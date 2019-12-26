@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="title"> {{ STRINGS.TITLE }} </div>
+  <form [formGroup]="form">
+    <fieldset>
+        <div class="form-field">
+            <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+        </div>
+        <div class="form-field">
+            <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+        </div>
+    </fieldset>
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+    <div class="register">
+      <div class="register-text" (click)="register()">
+        {{ STRINGS.REGISTER_MESSAGE }}
+        <span class="highlight"> {{ STRINGS.REGISTER }} </span>
+      </div>
+    </div>
+    <div class="form-buttons">
+        <button type="button" class="button" (click)="login()"> {{ STRINGS.LOGIN }} </button>
+        <button type="button" class="button facebook" (click)="facebookLogin()">
+            <img src="../../../assets/images/f_logo_RGB-Blue_58.png" class="facebook-logo">
+            {{ STRINGS.FACEBOOK_LOGIN }}
+        </button>
+    </div>
+  </form>
+</div>

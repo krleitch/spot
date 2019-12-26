@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="title"> {{ STRINGS.TITLE }} </div>
+  <form [formGroup]="form">
+    <fieldset>
+        <div class="form-field">
+            <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+        </div>
+        <div class="form-field">
+            <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+        </div>
+        <div class="form-field">
+          <input name="confirm" formControlName="confirm" [placeholder]="STRINGS.CONFIRM_PLACEHOLDER" type="password" required>
+      </div>
+    </fieldset>
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+    <div class="login">
+        <div class="login-text" (click)="login()">
+          {{ STRINGS.LOGIN_MESSAGE}}
+          <span class="highlight"> {{ STRINGS.LOGIN }} </span></div>
+      </div>
+    <div class="form-buttons">
+        <button class="button" (click)="register()"> {{ STRINGS.REGISTER }} </button>
+    </div>
+  </form>
+</div>

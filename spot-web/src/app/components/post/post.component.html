@@ -1,0 +1,32 @@
+<div class="post">
+  <div class="container">
+    <div class="like-bar">
+      <span class="like button" (click)="likePost()"> <i class="material-icons green pad"> thumb_up </i> </span>
+      <span class="score"> {{ post.likes - post.dislikes }} </span>
+      <span class="dislike button" (click)="dislikePost()"> <i class="material-icons red pad"> thumb_down </i> </span>
+    </div>
+    <div class="inner">
+      <div class="header">
+        <div class="title align-bottom ">
+            <i class="material-icons icon-size "> room </i>
+            <div> {{ post.spot }} </div>
+        </div>
+        <div class="time align-bottom ">
+            {{ timeMessage }}
+        </div>
+        <div #dropdown class="dropdown align-bottom" (click)="showDropdown(true)">
+          <i class="material-icons icon-size"> more_horiz </i>
+          <div  class="dropdown-content" [ngClass]="{'show': dropEnabled }">
+            <div class="button" (click)="deletePost()">Delete</div>
+            <div class="button">Report</div>
+          </div>
+        </div>
+      </div>
+      <div class="content" (click)="expand()" [ngClass]="{'post-selected': expanded }">
+        {{ post.content }}
+      </div>
+    </div>
+  </div>
+  <div class="bar"></div>
+  <spot-comments [postId]="post.id"></spot-comments>
+</div>

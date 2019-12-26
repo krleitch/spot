@@ -1,0 +1,33 @@
+@import '../../styles/colors';
+
+button {
+    background-color: $header-color;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 0px 12px;
+    margin-bottom: 10px;
+    outline: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    &:hover {
+        background-color: lighten($header-color, 3%);
+    }
+}
+
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 6px 0;
+    box-sizing: border-box;
+    border: 2px solid #9E9E9E;
+    border-radius: 4px;
+    outline: none;
+}
+
+fieldset {
+    border: none;
+    padding-bottom: 0px;
+}

@@ -1,0 +1,25 @@
+<div class="nav-bar">
+  <div class="title">
+    SPOT
+  </div>
+  <div class="nav-buttons">
+    <div class="button" (click)="home()">
+      Home <span class="select-bar" [ngClass]="{'selected': selected('home')}"></span>
+    </div>
+  </div>
+  <div class="account-buttons">
+    <div class="logged-in" *ngIf="loggedIn$ | async; else loginBlock">
+      <div class="button" (click)="account()">
+          My Account <span class="select-bar" [ngClass]="{'selected': selected('account')}"></span>  
+        </div>
+        <div class="button" (click)="logout()">
+          Logout <span class="select-bar" [ngClass]="{'selected': selected('logout')}"></span>  
+        </div>
+    </div>
+    <ng-template #loginBlock>
+      <div class="button" (click)="login()" *ngIf="!loggedIn">
+        Login <span class="select-bar" [ngClass]="{'selected': selected('login')}"></span>  
+      </div>
+    </ng-template>
+  </div>
+</div>

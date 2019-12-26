@@ -1,0 +1,9 @@
+# SPOT SERVER
+
+# Ignore directories
+node_modules/
+build/
+
+# Ignore files
+secret.json
+

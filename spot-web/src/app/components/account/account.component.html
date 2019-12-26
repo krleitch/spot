@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="account-info">
+    <div class="title"> Account Details</div>
+    <div *ngIf="user$ | async as user; else noAccount">
+      <div> Email: {{ user.email }} </div>
+      <div class="button" (click)="deleteUser()">
+          Delete Account
+      </div>
+    </div>
+    <ng-template #noAccount>
+        You are not logged into a user at the moment
+    </ng-template>
+  </div>
+</div>

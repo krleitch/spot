@@ -1,0 +1,6 @@
+<div class="page">
+  <spot-create></spot-create>
+  <div *ngFor="let post of posts$ | async">
+    <spot-post [post]="post"></spot-post>
+  </div>
+</div>
