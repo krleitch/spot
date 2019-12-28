@@ -18,6 +18,7 @@ import { CommentsComponent } from './components/comments/comments.component';
 import { CreateComponent } from './components/create/create.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { RepliesComponent } from './components/replies/replies.component';
+import { LandingComponent } from './components/pre-auth/landing/landing.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { RepliesComponent } from './components/replies/replies.component';
     CommentsComponent,
     CreateComponent,
     EditorComponent,
-    RepliesComponent
+    RepliesComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,

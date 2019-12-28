@@ -15,6 +15,7 @@ import { CommentsComponent } from './components/comments/comments.component';
 import { CreateComponent } from './components/create/create.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { RepliesComponent } from './components/replies/replies.component';
+import { LandingComponent } from './components/pre-auth/landing/landing.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -34,7 +35,8 @@ import { RepliesComponent } from './components/replies/replies.component';
     CommentsComponent,
     CreateComponent,
     EditorComponent,
-    RepliesComponent
+    RepliesComponent,
+    LandingComponent
   ],
   imports: [
     NativeScriptModule,

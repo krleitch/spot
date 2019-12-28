@@ -1,0 +1,70 @@
+<div>
+  <div class="nav">
+    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="nav-button about"> {{ STRINGS.ABOUT }} </span>
+    <span class="nav-button careers"> {{ STRINGS.CAREERS }} </span>
+    <span class="nav-button faq"> {{ STRINGS.FAQ }} </span>
+    <span class="nav-button support"> {{ STRINGS.SUPPORT }} </span>
+    <div class="mobile-links">
+      <span class="mobile-download-text"> {{ STRINGS.MOBILE_DOWNLOAD }} </span>
+      <img class="mobile-download-button" src="../../../../assets/images/google_play_badge.png">
+      <img class="mobile-download-button" src="../../../../assets/images/app_store_badge.svg">
+    </div>
+  </div>
+  <div class="content">
+    <div class="showcase">
+      <div class="showcase-content">
+        <div class="showcase-text">
+            {{ STRINGS.SHOWCASE_TEXT }}
+          </div>
+          <img class="showcase-image" src="../../../../assets/images/showcase.jpg">
+      </div>
+    </div>
+    <div class="signup">
+      <div class="signup-content">
+        <div class="signup-text">
+          {{ STRINGS.COMMUNITY }}
+        </div>
+        <form [formGroup]="form">
+          <div class="login-options">
+            <div type="button" class="facebook" (click)="facebookLogin()">
+              <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+              {{ STRINGS.FACEBOOK_LOGIN }}
+            </div>
+            <div type="button" class="google" (click)="googleLogin()">
+              <img src="../../../assets/images/google_login.png" class="google-logo">
+              {{ STRINGS.GOOGLE_LOGIN }}
+            </div>
+          </div>
+          <div>
+            <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
+          </div>
+          <fieldset>
+              <div class="form-field">
+                  <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+              </div>
+              <div class="form-field">
+                  <input name="username" formControlName="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="password" required>
+              </div>
+              <div class="form-field">
+                  <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER"required>
+              </div>
+              <div class="form-field">
+                  <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
+              </div>
+          </fieldset>
+          <div class="form-buttons">
+            <button type="button" class="button" (click)="signup()"> {{ STRINGS.SIGN_UP }} </button>
+            <button type="button" class="button" (click)="login()"> {{ STRINGS.LOGIN }} </button>
+          </div>
+        </form>
+        <div class="terms-and-conditions">
+          <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
+        </div>
+        <div class="copyright">
+          <span> &#169; {{ STRINGS.COPYRIGHT }} </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
