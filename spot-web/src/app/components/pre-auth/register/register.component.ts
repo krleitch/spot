@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
-  selector: 'spot-landing',
-  templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss']
+  selector: 'spot-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
 })
-export class LandingComponent implements OnInit {
+export class RegisterComponent implements OnInit {
 
-  STRINGS = STRINGS.PRE_AUTH.LANDING;
+  STRINGS = STRINGS.PRE_AUTH.REGISTER;
 
   form: FormGroup;
 
@@ -27,21 +27,8 @@ export class LandingComponent implements OnInit {
   ngOnInit() {
   }
 
-  facebookLogin() {
-
-  }
-
-  googleLogin() {
-
-  }
-
-  signUp() {
-
-  }
-
   login() {
     this.router.navigateByUrl('/login');
   }
-
 
 }

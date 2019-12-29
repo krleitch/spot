@@ -9,8 +9,6 @@ import { HomeComponent } from './components/home/home.component';
 import { RootStoreModule } from './root-store';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { AccountComponent } from './components/account/account.component';
 import { PostComponent } from './components/post/post.component';
@@ -19,6 +17,9 @@ import { CreateComponent } from './components/create/create.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { RepliesComponent } from './components/replies/replies.component';
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
+import { NavComponent } from './components/pre-auth/nav/nav.component';
+import { LoginComponent } from './components/pre-auth/login/login.component';
+import { RegisterComponent } from './components/pre-auth/register/register.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { LandingComponent } from './components/pre-auth/landing/landing.componen
     CreateComponent,
     EditorComponent,
     RepliesComponent,
-    LandingComponent
+    LandingComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,

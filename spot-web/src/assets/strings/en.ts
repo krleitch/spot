@@ -43,7 +43,7 @@ export const STRINGS = {
     // Pre-Auth Pages
     PRE_AUTH: {
 
-        LANDING: {
+        NAV: {
 
             // NAVIGATION
             TITLE: 'Spot',
@@ -51,7 +51,11 @@ export const STRINGS = {
             CAREERS: 'Careers',
             FAQ: 'FAQ',
             SUPPORT: 'Support',
-            MOBILE_DOWNLOAD: 'Download Us',
+            MOBILE_DOWNLOAD: 'Download Us'
+
+        },
+
+        LANDING: {
 
             // SHOWCASE
             SHOWCASE_TEXT: 'See what those around you are really saying',
@@ -64,19 +68,68 @@ export const STRINGS = {
             SIGN_UP_ALTERNATE: 'Or',
 
             SIGN_UP: 'Sign Up',
-            LOGIN: 'Or Login',
 
             EMAIL_PLACEHOLDER: 'Email',
             USERNAME_PLACEHOLDER: 'Username',
             PASSWORD_PLACEHOLDER: 'Password',
             PHONE_PLACEHOLDER: 'Phone Number',
 
+            EXISTING_ACCOUNT: 'Already have an account?',
+            SIGN_IN: 'Sign in',
+
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
             COPYRIGHT: '2020 Spot from REM',
 
-        }
+        },
 
+        REGISTER: {
+
+            // SIGNUP FROM
+            COMMUNITY: 'Join your community',
+            FACEBOOK_LOGIN: 'Sign In With Facebook',
+            GOOGLE_LOGIN: 'Sign In With Google',
+
+            SIGN_UP_ALTERNATE: 'Or',
+
+            SIGN_UP: 'Sign Up',
+
+            EMAIL_PLACEHOLDER: 'Email',
+            USERNAME_PLACEHOLDER: 'Username',
+            PASSWORD_PLACEHOLDER: 'Password',
+            PHONE_PLACEHOLDER: 'Phone Number',
+
+            EXISTING_ACCOUNT: 'Already have an account?',
+            SIGN_IN: 'Sign in',
+
+            // TERMS AND COPYRIGHT
+            TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
+            COPYRIGHT: '2020 Spot from REM',
+            
+        },
+
+        LOGIN: {
+
+            // SIGNUP FROM
+            COMMUNITY: 'Join your community',
+            FACEBOOK_LOGIN: 'Sign In With Facebook',
+            GOOGLE_LOGIN: 'Sign In With Google',
+
+            FORGOT_PASSWORD: 'Forgot Password',
+            SIGN_UP_ALTERNATE: 'Or',
+
+            SIGN_IN: 'Sign In',
+
+            NO_ACCOUNT: 'Don\'t have an account?',
+            SIGN_UP: 'Sign Up',
+
+            EMAIL_OR_USER_PLACEHOLDER: 'Email or Username',
+            PASSWORD_PLACEHOLDER: 'Password',
+
+            // TERMS AND COPYRIGHT
+            TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
+            COPYRIGHT: '2020 Spot from REM',
+        }
 
     }
 

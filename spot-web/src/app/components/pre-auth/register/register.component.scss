@@ -1,33 +1,5 @@
 @import '../../../styles/colors';
 
-// CONTENT
-
-.content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 100px;
-}
-
-.showcase {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    margin-right: 25px;
-}
-
-.showcase-text {
-    display: block;
-    margin-left: 5px;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.showcase-image {
-    height: 400px;
-}
-
 // SIGNUP
 
 .signup {
@@ -35,7 +7,7 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    margin-left: 25px;
+    padding-top: 100px;
 }
 
 .signup-text {
@@ -130,7 +102,12 @@ fieldset {
     justify-content: center;
     align-items: center;
     width: 100%;
+    margin-bottom: 10px;
     box-sizing: border-box;
+}
+
+.sign-up-alternate {
+    margin-bottom: 10px;
 }
 
 .button {
@@ -161,17 +138,10 @@ input {
     outline: none;
 }
 
-.terms-and-conditions {
-    font-size: 14px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
 // EXISTING ACCOUNT
 
 .bar {
-    width: 100%;
+    width: 300px;
     border-bottom: 1px solid $button-black;
     margin-bottom: 10px;
 }
