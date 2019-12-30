@@ -81,6 +81,19 @@ export const STRINGS = {
             TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
             COPYRIGHT: '2020 Spot from REM',
 
+            // ERROR MESSAGES
+            EMAIL_ERROR: 'Email is required',
+            USERNAME_ERROR: 'Username is required',
+            PASSWORD_ERROR: 'Password is required',
+            PHONE_ERROR: 'Phone is required',
+
+            EMAIL_INVALID: 'Email is invalid',
+            PHONE_INVALID: 'Phone number is invalid',
+
+            EMAIL_USED: 'Email is already in use',
+            USERNAME_USED: 'Username is already in use',
+            PHONE_USED: 'Phone is already in use'
+
         },
 
         REGISTER: {
@@ -105,7 +118,20 @@ export const STRINGS = {
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
             COPYRIGHT: '2020 Spot from REM',
-            
+
+            // ERROR MESSAGES
+            EMAIL_ERROR: 'Email is required',
+            USERNAME_ERROR: 'Username is required',
+            PASSWORD_ERROR: 'Password is required',
+            PHONE_ERROR: 'Phone is required',
+
+            EMAIL_INVALID: 'Email is invalid',
+            PHONE_INVALID: 'Phone number is invalid',
+
+            EMAIL_USED: 'Email is already in use',
+            USERNAME_USED: 'Username is already in use',
+            PHONE_USED: 'Phone is already in use'
+
         },
 
         LOGIN: {
@@ -129,6 +155,10 @@ export const STRINGS = {
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
             COPYRIGHT: '2020 Spot from REM',
+
+            // ERRORS
+            EMAIL_OR_USER_ERROR: 'Email/Username is required',
+            PASSWORD_ERROR: 'Password is required',
         }
 
     }

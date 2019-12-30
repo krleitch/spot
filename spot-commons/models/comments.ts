@@ -15,5 +15,3 @@ export interface CommentsHash {
 export interface AddCommentRequest {
     Content: string;
 }
-
-  

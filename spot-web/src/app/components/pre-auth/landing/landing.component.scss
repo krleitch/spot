@@ -115,6 +115,15 @@ fieldset {
     box-sizing: border-box;
 }
 
+.error-message {
+    text-align: center;
+    color: $error-red;
+}
+
+input.ng-dirty.ng-invalid {
+    border: 1px solid $error-red;
+  }
+
 .form-field {
     display: flex;
     flex-flow: column;

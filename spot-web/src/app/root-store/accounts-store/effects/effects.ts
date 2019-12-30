@@ -5,7 +5,7 @@ import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as featureActions from '../actions/actions';
-import { AuthenticationService } from '@services/auth.service';
+import { AuthenticationService } from '@services/authentication.service';
 
 @Injectable()
 export class AccountsStoreEffects {

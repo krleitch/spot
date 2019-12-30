@@ -121,6 +121,7 @@ module.exports = env => {
             ],
             alias: {
                 '@src': path.resolve(__dirname, 'src'),
+                '@models': path.resolve(__dirname, '../spot-commons/models'),
                 '@services': path.resolve(__dirname, 'src/app/services'),
                 '@store': path.resolve(__dirname, 'src/app/root-store'),
                 '@styles': path.resolve(__dirname, 'src/app/styles'),

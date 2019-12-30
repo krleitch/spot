@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthenticationService } from '@src/app/services/auth.service';
+import { AuthenticationService } from '@src/app/services/authentication.service';
 import { Router } from '@angular/router';
 import { Store, ActionsSubject } from '@ngrx/store';
 import { AccountsActions, RootStoreState } from '@store';

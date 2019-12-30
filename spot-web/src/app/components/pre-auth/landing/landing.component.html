@@ -41,6 +41,9 @@
                 <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
             </div>
         </fieldset>
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
         <div class="form-buttons">
           <button type="button" class="button" (click)="signUp()"> {{ STRINGS.SIGN_UP }} </button>
         </div>
@@ -49,7 +52,7 @@
         <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
       </div>
       <div class="bar"></div>
-      <div class="existing-account" (click)="login()">
+      <div class="existing-account" (click)="signIn()">
         <span> {{ STRINGS.EXISTING_ACCOUNT }} </span>
         <span class="sign-in-highlight"> {{ STRINGS.SIGN_IN }} </span>
       </div>

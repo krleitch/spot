@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthenticationService } from '@src/app/services/auth.service';
+import { AuthenticationService } from '@src/app/services/authentication.service';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { AccountsActions, AccountsFacebookActions, AccountsStoreSelectors, RootStoreState } from '../../root-store';

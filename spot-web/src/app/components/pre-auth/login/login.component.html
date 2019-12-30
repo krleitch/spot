@@ -13,8 +13,11 @@
             <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
         </div>
       </fieldset>
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
       <div class="form-buttons">
-        <button type="button" class="button" (click)="login()"> {{ STRINGS.SIGN_IN }} </button>
+        <button type="button" class="button" (click)="signIn()"> {{ STRINGS.SIGN_IN }} </button>
       </div>
       <div class="forgot-password">
           <span> {{ STRINGS.FORGOT_PASSWORD }} </span>

@@ -39,6 +39,16 @@ export class AuthenticationService {
         return this.http.get<any>(`${this.baseUrl}/accounts/account`);
     }
 
+    validateEmail(email: string): boolean {
+        const regex = /^\S+@\S+\.\S+$/;
+        return email.match(regex) != null;
+    }
+
+    validatePhone(phone: string): boolean {
+        const regex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+        return phone.match(regex) != null;
+    }
+
     md5Hash(data: string): string {
         return Md5.hashStr(data).toString();
     }

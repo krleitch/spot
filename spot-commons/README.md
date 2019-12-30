@@ -1,6 +1,6 @@
 # SPOT-COMMONS
 
-### Types
+### Models
 
-Common types for spot-web and spot-server
+Common models for spot-web and spot-server
 
