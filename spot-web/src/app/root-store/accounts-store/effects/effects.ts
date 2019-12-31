@@ -37,6 +37,26 @@ export class AccountsStoreEffects {
     )
   );
 
+  @Effect({dispatch: false})
+  registerAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.RegisterSuccessAction>(
+      featureActions.ActionTypes.REGISTER_SUCCESS
+    ),
+    tap( registerResponse => {
+      this.authenticationService.loginAccountSuccess(registerResponse);
+    })
+  );
+
+  @Effect({dispatch: false})
+  registerAccountFailureEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.RegisterFailureAction>(
+      featureActions.ActionTypes.REGISTER_FAILURE
+    ),
+    tap( (action: featureActions.RegisterFailureAction) => {
+      this.authenticationService.registerAccountFailed(action.error.error);
+    })
+  );
+
   @Effect()
   loginAccountEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.LoginRequestAction>(
@@ -64,15 +84,7 @@ export class AccountsStoreEffects {
     })
   );
 
-  @Effect({dispatch: false})
-  registerAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.RegisterSuccessAction>(
-      featureActions.ActionTypes.REGISTER_SUCCESS
-    ),
-    tap( registerResponse => {
-      this.authenticationService.loginAccountSuccess(registerResponse);
-    })
-  );
+
 
   @Effect({dispatch: false})
   loginAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(

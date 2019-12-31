@@ -6,13 +6,17 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { RegisterRequest, RegisterResponse } from '@models/authentication';
+import { AlertService } from '@services/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
 
     baseUrl = environment.baseUrl;
 
-    constructor(private http: HttpClient, private router: Router) {
+    constructor(
+        private http: HttpClient,
+        private router: Router,
+        private alertService: AlertService) {
     }
 
     registerFacebookAccount(request: any): Observable<any> {
@@ -75,6 +79,10 @@ export class AuthenticationService {
     registerFacebookAccountSuccess(action) {
         localStorage.setItem('id_token', action.response.idToken);
         localStorage.setItem('id_expires_in', JSON.stringify(action.response.expireIn));
+    }
+
+    registerAccountFailed(message: string) {
+        this.alertService.error(message);
     }
 
 }
