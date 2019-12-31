@@ -15,7 +15,6 @@ import { PostComponent } from './components/post/post.component';
 import { CommentsComponent } from './components/comments/comments.component';
 import { CreateComponent } from './components/create/create.component';
 import { EditorComponent } from './components/editor/editor.component';
-import { RepliesComponent } from './components/replies/replies.component';
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
 import { NavComponent } from './components/pre-auth/nav/nav.component';
 import { LoginComponent } from './components/pre-auth/login/login.component';
@@ -34,7 +33,6 @@ import { RegisterComponent } from './components/pre-auth/register/register.compo
     CommentsComponent,
     CreateComponent,
     EditorComponent,
-    RepliesComponent,
     LandingComponent,
     NavComponent
   ],

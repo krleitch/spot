@@ -22,9 +22,9 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit() {
 
-    this.loggedIn$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectMyFeatureLoggedIn)
-    );
+    // this.loggedIn$ = this.store$.pipe(
+    //   select(AccountsStoreSelectors.selectMyFeatureLoggedIn)
+    // );
 
     this.currentTab = this.location.path().substr(1);
   }

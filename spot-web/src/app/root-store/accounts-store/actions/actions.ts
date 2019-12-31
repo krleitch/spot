@@ -1,5 +1,7 @@
 import { Action } from '@ngrx/store';
 
+import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
+
 export enum ActionTypes {
   LOGIN_REQUEST = '[Accounts] Login Request',
   LOGIN_SUCCESS = '[Accounts] Login Success',
@@ -18,47 +20,38 @@ export enum ActionTypes {
   ACCOUNT_FAILURE = '[Accounts] Account Failure'
 }
 
-export class AuthenticateRequestAction implements Action {
-    readonly type = ActionTypes.LOGIN_REQUEST;
-    constructor(public request: any) {}
-}
-
-export class AuthenticateSuccessAction implements Action {
-    readonly type = ActionTypes.LOGIN_SUCCESS;
-    constructor(public payload: { response: any }) {}
-}
-
-export class AuthenticateFailureAction implements Action {
-    readonly type = ActionTypes.LOGIN_FAILURE;
-    constructor(public payload: { error: string }) {}
-}
-
 export class RegisterRequestAction implements Action {
     readonly type = ActionTypes.REGISTER_REQUEST;
-    constructor(public request: any) {}
+    constructor(public request: RegisterRequest) {}
 }
 
 export class RegisterSuccessAction implements Action {
     readonly type = ActionTypes.REGISTER_SUCCESS;
-    constructor(public payload: { response: any }) {}
+    constructor(public response: RegisterResponse) {}
 }
 
 export class RegisterFailureAction implements Action {
     readonly type = ActionTypes.REGISTER_FAILURE;
-    constructor(public payload: { error: string }) {}
+    constructor(public error: any) {}
+}
+
+export class LoginRequestAction implements Action {
+    readonly type = ActionTypes.LOGIN_REQUEST;
+    constructor(public request: LoginRequest) {}
+}
+
+export class LoginSuccessAction implements Action {
+    readonly type = ActionTypes.LOGIN_SUCCESS;
+    constructor(public response: LoginResponse) {}
+}
+
+export class LoginFailureAction implements Action {
+    readonly type = ActionTypes.LOGIN_FAILURE;
+    constructor(public error: any) {}
 }
 
 export class LogoutRequestAction implements Action {
     readonly type = ActionTypes.LOGOUT_REQUEST;
-}
-
-export class LogoutSuccessAction implements Action {
-    readonly type = ActionTypes.LOGOUT_SUCCESS;
-}
-
-export class LogoutFailureAction implements Action {
-    readonly type = ActionTypes.LOGOUT_FAILURE;
-    constructor(public payload: { error: string }) {}
 }
 
 export class DeleteRequestAction implements Action {
@@ -71,7 +64,7 @@ export class DeleteSuccessAction implements Action {
 
 export class DeleteFailureAction implements Action {
     readonly type = ActionTypes.DELETE_FAILURE;
-    constructor(public payload: { error: string }) {}
+    constructor(public error: string) {}
 }
 
 export class AccountRequestAction implements Action {
@@ -80,19 +73,18 @@ export class AccountRequestAction implements Action {
 
 export class AccountSuccessAction implements Action {
     readonly type = ActionTypes.ACCOUNT_SUCCESS;
-    constructor(public payload: { response: any }) {}
+    constructor(public response: any) {}
 }
 
 export class AccountFailureAction implements Action {
     readonly type = ActionTypes.ACCOUNT_FAILURE;
-    constructor(public payload: { error: string }) {}
+    constructor(public error: string) {}
 }
 
-export type Actions = AuthenticateRequestAction | AuthenticateSuccessAction |
-                      AuthenticateFailureAction | RegisterRequestAction |
+export type Actions = LoginRequestAction | LoginSuccessAction |
+                      LoginFailureAction | RegisterRequestAction |
                       RegisterSuccessAction | RegisterFailureAction |
-                      LogoutRequestAction | LogoutSuccessAction |
-                      LogoutFailureAction | DeleteRequestAction |
+                      LogoutRequestAction | DeleteRequestAction |
                       DeleteSuccessAction | DeleteFailureAction |
                       AccountRequestAction | AccountSuccessAction |
                       AccountFailureAction;

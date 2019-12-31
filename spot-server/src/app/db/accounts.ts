@@ -1,12 +1,12 @@
-export { addAccount, getAccountByEmail, deleteAccount, getAccountById, addFacebookAccount, getFacebookAccount }
+export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, getAccountById, addFacebookAccount, getFacebookAccount }
 
 const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function addAccount(email: string, pass: string, salt: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, email, pass, salt) VALUES (?, ?, ?, ?)';
-    var values = [uuid.v4(), email, pass, salt, false];
+function addAccount(email: string, username: string, pass: string, phone: string, salt: string): Promise<any> {
+    var sql = 'INSERT INTO accounts (id, email, username, pass, phone, salt) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), email, username, pass, phone, salt, false];
     return db.query(sql, values);
 }
 
@@ -31,6 +31,12 @@ function deleteAccount(id: string) {
 function getAccountByEmail(email: string): Promise<any> {
     var sql = 'SELECT * FROM accounts WHERE email = ?';
     var values = [email];
+    return db.query(sql, values);
+}
+
+function getAccountByUsername(username: string): Promise<any> {
+    var sql = 'SELECT * FROM accounts WHERE username = ?';
+    var values = [username];
     return db.query(sql, values);
 }
 

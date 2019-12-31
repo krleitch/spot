@@ -149,7 +149,7 @@ export const STRINGS = {
             NO_ACCOUNT: 'Don\'t have an account?',
             SIGN_UP: 'Sign Up',
 
-            EMAIL_OR_USER_PLACEHOLDER: 'Email or Username',
+            EMAIL_OR_USERNAME_PLACEHOLDER: 'Email or Username',
             PASSWORD_PLACEHOLDER: 'Password',
 
             // TERMS AND COPYRIGHT

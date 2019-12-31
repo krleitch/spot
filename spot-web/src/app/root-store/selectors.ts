@@ -1,4 +1,3 @@
-import { createSelector, MemoizedSelector } from '@ngrx/store';
-import { PostsStoreSelectors } from './posts-store';
+export { };
 
 // Selectors for global state go here

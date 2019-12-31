@@ -2,7 +2,7 @@ import { AuthenticationService } from '@src/app/services/authentication.service'
 import { Component, OnInit } from '@angular/core';
 
 import { select, Store } from '@ngrx/store';
-import { ActionTypes, AuthenticateSuccessAction, AuthenticateFailureAction } from '@src/app/root-store/accounts-store/actions/actions';
+import { ActionTypes, LoginSuccessAction, LoginFailureAction } from '@src/app/root-store/accounts-store/actions/actions';
 import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '../../root-store';
 import { Observable } from 'rxjs';
 
@@ -19,9 +19,9 @@ export class AccountComponent implements OnInit {
     private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
-    this.user$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectMyFeatureUser)
-    );
+    // this.user$ = this.store$.pipe(
+    //   select(AccountsStoreSelectors.selectMyFeatureUser)
+    // );
   }
 
   deleteUser() {

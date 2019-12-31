@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
-import { RegisterRequest, RegisterResponse } from '@models/authentication';
+import { RegisterRequest } from '@models/authentication';
 import { Store } from '@ngrx/store';
-import { AccountsActions, RootStoreState } from '@store';
+import { RootStoreState } from '@store';
+import { AccountsActions } from '@store/accounts-store';
 
 @Component({
   selector: 'spot-landing',
@@ -37,11 +38,11 @@ export class LandingComponent implements OnInit {
   ngOnInit() { }
 
   facebookLogin() {
-
+    console.log('facebookLogin');
   }
 
   googleLogin() {
-
+    console.log('googleLogin');
   }
 
   signUp() {
@@ -88,14 +89,14 @@ export class LandingComponent implements OnInit {
 
     this.errorMessage = '';
 
-    const loginRequest: RegisterRequest = {
+    const registerRequest: RegisterRequest = {
       email: val.email,
       username: val.username,
       password: this.authenticationService.md5Hash(val.password),
       phone: val.phone
     };
     this.store$.dispatch(
-      new AccountsActions.AuthenticateRequestAction(loginRequest)
+      new AccountsActions.RegisterRequestAction(registerRequest)
     );
   }
 

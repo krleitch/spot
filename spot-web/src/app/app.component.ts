@@ -12,9 +12,7 @@ import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '@store'
 export class AppComponent implements OnInit {
   title = 'spot-web';
 
-  constructor(private store$: Store<RootStoreState.State>) {
-    
-  }
+  constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
     this.fbLibrary();

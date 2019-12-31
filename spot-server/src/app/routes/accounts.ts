@@ -12,18 +12,18 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.delete('/delete', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
     const user = req.user;
     accounts.deleteAccount(user.id).then( (rows: any) => {
-        res.status(200).json(rows);   
+        res.status(200);   
     }, (err: any) => {
+        res.status(500).send('Error deleting account');
     });
 })
 
 router.get('/account', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
     const user = req.user;
     accounts.getAccountById(user.id).then((rows: any) => {
-        res.status(200).json(rows[0]);
+        res.status(200).json({ account: rows[0] });
     }, (err: any) => {
-        console.log(err);
-        res.sendStatus(500);
+        res.status(500).send("Error getting the account");
     })
 })
 

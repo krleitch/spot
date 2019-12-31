@@ -1,3 +1,4 @@
+require('module-alias/register');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
@@ -26,10 +27,10 @@ app.use(bodyParser.json());
 app.use(Cors());
 
 app.use('/', root);
+app.use('/auth', auth);
 app.use('/posts', passport.authenticate('jwt', {session: true}), posts);
 app.use('/accounts', passport.authenticate('jwt', {session: true}), accounts);
 app.use('/comments', passport.authenticate('jwt', {session: true}), comments);
-app.use('/auth', auth);
 
 app.listen(port, (err: any) => {
   if (err) {

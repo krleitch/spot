@@ -5,7 +5,7 @@ import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
-// import * as auth from '../../../../spot-commons/types/auth';
+import { RegisterRequest, RegisterResponse } from '@models/authentication';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -23,20 +23,12 @@ export class AuthenticationService {
         return this.http.post<any>(`${this.baseUrl}/auth/login/facebook`, request);
     }
 
-    registerAccount(registerRequest: any): Observable<any> {
-        return this.http.post<any>(`${this.baseUrl}/auth/register`, registerRequest);
+    registerAccount(registerRequest: RegisterRequest): Observable<RegisterResponse> {
+        return this.http.post<RegisterResponse>(`${this.baseUrl}/auth/register`, registerRequest);
     }
 
     loginAccount(loginAccountRequest: any): Observable<any> {
         return this.http.post<any>(`${this.baseUrl}/auth/login`, loginAccountRequest);
-    }
-
-    deleteAccount(): Observable<any> {
-        return this.http.delete<any>(`${this.baseUrl}/accounts/delete`);
-    }
-
-    getAccount(): Observable<any> {
-        return this.http.get<any>(`${this.baseUrl}/accounts/account`);
     }
 
     validateEmail(email: string): boolean {
@@ -65,13 +57,12 @@ export class AuthenticationService {
                 });
             }
         });
-
         this.router.navigateByUrl('/login');
     }
 
     loginAccountSuccess(action) {
-        localStorage.setItem('id_token', action.payload.response.jwt.token);
-        localStorage.setItem('id_expires_in', JSON.stringify(action.payload.response.jwt.expiresIn));
+        localStorage.setItem('id_token', action.response.jwt.token);
+        localStorage.setItem('id_expires_in', JSON.stringify(action.response.jwt.expiresIn));
         this.router.navigateByUrl('/home');
     }
 
@@ -81,17 +72,9 @@ export class AuthenticationService {
         this.router.navigateByUrl('/home');
     }
 
-    registerAccountSuccess() {
-        this.router.navigateByUrl('/login');
-    }
-
-    registerFacebookAccountSuccess(response) {
-        localStorage.setItem('id_token', response.response.idToken);
-        localStorage.setItem('id_expires_in', JSON.stringify(response.response.expireIn));
-    }
-
-    onDeleteAccountSuccess() {
-        this.router.navigateByUrl('/home');
+    registerFacebookAccountSuccess(action) {
+        localStorage.setItem('id_token', action.response.idToken);
+        localStorage.setItem('id_expires_in', JSON.stringify(action.response.expireIn));
     }
 
 }

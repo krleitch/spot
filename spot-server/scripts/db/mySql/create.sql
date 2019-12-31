@@ -19,7 +19,9 @@ CREATE TABLE posts (
 CREATE TABLE accounts (
     id VARCHAR(36) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    pass VARCHAR(1024),
+    username VARCHAR(255) NOT NULL UNIQUE,
+    pass VARCHAR(1024) NOT NULL,
+    phone VARCHAR(255) NOT NULL UNIQUE,
     salt VARCHAR(256),
     facebook_id VARCHAR(36) UNIQUE,
     PRIMARY KEY (id)

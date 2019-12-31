@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
+import { RegisterRequest } from '@models/authentication';
+import { Store } from '@ngrx/store';
+import { RootStoreState } from '@store';
+import { AccountsActions } from '@store/accounts-store';
 
 @Component({
   selector: 'spot-register',
@@ -20,7 +24,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private store$: Store<RootStoreState.State>
   ) {
     this.form = this.fb.group({
       email: ['', Validators.required],
@@ -76,6 +81,16 @@ export class RegisterComponent implements OnInit {
     }
 
     this.errorMessage = '';
+
+    const registerRequest: RegisterRequest = {
+      email: val.email,
+      username: val.username,
+      password: this.authenticationService.md5Hash(val.password),
+      phone: val.phone
+    };
+    this.store$.dispatch(
+      new AccountsActions.RegisterRequestAction(registerRequest)
+    );
   }
 
   login() {

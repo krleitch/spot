@@ -4,72 +4,59 @@ import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions | FacebookActions): State {
   switch (action.type) {
-    case ActionTypes.LOGIN_REQUEST: {
+    case ActionTypes.REGISTER_SUCCESS: {
       return {
         ...state,
-        loggedIn: false
+        account: action.response.account
+      };
+    }
+    case ActionTypes.REGISTER_FAILURE: {
+      return {
+        ...state,
+        account: null
       };
     }
     case ActionTypes.LOGIN_SUCCESS: {
-        return {
-          ...state,
-          loggedIn: true,
-          idToken: action.payload.response.idToken,
-          expireIn: action.payload.response.expireIn,
-          user: action.payload.response.user
-        };
-      }
-    case ActionTypes.LOGIN_FAILURE: {
-    return {
+      return {
         ...state,
-        loggedIn: false,
-        error: action.payload.error
+        account: action.response.account
+      };
+    }
+    case ActionTypes.LOGIN_FAILURE: {
+      return {
+        ...state,
+        account: null
       };
     }
     case ActionTypes.LOGOUT_REQUEST: {
-        return {
-            ...state,
-            loggedIn: false
-        };
+      return {
+        ...state,
+        account: null
+      };
     }
     case ActionTypes.DELETE_SUCCESS: {
-        return {
-            ...state,
-            loggedIn: false
-        };
+      return {
+        ...state,
+        account: null
+      };
     }
     case ActionTypes.ACCOUNT_SUCCESS: {
-        return {
-            ...state,
-            loggedIn: true,
-            user: action.payload.response
-        };
+      return {
+        ...state,
+        account: action.response.account
+      };
     }
     case FacebookActionTypes.FACEBOOK_REGISTER_SUCCESS: {
-        return {
-          ...state,
-          loggedIn: true,
-          user: action.response.user
-        };
-    }
-    case FacebookActionTypes.FACEBOOK_REGISTER_FAILURE: {
-        return {
-          ...state,
-          loggedIn: false
-        };
+      return {
+        ...state,
+        account: action.response.user
+      };
     }
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
-        return {
-          ...state,
-          loggedIn: true,
-          user: action.response.user
-        };
-    }
-    case FacebookActionTypes.FACEBOOK_LOGIN_FAILURE: {
-        return {
-          ...state,
-          loggedIn: false
-        };
+      return {
+        ...state,
+        account: action.response.user
+      };
     }
     default: {
       return state;

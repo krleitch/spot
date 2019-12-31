@@ -6,40 +6,49 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as featureActions from '../actions/actions';
 import { AuthenticationService } from '@services/authentication.service';
+import { AccountsService } from '@services/accounts.service';
+import { RegisterResponse, LoginResponse } from '@models/authentication';
 
 @Injectable()
 export class AccountsStoreEffects {
-  constructor(private authenticationService: AuthenticationService, private actions$: Actions) { }
-
-  @Effect()
-  authenticateAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.AuthenticateRequestAction>(
-      featureActions.ActionTypes.LOGIN_REQUEST
-    ),
-    switchMap(authenticateRequest =>
-      this.authenticationService
-        .loginAccount(authenticateRequest.request)
-        .pipe(
-            map(response => new featureActions.AuthenticateSuccessAction({ response })),
-            catchError(error =>
-              observableOf(new featureActions.AuthenticateFailureAction({ error }))
-            )
-          )
-    )
-  );
+  constructor(
+    private authenticationService: AuthenticationService,
+    private accountsService: AccountsService,
+    private actions$: Actions
+  ) { }
 
   @Effect()
   registerAccountEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.RegisterRequestAction>(
       featureActions.ActionTypes.REGISTER_REQUEST
     ),
-    switchMap(registerRequest =>
+    switchMap((registerRequest: featureActions.RegisterRequestAction) =>
       this.authenticationService
         .registerAccount(registerRequest.request)
         .pipe(
-            map(response => new featureActions.RegisterSuccessAction({ response })),
+          map((response: RegisterResponse) => {
+            console.log(response);
+            return new featureActions.RegisterSuccessAction(response);
+          }),
+          catchError((error: any) =>
+            observableOf(new featureActions.RegisterFailureAction(error))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  loginAccountEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.LoginRequestAction>(
+      featureActions.ActionTypes.LOGIN_REQUEST
+    ),
+    switchMap(authenticateRequest =>
+      this.authenticationService
+        .loginAccount(authenticateRequest.request)
+        .pipe(
+            map(response => new featureActions.LoginSuccessAction(response)),
             catchError(error =>
-              observableOf(new featureActions.RegisterFailureAction({ error }))
+              observableOf(new featureActions.LoginFailureAction(error))
             )
           )
     )
@@ -50,7 +59,7 @@ export class AccountsStoreEffects {
     ofType<featureActions.LogoutRequestAction>(
       featureActions.ActionTypes.LOGOUT_REQUEST
     ),
-    tap( logoutRequest => {
+    tap( (logoutRequest) => {
       this.authenticationService.logoutAccountSuccess();
     })
   );
@@ -60,18 +69,18 @@ export class AccountsStoreEffects {
     ofType<featureActions.RegisterSuccessAction>(
       featureActions.ActionTypes.REGISTER_SUCCESS
     ),
-    tap( registerRequest => {
-      this.authenticationService.registerAccountSuccess();
+    tap( registerResponse => {
+      this.authenticationService.loginAccountSuccess(registerResponse);
     })
   );
 
   @Effect({dispatch: false})
-  authenticateAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.AuthenticateSuccessAction>(
+  loginAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.LoginSuccessAction>(
       featureActions.ActionTypes.LOGIN_SUCCESS
     ),
-    tap( authenticateRequest => {
-      this.authenticationService.loginAccountSuccess(authenticateRequest);
+    tap( loginResponse => {
+      this.authenticationService.loginAccountSuccess(loginResponse);
     })
   );
 
@@ -81,7 +90,7 @@ export class AccountsStoreEffects {
       featureActions.ActionTypes.DELETE_SUCCESS
     ),
     tap( deleteRequest => {
-      this.authenticationService.onDeleteAccountSuccess();
+      this.accountsService.onDeleteAccountSuccess();
     })
   );
 
@@ -91,12 +100,12 @@ export class AccountsStoreEffects {
       featureActions.ActionTypes.DELETE_REQUEST
     ),
     switchMap(deleteRequest =>
-      this.authenticationService
+      this.accountsService
         .deleteAccount()
         .pipe(
             map(response => new featureActions.DeleteSuccessAction()),
             catchError(error =>
-              observableOf(new featureActions.DeleteFailureAction({ error }))
+              observableOf(new featureActions.DeleteFailureAction(error))
             )
           )
     )
@@ -108,12 +117,12 @@ export class AccountsStoreEffects {
       featureActions.ActionTypes.ACCOUNT_REQUEST
     ),
     switchMap(deleteRequest =>
-      this.authenticationService
+      this.accountsService
         .getAccount()
         .pipe(
-            map(response => new featureActions.AccountSuccessAction({ response })),
+            map(response => new featureActions.AccountSuccessAction(response)),
             catchError(error =>
-              observableOf(new featureActions.AccountFailureAction({ error }))
+              observableOf(new featureActions.AccountFailureAction(error))
             )
           )
     )

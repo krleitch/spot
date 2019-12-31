@@ -3,6 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { STRINGS } from '@assets/strings/en';
+import { AuthenticationService } from '@services/authentication.service';
+import { LoginRequest } from '@models/authentication';
+import { Store } from '@ngrx/store';
+import { RootStoreState } from '@store';
+import { AccountsActions } from '@store/accounts-store';
 
 @Component({
   selector: 'spot-login',
@@ -16,9 +21,13 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   errorMessage: string;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private store$: Store<RootStoreState.State>) {
     this.form = this.fb.group({
-      emailOrUser: ['', Validators.required],
+      emailOrUsername: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
@@ -29,9 +38,9 @@ export class LoginComponent implements OnInit {
   signIn() {
     const val = this.form.value;
 
-    if (!val.emailOrUser) {
+    if (!val.emailOrUsername) {
       this.errorMessage = this.STRINGS.EMAIL_OR_USER_ERROR;
-      this.form.controls.emailOrUser.markAsDirty();
+      this.form.controls.emailOrUsername.markAsDirty();
       return;
     }
 
@@ -42,6 +51,14 @@ export class LoginComponent implements OnInit {
     }
 
     this.errorMessage = '';
+
+    const loginRequest: LoginRequest = {
+      emailOrUsername: val.emailOrUsername,
+      password: this.authenticationService.md5Hash(val.password),
+    };
+    this.store$.dispatch(
+      new AccountsActions.LoginRequestAction(loginRequest)
+    );
   }
 
   register() {

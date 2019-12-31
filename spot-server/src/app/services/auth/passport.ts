@@ -11,20 +11,35 @@ const accounts = require('../../db/accounts');
 
 // Login Local
 const localOptions = {  
-    usernameField: 'email',
+    usernameField: 'emailOrUsername',
     passwordField: 'password'
 };
 
 passport.use(new LocalStrategy(localOptions,
-    function(email: any, password: any, done: any) {
-        accounts.getAccountByEmail(email).then( (user: any) => {
-            user = user[0];
-            if (!user) { return done(null, false); }
-            if (!auth.validatePassword(user, password)) { return done(null, false); }
-            return done(null, user);
-        }, (err: any) => {
-            return done(err);
-        });
+    function(emailOrUsername: any, password: any, done: any) {
+
+        const regex = /^\S+@\S+\.\S+$/;
+        const isEmail = emailOrUsername.match(regex) != null;
+
+        if (isEmail) {
+            accounts.getAccountByEmail(emailOrUsername).then( (user: any) => {
+                user = user[0];
+                if (!user) { return done(null, false); }
+                if (!auth.validatePassword(user, password)) { return done(null, false); }
+                return done(null, user);
+            }, (err: any) => {
+                return done(err);
+            });
+        } else {
+            accounts.getAccountByUsername(emailOrUsername).then( (user: any) => {
+                user = user[0];
+                if (!user) { return done(null, false); }
+                if (!auth.validatePassword(user, password)) { return done(null, false); }
+                return done(null, user);
+            }, (err: any) => {
+                return done(err);
+            });            
+        }
     }
 ));
 
@@ -34,7 +49,6 @@ passport.serializeUser(function (user: any, done: any) {
 });
 
 passport.deserializeUser(function (id: any, done: any) {
-    console.log('called deserialize', id);
     accounts.getAccountById(id).then( (user: any) => {
         return done(null, user[0])
     }, (err: any) => {

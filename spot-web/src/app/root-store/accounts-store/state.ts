@@ -1,18 +1,10 @@
 
 export interface State {
-    loggedIn: boolean;
-    idToken: string;
-    user: any;
-    expireIn: string;
-    error: string;
+    account: any;
 }
 
 export const initialState: State = (
   {
-    loggedIn: false,
-    idToken: null,
-    user: null,
-    expireIn: null,
-    error: null
+    account: null,
   }
 );
