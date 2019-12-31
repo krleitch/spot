@@ -20,6 +20,7 @@ import { NavComponent } from './components/pre-auth/nav/nav.component';
 import { LoginComponent } from './components/pre-auth/login/login.component';
 import { RegisterComponent } from './components/pre-auth/register/register.component';
 import { AlertComponent } from './components/helpers/alert/alert.component';
+import { AboutComponent } from './components/pre-auth/about/about.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { AlertComponent } from './components/helpers/alert/alert.component';
     EditorComponent,
     LandingComponent,
     NavComponent,
-    AlertComponent
+    AlertComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

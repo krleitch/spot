@@ -7,6 +7,7 @@ import { AccountComponent } from './components/account/account.component';
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
 import { LoginComponent } from './components/pre-auth/login/login.component';
 import { RegisterComponent } from './components/pre-auth/register/register.component';
+import { AboutComponent } from './components/pre-auth/about/about.component';
 
 
 export const routes: Routes = [
@@ -29,6 +30,10 @@ export const routes: Routes = [
   {
     path: 'account',
     component: AccountComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
   }
 ];
 

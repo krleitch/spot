@@ -20,4 +20,8 @@ export class NavComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
+  about() {
+    this.router.navigateByUrl('/about');
+  }
+
 }
