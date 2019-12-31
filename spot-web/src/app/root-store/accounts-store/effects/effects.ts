@@ -26,12 +26,9 @@ export class AccountsStoreEffects {
       this.authenticationService
         .registerAccount(registerRequest.request)
         .pipe(
-          map((response: RegisterResponse) => {
-            console.log(response);
-            return new featureActions.RegisterSuccessAction(response);
-          }),
-          catchError((error: any) =>
-            observableOf(new featureActions.RegisterFailureAction(error))
+          map((response: RegisterResponse) => new featureActions.RegisterSuccessAction(response)),
+          catchError((errorResponse: any) =>
+            observableOf(new featureActions.RegisterFailureAction(errorResponse.error))
           )
         )
     )
@@ -53,7 +50,7 @@ export class AccountsStoreEffects {
       featureActions.ActionTypes.REGISTER_FAILURE
     ),
     tap( (action: featureActions.RegisterFailureAction) => {
-      this.authenticationService.registerAccountFailed(action.error.error);
+      this.authenticationService.failureMessage(action.error);
     })
   );
 
@@ -67,24 +64,12 @@ export class AccountsStoreEffects {
         .loginAccount(authenticateRequest.request)
         .pipe(
             map(response => new featureActions.LoginSuccessAction(response)),
-            catchError(error =>
-              observableOf(new featureActions.LoginFailureAction(error))
+            catchError(errorResponse =>
+              observableOf(new featureActions.LoginFailureAction(errorResponse.error))
             )
           )
     )
   );
-
-  @Effect({dispatch: false})
-  logoutAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LogoutRequestAction>(
-      featureActions.ActionTypes.LOGOUT_REQUEST
-    ),
-    tap( (logoutRequest) => {
-      this.authenticationService.logoutAccountSuccess();
-    })
-  );
-
-
 
   @Effect({dispatch: false})
   loginAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
@@ -97,12 +82,22 @@ export class AccountsStoreEffects {
   );
 
   @Effect({dispatch: false})
-  deleteAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.DeleteSuccessAction>(
-      featureActions.ActionTypes.DELETE_SUCCESS
+  loginAccountFailureEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.LoginFailureAction>(
+      featureActions.ActionTypes.LOGIN_FAILURE
     ),
-    tap( deleteRequest => {
-      this.accountsService.onDeleteAccountSuccess();
+    tap( (action: featureActions.LoginFailureAction) => {
+      this.authenticationService.failureMessage(action.error);
+    })
+  );
+
+  @Effect({dispatch: false})
+  logoutAccountEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.LogoutRequestAction>(
+      featureActions.ActionTypes.LOGOUT_REQUEST
+    ),
+    tap( (logoutRequest) => {
+      this.authenticationService.logoutAccountSuccess();
     })
   );
 
@@ -121,6 +116,16 @@ export class AccountsStoreEffects {
             )
           )
     )
+  );
+
+  @Effect({dispatch: false})
+  deleteAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.DeleteSuccessAction>(
+      featureActions.ActionTypes.DELETE_SUCCESS
+    ),
+    tap( deleteRequest => {
+      this.accountsService.onDeleteAccountSuccess();
+    })
   );
 
   @Effect()

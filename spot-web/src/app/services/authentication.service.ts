@@ -81,7 +81,7 @@ export class AuthenticationService {
         localStorage.setItem('id_expires_in', JSON.stringify(action.response.expireIn));
     }
 
-    registerAccountFailed(message: string) {
+    failureMessage(message: string) {
         this.alertService.error(message);
     }
 
