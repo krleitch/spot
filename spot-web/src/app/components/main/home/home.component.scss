@@ -1,0 +1,7 @@
+@import '../../../styles/colors';
+
+.container {
+    height: calc(100% - 60px);
+    width: 100%;
+    background-color: $background-grey;
+}

@@ -1,0 +1,18 @@
+<div class="nav">
+  <span class="title"> {{ STRINGS.TITLE }} </span>
+  <div class="features">
+    <div class="score">
+      <span> + 4849238429 </span>
+    </div>
+    <div class="notifications">
+      <i class="material-icons"> notifications_none </i>
+    </div>
+    <div #account class="account" (click)="accountSetDropdown(true)">
+      <i class="material-icons"> person_outline </i>
+      <div class="dropdown-content" [ngClass]="{'show': accountShowDropdown }">
+        <div class="button" (click)="account()"> Account </div>
+        <div class="button" (click)="logout()"> Logout </div>
+      </div>
+    </div>
+  </div>
+</div>

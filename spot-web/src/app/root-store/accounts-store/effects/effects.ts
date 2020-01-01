@@ -49,7 +49,7 @@ export class AccountsStoreEffects {
     ofType<featureActions.RegisterFailureAction>(
       featureActions.ActionTypes.REGISTER_FAILURE
     ),
-    tap( (action: featureActions.RegisterFailureAction) => {
+    tap((action: featureActions.RegisterFailureAction) => {
       this.authenticationService.failureMessage(action.error);
     })
   );
@@ -76,7 +76,7 @@ export class AccountsStoreEffects {
     ofType<featureActions.LoginSuccessAction>(
       featureActions.ActionTypes.LOGIN_SUCCESS
     ),
-    tap( loginResponse => {
+    tap(loginResponse => {
       this.authenticationService.loginAccountSuccess(loginResponse);
     })
   );
@@ -86,7 +86,7 @@ export class AccountsStoreEffects {
     ofType<featureActions.LoginFailureAction>(
       featureActions.ActionTypes.LOGIN_FAILURE
     ),
-    tap( (action: featureActions.LoginFailureAction) => {
+    tap((action: featureActions.LoginFailureAction) => {
       this.authenticationService.failureMessage(action.error);
     })
   );
@@ -96,7 +96,7 @@ export class AccountsStoreEffects {
     ofType<featureActions.LogoutRequestAction>(
       featureActions.ActionTypes.LOGOUT_REQUEST
     ),
-    tap( (logoutRequest) => {
+    tap((logoutRequest: featureActions.LogoutRequestAction) => {
       this.authenticationService.logoutAccountSuccess();
     })
   );
