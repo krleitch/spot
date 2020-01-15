@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
-import { LikePostRequest, DislikePostRequest } from '@models/posts';
+// import { LikePostRequest, DislikePostRequest } from '@models/posts';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -53,24 +53,24 @@ export class PostComponent implements OnInit {
     }
   }
 
-  like() {
-    const request: LikePostRequest = {
-      id: this.post.id
-    };
-    this.store$.dispatch(
-      new PostsStoreActions.LikeRequestAction(request)
-    );
+  // like() {
+  //   const request: LikePostRequest = {
+  //     id: this.post.id
+  //   };
+  //   this.store$.dispatch(
+  //     new PostsStoreActions.LikeRequestAction(request)
+  //   );
 
-  }
+  // }
 
-  dislike() {
-    const request: DislikePostRequest = {
-      id: this.post.id
-    };
-    this.store$.dispatch(
-      new PostsStoreActions.DislikeRequestAction(request)
-    );
-  }
+  // dislike() {
+  //   const request: DislikePostRequest = {
+  //     id: this.post.id
+  //   };
+  //   this.store$.dispatch(
+  //     new PostsStoreActions.DislikeRequestAction(request)
+  //   );
+  // }
 
   setExpanded(value: boolean) {
     this.expanded = value;

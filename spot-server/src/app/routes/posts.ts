@@ -37,6 +37,7 @@ router.post('/', function (req: any, res: any) {
     posts.addPost(content, user.id).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
+        console.log(err);
         res.sendStatus(500);
     })
 });

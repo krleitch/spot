@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS reply_to;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS posts_rating;
 
 CREATE TABLE accounts (
     id VARCHAR(36) NOT NULL,
@@ -56,5 +57,5 @@ CREATE TABLE posts_rating (
     rating INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
-    FOREIGN KEY (account_id) REFERENCES accounts (id),
+    FOREIGN KEY (account_id) REFERENCES accounts (id)
 );

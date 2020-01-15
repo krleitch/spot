@@ -16,7 +16,7 @@ function getPostById(id: string): Promise<any> {
 }
 
 function addPost(content: string, user: string) {
-    var sql = 'INSERT INTO Posts (id, creation_date, creator, longitude, latitude, content, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    var sql = 'INSERT INTO Posts (id, creation_date, account_id, longitude, latitude, content, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     var values = [uuid.v4(), new Date(), user, 43.1233, 45.2323, content, 0, 0];
     return db.query(sql, values);
 }
