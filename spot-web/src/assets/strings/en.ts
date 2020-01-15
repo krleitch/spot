@@ -11,7 +11,25 @@ export const STRINGS = {
 
             TITLE: 'Spot'
 
+        },
+
+        CREATE: {
+
+            CREATE_PLACEHOLDER: 'Spot something?',
+            SUBMIT: 'Submit'
+
+        },
+
+        POST: {
+
+            SEE_MORE: 'See more',
+            SEE_LESS: 'See less',
+
+            CURRENT_TIME: 'Now'
+
         }
+
+
 
     },
 

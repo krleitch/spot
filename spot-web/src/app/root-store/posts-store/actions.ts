@@ -1,5 +1,7 @@
 import { Action } from '@ngrx/store';
 
+import { AddPostRequest } from '@models/posts';
+
 export enum ActionTypes {
   LIKE_REQUEST = '[Posts] Like Request',
   DISLIKE_REQUEST = '[Posts] Dislike Request',
@@ -40,12 +42,12 @@ export class DeleteSuccessAction implements Action {
 
 export class AddRequestAction implements Action {
   readonly type = ActionTypes.ADD_REQUEST;
-  constructor(public request: any) {}
+  constructor(public request: AddPostRequest) {}
 }
 
 export class AddFailureAction implements Action {
   readonly type = ActionTypes.ADD_FAILURE;
-  constructor(public payload: { error: string }) {}
+  constructor(public error: string) {}
 }
 
 export class AddSuccessAction implements Action {
@@ -58,7 +60,7 @@ export class LoadRequestAction implements Action {
 
 export class LoadFailureAction implements Action {
   readonly type = ActionTypes.LOAD_FAILURE;
-  constructor(public payload: { error: string }) {}
+  constructor(public error: string) {}
 }
 
 export class LoadSuccessAction implements Action {

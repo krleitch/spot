@@ -1,0 +1,84 @@
+@import '../../../styles/colors';
+
+.container {
+    display: flex;
+    background-color: white;
+    padding: 12px 12px;
+    margin-bottom: 10px;
+}
+
+.left-bar {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 30px;
+    margin-right: 5px;
+}
+
+.vote {
+    cursor: pointer;
+}
+
+.time {
+    font-size: 12px;
+    color: $subtle-grey;
+}
+
+.content-container {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.content {
+    font-size: 14px;
+    line-height: 1.2em;
+    overflow: hidden;
+}
+
+.fade {
+    position: relative;
+    height: 3.6em; /* exactly three lines */
+}
+
+.fade:after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 1.2em;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+}
+
+// Click see more
+.content-expanded {
+    min-height: 6em;
+    height: auto;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+}
+
+.comment-number {
+    flex: 1;
+    text-align: left;
+}
+
+.expand {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+        color: $button-highlight;
+    }
+}
+
+.share {
+    flex: 1;
+    text-align: right;
+}

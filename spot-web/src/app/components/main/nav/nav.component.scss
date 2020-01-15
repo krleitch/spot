@@ -22,8 +22,16 @@
 }
 
 .score {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 14px;
     margin-right: 10px;
+}
+
+.hot {
+    color: $error-red;
+    margin-right: 3px;
 }
 
 .notifications {

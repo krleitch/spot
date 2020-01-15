@@ -1,4 +1,11 @@
 <spot-main-nav></spot-main-nav>
 <div class="container">
-  <spot-create></spot-create>
+  <div class="content">
+      <spot-create></spot-create>
+      <div class="posts">
+        <div *ngFor="let post of posts$ | async">
+            <spot-post [post]="post"></spot-post>
+        </div>
+      </div>
+  </div>
 </div>

@@ -1,3 +1,9 @@
-<div class="test">
-
+<div class="container">
+  <div class="editor">
+      <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" spellcheck="false"></div>
+  </div>
+  <div class="option-bar">
+    <i class="material-icons photo"> insert_photo </i>
+    <span class="submit" (click)="submit()"> {{ STRINGS.SUBMIT }} </span>
+  </div>
 </div>

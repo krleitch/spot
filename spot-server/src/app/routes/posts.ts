@@ -30,8 +30,11 @@ router.get('/:postId', function (req: any, res: any) {
 
 // Add a post
 router.post('/', function (req: any, res: any) {
-    const { Spot, Content } = req.body;
-    posts.addPost(Spot, Content).then((rows: any) => {
+
+    const { content } = req.body;
+    const user = req.user;
+
+    posts.addPost(content, user.id).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
         res.sendStatus(500);

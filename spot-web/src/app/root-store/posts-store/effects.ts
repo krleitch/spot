@@ -66,13 +66,13 @@ export class PostsStoreEffects {
     ofType<featureActions.AddRequestAction>(
       featureActions.ActionTypes.ADD_REQUEST
     ),
-    switchMap(post =>
+    switchMap((post: featureActions.AddRequestAction) =>
       this.postsService
         .addPost(post.request)
         .pipe(
           map(response => new featureActions.LoadRequestAction()),
           catchError(error =>
-            observableOf(new featureActions.AddFailureAction({ error }))
+            observableOf(new featureActions.AddFailureAction(error))
           )
         )
     )
@@ -94,7 +94,7 @@ export class PostsStoreEffects {
               })
           ),
           catchError(error =>
-            observableOf(new featureActions.LoadFailureAction({ error }))
+            observableOf(new featureActions.LoadFailureAction(error))
           )
         )
     )

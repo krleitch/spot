@@ -22,7 +22,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       return {
         ...state,
         isLoading: false,
-        error: action.payload.error
+        error: action.error
       };
     }
     default: {

@@ -1,7 +1,28 @@
 @import '../../../styles/colors';
 
 .container {
-    height: calc(100% - 60px);
+    display: flex;
+    justify-content: center;
+    min-height: calc(100% - 60px);
     width: 100%;
     background-color: $background-grey;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    height: 100%;
+    width: 60%;
+    padding-top: 20px;
+}
+
+spot-create {
+    width: 100%;
+    height: auto;
+}
+
+.posts {
+    margin-top: 10px;
+    width: 100%;
 }

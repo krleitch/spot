@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+import { STRINGS } from '@assets/strings/en';
+import { AddPostRequest } from '@models/posts';
+import { RootStoreState } from '@store';
+import { PostsStoreActions } from '@store/posts-store';
 
 @Component({
   selector: 'spot-create',
@@ -7,9 +13,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateComponent implements OnInit {
 
-  constructor() { }
+  STRINGS = STRINGS.MAIN.CREATE;
+
+  constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
+  }
+
+  submit() {
+    const contenteditable = document.querySelector('[contenteditable]');
+    const content = contenteditable.textContent;
+
+    const post: AddPostRequest = {
+      content: content,
+    };
+
+    this.store$.dispatch(
+      new PostsStoreActions.AddRequestAction(post)
+    );
   }
 
 }

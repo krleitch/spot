@@ -23,7 +23,7 @@ export class PostComponent implements OnInit {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  offClickHandler(event:any) {
+  offClickHandler(event: any) {
     if (!this.dropdown.nativeElement.contains(event.target)) {
       this.showDropdown(false);
     }
@@ -39,7 +39,11 @@ export class PostComponent implements OnInit {
     const timeDiff = curTime.getTime() - postTime.getTime();
     if (timeDiff < 60000) {
       const secDiff = Math.round(timeDiff/1000);
-      this.timeMessage = secDiff + " second" + (secDiff == 1 ? "" : "s") +  " ago"
+      if (secDiff === 0) {
+        this.timeMessage = 'now';
+      } else {
+        this.timeMessage = secDiff + " second" + (secDiff == 1 ? "" : "s") +  " ago"
+      }
     } else if (timeDiff < 3600000) {
       const minDiff = Math.round(timeDiff/60000);
       this.timeMessage = minDiff + " minute"+ (minDiff == 1 ? "" : "s") + " ago";

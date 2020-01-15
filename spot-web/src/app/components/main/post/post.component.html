@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="left-bar">
+    <i class="material-icons vote" (click)="like()"> keyboard_arrow_up </i>
+    <div class="points"> {{ post.likes - post.dislikes }} </div>
+    <i class="material-icons vote" (click)="dislike()"> keyboard_arrow_down </i>
+    <div class="time">
+        {{ timeMessage }}
+    </div>
+  </div>
+  <div class="content-container">
+    <div class="content" [ngClass]="{'content-expanded': expanded, 'fade': !expanded }">
+      {{ post.content }}
+    </div>
+    <div class="options">
+      <span class="comment-number"> 86 comments </span>
+      <div *ngIf="!expanded; else notExpanded">
+          <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+      </div>
+      <ng-template #notExpanded>
+          <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+      </ng-template>
+      <i class="material-icons share"> share </i>
+    </div>
+  </div>
+</div>
