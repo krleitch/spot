@@ -10,5 +10,24 @@ export interface Post {
 }
 
 export interface AddPostRequest {
-    content: string
+    content: string;
+}
+
+export interface LikePostRequest {
+    postId: string;
+}
+
+export interface DislikePostRequest {
+    postId: string;
+}
+
+export interface PostRatingRequest {
+    postId: string;
+}
+
+export interface PostRatingResponse {
+    post_id: string;
+    likes: number;
+    dislikes: number;
+    rated: boolean;
 }

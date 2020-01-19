@@ -6,6 +6,8 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { PostsService } from '../../services/posts.service';
 import * as featureActions from './actions';
 
+import { PostRatingResponse } from '@models/posts';
+
 @Injectable()
 export class PostsStoreEffects {
   constructor(private postsService: PostsService, private actions$: Actions) { }
@@ -25,7 +27,7 @@ export class PostsStoreEffects {
           )
         )
     )
-  )
+  );
 
   @Effect()
   likePostEffect$: Observable<Action> = this.actions$.pipe(
@@ -42,7 +44,7 @@ export class PostsStoreEffects {
           )
         )
     )
-  )
+  );
 
   @Effect()
   deletePostEffect$: Observable<Action> = this.actions$.pipe(
@@ -59,7 +61,7 @@ export class PostsStoreEffects {
           )
         )
     )
-  )
+  );
 
   @Effect()
   addPostEffect$: Observable<Action> = this.actions$.pipe(
@@ -76,7 +78,24 @@ export class PostsStoreEffects {
           )
         )
     )
-  )
+  );
+
+  @Effect()
+  getRatingEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.RatingRequestAction>(
+      featureActions.ActionTypes.RATING_REQUEST
+    ),
+    switchMap((action: featureActions.RatingRequestAction) =>
+      this.postsService
+        .getPostRating(action.request)
+        .pipe(
+          map( (response: PostRatingResponse) => new featureActions.RatingSuccessAction(response)),
+          catchError(error =>
+            observableOf(new featureActions.RatingFailureAction(error))
+          )
+        )
+    )
+  );
 
   @Effect()
   loadRequestEffect$: Observable<Action> = this.actions$.pipe(

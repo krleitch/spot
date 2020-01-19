@@ -3,9 +3,10 @@ import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
-// import { LikePostRequest, DislikePostRequest } from '@models/posts';
+import { LikePostRequest, DislikePostRequest, PostRatingRequest } from '@models/posts';
 
 import { STRINGS } from '@assets/strings/en';
+import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view/util';
 
 @Component({
   selector: 'spot-post',
@@ -14,12 +15,14 @@ import { STRINGS } from '@assets/strings/en';
 })
 export class PostComponent implements OnInit {
 
+  @Input() post: any;
+
   STRINGS = STRINGS.MAIN.POST;
 
+  MAX_POST_LENGTH = 300;
   expanded = false;
-  timeMessage: string;
 
-  @Input() post: any;
+  timeMessage: string;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
@@ -53,24 +56,35 @@ export class PostComponent implements OnInit {
     }
   }
 
-  // like() {
-  //   const request: LikePostRequest = {
-  //     id: this.post.id
-  //   };
-  //   this.store$.dispatch(
-  //     new PostsStoreActions.LikeRequestAction(request)
-  //   );
+  getContent(): string {
+    if (this.expandable() && !this.expanded) {
+      return this.post.content.substring(0, this.MAX_POST_LENGTH) + ' ...';
+    } else {
+      return this.post.content;
+    }
+  }
 
-  // }
+  expandable(): boolean {
+    return this.post.content.length > this.MAX_POST_LENGTH;
+  }
 
-  // dislike() {
-  //   const request: DislikePostRequest = {
-  //     id: this.post.id
-  //   };
-  //   this.store$.dispatch(
-  //     new PostsStoreActions.DislikeRequestAction(request)
-  //   );
-  // }
+  like() {
+    const request: LikePostRequest = {
+      postId: this.post.id
+    };
+    this.store$.dispatch(
+      new PostsStoreActions.LikeRequestAction(request)
+    );
+  }
+
+  dislike() {
+    const request: DislikePostRequest = {
+      postId: this.post.id
+    };
+    this.store$.dispatch(
+      new PostsStoreActions.DislikeRequestAction(request)
+    );
+  }
 
   setExpanded(value: boolean) {
     this.expanded = value;

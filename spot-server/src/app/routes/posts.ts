@@ -11,10 +11,13 @@ router.use(function timeLog (req: any, res: any, next: any) {
 
 // Get all posts
 router.get('/', function (req: any, res: any) {
-    posts.getPosts().then((rows: any) => {
+    const accountId = req.user.id;
+    posts.getPosts(accountId).then((rows: []) => {
+        console.log(rows);
         res.status(200).json(rows);
     }, (err: any) => {
-        res.sendStatus(500);
+        console.log(err);
+        res.status(500).send('Error getting posts');
     })
 });
 
@@ -24,7 +27,18 @@ router.get('/:postId', function (req: any, res: any) {
     posts.getPostById(id).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
-        res.sendStatus(500);
+        res.status(500).send('Error getting post');
+    })
+});
+
+// Get a posts rating
+router.get('/:postId/rating', function (req: any, res: any) {
+    const post_id = req.params.postId;
+    const account_id = req.user.id;
+    posts.getRatingForPost(post_id, account_id).then((rows: any) => {
+        res.status(200).json(rows[0]);
+    }, (err: any) => {
+        res.status(500).send('Error rating post');
     })
 });
 
@@ -37,28 +51,29 @@ router.post('/', function (req: any, res: any) {
     posts.addPost(content, user.id).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
-        console.log(err);
-        res.sendStatus(500);
+        res.status(500).send('Error adding post');
     })
 });
 
 // Like a post
 router.put('/:postId/like', function(req: any, res: any) {
-    const id = req.params.postId;
-    posts.likePost(id).then((rows: any) => {
+    const postId = req.params.postId;
+    const accountId = req.user.id;
+    posts.likePost(postId, accountId).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
-        res.sendStatus(500);
+        res.status(500).send('Error liking post');
     })
 })
 
 // Dislike a post
 router.put('/:postId/dislike', function(req: any, res: any) {
-    const id = req.params.postId;
-    posts.dislikePost(id).then((rows: any) => {
+    const postId = req.params.postId;
+    const accountId = req.user.id;
+    posts.dislikePost(postId, accountId).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
-        res.sendStatus(500);
+        res.status(500).send('Error disliking post');
     })
 })
 
@@ -69,10 +84,10 @@ router.delete('/:postId', function(req: any, res: any) {
         posts.deletePost(id).then((rows: any) => {
             res.status(200).json(rows);
         }, (err: any) => {
-            res.sendStatus(500);
+            res.status(500).send('Error deleting post');
         })
     }, (err: any) => {
-        res.sendStatus(500);
+        res.status(500).send('Error deleting post');
     });
 
 })
