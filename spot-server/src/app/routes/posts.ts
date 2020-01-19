@@ -5,7 +5,6 @@ const comments = require('../db/comments');
 const posts = require('../db/posts');
 
 router.use(function timeLog (req: any, res: any, next: any) {
-    // console.log('[POSTS] ', Date.now());
     next();
 });
 
@@ -13,7 +12,6 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.get('/', function (req: any, res: any) {
     const accountId = req.user.id;
     posts.getPosts(accountId).then((rows: []) => {
-        console.log(rows);
         res.status(200).json(rows);
     }, (err: any) => {
         console.log(err);
@@ -44,10 +42,8 @@ router.get('/:postId/rating', function (req: any, res: any) {
 
 // Add a post
 router.post('/', function (req: any, res: any) {
-
     const { content } = req.body;
     const user = req.user;
-
     posts.addPost(content, user.id).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
@@ -60,7 +56,7 @@ router.put('/:postId/like', function(req: any, res: any) {
     const postId = req.params.postId;
     const accountId = req.user.id;
     posts.likePost(postId, accountId).then((rows: any) => {
-        res.status(200).json(rows[0]);
+        res.status(200).json({ postId: postId });
     }, (err: any) => {
         res.status(500).send('Error liking post');
     })
@@ -71,7 +67,7 @@ router.put('/:postId/dislike', function(req: any, res: any) {
     const postId = req.params.postId;
     const accountId = req.user.id;
     posts.dislikePost(postId, accountId).then((rows: any) => {
-        res.status(200).json(rows[0]);
+        res.status(200).json({ postId: postId });
     }, (err: any) => {
         res.status(500).send('Error disliking post');
     })

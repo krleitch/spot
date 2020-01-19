@@ -11,7 +11,7 @@
     <div #account class="account" (click)="accountSetDropdown(true)">
       <i class="material-icons"> person_outline </i>
       <div class="dropdown-content" [ngClass]="{'show': accountShowDropdown }">
-        <div class="button" (click)="account()"> Account </div>
+        <div class="button" (click)="navigateAccount()"> Account </div>
         <div class="button" (click)="logout()"> Logout </div>
       </div>
     </div>

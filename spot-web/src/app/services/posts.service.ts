@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 import { PostRatingResponse, PostRatingRequest } from '@models/posts';
+import { AlertService } from '@services/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class PostsService {
 
   private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private alertService: AlertService) { }
 
   getPosts(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/posts`)
@@ -32,12 +33,16 @@ export class PostsService {
     return this.http.delete<any>(`${this.baseUrl}/posts/${post.Id}`);
   }
 
-  likePost(post: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/posts/${post.postId}/like`, post);
+  likePost(request: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/posts/${request.postId}/like`, request);
   }
 
-  dislikePost(post: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/posts/${post.postId}/Dislike`, post);
+  dislikePost(request: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/posts/${request.postId}/Dislike`, request);
+  }
+
+  failureMessage(message: string) {
+    this.alertService.error(message);
   }
 
 }

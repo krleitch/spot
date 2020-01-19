@@ -2,28 +2,38 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PostsService } from '../../services/posts.service';
 import * as featureActions from './actions';
 
-import { PostRatingResponse } from '@models/posts';
+import { DislikePostSuccess, LikePostSuccess } from '@models/posts';
 
 @Injectable()
 export class PostsStoreEffects {
   constructor(private postsService: PostsService, private actions$: Actions) { }
+
+  @Effect({dispatch: false})
+  GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.GenericFailureAction>(
+      featureActions.ActionTypes.GENERIC_FAILURE
+    ),
+    tap((action: featureActions.GenericFailureAction) => {
+      this.postsService.failureMessage(action.error);
+    })
+  );
 
   @Effect()
   dislikePostEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.DislikeRequestAction>(
       featureActions.ActionTypes.DISLIKE_REQUEST
     ),
-    switchMap(post =>
+    switchMap(action =>
       this.postsService
-        .dislikePost(post.request)
+        .dislikePost(action.request)
         .pipe(
-          map(response => new featureActions.LoadRequestAction()),
-          catchError(error =>
-            observableOf(new featureActions.DeleteFailureAction({ error }))
+          map( (response: DislikePostSuccess) => new featureActions.DislikeSuccessAction(response)),
+          catchError( errorResponse =>
+            observableOf(new featureActions.GenericFailureAction(errorResponse.error))
           )
         )
     )
@@ -34,13 +44,13 @@ export class PostsStoreEffects {
     ofType<featureActions.LikeRequestAction>(
       featureActions.ActionTypes.LIKE_REQUEST
     ),
-    switchMap(post =>
+    switchMap(action =>
       this.postsService
-        .likePost(post.request)
+        .likePost(action.request)
         .pipe(
-          map(response => new featureActions.LoadRequestAction()),
-          catchError(error =>
-            observableOf(new featureActions.DeleteFailureAction({ error }))
+          map( (response: LikePostSuccess) => new featureActions.LikeSuccessAction(response)),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )
@@ -89,7 +99,7 @@ export class PostsStoreEffects {
       this.postsService
         .getPostRating(action.request)
         .pipe(
-          map( (response: PostRatingResponse) => new featureActions.RatingSuccessAction(response)),
+          map(response => new featureActions.RatingSuccessAction(response)),
           catchError(error =>
             observableOf(new featureActions.RatingFailureAction(error))
           )

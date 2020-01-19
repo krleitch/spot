@@ -3,10 +3,9 @@ import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
-import { LikePostRequest, DislikePostRequest, PostRatingRequest } from '@models/posts';
+import { LikePostRequest, DislikePostRequest, PostRatingRequest, Post } from '@models/posts';
 
 import { STRINGS } from '@assets/strings/en';
-import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view/util';
 
 @Component({
   selector: 'spot-post',
@@ -15,7 +14,7 @@ import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view
 })
 export class PostComponent implements OnInit {
 
-  @Input() post: any;
+  @Input() post: Post;
 
   STRINGS = STRINGS.MAIN.POST;
 
@@ -69,21 +68,25 @@ export class PostComponent implements OnInit {
   }
 
   like() {
-    const request: LikePostRequest = {
-      postId: this.post.id
-    };
-    this.store$.dispatch(
-      new PostsStoreActions.LikeRequestAction(request)
-    );
+    if (this.post.rated !== 1) {
+      const request: LikePostRequest = {
+        postId: this.post.id
+      };
+      this.store$.dispatch(
+        new PostsStoreActions.LikeRequestAction(request)
+      );
+    }
   }
 
   dislike() {
-    const request: DislikePostRequest = {
-      postId: this.post.id
-    };
-    this.store$.dispatch(
-      new PostsStoreActions.DislikeRequestAction(request)
-    );
+    if (this.post.rated !== 0) {
+      const request: DislikePostRequest = {
+        postId: this.post.id
+      };
+      this.store$.dispatch(
+        new PostsStoreActions.DislikeRequestAction(request)
+      );
+    }
   }
 
   setExpanded(value: boolean) {

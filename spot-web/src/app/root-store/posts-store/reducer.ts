@@ -25,6 +25,34 @@ export function featureReducer(state = initialState, action: Actions): State {
         error: action.error
       };
     }
+    case ActionTypes.LIKE_SUCCESS: {
+      state.posts.forEach( (post , i) => {
+        if (post.id === action.response.postId) {
+          post.likes += 1;
+          if (post.rated === 0) {
+            post.dislikes -= 1;
+          }
+          post.rated = 1;
+        }
+      });
+      return {
+        ...state
+      };
+    }
+    case ActionTypes.DISLIKE_SUCCESS: {
+      state.posts.forEach( (post , i) => {
+        if (post.id === action.response.postId) {
+          post.dislikes += 1;
+          if (post.rated === 1) {
+            post.likes -= 1;
+          }
+          post.rated = 0;
+        }
+      });
+      return {
+        ...state
+      };
+    }
     default: {
       return state;
     }

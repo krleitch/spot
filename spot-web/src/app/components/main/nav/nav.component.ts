@@ -44,7 +44,7 @@ export class NavComponent implements OnInit {
     );
   }
 
-  account() {
+  navigateAccount() {
     this.router.navigateByUrl('/account');
   }
 

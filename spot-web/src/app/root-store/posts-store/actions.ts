@@ -1,10 +1,13 @@
 import { Action } from '@ngrx/store';
 
-import { AddPostRequest, LikePostRequest, DislikePostRequest, PostRatingRequest, PostRatingResponse } from '@models/posts';
+import { AddPostRequest, LikePostRequest, DislikePostRequest, PostRatingRequest, PostRatingResponse,
+          LikePostSuccess, DislikePostSuccess } from '@models/posts';
 
 export enum ActionTypes {
   LIKE_REQUEST = '[Posts] Like Request',
+  LIKE_SUCCESS = '[Posts] Like Success',
   DISLIKE_REQUEST = '[Posts] Dislike Request',
+  DISLIKE_SUCCESS = '[Posts] Dislike Success',
   DELETE_REQUEST = '[Posts] Delete Request',
   DELETE_FAILURE = '[Posts] Delete Request',
   DELETE_SUCCESS = '[Posts] Delete Request',
@@ -16,7 +19,13 @@ export enum ActionTypes {
   LOAD_SUCCESS = '[Posts] Load Success',
   RATING_REQUEST = '[Posts] Rating Request',
   RATING_FAILURE = '[Posts] Rating Failure',
-  RATING_SUCCESS = '[Posts] Rating Success'
+  RATING_SUCCESS = '[Posts] Rating Success',
+  GENERIC_FAILURE = '[Posts] Generic Failure'
+}
+
+export class GenericFailureAction implements Action {
+  readonly type = ActionTypes.LIKE_REQUEST;
+  constructor(public error: string) {}
 }
 
 export class LikeRequestAction implements Action {
@@ -24,9 +33,19 @@ export class LikeRequestAction implements Action {
   constructor(public request: LikePostRequest) {}
 }
 
+export class LikeSuccessAction implements Action {
+  readonly type = ActionTypes.LIKE_SUCCESS;
+  constructor(public response: LikePostSuccess) {}
+}
+
 export class DislikeRequestAction implements Action {
   readonly type = ActionTypes.DISLIKE_REQUEST;
   constructor(public request: DislikePostRequest) {}
+}
+
+export class DislikeSuccessAction implements Action {
+  readonly type = ActionTypes.DISLIKE_SUCCESS;
+  constructor(public response: DislikePostSuccess) {}
 }
 
 export class DeleteRequestAction implements Action {
@@ -89,5 +108,6 @@ export class LoadSuccessAction implements Action {
 export type Actions = LoadRequestAction | LoadFailureAction | LoadSuccessAction |
                       AddRequestAction | AddFailureAction | AddSuccessAction |
                       DeleteRequestAction | DeleteFailureAction | DeleteSuccessAction |
-                      LikeRequestAction | DislikeRequestAction | RatingRequestAction |
+                      LikeRequestAction | LikeSuccessAction | DislikeRequestAction |
+                      DislikeSuccessAction | RatingRequestAction | GenericFailureAction |
                       RatingFailureAction | RatingSuccessAction;
