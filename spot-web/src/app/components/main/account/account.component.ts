@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { select, Store } from '@ngrx/store';
 import { ActionTypes, LoginSuccessAction, LoginFailureAction } from '@src/app/root-store/accounts-store/actions/actions';
-import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '../../root-store';
+import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '../../../root-store';
 import { Observable } from 'rxjs';
 
 @Component({

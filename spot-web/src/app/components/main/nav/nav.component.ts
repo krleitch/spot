@@ -48,4 +48,8 @@ export class NavComponent implements OnInit {
     this.router.navigateByUrl('/account');
   }
 
+  navigateHome() {
+    this.router.navigateByUrl('/home');
+  }
+
 }

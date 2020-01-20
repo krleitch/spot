@@ -1,14 +1,23 @@
-@import '../../styles/colors';
+@import '../../../styles/colors';
 
 .container {
-    padding-left: 15%;
-    padding-right: 15%;
-    padding-top: 50px;
+    min-height: calc(100% - 60px);
+    width: 100%;
+    margin-top: 60px;
     text-align: center;
+    background-color: $background-grey;
+}
+
+spot-main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
 }
 
 .account-info {
-    text-align: center;  
+    text-align: center;
 }
 
 .title {

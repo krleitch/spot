@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { RootStoreModule } from './root-store';
 
 import { NavigationComponent } from './components/navigation/navigation.component';
-import { AccountComponent } from './components/account/account.component';
 import { CommentsComponent } from './components/comments/comments.component';
 import { EditorComponent } from './components/editor/editor.component';
 
@@ -23,13 +22,13 @@ import { NavComponent as MainNavComponent } from './components/main/nav/nav.comp
 import { HomeComponent } from './components/main/home/home.component';
 import { CreateComponent } from './components/main/create/create.component';
 import { PostComponent } from './components/main/post/post.component';
+import { AccountComponent } from './components/main/account/account.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
-    AccountComponent,
     CommentsComponent,
     EditorComponent,
     // PRE-AUTH
@@ -43,7 +42,8 @@ import { PostComponent } from './components/main/post/post.component';
     MainNavComponent,
     HomeComponent,
     CreateComponent,
-    PostComponent
+    PostComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,

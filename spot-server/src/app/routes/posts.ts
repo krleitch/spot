@@ -75,10 +75,10 @@ router.put('/:postId/dislike', function(req: any, res: any) {
 
 // Delete a post
 router.delete('/:postId', function(req: any, res: any) {
-    const id = req.params.postId;
-    comments.deleteCommentByPostId(id).then((rows: any) => {
-        posts.deletePost(id).then((rows: any) => {
-            res.status(200).json(rows);
+    const postId = req.params.postId;
+    comments.deleteCommentByPostId(postId).then((rows: any) => {
+        posts.deletePost(postId).then((rows: any) => {
+            res.status(200).json({ postId: postId });
         }, (err: any) => {
             res.status(500).send('Error deleting post');
         })
