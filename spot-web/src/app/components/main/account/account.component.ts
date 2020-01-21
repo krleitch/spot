@@ -18,16 +18,12 @@ export class AccountComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService,
     private store$: Store<RootStoreState.State>) { }
 
-  ngOnInit() {
-    // this.user$ = this.store$.pipe(
-    //   select(AccountsStoreSelectors.selectMyFeatureUser)
-    // );
-  }
+  ngOnInit() {}
 
   deleteUser() {
     this.store$.dispatch(
       new AccountsActions.DeleteRequestAction()
-  );
+    );
   }
 
 }

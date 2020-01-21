@@ -7,7 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 
 import { RootStoreModule } from './root-store';
 import { NavigationComponent } from './components/navigation/navigation.component';
-import { AccountComponent } from './components/account/account.component';
+import { AccountComponent } from './components/main/account/account.component';
 import { PostComponent } from './components/post/post.component';
 import { CommentsComponent } from './components/comments/comments.component';
 import { CreateComponent } from './components/main/create/create.component';

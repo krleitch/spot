@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
@@ -15,6 +15,7 @@ import { STRINGS } from '@assets/strings/en';
 export class PostComponent implements OnInit {
 
   @Input() post: Post;
+  @ViewChild('dropdownexpand') dropdown;
 
   STRINGS = STRINGS.MAIN.POST;
 
@@ -22,11 +23,20 @@ export class PostComponent implements OnInit {
   expanded = false;
 
   timeMessage: string;
+  dropEnabled = false;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>) {
+    document.addEventListener('click', this.offClickHandler.bind(this));
+  }
 
   ngOnInit() {
     this.getTime(this.post.creation_date);
+  }
+
+  offClickHandler(event: any) {
+    if (!this.dropdown.nativeElement.contains(event.target)) {
+      this.showDropdown(false);
+    }
   }
 
   getTime(date) {
@@ -65,6 +75,20 @@ export class PostComponent implements OnInit {
 
   expandable(): boolean {
     return this.post.content.length > this.MAX_POST_LENGTH;
+  }
+
+
+  showDropdown(value) {
+    this.dropEnabled = value;
+  }
+
+  deletePost() {
+    var request: any = {
+      Id: this.post.id
+    };
+    this.store$.dispatch(
+      new PostsStoreActions.DeleteRequestAction(request)
+    )
   }
 
   like() {

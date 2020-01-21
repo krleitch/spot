@@ -24,4 +24,13 @@
       <i class="material-icons share"> share </i>
     </div>
   </div>
+  <div class="right-bar">
+    <div #dropdownexpand class="dropdown align-bottom" (click)="showDropdown(true)">
+      <i class="material-icons icon-size"> more_horiz </i>
+      <div  class="dropdown-content" [ngClass]="{'show': dropEnabled }">
+        <div class="button" (click)="deletePost()">Delete</div>
+        <div class="button">Report</div>
+      </div>
+    </div>
+  </div>
 </div>
