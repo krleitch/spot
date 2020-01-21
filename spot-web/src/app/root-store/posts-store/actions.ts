@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
-import { AddPostRequest, LikePostRequest, DislikePostRequest, PostRatingRequest, PostRatingResponse,
-          LikePostSuccess, DislikePostSuccess } from '@models/posts';
+import { AddPostRequest, LikePostRequest, DislikePostRequest, LikePostSuccess, DislikePostSuccess,
+          DeletePostRequest, DeletePostSuccess } from '@models/posts';
 
 export enum ActionTypes {
   LIKE_REQUEST = '[Posts] Like Request',
@@ -9,22 +9,18 @@ export enum ActionTypes {
   DISLIKE_REQUEST = '[Posts] Dislike Request',
   DISLIKE_SUCCESS = '[Posts] Dislike Success',
   DELETE_REQUEST = '[Posts] Delete Request',
-  DELETE_FAILURE = '[Posts] Delete Request',
-  DELETE_SUCCESS = '[Posts] Delete Request',
+  DELETE_SUCCESS = '[Posts] Delete Success',
   ADD_REQUEST = '[Posts] Add Request',
   ADD_FAILURE = '[Posts] Add Failure',
   ADD_SUCCESS = '[Posts] Add Success',
   LOAD_REQUEST = '[Posts] Load Request',
   LOAD_FAILURE = '[Posts] Load Failure',
   LOAD_SUCCESS = '[Posts] Load Success',
-  RATING_REQUEST = '[Posts] Rating Request',
-  RATING_FAILURE = '[Posts] Rating Failure',
-  RATING_SUCCESS = '[Posts] Rating Success',
   GENERIC_FAILURE = '[Posts] Generic Failure'
 }
 
 export class GenericFailureAction implements Action {
-  readonly type = ActionTypes.LIKE_REQUEST;
+  readonly type = ActionTypes.GENERIC_FAILURE;
   constructor(public error: string) {}
 }
 
@@ -50,16 +46,12 @@ export class DislikeSuccessAction implements Action {
 
 export class DeleteRequestAction implements Action {
   readonly type = ActionTypes.DELETE_REQUEST;
-  constructor(public request: any) {}
-}
-
-export class DeleteFailureAction implements Action {
-  readonly type = ActionTypes.DELETE_FAILURE;
-  constructor(public payload: { error: string }) {}
+  constructor(public request: DeletePostRequest) {}
 }
 
 export class DeleteSuccessAction implements Action {
   readonly type = ActionTypes.DELETE_SUCCESS;
+  constructor(public response: DeletePostSuccess) {}
 }
 
 export class AddRequestAction implements Action {
@@ -74,21 +66,6 @@ export class AddFailureAction implements Action {
 
 export class AddSuccessAction implements Action {
   readonly type = ActionTypes.ADD_SUCCESS;
-}
-
-export class RatingRequestAction implements Action {
-  readonly type = ActionTypes.RATING_REQUEST;
-  constructor(public request: PostRatingRequest) {}
-}
-
-export class RatingFailureAction implements Action {
-  readonly type = ActionTypes.RATING_FAILURE;
-  constructor(public error: string) {}
-}
-
-export class RatingSuccessAction implements Action {
-  readonly type = ActionTypes.RATING_SUCCESS;
-  constructor(public response: PostRatingResponse) {}
 }
 
 export class LoadRequestAction implements Action {
@@ -107,7 +84,6 @@ export class LoadSuccessAction implements Action {
 
 export type Actions = LoadRequestAction | LoadFailureAction | LoadSuccessAction |
                       AddRequestAction | AddFailureAction | AddSuccessAction |
-                      DeleteRequestAction | DeleteFailureAction | DeleteSuccessAction |
-                      LikeRequestAction | LikeSuccessAction | DislikeRequestAction |
-                      DislikeSuccessAction | RatingRequestAction | GenericFailureAction |
-                      RatingFailureAction | RatingSuccessAction;
+                      DeleteRequestAction  | DeleteSuccessAction | LikeRequestAction |
+                      LikeSuccessAction | DislikeRequestAction | DislikeSuccessAction |
+                      GenericFailureAction;

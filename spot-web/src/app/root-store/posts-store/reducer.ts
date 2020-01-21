@@ -53,6 +53,16 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state
       };
     }
+    case ActionTypes.DELETE_SUCCESS: {
+      state.posts.forEach( (post , i) => {
+        if (post.id === action.response.postId) {
+          state.posts.splice(i, 1);
+        }
+      });
+      return {
+        ...state
+      };
+    }
     default: {
       return state;
     }

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
-import { LikePostRequest, DislikePostRequest, PostRatingRequest, Post } from '@models/posts';
+import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post } from '@models/posts';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -15,7 +15,7 @@ import { STRINGS } from '@assets/strings/en';
 export class PostComponent implements OnInit {
 
   @Input() post: Post;
-  @ViewChild('dropdownexpand') dropdown;
+  @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.POST;
 
@@ -23,7 +23,7 @@ export class PostComponent implements OnInit {
   expanded = false;
 
   timeMessage: string;
-  dropEnabled = false;
+  optionsEnabled = false;
 
   constructor(private store$: Store<RootStoreState.State>) {
     document.addEventListener('click', this.offClickHandler.bind(this));
@@ -33,10 +33,23 @@ export class PostComponent implements OnInit {
     this.getTime(this.post.creation_date);
   }
 
-  offClickHandler(event: any) {
-    if (!this.dropdown.nativeElement.contains(event.target)) {
-      this.showDropdown(false);
+  offClickHandler(event: MouseEvent) {
+    if (!this.options.nativeElement.contains(event.target)) {
+      this.setOptions(false);
     }
+  }
+
+  setOptions(value) {
+    this.optionsEnabled = value;
+  }
+
+  deletePost() {
+    const request: DeletePostRequest = {
+      postId: this.post.id
+    };
+    this.store$.dispatch(
+      new PostsStoreActions.DeleteRequestAction(request)
+    );
   }
 
   getTime(date) {
@@ -75,20 +88,6 @@ export class PostComponent implements OnInit {
 
   expandable(): boolean {
     return this.post.content.length > this.MAX_POST_LENGTH;
-  }
-
-
-  showDropdown(value) {
-    this.dropEnabled = value;
-  }
-
-  deletePost() {
-    var request: any = {
-      Id: this.post.id
-    };
-    this.store$.dispatch(
-      new PostsStoreActions.DeleteRequestAction(request)
-    )
   }
 
   like() {

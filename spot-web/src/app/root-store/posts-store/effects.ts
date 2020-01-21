@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PostsService } from '../../services/posts.service';
 import * as featureActions from './actions';
 
-import { DislikePostSuccess, LikePostSuccess } from '@models/posts';
+import { DislikePostSuccess, LikePostSuccess, DeletePostSuccess } from '@models/posts';
 
 @Injectable()
 export class PostsStoreEffects {
@@ -61,13 +61,13 @@ export class PostsStoreEffects {
     ofType<featureActions.DeleteRequestAction>(
       featureActions.ActionTypes.DELETE_REQUEST
     ),
-    switchMap(post =>
+    switchMap(action =>
       this.postsService
-        .deletePost(post.request)
+        .deletePost(action.request)
         .pipe(
-          map(response => new featureActions.LoadRequestAction()),
-          catchError(error =>
-            observableOf(new featureActions.DeleteFailureAction({ error }))
+          map( (response: DeletePostSuccess) => new featureActions.DeleteSuccessAction(response)),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )
@@ -85,23 +85,6 @@ export class PostsStoreEffects {
           map(response => new featureActions.LoadRequestAction()),
           catchError(error =>
             observableOf(new featureActions.AddFailureAction(error))
-          )
-        )
-    )
-  );
-
-  @Effect()
-  getRatingEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.RatingRequestAction>(
-      featureActions.ActionTypes.RATING_REQUEST
-    ),
-    switchMap((action: featureActions.RatingRequestAction) =>
-      this.postsService
-        .getPostRating(action.request)
-        .pipe(
-          map(response => new featureActions.RatingSuccessAction(response)),
-          catchError(error =>
-            observableOf(new featureActions.RatingFailureAction(error))
           )
         )
     )

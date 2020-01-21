@@ -29,17 +29,6 @@ router.get('/:postId', function (req: any, res: any) {
     })
 });
 
-// Get a posts rating
-router.get('/:postId/rating', function (req: any, res: any) {
-    const post_id = req.params.postId;
-    const account_id = req.user.id;
-    posts.getRatingForPost(post_id, account_id).then((rows: any) => {
-        res.status(200).json(rows[0]);
-    }, (err: any) => {
-        res.status(500).send('Error rating post');
-    })
-});
-
 // Add a post
 router.post('/', function (req: any, res: any) {
     const { content } = req.body;
@@ -76,16 +65,11 @@ router.put('/:postId/dislike', function(req: any, res: any) {
 // Delete a post
 router.delete('/:postId', function(req: any, res: any) {
     const postId = req.params.postId;
-    comments.deleteCommentByPostId(postId).then((rows: any) => {
-        posts.deletePost(postId).then((rows: any) => {
-            res.status(200).json({ postId: postId });
-        }, (err: any) => {
-            res.status(500).send('Error deleting post');
-        })
+    posts.deletePost(postId).then((rows: any) => {
+        res.status(200).json({ postId: postId });
     }, (err: any) => {
         res.status(500).send('Error deleting post');
-    });
-
+    })
 })
 
 export = router;

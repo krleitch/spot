@@ -22,10 +22,16 @@ export const STRINGS = {
 
         POST: {
 
+            // Left bar
+            CURRENT_TIME: 'Now',
+
+            COMMENTS: 'comments',
             SEE_MORE: 'See more',
             SEE_LESS: 'See less',
 
-            CURRENT_TIME: 'Now'
+            // Options
+            DELETE: 'Delete',
+            REPORT: 'Report'
 
         }
 

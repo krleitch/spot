@@ -1,10 +1,10 @@
-export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getRatingForPost }
+export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost }
 
 const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function getPosts(accoutId: string) {
+function getPosts(accoutId: string): Promise<any> {
     var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content,
                 SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
                 SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
@@ -22,37 +22,30 @@ function getPostById(id: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function addPost(content: string, user: string) {
+function addPost(content: string, user: string): Promise<any> {
     var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content) VALUES (?, ?, ?, ?, ?, ?)';
     var values = [uuid.v4(), new Date(), user, 43.1233, 45.2323, content];
     return db.query(sql, values);
 }
 
-function likePost(postId: string, accountId: string) {
+function likePost(postId: string, accountId: string): Promise<any> {
     var sql = 'INSERT INTO posts_rating (id, post_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 1';
     var values = [uuid.v4(), postId, accountId, 1];
     return db.query(sql, values);
 }
 
-function dislikePost(postId: string, accountId: string) {
+function dislikePost(postId: string, accountId: string): Promise<any> {
     var sql = 'INSERT INTO posts_rating (id, post_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 0';
     var values = [uuid.v4(), postId, accountId, 0];
     return db.query(sql, values);
 }
 
-function getRatingForPost(postId: string, accountId: string) {
-    var sql = `SELECT
-        post_id,
-        SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) AS likes, 
-        SUM(CASE WHEN rating = 0 THEN 1 ELSE 0 END) AS dislikes,
-        (CASE WHEN EXISTS ( SELECT 1 FROM posts_rating WHERE post_id = ? AND account_id = ? ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END) AS rated
-        FROM posts_rating WHERE post_id = ?`;
-    var values = [postId, accountId, postId];
-    return db.query(sql, values);
-}
-
-function deletePost(id: string) {
-    var sql = 'DELETE FROM posts WHERE id = ?';
+function deletePost(id: string): Promise<any> {
+    var sql = 'DELETE FROM posts_rating WHERE post_id = ?';
     var values = [id];
-    return db.query(sql, values);
+    return db.query(sql, values).then( (rows: any) => {
+        var sql = 'DELETE FROM posts WHERE id = ?';
+        var values = [id];
+        return db.query(sql, values);
+    });
 }

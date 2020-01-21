@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
-import { PostRatingResponse, PostRatingRequest } from '@models/posts';
+import { DeletePostRequest } from '@models/posts';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -21,16 +21,12 @@ export class PostsService {
     .pipe(map(result => result));
   }
 
-  getPostRating(request: PostRatingRequest): Observable<PostRatingResponse> {
-    return this.http.get<PostRatingResponse>(`${this.baseUrl}/posts/${request.postId}/rating`);
-  }
-
   addPost(post: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/posts`, post);
   }
 
-  deletePost(post: any): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/posts/${post.Id}`);
+  deletePost(request: DeletePostRequest): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/posts/${request.postId}`);
   }
 
   likePost(request: any): Observable<any> {
