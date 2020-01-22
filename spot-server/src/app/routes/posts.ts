@@ -21,8 +21,9 @@ router.get('/', function (req: any, res: any) {
 
 // Get a single post
 router.get('/:postId', function (req: any, res: any) {
-    const id = req.params.postId;
-    posts.getPostById(id).then((rows: any) => {
+    const postId = req.params.postId;
+    const accountId = req.user.id;
+    posts.getPostById(postId, accountId).then((rows: any) => {
         res.status(200).json(rows[0]);
     }, (err: any) => {
         res.status(500).send('Error getting post');
@@ -32,9 +33,9 @@ router.get('/:postId', function (req: any, res: any) {
 // Add a post
 router.post('/', function (req: any, res: any) {
     const { content } = req.body;
-    const user = req.user;
-    posts.addPost(content, user.id).then((rows: any) => {
-        res.status(200).json(rows[0]);
+    const accountId = req.user.id;
+    posts.addPost(content, accountId).then((rows: any) => {
+        res.status(200).json({ post: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error adding post');
     })

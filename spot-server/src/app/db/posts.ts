@@ -4,7 +4,7 @@ const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function getPosts(accoutId: string): Promise<any> {
+function getPosts(accountId: string): Promise<any> {
     var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content,
                 SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
                 SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
@@ -12,20 +12,29 @@ function getPosts(accoutId: string): Promise<any> {
                       WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                       ELSE NULL END) AS rated
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id GROUP BY posts.id ORDER BY posts.creation_date DESC`;
-    var values = [accoutId, accoutId];
+    var values = [accountId, accountId];
     return db.query(sql, values);
 }
 
-function getPostById(id: string): Promise<any> {
-    var sql = 'SELECT * FROM posts WHERE id = ?';
-    var values = [id];
+function getPostById(postId: string, accountId: string): Promise<any> {
+    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content,
+    SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
+    SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
+    (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
+          WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
+          ELSE NULL END) AS rated
+    FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? GROUP BY posts.id ORDER BY posts.creation_date DESC`;
+    var values = [accountId, accountId, postId];
     return db.query(sql, values);
 }
 
-function addPost(content: string, user: string): Promise<any> {
+function addPost(content: string, accountId: string): Promise<any> {
+    var postId = uuid.v4();
     var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), new Date(), user, 43.1233, 45.2323, content];
-    return db.query(sql, values);
+    var values = [postId, new Date(), accountId, 43.1233, 45.2323, content];
+    return db.query(sql, values).then( (rows: any) => {
+        return getPostById(postId, accountId);
+    });
 }
 
 function likePost(postId: string, accountId: string): Promise<any> {

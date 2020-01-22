@@ -23,9 +23,7 @@ export class NavComponent implements OnInit {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   offClickHandler(event: MouseEvent) {
     // Hide the dropdown if you click outside

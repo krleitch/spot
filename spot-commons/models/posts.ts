@@ -19,6 +19,10 @@ export interface AddPostRequest {
     content: string;
 }
 
+export interface AddPostSuccess {
+    post: Post;
+}
+
 // Like a post
 export interface LikePostRequest {
     postId: string;

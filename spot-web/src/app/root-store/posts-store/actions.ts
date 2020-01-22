@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
-import { AddPostRequest, LikePostRequest, DislikePostRequest, LikePostSuccess, DislikePostSuccess,
-          DeletePostRequest, DeletePostSuccess, LoadPostSuccess } from '@models/posts';
+import { AddPostRequest, AddPostSuccess, LikePostRequest, DislikePostRequest, LikePostSuccess, DislikePostSuccess,
+          DeletePostRequest, DeletePostSuccess, LoadPostSuccess  } from '@models/posts';
 
 export enum ActionTypes {
   LIKE_REQUEST = '[Posts] Like Request',
@@ -11,7 +11,6 @@ export enum ActionTypes {
   DELETE_REQUEST = '[Posts] Delete Request',
   DELETE_SUCCESS = '[Posts] Delete Success',
   ADD_REQUEST = '[Posts] Add Request',
-  ADD_FAILURE = '[Posts] Add Failure',
   ADD_SUCCESS = '[Posts] Add Success',
   LOAD_REQUEST = '[Posts] Load Request',
   LOAD_SUCCESS = '[Posts] Load Success',
@@ -58,13 +57,9 @@ export class AddRequestAction implements Action {
   constructor(public request: AddPostRequest) {}
 }
 
-export class AddFailureAction implements Action {
-  readonly type = ActionTypes.ADD_FAILURE;
-  constructor(public error: string) {}
-}
-
 export class AddSuccessAction implements Action {
   readonly type = ActionTypes.ADD_SUCCESS;
+  constructor( public response: AddPostSuccess) {}
 }
 
 export class LoadRequestAction implements Action {
@@ -77,6 +72,6 @@ export class LoadSuccessAction implements Action {
 }
 
 export type Actions = GenericFailureAction | LoadRequestAction | LoadSuccessAction |
-                      AddRequestAction | AddFailureAction | AddSuccessAction |
-                      DeleteRequestAction  | DeleteSuccessAction | LikeRequestAction |
-                      LikeSuccessAction | DislikeRequestAction | DislikeSuccessAction;
+                      AddRequestAction | AddSuccessAction | DeleteRequestAction |
+                      DeleteSuccessAction | LikeRequestAction | LikeSuccessAction |
+                      DislikeRequestAction | DislikeSuccessAction;
