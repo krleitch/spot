@@ -15,6 +15,19 @@ export const STRINGS = {
 
         ACCOUNT: {
 
+            // No account
+            NO_ACCOUNT: 'You are currently not logged in to an account',
+
+            // My account
+            MY_ACCOUNT: 'My Account',
+
+            EMAIL: 'Email',
+            USERNAME: 'Username',
+            PHONE: 'Phone number',
+
+            // Account options
+            ACCOUNT_OPTIONS: 'Account Options',
+            DELETE: 'Delete Account'
 
         },
 

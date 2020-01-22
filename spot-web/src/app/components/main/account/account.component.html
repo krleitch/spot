@@ -1,15 +1,20 @@
 <spot-main-nav></spot-main-nav>
-<div class="container">
+<div class="account">
   <div class="account-info">
-    <div class="title"> Account Details</div>
     <div *ngIf="account$ | async as account; else noAccount">
-      <div> Email: {{ account.email }} </div>
-      <div class="button" (click)="deleteUser()">
-          Delete Account
-      </div>
+      <div class="title"> {{ STRINGS.MY_ACCOUNT }}</div>
+      <div class="subheading"> {{ STRINGS.EMAIL }} </div>
+      <div class="value"> {{ account.email }} </div>
+      <div class="subheading"> {{ STRINGS.USERNAME }} </div>
+      <div class="value"> {{ account.username }} </div>
+      <div class="subheading"> {{ STRINGS.PHONE }} </div>
+      <div class="value"> {{ account.phone }} </div>
+      <br/>
+      <div class="title"> {{ STRINGS.ACCOUNT_OPTIONS }} </div>
+      <div class="button" (click)="deleteUser()"> {{ STRINGS.DELETE }} </div>
     </div>
     <ng-template #noAccount>
-        You are not logged into a user at the moment
+        {{ STRINGS.NO_ACCOUNT }}
     </ng-template>
   </div>
 </div>
