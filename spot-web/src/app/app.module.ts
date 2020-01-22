@@ -8,9 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RootStoreModule } from './root-store';
 
-import { NavigationComponent } from './components/navigation/navigation.component';
 import { CommentsComponent } from './components/comments/comments.component';
-import { EditorComponent } from './components/editor/editor.component';
 
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
 import { NavComponent } from './components/pre-auth/nav/nav.component';
@@ -28,9 +26,7 @@ import { AccountComponent } from './components/main/account/account.component';
 @NgModule({
   declarations: [
     AppComponent,
-    NavigationComponent,
     CommentsComponent,
-    EditorComponent,
     // PRE-AUTH
     LandingComponent,
     LoginComponent,
