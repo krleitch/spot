@@ -1,10 +1,11 @@
+import { Post } from '@models/posts';
 
 export interface State {
-  posts: any[];
+  posts: Post[];
 }
 
 export const initialState: State = (
   {
-    posts: null,
+    posts: [],
   }
 );

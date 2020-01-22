@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
-import { DeletePostRequest, LoadPostSuccess } from '@models/posts';
+import { DeletePostRequest, DeletePostSuccess, AddPostRequest, AddPostSuccess, LoadPostSuccess, LikePostSuccess,
+          LikePostRequest, DislikePostRequest, DislikePostSuccess } from '@models/posts';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -20,20 +21,20 @@ export class PostsService {
     return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`);
   }
 
-  addPost(post: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/posts`, post);
+  addPost(request: AddPostRequest): Observable<AddPostSuccess> {
+    return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, request);
   }
 
-  deletePost(request: DeletePostRequest): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/posts/${request.postId}`);
+  deletePost(request: DeletePostRequest): Observable<DeletePostSuccess> {
+    return this.http.delete<DeletePostSuccess>(`${this.baseUrl}/posts/${request.postId}`);
   }
 
-  likePost(request: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/posts/${request.postId}/like`, request);
+  likePost(request: LikePostRequest): Observable<LikePostSuccess> {
+    return this.http.put<LikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/like`, request);
   }
 
-  dislikePost(request: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/posts/${request.postId}/Dislike`, request);
+  dislikePost(request: DislikePostRequest): Observable<DislikePostSuccess> {
+    return this.http.put<DislikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/Dislike`, request);
   }
 
   failureMessage(message: string) {
