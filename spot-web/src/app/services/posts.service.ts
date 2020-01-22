@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
-import { DeletePostRequest } from '@models/posts';
+import { DeletePostRequest, LoadPostSuccess } from '@models/posts';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -16,9 +16,8 @@ export class PostsService {
 
   constructor(private http: HttpClient, private alertService: AlertService) { }
 
-  getPosts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/posts`)
-    .pipe(map(result => result));
+  getPosts(): Observable<LoadPostSuccess> {
+    return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`);
   }
 
   addPost(post: any): Observable<any> {

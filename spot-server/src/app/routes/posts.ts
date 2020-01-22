@@ -12,7 +12,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.get('/', function (req: any, res: any) {
     const accountId = req.user.id;
     posts.getPosts(accountId).then((rows: []) => {
-        res.status(200).json(rows);
+        res.status(200).json({ posts: rows });
     }, (err: any) => {
         console.log(err);
         res.status(500).send('Error getting posts');

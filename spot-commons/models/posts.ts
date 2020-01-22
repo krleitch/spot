@@ -9,6 +9,11 @@ export interface Post {
     rated: number;
 }
 
+// Load posts
+export interface LoadPostSuccess {
+    posts: Post[];
+}
+
 // Add a post
 export interface AddPostRequest {
     content: string;
