@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="add">
+    <form [formGroup]="form">
+      <fieldset>
+        <div class="form-field">
+            <input name="comment" formControlName="comment" [placeholder]="STRINGS.ADD_COMMENT_PLACEHOLDER" required>
+        </div>
+      </fieldset>
+    </form>
+    <div class="send">
+      <i class="material-icons"> send </i>
+    </div>
+  </div>
+  <div class="comments">
+    <div class="left-bar">
+      left
+    </div >
+      comment
+    <div class="right-bar">
+      right
+    </div>
+  </div>
+</div>

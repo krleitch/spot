@@ -9,9 +9,16 @@
     padding: 5px 10px;
 }
 
+.highlight {
+  color: $button-highlight;
+}
+
 .title {
     font-size: 35px;
     cursor: pointer;
+    &:hover {
+      @extend .highlight;
+    }
 }
 
 // FEATURES
@@ -40,6 +47,9 @@
     color: $subtle-grey;
     margin-right: 10px;
     cursor: pointer;
+    &:hover {
+      @extend .highlight;
+    }
 }
 
 .account {
@@ -47,6 +57,9 @@
     font-size: 18px;
     color: $subtle-grey;
     cursor: pointer;
+    &:hover {
+      @extend .highlight;
+    }
 }
 
 // DROPDOWN

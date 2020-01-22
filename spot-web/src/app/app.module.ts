@@ -8,8 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RootStoreModule } from './root-store';
 
-import { CommentsComponent } from './components/comments/comments.component';
-
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
 import { NavComponent } from './components/pre-auth/nav/nav.component';
 import { LoginComponent } from './components/pre-auth/login/login.component';
@@ -21,12 +19,12 @@ import { HomeComponent } from './components/main/home/home.component';
 import { CreateComponent } from './components/main/create/create.component';
 import { PostComponent } from './components/main/post/post.component';
 import { AccountComponent } from './components/main/account/account.component';
+import { CommentsComponent } from './components/main/comments/comments.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    CommentsComponent,
     // PRE-AUTH
     LandingComponent,
     LoginComponent,
@@ -39,7 +37,8 @@ import { AccountComponent } from './components/main/account/account.component';
     HomeComponent,
     CreateComponent,
     PostComponent,
-    AccountComponent
+    AccountComponent,
+    CommentsComponent
   ],
   imports: [
     BrowserModule,

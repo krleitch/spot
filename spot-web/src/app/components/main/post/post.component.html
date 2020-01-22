@@ -1,36 +1,39 @@
 <div class="container">
-  <div class="left-bar">
-    <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': post.rated == 1}"> keyboard_arrow_up </i>
-    <div class="points"> {{ post.likes - post.dislikes }} </div>
-    <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': post.rated == 0}"> keyboard_arrow_down </i>
-    <div class="time">
-        {{ timeMessage }}
+  <div class="post">
+    <div class="left-bar">
+      <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': post.rated == 1}"> keyboard_arrow_up </i>
+      <div class="points"> {{ post.likes - post.dislikes }} </div>
+      <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': post.rated == 0}"> keyboard_arrow_down </i>
+      <div class="time">
+          {{ timeMessage }}
+      </div>
     </div>
-  </div>
-  <div class="content-container">
-    <div class="content" [ngClass]="{'content-expanded': expanded}">
-      {{ getContent() }}
-    </div>
-    <div class="options">
-      <span class="comment-number"> # {{ STRINGS.COMMENTS }} </span>
-      <div *ngIf="expandable()">
-        <div *ngIf="!expanded; else notExpanded">
-            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+    <div class="content-container">
+      <div class="content" [ngClass]="{'content-expanded': expanded}">
+        {{ getContent() }}
+      </div>
+      <div class="options">
+        <span class="comment-number"> # {{ STRINGS.COMMENTS }} </span>
+        <div *ngIf="expandable()">
+          <div *ngIf="!expanded; else notExpanded">
+              <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+          </div>
+          <ng-template #notExpanded>
+              <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+          </ng-template>
         </div>
-        <ng-template #notExpanded>
-            <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
-        </ng-template>
+        <i class="material-icons share"> share </i>
       </div>
-      <i class="material-icons share"> share </i>
     </div>
-  </div>
-  <div class="right-bar">
-    <div #options class="dropdown align-bottom" (click)="setOptions(true)">
-      <i class="material-icons icon-size"> more_horiz </i>
-      <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
-        <div class="button" (click)="deletePost()"> {{ STRINGS.DELETE }} </div>
-        <div class="button"> {{ STRINGS.REPORT }} </div>
+    <div class="right-bar">
+      <div #options class="dropdown align-bottom" (click)="setOptions(true)">
+        <i class="material-icons icon-size"> more_horiz </i>
+        <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
+          <div class="button" (click)="deletePost()"> {{ STRINGS.DELETE }} </div>
+          <div class="button"> {{ STRINGS.REPORT }} </div>
+        </div>
       </div>
     </div>
   </div>
+  <spot-comments></spot-comments>
 </div>

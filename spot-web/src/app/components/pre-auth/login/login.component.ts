@@ -65,4 +65,12 @@ export class LoginComponent implements OnInit {
     this.router.navigateByUrl('/register');
   }
 
+  googleLogin() {
+
+  }
+
+  facebookLogin() {
+
+  }
+
 }

@@ -33,9 +33,14 @@ export const STRINGS = {
             DELETE: 'Delete',
             REPORT: 'Report'
 
+        },
+
+        COMMENTS: {
+
+          // Form
+          ADD_COMMENT_PLACEHOLDER: 'Add a comment'
+
         }
-
-
 
     },
 
@@ -97,7 +102,7 @@ export const STRINGS = {
 
         REGISTER: {
 
-            // SIGNUP FROM
+            // SIGNUP FORM
             COMMUNITY: 'Join your community',
             FACEBOOK_LOGIN: 'Sign In With Facebook',
             GOOGLE_LOGIN: 'Sign In With Google',

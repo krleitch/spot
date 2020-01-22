@@ -16,9 +16,13 @@ export class AccountComponent implements OnInit {
   user$: Observable<any>;
 
   constructor(private authenticationService: AuthenticationService,
-    private store$: Store<RootStoreState.State>) { }
+              private store$: Store<RootStoreState.State>) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsUser)
+    );
+  }
 
   deleteUser() {
     this.store$.dispatch(

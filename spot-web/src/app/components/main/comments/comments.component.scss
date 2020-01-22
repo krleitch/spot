@@ -1,0 +1,64 @@
+@import '../../../styles/colors';
+
+// Add a comment
+
+.add {
+  display: flex;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.highlight {
+  color: $button-highlight;
+}
+
+.send {
+  width: 30px;
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+// Add comment form
+
+form {
+  margin-left: 30px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+fieldset {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+input {
+  padding: 6px 10px;
+  margin: 6px 0;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid $subtle-grey;
+  outline: none;
+}
+
+// Comments
+
+.comments {
+  display: flex;
+  background-color: white;
+  padding: 0px 12px;
+  margin-bottom: 10px;
+}
+
