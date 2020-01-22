@@ -2,8 +2,8 @@
 <div class="container">
   <div class="account-info">
     <div class="title"> Account Details</div>
-    <div *ngIf="user$ | async as user; else noAccount">
-      <div> Email: {{ user.email }} </div>
+    <div *ngIf="account$ | async as account; else noAccount">
+      <div> Email: {{ account.email }} </div>
       <div class="button" (click)="deleteUser()">
           Delete Account
       </div>

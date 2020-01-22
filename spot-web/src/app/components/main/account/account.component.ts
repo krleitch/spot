@@ -1,25 +1,24 @@
-import { AuthenticationService } from '@src/app/services/authentication.service';
 import { Component, OnInit } from '@angular/core';
-
-import { select, Store } from '@ngrx/store';
-import { ActionTypes, LoginSuccessAction, LoginFailureAction } from '@src/app/root-store/accounts-store/actions/actions';
-import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '../../../root-store';
 import { Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+
+import { AccountsActions } from '@store/accounts-store';
+import { AccountsStoreSelectors, RootStoreState } from '@store';
+import { Account } from '@models/accounts';
 
 @Component({
-  selector: 'app-account',
+  selector: 'spot-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
 
-  user$: Observable<any>;
+  account$: Observable<Account>;
 
-  constructor(private authenticationService: AuthenticationService,
-              private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
-    this.user$ = this.store$.pipe(
+    this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsUser)
     );
   }

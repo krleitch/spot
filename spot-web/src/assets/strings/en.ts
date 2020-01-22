@@ -13,6 +13,11 @@ export const STRINGS = {
 
         },
 
+        ACCOUNT: {
+
+
+        },
+
         CREATE: {
 
             CREATE_PLACEHOLDER: 'Spot something?',
