@@ -1,45 +1,40 @@
 import { Action } from '@ngrx/store';
 
+import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddCommentSuccess } from '@models/comments';
+
 export enum ActionTypes {
   ADD_REQUEST = '[Comments] Add Request',
   ADD_SUCCESS = '[Comments] Add Success',
-  ADD_FAILURE = '[Comments] Add Failure',
   GET_REQUEST = '[Comments] Get Request',
   GET_SUCCESS = '[Comments] Get Success',
-  GET_FAILURE = '[Comments] Get Failure',
-  DELETE_REQUEST = '[Delete] Delete Request',
-  DELETE_SUCCESS = '[Delete] Delete Success',
-  DELETE_FAILURE = '[Delete] Delete Failure',
+  DELETE_REQUEST = '[Comments] Delete Request',
+  DELETE_SUCCESS = '[Comments] Delete Success',
+  GENERIC_FAILURE = '[Comments] Generic Failure'
+}
+
+export class GenericFailureAction implements Action {
+  readonly type = ActionTypes.GENERIC_FAILURE;
+  constructor(public error: string) {}
 }
 
 export class AddRequestAction implements Action {
     readonly type = ActionTypes.ADD_REQUEST;
-    constructor(public request: { postId: string, body: any }) {}
+    constructor(public request: AddCommentRequest) {}
 }
 
 export class AddSuccessAction implements Action {
     readonly type = ActionTypes.ADD_SUCCESS;
-    constructor(public response: { postId: string, comment: Comment }) {}
-}
-
-export class AddFailureAction implements Action {
-    readonly type = ActionTypes.ADD_FAILURE;
-    constructor(public payload: { error: string }) {}
+    constructor(public response: AddCommentSuccess) {}
 }
 
 export class GetRequestAction implements Action {
     readonly type = ActionTypes.GET_REQUEST;
-    constructor(public request: { postId: string }) {}
+    constructor(public request: LoadCommentsRequest) {}
 }
 
 export class GetSuccessAction implements Action {
     readonly type = ActionTypes.GET_SUCCESS;
-    constructor(public response: { postId: string, comments: Comment[] }) {}
-}
-
-export class GetFailureAction implements Action {
-    readonly type = ActionTypes.GET_FAILURE;
-    constructor(public payload: { error: string }) {}
+    constructor(public response: LoadCommentsSuccess) {}
 }
 
 export class DeleteRequestAction implements Action {
@@ -52,13 +47,7 @@ export class DeleteSuccessAction implements Action {
     constructor(public response: any) {}
 }
 
-export class DeleteFailureAction implements Action {
-    readonly type = ActionTypes.DELETE_FAILURE;
-    constructor(public payload: { error: string }) {}
-}
-
 export type Actions = AddRequestAction | AddSuccessAction |
-                      AddFailureAction | GetRequestAction |
-                      GetSuccessAction | GetFailureAction |
+                      GetRequestAction | GetSuccessAction |
                       DeleteRequestAction | DeleteSuccessAction |
-                      DeleteFailureAction;
+                      GenericFailureAction;

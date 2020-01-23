@@ -4,10 +4,10 @@ import { initialState, State } from './state';
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
     case ActionTypes.ADD_SUCCESS: {
-        // if (state.comments[action.response.postId] === undefined) {
-        //     state.comments[action.response.postId] = [];
-        // }
-        // state.comments[action.response.postId].push(action.response.comment);
+        if (state.comments[action.response.postId] === undefined) {
+            state.comments[action.response.postId] = [];
+        }
+        state.comments[action.response.postId].unshift(action.response.comment);
         return {
             ...state,
         };

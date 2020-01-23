@@ -13,7 +13,7 @@
         {{ getContent() }}
       </div>
       <div class="options">
-        <span class="comment-number"> # {{ STRINGS.COMMENTS }} </span>
+        <span class="comment-number"> {{ post.comments }} {{ STRINGS.COMMENTS }} </span>
         <div *ngIf="expandable()">
           <div *ngIf="!expanded; else notExpanded">
               <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
@@ -35,5 +35,5 @@
       </div>
     </div>
   </div>
-  <spot-comments-container></spot-comments-container>
+  <spot-comments-container [postId]="post.id"></spot-comments-container>
 </div>

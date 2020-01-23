@@ -65,13 +65,13 @@ export class CommentsComponent implements OnInit {
     }
   }
 
-  addComment(content: string) {
-    const comment: any = {
-      Content: content
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.AddRequestAction( { postId: this.postId, body: comment })
-    );
-  }
+  // addComment(content: string) {
+  //   const comment: any = {
+  //     Content: content
+  //   };
+  //   this.store$.dispatch(
+  //     new CommentsStoreActions.AddRequestAction( { postId: this.postId, body: comment })
+  //   );
+  // }
 
 }

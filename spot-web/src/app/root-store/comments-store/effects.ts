@@ -3,28 +3,37 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap, mergeMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
 
 import * as featureActions from './actions';
 import { CommentService } from '../../services/comments.service';
-
+import { AddCommentSuccess, LoadCommentsSuccess } from '@models/comments';
 
 @Injectable()
 export class CommentsStoreEffects {
   constructor(private commentService: CommentService, private actions$: Actions) { }
-          
+
+  @Effect({dispatch: false})
+  GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.GenericFailureAction>(
+      featureActions.ActionTypes.GENERIC_FAILURE
+    ),
+    tap((action: featureActions.GenericFailureAction) => {
+      this.commentService.failureMessage(action.error);
+    })
+  );
+
   @Effect()
   addCommentEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.AddRequestAction>(
       featureActions.ActionTypes.ADD_REQUEST
     ),
-    switchMap(addCommentRequest =>
+    switchMap(action =>
       this.commentService
-        .addComment(addCommentRequest.request.postId, addCommentRequest.request.body)
+        .addComment(action.request)
         .pipe(
-            map(response => new featureActions.GetRequestAction({ postId: addCommentRequest.request.postId })),
-            catchError(error =>
-              observableOf(new featureActions.AddFailureAction({ error }))
+            map( (response: AddCommentSuccess) => new featureActions.AddSuccessAction(response)),
+            catchError(errorResponse =>
+              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )
           )
     )
@@ -35,18 +44,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.GetRequestAction>(
       featureActions.ActionTypes.GET_REQUEST
     ),
-    mergeMap(registerRequest =>
+    mergeMap(action =>
       this.commentService
-        .getComments(registerRequest.request.postId)
+        .getComments(action.request)
         .pipe(
-            map(response => new featureActions.GetSuccessAction({ postId: registerRequest.request.postId, comments: response })),
-            catchError(error =>
-              observableOf(new featureActions.GetFailureAction({ error }))
+            map( (response: LoadCommentsSuccess) => new featureActions.GetSuccessAction(response)),
+            catchError( errorResponse =>
+              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )
           )
     )
   );
-  
+
   @Effect()
   deleteCommentEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.DeleteRequestAction>(
@@ -57,8 +66,8 @@ export class CommentsStoreEffects {
         .deleteComment(deleteRequest.request.commentId)
         .pipe(
             map(response => new featureActions.GetRequestAction({ postId: deleteRequest.request.postId })),
-            catchError(error =>
-              observableOf(new featureActions.DeleteFailureAction({ error }))
+            catchError( errorResponse =>
+              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )
           )
     )

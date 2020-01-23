@@ -14,6 +14,7 @@ export interface LoadCommentsRequest {
 }
 
 export interface LoadCommentsSuccess {
+    postId: string;
     comments: Comment[];
 }
 
@@ -24,11 +25,9 @@ export interface AddCommentRequest {
 }
 
 export interface AddCommentSuccess {
+    postId: string;
     comment: Comment;
 }
-
-
-
 
 
 

@@ -10,7 +10,8 @@ function getPosts(accountId: string): Promise<any> {
                 SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
                       WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
-                      ELSE NULL END) AS rated
+                      ELSE NULL END) AS rated,
+                (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id GROUP BY posts.id ORDER BY posts.creation_date DESC`;
     var values = [accountId, accountId];
     return db.query(sql, values);
@@ -18,12 +19,13 @@ function getPosts(accountId: string): Promise<any> {
 
 function getPostById(postId: string, accountId: string): Promise<any> {
     var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content,
-    SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
-    SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
-    (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
-          WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
-          ELSE NULL END) AS rated
-    FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? GROUP BY posts.id ORDER BY posts.creation_date DESC`;
+                SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
+                SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
+                (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
+                    WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
+                    ELSE NULL END) AS rated,
+                (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
+                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? GROUP BY posts.id ORDER BY posts.creation_date DESC`;
     var values = [accountId, accountId, postId];
     return db.query(sql, values);
 }

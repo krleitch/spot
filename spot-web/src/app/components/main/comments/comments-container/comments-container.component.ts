@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
-import { LoadCommentsRequest, AddCommentRequest } from '@models/comments';
+import { LoadCommentsRequest, AddCommentRequest, Comment } from '@models/comments';
 
 @Component({
   selector: 'spot-comments-container',

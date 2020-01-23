@@ -7,6 +7,7 @@ export interface Post {
     likes: number;
     dislikes: number;
     rated: number;
+    comments: number;
 }
 
 // Load posts
