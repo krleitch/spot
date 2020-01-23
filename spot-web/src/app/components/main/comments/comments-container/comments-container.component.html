@@ -1,7 +1,7 @@
 <div class="container">
   <div class="comments-container">
     <div *ngFor="let comment of comments$ | async">
-        {{ comment.content }}
+        <spot-comment [comment]="comment"></spot-comment>
     </div>
   </div>
   <div class="add">
