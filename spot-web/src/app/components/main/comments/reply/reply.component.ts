@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'spot-reply',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./reply.component.scss']
 })
 export class ReplyComponent implements OnInit {
+
+  @Input() commentId: string;
 
   constructor() { }
 

@@ -1,5 +1,26 @@
 <div class="container">
   <div class="comment">
-    {{ comment.content }}
+    <div class="left-bar">
+      <div class="column">
+        <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': comment.rated == 1}"> keyboard_arrow_up </i>
+        <div class="points"> {{ comment.likes - comment.dislikes }} </div>
+        <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': comment.rated == 0}"> keyboard_arrow_down </i>
+      </div>
+      <div class="profile"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="content">
+        {{ comment.content }}
+      </div>
+      <div class="options">
+        <span class="reply"> {{ STRINGS.REPLY }} </span>
+      </div>
+    </div>
+    <div class="right-bar">
+      <div class="time">
+        {{ timeMessage }}
+      </div>
+    </div>
   </div>
+  <spot-reply [commentId]="comment.id"></spot-reply>
 </div>

@@ -18,7 +18,7 @@ export class CommentsContainerComponent implements OnInit {
   @Input() postId: string;
   comments$: Observable<Comment[]>;
 
-  STRINGS = STRINGS.MAIN.COMMENTS;
+  STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
 
   form: FormGroup;
 

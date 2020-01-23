@@ -1,0 +1,66 @@
+@import '../../../../styles/colors';
+
+
+// Comment
+.comment {
+  display: flex;
+}
+
+// Content
+.content-wrapper {
+  width: 100%;
+}
+
+.highlight {
+  color: $button-highlight;
+}
+
+.reply {
+  cursor: pointer;
+  color: $subtle-grey;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+// left bar
+.left-bar {
+  display: flex;
+  width: 50px;
+  margin-right: 5px;
+}
+
+.column {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  margin-right: 3px;
+}
+
+.vote {
+    cursor: pointer;
+    font-size: 16px;
+    &:hover {
+      @extend .highlight;
+    }
+}
+
+.profile {
+  margin-top: 3px;
+  width: 25px;
+  height: 25px;
+  background-color: black;
+  border-radius: 12.5px;
+}
+
+// right bar
+.right-bar {
+  display: flex;
+  justify-content: center;
+  width: 30px;
+}
+
+.time {
+  font-size: 12px;
+  color: $subtle-grey;
+}

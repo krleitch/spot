@@ -53,10 +53,17 @@ export const STRINGS = {
 
         },
 
-        COMMENTS: {
+        COMMENTS_CONTAINER: {
 
           // Form
           ADD_COMMENT_PLACEHOLDER: 'Add a comment'
+
+        },
+
+        COMMENTS: {
+
+          // Reply
+          REPLY: 'reply'
 
         }
 
