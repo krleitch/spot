@@ -13,7 +13,21 @@
         {{ comment.content }}
       </div>
       <div class="options">
-        <span class="reply"> {{ STRINGS.REPLY }} </span>
+        <span class="reply" (click)="setShowAddReply(true)"> {{ STRINGS.REPLY }} </span>
+        <span class="seperator"> | </span>
+        <span class="delete"> {{ STRINGS.DELETE }} </span>
+      </div>
+      <div *ngIf="showAddReply" class="add">
+        <form [formGroup]="form">
+          <fieldset>
+            <div class="form-field">
+              <input autocomplete="off" name="comment" formControlName="comment" [placeholder]="STRINGS.ADD_REPLY_PLACEHOLDER" required>
+            </div>
+          </fieldset>
+        </form>
+        <div class="send" (click)="addReply()">
+          <i class="material-icons"> send </i>
+        </div>
       </div>
     </div>
     <div class="right-bar">

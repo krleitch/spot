@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { STRINGS } from '@assets/strings/en';
 import { Comment } from '@models/comments';
@@ -14,9 +15,16 @@ export class CommentComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.COMMENTS;
 
-  timeMessage: string;
+  form: FormGroup;
 
-  constructor() { }
+  timeMessage: string;
+  showAddReply = false;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      comment: ['', Validators.required]
+    });
+  }
 
   ngOnInit() {
     this.getTime(this.comment.creation_date);
@@ -46,6 +54,27 @@ export class CommentComponent implements OnInit {
       const yearDiff = Math.round(timeDiff / 31536000000);
       this.timeMessage = yearDiff + 'y';
     }
+  }
+
+  setShowAddReply(val: boolean) {
+    this.showAddReply = val;
+  }
+
+  addReply() {
+
+    const val = this.form.value;
+
+    // if (val.comment) {
+    //   const request: AddCommentRequest = {
+    //     commentId: this.comment.id,
+    //     content: val.comment
+    //   };
+    //   this.store$.dispatch(
+    //     new CommentsStoreActions.AddRequestAction(request)
+    //   );
+    // } else {
+    //   this.form.controls.comment.markAsDirty();
+    // }
   }
 
   like() {

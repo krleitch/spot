@@ -42,7 +42,7 @@ export class CommentsContainerComponent implements OnInit {
     );
   }
 
-  addComment(content: string) {
+  addComment() {
 
     const val = this.form.value;
 
