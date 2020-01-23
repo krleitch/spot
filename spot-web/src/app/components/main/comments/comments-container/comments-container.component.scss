@@ -1,4 +1,12 @@
-@import '../../../styles/colors';
+@import '../../../../styles/colors';
+
+// Comments container
+
+.comments-container {
+  display: flex;
+  background-color: white;
+  padding: 0px 12px;
+}
 
 // Add a comment
 
@@ -53,12 +61,6 @@ input {
   outline: none;
 }
 
-// Comments
-
-.comments {
-  display: flex;
-  background-color: white;
-  padding: 0px 12px;
-  margin-bottom: 10px;
+input.ng-dirty.ng-invalid {
+  border: 1px solid $error-red;
 }
-

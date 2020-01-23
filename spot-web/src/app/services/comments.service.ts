@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess } from '@models/comments';
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +14,16 @@ export class CommentService {
 
   constructor(private http: HttpClient) { }
 
-  getComments(postId: any): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/comments/${postId}`);
+  getComments(request: LoadCommentsRequest): Observable<LoadCommentsSuccess> {
+    return this.http.get<LoadCommentsSuccess>(`${this.baseUrl}/comments/${request.postId}`);
   }
 
   deleteComment(commentId: string): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/comments/${commentId}`);
   }
 
-  addComment(postId: any, comment: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/comments/${postId}/add`, comment);
+  addComment(request: AddCommentRequest): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/comments/${request.postId}/add`, request.content);
   }
 
 }

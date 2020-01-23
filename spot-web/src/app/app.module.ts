@@ -19,7 +19,9 @@ import { HomeComponent } from './components/main/home/home.component';
 import { CreateComponent } from './components/main/create/create.component';
 import { PostComponent } from './components/main/post/post.component';
 import { AccountComponent } from './components/main/account/account.component';
-import { CommentsComponent } from './components/main/comments/comments.component';
+import { CommentsContainerComponent } from './components/main/comments/comments-container/comments-container.component';
+import { ReplyComponent } from './components/main/comments/reply/reply.component';
+import { CommentComponent } from './components/main/comments/comment/comment.component';
 
 
 @NgModule({
@@ -38,7 +40,10 @@ import { CommentsComponent } from './components/main/comments/comments.component
     CreateComponent,
     PostComponent,
     AccountComponent,
-    CommentsComponent
+    // COMMENTS
+    CommentsContainerComponent,
+    ReplyComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,

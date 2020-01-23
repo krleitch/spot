@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="comments-container">
+    <div class="left-bar">
+      left
+    </div >
+      comment
+    <div class="right-bar">
+      right
+    </div>
+  </div>
+  <div class="add">
+    <form [formGroup]="form">
+      <fieldset>
+        <div class="form-field">
+            <input autocomplete="off" name="comment" formControlName="comment" [placeholder]="STRINGS.ADD_COMMENT_PLACEHOLDER" required>
+        </div>
+      </fieldset>
+    </form>
+    <div class="send" (click)="addComment()">
+      <i class="material-icons"> send </i>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,8 @@ import { LoginComponent } from './components/pre-auth/login/login.component';
 import { RegisterComponent } from './components/pre-auth/register/register.component';
 import { AlertComponent } from './components/helpers/alert/alert.component';
 import { NavComponent as MainNavComponent } from './components/main/nav/nav.component';
+import { ReplyComponent } from './components/main/comments/reply/reply.component';
+import { CommentComponent } from './components/main/comments/comment/comment.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -32,7 +34,9 @@ import { NavComponent as MainNavComponent } from './components/main/nav/nav.comp
     LandingComponent,
     NavComponent,
     AlertComponent,
-    MainNavComponent
+    MainNavComponent,
+    ReplyComponent,
+    CommentComponent
   ],
   imports: [
     NativeScriptModule,

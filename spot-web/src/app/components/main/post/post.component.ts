@@ -79,6 +79,7 @@ export class PostComponent implements OnInit {
   }
 
   getContent(): string {
+    // https://css-tricks.com/line-clampin/
     if (this.expandable() && !this.expanded) {
       return this.post.content.substring(0, this.MAX_POST_LENGTH) + ' ...';
     } else {
