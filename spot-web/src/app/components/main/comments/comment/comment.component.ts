@@ -1,8 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { RootStoreState } from '@store';
+import { CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment } from '@models/comments';
+import { Comment, DeleteCommentRequest } from '@models/comments';
 
 @Component({
   selector: 'spot-comment',
@@ -20,7 +23,8 @@ export class CommentComponent implements OnInit {
   timeMessage: string;
   showAddReply = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private store$: Store<RootStoreState.State>) {
     this.form = this.fb.group({
       comment: ['', Validators.required]
     });
@@ -54,6 +58,16 @@ export class CommentComponent implements OnInit {
       const yearDiff = Math.round(timeDiff / 31536000000);
       this.timeMessage = yearDiff + 'y';
     }
+  }
+
+  deleteComment() {
+    const request: DeleteCommentRequest = {
+      postId: this.comment.post_id,
+      commentId: this.comment.id
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.DeleteRequestAction(request)
+    );
   }
 
   setShowAddReply(val: boolean) {

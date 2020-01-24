@@ -29,7 +29,16 @@ export interface AddCommentSuccess {
     comment: Comment;
 }
 
+// Delete a comment
+export interface DeleteCommentRequest {
+    postId: string;
+    commentId: string;
+}
 
+export interface DeleteCommentSuccess {
+    postId: string;
+    commentId: string;
+}
 
 export interface CommentsHash {
     [post_id: string] : Comment[];

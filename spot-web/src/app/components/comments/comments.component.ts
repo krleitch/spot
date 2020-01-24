@@ -20,13 +20,13 @@ export class CommentsComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
-    this.comments$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.postId })
-    );
+    // this.comments$ = this.store$.pipe(
+    //   select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.postId })
+    // );
 
-    this.store$.dispatch(
-      new CommentsStoreActions.GetRequestAction({ postId: this.postId })
-    );
+    // this.store$.dispatch(
+    //   new CommentsStoreActions.GetRequestAction({ postId: this.postId })
+    // );
   }
 
   expand() {
@@ -42,9 +42,9 @@ export class CommentsComponent implements OnInit {
   }
 
   deleteComment(commentId) {
-    this.store$.dispatch(
-      new CommentsStoreActions.DeleteRequestAction({ commentId: commentId, postId: this.postId })
-    );
+    // this.store$.dispatch(
+    //   new CommentsStoreActions.DeleteRequestAction({ commentId: commentId, postId: this.postId })
+    // );
   }
 
   getTime(date) {

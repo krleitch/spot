@@ -1,3 +1,5 @@
+import { deleteCommentByPostId } from "../db/comments";
+
 const express = require('express');
 const router = express.Router();
 
@@ -32,10 +34,13 @@ router.post('/:postId/add', function (req: any, res: any) {
 });
 
 // Delete a single comment
-router.delete('/:commentId', function (req: any, res: any) {
+router.delete('/:postId/:commentId', function (req: any, res: any) {
+
+    const postId = req.params.postId;
     const commentId = req.params.commentId;
+
     comments.deleteComment(commentId).then( (rows: any) => {
-        res.status(200).json(rows)
+        res.status(200).json({ postId: postId, commentId: commentId })
     }, (err: any) => {
         res.status(500).send('Error deleting comment');
     });

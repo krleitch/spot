@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
-import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddCommentSuccess } from '@models/comments';
+import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddCommentSuccess,
+          DeleteCommentRequest, DeleteCommentSuccess } from '@models/comments';
 
 export enum ActionTypes {
   ADD_REQUEST = '[Comments] Add Request',
@@ -39,12 +40,12 @@ export class GetSuccessAction implements Action {
 
 export class DeleteRequestAction implements Action {
     readonly type = ActionTypes.DELETE_REQUEST;
-    constructor(public request: { commentId: string , postId: string}) {}
+    constructor(public request: DeleteCommentRequest) {}
 }
 
 export class DeleteSuccessAction implements Action {
     readonly type = ActionTypes.DELETE_SUCCESS;
-    constructor(public response: any) {}
+    constructor(public response: DeleteCommentSuccess) {}
 }
 
 export type Actions = AddRequestAction | AddSuccessAction |

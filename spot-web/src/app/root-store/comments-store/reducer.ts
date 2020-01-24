@@ -12,6 +12,16 @@ export function featureReducer(state = initialState, action: Actions): State {
             ...state,
         };
     }
+    case ActionTypes.DELETE_SUCCESS: {
+      state.comments[action.response.postId].forEach( (comment, i) => {
+        if (comment.id === action.response.commentId) {
+          state.comments[action.response.postId].splide(i, 1);
+        }
+      });
+      return {
+          ...state,
+      };
+  }
     case ActionTypes.GET_SUCCESS: {
         state.comments[action.response.postId] = action.response.comments;
         return {

@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap, mergeMap } from 'rxjs/operators';
 
 import * as featureActions from './actions';
 import { CommentService } from '../../services/comments.service';
-import { AddCommentSuccess, LoadCommentsSuccess } from '@models/comments';
+import { AddCommentSuccess, LoadCommentsSuccess, DeleteCommentSuccess } from '@models/comments';
 
 @Injectable()
 export class CommentsStoreEffects {
@@ -61,11 +61,11 @@ export class CommentsStoreEffects {
     ofType<featureActions.DeleteRequestAction>(
       featureActions.ActionTypes.DELETE_REQUEST
     ),
-    switchMap(deleteRequest =>
+    switchMap(action =>
       this.commentService
-        .deleteComment(deleteRequest.request.commentId)
+        .deleteComment(action.request)
         .pipe(
-            map(response => new featureActions.GetRequestAction({ postId: deleteRequest.request.postId })),
+            map( (response: DeleteCommentSuccess) => new featureActions.GetRequestAction(response)),
             catchError( errorResponse =>
               observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddCommentSuccess } from '@models/comments';
+import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddCommentSuccess, DeleteCommentRequest } from '@models/comments';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -23,8 +23,8 @@ export class CommentService {
     return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/add`, request);
   }
 
-  deleteComment(commentId: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/comments/${commentId}`);
+  deleteComment(request: DeleteCommentRequest): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`);
   }
 
   failureMessage(message: string) {

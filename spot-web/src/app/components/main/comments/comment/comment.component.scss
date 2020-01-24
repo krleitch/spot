@@ -81,6 +81,12 @@
   align-items: center;
 }
 
+.send {
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
+}
 
 form {
   display: flex;

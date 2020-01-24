@@ -15,7 +15,7 @@
       <div class="options">
         <span class="reply" (click)="setShowAddReply(true)"> {{ STRINGS.REPLY }} </span>
         <span class="seperator"> | </span>
-        <span class="delete"> {{ STRINGS.DELETE }} </span>
+        <span class="delete" (click)="deleteComment()"> {{ STRINGS.DELETE }} </span>
       </div>
       <div *ngIf="showAddReply" class="add">
         <form [formGroup]="form">
