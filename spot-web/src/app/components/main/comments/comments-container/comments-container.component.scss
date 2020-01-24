@@ -9,6 +9,19 @@
   padding: 0px 12px 0px 6px;
 }
 
+.highlight {
+  color: $button-highlight;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
 // Add a comment
 
 .add {
@@ -16,10 +29,6 @@
   padding: 0px 12px;
   justify-content: center;
   align-items: center;
-}
-
-.highlight {
-  color: $button-highlight;
 }
 
 .send {

@@ -3,6 +3,7 @@
     <div *ngFor="let comment of comments$ | async">
         <spot-comment [comment]="comment"></spot-comment>
     </div>
+    <div class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
   </div>
   <div class="add">
     <form [formGroup]="form">

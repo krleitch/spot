@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -16,7 +16,10 @@ export class CommentService {
   constructor(private http: HttpClient, private alertService: AlertService) { }
 
   getComments(request: LoadCommentsRequest): Observable<LoadCommentsSuccess> {
-    return this.http.get<LoadCommentsSuccess>(`${this.baseUrl}/comments/${request.postId}`);
+    let params = new HttpParams();
+    params = params.append('offset', request.offset.toString());
+    params = params.append('limit', request.limit.toString());
+    return this.http.get<LoadCommentsSuccess>(`${this.baseUrl}/comments/${request.postId}`, { params });
   }
 
   addComment(request: AddCommentRequest): Observable<AddCommentSuccess> {

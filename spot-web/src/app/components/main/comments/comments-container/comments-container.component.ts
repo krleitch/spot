@@ -7,6 +7,7 @@ import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { LoadCommentsRequest, AddCommentRequest, Comment } from '@models/comments';
+import { Post } from '@models/posts';
 
 @Component({
   selector: 'spot-comments-container',
@@ -15,12 +16,14 @@ import { LoadCommentsRequest, AddCommentRequest, Comment } from '@models/comment
 })
 export class CommentsContainerComponent implements OnInit {
 
-  @Input() postId: string;
+  @Input() post: Post;
   comments$: Observable<Comment[]>;
 
   STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
 
   form: FormGroup;
+
+  currentOffset = 0;
 
   constructor(private fb: FormBuilder,
               private store$: Store<RootStoreState.State>) {
@@ -31,15 +34,32 @@ export class CommentsContainerComponent implements OnInit {
 
   ngOnInit() {
     this.comments$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.postId })
+      select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
     );
 
     const request: LoadCommentsRequest = {
-      postId: this.postId
+      postId: this.post.id,
+      offset: this.currentOffset,
+      limit: 1
     };
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
+    this.currentOffset += 1;
+  }
+
+  loadMoreComments() {
+    // Load 5 more comments
+    const limit = 1;
+    const request: LoadCommentsRequest = {
+      postId: this.post.id,
+      offset: this.currentOffset,
+      limit
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.GetRequestAction(request)
+    );
+    this.currentOffset += limit;
   }
 
   addComment() {
@@ -48,7 +68,7 @@ export class CommentsContainerComponent implements OnInit {
 
     if (val.comment) {
       const request: AddCommentRequest = {
-        postId: this.postId,
+        postId: this.post.id,
         content: val.comment
       };
       this.store$.dispatch(

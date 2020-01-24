@@ -55,6 +55,8 @@ export const STRINGS = {
 
         COMMENTS_CONTAINER: {
 
+          LOAD_MORE_COMMENTS: 'Load more comments',
+
           // Form
           ADD_COMMENT_PLACEHOLDER: 'Add a comment'
 

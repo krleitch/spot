@@ -65,7 +65,7 @@ export class CommentsStoreEffects {
       this.commentService
         .deleteComment(action.request)
         .pipe(
-            map( (response: DeleteCommentSuccess) => new featureActions.GetRequestAction(response)),
+            map( (response: DeleteCommentSuccess) => new featureActions.DeleteSuccessAction(response)),
             catchError( errorResponse =>
               observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )

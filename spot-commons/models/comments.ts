@@ -11,6 +11,8 @@ export interface Comment {
 // Load all comments
 export interface LoadCommentsRequest {
     postId: string;
+    offset: number;
+    limit: number;
 }
 
 export interface LoadCommentsSuccess {

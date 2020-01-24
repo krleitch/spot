@@ -15,7 +15,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.DELETE_SUCCESS: {
       state.comments[action.response.postId].forEach( (comment, i) => {
         if (comment.id === action.response.commentId) {
-          state.comments[action.response.postId].splide(i, 1);
+          state.comments[action.response.postId].splice(i, 1);
         }
       });
       return {
@@ -23,10 +23,13 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
   }
     case ActionTypes.GET_SUCCESS: {
-        state.comments[action.response.postId] = action.response.comments;
-        return {
-          ...state,
-        };
+      if (state.comments[action.response.postId] === undefined) {
+        state.comments[action.response.postId] = [];
+      }
+      state.comments[action.response.postId] = state.comments[action.response.postId].concat(action.response.comments);
+      return {
+        ...state,
+      };
     }
     case ActionTypes.GET_SUCCESS: {
         state.comments[action.response.postId] = action.response.comments;

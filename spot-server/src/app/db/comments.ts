@@ -31,9 +31,9 @@ function getCommentById(commentId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function getCommentByPostId(postId: string): Promise<any> {
-    var sql = 'SELECT * FROM comments WHERE post_id = ? ORDER BY creation_date DESC';
-    var values = [postId];
+function getCommentByPostId(postId: string, offset: number, limit: number): Promise<any> {
+    var sql = 'SELECT * FROM comments WHERE post_id = ? ORDER BY creation_date DESC LIMIT ? OFFSET ?';
+    var values = [postId, limit, offset];
     return db.query(sql, values);
 }
 

@@ -12,7 +12,11 @@ router.use(function timeLog (req: any, res: any, next: any) {
 // Get all comments for a post
 router.get('/:postId', function (req: any, res: any) {
     const postId = req.params.postId
-    comments.getCommentByPostId(postId).then( (rows: any) => {
+
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
+
+    comments.getCommentByPostId(postId, offset, limit).then( (rows: any) => {
         res.status(200).json({ postId: postId, comments: rows });
     }, (err: any) => {
         res.status(500).send('Error getting comments');
