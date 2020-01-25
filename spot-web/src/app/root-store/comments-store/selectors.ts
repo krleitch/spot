@@ -32,4 +32,3 @@ export const selectMyFeatureReplies: MemoizedSelectorWithProps<
   selectMyFeatureState,
   (state, props) => selectReplies(state, props.postId, props.commentId)
 );
-

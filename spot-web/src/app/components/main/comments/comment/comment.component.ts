@@ -61,6 +61,21 @@ export class CommentComponent implements OnInit {
     }
   }
 
+  loadMoreReplies() {
+    // Load 5 more replys
+    const limit = 5;
+    const request: LoadRepliesRequest = {
+      postId: this.comment.post_id,
+      commentId: this.comment.id,
+      offset: this.currentOffset,
+      limit
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.GetReplyRequestAction(request)
+    );
+    this.currentOffset += limit;
+  }
+
   setOptions(value) {
     this.optionsEnabled = value;
   }

@@ -69,7 +69,8 @@ export const STRINGS = {
           REPORT: 'Report',
 
           // Reply
-          ADD_REPLY_PLACEHOLDER: 'Add a reply'
+          ADD_REPLY_PLACEHOLDER: 'Add a reply',
+          LOAD_MORE_REPLIES: 'Load more replies'
 
         }
 

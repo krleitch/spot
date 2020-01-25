@@ -170,3 +170,13 @@ input.ng-dirty.ng-invalid {
   border: 1px solid $error-red;
 }
 
+// replies
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
+}
