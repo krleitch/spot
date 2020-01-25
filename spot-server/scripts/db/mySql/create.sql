@@ -39,7 +39,7 @@ CREATE TABLE comments (
     FOREIGN KEY (account_id) REFERENCES accounts (id)
 );
 
-ALTER TABLE comments ADD FOREIGN KEY (parent_id) REFERENCES comments (id);
+ALTER TABLE comments ADD FOREIGN KEY (parent_id) REFERENCES comments (id) ON DELETE CASCADE;
 
 CREATE TABLE posts_rating (
     id VARCHAR(36) NOT NULL,

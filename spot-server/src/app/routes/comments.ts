@@ -80,4 +80,19 @@ router.post('/:postId/:commentId/add', function (req: any, res: any) {
     });
 });
 
+// Delete a single comment
+router.delete('/:postId/:parentId/:commentId', function (req: any, res: any) {
+
+    const postId = req.params.postId;
+    const parentId = req.params.parentId;
+    const commentId = req.params.commentId;
+
+    comments.deleteCommentById(commentId).then( (rows: any) => {
+        res.status(200).json({ postId: postId, parentId: parentId, commentId: commentId })
+    }, (err: any) => {
+        console.log(err);
+        res.status(500).send('Error deleting comment');
+    });
+});
+
 export = router;

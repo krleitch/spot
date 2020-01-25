@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddCommentSuccess, DeleteCommentRequest,
-          LoadRepliesRequest, LoadRepliesSuccess, AddReplyRequest, AddReplySuccess } from '@models/comments';
+          DeleteCommentSuccess, LoadRepliesRequest, LoadRepliesSuccess, AddReplyRequest, AddReplySuccess,
+          DeleteReplyRequest, DeleteReplySuccess } from '@models/comments';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -27,8 +28,8 @@ export class CommentService {
     return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/add`, request);
   }
 
-  deleteComment(request: DeleteCommentRequest): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`);
+  deleteComment(request: DeleteCommentRequest): Observable<DeleteCommentSuccess> {
+    return this.http.delete<DeleteCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`);
   }
 
   getReplies(request: LoadRepliesRequest): Observable<LoadRepliesSuccess> {
@@ -40,6 +41,10 @@ export class CommentService {
 
   addReply(request: AddReplyRequest): Observable<AddReplySuccess> {
     return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/add`, request);
+  }
+
+  deleteReply(request: DeleteReplyRequest): Observable<DeleteReplySuccess> {
+    return this.http.delete<DeleteReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}`);
   }
 
   failureMessage(message: string) {

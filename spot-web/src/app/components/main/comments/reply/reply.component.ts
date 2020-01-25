@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, AddReplyRequest, DeleteCommentRequest } from '@models/comments';
+import { Comment, AddReplyRequest, DeleteReplyRequest } from '@models/comments';
 
 @Component({
   selector: 'spot-reply',
@@ -75,13 +75,14 @@ export class ReplyComponent implements OnInit {
     }
   }
 
-  deleteComment() {
-    const request: DeleteCommentRequest = {
+  deleteReply() {
+    const request: DeleteReplyRequest = {
       postId: this.reply.post_id,
+      parentId: this.reply.parent_id,
       commentId: this.reply.id
     };
     this.store$.dispatch(
-      new CommentsStoreActions.DeleteRequestAction(request)
+      new CommentsStoreActions.DeleteReplyRequestAction(request)
     );
   }
 
@@ -96,7 +97,7 @@ export class ReplyComponent implements OnInit {
     if (val.comment) {
       const request: AddReplyRequest = {
         postId: this.reply.post_id,
-        commentId: this.reply.id,
+        commentId: this.reply.parent_id,
         content: val.comment
       };
       this.store$.dispatch(

@@ -1,6 +1,7 @@
 export interface Comment {
     id: string;
     post_id: string;
+    parent_id: string;
     creation_date: string;
     content: string;
     likes: number;
@@ -72,11 +73,13 @@ export interface AddReplySuccess {
 // Delete a comment
 export interface DeleteReplyRequest {
     postId: string;
+    parentId: string;
     commentId: string;
 }
 
 export interface DeleteReplySuccess {
     postId: string;
+    parentId: string;
     commentId: string;
 }
 

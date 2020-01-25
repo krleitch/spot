@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 
 import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddCommentSuccess,
           DeleteCommentRequest, DeleteCommentSuccess, AddReplyRequest, AddReplySuccess,
-          LoadRepliesRequest, LoadRepliesSuccess } from '@models/comments';
+          LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess } from '@models/comments';
 
 export enum ActionTypes {
   ADD_REQUEST = '[Comments] Add Request',
@@ -15,6 +15,8 @@ export enum ActionTypes {
   GET_REPLY_SUCCESS = '[Comments] Get Reply Success',
   DELETE_REQUEST = '[Comments] Delete Request',
   DELETE_SUCCESS = '[Comments] Delete Success',
+  DELETE_REPLY_REQUEST = '[Comments] Delete Reply Request',
+  DELETE_REPLY_SUCCESS = '[Comments] Delete Reply Success',
   GENERIC_FAILURE = '[Comments] Generic Failure'
 }
 
@@ -73,9 +75,20 @@ export class GetReplySuccessAction implements Action {
   constructor(public response: LoadRepliesSuccess) {}
 }
 
+export class DeleteReplyRequestAction implements Action {
+  readonly type = ActionTypes.DELETE_REPLY_REQUEST;
+  constructor(public request: DeleteReplyRequest) {}
+}
+
+export class DeleteReplySuccessAction implements Action {
+  readonly type = ActionTypes.DELETE_REPLY_SUCCESS;
+  constructor(public response: DeleteReplySuccess) {}
+}
+
 export type Actions = AddRequestAction | AddSuccessAction |
                       GetRequestAction | GetSuccessAction |
                       DeleteRequestAction | DeleteSuccessAction |
                       AddReplyRequestAction | AddReplySuccessAction |
                       GetReplyRequestAction | GetReplySuccessAction |
+                      DeleteReplyRequestAction | DeleteReplySuccessAction |
                       GenericFailureAction;

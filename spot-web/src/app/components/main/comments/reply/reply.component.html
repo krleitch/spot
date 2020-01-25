@@ -29,7 +29,7 @@
       <div #options class="dropdown align-bottom" (click)="setOptions(true)">
         <i class="material-icons icon-size"> more_horiz </i>
         <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
-          <div class="button" (click)="deleteComment()"> {{ STRINGS.DELETE }} </div>
+          <div class="button" (click)="deleteReply()"> {{ STRINGS.DELETE }} </div>
           <div class="button"> {{ STRINGS.REPORT }} </div>
         </div>
       </div>
