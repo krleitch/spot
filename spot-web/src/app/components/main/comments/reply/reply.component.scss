@@ -63,17 +63,14 @@
 .reply-icon {
   cursor: pointer;
   color: $subtle-grey;
+  visibility: hidden;
   &:hover {
     @extend .highlight;
   }
 }
 
-.delete {
-  cursor: pointer;
-  color: $subtle-grey;
-  &:hover {
-    @extend .highlight;
-  }
+.reply:hover .reply-icon {
+  visibility: visible;
 }
 
 .time {
@@ -89,9 +86,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  visibility: hidden;
   &:hover {
     @extend .highlight;
   }
+}
+
+.reply:hover .dropdown {
+  visibility: visible;
 }
 
 .dropdown-content {

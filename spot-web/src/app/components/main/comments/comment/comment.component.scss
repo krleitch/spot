@@ -60,20 +60,18 @@
   width: 30px;
 }
 
+
 .reply {
   cursor: pointer;
   color: $subtle-grey;
+  visibility: hidden;
   &:hover {
     @extend .highlight;
   }
 }
 
-.delete {
-  cursor: pointer;
-  color: $subtle-grey;
-  &:hover {
-    @extend .highlight;
-  }
+.comment:hover .reply {
+  visibility: visible;
 }
 
 .time {
@@ -89,9 +87,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  visibility: hidden;
   &:hover {
     @extend .highlight;
   }
+}
+
+.comment:hover .dropdown {
+  visibility: visible;
 }
 
 .dropdown-content {
