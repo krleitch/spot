@@ -12,11 +12,6 @@
       <div class="content">
         {{ comment.content }}
       </div>
-      <div class="options">
-        <span class="reply" (click)="setShowAddReply(true)"> {{ STRINGS.REPLY }} </span>
-        <span class="seperator"> | </span>
-        <span class="delete" (click)="deleteComment()"> {{ STRINGS.DELETE }} </span>
-      </div>
       <div *ngIf="showAddReply" class="add">
         <form [formGroup]="form">
           <fieldset>
@@ -31,10 +26,22 @@
       </div>
     </div>
     <div class="right-bar">
+      <div #options class="dropdown align-bottom" (click)="setOptions(true)">
+        <i class="material-icons icon-size"> more_horiz </i>
+        <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
+          <div class="button" (click)="deleteComment()"> {{ STRINGS.DELETE }} </div>
+          <div class="button"> {{ STRINGS.REPORT }} </div>
+        </div>
+      </div>
       <div class="time">
         {{ timeMessage }}
       </div>
+      <div class="reply" (click)="setShowAddReply(true)">
+        <i class="material-icons"> reply </i>
+      </div>
     </div>
   </div>
-  <spot-reply [commentId]="comment.id"></spot-reply>
+  <div *ngFor="let reply of replies$ | async">
+    <spot-reply [reply]="reply"></spot-reply>
+  </div>
 </div>

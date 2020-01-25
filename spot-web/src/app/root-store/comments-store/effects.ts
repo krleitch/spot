@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap, mergeMap } from 'rxjs/operators';
 
 import * as featureActions from './actions';
 import { CommentService } from '../../services/comments.service';
-import { AddCommentSuccess, LoadCommentsSuccess, DeleteCommentSuccess } from '@models/comments';
+import { AddCommentSuccess, LoadCommentsSuccess, DeleteCommentSuccess, AddReplySuccess, LoadRepliesSuccess } from '@models/comments';
 
 @Injectable()
 export class CommentsStoreEffects {
@@ -66,6 +66,40 @@ export class CommentsStoreEffects {
         .deleteComment(action.request)
         .pipe(
             map( (response: DeleteCommentSuccess) => new featureActions.DeleteSuccessAction(response)),
+            catchError( errorResponse =>
+              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            )
+          )
+    )
+  );
+
+  @Effect()
+  addReplyEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.AddReplyRequestAction>(
+      featureActions.ActionTypes.ADD_REPLY_REQUEST
+    ),
+    switchMap(action =>
+      this.commentService
+        .addReply(action.request)
+        .pipe(
+            map( (response: AddReplySuccess) => new featureActions.AddReplySuccessAction(response)),
+            catchError(errorResponse =>
+              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            )
+          )
+    )
+  );
+
+  @Effect()
+  getRepliesEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.GetReplyRequestAction>(
+      featureActions.ActionTypes.GET_REPLY_REQUEST
+    ),
+    mergeMap(action =>
+      this.commentService
+        .getReplies(action.request)
+        .pipe(
+            map( (response: LoadRepliesSuccess) => new featureActions.GetReplySuccessAction(response)),
             catchError( errorResponse =>
               observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )

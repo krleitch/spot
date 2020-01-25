@@ -65,8 +65,8 @@ export const STRINGS = {
         COMMENTS: {
 
           // Options
-          DELETE: 'delete',
-          REPLY: 'reply',
+          DELETE: 'Delete',
+          REPORT: 'Report',
 
           // Reply
           ADD_REPLY_PLACEHOLDER: 'Add a reply'

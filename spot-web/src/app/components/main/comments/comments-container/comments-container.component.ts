@@ -36,7 +36,6 @@ export class CommentsContainerComponent implements OnInit {
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
     );
-
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       offset: this.currentOffset,
@@ -50,7 +49,7 @@ export class CommentsContainerComponent implements OnInit {
 
   loadMoreComments() {
     // Load 5 more comments
-    const limit = 1;
+    const limit = 5;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       offset: this.currentOffset,
@@ -63,9 +62,7 @@ export class CommentsContainerComponent implements OnInit {
   }
 
   addComment() {
-
     const val = this.form.value;
-
     if (val.comment) {
       const request: AddCommentRequest = {
         postId: this.post.id,

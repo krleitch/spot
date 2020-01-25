@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { Comment } from '@models/comments';
+
 @Component({
   selector: 'spot-reply',
   templateUrl: './reply.component.html',
@@ -7,7 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ReplyComponent implements OnInit {
 
-  @Input() commentId: string;
+  @Input() reply: Comment;
 
   constructor() { }
 

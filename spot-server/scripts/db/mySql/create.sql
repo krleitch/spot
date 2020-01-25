@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS posts_rating;
-DROP TABLE IF EXISTS reply_to;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS accounts;
@@ -29,6 +28,7 @@ CREATE TABLE posts (
 CREATE TABLE comments (
     id VARCHAR(36) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
+    parent_id VARCHAR(36),
     account_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
     content varchar(255) NOT NULL,
@@ -39,14 +39,7 @@ CREATE TABLE comments (
     FOREIGN KEY (account_id) REFERENCES accounts (id)
 );
 
-CREATE TABLE reply_to (
-    id VARCHAR(36) NOT NULL,
-    parent_id VARCHAR(36) NOT NULL,
-    reply_id VARCHAR(36) NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (parent_id) REFERENCES comments (id),
-    FOREIGN KEY (reply_id) REFERENCES comments (id)
-);
+ALTER TABLE comments ADD FOREIGN KEY (parent_id) REFERENCES comments (id);
 
 CREATE TABLE posts_rating (
     id VARCHAR(36) NOT NULL,

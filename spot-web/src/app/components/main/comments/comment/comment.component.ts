@@ -1,11 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { RootStoreState } from '@store';
-import { CommentsStoreActions } from '@store/comments-store';
+import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, DeleteCommentRequest } from '@models/comments';
+import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest } from '@models/comments';
 
 @Component({
   selector: 'spot-comment',
@@ -15,23 +16,53 @@ import { Comment, DeleteCommentRequest } from '@models/comments';
 export class CommentComponent implements OnInit {
 
   @Input() comment: Comment;
+  @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
+
+  replies$: Observable<Comment[]>;
 
   form: FormGroup;
 
   timeMessage: string;
   showAddReply = false;
+  optionsEnabled = false;
+
+  currentOffset = 0;
 
   constructor(private fb: FormBuilder,
               private store$: Store<RootStoreState.State>) {
+    document.addEventListener('click', this.offClickHandler.bind(this));
     this.form = this.fb.group({
       comment: ['', Validators.required]
     });
   }
 
   ngOnInit() {
+    this.replies$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectMyFeatureReplies, { postId: this.comment.post_id, commentId: this.comment.id })
+    );
+    const request: LoadRepliesRequest = {
+      postId: this.comment.post_id,
+      commentId: this.comment.id,
+      offset: this.currentOffset,
+      limit: 1
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.GetReplyRequestAction(request)
+    );
+    this.currentOffset += 1;
     this.getTime(this.comment.creation_date);
+  }
+
+  offClickHandler(event: MouseEvent) {
+    if (!this.options.nativeElement.contains(event.target)) {
+      this.setOptions(false);
+    }
+  }
+
+  setOptions(value) {
+    this.optionsEnabled = value;
   }
 
   getTime(date) {
@@ -78,17 +109,18 @@ export class CommentComponent implements OnInit {
 
     const val = this.form.value;
 
-    // if (val.comment) {
-    //   const request: AddCommentRequest = {
-    //     commentId: this.comment.id,
-    //     content: val.comment
-    //   };
-    //   this.store$.dispatch(
-    //     new CommentsStoreActions.AddRequestAction(request)
-    //   );
-    // } else {
-    //   this.form.controls.comment.markAsDirty();
-    // }
+    if (val.comment) {
+      const request: AddReplyRequest = {
+        postId: this.comment.post_id,
+        commentId: this.comment.id,
+        content: val.comment
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.AddReplyRequestAction(request)
+      );
+    } else {
+      this.form.controls.comment.markAsDirty();
+    }
   }
 
   like() {

@@ -42,7 +42,50 @@ export interface DeleteCommentSuccess {
     commentId: string;
 }
 
+// Load all replies
+export interface LoadRepliesRequest {
+    postId: string;
+    commentId: string;
+    offset: number;
+    limit: number;
+}
+
+export interface LoadRepliesSuccess {
+    postId: string;
+    commentId: string;
+    replies: Comment[];
+}
+
+// Add a reply
+export interface AddReplyRequest {
+    postId: string;
+    commentId: string;
+    content: string;
+}
+
+export interface AddReplySuccess {
+    postId: string;
+    commentId: string;
+    reply: Comment;
+}
+
+// Delete a comment
+export interface DeleteReplyRequest {
+    postId: string;
+    commentId: string;
+}
+
+export interface DeleteReplySuccess {
+    postId: string;
+    commentId: string;
+}
+
+// Hash used for storing comments in ngrx
 export interface CommentsHash {
     [post_id: string] : Comment[];
+}
+
+export interface RepliesHash {
+    [post_id: string] : { [comment_id: string] : Comment[]; };
 }
 

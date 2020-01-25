@@ -11,8 +11,8 @@ router.use(function timeLog (req: any, res: any, next: any) {
 
 // Get all comments for a post
 router.get('/:postId', function (req: any, res: any) {
-    const postId = req.params.postId
-
+    
+    const postId = req.params.postId;
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
@@ -43,10 +43,40 @@ router.delete('/:postId/:commentId', function (req: any, res: any) {
     const postId = req.params.postId;
     const commentId = req.params.commentId;
 
-    comments.deleteComment(commentId).then( (rows: any) => {
+    comments.deleteCommentById(commentId).then( (rows: any) => {
         res.status(200).json({ postId: postId, commentId: commentId })
     }, (err: any) => {
         res.status(500).send('Error deleting comment');
+    });
+});
+
+// Get all replies for a comment on a post
+router.get('/:postId/:commentId', function (req: any, res: any) {
+    
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
+
+    comments.getRepliesByCommentId(postId, commentId, offset, limit).then( (rows: any) => {
+        res.status(200).json({ postId: postId, commentId: commentId, replies: rows });
+    }, (err: any) => {
+        res.status(500).send('Error getting comments');
+    });
+});
+
+// Create a reply
+router.post('/:postId/:commentId/add', function (req: any, res: any) {
+
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const { content } = req.body;
+    const accountId = req.user.id;
+
+    comments.addReply(postId, commentId, accountId, content).then( (rows: any) => {
+        res.status(200).json({ postId: postId, commentId: commentId, reply: rows[0] } );
+    }, (err: any) => {
+        res.status(500).send('Error adding reply');
     });
 });
 

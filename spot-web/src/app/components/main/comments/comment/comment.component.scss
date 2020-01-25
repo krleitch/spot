@@ -11,6 +11,10 @@
   width: 100%;
 }
 
+.content {
+  margin-top: 15px;
+}
+
 .highlight {
   color: $button-highlight;
 }
@@ -34,6 +38,8 @@
 // left bar
 .left-bar {
   display: flex;
+  align-items: center;
+  margin-left: 50px;
   width: 50px;
   margin-right: 5px;
 }
@@ -55,22 +61,65 @@
 
 .profile {
   margin-top: 3px;
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   background-color: black;
-  border-radius: 12.5px;
+  border-radius: 15px;
 }
 
-// right bar
+// right-bar
 .right-bar {
   display: flex;
-  justify-content: center;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
   width: 30px;
 }
 
 .time {
   font-size: 12px;
   color: $subtle-grey;
+}
+
+.dropdown {
+  cursor: pointer;
+  margin-left: auto;
+  position: relative;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 50px;
+  top: 20px;
+  right: 0;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content .button {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content .button:hover {background-color: #ddd}
+
+.show {
+  display:block;
+}
+
+.icon-size {
+  font-size: 20px;
 }
 
 // Add reply form
