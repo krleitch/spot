@@ -19,27 +19,11 @@
   color: $button-highlight;
 }
 
-.reply {
-  cursor: pointer;
-  color: $subtle-grey;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
-.delete {
-  cursor: pointer;
-  color: $subtle-grey;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
 // left bar
 .left-bar {
   display: flex;
   align-items: center;
-  margin-left: 50px;
+  margin-left: 25px;
   width: 50px;
   margin-right: 5px;
 }
@@ -74,6 +58,22 @@
   justify-content: space-between;
   align-items: center;
   width: 30px;
+}
+
+.reply {
+  cursor: pointer;
+  color: $subtle-grey;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+.delete {
+  cursor: pointer;
+  color: $subtle-grey;
+  &:hover {
+    @extend .highlight;
+  }
 }
 
 .time {
