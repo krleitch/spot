@@ -85,6 +85,62 @@ export function featureReducer(state = initialState, action: Actions): State {
           ...state,
       };
     }
+    case ActionTypes.LIKE_SUCCESS: {
+      state.comments[action.response.postId].comments.forEach( (comment , i) => {
+        if (comment.id === action.response.commentId) {
+          comment.likes += 1;
+          if (comment.rated === 0) {
+            comment.dislikes -= 1;
+          }
+          comment.rated = 1;
+        }
+      });
+      return {
+        ...state
+      };
+    }
+    case ActionTypes.DISLIKE_SUCCESS: {
+      state.comments[action.response.postId].comments.forEach( (comment , i) => {
+        if (comment.id === action.response.commentId) {
+          comment.dislikes += 1;
+          if (comment.rated === 1) {
+            comment.likes -= 1;
+          }
+          comment.rated = 0;
+        }
+      });
+      return {
+        ...state
+      };
+    }
+    case ActionTypes.LIKE_REPLY_SUCCESS: {
+      state.replies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
+        if (reply.id === action.response.commentId) {
+          reply.likes += 1;
+          if (reply.rated === 0) {
+            reply.dislikes -= 1;
+          }
+          reply.rated = 1;
+        }
+      });
+      return {
+        ...state
+      };
+    }
+    case ActionTypes.DISLIKE_REPLY_SUCCESS: {
+      state.replies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
+        if (reply.id === action.response.commentId) {
+          reply.dislikes += 1;
+          if (reply.rated === 1) {
+            reply.likes -= 1;
+          }
+          reply.rated = 0;
+        }
+      });
+      return {
+        ...state
+      };
+    }
     default: {
       return state;
     }

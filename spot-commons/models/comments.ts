@@ -85,6 +85,54 @@ export interface DeleteReplySuccess {
     commentId: string;
 }
 
+// Like a comment
+export interface LikeCommentRequest {
+    postId: string;
+    commentId: string;
+}
+
+export interface LikeCommentSuccess {
+    postId: string;
+    commentId: string;
+}
+
+// Dislike a comment
+export interface DislikeCommentRequest {
+    postId: string;
+    commentId: string;
+}
+
+export interface DislikeCommentSuccess {
+    postId: string;
+    commentId: string;
+}
+
+// Like a reply
+export interface LikeReplyRequest {
+    postId: string;
+    parentId: string;
+    commentId: string;
+}
+
+export interface LikeReplySuccess {
+    postId: string;
+    parentId: string;
+    commentId: string;
+}
+
+// Dislike a reply
+export interface DislikeReplyRequest {
+    postId: string;
+    parentId: string;
+    commentId: string;
+}
+
+export interface DislikeReplySuccess {
+    postId: string;
+    parentId: string;
+    commentId: string;
+}
+
 // Hash used for storing comments in ngrx
 export interface CommentsHash {
     [post_id: string] : Comment[];

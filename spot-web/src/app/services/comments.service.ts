@@ -5,7 +5,9 @@ import { environment } from 'src/environments/environment';
 
 import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddCommentSuccess, DeleteCommentRequest,
           DeleteCommentSuccess, LoadRepliesRequest, LoadRepliesSuccess, AddReplyRequest, AddReplySuccess,
-          DeleteReplyRequest, DeleteReplySuccess } from '@models/comments';
+          DeleteReplyRequest, DeleteReplySuccess, LikeCommentRequest, DislikeCommentRequest,
+          LikeCommentSuccess, DislikeCommentSuccess, LikeReplyRequest, DislikeReplyRequest,
+          LikeReplySuccess, DislikeReplySuccess } from '@models/comments';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -45,6 +47,24 @@ export class CommentService {
 
   deleteReply(request: DeleteReplyRequest): Observable<DeleteReplySuccess> {
     return this.http.delete<DeleteReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}`);
+  }
+
+  likeComment(request: LikeCommentRequest): Observable<LikeCommentSuccess> {
+    return this.http.put<LikeCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/like`, request);
+  }
+
+  dislikeComment(request: DislikeCommentRequest): Observable<DislikeCommentSuccess> {
+    return this.http.put<DislikeCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/dislike`, request);
+  }
+
+  likeReply(request: LikeReplyRequest): Observable<LikeReplySuccess> {
+    return this.http.put<LikeReplySuccess>
+    (`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}/like`, request);
+  }
+
+  dislikeReply(request: DislikeReplyRequest): Observable<DislikeReplySuccess> {
+    return this.http.put<DislikeReplySuccess>
+    (`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}/dislike`, request);
   }
 
   failureMessage(message: string) {

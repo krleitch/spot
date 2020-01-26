@@ -6,7 +6,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest } from '@models/comments';
+import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
+         LikeCommentRequest, DislikeCommentRequest } from '@models/comments';
 
 @Component({
   selector: 'spot-comment',
@@ -152,11 +153,27 @@ export class CommentComponent implements OnInit {
   }
 
   like() {
-
+    if (this.comment.rated !== 1) {
+      const request: LikeCommentRequest = {
+        postId: this.comment.post_id,
+        commentId: this.comment.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.LikeRequestAction(request)
+      );
+    }
   }
 
   dislike() {
-
+    if (this.comment.rated !== 0) {
+      const request: DislikeCommentRequest = {
+        postId: this.comment.post_id,
+        commentId: this.comment.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.DislikeRequestAction(request)
+      );
+    }
   }
 
 }

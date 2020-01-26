@@ -2,7 +2,9 @@ import { Action } from '@ngrx/store';
 
 import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddCommentSuccess,
           DeleteCommentRequest, DeleteCommentSuccess, AddReplyRequest, AddReplySuccess,
-          LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess } from '@models/comments';
+          LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess,
+          LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
+          LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess} from '@models/comments';
 
 export enum ActionTypes {
   ADD_REQUEST = '[Comments] Add Request',
@@ -17,6 +19,14 @@ export enum ActionTypes {
   DELETE_SUCCESS = '[Comments] Delete Success',
   DELETE_REPLY_REQUEST = '[Comments] Delete Reply Request',
   DELETE_REPLY_SUCCESS = '[Comments] Delete Reply Success',
+  LIKE_REQUEST = '[Comments] Like Request',
+  LIKE_SUCCESS = '[Comments] Like Success',
+  DISLIKE_REQUEST = '[Comments] Dislike Request',
+  DISLIKE_SUCCESS = '[Comments] Dislike Success',
+  LIKE_REPLY_REQUEST = '[Comments] Like Reply Request',
+  LIKE_REPLY_SUCCESS = '[Comments] Like Reply Success',
+  DISLIKE_REPLY_REQUEST = '[Comments] Dislike Reply Request',
+  DISLIKE_REPLY_SUCCESS = '[Comments] Dislike Reply Success',
   GENERIC_FAILURE = '[Comments] Generic Failure'
 }
 
@@ -85,10 +95,54 @@ export class DeleteReplySuccessAction implements Action {
   constructor(public response: DeleteReplySuccess) {}
 }
 
+export class LikeRequestAction implements Action {
+  readonly type = ActionTypes.LIKE_REQUEST;
+  constructor(public request: LikeCommentRequest) {}
+}
+
+export class LikeSuccessAction implements Action {
+  readonly type = ActionTypes.LIKE_SUCCESS;
+  constructor(public response: LikeCommentSuccess) {}
+}
+
+export class DislikeRequestAction implements Action {
+  readonly type = ActionTypes.DISLIKE_REQUEST;
+  constructor(public request: DislikeCommentRequest) {}
+}
+
+export class DislikeSuccessAction implements Action {
+  readonly type = ActionTypes.DISLIKE_SUCCESS;
+  constructor(public response: DislikeCommentSuccess) {}
+}
+
+export class LikeReplyRequestAction implements Action {
+  readonly type = ActionTypes.LIKE_REPLY_REQUEST;
+  constructor(public request: LikeReplyRequest) {}
+}
+
+export class LikeReplySuccessAction implements Action {
+  readonly type = ActionTypes.LIKE_REPLY_SUCCESS;
+  constructor(public response: LikeReplySuccess) {}
+}
+
+export class DislikeReplyRequestAction implements Action {
+  readonly type = ActionTypes.DISLIKE_REPLY_REQUEST;
+  constructor(public request: DislikeReplyRequest) {}
+}
+
+export class DislikeReplySuccessAction implements Action {
+  readonly type = ActionTypes.DISLIKE_REPLY_SUCCESS;
+  constructor(public response: DislikeReplySuccess) {}
+}
+
 export type Actions = AddRequestAction | AddSuccessAction |
                       GetRequestAction | GetSuccessAction |
                       DeleteRequestAction | DeleteSuccessAction |
                       AddReplyRequestAction | AddReplySuccessAction |
                       GetReplyRequestAction | GetReplySuccessAction |
                       DeleteReplyRequestAction | DeleteReplySuccessAction |
+                      LikeRequestAction | LikeSuccessAction |
+                      DislikeRequestAction | DislikeSuccessAction |
+                      LikeReplyRequestAction | LikeReplySuccessAction |
+                      DislikeReplyRequestAction | DislikeReplySuccessAction |
                       GenericFailureAction;

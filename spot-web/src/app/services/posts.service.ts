@@ -34,7 +34,7 @@ export class PostsService {
   }
 
   dislikePost(request: DislikePostRequest): Observable<DislikePostSuccess> {
-    return this.http.put<DislikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/Dislike`, request);
+    return this.http.put<DislikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/dislike`, request);
   }
 
   failureMessage(message: string) {

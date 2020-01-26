@@ -33,8 +33,6 @@ CREATE TABLE comments (
     account_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
     content varchar(255) NOT NULL,
-    likes INT NOT NULL,
-    dislikes INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id)

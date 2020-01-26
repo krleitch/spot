@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, AddReplyRequest, DeleteReplyRequest } from '@models/comments';
+import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest, DislikeReplyRequest } from '@models/comments';
 
 @Component({
   selector: 'spot-reply',
@@ -109,11 +109,29 @@ export class ReplyComponent implements OnInit {
   }
 
   like() {
-
+    if (this.reply.rated !== 1) {
+      const request: LikeReplyRequest = {
+        postId: this.reply.post_id,
+        parentId: this.reply.parent_id,
+        commentId: this.reply.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.LikeReplyRequestAction(request)
+      );
+    }
   }
 
   dislike() {
-
+    if (this.reply.rated !== 0) {
+      const request: DislikeReplyRequest = {
+        postId: this.reply.post_id,
+        parentId: this.reply.parent_id,
+        commentId: this.reply.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.DislikeReplyRequestAction(request)
+      );
+    }
   }
 
 }
