@@ -17,7 +17,12 @@ import { Post } from '@models/posts';
 export class CommentsContainerComponent implements OnInit {
 
   @Input() post: Post;
-  comments$: Observable<Comment[]>;
+  // fix this type
+  comments$: Observable<any>;
+
+  comments = [];
+  totalComments = 0;
+  numLoaded = 0;
 
   STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
 
@@ -36,6 +41,12 @@ export class CommentsContainerComponent implements OnInit {
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
     );
+
+    this.comments$.subscribe( comments => {
+      this.comments = comments.comments;
+      this.totalComments = comments.totalComments;
+    });
+
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       offset: this.currentOffset,
@@ -44,12 +55,13 @@ export class CommentsContainerComponent implements OnInit {
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
+    this.numLoaded += 1;
     this.currentOffset += 1;
   }
 
   loadMoreComments() {
-    // Load 5 more comments
-    const limit = 5;
+    // Load 1 more comments
+    const limit = 1;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       offset: this.currentOffset,
@@ -58,6 +70,7 @@ export class CommentsContainerComponent implements OnInit {
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
+    this.numLoaded += limit;
     this.currentOffset += limit;
   }
 

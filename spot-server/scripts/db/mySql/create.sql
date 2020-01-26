@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS comments_rating;
 DROP TABLE IF EXISTS posts_rating;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
@@ -50,4 +51,15 @@ CREATE TABLE posts_rating (
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     UNIQUE (post_id, account_id)
+);
+
+CREATE TABLE comments_rating (
+    id VARCHAR(36) NOT NULL,
+    comment_id VARCHAR(36) NOT NULL,
+    account_id VARCHAR(36) NOT NULL,
+    rating INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (comment_id) REFERENCES comments (id),
+    FOREIGN KEY (account_id) REFERENCES accounts (id),
+    UNIQUE (comment_id, account_id)
 );

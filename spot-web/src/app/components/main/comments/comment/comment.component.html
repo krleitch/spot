@@ -41,8 +41,8 @@
       </div>
     </div>
   </div>
-  <div *ngFor="let reply of replies$ | async">
+  <div *ngFor="let reply of replies">
     <spot-reply [reply]="reply"></spot-reply>
   </div>
-  <div class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
+  <div *ngIf="numLoaded < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
 </div>

@@ -1,5 +1,3 @@
-import { deleteCommentByPostId } from "../db/comments";
-
 const express = require('express');
 const router = express.Router();
 
@@ -17,7 +15,11 @@ router.get('/:postId', function (req: any, res: any) {
     const limit = Number(req.query.limit);
 
     comments.getCommentByPostId(postId, offset, limit).then( (rows: any) => {
-        res.status(200).json({ postId: postId, comments: rows });
+        comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
+            res.status(200).json({ postId: postId, comments: rows, totalComments: num[0].total });
+        }, (err: any) => {
+            return Promise.reject(err);
+        });
     }, (err: any) => {
         res.status(500).send('Error getting comments');
     });
@@ -59,7 +61,12 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
     const limit = Number(req.query.limit);
 
     comments.getRepliesByCommentId(postId, commentId, offset, limit).then( (rows: any) => {
-        res.status(200).json({ postId: postId, commentId: commentId, replies: rows });
+        comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
+            console.log(num[0]);
+            res.status(200).json({ postId: postId, commentId: commentId, replies: rows, totalReplies: num[0].total });
+        }, (err: any) => {
+            return Promise.reject(err);
+        });
     }, (err: any) => {
         res.status(500).send('Error getting comments');
     });
@@ -90,7 +97,6 @@ router.delete('/:postId/:parentId/:commentId', function (req: any, res: any) {
     comments.deleteCommentById(commentId).then( (rows: any) => {
         res.status(200).json({ postId: postId, parentId: parentId, commentId: commentId })
     }, (err: any) => {
-        console.log(err);
         res.status(500).send('Error deleting comment');
     });
 });

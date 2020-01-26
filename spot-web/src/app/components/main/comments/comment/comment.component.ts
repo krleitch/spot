@@ -20,7 +20,12 @@ export class CommentComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.COMMENTS;
 
-  replies$: Observable<Comment[]>;
+  // fix this type
+  replies$: Observable<any>;
+
+  replies = [];
+  totalReplies = 0;
+  numLoaded = 0;
 
   form: FormGroup;
 
@@ -42,6 +47,12 @@ export class CommentComponent implements OnInit {
     this.replies$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureReplies, { postId: this.comment.post_id, commentId: this.comment.id })
     );
+
+    this.replies$.subscribe( replies => {
+      this.replies = replies.replies;
+      this.totalReplies = replies.totalReplies;
+    });
+
     const request: LoadRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
@@ -52,6 +63,7 @@ export class CommentComponent implements OnInit {
       new CommentsStoreActions.GetReplyRequestAction(request)
     );
     this.currentOffset += 1;
+    this.numLoaded += 1;
     this.getTime(this.comment.creation_date);
   }
 
@@ -62,8 +74,8 @@ export class CommentComponent implements OnInit {
   }
 
   loadMoreReplies() {
-    // Load 5 more replys
-    const limit = 5;
+    // Load 1 more replys
+    const limit = 1;
     const request: LoadRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
@@ -74,6 +86,7 @@ export class CommentComponent implements OnInit {
       new CommentsStoreActions.GetReplyRequestAction(request)
     );
     this.currentOffset += limit;
+    this.numLoaded += limit;
   }
 
   setOptions(value) {

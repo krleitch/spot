@@ -18,6 +18,7 @@ export interface LoadCommentsRequest {
 
 export interface LoadCommentsSuccess {
     postId: string;
+    totalComments: number;
     comments: Comment[];
 }
 
@@ -55,6 +56,7 @@ export interface LoadRepliesSuccess {
     postId: string;
     commentId: string;
     replies: Comment[];
+    totalReplies: number;
 }
 
 // Add a reply

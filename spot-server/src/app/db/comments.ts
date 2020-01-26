@@ -1,4 +1,5 @@
-export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId, addReply, getRepliesByCommentId }
+export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
+          getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost }
 
 const uuid = require('uuid');
 
@@ -54,5 +55,19 @@ function addReply(postId: string, commentId: string, accountId: string, content:
 function getRepliesByCommentId(postId: string, commentId: string, offset: number, limit: number): Promise<any> {
     var sql = 'SELECT * FROM comments WHERE post_id = ? AND parent_id = ? ORDER BY creation_date DESC LIMIT ? OFFSET ?';
     var values = [postId, commentId, limit, offset];
+    return db.query(sql, values);
+}
+
+// Return the number of comments
+function getNumberOfCommentsForPost(postId: string): Promise<any> {
+    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND parent_id IS NULL';
+    var values = [postId];
+    return db.query(sql, values);
+}
+
+// Return the number of replies for comment for post
+function getNumberOfRepliesForComment(postId: string, commentId: string): Promise<any> {
+    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND parent_id = ?';
+    var values = [postId, commentId];
     return db.query(sql, values);
 }

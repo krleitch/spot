@@ -2,13 +2,22 @@ import { createSelector, createFeatureSelector, MemoizedSelector, MemoizedSelect
 
 import { State } from './state';
 
-export const selectComments = (state: State, postId: string): Comment[] => state.comments[postId];
-export const selectReplies = (state: State, postId: string, commentId): Comment[] => {
+export const selectComments = (state: State, postId: string): any => {
+  if (state.comments[postId] === undefined) {
+    return { comments: [], totalComments: 0 };
+  }
+  return state.comments[postId];
+};
+export const selectReplies = (state: State, postId: string, commentId): any => {
   if (state.replies[postId] === undefined) {
-    return [];
+    return { replies: [], totalReplies: 0 };
+  }
+  if (state.replies[postId][commentId] === undefined) {
+    return { replies: [], totalReplies: 0 };
   }
   return state.replies[postId][commentId];
-}
+};
+
 
 export const selectMyFeatureState: MemoizedSelector<
   object,
