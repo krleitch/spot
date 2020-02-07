@@ -18,6 +18,8 @@ export class ReplyComponent implements OnInit {
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.REPLY;
+  profilePictures = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+  'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
   form: FormGroup;
 
@@ -132,6 +134,13 @@ export class ReplyComponent implements OnInit {
         new CommentsStoreActions.DislikeReplyRequestAction(request)
       );
     }
+  }
+
+  getProfilePicture(index) {
+    if ( index === -1 ) {
+      return 'OP';
+    }
+    return this.profilePictures[index];
   }
 
 }

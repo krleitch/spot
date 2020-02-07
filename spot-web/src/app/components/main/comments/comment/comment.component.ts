@@ -20,6 +20,10 @@ export class CommentComponent implements OnInit {
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
+  profilePictures = [ 'Ω', 'B', 'Δ', 'D', 'E', 'Σ', 'G', 'α', 'I', 'Π', 'K', 'L',
+                      'M', 'Φ', 'O', 'P', 'Q', 'R', 'μ', 'β', 'U', 'ν', 'Γ', 'X', 'Y', 'Θ'];
+  PICTURES_LENGTH = 16;
+  COLORS_LENGTH = 14;
 
   // fix this type
   replies$: Observable<any>;
@@ -174,6 +178,20 @@ export class CommentComponent implements OnInit {
         new CommentsStoreActions.DislikeRequestAction(request)
       );
     }
+  }
+
+  getProfilePictureClass(index) {
+    if ( index === -1 ) {
+      return 'profile pop';
+    }
+    return 'profile p' + (index % this.COLORS_LENGTH + 1);
+  }
+
+  getProfilePicture(index) {
+    if ( index === -1 ) {
+      return 'OP';
+    }
+    return this.profilePictures[index % this.PICTURES_LENGTH];
   }
 
 }

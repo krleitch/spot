@@ -3,12 +3,11 @@ export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostI
           likeComment, dislikeComment }
 
 const uuid = require('uuid');
-
 const db = require('./mySql');
 
 // Used for getting a comment or reply
 function getCommentById(commentId: string, accountId: string): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content,
+    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id,
         SUM(CASE WHEN comments_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
         SUM(CASE WHEN comments_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
@@ -22,7 +21,7 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
 
 // Used for getting just the comments of a post
 function getCommentByPostId(postId: string, accountId: string, offset: number, limit: number): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content,
+    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id,
         SUM(CASE WHEN comments_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
         SUM(CASE WHEN comments_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
@@ -68,7 +67,7 @@ function addReply(postId: string, commentId: string, accountId: string, content:
 
 // Used for getting just the comments of a post
 function getRepliesByCommentId(postId: string, commentId: string, accountId: string, offset: number, limit: number): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content,
+    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id,
         SUM(CASE WHEN comments_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
         SUM(CASE WHEN comments_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 

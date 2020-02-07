@@ -7,6 +7,7 @@ export interface Comment {
     likes: number;
     dislikes: number;
     rated: number;
+    profilePicture: number;
 }
 
 // Load all comments

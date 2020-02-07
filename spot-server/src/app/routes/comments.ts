@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const posts = require('../db/posts');
 const comments = require('../db/comments');
+const commentsService = require('../services/comments');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -17,7 +19,12 @@ router.get('/:postId', function (req: any, res: any) {
 
     comments.getCommentByPostId(postId, accountId, offset, limit).then( (rows: any) => {
         comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
-            res.status(200).json({ postId: postId, comments: rows, totalComments: num[0].total });
+            posts.getPostCreator(postId).then( (postCreator: any) => {
+                commentsService.addProfilePicture(rows, postCreator[0].account_id);
+                res.status(200).json({ postId: postId, comments: rows, totalComments: num[0].total });
+            }, (err: any) => {
+                return Promise.reject(err);
+            });
         }, (err: any) => {
             return Promise.reject(err);
         });
@@ -34,7 +41,12 @@ router.post('/:postId/add', function (req: any, res: any) {
     const postId = req.params.postId;
 
     comments.addComment(postId, accountId, content).then( (rows: any) => {
-        res.status(200).json({ postId: postId, comment: rows[0] } );
+        posts.getPostCreator(postId).then( (postCreator: any) => {
+            commentsService.addProfilePicture(rows, postCreator[0].account_id);
+            res.status(200).json({ postId: postId, comment: rows[0] } );
+        }, (err: any) => {
+            return Promise.reject(err);
+        });
     }, (err: any) => {
         res.status(500).send('Error adding comment');
     });
@@ -64,7 +76,12 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
 
     comments.getRepliesByCommentId(postId, commentId, accountId, offset, limit).then( (rows: any) => {
         comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
-            res.status(200).json({ postId: postId, commentId: commentId, replies: rows, totalReplies: num[0].total });
+            posts.getPostCreator(postId).then( (postCreator: any) => {
+                commentsService.addProfilePicture(rows, postCreator[0].account_id);
+                res.status(200).json({ postId: postId, commentId: commentId, replies: rows, totalReplies: num[0].total });
+            }, (err: any) => {
+                return Promise.reject(err);
+            });
         }, (err: any) => {
             return Promise.reject(err);
         });
@@ -82,7 +99,13 @@ router.post('/:postId/:commentId/add', function (req: any, res: any) {
     const accountId = req.user.id;
 
     comments.addReply(postId, commentId, accountId, content).then( (rows: any) => {
-        res.status(200).json({ postId: postId, commentId: commentId, reply: rows[0] } );
+        posts.getPostCreator(postId).then( (postCreator: any) => {
+            commentsService.addProfilePicture(rows, postCreator[0].account_id);
+            res.status(200).json({ postId: postId, commentId: commentId, reply: rows[0] } );
+        }, (err: any) => {
+            return Promise.reject(err);
+        });
+
     }, (err: any) => {
         res.status(500).send('Error adding reply');
     });

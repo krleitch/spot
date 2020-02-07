@@ -1,4 +1,4 @@
-export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost }
+export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator }
 
 const uuid = require('uuid');
 
@@ -59,4 +59,10 @@ function deletePost(id: string): Promise<any> {
         var values = [id];
         return db.query(sql, values);
     });
+}
+
+function getPostCreator(postId: string) {
+    var sql = 'SELECT account_id from posts WHERE id = ?';
+    var values = [postId];
+    return db.query(sql, values);
 }
