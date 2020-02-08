@@ -12,7 +12,15 @@
     </div>
     <div class="content-wrapper">
       <div class="content">
-        {{ comment.content }}
+        {{ getContent() }}
+        <span *ngIf="expandable()">
+          <span *ngIf="!expanded; else notExpanded">
+            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+          </span>
+          <ng-template #notExpanded>
+              <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+          </ng-template>
+        </span>
       </div>
       <div *ngIf="showAddReply" class="add">
         <form [formGroup]="form">

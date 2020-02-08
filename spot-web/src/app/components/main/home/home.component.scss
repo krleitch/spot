@@ -25,6 +25,7 @@
 @media screen and (max-width: $tablet-width) {
   .content {
     width: 95%;
+    min-width: 0;
   }
 }
 

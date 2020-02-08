@@ -22,6 +22,10 @@ export class CommentComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.COMMENTS;
 
+  // Show ... for content
+  MAX_COMMENT_LENGTH = 100;
+  expanded = false;
+
   // fix this type
   replies$: Observable<any>;
 
@@ -74,6 +78,23 @@ export class CommentComponent implements OnInit {
     if (!this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
+  }
+
+  getContent(): string {
+    // https://css-tricks.com/line-clampin/
+    if (this.expandable() && !this.expanded) {
+      return this.comment.content.substring(0, this.MAX_COMMENT_LENGTH) + ' ...';
+    } else {
+      return this.comment.content;
+    }
+  }
+
+  expandable(): boolean {
+    return this.comment.content.length > this.MAX_COMMENT_LENGTH;
+  }
+
+  setExpanded(value: boolean) {
+    this.expanded = value;
   }
 
   loadMoreReplies() {

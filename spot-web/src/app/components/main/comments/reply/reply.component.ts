@@ -20,6 +20,10 @@ export class ReplyComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.REPLY;
 
+  // Show ... for content
+  MAX_REPLY_LENGTH = 100;
+  expanded = false;
+
   form: FormGroup;
 
   timeMessage: string;
@@ -75,6 +79,23 @@ export class ReplyComponent implements OnInit {
       const yearDiff = Math.round(timeDiff / 31536000000);
       this.timeMessage = yearDiff + 'y';
     }
+  }
+
+  getContent(): string {
+    // https://css-tricks.com/line-clampin/
+    if (this.expandable() && !this.expanded) {
+      return this.reply.content.substring(0, this.MAX_REPLY_LENGTH) + ' ...';
+    } else {
+      return this.reply.content;
+    }
+  }
+
+  expandable(): boolean {
+    return this.reply.content.length > this.MAX_REPLY_LENGTH;
+  }
+
+  setExpanded(value: boolean) {
+    this.expanded = value;
   }
 
   deleteReply() {

@@ -19,6 +19,16 @@
   color: $button-highlight;
 }
 
+.expand {
+  flex: 1;
+  text-align: center;
+  color: $subtle-grey;
+  cursor: pointer;
+  &:hover {
+      @extend .highlight;
+  }
+}
+
 // left bar
 .left-bar {
   margin-left: 45px;

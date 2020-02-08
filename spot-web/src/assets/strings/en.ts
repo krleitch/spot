@@ -70,7 +70,11 @@ export const STRINGS = {
 
           // Reply
           ADD_REPLY_PLACEHOLDER: 'Add a reply',
-          LOAD_MORE_REPLIES: 'Load more replies'
+          LOAD_MORE_REPLIES: 'Load more replies',
+
+          // See more
+          SEE_MORE: 'See more',
+          SEE_LESS: 'See less'
 
         },
 
@@ -81,7 +85,11 @@ export const STRINGS = {
           REPORT: 'Report',
 
           // Reply
-          ADD_REPLY_PLACEHOLDER: 'Add a reply'
+          ADD_REPLY_PLACEHOLDER: 'Add a reply',
+
+          // See more
+          SEE_MORE: 'See more',
+          SEE_LESS: 'See less'
 
         }
 

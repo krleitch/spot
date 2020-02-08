@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>) { }
 
   loadedPosts = 0;
-  POSTS_LIMIT = 5;
+  POSTS_LIMIT = 3;
 
   ngOnInit() {
 
