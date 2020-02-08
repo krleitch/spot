@@ -21,11 +21,15 @@
 
 // left bar
 .left-bar {
+  margin-left: 45px;
+  width: 50px;
+  margin-right: 8px;
+}
+
+.left-bar-alignment {
   display: flex;
   align-items: center;
-  margin-left: 50px;
-  width: 50px;
-  margin-right: 5px;
+  margin-top: 5px;
 }
 
 .column {

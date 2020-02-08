@@ -67,18 +67,27 @@
     text-align: left;
 }
 
+.highlight {
+  color: $button-highlight;
+}
+
 .expand {
     flex: 1;
     text-align: center;
     cursor: pointer;
     &:hover {
-        color: $button-highlight;
+        @extend .highlight;
     }
 }
 
 .share {
     flex: 1;
+    color: $subtle-grey;
+    cursor: pointer;
     text-align: right;
+    &:hover {
+      @extend .highlight;
+    }
 }
 
 // right-bar

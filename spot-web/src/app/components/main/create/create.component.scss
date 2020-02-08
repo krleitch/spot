@@ -37,12 +37,24 @@
     background-color: white;
 }
 
+.highlight {
+  color: $button-highlight;
+}
+
 .photo {
     cursor: pointer;
+    color: $subtle-grey;
     margin-right: 10px;
+    &:hover {
+      @extend .highlight;
+    }
 }
 
 .submit {
     font-size: 14px;
+    color: $subtle-grey;
     cursor: pointer;
+    &:hover {
+      @extend .highlight;
+    }
 }

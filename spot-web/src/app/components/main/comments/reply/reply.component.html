@@ -1,12 +1,14 @@
 <div class="container">
   <div class="reply">
     <div class="left-bar">
-      <div class="column">
-        <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': reply.rated == 1}"> keyboard_arrow_up </i>
-        <div class="points"> {{ reply.likes - reply.dislikes }} </div>
-        <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': reply.rated == 0}"> keyboard_arrow_down </i>
+      <div class="left-bar-alignment">
+        <div class="column">
+          <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': reply.rated == 1}"> keyboard_arrow_up </i>
+          <div class="points"> {{ reply.likes - reply.dislikes }} </div>
+          <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': reply.rated == 0}"> keyboard_arrow_down </i>
+        </div>
+        <div [class]="getProfilePictureClass(reply.profilePicture)"> {{ getProfilePictureSymbol(reply.profilePicture) }} </div>
       </div>
-      <div [class]="getProfilePictureClass(reply.profilePicture)"> {{ getProfilePictureSymbol(reply.profilePicture) }} </div>
     </div>
     <div class="content-wrapper">
       <div class="content">
