@@ -6,7 +6,7 @@
         <div class="points"> {{ comment.likes - comment.dislikes }} </div>
         <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': comment.rated == 0}"> keyboard_arrow_down </i>
       </div>
-      <div [class]="getProfilePictureClass(comment.profilePicture)"> {{ getProfilePicture(comment.profilePicture) }} </div>
+      <div [class]="getProfilePictureClass(comment.profilePicture)"> {{ getProfilePictureSymbol(comment.profilePicture) }} </div>
     </div>
     <div class="content-wrapper">
       <div class="content">

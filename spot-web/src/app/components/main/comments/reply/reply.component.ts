@@ -6,6 +6,7 @@ import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest, DislikeReplyRequest } from '@models/comments';
+import { CommentService } from '@services/comments.service';
 
 @Component({
   selector: 'spot-reply',
@@ -18,8 +19,6 @@ export class ReplyComponent implements OnInit {
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.REPLY;
-  profilePictures = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-  'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
   form: FormGroup;
 
@@ -30,7 +29,8 @@ export class ReplyComponent implements OnInit {
   currentOffset = 0;
 
   constructor(private fb: FormBuilder,
-              private store$: Store<RootStoreState.State>) {
+              private store$: Store<RootStoreState.State>,
+              private commentService: CommentService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
     this.form = this.fb.group({
       comment: ['', Validators.required]
@@ -136,11 +136,12 @@ export class ReplyComponent implements OnInit {
     }
   }
 
-  getProfilePicture(index) {
-    if ( index === -1 ) {
-      return 'OP';
-    }
-    return this.profilePictures[index];
+  getProfilePictureClass(index) {
+    return this.commentService.getProfilePictureClass(index);
+  }
+
+  getProfilePictureSymbol(index) {
+    return this.commentService.getProfilePictureSymbol(index);
   }
 
 }

@@ -8,6 +8,7 @@ import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-st
 import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
          LikeCommentRequest, DislikeCommentRequest } from '@models/comments';
+import { CommentService } from '@services/comments.service';
 
 @Component({
   selector: 'spot-comment',
@@ -20,10 +21,6 @@ export class CommentComponent implements OnInit {
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
-  profilePictures = [ 'Ω', 'B', 'Δ', 'D', 'E', 'Σ', 'G', 'α', 'I', 'Π', 'K', 'L',
-                      'M', 'Φ', 'O', 'P', 'Q', 'R', 'μ', 'β', 'U', 'ν', 'Γ', 'X', 'Y', 'Θ'];
-  PICTURES_LENGTH = 16;
-  COLORS_LENGTH = 14;
 
   // fix this type
   replies$: Observable<any>;
@@ -41,7 +38,8 @@ export class CommentComponent implements OnInit {
   currentOffset = 0;
 
   constructor(private fb: FormBuilder,
-              private store$: Store<RootStoreState.State>) {
+              private store$: Store<RootStoreState.State>,
+              private commentService: CommentService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
     this.form = this.fb.group({
       comment: ['', Validators.required]
@@ -181,17 +179,11 @@ export class CommentComponent implements OnInit {
   }
 
   getProfilePictureClass(index) {
-    if ( index === -1 ) {
-      return 'profile pop';
-    }
-    return 'profile p' + (index % this.COLORS_LENGTH + 1);
+    return this.commentService.getProfilePictureClass(index);
   }
 
-  getProfilePicture(index) {
-    if ( index === -1 ) {
-      return 'OP';
-    }
-    return this.profilePictures[index % this.PICTURES_LENGTH];
+  getProfilePictureSymbol(index) {
+    return this.commentService.getProfilePictureSymbol(index);
   }
 
 }
