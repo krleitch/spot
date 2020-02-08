@@ -97,7 +97,7 @@ export class PostsStoreEffects {
     ),
     switchMap(action =>
       this.postsService
-        .getPosts()
+        .getPosts(action.request)
         .pipe(
           map((response: LoadPostSuccess) => new featureActions.LoadSuccessAction( response )),
           catchError(errorResponse =>

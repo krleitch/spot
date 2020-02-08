@@ -22,6 +22,7 @@ import { AccountComponent } from './components/main/account/account.component';
 import { CommentsContainerComponent } from './components/main/comments/comments-container/comments-container.component';
 import { ReplyComponent } from './components/main/comments/reply/reply.component';
 import { CommentComponent } from './components/main/comments/comment/comment.component';
+import { InfiniteScrollComponent } from './components/helpers/infinite-scroll/infinite-scroll.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { CommentComponent } from './components/main/comments/comment/comment.com
     // COMMENTS
     CommentsContainerComponent,
     ReplyComponent,
-    CommentComponent
+    CommentComponent,
+    InfiniteScrollComponent
   ],
   imports: [
     BrowserModule,

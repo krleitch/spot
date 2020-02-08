@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 import { DeletePostRequest, DeletePostSuccess, AddPostRequest, AddPostSuccess, LoadPostSuccess, LikePostSuccess,
-          LikePostRequest, DislikePostRequest, DislikePostSuccess } from '@models/posts';
+          LikePostRequest, DislikePostRequest, DislikePostSuccess, LoadPostRequest } from '@models/posts';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -17,8 +16,11 @@ export class PostsService {
 
   constructor(private http: HttpClient, private alertService: AlertService) { }
 
-  getPosts(): Observable<LoadPostSuccess> {
-    return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`);
+  getPosts(request: LoadPostRequest): Observable<LoadPostSuccess> {
+    let params = new HttpParams();
+    params = params.append('offset', request.offset.toString());
+    params = params.append('limit', request.limit.toString());
+    return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`, { params });
   }
 
   addPost(request: AddPostRequest): Observable<AddPostSuccess> {

@@ -10,8 +10,12 @@ router.use(function timeLog (req: any, res: any, next: any) {
 
 // Get all posts
 router.get('/', function (req: any, res: any) {
+
     const accountId = req.user.id;
-    posts.getPosts(accountId).then((rows: []) => {
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
+
+    posts.getPosts(accountId, offset, limit).then((rows: []) => {
         res.status(200).json({ posts: rows });
     }, (err: any) => {
         console.log(err);

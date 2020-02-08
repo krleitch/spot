@@ -16,6 +16,7 @@ import { AlertComponent } from './components/helpers/alert/alert.component';
 import { NavComponent as MainNavComponent } from './components/main/nav/nav.component';
 import { ReplyComponent } from './components/main/comments/reply/reply.component';
 import { CommentComponent } from './components/main/comments/comment/comment.component';
+import { InfiniteScrollComponent } from './components/helpers/infinite-scroll/infinite-scroll.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -36,7 +37,8 @@ import { CommentComponent } from './components/main/comments/comment/comment.com
     AlertComponent,
     MainNavComponent,
     ReplyComponent,
-    CommentComponent
+    CommentComponent,
+    InfiniteScrollComponent
   ],
   imports: [
     NativeScriptModule,

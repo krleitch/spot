@@ -11,6 +11,11 @@ export interface Post {
 }
 
 // Load posts
+export interface LoadPostRequest {
+    offset: number;
+    limit: number;
+}
+
 export interface LoadPostSuccess {
     posts: Post[];
 }

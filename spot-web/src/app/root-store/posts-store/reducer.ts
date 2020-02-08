@@ -6,7 +6,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.LOAD_SUCCESS: {
       return {
         ...state,
-        posts: action.response.posts
+        posts: state.posts.concat(action.response.posts)
       };
     }
     case ActionTypes.ADD_SUCCESS: {

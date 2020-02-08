@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import { AddPostRequest, AddPostSuccess, LikePostRequest, DislikePostRequest, LikePostSuccess, DislikePostSuccess,
-          DeletePostRequest, DeletePostSuccess, LoadPostSuccess  } from '@models/posts';
+          DeletePostRequest, DeletePostSuccess, LoadPostSuccess, LoadPostRequest  } from '@models/posts';
 
 export enum ActionTypes {
   LIKE_REQUEST = '[Posts] Like Request',
@@ -59,11 +59,12 @@ export class AddRequestAction implements Action {
 
 export class AddSuccessAction implements Action {
   readonly type = ActionTypes.ADD_SUCCESS;
-  constructor( public response: AddPostSuccess) {}
+  constructor(public response: AddPostSuccess) {}
 }
 
 export class LoadRequestAction implements Action {
   readonly type = ActionTypes.LOAD_REQUEST;
+  constructor(public request: LoadPostRequest ) {}
 }
 
 export class LoadSuccessAction implements Action {
