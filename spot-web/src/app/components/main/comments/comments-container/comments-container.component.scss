@@ -16,6 +16,7 @@
 .load-more {
   display: flex;
   justify-content: center;
+  color: $subtle-grey;
   cursor: pointer;
   &:hover {
     @extend .highlight;

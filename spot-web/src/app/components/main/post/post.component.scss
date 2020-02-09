@@ -64,6 +64,7 @@
 
 .comment-number {
     flex: 1;
+    color: $subtle-grey;
     text-align: left;
 }
 
@@ -74,6 +75,7 @@
 .expand {
     flex: 1;
     text-align: center;
+    color: $subtle-grey;
     cursor: pointer;
     &:hover {
         @extend .highlight;
