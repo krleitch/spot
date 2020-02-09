@@ -165,7 +165,7 @@ export class CommentComponent implements OnInit {
 
     const val = this.form.value;
 
-    if (val.comment && val.comment <= this.MAX_COMMENT_LENGTH) {
+    if (val.comment && val.comment.length <= this.MAX_COMMENT_LENGTH) {
       const request: AddReplyRequest = {
         postId: this.comment.post_id,
         commentId: this.comment.id,
