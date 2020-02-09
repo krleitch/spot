@@ -32,11 +32,30 @@
 }
 
 .send {
+  display: flex;
+  align-items: center;
   width: 30px;
+  color: $subtle-grey;
   cursor: pointer;
   &:hover {
     @extend .highlight;
   }
+}
+
+.photo {
+  cursor: pointer;
+  color: $subtle-grey;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+.counter {
+  color: $subtle-grey;
+}
+
+.counter-error {
+  color: $error-red;
 }
 
 // Add comment form
@@ -62,15 +81,18 @@ fieldset {
   box-sizing: border-box;
 }
 
-input {
-  padding: 6px 10px;
-  margin: 6px 0;
-  width: 100%;
-  box-sizing: border-box;
+.input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid $subtle-grey;
-  outline: none;
+  margin: 5px 0px;
 }
 
-input.ng-dirty.ng-invalid {
-  border: 1px solid $error-red;
+input {
+  padding: 6px 6px;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  flex: 1;
 }

@@ -28,6 +28,11 @@ export class CommentsContainerComponent implements OnInit {
 
   form: FormGroup;
 
+  // displaying used characters for add comment
+  MAX_COMMENT_LENGTH = 300;
+  currentLength = 0;
+
+  // for dynamic loading
   currentOffset = 0;
 
   constructor(private fb: FormBuilder,
@@ -76,7 +81,7 @@ export class CommentsContainerComponent implements OnInit {
 
   addComment() {
     const val = this.form.value;
-    if (val.comment) {
+    if (val.comment && val.comment.length <= this.MAX_COMMENT_LENGTH) {
       const request: AddCommentRequest = {
         postId: this.post.id,
         content: val.comment
@@ -87,6 +92,14 @@ export class CommentsContainerComponent implements OnInit {
     } else {
       this.form.controls.comment.markAsDirty();
     }
+  }
+
+  onKey(event) {
+    this.currentLength = this.form.value.comment.length;
+  }
+
+  invalidLength(): boolean {
+    return this.currentLength > this.MAX_COMMENT_LENGTH;
   }
 
 }

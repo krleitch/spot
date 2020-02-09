@@ -25,14 +25,16 @@
       <div *ngIf="showAddReply" class="add">
         <form [formGroup]="form">
           <fieldset>
-            <div class="form-field">
-              <input autocomplete="off" name="comment" formControlName="comment" [placeholder]="STRINGS.ADD_REPLY_PLACEHOLDER" required>
+            <div class="input-container">
+              <input autocomplete="off" name="comment" (keyup)="onKey($event)" formControlName="comment" [placeholder]="STRINGS.ADD_REPLY_PLACEHOLDER" required />
+              <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_REPLY_LENGTH - currentLength }} </span>
+              <i class="material-icons photo"> insert_photo </i>
+              <span class="send" (click)="addReply()">
+                <i class="material-icons"> send </i>
+              </span>
             </div>
           </fieldset>
         </form>
-        <div class="send" (click)="addReply()">
-          <i class="material-icons"> send </i>
-        </div>
       </div>
     </div>
     <div class="right-bar">

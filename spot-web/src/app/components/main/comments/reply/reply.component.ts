@@ -21,10 +21,14 @@ export class ReplyComponent implements OnInit {
   STRINGS = STRINGS.MAIN.REPLY;
 
   // Show ... for content
-  MAX_REPLY_LENGTH = 100;
+  MAX_SHOW_REPLY_LENGTH = 100;
   expanded = false;
 
   form: FormGroup;
+
+  // displaying used characters for add reply
+  MAX_REPLY_LENGTH = 300;
+  currentLength = 0;
 
   timeMessage: string;
   showAddReply = false;
@@ -84,14 +88,14 @@ export class ReplyComponent implements OnInit {
   getContent(): string {
     // https://css-tricks.com/line-clampin/
     if (this.expandable() && !this.expanded) {
-      return this.reply.content.substring(0, this.MAX_REPLY_LENGTH) + ' ...';
+      return this.reply.content.substring(0, this.MAX_SHOW_REPLY_LENGTH) + ' ...';
     } else {
       return this.reply.content;
     }
   }
 
   expandable(): boolean {
-    return this.reply.content.length > this.MAX_REPLY_LENGTH;
+    return this.reply.content.length > this.MAX_SHOW_REPLY_LENGTH;
   }
 
   setExpanded(value: boolean) {
@@ -117,7 +121,7 @@ export class ReplyComponent implements OnInit {
 
     const val = this.form.value;
 
-    if (val.comment) {
+    if (val.comment && val.comment.length <= this.MAX_REPLY_LENGTH) {
       const request: AddReplyRequest = {
         postId: this.reply.post_id,
         commentId: this.reply.parent_id,
@@ -163,6 +167,14 @@ export class ReplyComponent implements OnInit {
 
   getProfilePictureSymbol(index) {
     return this.commentService.getProfilePictureSymbol(index);
+  }
+
+  onKey(event) {
+    this.currentLength = this.form.value.comment.length;
+  }
+
+  invalidLength(): boolean {
+    return this.currentLength > this.MAX_REPLY_LENGTH;
   }
 
 }

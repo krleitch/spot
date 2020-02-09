@@ -23,7 +23,7 @@ export class CommentComponent implements OnInit {
   STRINGS = STRINGS.MAIN.COMMENTS;
 
   // Show ... for content
-  MAX_COMMENT_LENGTH = 100;
+  MAX_SHOW_COMMENT_LENGTH = 100;
   expanded = false;
 
   // fix this type
@@ -34,6 +34,10 @@ export class CommentComponent implements OnInit {
   numLoaded = 0;
 
   form: FormGroup;
+
+  // displaying used characters for add comment
+  MAX_COMMENT_LENGTH = 300;
+  currentLength = 0;
 
   timeMessage: string;
   showAddReply = false;
@@ -83,14 +87,14 @@ export class CommentComponent implements OnInit {
   getContent(): string {
     // https://css-tricks.com/line-clampin/
     if (this.expandable() && !this.expanded) {
-      return this.comment.content.substring(0, this.MAX_COMMENT_LENGTH) + ' ...';
+      return this.comment.content.substring(0, this.MAX_SHOW_COMMENT_LENGTH) + ' ...';
     } else {
       return this.comment.content;
     }
   }
 
   expandable(): boolean {
-    return this.comment.content.length > this.MAX_COMMENT_LENGTH;
+    return this.comment.content.length > this.MAX_SHOW_COMMENT_LENGTH;
   }
 
   setExpanded(value: boolean) {
@@ -161,7 +165,7 @@ export class CommentComponent implements OnInit {
 
     const val = this.form.value;
 
-    if (val.comment) {
+    if (val.comment && val.comment <= this.MAX_COMMENT_LENGTH) {
       const request: AddReplyRequest = {
         postId: this.comment.post_id,
         commentId: this.comment.id,
@@ -205,6 +209,14 @@ export class CommentComponent implements OnInit {
 
   getProfilePictureSymbol(index) {
     return this.commentService.getProfilePictureSymbol(index);
+  }
+
+  onKey(event) {
+    this.currentLength = this.form.value.comment.length;
+  }
+
+  invalidLength(): boolean {
+    return this.currentLength > this.MAX_COMMENT_LENGTH;
   }
 
 }
