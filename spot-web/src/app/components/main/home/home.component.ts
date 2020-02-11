@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
+  location = 'global';
+
   loadedPosts = 0;
   POSTS_LIMIT = 5;
 
@@ -57,6 +59,18 @@ export class HomeComponent implements OnInit {
 
     this.loadedPosts += this.POSTS_LIMIT;
 
+  }
+
+  setGlobal() {
+    this.location = 'global';
+  }
+
+  setLocal() {
+    this.location = 'local';
+  }
+
+  isSelected(location) {
+    return this.location === location;
   }
 
 }

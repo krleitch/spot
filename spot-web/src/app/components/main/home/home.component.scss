@@ -37,6 +37,26 @@ spot-main-nav {
   height: 60px;
 }
 
+.globalToggle {
+  position: fixed;
+  display: flex;
+  top: 20px;
+  left: 100px;
+}
+
+.global {
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.local {
+  cursor: pointer;
+}
+
+.selected {
+  color: $button-highlight;
+}
+
 spot-create {
     width: 100%;
     height: auto;

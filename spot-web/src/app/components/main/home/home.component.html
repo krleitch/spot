@@ -1,4 +1,8 @@
 <spot-main-nav></spot-main-nav>
+<div class="globalToggle">
+  <div class="global" [ngClass]="{'selected': isSelected('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
+  <div class="local" [ngClass]="{'selected': isSelected('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
+</div>
 <div class="container">
   <div class="content">
       <spot-create></spot-create>
