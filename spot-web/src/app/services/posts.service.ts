@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { DeletePostRequest, DeletePostSuccess, AddPostRequest, AddPostSuccess, LoadPostSuccess, LikePostSuccess,
-          LikePostRequest, DislikePostRequest, DislikePostSuccess, LoadPostRequest } from '@models/posts';
+          LikePostRequest, DislikePostRequest, DislikePostSuccess, LoadPostRequest,
+          LoadSinglePostRequest, LoadSinglePostSuccess } from '@models/posts';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -21,6 +22,10 @@ export class PostsService {
     params = params.append('offset', request.offset.toString());
     params = params.append('limit', request.limit.toString());
     return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`, { params });
+  }
+
+  getPost(request: LoadSinglePostRequest): Observable<LoadSinglePostSuccess> {
+    return this.http.get<LoadSinglePostSuccess>(`${this.baseUrl}/posts/${request.postId}`);
   }
 
   addPost(request: AddPostRequest): Observable<AddPostSuccess> {

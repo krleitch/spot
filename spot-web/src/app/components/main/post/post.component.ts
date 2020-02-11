@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
@@ -25,7 +26,7 @@ export class PostComponent implements OnInit {
   timeMessage: string;
   optionsEnabled = false;
 
-  constructor(private store$: Store<RootStoreState.State>) {
+  constructor(private store$: Store<RootStoreState.State>, private router: Router) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -50,6 +51,10 @@ export class PostComponent implements OnInit {
     this.store$.dispatch(
       new PostsStoreActions.DeleteRequestAction(request)
     );
+  }
+
+  openPost() {
+    this.router.navigateByUrl('posts/' + this.post.id);
   }
 
   getTime(date) {

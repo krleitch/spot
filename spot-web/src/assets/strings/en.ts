@@ -48,6 +48,7 @@ export const STRINGS = {
             SEE_LESS: 'See less',
 
             // Options
+            OPEN_POST: 'Open',
             DELETE: 'Delete',
             REPORT: 'Report'
 

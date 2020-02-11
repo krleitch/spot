@@ -8,7 +8,7 @@ import { RegisterComponent } from './components/pre-auth/register/register.compo
 
 import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
-
+import { PostDetailComponent } from './components/main/post-detail/post-detail.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +30,10 @@ export const routes: Routes = [
   {
     path: 'account',
     component: AccountComponent
+  },
+  {
+    path: 'posts/:postId',
+    component: PostDetailComponent
   }
 ];
 

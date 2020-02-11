@@ -20,6 +20,14 @@ export interface LoadPostSuccess {
     posts: Post[];
 }
 
+export interface LoadSinglePostRequest {
+    postId: string;
+}
+
+export interface LoadSinglePostSuccess {
+    post: Post;
+}
+
 // Add a post
 export interface AddPostRequest {
     content: string;

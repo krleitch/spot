@@ -19,7 +19,7 @@
 // include a placeholder
 [contentEditable=true]:empty:not(:focus):before{
     content:attr(ph);
-    color: $description-color;
+    color: $subtle-grey;
     font-style: italic;
 }
 

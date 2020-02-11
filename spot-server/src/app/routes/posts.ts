@@ -28,7 +28,7 @@ router.get('/:postId', function (req: any, res: any) {
     const postId = req.params.postId;
     const accountId = req.user.id;
     posts.getPostById(postId, accountId).then((rows: any) => {
-        res.status(200).json(rows[0]);
+        res.status(200).json({ post: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error getting post');
     })
