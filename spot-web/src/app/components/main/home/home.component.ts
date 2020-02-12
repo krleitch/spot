@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit {
   // needed so the infinite scroll doesnt get called right away to overwrite
   initialLoad = false;
 
+  locationEnabled = false;
+
   ngOnInit() {
 
     this.getAccountLocation();
@@ -88,26 +90,21 @@ export class HomeComponent implements OnInit {
         const request: SetLocationRequest = {
           location: { longitude: position.coords.longitude, latitude: position.coords.latitude }
         };
-        console.log(request);
         this.store$.dispatch(
           new AccountsActions.SetLocationAction(request)
         );
-      }, this.showError);
+        this.locationEnabled = true;
+      }, this.showError.bind(this));
+    } else {
+      // browser doesnt support location
+      this.locationEnabled = false;
     }
   }
 
   showError(error) {
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        console.log('User denied the request for Geolocation.');
-        break;
-      case error.POSITION_UNAVAILABLE:
-        console.log('Location information is unavailable.');
-        break;
-      case error.TIMEOUT:
-        console.log('The request to get user location timed out.');
-        break;
-    }
+    // error.code of error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT
+    // hide the content
+    this.locationEnabled = false;
   }
 
   setGlobal() {

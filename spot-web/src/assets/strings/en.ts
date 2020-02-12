@@ -16,7 +16,9 @@ export const STRINGS = {
         HOME: {
 
             // loading posts
-            LOADING_POSTS: 'Fetching posts...'
+            LOADING_POSTS: 'Fetching posts...',
+
+            ENABLE_LOCATION : 'Please enable location to see posts'
 
         },
 
