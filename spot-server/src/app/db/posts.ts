@@ -32,10 +32,10 @@ function getPostById(postId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function addPost(content: string, accountId: string): Promise<any> {
+function addPost(content: string, location: any, accountId: string): Promise<any> {
     var postId = uuid.v4();
     var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [postId, new Date(), accountId, 43.1233, 45.2323, content];
+    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content];
     return db.query(sql, values).then( (rows: any) => {
         return getPostById(postId, accountId);
     });

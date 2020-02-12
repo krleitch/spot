@@ -36,9 +36,9 @@ router.get('/:postId', function (req: any, res: any) {
 
 // Add a post
 router.post('/', function (req: any, res: any) {
-    const { content } = req.body;
+    const { content, location } = req.body;
     const accountId = req.user.id;
-    posts.addPost(content, accountId).then((rows: any) => {
+    posts.addPost(content, location, accountId).then((rows: any) => {
         res.status(200).json({ post: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error adding post');

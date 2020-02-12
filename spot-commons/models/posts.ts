@@ -1,3 +1,5 @@
+import { Location } from './accounts';
+
 export interface Post {
     id: string;
     creation_date: string;
@@ -33,6 +35,7 @@ export interface LoadSinglePostSuccess {
 // Add a post
 export interface AddPostRequest {
     content: string;
+    location: Location;
 }
 
 export interface AddPostSuccess {
