@@ -8,6 +8,7 @@ export interface Post {
     dislikes: number;
     rated: number;
     comments: number;
+    owned: boolean;
 }
 
 // Load posts

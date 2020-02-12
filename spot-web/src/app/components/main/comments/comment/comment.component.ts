@@ -83,7 +83,7 @@ export class CommentComponent implements OnInit {
       new CommentsStoreActions.GetReplyRequestAction(request)
     );
     this.currentOffset += initialLimit;
-    // off set and num loaded should be based off array lenght, not set here, FIX TODO
+    // off set and num loaded should be based off array length, not set here, FIX TODO
     this.numLoaded += initialLimit;
     this.getTime(this.comment.creation_date);
   }

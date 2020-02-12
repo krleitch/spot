@@ -11,9 +11,10 @@ function getPosts(accountId: string, offset: number, limit: number): Promise<any
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
                       WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                       ELSE NULL END) AS rated,
+                (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
                 (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id GROUP BY posts.id ORDER BY posts.creation_date DESC LIMIT ? OFFSET ?`;
-    var values = [accountId, accountId, limit, offset];
+    var values = [accountId, accountId, accountId, limit, offset];
     return db.query(sql, values);
 }
 
@@ -24,9 +25,10 @@ function getPostById(postId: string, accountId: string): Promise<any> {
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
                     WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                     ELSE NULL END) AS rated,
+                (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
                 (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? GROUP BY posts.id ORDER BY posts.creation_date DESC`;
-    var values = [accountId, accountId, postId];
+    var values = [accountId, accountId, accountId, postId];
     return db.query(sql, values);
 }
 

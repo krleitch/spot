@@ -28,22 +28,15 @@ export class HomeComponent implements OnInit {
   loadedPosts = 0;
   POSTS_LIMIT = 5;
 
+  // keep track of whether the initial load was made
+  // needed so the infinite scroll doesnt get called right away to overwrite
+  initialLoad = false;
+
   ngOnInit() {
 
     this.getAccountLocation();
 
-    this.posts$ = this.store$.pipe(
-      select(PostsStoreSelectors.selectMyFeaturePosts)
-    );
-
-    this.loading$ = this.store$.pipe(
-      select(PostsStoreSelectors.selectMyFeatureLoading)
-    );
-
-  }
-
-  onScroll() {
-
+    // Loads the initial posts
     const request: LoadPostRequest = {
       offset: this.loadedPosts,
       limit: this.POSTS_LIMIT
@@ -55,6 +48,37 @@ export class HomeComponent implements OnInit {
     );
 
     this.loadedPosts += this.POSTS_LIMIT;
+
+    this.posts$ = this.store$.pipe(
+      select(PostsStoreSelectors.selectMyFeaturePosts)
+    );
+
+    this.posts$.subscribe( elem => {
+      this.initialLoad = elem.length !== 0;
+    });
+
+    this.loading$ = this.store$.pipe(
+      select(PostsStoreSelectors.selectMyFeatureLoading)
+    );
+
+  }
+
+  onScroll() {
+
+    if ( this.initialLoad ) {
+
+      const request: LoadPostRequest = {
+        offset: this.loadedPosts,
+        limit: this.POSTS_LIMIT
+      };
+
+      // Load POSTS_LIMIT posts
+      this.store$.dispatch(
+        new PostsStoreActions.LoadRequestAction(request)
+      );
+
+      this.loadedPosts += this.POSTS_LIMIT;
+    }
 
   }
 

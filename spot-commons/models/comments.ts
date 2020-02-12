@@ -8,6 +8,7 @@ export interface Comment {
     dislikes: number;
     rated: number;
     profilePicture: number;
+    owned: boolean;
 }
 
 // Load all comments
