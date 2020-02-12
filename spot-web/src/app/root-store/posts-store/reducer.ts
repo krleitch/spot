@@ -3,10 +3,22 @@ import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
-    case ActionTypes.LOAD_SUCCESS: {
+    case ActionTypes.LOAD_REQUEST: {
       return {
         ...state,
-        posts: state.posts.concat(action.response.posts)
+        loading: true
+      };
+    }
+    case ActionTypes.LOAD_SUCCESS: {
+      if ( action.response.offset === 0 ) {
+        state.posts = action.response.posts;
+      } else {
+        state.posts = state.posts.concat(action.response.posts);
+      }
+      return {
+        ...state,
+        posts: state.posts,
+        loading: false
       };
     }
     case ActionTypes.ADD_SUCCESS: {

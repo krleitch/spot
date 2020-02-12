@@ -21,6 +21,7 @@ export interface LoadCommentsSuccess {
     postId: string;
     totalComments: number;
     comments: Comment[];
+    offset: number;
 }
 
 // Add a comment
@@ -58,6 +59,7 @@ export interface LoadRepliesSuccess {
     commentId: string;
     replies: Comment[];
     totalReplies: number;
+    offset: number;
 }
 
 // Add a reply

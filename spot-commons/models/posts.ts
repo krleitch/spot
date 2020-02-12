@@ -18,6 +18,7 @@ export interface LoadPostRequest {
 
 export interface LoadPostSuccess {
     posts: Post[];
+    offset: number,
 }
 
 export interface LoadSinglePostRequest {

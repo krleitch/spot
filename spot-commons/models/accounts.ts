@@ -5,3 +5,12 @@ export interface Account {
     password: string;
     phone: string;
 }
+
+export interface Location {
+    latitude: number;
+    longitude: number;
+}
+
+export interface SetLocationRequest {
+    location: Location
+}

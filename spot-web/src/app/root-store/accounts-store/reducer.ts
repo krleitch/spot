@@ -40,6 +40,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         account: null
       };
     }
+    case ActionTypes.SET_LOCATION: {
+      return {
+        ...state,
+        location: action.request.location
+      };
+    }
     case ActionTypes.ACCOUNT_SUCCESS: {
       return {
         ...state,

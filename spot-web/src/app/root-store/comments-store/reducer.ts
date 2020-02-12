@@ -33,10 +33,16 @@ export function featureReducer(state = initialState, action: Actions): State {
           totalComments: 0
         };
       }
-      // Error of if you navigate back to page...
-      state.comments[action.response.postId] = {
-        comments: state.comments[action.response.postId].comments.concat(action.response.comments),
-        totalComments: action.response.totalComments
+      if ( action.response.offset === 0 ) {
+        state.comments[action.response.postId] = {
+          comments: action.response.comments,
+          totalComments: action.response.totalComments
+        };
+      } else {
+        state.comments[action.response.postId] = {
+          comments: state.comments[action.response.postId].comments.concat(action.response.comments),
+          totalComments: action.response.totalComments
+        };
       }
       return {
         ...state,
@@ -52,9 +58,16 @@ export function featureReducer(state = initialState, action: Actions): State {
             totalReplies: 0
           };
         }
-        state.replies[action.response.postId][action.response.commentId] = {
-          replies: state.replies[action.response.postId][action.response.commentId].replies.concat(action.response.replies),
-          totalReplies: action.response.totalReplies
+        if ( action.response.offset === 0 ) {
+          state.replies[action.response.postId][action.response.commentId] = {
+            replies: action.response.replies,
+            totalReplies: action.response.totalReplies
+          };
+        } else {
+          state.replies[action.response.postId][action.response.commentId] = {
+            replies: state.replies[action.response.postId][action.response.commentId].replies.concat(action.response.replies),
+            totalReplies: action.response.totalReplies
+          };
         }
         return {
           ...state,

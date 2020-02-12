@@ -50,7 +50,10 @@ export class CommentsStoreEffects {
       this.commentService
         .getComments(action.request)
         .pipe(
-            map( (response: LoadCommentsSuccess) => new featureActions.GetSuccessAction(response)),
+            map( (response: LoadCommentsSuccess) => {
+              response.offset = action.request.offset;
+              return new featureActions.GetSuccessAction(response);
+            }),
             catchError( errorResponse =>
               observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )
@@ -101,7 +104,10 @@ export class CommentsStoreEffects {
       this.commentService
         .getReplies(action.request)
         .pipe(
-            map( (response: LoadRepliesSuccess) => new featureActions.GetReplySuccessAction(response)),
+            map( (response: LoadRepliesSuccess) => {
+              response.offset = action.request.offset;
+              return new featureActions.GetReplySuccessAction(response);
+            }),
             catchError( errorResponse =>
               observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )

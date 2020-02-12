@@ -11,9 +11,9 @@
           <div *ngFor="let post of posts$ | async">
               <spot-post [post]="post"></spot-post>
           </div>
-          <!-- THIS IS TODO, SHOUDL HAVE LOADING PROPERTY IN STORE <div *ngIf="isLoading$ | async">
-            Fetching posts...
-          </div> -->
+          <div class="loading" *ngIf="loading$ | async">
+            {{ STRINGS.LOADING_POSTS }}
+          </div>
         </spot-infinite-scroll>
       </div>
   </div>

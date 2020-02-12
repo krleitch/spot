@@ -13,6 +13,13 @@ export const STRINGS = {
 
         },
 
+        HOME: {
+
+            // loading posts
+            LOADING_POSTS: 'Fetching posts...'
+
+        },
+
         ACCOUNT: {
 
             // No account

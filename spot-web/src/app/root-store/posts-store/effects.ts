@@ -99,7 +99,10 @@ export class PostsStoreEffects {
       this.postsService
         .getPosts(action.request)
         .pipe(
-          map((response: LoadPostSuccess) => new featureActions.LoadSuccessAction( response )),
+          map((response: LoadPostSuccess) => {
+            response.offset = action.request.offset;
+            return new featureActions.LoadSuccessAction( response );
+          }),
           catchError(errorResponse =>
             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
           )
