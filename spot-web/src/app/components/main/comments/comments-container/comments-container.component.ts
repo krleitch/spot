@@ -16,6 +16,7 @@ import { Post } from '@models/posts';
 })
 export class CommentsContainerComponent implements OnInit {
 
+  @Input() detailed: boolean;
   @Input() post: Post;
   // fix this type
   comments$: Observable<any>;
@@ -52,16 +53,24 @@ export class CommentsContainerComponent implements OnInit {
       this.totalComments = comments.totalComments;
     });
 
+    // if detailed load more comments
+    let initialLimit;
+    if ( this.detailed ) {
+      initialLimit = 10;
+    } else {
+      initialLimit = 1;
+    }
+
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       offset: this.currentOffset,
-      limit: 1
+      limit: initialLimit
     };
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
-    this.numLoaded += 1;
-    this.currentOffset += 1;
+    this.numLoaded += initialLimit;
+    this.currentOffset += initialLimit;
   }
 
   loadMoreComments() {

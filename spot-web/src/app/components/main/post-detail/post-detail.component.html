@@ -1,6 +1,6 @@
 <spot-main-nav></spot-main-nav>
 <div class="container">
   <div class="content" *ngIf="post$ | async as post">
-    <spot-post [post]="post"></spot-post>
+    <spot-post [post]="post" [detailed]="true"></spot-post>
   </div>
 </div>

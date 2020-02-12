@@ -1,7 +1,7 @@
 <div class="container">
   <div class="comments-container">
     <div *ngFor="let comment of comments">
-        <spot-comment [comment]="comment"></spot-comment>
+        <spot-comment [comment]="comment" [detailed]="detailed"></spot-comment>
     </div>
     <div *ngIf="numLoaded < totalComments" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
   </div>

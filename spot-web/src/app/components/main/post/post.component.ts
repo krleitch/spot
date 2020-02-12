@@ -15,6 +15,7 @@ import { STRINGS } from '@assets/strings/en';
 })
 export class PostComponent implements OnInit {
 
+  @Input() detailed: boolean;
   @Input() post: Post;
   @ViewChild('options') options;
 

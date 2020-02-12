@@ -15,6 +15,7 @@ import { CommentService } from '@services/comments.service';
 })
 export class ReplyComponent implements OnInit {
 
+  @Input() detailed: boolean;
   @Input() reply: Comment;
   @ViewChild('options') options;
 

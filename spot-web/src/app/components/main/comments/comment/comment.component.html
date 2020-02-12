@@ -54,7 +54,7 @@
     </div>
   </div>
   <div *ngFor="let reply of replies">
-    <spot-reply [reply]="reply"></spot-reply>
+    <spot-reply [reply]="reply" [detailed]="detailed"></spot-reply>
   </div>
   <div *ngIf="numLoaded < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
 </div>

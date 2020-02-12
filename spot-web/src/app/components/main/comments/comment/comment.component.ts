@@ -17,6 +17,7 @@ import { CommentService } from '@services/comments.service';
 })
 export class CommentComponent implements OnInit {
 
+  @Input() detailed: boolean;
   @Input() comment: Comment;
   @ViewChild('options') options;
 
@@ -64,17 +65,26 @@ export class CommentComponent implements OnInit {
       this.totalReplies = replies.totalReplies;
     });
 
+    // if detailed load more replies
+    let initialLimit;
+    if ( this.detailed ) {
+      initialLimit = 10;
+    } else {
+      initialLimit = 1;
+    }
+
     const request: LoadRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
       offset: this.currentOffset,
-      limit: 1
+      limit: initialLimit
     };
     this.store$.dispatch(
       new CommentsStoreActions.GetReplyRequestAction(request)
     );
-    this.currentOffset += 1;
-    this.numLoaded += 1;
+    this.currentOffset += initialLimit;
+    // off set and num loaded should be based off array lenght, not set here, FIX TODO
+    this.numLoaded += initialLimit;
     this.getTime(this.comment.creation_date);
   }
 
