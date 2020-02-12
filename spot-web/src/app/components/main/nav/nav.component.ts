@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import { STRINGS } from '@assets/strings/en';
-
 import { AccountsActions } from '@store/accounts-store';
-import { RootStoreState } from '@store';
+import { AccountsStoreSelectors, RootStoreState } from '@store';
+import { Account } from '@models/accounts';
 
 @Component({
   selector: 'spot-main-nav',
@@ -16,6 +17,8 @@ export class NavComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.NAV;
 
+  account$: Observable<Account>;
+
   @ViewChild('account') accountView;
   accountShowDropdown = false;
 
@@ -23,7 +26,13 @@ export class NavComponent implements OnInit {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsUser)
+    );
+
+  }
 
   offClickHandler(event: MouseEvent) {
     // Hide the dropdown if you click outside

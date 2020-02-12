@@ -5,8 +5,8 @@ const uuid = require('uuid');
 const db = require('./mySql');
 
 function addAccount(email: string, username: string, pass: string, phone: string, salt: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, email, username, pass, phone, salt) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), email, username, pass, phone, salt, false];
+    var sql = 'INSERT INTO accounts (id, email, username, pass, phone, score, salt) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), email, username, pass, phone, 0, salt, false];
     return db.query(sql, values);
 }
 
@@ -28,6 +28,7 @@ function deleteAccount(id: string) {
     return db.query(sql, values);
 }
 
+// TODO, wanna change from *
 function getAccountByEmail(email: string): Promise<any> {
     var sql = 'SELECT * FROM accounts WHERE email = ?';
     var values = [email];

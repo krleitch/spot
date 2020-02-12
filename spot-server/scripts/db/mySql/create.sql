@@ -10,6 +10,7 @@ CREATE TABLE accounts (
     username VARCHAR(255) NOT NULL UNIQUE,
     pass VARCHAR(1024) NOT NULL,
     phone VARCHAR(255) NOT NULL UNIQUE,
+    score INT,
     salt VARCHAR(256),
     facebook_id VARCHAR(36) UNIQUE,
     PRIMARY KEY (id)

@@ -53,6 +53,9 @@
 }
 
 .account {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
     font-size: 18px;
     color: $subtle-grey;
@@ -60,6 +63,18 @@
     &:hover {
       @extend .highlight;
     }
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+.username {
+  font-size: 14px;
+}
+
+.account:hover .username {
+  text-decoration: underline;
 }
 
 // DROPDOWN

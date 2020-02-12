@@ -4,6 +4,7 @@ export interface Account {
     username: string;
     password: string;
     phone: string;
+    score: number;
 }
 
 export interface Location {
