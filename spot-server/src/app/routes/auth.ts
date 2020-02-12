@@ -24,7 +24,7 @@ router.post('/register', function (req: any, res: any) {
             const token = auth.generateToken(user);
             res.status(200).json({
                 jwt: { token: token, expiresIn: '2h' },
-                user: user
+                account: user
             });  
         }, (err: any) => {
             res.status(500).send('Cannot login to account');
@@ -40,7 +40,7 @@ router.post('/login', passport.authenticate('local', {session: true}), function 
     const token = auth.generateToken(user);
     res.status(200).json({
         jwt: { token: token, expiresIn: '2h' },
-        user: user
+        account: user
     });                            
 });
 
@@ -76,7 +76,7 @@ router.post('/login/facebook', function (req: any, res: any) {
             const token = auth.generateToken(user);
             res.status(200).json({
                 jwt: { token: token, expiresIn: '2h' },
-                user: user
+                account: user
             });        
         }, (err: any) => {
             res.sendStatus(500);
