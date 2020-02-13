@@ -13,10 +13,17 @@ export interface Post {
     owned: boolean;
 }
 
+export interface PostFilter {
+    location: string; // global, local
+    sort: string; // new, hot
+}
+
 // Load posts
 export interface LoadPostRequest {
     offset: number;
     limit: number;
+    location: Location;
+    filter: PostFilter;
 }
 
 export interface LoadPostSuccess {

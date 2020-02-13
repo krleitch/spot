@@ -7,6 +7,7 @@ export interface Account {
     score: number;
 }
 
+// the location object associated with the account for the login
 export interface Location {
     latitude: number;
     longitude: number;

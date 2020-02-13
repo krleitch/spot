@@ -4,7 +4,7 @@ const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function getPosts(accountId: string, offset: number, limit: number): Promise<any> {
+function getPosts(accountId: string, latitude: number, longitude: number, location: string , sort: string, offset: number, limit: number): Promise<any> {
     var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content,
                 SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
                 SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
@@ -13,7 +13,15 @@ function getPosts(accountId: string, offset: number, limit: number): Promise<any
                       ELSE NULL END) AS rated,
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
                 (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
-                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id GROUP BY posts.id ORDER BY posts.creation_date DESC LIMIT ? OFFSET ?`;
+                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id GROUP BY posts.id`;
+    var sortSql;
+    if ( sort === 'new' ) {
+        sortSql = ' ORDER BY posts.creation_date DESC';
+    } else {
+        sortSql = ' ORDER BY posts.creation_date DESC';
+    }
+    var limitOffsetSql = ' LIMIT ? OFFSET ?';
+    sql = sql + sortSql + limitOffsetSql;
     var values = [accountId, accountId, accountId, limit, offset];
     return db.query(sql, values);
 }

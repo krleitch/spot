@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
-import { AccountsActions } from '@store/accounts-store';
+import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
 import { Post, LoadPostRequest } from '@models/posts';
-import { SetLocationRequest } from '@models/accounts';
+import { SetLocationRequest, Location } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -23,9 +23,11 @@ export class HomeComponent implements OnInit {
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
-  location = 'global';
+  postlocation = 'global';
+  location$: Observable<Location>;
+  myLocation: Location;
 
-  postFilter = 'new';
+  postSort = 'new';
 
   loadedPosts = 0;
   POSTS_LIMIT = 5;
@@ -40,25 +42,41 @@ export class HomeComponent implements OnInit {
 
     this.getAccountLocation();
 
-    // Loads the initial posts
-    const request: LoadPostRequest = {
-      offset: this.loadedPosts,
-      limit: this.POSTS_LIMIT
-    };
-
-    // Load POSTS_LIMIT posts
-    this.store$.dispatch(
-      new PostsStoreActions.LoadRequestAction(request)
+    this.location$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsLocation)
     );
 
-    this.loadedPosts += this.POSTS_LIMIT;
+    this.location$.subscribe( (location: Location) => {
+      this.myLocation = location;
 
-    this.posts$ = this.store$.pipe(
-      select(PostsStoreSelectors.selectMyFeaturePosts)
-    );
+      // don't load unless we have a location
+      if (location === null) {
+        return;
+      }
 
-    this.posts$.subscribe( elem => {
-      this.initialLoad = elem.length !== 0;
+      // Loads the initial posts
+      const request: LoadPostRequest = {
+        offset: this.loadedPosts,
+        limit: this.POSTS_LIMIT,
+        location: this.myLocation,
+        filter: { location: this.postlocation, sort: this.postSort }
+      };
+
+      // Load POSTS_LIMIT posts
+      this.store$.dispatch(
+        new PostsStoreActions.LoadRequestAction(request)
+      );
+
+      this.loadedPosts += this.POSTS_LIMIT;
+
+      this.posts$ = this.store$.pipe(
+        select(PostsStoreSelectors.selectMyFeaturePosts)
+      );
+
+      this.posts$.subscribe( elem => {
+        this.initialLoad = elem.length !== 0;
+      });
+
     });
 
     this.loading$ = this.store$.pipe(
@@ -73,7 +91,9 @@ export class HomeComponent implements OnInit {
 
       const request: LoadPostRequest = {
         offset: this.loadedPosts,
-        limit: this.POSTS_LIMIT
+        limit: this.POSTS_LIMIT,
+        location: this.myLocation,
+        filter: { location: this.postlocation, sort: this.postSort }
       };
 
       // Load POSTS_LIMIT posts
@@ -83,6 +103,10 @@ export class HomeComponent implements OnInit {
 
       this.loadedPosts += this.POSTS_LIMIT;
     }
+
+  }
+
+  refresh() {
 
   }
 
@@ -110,27 +134,31 @@ export class HomeComponent implements OnInit {
   }
 
   setGlobal() {
-    this.location = 'global';
+    this.postlocation = 'global';
+    this.refresh();
   }
 
   setLocal() {
-    this.location = 'local';
+    this.postlocation = 'local';
+    this.refresh();
   }
 
   isSelectedLocation(location) {
-    return this.location === location;
+    return this.postlocation === location;
   }
 
   setNew() {
-    this.postFilter = 'new';
+    this.postSort = 'new';
+    this.refresh();
   }
 
   setHot() {
-    this.postFilter = 'hot';
+    this.postSort = 'hot';
+    this.refresh();
   }
 
-  isSelectedPostFilter(postfilter) {
-    return this.postFilter === postfilter;
+  isSelectedPostSort(postSort) {
+    return this.postSort === postSort;
   }
 
 }

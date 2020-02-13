@@ -4,8 +4,8 @@
   <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
 </div>
 <div class="postFilterToggle">
-  <div class="new" [ngClass]="{'selectedFilter': isSelectedPostFilter('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
-  <div class="hot" [ngClass]="{'selectedFilter': isSelectedPostFilter('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
+  <div class="new" [ngClass]="{'selectedSort': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
+  <div class="hot" [ngClass]="{'selectedSort': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
 </div>
 <div class="container">
   <div *ngIf="locationEnabled; else noLocation" class="content">

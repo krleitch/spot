@@ -19,6 +19,10 @@ export class PostsService {
 
   getPosts(request: LoadPostRequest): Observable<LoadPostSuccess> {
     let params = new HttpParams();
+    params = params.append('latitude', request.location.latitude.toString());
+    params = params.append('longitude', request.location.longitude.toString());
+    params = params.append('location', request.filter.location);
+    params = params.append('sort', request.filter.sort);
     params = params.append('offset', request.offset.toString());
     params = params.append('limit', request.limit.toString());
     return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`, { params });

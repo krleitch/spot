@@ -12,13 +12,17 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.get('/', function (req: any, res: any) {
 
     const accountId = req.user.id;
+    
+    const latitude = Number(req.query.latitude);
+    const longitude = Number(req.query.longitude);
+    const location = req.query.location;
+    const sort = req.query.sort;
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
-    posts.getPosts(accountId, offset, limit).then((rows: []) => {
+    posts.getPosts(accountId, latitude, longitude, location, sort, offset, limit).then((rows: []) => {
         res.status(200).json({ posts: rows });
     }, (err: any) => {
-        console.log(err);
         res.status(500).send('Error getting posts');
     })
 });
