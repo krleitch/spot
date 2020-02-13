@@ -25,6 +25,8 @@ export class HomeComponent implements OnInit {
 
   location = 'global';
 
+  postFilter = 'new';
+
   loadedPosts = 0;
   POSTS_LIMIT = 5;
 
@@ -115,8 +117,20 @@ export class HomeComponent implements OnInit {
     this.location = 'local';
   }
 
-  isSelected(location) {
+  isSelectedLocation(location) {
     return this.location === location;
+  }
+
+  setNew() {
+    this.postFilter = 'new';
+  }
+
+  setHot() {
+    this.postFilter = 'hot';
+  }
+
+  isSelectedPostFilter(postfilter) {
+    return this.postFilter === postfilter;
   }
 
 }

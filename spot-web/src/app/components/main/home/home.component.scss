@@ -37,7 +37,7 @@ spot-main-nav {
   height: 60px;
 }
 
-.globalToggle {
+.locationToggle {
   position: fixed;
   display: flex;
   top: 20px;
@@ -53,8 +53,40 @@ spot-main-nav {
   cursor: pointer;
 }
 
-.selected {
+.selectedLocation {
   color: $button-highlight;
+}
+
+.postFilterToggle {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  width: 80px;
+  top: 15px;
+  left: calc(50% - 40px);
+  border: 1px solid black;
+}
+
+.new {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  padding: 5px 3px;
+  width: 100%;
+  border-right: 1px solid black;
+}
+
+.hot {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
+  padding: 5px 3px;
+}
+
+.selectedFilter{
+  color: white;
+  background-color: $button-highlight;
 }
 
 spot-create {

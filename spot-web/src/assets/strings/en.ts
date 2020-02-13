@@ -18,7 +18,11 @@ export const STRINGS = {
             // loading posts
             LOADING_POSTS: 'Fetching posts...',
 
-            ENABLE_LOCATION : 'Please enable location to see posts'
+            ENABLE_LOCATION : 'Please enable location to see posts',
+
+            // Posts Toggle
+            NEW: 'New',
+            HOT: 'Hot'
 
         },
 
