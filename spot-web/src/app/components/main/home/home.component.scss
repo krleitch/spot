@@ -64,7 +64,6 @@ spot-main-nav {
   width: 80px;
   top: 15px;
   left: calc(50% - 40px);
-  border: 1px solid black;
 }
 
 .new {
@@ -73,7 +72,7 @@ spot-main-nav {
   cursor: pointer;
   padding: 5px 3px;
   width: 100%;
-  border-right: 1px solid black;
+  background-color: $lighter-grey;
 }
 
 .hot {
@@ -82,6 +81,7 @@ spot-main-nav {
   width: 100%;
   cursor: pointer;
   padding: 5px 3px;
+  background-color: $lighter-grey;
 }
 
 .selectedFilter{
