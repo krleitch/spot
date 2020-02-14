@@ -108,6 +108,23 @@ export class HomeComponent implements OnInit {
 
   refresh() {
 
+    this.loadedPosts = 0;
+
+    // Loads the initial posts
+    const request: LoadPostRequest = {
+      offset: this.loadedPosts,
+      limit: this.POSTS_LIMIT,
+      location: this.myLocation,
+      filter: { location: this.postlocation, sort: this.postSort }
+    };
+
+    // Load POSTS_LIMIT posts
+    this.store$.dispatch(
+      new PostsStoreActions.LoadRequestAction(request)
+    );
+
+    this.loadedPosts += this.POSTS_LIMIT;
+
   }
 
   getAccountLocation() {

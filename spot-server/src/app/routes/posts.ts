@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const comments = require('../db/comments');
 const posts = require('../db/posts');
+const postsService = require('../services/posts');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -20,7 +20,8 @@ router.get('/', function (req: any, res: any) {
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
-    posts.getPosts(accountId, latitude, longitude, location, sort, offset, limit).then((rows: []) => {
+    posts.getPosts(accountId, sort, offset, limit).then((rows: any) => {
+        rows = rows.filter( ( post: any ) => postsService.filterLocation(post, location, latitude, longitude));
         res.status(200).json({ posts: rows });
     }, (err: any) => {
         res.status(500).send('Error getting posts');
