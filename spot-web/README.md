@@ -24,4 +24,4 @@
 * Configure for HTTPS https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/
 * Windows HTTPS https://zeropointdevelopment.com/how-to-get-https-working-in-windows-10-localhost-dev-environment/
 
-Get Spot-Server at https://github.com/krleitch/spot-server
+Get Spot-Server at https://github.com/krleitch/spot-server 
