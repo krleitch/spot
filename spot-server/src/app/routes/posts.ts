@@ -3,6 +3,7 @@ const router = express.Router();
 
 const posts = require('../db/posts');
 const postsService = require('../services/posts');
+const imageService = require('../services/image');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -41,8 +42,11 @@ router.get('/:postId', function (req: any, res: any) {
 
 // Add a post
 router.post('/', function (req: any, res: any) {
-    const { content, location } = req.body;
+    const { content, location, image } = req.body;
     const accountId = req.user.id;
+
+    imageService.uploadImage(image);
+
     posts.addPost(content, location, accountId).then((rows: any) => {
         res.status(200).json({ post: rows[0] });
     }, (err: any) => {

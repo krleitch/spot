@@ -49,7 +49,8 @@ export class CreateComponent implements OnInit {
 
     const post: AddPostRequest = {
       content,
-      location: this.myLocation
+      location: this.myLocation,
+      image: this.imageFile
     };
 
     this.store$.dispatch(

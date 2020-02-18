@@ -43,6 +43,7 @@ export interface LoadSinglePostSuccess {
 export interface AddPostRequest {
     content: string;
     location: Location;
+    image: File;
 }
 
 export interface AddPostSuccess {
