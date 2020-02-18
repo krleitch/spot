@@ -9,6 +9,9 @@
       </div>
     </div>
     <div class="content-container">
+      <div class="distance">
+        {{ getDistance() }}
+      </div>
       <div class="content" [ngClass]="{'content-expanded': expanded}">
         {{ getContent() }}
       </div>

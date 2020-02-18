@@ -1,10 +1,14 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
 import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post } from '@models/posts';
+import { Location } from '@models/accounts';
+import { PostsService } from '@services/posts.service';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -21,18 +25,31 @@ export class PostComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.POST;
 
+  location$: Observable<Location>;
+  myLocation: Location;
+
   MAX_POST_LENGTH = 300;
   expanded = false;
 
   timeMessage: string;
   optionsEnabled = false;
 
-  constructor(private store$: Store<RootStoreState.State>, private router: Router) {
+  constructor(private store$: Store<RootStoreState.State>, private router: Router, private postsService: PostsService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
   ngOnInit() {
+
     this.getTime(this.post.creation_date);
+
+    this.location$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsLocation)
+    );
+
+    this.location$.subscribe( (location: Location) => {
+      this.myLocation = location;
+    });
+
   }
 
   offClickHandler(event: MouseEvent) {
@@ -82,6 +99,11 @@ export class PostComponent implements OnInit {
       const yearDiff = Math.round(timeDiff / 31536000000);
       this.timeMessage = yearDiff + 'y';
     }
+  }
+
+  getDistance() {
+    return this.postsService.calcDistance(this.post.latitude, this.post.longitude, this.myLocation.latitude,
+                                           this.myLocation.longitude, 'M').toFixed(1) + 'm';
   }
 
   getContent(): string {
