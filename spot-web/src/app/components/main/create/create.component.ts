@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { STRINGS } from '@assets/strings/en';
 import { AddPostRequest } from '@models/posts';
@@ -21,7 +22,10 @@ export class CreateComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  imageFile: File;
+  imgSrc: string;
+
+  constructor(private store$: Store<RootStoreState.State>, public domSanitizer: DomSanitizer) { }
 
   ngOnInit() {
 
@@ -50,6 +54,11 @@ export class CreateComponent implements OnInit {
     this.store$.dispatch(
       new PostsStoreActions.AddRequestAction(post)
     );
+  }
+
+  onFileChanged(event) {
+    this.imageFile = event.target.files[0];
+    this.imgSrc = window.URL.createObjectURL(this.imageFile);
   }
 
 }
