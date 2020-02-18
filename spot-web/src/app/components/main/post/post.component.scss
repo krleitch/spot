@@ -46,7 +46,7 @@
     display: flex;
     flex-flow: column;
     justify-content: space-between;
-    padding-top: 10px;
+    padding-top: 5px;
 }
 
 .content {
@@ -87,17 +87,23 @@
     }
 }
 
-.share {
-    flex: 1;
-    color: $subtle-grey;
-    cursor: pointer;
-    text-align: right;
-    &:hover {
-      @extend .highlight;
-    }
+// right-bar
+
+.right-bar {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
-// right-bar
+.share {
+  color: $subtle-grey;
+  cursor: pointer;
+  text-align: right;
+  &:hover {
+    @extend .highlight;
+  }
+}
 
 .dropdown {
   cursor: pointer;

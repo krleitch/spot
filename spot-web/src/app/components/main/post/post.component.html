@@ -9,9 +9,6 @@
       </div>
     </div>
     <div class="content-container">
-      <div class="distance">
-        {{ getDistance() }}
-      </div>
       <div class="content" [ngClass]="{'content-expanded': expanded}">
         {{ getContent() }}
       </div>
@@ -25,7 +22,9 @@
               <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
           </ng-template>
         </div>
-        <i class="material-icons share"> share </i>
+        <div class="distance">
+          {{ getDistance() }}
+        </div>
       </div>
     </div>
     <div class="right-bar">
@@ -37,6 +36,7 @@
           <div class="button"> {{ STRINGS.REPORT }} </div>
         </div>
       </div>
+      <i class="material-icons share"> share </i>
     </div>
   </div>
   <spot-comments-container [post]="post" [detailed]="detailed"></spot-comments-container>
