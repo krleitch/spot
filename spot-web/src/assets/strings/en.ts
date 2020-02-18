@@ -47,7 +47,10 @@ export const STRINGS = {
         CREATE: {
 
             CREATE_PLACEHOLDER: 'Spot something?',
-            SUBMIT: 'Submit'
+            SUBMIT: 'Submit',
+
+            // File options
+            FILE_TITLE: 'File:'
 
         },
 

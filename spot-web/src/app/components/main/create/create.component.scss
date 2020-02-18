@@ -8,6 +8,8 @@
 
 .editor {
     background: white;
+    max-height: 500px;
+    overflow: auto;
     // min-height: 75px;
 }
 
@@ -16,11 +18,18 @@
     // min-height: 75px;
 }
 
+.preview-image {
+  padding: 0px 12px;
+  max-width: 450px;
+  max-height: 1000px;
+}
+
 // include a placeholder
 [contentEditable=true]:empty:not(:focus):before{
     content:attr(ph);
     color: $subtle-grey;
     font-style: italic;
+    cursor: text;
 }
 
 [contenteditable]:focus {
@@ -39,6 +48,24 @@
 
 .highlight {
   color: $button-highlight;
+}
+
+.file-options {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.file-title {
+  margin-right: 5px;
+}
+
+.file-remove {
+  color: $subtle-grey;
+  cursor: pointer;
+  &:hover {
+    color: $error-red;
+  }
 }
 
 .photo {

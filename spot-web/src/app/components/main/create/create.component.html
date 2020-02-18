@@ -1,9 +1,16 @@
 <div class="container">
   <div class="editor">
       <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" spellcheck="false"></div>
-      <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)">
+      <img class="preview-image" *ngIf="imgSrc != null" [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)">
   </div>
   <div class="option-bar">
+    <div class="file-options" *ngIf="imgSrc != null">
+      <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
+      <span class="file-name"> {{ getDisplayFilename(imageFile.name) }} </span>
+      <span class="file-remove" (click)="removeFile()">
+        <i class="material-icons"> delete </i>
+      </span>
+    </div>
     <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
     <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
     <span class="submit" (click)="submit()"> {{ STRINGS.SUBMIT }} </span>

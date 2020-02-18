@@ -22,8 +22,9 @@ export class CreateComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
+  FILENAME_MAX_SIZE = 25;
   imageFile: File;
-  imgSrc: string;
+  imgSrc: string = null;
 
   constructor(private store$: Store<RootStoreState.State>, public domSanitizer: DomSanitizer) { }
 
@@ -59,6 +60,19 @@ export class CreateComponent implements OnInit {
   onFileChanged(event) {
     this.imageFile = event.target.files[0];
     this.imgSrc = window.URL.createObjectURL(this.imageFile);
+  }
+
+  removeFile() {
+    this.imageFile = null;
+    this.imgSrc = null;
+  }
+
+  getDisplayFilename(name: string) {
+    if (name.length > this.FILENAME_MAX_SIZE) {
+      return name.substr(0, this.FILENAME_MAX_SIZE) + '...';
+    } else {
+      return name;
+    }
   }
 
 }
