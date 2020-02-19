@@ -1,1 +1,0 @@
-This is a temp folder. Will be moved to S3 bucket

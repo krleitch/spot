@@ -1,19 +1,38 @@
-export { uploadImage }
+export { upload }
 
-const fs = require("fs");
+const aws = require('aws-sdk');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
 
+const awsconfig = require('../../../awskey.json');
 
-const imageBase = "../images/posts/"
+aws.config.update({
+    secretAccessKey: awsconfig.SecretAccessKey,
+    accessKeyId: awsconfig.AccessKeyID,
+    region: 'us-east-1'
+});
 
-function uploadImage(image: File) {
-    saveImage(image);
+const s3 = new aws.S3();
+
+const fileFilter = (req: any, file: any, cb: any) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(new Error('Invalid file type, only JPEG and PNG is allowed!'), false);
+    }
 }
-
-// this function will be replaced to sending to s3 bucket
-function saveImage(image: File) {
-    fs.writeFile(imageBase + '/test', image, (err: any) => {
-        if (err) {
-            console.log(err);
+  
+const upload = multer({
+    fileFilter,
+    storage: multerS3({
+        acl: 'public-read',
+        s3,
+        bucket: 'spot',
+        metadata: function (req: any, file: any, cb: any) {
+            cb(null, {fieldName: 'TESTING_METADATA'});
+        },
+        key: function (req: any, file: any, cb: any) {
+            cb(null, Date.now().toString())
         }
     })
-}
+});
