@@ -10,15 +10,15 @@
     background: white;
     max-height: 500px;
     overflow: auto;
-    // min-height: 75px;
 }
 
-.content {
+#content {
     padding: 12px 12px;
-    // min-height: 75px;
 }
 
-.preview-image {
+.image {
+  display: flex;
+  justify-content: center;
   padding: 0px 12px;
   max-width: 450px;
   max-height: 1000px;
@@ -68,10 +68,19 @@
   }
 }
 
+.counter {
+  color: $subtle-grey;
+  margin-right: 7px;
+}
+
+.counter-error {
+  color: $error-red;
+}
+
 .photo {
     cursor: pointer;
     color: $subtle-grey;
-    margin-right: 10px;
+    margin-right: 7px;
     &:hover {
       @extend .highlight;
     }

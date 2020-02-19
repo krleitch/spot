@@ -22,6 +22,10 @@ export class CreateComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
+  // displaying used characters for create a post
+  MAX_POST_LENGTH = 2000;
+  currentLength = 0;
+
   FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
@@ -29,6 +33,12 @@ export class CreateComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>, public domSanitizer: DomSanitizer) { }
 
   ngOnInit() {
+
+    const content = document.getElementById('content');
+
+    content.addEventListener('input', ( event ) => {
+      this.currentLength = content.innerText.length;
+    }, false);
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
@@ -41,21 +51,21 @@ export class CreateComponent implements OnInit {
   }
 
   submit() {
+
     const contenteditable = document.querySelector('[contenteditable]');
     const content = contenteditable.textContent;
 
-    // TODO
-    // checks on content, make sure location isnt null
+    if ( content.length <= this.MAX_POST_LENGTH && this.myLocation != null) {
+      const post: AddPostRequest = {
+        content,
+        location: this.myLocation,
+        image: this.imageFile
+      };
 
-    const post: AddPostRequest = {
-      content,
-      location: this.myLocation,
-      image: this.imageFile
-    };
-
-    this.store$.dispatch(
-      new PostsStoreActions.AddRequestAction(post)
-    );
+      this.store$.dispatch(
+        new PostsStoreActions.AddRequestAction(post)
+      );
+    }
   }
 
   onFileChanged(event) {
@@ -74,6 +84,15 @@ export class CreateComponent implements OnInit {
     } else {
       return name;
     }
+  }
+
+  // TODO for making focus better
+  // setFocus() {
+  //   document.getElementById('content').focus();
+  // }
+
+  invalidLength(): boolean {
+    return this.currentLength > this.MAX_POST_LENGTH;
   }
 
 }

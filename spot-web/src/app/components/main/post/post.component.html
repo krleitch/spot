@@ -12,7 +12,7 @@
       <div class="content" [ngClass]="{'content-expanded': expanded}">
         {{ getContent() }}
       </div>
-      <div *ngIf="post.image_src != null">
+      <div class="image" *ngIf="post.image_src != null">
         <img [src]="post.image_src" />
       </div>
       <div class="options">

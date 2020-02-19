@@ -1,7 +1,9 @@
 <div class="container">
   <div class="editor">
-      <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" spellcheck="false"></div>
-      <img class="preview-image" *ngIf="imgSrc != null" [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)">
+      <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" id="content" spellcheck="false"></div>
+      <div class="image" *ngIf="imgSrc != null">
+        <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
+      </div>
   </div>
   <div class="option-bar">
     <div class="file-options" *ngIf="imgSrc != null">
@@ -12,6 +14,7 @@
       </span>
     </div>
     <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
+    <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_POST_LENGTH - currentLength }} </span>
     <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
     <span class="submit" (click)="submit()"> {{ STRINGS.SUBMIT }} </span>
   </div>
