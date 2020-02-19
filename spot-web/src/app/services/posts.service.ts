@@ -33,7 +33,14 @@ export class PostsService {
   }
 
   addPost(request: AddPostRequest): Observable<AddPostSuccess> {
-    return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, request);
+
+    console.log(request.image);
+
+    const formData = new FormData();
+    formData.append('image', request.image);
+    // formData.append('content', request.content);
+
+    return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, formData);
   }
 
   deletePost(request: DeletePostRequest): Observable<DeletePostSuccess> {

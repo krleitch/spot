@@ -1,4 +1,4 @@
-export { upload }
+// export { upload }
 
 const aws = require('aws-sdk');
 const multer = require('multer');
@@ -36,3 +36,5 @@ const upload = multer({
         }
     })
 });
+
+module.exports = upload;
