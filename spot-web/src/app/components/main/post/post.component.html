@@ -12,6 +12,9 @@
       <div class="content" [ngClass]="{'content-expanded': expanded}">
         {{ getContent() }}
       </div>
+      <div *ngIf="post.image_src != null">
+        <img [src]="post.image_src" />
+      </div>
       <div class="options">
         <span class="comment-number"> {{ post.comments }} {{ STRINGS.COMMENTS }} </span>
         <div *ngIf="expandable()">

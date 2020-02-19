@@ -6,6 +6,7 @@ export interface Post {
     longitude: number;
     latitude: number;
     content: string;
+    image_src: string;
     likes: number;
     dislikes: number;
     rated: number;

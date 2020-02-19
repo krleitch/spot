@@ -5,7 +5,7 @@ const uuid = require('uuid');
 const db = require('./mySql');
 
 function getPosts(accountId: string, sort: string, offset: number, limit: number): Promise<any> {
-    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content,
+    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.image_src,
                 SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
                 SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
@@ -27,7 +27,7 @@ function getPosts(accountId: string, sort: string, offset: number, limit: number
 }
 
 function getPostById(postId: string, accountId: string): Promise<any> {
-    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content,
+    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.image_src,
                 SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
                 SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
@@ -40,10 +40,10 @@ function getPostById(postId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function addPost(content: string, location: any, accountId: string): Promise<any> {
+function addPost(content: string, location: any, imageSrc: string, accountId: string): Promise<any> {
     var postId = uuid.v4();
-    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content];
+    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, image_src) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, imageSrc];
     return db.query(sql, values).then( (rows: any) => {
         return getPostById(postId, accountId);
     });

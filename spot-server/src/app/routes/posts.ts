@@ -4,12 +4,6 @@ const router = express.Router();
 const posts = require('../db/posts');
 const postsService = require('../services/posts');
 
-
-// const imageService = require('../services/image');
-const upload = require('../services/image');
-const singleUpload = upload.single('image');
-
-
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
@@ -47,26 +41,18 @@ router.get('/:postId', function (req: any, res: any) {
 
 // Add a post
 router.post('/', function (req: any, res: any) {
-    // const { content, location, image } = req.body;
+   
     const accountId = req.user.id;
+    const { content, location, image } = req.body;
 
-    // imageService.uploadImage(image);
-
-    singleUpload(req, res, function(err: any) {
-        if (err) {
-            console.log(err)
-            return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}]});
-        }
-    
-        return res.json({'imageUrl': req.file.location});
-    });
+    posts.addPost(content, location, image, accountId).then((rows: any) => {
+        res.status(200).json({ post: rows[0] });
+    }, (err: any) => {
+        console.log(err);
+        res.status(500).send('Error adding post');
+    })
 
 
-    // posts.addPost(content, location, accountId).then((rows: any) => {
-    //     res.status(200).json({ post: rows[0] });
-    // }, (err: any) => {
-    //     res.status(500).send('Error adding post');
-    // })
 });
 
 // Like a post
