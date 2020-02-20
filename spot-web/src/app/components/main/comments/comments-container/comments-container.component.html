@@ -6,17 +6,26 @@
     <div *ngIf="numLoaded < totalComments" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
   </div>
   <div class="add">
-    <form [formGroup]="form">
-      <fieldset>
-        <div class="input-container">
-          <input autocomplete="off" name="comment" (keyup)="onKey($event)" formControlName="comment" [placeholder]="STRINGS.ADD_COMMENT_PLACEHOLDER" required />
-          <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_COMMENT_LENGTH - currentLength }} </span>
-          <i class="material-icons photo"> insert_photo </i>
-          <span class="send" (click)="addComment()">
-            <i class="material-icons"> send </i>
-          </span>
-        </div>
-      </fieldset>
-    </form>
+    <div class="editor">
+      <div contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" id="comment-content" spellcheck="false"></div>
+      <div class="image" *ngIf="imgSrc != null">
+        <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
+      </div>
+      <div class="file-options" *ngIf="imgSrc != null">
+        <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
+        <span class="file-name"> {{ getDisplayFilename(imageFile.name) }} </span>
+        <span class="file-remove" (click)="removeFile()">
+          <i class="material-icons"> delete </i>
+        </span>
+      </div>
+      <div class="comment-options">
+        <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_COMMENT_LENGTH - currentLength }} </span>
+        <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
+        <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
+        <span class="send" (click)="addComment()">
+          <i class="material-icons"> send </i>
+        </span>
+      </div>
+    </div>
   </div>
 </div>

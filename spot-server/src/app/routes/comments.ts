@@ -36,11 +36,11 @@ router.get('/:postId', function (req: any, res: any) {
 // Create a comment
 router.post('/:postId/add', function (req: any, res: any) {
 
-    const { content } = req.body;
+    const { content, image } = req.body;
     const accountId = req.user.id;
     const postId = req.params.postId;
 
-    comments.addComment(postId, accountId, content).then( (rows: any) => {
+    comments.addComment(postId, accountId, content, image).then( (rows: any) => {
         posts.getPostCreator(postId).then( (postCreator: any) => {
             commentsService.addProfilePicture(rows, postCreator[0].account_id);
             res.status(200).json({ postId: postId, comment: rows[0] } );
@@ -48,6 +48,7 @@ router.post('/:postId/add', function (req: any, res: any) {
             return Promise.reject(err);
         });
     }, (err: any) => {
+        console.log(err);
         res.status(500).send('Error adding comment');
     });
 });

@@ -23,6 +23,7 @@ export class CreateComponent implements OnInit {
   myLocation: Location;
 
   // displaying used characters for create a post
+  content: HTMLElement;
   MAX_POST_LENGTH = 2000;
   currentLength = 0;
 
@@ -34,10 +35,10 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
 
-    const content = document.getElementById('content');
+    this.content = document.getElementById('content');
 
-    content.addEventListener('input', ( event ) => {
-      this.currentLength = content.innerText.length;
+    this.content.addEventListener('input', ( event ) => {
+      this.currentLength = this.content.innerText.length;
     }, false);
 
     this.location$ = this.store$.pipe(
@@ -52,8 +53,7 @@ export class CreateComponent implements OnInit {
 
   submit() {
 
-    const contenteditable = document.querySelector('[contenteditable]');
-    const content = contenteditable.textContent;
+    const content = this.content.innerText;
 
     if ( content.length <= this.MAX_POST_LENGTH && this.myLocation != null) {
       const post: AddPostRequest = {

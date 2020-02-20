@@ -13,6 +13,9 @@
     <div class="content-wrapper">
       <div class="content">
         {{ getContent() }}
+        <div class="image" *ngIf="comment.image_src != null">
+          <img [src]="comment.image_src" />
+        </div>
         <span *ngIf="expandable()">
           <span *ngIf="!expanded; else notExpanded">
             <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>

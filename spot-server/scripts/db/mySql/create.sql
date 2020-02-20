@@ -22,7 +22,7 @@ CREATE TABLE posts (
     account_id VARCHAR(36) NOT NULL,
     longitude DECIMAL(9,6) NOT NULL,
     latitude DECIMAL(9,6) NOT NULL,
-    content VARCHAR(8000) NOT NULL,
+    content VARCHAR(3000) NOT NULL,
     image_src VARCHAR(200),
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     PRIMARY KEY (id)
@@ -34,7 +34,8 @@ CREATE TABLE comments (
     parent_id VARCHAR(36),
     account_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
-    content varchar(255) NOT NULL,
+    content varchar(400) NOT NULL,
+    image_src VARCHAR(200),
     PRIMARY KEY (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id)

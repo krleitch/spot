@@ -7,7 +7,7 @@ const db = require('./mySql');
 
 // Used for getting a comment or reply
 function getCommentById(commentId: string, accountId: string): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id,
+    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
         SUM(CASE WHEN comments_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
         SUM(CASE WHEN comments_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
@@ -22,7 +22,7 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
 
 // Used for getting just the comments of a post
 function getCommentByPostId(postId: string, accountId: string, offset: number, limit: number): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id,
+    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
         SUM(CASE WHEN comments_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
         SUM(CASE WHEN comments_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
@@ -35,11 +35,11 @@ function getCommentByPostId(postId: string, accountId: string, offset: number, l
     return db.query(sql, values);
 }
 
-function addComment(postId: string, accountId: string, content: string): Promise<any> {
+function addComment(postId: string, accountId: string, content: string, image: string): Promise<any> {
     const commentId = uuid.v4();
     // Note the parent_id is NULL
-    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, content) VALUES (?, ?, ?, ?, ?)';
-    var values = [commentId, postId, accountId, new Date(), content];
+    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, content, image_src) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [commentId, postId, accountId, new Date(), content, image];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(commentId, accountId);  
     });
@@ -69,7 +69,7 @@ function addReply(postId: string, commentId: string, accountId: string, content:
 
 // Used for getting just the comments of a post
 function getRepliesByCommentId(postId: string, commentId: string, accountId: string, offset: number, limit: number): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id,
+    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
         SUM(CASE WHEN comments_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
         SUM(CASE WHEN comments_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 

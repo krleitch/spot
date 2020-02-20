@@ -75,7 +75,10 @@ export const STRINGS = {
           LOAD_MORE_COMMENTS: 'Load more comments',
 
           // Form
-          ADD_COMMENT_PLACEHOLDER: 'Add a comment'
+          ADD_COMMENT_PLACEHOLDER: 'Add a comment',
+
+          // File options
+          FILE_TITLE: 'File:'
 
         },
 

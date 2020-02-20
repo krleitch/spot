@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
@@ -25,25 +25,32 @@ export class CommentsContainerComponent implements OnInit {
   totalComments = 0;
   numLoaded = 0;
 
+  FILENAME_MAX_SIZE = 25;
+  imageFile: File;
+  imgSrc: string = null;
+
   STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
 
-  form: FormGroup;
-
   // displaying used characters for add comment
+  commentContent: HTMLElement;
   MAX_COMMENT_LENGTH = 300;
   currentLength = 0;
 
   // for dynamic loading
   currentOffset = 0;
 
-  constructor(private fb: FormBuilder,
-              private store$: Store<RootStoreState.State>) {
-    this.form = this.fb.group({
-      comment: ['', Validators.required]
-    });
+  constructor(private store$: Store<RootStoreState.State>,
+              public domSanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
+
+    this.commentContent = document.getElementById('comment-content');
+
+    this.commentContent.addEventListener('input', ( event ) => {
+      this.currentLength = this.commentContent.innerText.length;
+    }, false);
+
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
     );
@@ -71,6 +78,7 @@ export class CommentsContainerComponent implements OnInit {
     );
     this.numLoaded += initialLimit;
     this.currentOffset += initialLimit;
+
   }
 
   loadMoreComments() {
@@ -89,26 +97,41 @@ export class CommentsContainerComponent implements OnInit {
   }
 
   addComment() {
-    const val = this.form.value;
-    if (val.comment && val.comment.length <= this.MAX_COMMENT_LENGTH) {
+
+    const content = this.commentContent.innerText;
+
+    if (content.length <= this.MAX_COMMENT_LENGTH) {
       const request: AddCommentRequest = {
         postId: this.post.id,
-        content: val.comment
+        content,
+        image: this.imageFile
       };
       this.store$.dispatch(
         new CommentsStoreActions.AddRequestAction(request)
       );
-    } else {
-      this.form.controls.comment.markAsDirty();
     }
-  }
-
-  onKey(event) {
-    this.currentLength = this.form.value.comment.length;
   }
 
   invalidLength(): boolean {
     return this.currentLength > this.MAX_COMMENT_LENGTH;
+  }
+
+  onFileChanged(event) {
+    this.imageFile = event.target.files[0];
+    this.imgSrc = window.URL.createObjectURL(this.imageFile);
+  }
+
+  removeFile() {
+    this.imageFile = null;
+    this.imgSrc = null;
+  }
+
+  getDisplayFilename(name: string) {
+    if (name.length > this.FILENAME_MAX_SIZE) {
+      return name.substr(0, this.FILENAME_MAX_SIZE) + '...';
+    } else {
+      return name;
+    }
   }
 
 }

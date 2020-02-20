@@ -4,6 +4,7 @@ export interface Comment {
     parent_id: string;
     creation_date: string;
     content: string;
+    image_src: string;
     likes: number;
     dislikes: number;
     rated: number;
@@ -29,6 +30,7 @@ export interface LoadCommentsSuccess {
 export interface AddCommentRequest {
     postId: string;
     content: string;
+    image: File;
 }
 
 export interface AddCommentSuccess {
@@ -68,6 +70,7 @@ export interface AddReplyRequest {
     postId: string;
     commentId: string;
     content: string;
+    // image: File;
 }
 
 export interface AddReplySuccess {

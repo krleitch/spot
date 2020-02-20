@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddCommentSuccess, DeleteCommentRequest,
@@ -32,8 +33,23 @@ export class CommentService {
   }
 
   addComment(request: AddCommentRequest): Observable<AddCommentSuccess> {
-    return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/add`, request);
+
+    if ( request.image ) {
+      const formData = new FormData();
+      formData.append('image', request.image);
+
+      return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
+        request.image = response.imageSrc;
+        return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/add`, request);
+      }));
+
+    } else {
+      request.image = null;
+      return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/add`, request);
+    }
+
   }
+
 
   deleteComment(request: DeleteCommentRequest): Observable<DeleteCommentSuccess> {
     return this.http.delete<DeleteCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`);
