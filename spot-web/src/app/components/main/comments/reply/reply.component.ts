@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
@@ -25,9 +25,12 @@ export class ReplyComponent implements OnInit {
   MAX_SHOW_REPLY_LENGTH = 100;
   expanded = false;
 
-  form: FormGroup;
+  FILENAME_MAX_SIZE = 20;
+  imageFile: File;
+  imgSrc: string = null;
 
   // displaying used characters for add reply
+  reply2Content: HTMLElement;
   MAX_REPLY_LENGTH = 300;
   currentLength = 0;
 
@@ -37,16 +40,20 @@ export class ReplyComponent implements OnInit {
 
   currentOffset = 0;
 
-  constructor(private fb: FormBuilder,
-              private store$: Store<RootStoreState.State>,
-              private commentService: CommentService) {
+  constructor(private store$: Store<RootStoreState.State>,
+              private commentService: CommentService,
+              public domSanitizer: DomSanitizer) {
     document.addEventListener('click', this.offClickHandler.bind(this));
-    this.form = this.fb.group({
-      comment: ['', Validators.required]
-    });
   }
 
   ngOnInit() {
+
+    this.reply2Content = document.getElementById('reply2-content');
+
+    this.reply2Content.addEventListener('input', ( event ) => {
+      this.currentLength = this.reply2Content.innerText.length;
+    }, false);
+
     this.getTime(this.reply.creation_date);
   }
 
@@ -120,19 +127,18 @@ export class ReplyComponent implements OnInit {
 
   addReply() {
 
-    const val = this.form.value;
+    const content = this.reply2Content.textContent;
 
-    if (val.comment && val.comment.length <= this.MAX_REPLY_LENGTH) {
+    if (content.length <= this.MAX_REPLY_LENGTH) {
       const request: AddReplyRequest = {
         postId: this.reply.post_id,
         commentId: this.reply.parent_id,
-        content: val.comment
+        content,
+        image: this.imageFile
       };
       this.store$.dispatch(
         new CommentsStoreActions.AddReplyRequestAction(request)
       );
-    } else {
-      this.form.controls.comment.markAsDirty();
     }
   }
 
@@ -170,12 +176,26 @@ export class ReplyComponent implements OnInit {
     return this.commentService.getProfilePictureSymbol(index);
   }
 
-  onKey(event) {
-    this.currentLength = this.form.value.comment.length;
-  }
-
   invalidLength(): boolean {
     return this.currentLength > this.MAX_REPLY_LENGTH;
+  }
+
+  onFileChanged(event) {
+    this.imageFile = event.target.files[0];
+    this.imgSrc = window.URL.createObjectURL(this.imageFile);
+  }
+
+  removeFile() {
+    this.imageFile = null;
+    this.imgSrc = null;
+  }
+
+  getDisplayFilename(name: string) {
+    if (name.length > this.FILENAME_MAX_SIZE) {
+      return name.substr(0, this.FILENAME_MAX_SIZE) + '...';
+    } else {
+      return name;
+    }
   }
 
 }

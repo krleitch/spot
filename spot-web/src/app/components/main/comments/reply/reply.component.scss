@@ -15,6 +15,15 @@
   margin-top: 15px;
 }
 
+.image {
+  display: flex;
+  justify-content: center;
+  padding: 6px 12px;
+  width: 100%;
+  max-width: 450px;
+  max-height: 1000px;
+}
+
 .highlight {
   color: $button-highlight;
 }
@@ -150,6 +159,10 @@
   align-items: center;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .send {
   display: flex;
   align-items: center;
@@ -163,6 +176,7 @@
 .photo {
   cursor: pointer;
   color: $subtle-grey;
+  margin-right: 3px;
   &:hover {
     @extend .highlight;
   }
@@ -170,46 +184,76 @@
 
 .counter {
   color: $subtle-grey;
+  margin-right: 3px;
 }
 
 .counter-error {
   color: $error-red;
 }
 
-form {
+.editor {
   display: flex;
-  flex-flow: column;
-  justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   width: 100%;
   box-sizing: border-box;
-}
-
-fieldset {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  width: 100%;
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
-}
-
-.input-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border: 1px solid $subtle-grey;
   margin: 5px 0px;
 }
 
-input {
+#reply2-content {
+  flex-grow: 1;
   padding: 6px 6px;
+  max-width: 100%;
   box-sizing: border-box;
-  border: none;
-  outline: none;
+  overflow-wrap: break-word;
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+  padding: 6px 12px;
+  width: 100%;
+  max-width: 450px;
+  max-height: 1000px;
+}
+
+// include a placeholder
+[contentEditable=true]:empty:not(:focus):before{
+  content:attr(ph);
+  color: $subtle-grey;
+  font-style: italic;
+  cursor: text;
+}
+
+[contenteditable]:focus {
+  outline: 0px solid transparent;
+}
+
+.comment-options {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  padding: 0px 6px;
+}
+
+.file-options {
   flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.file-title {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.file-remove {
+  color: $subtle-grey;
+  cursor: pointer;
+  &:hover {
+    color: $error-red;
+  }
 }
 
 // replies

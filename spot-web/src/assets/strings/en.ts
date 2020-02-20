@@ -94,7 +94,10 @@ export const STRINGS = {
 
           // See more
           SEE_MORE: 'See more',
-          SEE_LESS: 'See less'
+          SEE_LESS: 'See less',
+
+          // File options
+          FILE_TITLE: 'File:'
 
         },
 
@@ -109,7 +112,10 @@ export const STRINGS = {
 
           // See more
           SEE_MORE: 'See more',
-          SEE_LESS: 'See less'
+          SEE_LESS: 'See less',
+
+          // File options
+          FILE_TITLE: 'File:'
 
         }
 

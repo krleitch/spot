@@ -96,10 +96,10 @@ router.post('/:postId/:commentId/add', function (req: any, res: any) {
 
     const postId = req.params.postId;
     const commentId = req.params.commentId;
-    const { content } = req.body;
+    const { content, image } = req.body;
     const accountId = req.user.id;
 
-    comments.addReply(postId, commentId, accountId, content).then( (rows: any) => {
+    comments.addReply(postId, commentId, accountId, content, image).then( (rows: any) => {
         posts.getPostCreator(postId).then( (postCreator: any) => {
             commentsService.addProfilePicture(rows, postCreator[0].account_id);
             res.status(200).json({ postId: postId, commentId: commentId, reply: rows[0] } );

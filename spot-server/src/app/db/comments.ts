@@ -58,10 +58,10 @@ function deleteCommentByPostId(postId: string): Promise<any> {
 }
 
 // Add a reply
-function addReply(postId: string, commentId: string, accountId: string, content: string): Promise<any> {
+function addReply(postId: string, commentId: string, accountId: string, content: string, image: string): Promise<any> {
     const replyId = uuid.v4();
-    var sql = 'INSERT INTO comments (id, post_id, parent_id, account_id, creation_date, content) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [replyId, postId, commentId, accountId, new Date(), content];
+    var sql = 'INSERT INTO comments (id, post_id, parent_id, account_id, creation_date, content, image_src) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    var values = [replyId, postId, commentId, accountId, new Date(), content, image];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(replyId, accountId);  
     });    

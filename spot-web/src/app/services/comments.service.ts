@@ -63,7 +63,21 @@ export class CommentService {
   }
 
   addReply(request: AddReplyRequest): Observable<AddReplySuccess> {
-    return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/add`, request);
+
+    if ( request.image ) {
+      const formData = new FormData();
+      formData.append('image', request.image);
+
+      return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
+        request.image = response.imageSrc;
+        return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/add`, request);
+      }));
+
+    } else {
+      request.image = null;
+      return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/add`, request);
+    }
+
   }
 
   deleteReply(request: DeleteReplyRequest): Observable<DeleteReplySuccess> {

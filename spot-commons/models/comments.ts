@@ -70,7 +70,7 @@ export interface AddReplyRequest {
     postId: string;
     commentId: string;
     content: string;
-    // image: File;
+    image: File;
 }
 
 export interface AddReplySuccess {
