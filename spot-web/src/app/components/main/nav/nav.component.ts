@@ -19,6 +19,8 @@ export class NavComponent implements OnInit {
 
   account$: Observable<Account>;
 
+  showNotifications = false;
+
   @ViewChild('account') accountView;
   accountShowDropdown = false;
 
@@ -57,6 +59,10 @@ export class NavComponent implements OnInit {
 
   navigateHome() {
     this.router.navigateByUrl('/home');
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
   }
 
 }

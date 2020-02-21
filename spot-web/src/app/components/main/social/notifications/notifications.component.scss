@@ -1,0 +1,16 @@
+@import '../../../../styles/colors';
+
+.container {
+  position: relative;
+}
+
+.notifications {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  background-color: white;
+  border: 1px solid black;
+  min-width: 250px;
+  min-height: 500px;
+  z-index: 2;
+}

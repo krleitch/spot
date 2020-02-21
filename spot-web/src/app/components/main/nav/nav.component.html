@@ -6,7 +6,8 @@
       <span> {{ myaccount.score }} </span>
     </div>
     <div class="notifications">
-      <i class="material-icons"> notifications_none </i>
+      <i class="material-icons" (click)="toggleNotifications()"> notifications_none </i>
+      <spot-notifications *ngIf="showNotifications"></spot-notifications>
     </div>
     <div #account class="account" (click)="accountSetDropdown(true)">
       <i class="material-icons icon"> person_outline </i>

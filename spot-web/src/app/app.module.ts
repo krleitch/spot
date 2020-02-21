@@ -25,6 +25,8 @@ import { CommentComponent } from './components/main/comments/comment/comment.com
 import { InfiniteScrollComponent } from './components/helpers/infinite-scroll/infinite-scroll.component';
 import { PostDetailComponent } from './components/main/post-detail/post-detail.component';
 import { ShareComponent } from './components/main/social/share/share.component';
+import { NotificationsComponent } from './components/main/social/notifications/notifications.component';
+import { NotificationItemComponent } from './components/main/social/notification-item/notification-item.component';
 
 
 @NgModule({
@@ -49,7 +51,9 @@ import { ShareComponent } from './components/main/social/share/share.component';
     CommentComponent,
     InfiniteScrollComponent,
     PostDetailComponent,
-    ShareComponent
+    ShareComponent,
+    NotificationsComponent,
+    NotificationItemComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,9 @@
 export interface Notification {
-
+    id: string;
+    creation_date: string;
+    seen: boolean;
+    from: string;
+    post: string;
 }
 
 // Get notifications
