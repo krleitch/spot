@@ -9,7 +9,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// Add a post
+// Upload a photo
 router.post('/upload', function (req: any, res: any) {
 
     singleUpload(req, res, function(err: any) {

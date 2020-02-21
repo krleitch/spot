@@ -9,6 +9,7 @@ const root = require('./routes/root');
 const accounts = require('./routes/accounts');
 const comments = require('./routes/comments');
 const image = require('./routes/image');
+const notifications = require('./routes/notifications');
 const auth = require('./routes/auth');
 const mySql = require('./db/mySql');
 const mongo = require('./db/mongo');
@@ -33,6 +34,7 @@ app.use('/posts', passport.authenticate('jwt', {session: true}), posts);
 app.use('/accounts', passport.authenticate('jwt', {session: true}), accounts);
 app.use('/comments', passport.authenticate('jwt', {session: true}), comments);
 app.use('/image', passport.authenticate('jwt', {session: true}), image);
+app.use('/notifications', passport.authenticate('jwt', {session: true}), notifications);
 
 app.listen(port, (err: any) => {
   if (err) {
