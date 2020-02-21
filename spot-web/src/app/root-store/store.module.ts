@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { PostsStoreModule } from './posts-store';
 import { AccountsStoreModule } from './accounts-store';
 import { CommentsStoreModule } from './comments-store/comments-store.module';
+import { SocialStoreModule } from './social-store/social-store.module';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { CommentsStoreModule } from './comments-store/comments-store.module';
     PostsStoreModule,
     AccountsStoreModule,
     CommentsStoreModule,
+    SocialStoreModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
   ],

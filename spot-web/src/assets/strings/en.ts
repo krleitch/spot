@@ -117,6 +117,13 @@ export const STRINGS = {
           // File options
           FILE_TITLE: 'File:'
 
+        },
+
+        SHARE: {
+
+          TITLE: 'Send to a friend!',
+          USERNAME_PLACEHOLDER: 'Enter username'
+
         }
 
     },

@@ -32,6 +32,7 @@ export class PostComponent implements OnInit {
   expanded = false;
 
   optionsEnabled = false;
+  showShare = false;
 
   constructor(private store$: Store<RootStoreState.State>, private router: Router, private postsService: PostsService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
@@ -140,6 +141,10 @@ export class PostComponent implements OnInit {
 
   setExpanded(value: boolean) {
     this.expanded = value;
+  }
+
+  toggleShare() {
+    this.showShare = !this.showShare;
   }
 
 }
