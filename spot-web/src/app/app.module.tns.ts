@@ -18,6 +18,7 @@ import { ReplyComponent } from './components/main/comments/reply/reply.component
 import { CommentComponent } from './components/main/comments/comment/comment.component';
 import { InfiniteScrollComponent } from './components/helpers/infinite-scroll/infinite-scroll.component';
 import { PostDetailComponent } from './components/main/post-detail/post-detail.component';
+import { ShareComponent } from './components/main/social/share/share.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -40,7 +41,8 @@ import { PostDetailComponent } from './components/main/post-detail/post-detail.c
     ReplyComponent,
     CommentComponent,
     InfiniteScrollComponent,
-    PostDetailComponent
+    PostDetailComponent,
+    ShareComponent
   ],
   imports: [
     NativeScriptModule,
