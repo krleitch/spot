@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS comments_rating;
 DROP TABLE IF EXISTS posts_rating;
 DROP TABLE IF EXISTS comments;
@@ -63,4 +64,14 @@ CREATE TABLE comments_rating (
     FOREIGN KEY (comment_id) REFERENCES comments (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     UNIQUE (comment_id, account_id)
+);
+
+CREATE TABLE notifications (
+    id VARCHAR(36) NOT NULL,
+    sender VARCHAR(255) NOT NULL,
+    receiver VARCHAR(255) NOT NULL,
+    creation_date VARCHAR(255) NOT NULL,
+    post_id VARCHAR(36) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (post_id) REFERENCES posts (id)
 );
