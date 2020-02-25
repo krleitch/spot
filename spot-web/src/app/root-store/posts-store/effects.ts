@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { PostsService } from '../../services/posts.service';
+import { PostsService } from '@services/posts.service';
 import * as featureActions from './actions';
 
 import { DislikePostSuccess, LikePostSuccess, DeletePostSuccess, LoadPostSuccess, AddPostSuccess } from '@models/posts';

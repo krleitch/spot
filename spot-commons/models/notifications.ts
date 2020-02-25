@@ -12,16 +12,17 @@ export interface GetNotificationsRequest {
 }
 
 export interface GetNotificationsSuccess {
-
+    notifications: Notification[];
 }
 
 // Add a notification
 export interface AddNotificationRequest {
-
+    receiver: string;
+    postId: string
 }
 
 export interface AddNotificationSuccess {
-
+    notification: Notification;
 }
 
 // Delete a notification

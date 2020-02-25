@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { RootStoreState } from '@store';
+import { SocialStoreActions, SocialStoreSelectors } from '@store/social-store';
+import { AddNotificationRequest } from '@models/notifications';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -9,17 +15,29 @@ import { STRINGS } from '@assets/strings/en';
 })
 export class ShareComponent implements OnInit {
 
+  @Input() postId;
+
   STRINGS = STRINGS.MAIN.SHARE;
 
   username: string;
 
-  constructor() { }
+  constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
   }
 
   sendNotification() {
-    console.log(this.username);
+
+    const request: AddNotificationRequest = {
+      receiver: this.username,
+      postId: this.postId
+    };
+
+    // send the notification
+    this.store$.dispatch(
+      new SocialStoreActions.AddNotificationAction(request)
+    );
+
   }
 
 }
