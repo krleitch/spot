@@ -1,4 +1,10 @@
 <div class="notification-item">
-  <span class="item" (click)="goToPost()"> {{ notification.username }} {{ STRINGS.PROMPT }} </span>
-  <span class="date"> {{ formatDate(notification.creation_date) }} </span>
+  <div class="image-container" *ngIf="notification.image_src">
+    <img [src]="notification.image_src">
+  </div>
+  <div class="prompt-container">
+    <div class="prompt" (click)="goToPost()"> {{ notification.username }} {{ STRINGS.PROMPT }} </div>
+    <div class="content-preview"> {{ getPreview(notification.content) }} </div>
+  </div>
+  <div class="date"> {{ getTime(notification.creation_date) }} </div>
 </div>

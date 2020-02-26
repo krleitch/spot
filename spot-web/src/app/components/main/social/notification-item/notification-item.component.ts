@@ -18,15 +18,43 @@ export class NotificationItemComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
+
+    console.log(this.notification);
+
   }
 
-  formatDate(date: string) {
-    const time = new Date(date);
-    return time.toDateString();
+  getTime(date: string) {
+    const curTime = new Date();
+    const postTime = new Date(date);
+    const timeDiff = curTime.getTime() - postTime.getTime();
+    if (timeDiff < 60000) {
+      const secDiff = Math.round(timeDiff / 1000);
+      if (secDiff === 0) {
+        return 'Now';
+      } else {
+        return secDiff + 's';
+      }
+    } else if (timeDiff < 3600000) {
+      const minDiff = Math.round(timeDiff / 60000);
+      return minDiff + 'm';
+    } else if (timeDiff < 86400000) {
+      const hourDiff = Math.round(timeDiff / 3600000);
+      return hourDiff + 'h';
+    } else if (timeDiff < 31536000000) {
+      const dayDiff = Math.round(timeDiff / 86400000);
+      return dayDiff + 'd';
+    } else {
+      const yearDiff = Math.round(timeDiff / 31536000000);
+      return yearDiff + 'y';
+    }
   }
 
   goToPost() {
     this.router.navigateByUrl(/posts/ + this.notification.post_id);
+  }
+
+  getPreview(content: string) {
+    return content.substr(0, 20) + '...';
   }
 
 }

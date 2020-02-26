@@ -16,16 +16,35 @@
   }
 }
 
+.image-container {
+  margin-right: 5px;
+}
+
+img {
+  max-height: 40px;
+  max-width: 40px;
+}
+
 .highlight {
   color: $button-highlight;
 }
 
-.item {
+.prompt-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+
+.prompt {
   font-size: 16px;
+}
+
+.content-preview {
+  color: $subtle-grey;
 }
 
 .date {
   font-size: 10px;
   margin-left: auto;
-  color: black;
+  color: $subtle-grey;
 }
