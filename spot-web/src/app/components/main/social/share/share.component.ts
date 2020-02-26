@@ -1,9 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
-import { SocialStoreActions, SocialStoreSelectors } from '@store/social-store';
+import { SocialStoreActions } from '@store/social-store';
 import { AddNotificationRequest } from '@models/notifications';
 
 import { STRINGS } from '@assets/strings/en';

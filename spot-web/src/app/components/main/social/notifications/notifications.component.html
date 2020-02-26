@@ -1,5 +1,7 @@
 <div class="container">
   <div class="notifications">
-
+    <div *ngFor="let notification of notifications$ | async">
+      <spot-notification-item [notification]="notification"></spot-notification-item>
+    </div>
   </div>
 </div>

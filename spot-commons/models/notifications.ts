@@ -1,9 +1,13 @@
 export interface Notification {
+    // id: string;
+    // creation_date: string;
+    // seen: boolean;
+    // post_id: string;
+    // username: string;
     id: string;
+    post_id: string;
     creation_date: string;
-    seen: boolean;
-    from: string;
-    post: string;
+    username: string;
 }
 
 // Get notifications

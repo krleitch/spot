@@ -68,10 +68,12 @@ CREATE TABLE comments_rating (
 
 CREATE TABLE notifications (
     id VARCHAR(36) NOT NULL,
-    sender VARCHAR(255) NOT NULL,
-    receiver VARCHAR(255) NOT NULL,
+    sender_id VARCHAR(36) NOT NULL,
+    receiver_id VARCHAR(36) NOT NULL,
     creation_date VARCHAR(255) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (post_id) REFERENCES posts (id)
+    FOREIGN KEY (post_id) REFERENCES posts (id),
+    FOREIGN KEY (sender_id) REFERENCES accounts (id),
+    FOREIGN KEY (receiver_id) REFERENCES accounts (id)
 );

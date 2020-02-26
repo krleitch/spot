@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Notification } from '@models/notifications';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'spot-notification-item',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NotificationItemComponent implements OnInit {
 
-  constructor() { }
+  @Input() notification: Notification;
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  goToPost() {
+    this.router.navigateByUrl(/posts/ + this.notification.post_id);
   }
 
 }

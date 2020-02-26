@@ -10,7 +10,7 @@ export const selectMyFeatureState: MemoizedSelector<
   State
 > = createFeatureSelector<State>('social');
 
-export const selectMyFeaturePosts: MemoizedSelector<
+export const selectMyFeatureNotifications: MemoizedSelector<
   object,
   Notification[]
 > = createSelector(

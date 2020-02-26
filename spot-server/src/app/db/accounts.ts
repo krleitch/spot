@@ -22,12 +22,6 @@ function getFacebookAccount(facebookId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function deleteAccount(id: string) {
-    var sql = 'DELETE FROM accounts WHERE id = ?';
-    var values = [id];
-    return db.query(sql, values);
-}
-
 // TODO, wanna change from *
 function getAccountByEmail(email: string): Promise<any> {
     var sql = 'SELECT * FROM accounts WHERE email = ?';
@@ -43,6 +37,12 @@ function getAccountByUsername(username: string): Promise<any> {
 
 function getAccountById(id: string) {
     var sql = 'SELECT * FROM accounts WHERE id = ?';
+    var values = [id];
+    return db.query(sql, values);
+}
+
+function deleteAccount(id: string) {
+    var sql = 'DELETE FROM accounts WHERE id = ?';
     var values = [id];
     return db.query(sql, values);
 }
