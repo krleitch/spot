@@ -11,6 +11,7 @@
   background-color: white;
   border: 1px solid black;
   min-width: 300px;
-  min-height: 500px;
+  max-height: 400px;
+  overflow: auto;
   z-index: 2;
 }
