@@ -5,7 +5,7 @@ import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { NotificationsService } from '@services/notifications.service';
 import * as featureActions from './actions';
-import { GetNotificationsSuccess, AddNotificationSuccess } from '@models/notifications';
+import { GetNotificationsSuccess, AddNotificationSuccess, SetNotificationSeenSuccess } from '@models/notifications';
 
 
 @Injectable()
@@ -55,6 +55,25 @@ export class SocialStoreEffects {
             // TODO this success message to STRINGS
             this.notificationsService.successMessage('Notification Sent!');
             return new featureActions.AddNotificationSuccessAction( response )
+          }),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  setNotificationSeenEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.SetNotificationSeenAction>(
+      featureActions.ActionTypes.SET_NOTIFICATION_SEEN_REQUEST
+    ),
+    switchMap((post: featureActions.SetNotificationSeenAction) =>
+      this.notificationsService
+        .setNotificationSeen(post.request)
+        .pipe(
+          map( (response: SetNotificationSeenSuccess) => {
+            return new featureActions.SetNotificationSeenSuccessAction( response )
           }),
           catchError(errorResponse =>
             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))

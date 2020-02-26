@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { AlertService } from '@services/alert.service';
-import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess } from '@models/notifications';
+import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess,
+          SetNotificationSeenSuccess, SetNotificationSeenRequest  } from '@models/notifications';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,11 @@ export class NotificationsService {
   addNotification(request: AddNotificationRequest): Observable<AddNotificationSuccess> {
     return this.http.post<AddNotificationSuccess>(`${this.baseUrl}/notifications`, request);
   }
+
+  setNotificationSeen(request: SetNotificationSeenRequest): Observable<SetNotificationSeenSuccess> {
+    return this.http.post<SetNotificationSeenSuccess>(`${this.baseUrl}/notifications/${request.notificationId}`, request);
+  }
+
 
   failureMessage(message: string) {
     this.alertService.error(message);

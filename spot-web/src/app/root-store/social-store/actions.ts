@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 
 import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess,
-          DeleteNotificationRequest, DeleteNotificationSuccess } from '@models/notifications';
+          DeleteNotificationRequest, DeleteNotificationSuccess, SetNotificationSeenRequest,
+          SetNotificationSeenSuccess } from '@models/notifications';
 
 export enum ActionTypes {
   GET_NOTIFICATIONS_REQUEST = '[Social] Get Notifications Request',
@@ -10,6 +11,8 @@ export enum ActionTypes {
   ADD_NOTIFICATION_SUCCESS = '[Social] Add Notification Success',
   DELETE_NOTIFICATION_REQUEST = '[Social] Delete Notification Request',
   DELETE_NOTIFICATION_SUCCESS = '[Social] Delete Notification Success',
+  SET_NOTIFICATION_SEEN_REQUEST = '[Social] Set Notification Seen Request',
+  SET_NOTIFICATION_SEEN_SUCCESS = '[Social] Set Notification Seen Success',
   GENERIC_FAILURE = '[Social] Generic Failure'
 }
 
@@ -48,7 +51,17 @@ export class DeleteNotificationSuccessAction implements Action {
   constructor(public response: DeleteNotificationSuccess) {}
 }
 
+export class SetNotificationSeenAction implements Action {
+  readonly type = ActionTypes.SET_NOTIFICATION_SEEN_REQUEST;
+  constructor(public request: SetNotificationSeenRequest) {}
+}
+
+export class SetNotificationSeenSuccessAction implements Action {
+  readonly type = ActionTypes.SET_NOTIFICATION_SEEN_SUCCESS;
+  constructor(public response: SetNotificationSeenSuccess) {}
+}
+
 export type Actions = GenericFailureAction | GetNotificationsAction | GetNotificationsSuccessAction |
                       AddNotificationAction | AddNotificationSuccessAction | DeleteNotificationAction |
-                      DeleteNotificationSuccessAction;
+                      SetNotificationSeenAction | SetNotificationSeenSuccessAction | DeleteNotificationSuccessAction;
 

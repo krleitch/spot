@@ -8,6 +8,9 @@ export interface Notification {
     post_id: string;
     creation_date: string;
     username: string;
+    image_src: string;
+    content: string;
+    seen: boolean;
 }
 
 // Get notifications
@@ -35,5 +38,14 @@ export interface DeleteNotificationRequest {
 }
 
 export interface DeleteNotificationSuccess {
+
+}
+
+// Set notification Seen
+export interface SetNotificationSeenRequest {
+    notificationId: string;
+}
+
+export interface SetNotificationSeenSuccess {
 
 }

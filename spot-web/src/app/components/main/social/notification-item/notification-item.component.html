@@ -1,4 +1,4 @@
-<div class="notification-item">
+<div class="notification-item" [ngClass]="{'seen': !notification.seen}">
   <div class="image-container" *ngIf="notification.image_src">
     <img [src]="notification.image_src">
   </div>

@@ -43,6 +43,18 @@ router.post('/', function (req: any, res: any) {
 
 });
 
+router.post('/:notificationId', function (req: any, res: any) {
+
+    const notificationId = req.params.notificationId;
+
+    notifications.setNotificationSeen(notificationId).then((rows: any) => {
+        res.status(200).send();
+    }, (err: any) => {
+        res.status(500).send('Error updating notification');
+    })
+
+});
+
 
 
 

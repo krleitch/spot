@@ -72,6 +72,7 @@ CREATE TABLE notifications (
     receiver_id VARCHAR(36) NOT NULL,
     creation_date VARCHAR(255) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
+    seen BOOLEAN,
     PRIMARY KEY (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (sender_id) REFERENCES accounts (id),

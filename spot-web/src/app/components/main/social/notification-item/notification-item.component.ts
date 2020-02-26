@@ -1,6 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Notification } from '@models/notifications';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import { RootStoreState } from '@store';
+import { SocialStoreActions } from '@store/social-store';
+import { SetNotificationSeenRequest } from '@models/notifications';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -15,7 +20,7 @@ export class NotificationItemComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.NOTIFICATION_ITEM;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
 
@@ -50,6 +55,16 @@ export class NotificationItemComponent implements OnInit {
   }
 
   goToPost() {
+
+    const request: SetNotificationSeenRequest = {
+      notificationId: this.notification.id
+    };
+
+    // set seen
+    this.store$.dispatch(
+      new SocialStoreActions.SetNotificationSeenAction(request)
+    );
+
     this.router.navigateByUrl(/posts/ + this.notification.post_id);
   }
 
