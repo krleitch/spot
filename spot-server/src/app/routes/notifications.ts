@@ -27,14 +27,17 @@ router.post('/', function (req: any, res: any) {
 
     const senderId = req.user.id;
 
-    accounts.getAccountByUsername(receiver).then((recevierAccount: any) => {
-        notifications.addNotification(senderId, recevierAccount[0].id, postId).then((rows: any) => {
-            res.status(200).json({ notification: rows[0] });
-        }, (err: any) => {
-            return Promise.reject(err);
-        })
+    accounts.getAccountByUsername(receiver).then((retAccount: any) => {
+        if ( retAccount[0] === undefined ) {
+            res.status(500).send('No user exists with that username');
+        } else {
+            notifications.addNotification(senderId, retAccount[0].id, postId).then((rows: any) => {
+                res.status(200).json({ notification: rows[0] });
+            }, (err: any) => {
+                return Promise.reject(err);
+            })
+        }
     }, (err: any) => {
-        console.log(err);
         res.status(500).send('Error sending notification');
     })
 

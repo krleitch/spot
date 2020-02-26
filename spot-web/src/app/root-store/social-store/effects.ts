@@ -51,7 +51,11 @@ export class SocialStoreEffects {
       this.notificationsService
         .addNotification(post.request)
         .pipe(
-          map( (response: AddNotificationSuccess) => new featureActions.AddNotificationSuccessAction( response )),
+          map( (response: AddNotificationSuccess) => {
+            // TODO this success message to STRINGS
+            this.notificationsService.successMessage('Notification Sent!');
+            return new featureActions.AddNotificationSuccessAction( response )
+          }),
           catchError(errorResponse =>
             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
           )

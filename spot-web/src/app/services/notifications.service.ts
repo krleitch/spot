@@ -26,4 +26,8 @@ export class NotificationsService {
     this.alertService.error(message);
   }
 
+  successMessage(message: string) {
+    this.alertService.success(message);
+  }
+
 }

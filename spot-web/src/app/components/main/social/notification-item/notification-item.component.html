@@ -1,3 +1,4 @@
 <div class="notification-item">
-  <span (click)="goToPost()"> {{ notification.username }} sent you a post! </span>
+  <span class="item" (click)="goToPost()"> {{ notification.username }} {{ STRINGS.PROMPT }} </span>
+  <span class="date"> {{ formatDate(notification.creation_date) }} </span>
 </div>

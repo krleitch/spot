@@ -124,6 +124,18 @@ export const STRINGS = {
           TITLE: 'Send to a friend!',
           USERNAME_PLACEHOLDER: 'Enter username'
 
+        },
+
+        NOTIFICATION: {
+
+          TITLE: 'Notifications'
+
+        },
+
+        NOTIFICATION_ITEM: {
+
+          PROMPT: 'sent you a post!'
+
         }
 
     },
