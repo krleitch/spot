@@ -6,10 +6,10 @@
 
 .notifications {
   position: absolute;
-  top: 25px;
+  top: 30px;
   right: 0;
   background-color: white;
-  border: 1px solid black;
+  border: 1px solid $subtle-grey;
   min-width: 300px;
   max-height: 400px;
   overflow: auto;
