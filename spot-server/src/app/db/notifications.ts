@@ -1,4 +1,4 @@
-export { getNotificationByReceiverId, getNotificationById, addNotification, deleteNotificationById, setNotificationSeen }
+export { getNotificationByReceiverId, getNotificationById, addNotification, deleteNotificationById, setNotificationSeen, deleteAllNotificationsForAccount }
 
 const uuid = require('uuid');
 
@@ -35,5 +35,11 @@ function setNotificationSeen(notificationId: string) {
 function deleteNotificationById(id: string) {
     var sql = `DELETE FROM notifications where id = ?`;
     var values = [id];
+    return db.query(sql, values);
+}
+
+function deleteAllNotificationsForAccount(accountId: string) {
+    var sql = `DELETE FROM notifications where receiver_id = ?`;
+    var values = [accountId];
     return db.query(sql, values);
 }

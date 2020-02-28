@@ -1,7 +1,18 @@
 <div class="container">
   <div class="notifications">
-    <div *ngFor="let notification of notifications$ | async">
-      <spot-notification-item [notification]="notification"></spot-notification-item>
+    <div class="header">
+      <span class="title"> {{ STRINGS.TITLE }} </span>
+      <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span>
+    </div>
+    <div *ngIf="notifications$ | async as notifications">
+      <ng-container *ngIf="notifications.length; else noNotifications">
+        <div *ngFor="let notification of notifications">
+          <spot-notification-item [notification]="notification"></spot-notification-item>
+        </div>
+      </ng-container>
+      <ng-template #noNotifications>
+        <div class="no-notifications"> {{ STRINGS.NO_NOTIFICATIONS }} </div>
+      </ng-template>
     </div>
   </div>
 </div>

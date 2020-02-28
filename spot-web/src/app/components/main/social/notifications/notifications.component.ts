@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { SocialStoreActions, SocialStoreSelectors } from '@store/social-store';
-import { Notification, GetNotificationsRequest } from '@models/notifications';
+import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest } from '@models/notifications';
+import { STRINGS } from '@assets/strings/en';
 
 
 @Component({
@@ -13,6 +14,8 @@ import { Notification, GetNotificationsRequest } from '@models/notifications';
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit {
+
+  STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
   notifications$: Observable<Notification[]>;
 
@@ -29,6 +32,16 @@ export class NotificationsComponent implements OnInit {
     // load the notifications
     this.store$.dispatch(
       new SocialStoreActions.GetNotificationsAction(request)
+    );
+
+  }
+
+  clearAll() {
+
+    const request: DeleteAllNotificationsRequest = {};
+
+    this.store$.dispatch(
+      new SocialStoreActions.DeleteAllNotificationsAction(request)
     );
 
   }

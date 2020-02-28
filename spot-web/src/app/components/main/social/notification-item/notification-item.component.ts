@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
 import { SocialStoreActions } from '@store/social-store';
-import { SetNotificationSeenRequest } from '@models/notifications';
+import { SetNotificationSeenRequest, DeleteNotificationRequest } from '@models/notifications';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -22,11 +22,7 @@ export class NotificationItemComponent implements OnInit {
 
   constructor(private router: Router, private store$: Store<RootStoreState.State>) { }
 
-  ngOnInit() {
-
-    console.log(this.notification);
-
-  }
+  ngOnInit() { }
 
   getTime(date: string) {
     const curTime = new Date();
@@ -71,5 +67,19 @@ export class NotificationItemComponent implements OnInit {
   getPreview(content: string) {
     return content.substr(0, 20) + '...';
   }
+
+  delete() {
+
+    const request: DeleteNotificationRequest = {
+      notificationId: this.notification.id
+    };
+
+    // delete the notification
+    this.store$.dispatch(
+      new SocialStoreActions.DeleteNotificationAction(request)
+    );
+
+  }
+
 
 }

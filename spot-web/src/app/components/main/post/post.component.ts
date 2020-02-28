@@ -22,6 +22,7 @@ export class PostComponent implements OnInit {
   @Input() detailed: boolean;
   @Input() post: Post;
   @ViewChild('options') options;
+  @ViewChild('share') share;
 
   STRINGS = STRINGS.MAIN.POST;
 
@@ -53,6 +54,10 @@ export class PostComponent implements OnInit {
   offClickHandler(event: MouseEvent) {
     if (!this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
+    }
+
+    if (!this.share.nativeElement.contains(event.target)) {
+      this.showShare = false;
     }
   }
 

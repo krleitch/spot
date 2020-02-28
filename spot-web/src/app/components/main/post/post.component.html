@@ -39,7 +39,7 @@
           <div class="button"> {{ STRINGS.REPORT }} </div>
         </div>
       </div>
-      <div>
+      <div #share>
         <i class="material-icons share" (click)="toggleShare()"> share </i>
         <spot-share *ngIf="showShare" [postId]="post.id"></spot-share>
       </div>

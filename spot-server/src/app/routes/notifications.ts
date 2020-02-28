@@ -55,7 +55,29 @@ router.post('/:notificationId', function (req: any, res: any) {
 
 });
 
+router.delete('/:notificationId', function (req: any, res: any) {
 
+    const notificationId = req.params.notificationId;
+
+    notifications.deleteNotificationById(notificationId).then((rows: any) => {
+        res.status(200).send({ notificationId: notificationId });
+    }, (err: any) => {
+        res.status(500).send('Error deleting notification');
+    })
+
+});
+
+router.delete('/', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    notifications.deleteAllNotificationsForAccount(accountId).then((rows: any) => {
+        res.status(200).send();
+    }, (err: any) => {
+        res.status(500).send('Error deleting all notifications');
+    })
+
+});
 
 
 export = router;

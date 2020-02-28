@@ -46,8 +46,22 @@ img {
   font-size: 16px;
 }
 
+.username {
+  // username styles
+}
+
+.delete {
+  color: $subtle-grey;
+  cursor: pointer;
+  margin-left: 5px;
+  &:hover {
+    color: $error-red;
+  }
+}
+
 .content-preview {
   color: $subtle-grey;
+  width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 14px;

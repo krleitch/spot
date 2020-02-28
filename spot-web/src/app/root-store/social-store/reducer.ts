@@ -14,6 +14,18 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state,
       };
     }
+    case ActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS: {
+      return {
+        ...state,
+        notifications: []
+      };
+    }
+    case ActionTypes.DELETE_NOTIFICATION_SUCCESS: {
+      state.notifications = state.notifications.filter( item => item.id !== action.response.notificationId );
+      return {
+        ...state,
+      };
+    }
     default: {
       return state;
     }

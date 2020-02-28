@@ -5,7 +5,8 @@ import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { NotificationsService } from '@services/notifications.service';
 import * as featureActions from './actions';
-import { GetNotificationsSuccess, AddNotificationSuccess, SetNotificationSeenSuccess } from '@models/notifications';
+import { GetNotificationsSuccess, AddNotificationSuccess, SetNotificationSeenSuccess,
+          DeleteNotificationSuccess, DeleteAllNotificationsSuccess } from '@models/notifications';
 
 
 @Injectable()
@@ -64,13 +65,51 @@ export class SocialStoreEffects {
   );
 
   @Effect()
+  deleteNotificationEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.DeleteNotificationAction>(
+      featureActions.ActionTypes.DELETE_NOTIFICATION_REQUEST
+    ),
+    switchMap((action: featureActions.DeleteNotificationAction) =>
+      this.notificationsService
+        .deleteNotification(action.request)
+        .pipe(
+          map( (response: DeleteNotificationSuccess) => {
+            return new featureActions.DeleteNotificationSuccessAction( response )
+          }),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  deleteAllNotificationsEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.DeleteAllNotificationsAction>(
+      featureActions.ActionTypes.DELETE_ALL_NOTIFICATIONS_REQUEST
+    ),
+    switchMap((action: featureActions.DeleteAllNotificationsAction) =>
+      this.notificationsService
+        .deleteAllNotifications(action.request)
+        .pipe(
+          map( (response: DeleteAllNotificationsSuccess) => {
+            return new featureActions.DeleteAllNotificationsSuccessAction( response )
+          }),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
   setNotificationSeenEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.SetNotificationSeenAction>(
       featureActions.ActionTypes.SET_NOTIFICATION_SEEN_REQUEST
     ),
-    switchMap((post: featureActions.SetNotificationSeenAction) =>
+    switchMap((action: featureActions.SetNotificationSeenAction) =>
       this.notificationsService
-        .setNotificationSeen(post.request)
+        .setNotificationSeen(action.request)
         .pipe(
           map( (response: SetNotificationSeenSuccess) => {
             return new featureActions.SetNotificationSeenSuccessAction( response )

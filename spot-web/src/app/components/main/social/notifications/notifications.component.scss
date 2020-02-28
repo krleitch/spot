@@ -11,7 +11,48 @@
   background-color: white;
   border: 1px solid $subtle-grey;
   min-width: 300px;
+  max-width: 300px;
   max-height: 400px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: none;
   z-index: 2;
+}
+
+.highlight {
+  color: $button-highlight;
+}
+
+.header {
+  cursor: default;
+  display: flex;
+  justify-content: space-between;
+  color: black;
+  font-size: 16px;
+  padding: 5px 10px;
+  border-top: 1px solid $subtle-grey;
+}
+
+.title {
+
+  // &:hover {
+  //   @extend .highlight;
+  // }
+}
+
+.clear {
+
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+.no-notifications {
+  display: flex;
+  justify-content: center;
+  cursor: default;
+  color: $subtle-grey;
+  font-size: 14px;
+  border-top: 1px solid $subtle-grey;
+  padding: 15px;
 }

@@ -5,7 +5,7 @@
       <i class="material-icons hot"> whatshot </i>
       <span> {{ myaccount.score }} </span>
     </div>
-    <div class="notifications">
+    <div class="notifications" #notifications>
       <i class="material-icons" (click)="toggleNotifications()"> notifications_none </i>
       <spot-notifications *ngIf="showNotifications"></spot-notifications>
     </div>

@@ -126,9 +126,11 @@ export const STRINGS = {
 
         },
 
-        NOTIFICATION: {
+        NOTIFICATIONS: {
 
-          TITLE: 'Notifications'
+          TITLE: 'Notifications',
+          CLEAR: 'Clear all',
+          NO_NOTIFICATIONS: 'No Notifications'
 
         },
 

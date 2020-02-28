@@ -32,12 +32,20 @@ export interface AddNotificationSuccess {
     notification: Notification;
 }
 
-// Delete a notification
+// Delete notifications
 export interface DeleteNotificationRequest {
-
+    notificationId: string;
 }
 
 export interface DeleteNotificationSuccess {
+    notificationId: string;
+}
+
+export interface DeleteAllNotificationsRequest {
+
+}
+
+export interface DeleteAllNotificationsSuccess {
 
 }
 

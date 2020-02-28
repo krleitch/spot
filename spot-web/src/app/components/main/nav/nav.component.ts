@@ -19,10 +19,10 @@ export class NavComponent implements OnInit {
 
   account$: Observable<Account>;
 
-  showNotifications = false;
-
   @ViewChild('account') accountView;
+  @ViewChild('notifications') notificationsView;
   accountShowDropdown = false;
+  showNotifications = false;
 
   constructor(private router: Router, private store$: Store<RootStoreState.State>) {
     document.addEventListener('click', this.offClickHandler.bind(this));
@@ -40,6 +40,10 @@ export class NavComponent implements OnInit {
     // Hide the dropdown if you click outside
     if (!this.accountView.nativeElement.contains(event.target)) {
       this.accountSetDropdown(false);
+    }
+
+    if (!this.notificationsView.nativeElement.contains(event.target)) {
+      this.showNotifications = false;
     }
   }
 

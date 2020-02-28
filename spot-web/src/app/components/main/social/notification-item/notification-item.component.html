@@ -1,7 +1,11 @@
 <div class="notification-item" [ngClass]="{'seen': !notification.seen}">
   <div class="prompt-container">
-    <div class="prompt" (click)="goToPost()"> {{ notification.username }} {{ STRINGS.PROMPT }} </div>
-    <div class="content-preview"> {{ notification.content }} </div>
+    <div class="prompt">
+      <span class="username"> {{ notification.username }} </span>
+      <span (click)="goToPost()"> {{ STRINGS.PROMPT }} </span>
+      <span class="delete" (click)="delete()"> X </span>
+    </div>
+    <div class="content-preview"> {{ getPreview(notification.content) }} </div>
   </div>
   <div class="image-container" *ngIf="notification.image_src">
     <img [src]="notification.image_src">
