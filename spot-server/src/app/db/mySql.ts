@@ -2,15 +2,30 @@ import { Connection } from "mysql";
 
 const mysql = require('mysql');
 
-const db: Connection  = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "admin",
-    database: "db"
-});
+// const db: Connection  = mysql.createConnection({
+//     host: "localhost",
+//     user: "root",
+//     password: "admin",
+//     database: "db"
+// });
+
+// KEEP CONNECTION OPEN
+
+const db = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: 'admin',
+    database: 'db'
+  });
+  
+// ... later
+db.query('select 1 + 1', (err: any, rows: any) => { /* */ });
+
+// KEEP CONNECTION OPEN
 
 function initDb() {
-    db.connect((err) => {
+    // db.connect((err: any) => {
+    db.getConnection((err: any) => {
         if(err){
           console.log('Error connecting to MySql');
           return;
