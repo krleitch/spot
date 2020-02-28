@@ -17,9 +17,6 @@ const db = mysql.createPool({
     password: 'admin',
     database: 'db'
   });
-  
-// ... later
-db.query('select 1 + 1', (err: any, rows: any) => { /* */ });
 
 // KEEP CONNECTION OPEN
 
