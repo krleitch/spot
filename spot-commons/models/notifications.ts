@@ -10,7 +10,7 @@ export interface Notification {
     username: string;
     image_src: string;
     content: string;
-    seen: boolean;
+    seen: number;
 }
 
 // Get notifications

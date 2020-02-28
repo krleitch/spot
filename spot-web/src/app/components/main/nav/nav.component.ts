@@ -5,8 +5,10 @@ import { Observable } from 'rxjs';
 
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions } from '@store/accounts-store';
+import { SocialStoreSelectors, SocialStoreActions } from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { Account } from '@models/accounts';
+import { Notification, GetNotificationsRequest } from '@models/notifications';
 
 @Component({
   selector: 'spot-main-nav',
@@ -18,6 +20,8 @@ export class NavComponent implements OnInit {
   STRINGS = STRINGS.MAIN.NAV;
 
   account$: Observable<Account>;
+  notifications$: Observable<Notification[]>;
+  unreadNotifications = '0';
 
   @ViewChild('account') accountView;
   @ViewChild('notifications') notificationsView;
@@ -33,6 +37,31 @@ export class NavComponent implements OnInit {
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsUser)
     );
+
+    this.notifications$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectMyFeatureNotifications)
+    );
+
+    const request: GetNotificationsRequest = {};
+
+    // load the notifications
+    this.store$.dispatch(
+      new SocialStoreActions.GetNotificationsAction(request)
+    );
+
+    this.notifications$.subscribe( (notifs: Notification[]) => {
+      let unread = 0;
+      notifs.forEach( (n: Notification) => {
+        if (n.seen === 0) {
+          unread += 1;
+        }
+      });
+      if (unread >= 10) {
+        this.unreadNotifications = '+';
+      } else {
+        this.unreadNotifications = unread.toString();
+      }
+    });
 
   }
 

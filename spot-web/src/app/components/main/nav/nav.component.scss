@@ -43,6 +43,7 @@
 }
 
 .notifications {
+  position: relative;
     display: flex;
     font-size: 18px;
     color: $subtle-grey;
@@ -51,6 +52,21 @@
     &:hover {
       @extend .highlight;
     }
+}
+
+.unread {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 14px;
+  right: -5px;
+  font-size: 11px;
+  color: white;
+  background-color: $error-red;
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
 }
 
 .account {

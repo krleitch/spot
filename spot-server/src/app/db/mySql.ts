@@ -33,7 +33,7 @@ function initDb() {
 
 function query( sql: string, args: Array<any> ) {
     return new Promise((resolve, reject) => {
-        db.query(sql, args, (err, results) => {
+        db.query(sql, args, (err: any, results: any) => {
             if (err) {
                 return reject(err);
             }
@@ -43,7 +43,7 @@ function query( sql: string, args: Array<any> ) {
 }
 function closeDb() {
     return new Promise((resolve, reject) => {
-        db.end(err => {
+        db.end((err: any) => {
             if (err) {
                 return reject(err);
             }
