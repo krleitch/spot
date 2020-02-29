@@ -26,6 +26,14 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state,
       };
     }
+    case ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS: {
+      state.notifications.forEach( notif => {
+        notif.seen = 1;
+      });
+      return {
+        ...state,
+      };
+    }
     default: {
       return state;
     }

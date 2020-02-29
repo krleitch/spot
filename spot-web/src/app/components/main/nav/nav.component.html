@@ -7,7 +7,7 @@
     </div>
     <div class="notifications" #notifications>
       <i class="material-icons" (click)="toggleNotifications()"> notifications_none </i>
-      <div *ngIf="unreadNotifications != '0'" class="unread"> {{ unreadNotifications }} </div>
+      <div *ngIf="unreadNotifications != '0'" class="unread" (click)="toggleNotifications()"> {{ unreadNotifications }} </div>
       <spot-notifications *ngIf="showNotifications"></spot-notifications>
     </div>
     <div #account class="account" (click)="accountSetDropdown(true)">

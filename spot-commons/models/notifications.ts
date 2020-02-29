@@ -57,3 +57,11 @@ export interface SetNotificationSeenRequest {
 export interface SetNotificationSeenSuccess {
 
 }
+
+export interface SetAllNotificationsSeenRequest {
+
+}
+
+export interface SetAllNotificationsSeenSuccess {
+
+}

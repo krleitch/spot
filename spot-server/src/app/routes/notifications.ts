@@ -43,7 +43,7 @@ router.post('/', function (req: any, res: any) {
 
 });
 
-router.post('/:notificationId', function (req: any, res: any) {
+router.put('/:notificationId/seen', function (req: any, res: any) {
 
     const notificationId = req.params.notificationId;
 
@@ -51,6 +51,18 @@ router.post('/:notificationId', function (req: any, res: any) {
         res.status(200).send();
     }, (err: any) => {
         res.status(500).send('Error updating notification');
+    })
+
+});
+
+router.put('/seen', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    notifications.setAllNotificationsSeen(accountId).then((rows: any) => {
+        res.status(200).send();
+    }, (err: any) => {
+        res.status(500).send('Error updating notifications');
     })
 
 });

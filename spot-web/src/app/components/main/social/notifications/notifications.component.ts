@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { SocialStoreActions, SocialStoreSelectors } from '@store/social-store';
-import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest } from '@models/notifications';
+import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest,
+          SetAllNotificationsSeenRequest } from '@models/notifications';
 import { STRINGS } from '@assets/strings/en';
 
 
@@ -42,6 +43,16 @@ export class NotificationsComponent implements OnInit {
 
     this.store$.dispatch(
       new SocialStoreActions.DeleteAllNotificationsAction(request)
+    );
+
+  }
+
+  seeAll() {
+
+    const request: SetAllNotificationsSeenRequest = {};
+
+    this.store$.dispatch(
+      new SocialStoreActions.SetAllNotificationsSeenAction(request)
     );
 
   }

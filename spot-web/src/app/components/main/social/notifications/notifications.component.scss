@@ -39,8 +39,14 @@
   // }
 }
 
-.clear {
+.see {
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
+}
 
+.clear {
   cursor: pointer;
   &:hover {
     @extend .highlight;

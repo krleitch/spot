@@ -130,7 +130,8 @@ export const STRINGS = {
 
           TITLE: 'Notifications',
           CLEAR: 'Clear all',
-          NO_NOTIFICATIONS: 'No Notifications'
+          NO_NOTIFICATIONS: 'No Notifications',
+          SEE_ALL: 'See all'
 
         },
 

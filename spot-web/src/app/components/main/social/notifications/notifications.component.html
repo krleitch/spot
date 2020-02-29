@@ -2,6 +2,7 @@
   <div class="notifications">
     <div class="header">
       <span class="title"> {{ STRINGS.TITLE }} </span>
+      <span class="see" (click)="seeAll()"> {{ STRINGS.SEE_ALL }} </span>
       <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span>
     </div>
     <div *ngIf="notifications$ | async as notifications">

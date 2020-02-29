@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { AlertService } from '@services/alert.service';
 import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess,
           SetNotificationSeenSuccess, SetNotificationSeenRequest, DeleteAllNotificationsRequest,
-          DeleteAllNotificationsSuccess, DeleteNotificationRequest, DeleteNotificationSuccess } from '@models/notifications';
+          DeleteAllNotificationsSuccess, DeleteNotificationRequest, DeleteNotificationSuccess,
+          SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess } from '@models/notifications';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,11 @@ export class NotificationsService {
   }
 
   setNotificationSeen(request: SetNotificationSeenRequest): Observable<SetNotificationSeenSuccess> {
-    return this.http.post<SetNotificationSeenSuccess>(`${this.baseUrl}/notifications/${request.notificationId}`, request);
+    return this.http.put<SetNotificationSeenSuccess>(`${this.baseUrl}/notifications/${request.notificationId}/seen`, request);
+  }
+
+  setAllNotificationsSeen(request: SetAllNotificationsSeenRequest): Observable<SetAllNotificationsSeenSuccess> {
+    return this.http.put<SetAllNotificationsSeenSuccess>(`${this.baseUrl}/notifications/seen`, request);
   }
 
   failureMessage(message: string) {

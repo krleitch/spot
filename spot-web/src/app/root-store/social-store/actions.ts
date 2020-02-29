@@ -2,7 +2,8 @@ import { Action } from '@ngrx/store';
 
 import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess,
           DeleteNotificationRequest, DeleteNotificationSuccess, SetNotificationSeenRequest,
-          SetNotificationSeenSuccess, DeleteAllNotificationsRequest, DeleteAllNotificationsSuccess } from '@models/notifications';
+          SetNotificationSeenSuccess, DeleteAllNotificationsRequest, DeleteAllNotificationsSuccess,
+          SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess } from '@models/notifications';
 
 export enum ActionTypes {
   GET_NOTIFICATIONS_REQUEST = '[Social] Get Notifications Request',
@@ -15,6 +16,8 @@ export enum ActionTypes {
   DELETE_ALL_NOTIFICATIONS_SUCCESS = '[Social] Delete All Notifications Success',
   SET_NOTIFICATION_SEEN_REQUEST = '[Social] Set Notification Seen Request',
   SET_NOTIFICATION_SEEN_SUCCESS = '[Social] Set Notification Seen Success',
+  SET_ALL_NOTIFICATIONS_SEEN_REQUEST = '[Social] Set All Notifications Seen Request',
+  SET_ALL_NOTIFICATIONS_SEEN_SUCCESS = '[Social] Set All Notifications Seen Success',
   GENERIC_FAILURE = '[Social] Generic Failure'
 }
 
@@ -73,8 +76,19 @@ export class SetNotificationSeenSuccessAction implements Action {
   constructor(public response: SetNotificationSeenSuccess) {}
 }
 
+export class SetAllNotificationsSeenAction implements Action {
+  readonly type = ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_REQUEST;
+  constructor(public request: SetAllNotificationsSeenRequest) {}
+}
+
+export class SetAllNotificationsSeenSuccessAction implements Action {
+  readonly type = ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS;
+  constructor(public response: SetAllNotificationsSeenSuccess) {}
+}
+
 export type Actions = GenericFailureAction | GetNotificationsAction | GetNotificationsSuccessAction |
                       AddNotificationAction | AddNotificationSuccessAction | DeleteNotificationAction |
                       SetNotificationSeenAction | SetNotificationSeenSuccessAction | DeleteNotificationSuccessAction |
-                      DeleteAllNotificationsAction | DeleteAllNotificationsSuccessAction;
+                      DeleteAllNotificationsAction | DeleteAllNotificationsSuccessAction | SetAllNotificationsSeenAction |
+                      SetAllNotificationsSeenSuccessAction;
 
