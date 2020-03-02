@@ -72,10 +72,10 @@
 .options {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .comment-number {
-    flex: 1;
     color: $subtle-grey;
     text-align: left;
 }
