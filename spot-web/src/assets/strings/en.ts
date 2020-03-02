@@ -131,7 +131,7 @@ export const STRINGS = {
           TITLE: 'Notifications',
           CLEAR: 'Clear all',
           NO_NOTIFICATIONS: 'No Notifications',
-          SEE_ALL: 'See all'
+          MARK_ALL_AS_SEEN: 'Mark all as seen'
 
         },
 

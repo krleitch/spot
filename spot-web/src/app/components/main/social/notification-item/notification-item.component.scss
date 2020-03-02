@@ -1,6 +1,11 @@
 @import '../../../../styles/colors';
 
+.wrapper {
+  position: relative;
+}
+
 .notification-item {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,6 +20,18 @@
     @extend .highlight;
   }
 }
+
+.delete {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  color: $subtle-grey;
+  cursor: pointer;
+  &:hover {
+    color: $error-red;
+  }
+}
+
 
 .seen {
   background-color: $lighter-grey;
@@ -48,15 +65,6 @@ img {
 
 .username {
   // username styles
-}
-
-.delete {
-  color: $subtle-grey;
-  cursor: pointer;
-  margin-left: 5px;
-  &:hover {
-    color: $error-red;
-  }
 }
 
 .content-preview {
