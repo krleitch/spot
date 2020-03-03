@@ -152,4 +152,8 @@ export class PostComponent implements OnInit {
     this.showShare = !this.showShare;
   }
 
+  onClose() {
+    this.showShare = false;
+  }
+
 }

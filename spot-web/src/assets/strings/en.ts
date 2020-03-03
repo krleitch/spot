@@ -122,7 +122,8 @@ export const STRINGS = {
         SHARE: {
 
           TITLE: 'Send to a friend!',
-          USERNAME_PLACEHOLDER: 'Enter username'
+          USERNAME_PLACEHOLDER: 'Enter username',
+          COPY_LINK: 'Copy link'
 
         },
 

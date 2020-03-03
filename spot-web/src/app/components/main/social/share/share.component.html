@@ -1,7 +1,10 @@
+<div class="background" (click)="closeShare()"></div>
 <div class="share">
   <div class="title"> {{ STRINGS.TITLE }} </div>
   <div class="input-container">
     <input [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
     <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
   </div>
+  <span class="copy" (click)="copyLink()"> {{ STRINGS.COPY_LINK }} </span>
 </div>
+

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
@@ -15,6 +15,7 @@ import { STRINGS } from '@assets/strings/en';
 export class ShareComponent implements OnInit {
 
   @Input() postId;
+  @Output() close = new EventEmitter<boolean>();
 
   STRINGS = STRINGS.MAIN.SHARE;
 
@@ -37,6 +38,15 @@ export class ShareComponent implements OnInit {
       new SocialStoreActions.AddNotificationAction(request)
     );
 
+  }
+
+  closeShare() {
+    this.close.emit(true);
+  }
+
+  copyLink() {
+    // https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+    // probably create text area hidden and copy its contents??
   }
 
 }
