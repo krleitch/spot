@@ -121,7 +121,7 @@ export const STRINGS = {
 
         SHARE: {
 
-          TITLE: 'Send to a friend!',
+          TITLE: 'Share a spot!',
           USERNAME_PLACEHOLDER: 'Enter username',
           COPY_LINK: 'Copy link'
 
@@ -138,7 +138,7 @@ export const STRINGS = {
 
         NOTIFICATION_ITEM: {
 
-          PROMPT: 'sent you a post!'
+          PROMPT: 'sent you a spot!'
 
         }
 

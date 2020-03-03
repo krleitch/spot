@@ -21,16 +21,32 @@
   left: calc(50% - 200px);
   display: flex;
   flex-flow: column;
-  justify-content: center;
   align-items: center;
   background-color: white;
-  border: 1px solid black;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
   z-index: 100;
+}
+
+.header {
+  padding: 10px 10px;
+  background-color: $lighter-grey;
+  width: 100%;
+  border-bottom: 1px solid $subtle-grey;
+  box-sizing: border-box;
+  margin-bottom: 15px;
 }
 
 .title {
   color: black;
   margin-bottom: 3px;
+}
+
+.close {
+  cursor: pointer;
+  float: right;
+  &:hover {
+    color: $error-red;
+  }
 }
 
 .input-container {

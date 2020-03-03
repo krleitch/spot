@@ -1,6 +1,9 @@
 <div class="background" (click)="closeShare()"></div>
 <div class="share">
-  <div class="title"> {{ STRINGS.TITLE }} </div>
+  <div class="header">
+    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="close" (click)="closeShare()"> x </span>
+  </div>
   <div class="input-container">
     <input [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
     <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
