@@ -28,6 +28,7 @@ export class ReplyComponent implements OnInit {
   FILENAME_MAX_SIZE = 20;
   imageFile: File;
   imgSrc: string = null;
+  expandImage = false;
 
   // displaying used characters for add reply
   reply2Content: HTMLElement;
@@ -196,6 +197,15 @@ export class ReplyComponent implements OnInit {
     } else {
       return name;
     }
+  }
+
+  // For expanding images
+  setExpandImageTrue() {
+    this.expandImage = true;
+  }
+
+  setExpandImageFalse() {
+    this.expandImage = false;
   }
 
 }

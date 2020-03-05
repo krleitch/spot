@@ -1,3 +1,4 @@
+<spot-image *ngIf="expandImage" [imageSrc]="post.image_src" (closeEvent)="setExpandImageFalse()"></spot-image>
 <div class="container">
   <div class="post">
     <div class="left-bar">
@@ -12,7 +13,7 @@
       <div class="content" [ngClass]="{'content-expanded': expanded}">
         {{ getContent() }}
       </div>
-      <div class="image" *ngIf="post.image_src != null">
+      <div (click)="setExpandImageTrue()" class="image" *ngIf="post.image_src != null">
         <img [src]="post.image_src" />
       </div>
       <div class="options">

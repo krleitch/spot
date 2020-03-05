@@ -1,3 +1,4 @@
+<spot-image *ngIf="expandImage" [imageSrc]="comment.image_src" (closeEvent)="setExpandImageFalse()"></spot-image>
 <div class="container">
   <div class="comment">
     <div class="left-bar">
@@ -13,7 +14,7 @@
     <div class="content-wrapper">
       <div class="content">
         {{ getContent() }}
-        <div class="image" *ngIf="comment.image_src != null">
+        <div class="image" (click)="setExpandImageTrue()" *ngIf="comment.image_src != null">
           <img [src]="comment.image_src" />
         </div>
         <span *ngIf="expandable()">

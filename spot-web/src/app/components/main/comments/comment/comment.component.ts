@@ -37,6 +37,7 @@ export class CommentComponent implements OnInit {
   FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
+  expandImage = false;
 
   // distplaying used characters for add comment
   replyContent: HTMLElement;
@@ -247,6 +248,15 @@ export class CommentComponent implements OnInit {
     } else {
       return name;
     }
+  }
+
+  // For expanding images
+  setExpandImageTrue() {
+    this.expandImage = true;
+  }
+
+  setExpandImageFalse() {
+    this.expandImage = false;
   }
 
 }

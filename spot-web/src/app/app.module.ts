@@ -27,6 +27,7 @@ import { PostDetailComponent } from './components/main/post-detail/post-detail.c
 import { ShareComponent } from './components/main/social/share/share.component';
 import { NotificationsComponent } from './components/main/social/notifications/notifications.component';
 import { NotificationItemComponent } from './components/main/social/notification-item/notification-item.component';
+import { ImageComponent } from './components/helpers/image/image.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { NotificationItemComponent } from './components/main/social/notification
     PostDetailComponent,
     ShareComponent,
     NotificationsComponent,
-    NotificationItemComponent
+    NotificationItemComponent,
+    ImageComponent
   ],
   imports: [
     BrowserModule,

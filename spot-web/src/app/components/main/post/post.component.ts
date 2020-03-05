@@ -35,6 +35,8 @@ export class PostComponent implements OnInit {
   optionsEnabled = false;
   showShare = false;
 
+  expandImage = false;
+
   constructor(private store$: Store<RootStoreState.State>, private router: Router, private postsService: PostsService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
@@ -118,10 +120,6 @@ export class PostComponent implements OnInit {
     }
   }
 
-  expandable(): boolean {
-    return this.post.content.length > this.MAX_POST_LENGTH;
-  }
-
   like() {
     if (this.post.rated !== 1) {
       const request: LikePostRequest = {
@@ -144,16 +142,31 @@ export class PostComponent implements OnInit {
     }
   }
 
+  // For show more on post content
+  expandable(): boolean {
+    return this.post.content.length > this.MAX_POST_LENGTH;
+  }
+
   setExpanded(value: boolean) {
     this.expanded = value;
   }
 
+  // Share events
   toggleShare() {
     this.showShare = !this.showShare;
   }
 
   onClose() {
     this.showShare = false;
+  }
+
+  // For expanding images
+  setExpandImageTrue() {
+    this.expandImage = true;
+  }
+
+  setExpandImageFalse() {
+    this.expandImage = false;
   }
 
 }
