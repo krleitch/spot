@@ -26,9 +26,9 @@
 
 .image {
   position: fixed;
-  top: 200px;
-  left: auto;
-  right: auto;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 img {
