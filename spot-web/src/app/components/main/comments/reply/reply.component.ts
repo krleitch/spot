@@ -137,6 +137,7 @@ export class ReplyComponent implements OnInit {
         content,
         image: this.imageFile
       };
+
       this.store$.dispatch(
         new CommentsStoreActions.AddReplyRequestAction(request)
       );
