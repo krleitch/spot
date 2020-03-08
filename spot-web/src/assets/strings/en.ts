@@ -9,7 +9,8 @@ export const STRINGS = {
 
         NAV: {
 
-            TITLE: 'Spot'
+            TITLE: 'Spot',
+            LOGIN: 'Login'
 
         },
 
@@ -221,7 +222,7 @@ export const STRINGS = {
 
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
-            COPYRIGHT: '2020 Spot from REM',
+            COPYRIGHT: '2020 Spot',
 
             // ERROR MESSAGES
             EMAIL_ERROR: 'Email is required',

@@ -21,6 +21,15 @@
     }
 }
 
+.login {
+  font-size: 18px;
+  margin-right: 10px;
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
 // FEATURES
 
 .features {

@@ -94,6 +94,10 @@ export class NavComponent implements OnInit {
     this.router.navigateByUrl('/home');
   }
 
+  navigateLogin() {
+    this.router.navigateByUrl('/login');
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
   }

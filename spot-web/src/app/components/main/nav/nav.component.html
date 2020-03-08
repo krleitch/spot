@@ -1,6 +1,6 @@
 <div class="nav">
   <span class="title" (click)="navigateHome()"> {{ STRINGS.TITLE }} </span>
-  <div *ngIf="account$ | async as myaccount" class="features">
+  <div *ngIf="account$ | async as myaccount; else noAccount" class="features">
     <div class="score">
       <i class="material-icons hot"> whatshot </i>
       <span> {{ myaccount.score }} </span>
@@ -19,4 +19,7 @@
       </div>
     </div>
   </div>
+  <ng-template #noAccount>
+    <div class="login" (click)="navigateLogin()"> {{ STRINGS.LOGIN }} </div>
+  </ng-template>
 </div>
