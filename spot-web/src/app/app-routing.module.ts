@@ -5,6 +5,7 @@ import { Routes } from '@angular/router';
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
 import { LoginComponent } from './components/pre-auth/login/login.component';
 import { RegisterComponent } from './components/pre-auth/register/register.component';
+import { UsernameComponent } from './components/pre-auth/username/username.component';
 
 import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
@@ -34,6 +35,10 @@ export const routes: Routes = [
   {
     path: 'posts/:postId',
     component: PostDetailComponent
+  },
+  {
+    path: 'username',
+    component: UsernameComponent
   }
 ];
 

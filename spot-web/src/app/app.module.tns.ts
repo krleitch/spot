@@ -22,6 +22,7 @@ import { ShareComponent } from './components/main/social/share/share.component';
 import { NotificationsComponent } from './components/main/social/notifications/notifications.component';
 import { NotificationItemComponent } from './components/main/social/notification-item/notification-item.component';
 import { ImageComponent } from './components/helpers/image/image.component';
+import { UsernameComponent } from './components/pre-auth/username/username.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -48,7 +49,8 @@ import { ImageComponent } from './components/helpers/image/image.component';
     ShareComponent,
     NotificationsComponent,
     NotificationItemComponent,
-    ImageComponent
+    ImageComponent,
+    UsernameComponent
   ],
   imports: [
     NativeScriptModule,
