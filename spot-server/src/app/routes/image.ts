@@ -15,7 +15,6 @@ router.post('/upload', function (req: any, res: any) {
     singleUpload(req, res, function(err: any) {
 
         if (err) {
-            console.log(err)
             return res.status(422).send('Error uploading iamge');
         }
 

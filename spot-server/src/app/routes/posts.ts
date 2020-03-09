@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const uuid = require('uuid');
+
 const posts = require('../db/posts');
 const postsService = require('../services/posts');
 
@@ -44,8 +46,10 @@ router.post('/', function (req: any, res: any) {
    
     const accountId = req.user.id;
     const { content, location, image } = req.body;
+    const postId = uuid.v4();
+    const link = postsService.generateLink(postId);
 
-    posts.addPost(content, location, image, accountId).then((rows: any) => {
+    posts.addPost(postId, content, location, image, link, accountId).then((rows: any) => {
         res.status(200).json({ post: rows[0] });
     }, (err: any) => {
         console.log(err);

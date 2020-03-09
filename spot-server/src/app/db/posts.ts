@@ -1,4 +1,4 @@
-export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator }
+export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink }
 
 const uuid = require('uuid');
 
@@ -40,10 +40,9 @@ function getPostById(postId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function addPost(content: string, location: any, imageSrc: string, accountId: string): Promise<any> {
-    var postId = uuid.v4();
-    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, image_src) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, imageSrc];
+function addPost(postId: string, content: string, location: any, imageSrc: string, link: string, accountId: string): Promise<any> {
+    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, link, imageSrc];
     return db.query(sql, values).then( (rows: any) => {
         return getPostById(postId, accountId);
     });
@@ -75,4 +74,12 @@ function getPostCreator(postId: string) {
     var sql = 'SELECT account_id from posts WHERE id = ?';
     var values = [postId];
     return db.query(sql, values);
+}
+
+function getPostByLink(link: string, accountId: string) {
+    var sql = 'SELECT id FROM posts WHERE link = ?';
+    var values = [link];
+    return db.query(sql, values).then( (rows: any) => {
+        return getPostById(rows[0].id, accountId);
+    });
 }
