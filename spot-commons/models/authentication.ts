@@ -9,7 +9,7 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
     jwt: { token: string, expiresIn: string };
-    account: Account
+    account: Account;
 };
 
 export interface LoginRequest {
@@ -19,5 +19,16 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     jwt: { token: string, expiresIn: string };
-    account: Account
+    account: Account;
 };
+
+// Facebook
+
+export interface FacebookLoginRequest {
+    accessToken: string;
+}
+
+export interface FacebookLoginResponse {
+    created: boolean;
+    account: Account;
+}

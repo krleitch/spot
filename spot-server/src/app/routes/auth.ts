@@ -44,7 +44,7 @@ router.post('/login', passport.authenticate('local', {session: true}), function 
     });                            
 });
 
-// Facebook login
+// Facebook Register
 router.post('/register/facebook', function (req: any, res: any) {
     const { accessToken } = req.body;
     auth.getFacebookDetails(accessToken).then( (facebookDetails: any) => {

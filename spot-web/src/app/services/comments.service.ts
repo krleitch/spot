@@ -50,7 +50,6 @@ export class CommentService {
 
   }
 
-
   deleteComment(request: DeleteCommentRequest): Observable<DeleteCommentSuccess> {
     return this.http.delete<DeleteCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`);
   }

@@ -27,4 +27,16 @@ router.get('/account', passport.authenticate('jwt', {session: false}), function 
     })
 })
 
+router.put('/account', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
+
+    const accountId = req.user.id;
+    const { username } = req.body;
+
+    accounts.updateUsername(username, accountId).then((rows: any) => {
+        res.status(200).json({ account: rows[0] });
+    }, (err: any) => {
+        res.status(500).send("Error updating username");
+    })
+})
+
 export = router;

@@ -1,4 +1,4 @@
-export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, getAccountById, addFacebookAccount, getFacebookAccount }
+export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, getAccountById, addFacebookAccount, getFacebookAccount, updateUsername }
 
 const uuid = require('uuid');
 
@@ -45,4 +45,10 @@ function deleteAccount(id: string) {
     var sql = 'DELETE FROM accounts WHERE id = ?';
     var values = [id];
     return db.query(sql, values);
+}
+
+function updateUsername(username: string, accountId: string) {
+    var sql = 'UPDATE accounts SET username = ? WHERE id = ?';
+    var values = [username, accountId];
+    return db.query(sql, values);  
 }

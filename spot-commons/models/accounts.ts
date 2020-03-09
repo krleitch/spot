@@ -16,3 +16,12 @@ export interface Location {
 export interface SetLocationRequest {
     location: Location
 }
+
+// update username
+export interface UpdateUsernameRequest {
+    username: string;
+}
+
+export interface UpdateUsernameResponse {
+    account: Account;
+}

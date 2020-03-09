@@ -38,7 +38,26 @@ export class LandingComponent implements OnInit {
   ngOnInit() { }
 
   facebookLogin() {
-    console.log('facebookLogin');
+
+    window['FB'].getLoginStatus((statusResponse) => {
+      if (statusResponse.status !== 'connected') {
+          window['FB'].login((loginResponse) => {
+            if (loginResponse.status === 'connected') {
+
+
+
+                console.log(loginResponse);
+            } else {
+              // could not login
+              // TODO some error msg
+            }
+          })
+      } else {
+        // already logged in
+        this.router.navigateByUrl('/home');
+      }
+    });
+
   }
 
   googleLogin() {

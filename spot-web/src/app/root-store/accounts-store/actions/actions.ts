@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
-import { SetLocationRequest } from '@models/accounts';
+import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse } from '@models/accounts';
 
 export enum ActionTypes {
   LOGIN_REQUEST = '[Accounts] Login Request',
@@ -19,7 +19,15 @@ export enum ActionTypes {
   ACCOUNT_REQUEST = '[Accounts] Account Request',
   ACCOUNT_SUCCESS = '[Accounts] Account Success',
   ACCOUNT_FAILURE = '[Accounts] Account Failure',
-  SET_LOCATION = '[Accounts] Set Location'
+  UPDATE_USERNAME_REQUEST = '[Accounts] Update Username Request',
+  UPDATE_USERNAME_SUCCESS = '[Accounts] Update Username Success',
+  SET_LOCATION = '[Accounts] Set Location',
+  GENERIC_FAILURE = '[Accounts] Generic Failure'
+}
+
+export class GenericFailureAction implements Action {
+  readonly type = ActionTypes.GENERIC_FAILURE;
+  constructor(public error: string) {}
 }
 
 export class RegisterRequestAction implements Action {
@@ -88,10 +96,22 @@ export class SetLocationAction implements Action {
   constructor(public request: SetLocationRequest) {}
 }
 
+export class UpdateUsernameAction implements Action {
+  readonly type = ActionTypes.UPDATE_USERNAME_REQUEST;
+  constructor(public request: UpdateUsernameRequest) {}
+}
+
+export class UpdateUsernameSuccessAction implements Action {
+  readonly type = ActionTypes.UPDATE_USERNAME_SUCCESS;
+  constructor(public response: UpdateUsernameResponse) {}
+}
+
 export type Actions = LoginRequestAction | LoginSuccessAction |
                       LoginFailureAction | RegisterRequestAction |
                       RegisterSuccessAction | RegisterFailureAction |
                       LogoutRequestAction | DeleteRequestAction |
                       DeleteSuccessAction | DeleteFailureAction |
                       AccountRequestAction | AccountSuccessAction |
-                      SetLocationAction | AccountFailureAction;
+                      SetLocationAction | AccountFailureAction |
+                      UpdateUsernameAction | UpdateUsernameSuccessAction |
+                      GenericFailureAction;

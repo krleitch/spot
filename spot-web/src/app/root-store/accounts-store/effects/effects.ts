@@ -17,6 +17,17 @@ export class AccountsStoreEffects {
     private actions$: Actions
   ) { }
 
+  @Effect({dispatch: false})
+  GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.GenericFailureAction>(
+      featureActions.ActionTypes.GENERIC_FAILURE
+    ),
+    tap((action: featureActions.GenericFailureAction) => {
+      this.accountsService.failureMessage(action.error);
+    })
+  );
+
+
   @Effect()
   registerAccountEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.RegisterRequestAction>(
@@ -133,13 +144,30 @@ export class AccountsStoreEffects {
     ofType<featureActions.AccountRequestAction>(
       featureActions.ActionTypes.ACCOUNT_REQUEST
     ),
-    switchMap(deleteRequest =>
+    switchMap(action =>
       this.accountsService
         .getAccount()
         .pipe(
             map(response => new featureActions.AccountSuccessAction(response)),
             catchError(error =>
               observableOf(new featureActions.AccountFailureAction(error))
+            )
+          )
+    )
+  );
+
+  @Effect()
+  updateUsernameEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.UpdateUsernameAction>(
+      featureActions.ActionTypes.UPDATE_USERNAME_REQUEST
+    ),
+    switchMap(action =>
+      this.accountsService
+        .updateUsername(action.request)
+        .pipe(
+            map(response => new featureActions.UpdateUsernameSuccessAction(response)),
+            catchError(error =>
+              observableOf(new featureActions.GenericFailureAction(error))
             )
           )
     )

@@ -9,8 +9,7 @@ export class AuthInterceptor implements HttpInterceptor {
         const idToken = localStorage.getItem('id_token');
         if (idToken) {
             const cloned = req.clone({
-                headers: req.headers.set('Authorization',
-                    'bearer ' + idToken)
+                headers: req.headers.set('Authorization', 'bearer ' + idToken)
             });
             return next.handle(cloned);
         } else {

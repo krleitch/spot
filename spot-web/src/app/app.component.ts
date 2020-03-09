@@ -10,13 +10,13 @@ import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '@store'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'spot-web';
+  title = 'spot';
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
     this.fbLibrary();
-    this.getUserIfExists();
+    this.getAccountIfExists();
   }
 
   fbLibrary() {
@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
      }(document, 'script', 'facebook-jssdk'));
   }
 
-  getUserIfExists() {
+  getAccountIfExists() {
     const accessToken = localStorage.getItem("fb_access_token");
     const idToken = localStorage.getItem("id_token");
     if (idToken) {

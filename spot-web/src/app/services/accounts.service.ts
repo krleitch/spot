@@ -3,13 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { AlertService } from '@services/alert.service';
+import { UpdateUsernameRequest, UpdateUsernameResponse } from '@models/accounts';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountsService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) { }
 
   baseUrl = environment.baseUrl;
 
@@ -18,11 +20,19 @@ export class AccountsService {
   }
 
   getAccount(): Observable<any> {
-      return this.http.get<any>(`${this.baseUrl}/accounts/account`);
+    return this.http.get<any>(`${this.baseUrl}/accounts/account`);
+  }
+
+  updateUsername(request: UpdateUsernameRequest): Observable<UpdateUsernameResponse> {
+    return this.http.put<UpdateUsernameResponse>(`${this.baseUrl}/accounts/account`, request);
   }
 
   onDeleteAccountSuccess() {
     this.router.navigateByUrl('/');
+  }
+
+  failureMessage(message: string) {
+    this.alertService.error(message);
   }
 
 }
