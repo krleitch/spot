@@ -18,6 +18,9 @@ export class CommentsContainerComponent implements OnInit {
 
   @Input() detailed: boolean;
   @Input() post: Post;
+
+  commentText: string;
+
   // fix this type
   comments$: Observable<any>;
 
@@ -32,7 +35,6 @@ export class CommentsContainerComponent implements OnInit {
   STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
 
   // displaying used characters for add comment
-  commentContent: HTMLElement;
   MAX_COMMENT_LENGTH = 300;
   currentLength = 0;
 
@@ -44,12 +46,6 @@ export class CommentsContainerComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.commentContent = document.getElementById('comment-content');
-
-    this.commentContent.addEventListener('input', ( event ) => {
-      this.currentLength = this.commentContent.innerText.length;
-    }, false);
 
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
@@ -81,6 +77,11 @@ export class CommentsContainerComponent implements OnInit {
 
   }
 
+  onTextInput(event) {
+    this.commentText = event.target.textContent;
+    this.currentLength = this.commentText.length;
+  }
+
   loadMoreComments() {
     // Load 1 more comments
     const limit = 1;
@@ -98,7 +99,7 @@ export class CommentsContainerComponent implements OnInit {
 
   addComment() {
 
-    const content = this.commentContent.innerText;
+    const content = this.commentText;
 
     if (content.length <= this.MAX_COMMENT_LENGTH) {
       const request: AddCommentRequest = {

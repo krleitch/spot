@@ -25,13 +25,14 @@ export class ReplyComponent implements OnInit {
   MAX_SHOW_REPLY_LENGTH = 100;
   expanded = false;
 
+  reply2Text: string;
+
   FILENAME_MAX_SIZE = 20;
   imageFile: File;
   imgSrc: string = null;
   expandImage = false;
 
   // displaying used characters for add reply
-  reply2Content: HTMLElement;
   MAX_REPLY_LENGTH = 300;
   currentLength = 0;
 
@@ -48,13 +49,6 @@ export class ReplyComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.reply2Content = document.getElementById('reply2-content');
-
-    this.reply2Content.addEventListener('input', ( event ) => {
-      this.currentLength = this.reply2Content.innerText.length;
-    }, false);
-
     this.getTime(this.reply.creation_date);
   }
 
@@ -62,6 +56,11 @@ export class ReplyComponent implements OnInit {
     if (!this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
+  }
+
+  onTextInput(event) {
+    this.reply2Text = event.target.textContent;
+    this.currentLength = this.reply2Text.length;
   }
 
   setOptions(value) {
@@ -128,7 +127,7 @@ export class ReplyComponent implements OnInit {
 
   addReply() {
 
-    const content = this.reply2Content.textContent;
+    const content = this.reply2Text;
 
     if (content.length <= this.MAX_REPLY_LENGTH) {
       const request: AddReplyRequest = {

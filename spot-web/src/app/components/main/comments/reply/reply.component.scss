@@ -19,9 +19,8 @@
   display: flex;
   justify-content: center;
   padding: 6px 12px;
-  width: 100%;
-  max-width: 450px;
-  max-height: 1000px;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .highlight {
@@ -201,7 +200,7 @@
   margin: 5px 0px;
 }
 
-#reply2-content {
+.reply2-content {
   flex-grow: 1;
   padding: 6px 6px;
   max-width: 100%;

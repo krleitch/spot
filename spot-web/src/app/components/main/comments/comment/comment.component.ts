@@ -27,6 +27,8 @@ export class CommentComponent implements OnInit {
   MAX_SHOW_COMMENT_LENGTH = 100;
   expanded = false;
 
+  replyText: string;
+
   // fix this type
   replies$: Observable<any>;
 
@@ -40,7 +42,6 @@ export class CommentComponent implements OnInit {
   expandImage = false;
 
   // distplaying used characters for add comment
-  replyContent: HTMLElement;
   MAX_COMMENT_LENGTH = 300;
   currentLength = 0;
 
@@ -57,12 +58,6 @@ export class CommentComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.replyContent = document.getElementById('reply-content');
-
-    this.replyContent.addEventListener('input', ( event ) => {
-      this.currentLength = this.replyContent.innerText.length;
-    }, false);
 
     this.replies$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureReplies, { postId: this.comment.post_id, commentId: this.comment.id })
@@ -100,6 +95,11 @@ export class CommentComponent implements OnInit {
     if (!this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
+  }
+
+  onTextInput(event) {
+    this.replyText = event.target.textContent;
+    this.currentLength = this.replyText.length;
   }
 
   getContent(): string {
@@ -181,7 +181,7 @@ export class CommentComponent implements OnInit {
 
   addReply() {
 
-    const content = this.replyContent.innerText;
+    const content = this.replyText;
 
     if (content.length <= this.MAX_COMMENT_LENGTH) {
       const request: AddReplyRequest = {

@@ -18,10 +18,9 @@
 .image {
   display: flex;
   justify-content: center;
-  padding: 12px 0px;
+  padding: 6px 12px;
   box-sizing: border-box;
-  max-width: 100%;
-  max-height: 500px;
+  cursor: pointer;
 }
 
 img {
@@ -207,21 +206,12 @@ img {
   margin: 5px 0px;
 }
 
-#reply-content {
+.reply-content {
   flex-grow: 1;
   padding: 6px 6px;
   max-width: 100%;
   box-sizing: border-box;
   overflow-wrap: break-word;
-}
-
-.image {
-  display: flex;
-  justify-content: center;
-  padding: 6px 12px;
-  width: 100%;
-  max-width: 450px;
-  max-height: 1000px;
 }
 
 // include a placeholder
