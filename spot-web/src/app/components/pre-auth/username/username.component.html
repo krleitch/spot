@@ -1,3 +1,12 @@
-<p>
-  username works!
-</p>
+<div class="username">
+  <div class="nav">
+    <div class="title"> {{ STRINGS.TITLE }} </div>
+  </div>
+  <div class="input-container">
+    <div class="heading"> {{ STRINGS.HEADING }} </div>
+    <input type="text" [placeholder]="STRINGS.USERNAME_PLACEHOLDER">
+    <button type="button" class="button" (click)="continue()"> {{ STRINGS.CONTINUE }} </button>
+    <div class="description"> {{ STRINGS.DESCRIPTION }} </div>
+  </div>
+</div>
+s

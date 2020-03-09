@@ -264,6 +264,17 @@ export const STRINGS = {
             // ERRORS
             EMAIL_OR_USER_ERROR: 'Email/Username is required',
             PASSWORD_ERROR: 'Password is required',
+        },
+
+        USERNAME: {
+
+          TITLE: 'Spot',
+          HEADING: 'Enter a username for your account',
+          DESCRIPTION: '*Your username will not be visible to anyone. All posts are anonymous',
+
+          USERNAME_PLACEHOLDER: 'Enter username',
+          CONTINUE: 'Continue to Spot'
+
         }
 
     }

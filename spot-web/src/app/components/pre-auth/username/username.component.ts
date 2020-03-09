@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-username',
@@ -7,9 +10,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UsernameComponent implements OnInit {
 
-  constructor() { }
+  STRINGS = STRINGS.PRE_AUTH.USERNAME;
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  continue() {
+    this.router.navigateByUrl('/home');
   }
 
 }
