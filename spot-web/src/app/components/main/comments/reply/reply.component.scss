@@ -105,20 +105,13 @@
 }
 
 .dropdown {
-  cursor: pointer;
-  margin-left: auto;
   position: relative;
-  width: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  visibility: hidden;
-  &:hover {
-    @extend .highlight;
-  }
 }
 
-.reply:hover .dropdown {
+.reply:hover .icon-size {
   visibility: visible;
 }
 
@@ -127,7 +120,7 @@
   position: absolute;
   background-color: #f1f1f1;
   min-width: 50px;
-  top: 20px;
+  top: 5px;
   right: 0;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -147,7 +140,12 @@
 }
 
 .icon-size {
+  cursor: pointer;
+  visibility: hidden;
   font-size: 20px;
+  &:hover {
+    @extend .highlight;
+  }
 }
 
 // Add reply form

@@ -32,12 +32,14 @@
       </div>
     </div>
     <div class="right-bar">
-      <div #options class="dropdown align-bottom" (click)="setOptions(true)">
-        <i class="material-icons icon-size"> more_horiz </i>
-        <div class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
-          <div class="button" (click)="openPost()"> {{ STRINGS.OPEN_POST }} </div>
-          <div *ngIf="post.owned" class="button" (click)="deletePost()"> {{ STRINGS.DELETE }} </div>
-          <div class="button"> {{ STRINGS.REPORT }} </div>
+      <div #options>
+        <i class="material-icons icon-size" (click)="setOptions(true)"> more_horiz </i>
+        <div class="dropdown align-bottom" >
+          <div class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
+            <div class="button" (click)="openPost()"> {{ STRINGS.OPEN_POST }} </div>
+            <div *ngIf="post.owned" class="button" (click)="deletePost()"> {{ STRINGS.DELETE }} </div>
+            <div class="button"> {{ STRINGS.REPORT }} </div>
+          </div>
         </div>
       </div>
       <div #share>
