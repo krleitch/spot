@@ -102,14 +102,20 @@ export class CommentsContainerComponent implements OnInit {
     const content = this.commentText;
 
     if (content.length <= this.MAX_COMMENT_LENGTH) {
+
       const request: AddCommentRequest = {
         postId: this.post.id,
         content,
         image: this.imageFile
       };
+
       this.store$.dispatch(
         new CommentsStoreActions.AddRequestAction(request)
       );
+
+      this.commentText = '';
+      this.imageFile = null;
+
     }
   }
 

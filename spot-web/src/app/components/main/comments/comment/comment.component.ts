@@ -190,9 +190,15 @@ export class CommentComponent implements OnInit {
         content,
         image: this.imageFile
       };
+
       this.store$.dispatch(
         new CommentsStoreActions.AddReplyRequestAction(request)
       );
+
+      this.replyText = '';
+      this.imageFile = null;
+      this.setShowAddReply(false);
+
     }
   }
 

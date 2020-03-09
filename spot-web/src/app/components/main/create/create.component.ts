@@ -22,8 +22,9 @@ export class CreateComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
+  postText: string;
+
   // displaying used characters for create a post
-  content: HTMLElement;
   MAX_POST_LENGTH = 2000;
   currentLength = 0;
 
@@ -35,12 +36,6 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
 
-    this.content = document.getElementById('content');
-
-    this.content.addEventListener('input', ( event ) => {
-      this.currentLength = this.content.innerText.length;
-    }, false);
-
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
     );
@@ -51,9 +46,14 @@ export class CreateComponent implements OnInit {
 
   }
 
+  onTextInput(event) {
+    this.postText = event.target.textContent;
+    this.currentLength = this.postText.length;
+  }
+
   submit() {
 
-    const content = this.content.innerText;
+    const content = this.postText;
 
     if ( content.length <= this.MAX_POST_LENGTH && this.myLocation != null) {
       const post: AddPostRequest = {
@@ -65,6 +65,10 @@ export class CreateComponent implements OnInit {
       this.store$.dispatch(
         new PostsStoreActions.AddRequestAction(post)
       );
+
+      this.postText = '';
+      this.imageFile = null;
+
     }
   }
 

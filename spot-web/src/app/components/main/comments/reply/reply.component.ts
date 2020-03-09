@@ -130,6 +130,7 @@ export class ReplyComponent implements OnInit {
     const content = this.reply2Text;
 
     if (content.length <= this.MAX_REPLY_LENGTH) {
+
       const request: AddReplyRequest = {
         postId: this.reply.post_id,
         commentId: this.reply.parent_id,
@@ -140,6 +141,11 @@ export class ReplyComponent implements OnInit {
       this.store$.dispatch(
         new CommentsStoreActions.AddReplyRequestAction(request)
       );
+
+      this.reply2Text = '';
+      this.imageFile = null;
+      this.setShowAddReply(false);
+
     }
   }
 

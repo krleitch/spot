@@ -1,6 +1,6 @@
 <div class="container">
   <div class="editor">
-      <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" id="content" spellcheck="false"></div>
+      <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" [textContent]="postText" (input)="onTextInput($event)"></div>
       <div class="image" *ngIf="imgSrc != null">
         <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>
