@@ -1,16 +1,11 @@
 export { filterLocation, generateLink }
 
-const { pbkdf2Sync } = require('crypto');
+const shortid = require('shortid');
 
 const LOCAL_DISTANCE = 10;
 
-function generateLink(postId: string): string {
-    const iterations = 10000;
-    const hashLength = 512;
-	const digest = 'sha512';
-	const salt = 'salt';
-	// TODO Really should just make the hash output be the length of id
-    return pbkdf2Sync(postId, salt, iterations, hashLength, digest).toString('hex').substring(0,20);
+function generateLink(): string {
+	return shortid.generate();
 }
 
 function filterLocation(post: any, location: string, latitude: number, longitude: number) {
