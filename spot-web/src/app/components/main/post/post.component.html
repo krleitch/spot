@@ -44,7 +44,7 @@
       </div>
       <div #share>
         <i class="material-icons share" (click)="toggleShare()"> share </i>
-        <spot-share *ngIf="showShare" [postId]="post.id" (close)="onClose($event)"></spot-share>
+        <spot-share *ngIf="showShare" [postLink]="post.link" (close)="onClose($event)"></spot-share>
       </div>
     </div>
   </div>

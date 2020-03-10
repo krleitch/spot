@@ -24,7 +24,7 @@ CREATE TABLE posts (
     longitude DECIMAL(9,6) NOT NULL,
     latitude DECIMAL(9,6) NOT NULL,
     content VARCHAR(3000) NOT NULL,
-    link VARCHAR(20) NOT NULL UNIQUE,
+    link VARCHAR(14) NOT NULL UNIQUE,
     image_src VARCHAR(200),
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     PRIMARY KEY (id)
@@ -75,7 +75,6 @@ CREATE TABLE notifications (
     post_id VARCHAR(36) NOT NULL,
     seen BOOLEAN,
     PRIMARY KEY (id),
-    FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (sender_id) REFERENCES accounts (id),
     FOREIGN KEY (receiver_id) REFERENCES accounts (id)
 );

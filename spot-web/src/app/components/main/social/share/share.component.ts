@@ -14,7 +14,7 @@ import { STRINGS } from '@assets/strings/en';
 })
 export class ShareComponent implements OnInit {
 
-  @Input() postId;
+  @Input() postLink;
   @Output() close = new EventEmitter<boolean>();
 
   STRINGS = STRINGS.MAIN.SHARE;
@@ -30,7 +30,7 @@ export class ShareComponent implements OnInit {
 
     const request: AddNotificationRequest = {
       receiver: this.username,
-      postId: this.postId
+      postLink: this.postLink
     };
 
     // send the notification

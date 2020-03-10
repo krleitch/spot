@@ -61,7 +61,7 @@ export class NotificationItemComponent implements OnInit {
       new SocialStoreActions.SetNotificationSeenAction(request)
     );
 
-    this.router.navigateByUrl(/posts/ + this.notification.post_id);
+    this.router.navigateByUrl(/posts/ + this.notification.link);
   }
 
   getPreview(content: string) {
