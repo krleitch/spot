@@ -30,7 +30,7 @@ export class PostsService {
   }
 
   getPost(request: LoadSinglePostRequest): Observable<LoadSinglePostSuccess> {
-    return this.http.get<LoadSinglePostSuccess>(`${this.baseUrl}/posts/${request.postId}`);
+    return this.http.get<LoadSinglePostSuccess>(`${this.baseUrl}/posts/${request.postLink}`);
   }
 
   addPost(request: AddPostRequest): Observable<AddPostSuccess> {

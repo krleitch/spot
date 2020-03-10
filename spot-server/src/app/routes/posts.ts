@@ -29,10 +29,10 @@ router.get('/', function (req: any, res: any) {
 });
 
 // Get a single post
-router.get('/:postId', function (req: any, res: any) {
-    const postId = req.params.postId;
+router.get('/:postLink', function (req: any, res: any) {
+    const postLink = req.params.postLink;
     const accountId = req.user.id;
-    posts.getPostById(postId, accountId).then((rows: any) => {
+    posts.getPostByLink(postLink, accountId).then((rows: any) => {
         res.status(200).json({ post: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error getting post');

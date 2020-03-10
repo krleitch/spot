@@ -21,7 +21,7 @@ export class PostDetailComponent implements OnInit {
     this.route.paramMap.subscribe( p => {
 
       const request: LoadSinglePostRequest = {
-        postId: p.get('postId')
+        postLink: p.get('postId')
       };
 
       this.post$ = this.postsService.getPost(request).pipe(

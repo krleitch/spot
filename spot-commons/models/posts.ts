@@ -12,6 +12,7 @@ export interface Post {
     rated: number;
     comments: number;
     owned: boolean;
+    link: string;
 }
 
 export interface PostFilter {
@@ -33,7 +34,7 @@ export interface LoadPostSuccess {
 }
 
 export interface LoadSinglePostRequest {
-    postId: string;
+    postLink: string;
 }
 
 export interface LoadSinglePostSuccess {

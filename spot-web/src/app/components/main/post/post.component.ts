@@ -77,7 +77,7 @@ export class PostComponent implements OnInit {
   }
 
   openPost() {
-    this.router.navigateByUrl('posts/' + this.post.id);
+    this.router.navigateByUrl('posts/' + this.post.link);
   }
 
   getTime() {
