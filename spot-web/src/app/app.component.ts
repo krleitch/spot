@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '@store';
+import { SetLocationRequest } from '@models/accounts';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.fbLibrary();
     this.getAccountIfExists();
+    this.getAccountLocation();
   }
 
   fbLibrary() {
@@ -50,6 +52,26 @@ export class AppComponent implements OnInit {
     } else if (accessToken) {
       // TODO fb login
     }
+  }
+
+  getAccountLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const request: SetLocationRequest = {
+          location: { longitude: position.coords.longitude, latitude: position.coords.latitude }
+        };
+        this.store$.dispatch(
+          new AccountsActions.SetLocationAction(request)
+        );
+      }, this.locationError.bind(this));
+    } else {
+      // browser doesnt support location
+    }
+  }
+
+  locationError(error) {
+    // error.code of error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT
+    // hide the content
   }
 
 }

@@ -25,7 +25,9 @@ export class PostDetailComponent implements OnInit {
       };
 
       this.post$ = this.postsService.getPost(request).pipe(
-        map( postSuccess => postSuccess.post)
+        map( postSuccess =>  {
+          return postSuccess.post;
+        })
       );
 
     });

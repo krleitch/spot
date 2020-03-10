@@ -40,8 +40,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getAccountLocation();
-
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
     );
@@ -51,7 +49,10 @@ export class HomeComponent implements OnInit {
 
       // don't load unless we have a location
       if (location === null) {
+        this.locationEnabled = false;
         return;
+      } else {
+        this.locationEnabled = true;
       }
 
       // Loads the initial posts
@@ -125,29 +126,6 @@ export class HomeComponent implements OnInit {
 
     this.loadedPosts += this.POSTS_LIMIT;
 
-  }
-
-  getAccountLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const request: SetLocationRequest = {
-          location: { longitude: position.coords.longitude, latitude: position.coords.latitude }
-        };
-        this.store$.dispatch(
-          new AccountsActions.SetLocationAction(request)
-        );
-        this.locationEnabled = true;
-      }, this.showError.bind(this));
-    } else {
-      // browser doesnt support location
-      this.locationEnabled = false;
-    }
-  }
-
-  showError(error) {
-    // error.code of error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT
-    // hide the content
-    this.locationEnabled = false;
   }
 
   setGlobal() {

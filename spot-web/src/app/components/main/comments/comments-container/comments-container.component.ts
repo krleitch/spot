@@ -69,6 +69,7 @@ export class CommentsContainerComponent implements OnInit {
       offset: this.currentOffset,
       limit: initialLimit
     };
+
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
