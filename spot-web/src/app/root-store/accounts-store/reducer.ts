@@ -52,6 +52,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         account: action.response.account
       };
     }
+    case ActionTypes.UPDATE_USERNAME_SUCCESS: {
+      return {
+        ...state,
+        account: action.response.account
+      };
+    }
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,

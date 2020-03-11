@@ -20,8 +20,8 @@ function addFacebookAccount(id: string, email: string): Promise<any> {
     const index = email.indexOf('@');
     // TODO THIS IS A BAD USERNAME GENERATOR
     var username = email.substring(0, index);
-    var sql = 'INSERT INTO accounts (id, email, username, facebook_id) VALUES (?, ?, ?, ?)';
-    var values = [uuid.v4(), email, username, id];
+    var sql = 'INSERT INTO accounts (id, email, username, facebook_id, score) VALUES (?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), email, username, id, 0];
     return db.query(sql, values).then( (rows: any) => {
         return getFacebookAccount(id);
     });
@@ -55,5 +55,7 @@ function deleteAccount(id: string) {
 function updateUsername(username: string, accountId: string) {
     var sql = 'UPDATE accounts SET username = ? WHERE id = ?';
     var values = [username, accountId];
-    return db.query(sql, values);  
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(accountId);
+    });;  
 }
