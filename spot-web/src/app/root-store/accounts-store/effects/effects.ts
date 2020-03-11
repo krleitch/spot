@@ -50,8 +50,8 @@ export class AccountsStoreEffects {
     ofType<featureActions.RegisterSuccessAction>(
       featureActions.ActionTypes.REGISTER_SUCCESS
     ),
-    tap( registerResponse => {
-      this.authenticationService.loginAccountSuccess(registerResponse);
+    tap( (action: featureActions.RegisterSuccessAction) => {
+      this.authenticationService.loginAccountSuccess(action.response);
     })
   );
 
@@ -87,8 +87,8 @@ export class AccountsStoreEffects {
     ofType<featureActions.LoginSuccessAction>(
       featureActions.ActionTypes.LOGIN_SUCCESS
     ),
-    tap(loginResponse => {
-      this.authenticationService.loginAccountSuccess(loginResponse);
+    tap((action: featureActions.LoginSuccessAction) => {
+      this.authenticationService.loginAccountSuccess(action.response);
     })
   );
 

@@ -7,7 +7,8 @@ import { AuthenticationService } from '@services/authentication.service';
 import { RegisterRequest } from '@models/authentication';
 import { Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions } from '@store/accounts-store';
+import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
+import { FacebookLoginRequest } from '@models/authentication';
 
 @Component({
   selector: 'spot-landing',
@@ -44,9 +45,18 @@ export class LandingComponent implements OnInit {
           window['FB'].login((loginResponse) => {
             if (loginResponse.status === 'connected') {
 
+                // localStorage.removeItem('fb_access_token');
+                // localStorage.removeItem('fb_expires_in');
 
 
-                console.log(loginResponse);
+                const request: FacebookLoginRequest = {
+                  accessToken: loginResponse.authResponse.accessToken
+                };
+
+                this.store$.dispatch(
+                  new AccountsFacebookActions.FacebookLoginRequestAction(request)
+                );
+
             } else {
               // could not login
               // TODO some error msg
@@ -54,7 +64,8 @@ export class LandingComponent implements OnInit {
           })
       } else {
         // already logged in
-        this.router.navigateByUrl('/home');
+        // this.router.navigateByUrl('/home');
+        window['FB'].logout();
       }
     });
 

@@ -45,44 +45,61 @@ router.post('/login', passport.authenticate('local', {session: true}), function 
 });
 
 // Facebook Register
-router.post('/register/facebook', function (req: any, res: any) {
-    const { accessToken } = req.body;
-    auth.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
-        accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email).then( (rows: any) => {
-            accounts.getFacebookAccount(facebookDetails.body.id).then(( user: any) => {
-                user = user[0];
-                const token = auth.generateToken(user);
-                res.status(200).json({
-                    jwt: { token: token, expiresIn: '2h' },
-                    user: user
-                });   
-            }, (err: any) => {
-                res.sendStatus(500);
-            })   
-        }, (err: any) => {
-           res.sendStatus(500);
-        });
-    }, (err: any) => {
-        res.sendStatus(500);
-    });
-});
+// router.post('/register/facebook', function (req: any, res: any) {
+//     const { accessToken } = req.body;
+//     auth.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
+//         accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email).then( (rows: any) => {
+//             accounts.getFacebookAccount(facebookDetails.body.id).then(( user: any) => {
+//                 user = user[0];
+//                 const token = auth.generateToken(user);
+//                 res.status(200).json({
+//                     jwt: { token: token, expiresIn: '2h' },
+//                     user: user
+//                 });   
+//             }, (err: any) => {
+//                 res.sendStatus(500);
+//             })   
+//         }, (err: any) => {
+//            res.sendStatus(500);
+//         });
+//     }, (err: any) => {
+//         res.sendStatus(500);
+//     });
+// });
 
 // Facebook login
 router.post('/login/facebook', function (req: any, res: any) {
     const { accessToken } = req.body;
     auth.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
         accounts.getFacebookAccount(facebookDetails.body.id).then(( user: any) => {
-            user = user[0];
-            const token = auth.generateToken(user);
-            res.status(200).json({
-                jwt: { token: token, expiresIn: '2h' },
-                account: user
-            });        
+            if ( user.length == 0 ) {
+                // create the account
+                accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email).then( (user2: any) => {
+                    user2 = user2[0];
+                    const token = auth.generateToken(user2);
+                    res.status(200).json({
+                        created: true,
+                        jwt: { token: token, expiresIn: '2h' },
+                        account: user2
+                    });   
+                }, (err: any) => {
+                    return Promise.reject(err);
+                });            
+            } else {
+                // account already exists
+                user = user[0];
+                const token = auth.generateToken(user);
+                res.status(200).json({
+                    created: false,
+                    jwt: { token: token, expiresIn: '2h' },
+                    account: user
+                });   
+            }
         }, (err: any) => {
-            res.sendStatus(500);
+            return Promise.reject(err);
         })   
     }, (err: any) => {
-        res.sendStatus(500);
+        res.status(500).send('Error signing in with facebook');
     });
 });
 

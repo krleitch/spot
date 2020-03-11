@@ -30,5 +30,6 @@ export interface FacebookLoginRequest {
 
 export interface FacebookLoginResponse {
     created: boolean;
+    jwt: { token: string, expiresIn: string };
     account: Account;
 }

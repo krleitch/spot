@@ -52,16 +52,10 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         account: action.response.account
       };
     }
-    case FacebookActionTypes.FACEBOOK_REGISTER_SUCCESS: {
-      return {
-        ...state,
-        account: action.response.user
-      };
-    }
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,
-        account: action.response.user
+        account: action.response.account
       };
     }
     default: {

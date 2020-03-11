@@ -10,16 +10,21 @@ function addAccount(email: string, username: string, pass: string, phone: string
     return db.query(sql, values);
 }
 
-function addFacebookAccount(id: string, email: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, email, facebook_id) VALUES (?, ?, ?)';
-    var values = [uuid.v4(), email, id];
-    return db.query(sql, values);
-}
-
 function getFacebookAccount(facebookId: string): Promise<any> {
     var sql = 'SELECT * FROM accounts WHERE facebook_id = ?';
     var values = [facebookId];
     return db.query(sql, values);
+}
+
+function addFacebookAccount(id: string, email: string): Promise<any> {
+    const index = email.indexOf('@');
+    // TODO THIS IS A BAD USERNAME GENERATOR
+    var username = email.substring(0, index);
+    var sql = 'INSERT INTO accounts (id, email, username, facebook_id) VALUES (?, ?, ?, ?)';
+    var values = [uuid.v4(), email, username, id];
+    return db.query(sql, values).then( (rows: any) => {
+        return getFacebookAccount(id);
+    });
 }
 
 // TODO, wanna change from *

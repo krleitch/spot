@@ -5,7 +5,7 @@ import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
-import { RegisterRequest, RegisterResponse } from '@models/authentication';
+import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginResponse, LoginResponse } from '@models/authentication';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({ providedIn: 'root' })
@@ -19,12 +19,8 @@ export class AuthenticationService {
         private alertService: AlertService) {
     }
 
-    registerFacebookAccount(request: any): Observable<any> {
-        return this.http.post<any>(`${this.baseUrl}/auth/register/facebook`, request);
-    }
-
-    loginFacebookAccount(request: any): Observable<any> {
-        return this.http.post<any>(`${this.baseUrl}/auth/login/facebook`, request);
+    loginFacebookAccount(request: FacebookLoginRequest): Observable<FacebookLoginResponse> {
+        return this.http.post<FacebookLoginResponse>(`${this.baseUrl}/auth/login/facebook`, request);
     }
 
     registerAccount(registerRequest: RegisterRequest): Observable<RegisterResponse> {
@@ -61,24 +57,24 @@ export class AuthenticationService {
                 });
             }
         });
+
         this.router.navigateByUrl('/login');
     }
 
-    loginAccountSuccess(action) {
-        localStorage.setItem('id_token', action.response.jwt.token);
-        localStorage.setItem('id_expires_in', JSON.stringify(action.response.jwt.expiresIn));
+    loginAccountSuccess(response: LoginResponse) {
+        localStorage.setItem('id_token', response.jwt.token);
+        localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
         this.router.navigateByUrl('/home');
     }
 
-    loginFacebookAccountSuccess(action) {
-        localStorage.setItem('id_token', action.payload.response.jwt.token);
-        localStorage.setItem('id_expires_in', JSON.stringify(action.payload.response.jwt.expiresIn));
-        this.router.navigateByUrl('/home');
-    }
-
-    registerFacebookAccountSuccess(action) {
-        localStorage.setItem('id_token', action.response.idToken);
-        localStorage.setItem('id_expires_in', JSON.stringify(action.response.expireIn));
+    loginFacebookAccountSuccess(response: FacebookLoginResponse) {
+        localStorage.setItem('id_token', response.jwt.token);
+        localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
+        if (response.created) {
+          this.router.navigateByUrl('/username');
+        } else {
+          this.router.navigateByUrl('/home');
+        }
     }
 
     failureMessage(message: string) {
