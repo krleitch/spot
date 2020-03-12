@@ -13,8 +13,10 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.get('/', function (req: any, res: any) {
 
     const id = req.user.id;
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
 
-    notifications.getNotificationByReceiverId(id).then((rows: any) => {
+    notifications.getNotificationByReceiverId(id, offset, limit).then((rows: any) => {
         res.status(200).json({ notifications: rows });
     }, (err: any) => {
         res.status(500).send('Error getting notifications');

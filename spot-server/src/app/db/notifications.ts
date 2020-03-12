@@ -5,10 +5,10 @@ const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function getNotificationByReceiverId(receiverId: string) {
+function getNotificationByReceiverId(receiverId: string, offset: number, limit: number) {
     var sql = `SELECT n.id, n.post_id, n.creation_date, n.seen, a.username, p.image_src, p.content, p.link FROM notifications n LEFT JOIN accounts a ON a.id = n.sender_id
-                LEFT JOIN posts p ON n.post_id = p.id WHERE receiver_id = ? ORDER BY n.creation_date DESC`;
-    var values = [receiverId];
+                LEFT JOIN posts p ON n.post_id = p.id WHERE receiver_id = ? ORDER BY n.creation_date DESC LIMIT ? OFFSET ?`;
+    var values = [receiverId, limit, offset];
     return db.query(sql, values);
 }
 

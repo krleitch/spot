@@ -42,12 +42,14 @@ export class NavComponent implements OnInit {
       select(SocialStoreSelectors.selectMyFeatureNotifications)
     );
 
-    const request: GetNotificationsRequest = {};
+    // TODO somehow test for notifs, not like this though
+    // maybe a get call for # of em???
+    // const request: GetNotificationsRequest = {};
 
-    // load the notifications
-    this.store$.dispatch(
-      new SocialStoreActions.GetNotificationsAction(request)
-    );
+    // // load the notifications
+    // this.store$.dispatch(
+    //   new SocialStoreActions.GetNotificationsAction(request)
+    // );
 
     this.notifications$.subscribe( (notifs: Notification[]) => {
       let unread = 0;

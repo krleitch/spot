@@ -7,9 +7,11 @@
     </div>
     <div *ngIf="notifications$ | async as notifications">
       <ng-container *ngIf="notifications.length; else noNotifications">
-        <div *ngFor="let notification of notifications">
-          <spot-notification-item [notification]="notification"></spot-notification-item>
-        </div>
+        <spot-infinite-scroll (scrolled)="onScroll()">
+          <div *ngFor="let notification of notifications">
+            <spot-notification-item [notification]="notification"></spot-notification-item>
+          </div>
+        </spot-infinite-scroll>
       </ng-container>
       <ng-template #noNotifications>
         <div class="no-notifications"> {{ STRINGS.NO_NOTIFICATIONS }} </div>

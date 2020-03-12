@@ -18,6 +18,9 @@ export class NotificationsComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
+  notificationsLoaded = 0;
+  loadLimit = 1;
+
   notifications$: Observable<Notification[]>;
 
   constructor(private store$: Store<RootStoreState.State>) { }
@@ -28,12 +31,33 @@ export class NotificationsComponent implements OnInit {
       select(SocialStoreSelectors.selectMyFeatureNotifications)
     );
 
-    const request: GetNotificationsRequest = {};
+    const request: GetNotificationsRequest = {
+      offset: this.notificationsLoaded,
+      limit: this.loadLimit
+    };
 
     // load the notifications
     this.store$.dispatch(
       new SocialStoreActions.GetNotificationsAction(request)
     );
+
+    this.notificationsLoaded += this.loadLimit;
+
+  }
+
+  onScroll() {
+
+    const request: GetNotificationsRequest = {
+      offset: this.notificationsLoaded,
+      limit: this.loadLimit
+    };
+
+    // load the notifications
+    this.store$.dispatch(
+      new SocialStoreActions.GetNotificationsAction(request)
+    );
+
+    this.notificationsLoaded += this.loadLimit;
 
   }
 

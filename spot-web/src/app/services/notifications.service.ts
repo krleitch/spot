@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { AlertService } from '@services/alert.service';
@@ -18,7 +18,10 @@ export class NotificationsService {
   baseUrl = environment.baseUrl;
 
   getNotifications(request: GetNotificationsRequest): Observable<GetNotificationsSuccess> {
-    return this.http.get<GetNotificationsSuccess>(`${this.baseUrl}/notifications`);
+    let params = new HttpParams();
+    params = params.append('offset', request.offset.toString());
+    params = params.append('limit', request.limit.toString());
+    return this.http.get<GetNotificationsSuccess>(`${this.baseUrl}/notifications`, { params });
   }
 
   addNotification(request: AddNotificationRequest): Observable<AddNotificationSuccess> {
