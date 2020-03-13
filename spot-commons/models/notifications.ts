@@ -63,3 +63,12 @@ export interface SetAllNotificationsSeenRequest {
 export interface SetAllNotificationsSeenSuccess {
 
 }
+
+// get unread notifications
+export interface GetNotificationsUnreadRequest {
+
+}
+
+export interface GetNotificationsUnreadSuccess {
+    unread: number;
+}

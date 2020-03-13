@@ -8,7 +8,7 @@ import { AccountsActions } from '@store/accounts-store';
 import { SocialStoreSelectors, SocialStoreActions } from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { Account } from '@models/accounts';
-import { Notification, GetNotificationsRequest } from '@models/notifications';
+import { Notification, GetNotificationsUnreadRequest } from '@models/notifications';
 
 @Component({
   selector: 'spot-main-nav',
@@ -20,7 +20,7 @@ export class NavComponent implements OnInit {
   STRINGS = STRINGS.MAIN.NAV;
 
   account$: Observable<Account>;
-  notifications$: Observable<Notification[]>;
+  unread$: Observable<number>;
   unreadNotifications = '0';
 
   @ViewChild('account') accountView;
@@ -38,30 +38,23 @@ export class NavComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountsUser)
     );
 
-    this.notifications$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureNotifications)
+    this.unread$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectMyFeatureUnread)
     );
 
-    // TODO somehow test for notifs, not like this though
-    // maybe a get call for # of em???
-    // const request: GetNotificationsRequest = {};
 
-    // // load the notifications
-    // this.store$.dispatch(
-    //   new SocialStoreActions.GetNotificationsAction(request)
-    // );
+    const request: GetNotificationsUnreadRequest = {};
 
-    this.notifications$.subscribe( (notifs: Notification[]) => {
-      let unread = 0;
-      notifs.forEach( (n: Notification) => {
-        if (n.seen === 0) {
-          unread += 1;
-        }
-      });
-      if (unread >= 10) {
+    this.store$.dispatch(
+      new SocialStoreActions.GetNotificationsUnreadAction(request)
+    );
+
+    this.unread$.subscribe( (numberUnread: number) => {
+      console.log(numberUnread);
+      if (numberUnread >= 10) {
         this.unreadNotifications = '+';
       } else {
-        this.unreadNotifications = unread.toString();
+        this.unreadNotifications = numberUnread.toString();
       }
     });
 

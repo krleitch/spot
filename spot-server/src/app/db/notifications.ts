@@ -1,5 +1,5 @@
 export { getNotificationByReceiverId, getNotificationById, addNotification, deleteNotificationById,
-            setAllNotificationsSeen, setNotificationSeen, deleteAllNotificationsForAccount }
+            setAllNotificationsSeen, setNotificationSeen, deleteAllNotificationsForAccount, getNotificationUnreadByReceiverId }
 
 const uuid = require('uuid');
 
@@ -40,13 +40,19 @@ function setAllNotificationsSeen(accountId: string) {
 }
 
 function deleteNotificationById(id: string) {
-    var sql = `DELETE FROM notifications where id = ?`;
+    var sql = `DELETE FROM notifications WHERE id = ?`;
     var values = [id];
     return db.query(sql, values);
 }
 
 function deleteAllNotificationsForAccount(accountId: string) {
-    var sql = `DELETE FROM notifications where receiver_id = ?`;
+    var sql = `DELETE FROM notifications WHERE receiver_id = ?`;
+    var values = [accountId];
+    return db.query(sql, values);
+}
+
+function getNotificationUnreadByReceiverId(accountId: string) {
+    var sql = `SELECT count(*) as unread FROM notifications WHERE receiver_id = ?`;
     var values = [accountId];
     return db.query(sql, values);
 }

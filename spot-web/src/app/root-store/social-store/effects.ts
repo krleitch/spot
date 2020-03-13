@@ -6,7 +6,8 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { NotificationsService } from '@services/notifications.service';
 import * as featureActions from './actions';
 import { GetNotificationsSuccess, AddNotificationSuccess, SetNotificationSeenSuccess,
-          DeleteNotificationSuccess, DeleteAllNotificationsSuccess, SetAllNotificationsSeenSuccess } from '@models/notifications';
+          DeleteNotificationSuccess, DeleteAllNotificationsSuccess, SetAllNotificationsSeenSuccess,
+          GetNotificationsUnreadSuccess } from '@models/notifications';
 
 
 @Injectable()
@@ -133,6 +134,25 @@ export class SocialStoreEffects {
         .pipe(
           map( (response: SetAllNotificationsSeenSuccess) => {
             return new featureActions.SetAllNotificationsSeenSuccessAction( response )
+          }),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  getNotificationsUnreadEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.GetNotificationsUnreadAction>(
+      featureActions.ActionTypes.GET_NOTIFICATIONS_UNREAD_REQUEST
+    ),
+    switchMap((action: featureActions.GetNotificationsUnreadAction) =>
+      this.notificationsService
+        .getNotificationsUnread(action.request)
+        .pipe(
+          map( (response: GetNotificationsUnreadSuccess) => {
+            return new featureActions.GetNotificationsUnreadSuccessAction( response )
           }),
           catchError(errorResponse =>
             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))

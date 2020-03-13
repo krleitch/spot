@@ -4,6 +4,7 @@ import { Notification } from '@models/notifications';
 import { State } from './state';
 
 export const selectNotifications = (state: State): Notification[] => state.notifications;
+export const selectUnread = (state: State): number => state.unread;
 
 export const selectMyFeatureState: MemoizedSelector<
   object,
@@ -16,4 +17,12 @@ export const selectMyFeatureNotifications: MemoizedSelector<
 > = createSelector(
   selectMyFeatureState,
   selectNotifications
+);
+
+export const selectMyFeatureUnread: MemoizedSelector<
+  object,
+  number
+> = createSelector(
+  selectMyFeatureState,
+  selectUnread
 );

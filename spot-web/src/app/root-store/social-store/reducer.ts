@@ -13,6 +13,12 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state,
       };
     }
+    case ActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS: {
+      return {
+        ...state,
+        unread: action.response.unread
+      };
+    }
     case ActionTypes.ADD_NOTIFICATION_SUCCESS: {
       return {
         ...state,

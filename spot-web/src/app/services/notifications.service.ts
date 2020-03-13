@@ -6,7 +6,8 @@ import { AlertService } from '@services/alert.service';
 import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess,
           SetNotificationSeenSuccess, SetNotificationSeenRequest, DeleteAllNotificationsRequest,
           DeleteAllNotificationsSuccess, DeleteNotificationRequest, DeleteNotificationSuccess,
-          SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess } from '@models/notifications';
+          SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess, GetNotificationsUnreadRequest,
+          GetNotificationsUnreadSuccess } from '@models/notifications';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,10 @@ export class NotificationsService {
 
   setAllNotificationsSeen(request: SetAllNotificationsSeenRequest): Observable<SetAllNotificationsSeenSuccess> {
     return this.http.put<SetAllNotificationsSeenSuccess>(`${this.baseUrl}/notifications/seen`, request);
+  }
+
+  getNotificationsUnread(request: GetNotificationsUnreadRequest): Observable<GetNotificationsUnreadSuccess> {
+    return this.http.get<GetNotificationsUnreadSuccess>(`${this.baseUrl}/notifications/unread`, request);
   }
 
   failureMessage(message: string) {

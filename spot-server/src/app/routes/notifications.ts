@@ -24,6 +24,20 @@ router.get('/', function (req: any, res: any) {
 
 });
 
+// get notifications
+router.get('/unread', function (req: any, res: any) {
+
+    const id = req.user.id;
+
+    notifications.getNotificationUnreadByReceiverId(id).then((rows: any) => {
+        res.status(200).json({ unread: rows[0].unread });
+    }, (err: any) => {
+        res.status(500).send('Error getting unread notifications');
+    })
+
+});
+
+
 router.post('/', function (req: any, res: any) {
 
     const { receiver, postLink } = req.body;
