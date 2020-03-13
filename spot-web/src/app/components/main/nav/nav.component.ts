@@ -50,7 +50,6 @@ export class NavComponent implements OnInit {
     );
 
     this.unread$.subscribe( (numberUnread: number) => {
-      console.log(numberUnread);
       if (numberUnread >= 10) {
         this.unreadNotifications = '+';
       } else {

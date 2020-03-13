@@ -52,7 +52,7 @@ function deleteAllNotificationsForAccount(accountId: string) {
 }
 
 function getNotificationUnreadByReceiverId(accountId: string) {
-    var sql = `SELECT count(*) as unread FROM notifications WHERE receiver_id = ?`;
+    var sql = `SELECT count(*) as unread FROM notifications WHERE receiver_id = ? AND seen = false`;
     var values = [accountId];
     return db.query(sql, values);
 }
