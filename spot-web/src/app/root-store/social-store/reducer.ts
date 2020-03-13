@@ -42,6 +42,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       });
       return {
         ...state,
+        unread: 0
       };
     }
     default: {
