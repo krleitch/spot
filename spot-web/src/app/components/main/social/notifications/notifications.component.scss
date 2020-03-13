@@ -12,9 +12,7 @@
   box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
   min-width: 300px;
   max-width: 300px;
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: none;
+  height: auto;
   z-index: 2;
 }
 
@@ -29,6 +27,13 @@
   color: black;
   font-size: 16px;
   padding: 5px 10px;
+}
+
+// honestly just change heights , make this the scrollable, and remove the fixed
+.notifications-container {
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: none;
 }
 
 .title {

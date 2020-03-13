@@ -5,7 +5,7 @@
       <span class="see" (click)="seeAll()"> {{ STRINGS.MARK_ALL_AS_SEEN }} </span>
       <!-- <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span> -->
     </div>
-    <div *ngIf="notifications$ | async as notifications">
+    <div class="notifications-container" *ngIf="notifications$ | async as notifications">
       <spot-infinite-scroll (scrolled)="onScroll()">
         <ng-container *ngIf="notifications.length; else noNotifications">
             <div *ngFor="let notification of notifications">
