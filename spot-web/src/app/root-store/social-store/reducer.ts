@@ -4,9 +4,13 @@ import { initialState, State } from './state';
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
     case ActionTypes.GET_NOTIFICATIONS_SUCCESS: {
+      if (action.response.offset === 0) {
+        state.notifications = action.response.notifications;
+      } else {
+        state.notifications = state.notifications.concat(action.response.notifications);
+      }
       return {
         ...state,
-        notifications: action.response.notifications,
       };
     }
     case ActionTypes.ADD_NOTIFICATION_SUCCESS: {

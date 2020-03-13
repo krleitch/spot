@@ -19,7 +19,8 @@ export class NotificationsComponent implements OnInit {
   STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
   notificationsLoaded = 0;
-  loadLimit = 1;
+  loadLimit = 10;
+  initialLoad = false;
 
   notifications$: Observable<Notification[]>;
 
@@ -43,21 +44,29 @@ export class NotificationsComponent implements OnInit {
 
     this.notificationsLoaded += this.loadLimit;
 
+    this.notifications$.subscribe( elem => {
+      this.initialLoad = elem.length !== 0;
+    });
+
   }
 
   onScroll() {
 
-    const request: GetNotificationsRequest = {
-      offset: this.notificationsLoaded,
-      limit: this.loadLimit
-    };
+    if (this.initialLoad) {
 
-    // load the notifications
-    this.store$.dispatch(
-      new SocialStoreActions.GetNotificationsAction(request)
-    );
+      const request: GetNotificationsRequest = {
+        offset: this.notificationsLoaded,
+        limit: this.loadLimit
+      };
 
-    this.notificationsLoaded += this.loadLimit;
+      // load the notifications
+      this.store$.dispatch(
+        new SocialStoreActions.GetNotificationsAction(request)
+      );
+
+      this.notificationsLoaded += this.loadLimit;
+
+    }
 
   }
 

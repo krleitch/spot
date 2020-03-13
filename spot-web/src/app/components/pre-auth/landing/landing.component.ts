@@ -48,7 +48,6 @@ export class LandingComponent implements OnInit {
                 // localStorage.removeItem('fb_access_token');
                 // localStorage.removeItem('fb_expires_in');
 
-
                 const request: FacebookLoginRequest = {
                   accessToken: loginResponse.authResponse.accessToken
                 };

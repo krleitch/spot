@@ -6,13 +6,13 @@
       <!-- <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span> -->
     </div>
     <div *ngIf="notifications$ | async as notifications">
-      <ng-container *ngIf="notifications.length; else noNotifications">
-        <spot-infinite-scroll (scrolled)="onScroll()">
-          <div *ngFor="let notification of notifications">
-            <spot-notification-item [notification]="notification"></spot-notification-item>
-          </div>
-        </spot-infinite-scroll>
-      </ng-container>
+      <spot-infinite-scroll (scrolled)="onScroll()">
+        <ng-container *ngIf="notifications.length; else noNotifications">
+            <div *ngFor="let notification of notifications">
+              <spot-notification-item [notification]="notification"></spot-notification-item>
+            </div>
+        </ng-container>
+      </spot-infinite-scroll>
       <ng-template #noNotifications>
         <div class="no-notifications"> {{ STRINGS.NO_NOTIFICATIONS }} </div>
       </ng-template>

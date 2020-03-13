@@ -17,6 +17,7 @@ export interface GetNotificationsRequest {
 
 export interface GetNotificationsSuccess {
     notifications: Notification[];
+    offset: number;
 }
 
 // Add a notification

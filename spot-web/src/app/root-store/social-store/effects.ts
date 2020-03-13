@@ -33,6 +33,7 @@ export class SocialStoreEffects {
         .getNotifications(action.request)
         .pipe(
           map((response: GetNotificationsSuccess) => {
+            response.offset = action.request.offset;
             return new featureActions.GetNotificationsSuccessAction( response );
           }),
           catchError(errorResponse =>
