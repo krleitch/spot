@@ -72,6 +72,7 @@ export class AppComponent implements OnInit {
   locationError(error) {
     // error.code of error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT
     // hide the content
+    // TODO: timeout errors for location can be an issue
   }
 
 }

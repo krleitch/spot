@@ -14,12 +14,15 @@ CREATE TABLE accounts (
     score INT,
     salt VARCHAR(256),
     facebook_id VARCHAR(36) UNIQUE,
+    creation_date DATETIME NOT NULL,
+    deletion_date DATETIME,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE posts (
     id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
+    deletion_date DATETIME,
     account_id VARCHAR(36) NOT NULL,
     longitude DECIMAL(9,6) NOT NULL,
     latitude DECIMAL(9,6) NOT NULL,
@@ -36,6 +39,7 @@ CREATE TABLE comments (
     parent_id VARCHAR(36),
     account_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
+    deletion_date DATETIME,
     content varchar(400) NOT NULL,
     image_src VARCHAR(200),
     PRIMARY KEY (id),

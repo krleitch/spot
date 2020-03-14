@@ -13,7 +13,7 @@ function getPosts(accountId: string, sort: string, offset: number, limit: number
                       ELSE NULL END) AS rated,
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
                 (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
-                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id GROUP BY posts.id`;
+                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.deletion_date IS NULL GROUP BY posts.id`;
     var sortSql;
     if ( sort === 'new' ) {
         sortSql = ' ORDER BY posts.creation_date DESC';
@@ -35,7 +35,7 @@ function getPostById(postId: string, accountId: string): Promise<any> {
                     ELSE NULL END) AS rated,
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
                 (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
-                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? GROUP BY posts.id ORDER BY posts.creation_date DESC`;
+                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? AND posts.deletion_date IS NULL GROUP BY posts.id ORDER BY posts.creation_date DESC`;
     var values = [accountId, accountId, accountId, postId];
     return db.query(sql, values);
 }
@@ -62,13 +62,9 @@ function dislikePost(postId: string, accountId: string): Promise<any> {
 }
 
 function deletePost(id: string): Promise<any> {
-    var sql = 'DELETE FROM posts_rating WHERE post_id = ?';
-    var values = [id];
-    return db.query(sql, values).then( (rows: any) => {
-        var sql = 'DELETE FROM posts WHERE id = ?';
-        var values = [id];
-        return db.query(sql, values);
-    });
+    var sql = 'UPDATE posts SET deletion_date = ? WHERE id = ?';
+    var values = [new Date(), id];
+    return db.query(sql, values);
 }
 
 function getPostCreator(postId: string) {

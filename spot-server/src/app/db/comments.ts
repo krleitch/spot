@@ -15,7 +15,7 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
             ELSE NULL END) AS rated,
         (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
-        WHERE comments.id = ? GROUP BY comments.id`;
+        WHERE comments.id = ? AND comments.deletion_date IS NULL GROUP BY comments.id`;
     var values = [accountId, accountId, accountId, commentId];
     return db.query(sql, values);
 }
@@ -30,7 +30,7 @@ function getCommentByPostId(postId: string, accountId: string, offset: number, l
             ELSE NULL END) AS rated,
         (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
-        WHERE comments.post_id = ? AND comments.parent_id IS NULL GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
+        WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
     var values = [accountId, accountId, accountId, postId, limit, offset];
     return db.query(sql, values);
 }
@@ -46,14 +46,14 @@ function addComment(postId: string, accountId: string, content: string, image: s
 }
 
 function deleteCommentById(commentId: string): Promise<any> {
-    var sql = 'DELETE FROM comments WHERE id = ?';
-    var values = [commentId];
+    var sql = 'UPDATE comments SET deletion_date = ? WHERE id = ?';
+    var values = [new Date(), commentId];
     return db.query(sql, values);
 }
 
 function deleteCommentByPostId(postId: string): Promise<any> {
-    var sql = 'DELETE FROM comments WHERE post_id = ?';
-    var values = [postId];
+    var sql = 'UPDATE comments SET deletion_date = ? WHERE post_id = ?';
+    var values = [new Date(), postId];
     return db.query(sql, values);
 }
 

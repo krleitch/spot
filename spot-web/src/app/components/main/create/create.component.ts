@@ -66,8 +66,9 @@ export class CreateComponent implements OnInit {
         new PostsStoreActions.AddRequestAction(post)
       );
 
-      this.postText = '';
-      this.imageFile = null;
+      // TODO FIX THIS
+      // this.postText = '';
+      // this.imageFile = null;
 
     }
   }
