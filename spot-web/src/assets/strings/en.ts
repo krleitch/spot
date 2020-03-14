@@ -139,7 +139,7 @@ export const STRINGS = {
 
         NOTIFICATION_ITEM: {
 
-          PROMPT: 'sent you a spot!'
+          PROMPT: 'sent a spot!'
 
         }
 

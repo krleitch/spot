@@ -64,10 +64,6 @@ export class NotificationItemComponent implements OnInit {
     this.router.navigateByUrl(/posts/ + this.notification.link);
   }
 
-  getPreview(content: string) {
-    return content.substr(0, 20) + '...';
-  }
-
   delete() {
 
     const request: DeleteNotificationRequest = {
