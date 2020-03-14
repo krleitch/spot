@@ -156,7 +156,8 @@ export const STRINGS = {
             CAREERS: 'Careers',
             FAQ: 'FAQ',
             SUPPORT: 'Support',
-            MOBILE_DOWNLOAD: 'Download Us'
+            MOBILE_DOWNLOAD: 'Download Us',
+            CONTACT: 'Contact Us'
 
         },
 

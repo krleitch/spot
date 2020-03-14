@@ -22,7 +22,7 @@
 }
 
 // For Mobile
-@media screen and (max-width: $tablet-width) {
+@media screen and (max-width: $mobile-width) {
   .content {
     width: 95%;
     min-width: 0;
@@ -42,7 +42,7 @@ spot-main-nav {
   position: fixed;
   display: flex;
   top: 20px;
-  left: 100px;
+  left: 90px;
   z-index: 100;
 }
 

@@ -13,6 +13,9 @@
 .title {
     font-size: 35px;
     cursor: pointer;
+    &:hover {
+      color: $button-highlight;
+    }
 }
 
 .nav-button {
