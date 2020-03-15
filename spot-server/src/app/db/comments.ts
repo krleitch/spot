@@ -45,15 +45,15 @@ function addComment(postId: string, accountId: string, content: string, image: s
     });
 }
 
-function deleteCommentById(commentId: string): Promise<any> {
-    var sql = 'UPDATE comments SET deletion_date = ? WHERE id = ?';
-    var values = [new Date(), commentId];
+function deleteCommentById(commentId: string, accountId: string): Promise<any> {
+    var sql = 'UPDATE comments SET deletion_date = ? WHERE id = ? AND account_id = ?';
+    var values = [new Date(), commentId, accountId];
     return db.query(sql, values);
 }
 
-function deleteCommentByPostId(postId: string): Promise<any> {
-    var sql = 'UPDATE comments SET deletion_date = ? WHERE post_id = ?';
-    var values = [new Date(), postId];
+function deleteCommentByPostId(postId: string, accountId: string): Promise<any> {
+    var sql = 'UPDATE comments SET deletion_date = ? WHERE post_id = ? AND account_id = ?';
+    var values = [new Date(), postId, accountId];
     return db.query(sql, values);
 }
 
@@ -77,21 +77,21 @@ function getRepliesByCommentId(postId: string, commentId: string, accountId: str
             ELSE NULL END) AS rated,
         (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
-        WHERE comments.post_id = ? AND comments.parent_id = ? GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
+        WHERE comments.post_id = ? AND comments.parent_id = ? AND comments.deletion_date IS NULL GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
     var values = [accountId, accountId, accountId, postId, commentId, limit, offset];
     return db.query(sql, values);
 }
 
 // Return the number of comments
 function getNumberOfCommentsForPost(postId: string): Promise<any> {
-    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND parent_id IS NULL';
+    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND deletion_date IS NULL AND parent_id IS NULL';
     var values = [postId];
     return db.query(sql, values);
 }
 
 // Return the number of replies for comment for post
 function getNumberOfRepliesForComment(postId: string, commentId: string): Promise<any> {
-    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND parent_id = ?';
+    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND parent_id = ? AND deletion_date IS NULL';
     var values = [postId, commentId];
     return db.query(sql, values);
 }

@@ -61,9 +61,9 @@ function dislikePost(postId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function deletePost(id: string): Promise<any> {
-    var sql = 'UPDATE posts SET deletion_date = ? WHERE id = ?';
-    var values = [new Date(), id];
+function deletePost(id: string, accountId: string): Promise<any> {
+    var sql = 'UPDATE posts SET deletion_date = ? WHERE id = ? AND account_id = ?';
+    var values = [new Date(), id, accountId];
     return db.query(sql, values);
 }
 

@@ -81,7 +81,8 @@ router.put('/:postId/dislike', function(req: any, res: any) {
 // Delete a post
 router.delete('/:postId', function(req: any, res: any) {
     const postId = req.params.postId;
-    posts.deletePost(postId).then((rows: any) => {
+    const accountId = req.user.id;
+    posts.deletePost(postId, accountId).then((rows: any) => {
         res.status(200).json({ postId: postId });
     }, (err: any) => {
         res.status(500).send('Error deleting post');

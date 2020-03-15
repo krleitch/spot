@@ -10,12 +10,6 @@
     padding-top: 100px;
 }
 
-@media screen and (max-width: $mobile-width) {
-  .content {
-    flex-flow: column;
-  }
-}
-
 .showcase {
     display: flex;
     flex-flow: column;
@@ -214,3 +208,27 @@ input {
     bottom: 5px;
     font-size: 14px;
 }
+
+// Mobile stylings
+@media screen and (max-width: $mobile-width) {
+    .content {
+      flex-flow: column;
+    }
+  
+    .showcase {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+  
+    .signup {
+        margin-top: 25px;
+        margin-left: 0px;
+        margin-bottom: 25px;
+    }
+
+    .copyright {
+        display: none;
+    }
+  
+  }
+  

@@ -58,8 +58,9 @@ router.delete('/:postId/:commentId', function (req: any, res: any) {
 
     const postId = req.params.postId;
     const commentId = req.params.commentId;
+    const accountId = req.user.id;
 
-    comments.deleteCommentById(commentId).then( (rows: any) => {
+    comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
         res.status(200).json({ postId: postId, commentId: commentId })
     }, (err: any) => {
         res.status(500).send('Error deleting comment');
@@ -118,8 +119,9 @@ router.delete('/:postId/:parentId/:commentId', function (req: any, res: any) {
     const postId = req.params.postId;
     const parentId = req.params.parentId;
     const commentId = req.params.commentId;
+    const accountId = req.user.id;
 
-    comments.deleteCommentById(commentId).then( (rows: any) => {
+    comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
         res.status(200).json({ postId: postId, parentId: parentId, commentId: commentId })
     }, (err: any) => {
         res.status(500).send('Error deleting comment');
