@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { AccountsActions } from '@store/accounts-store';
 import { SocialStoreSelectors, SocialStoreActions } from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { Account } from '@models/accounts';
-import { Notification, GetNotificationsUnreadRequest } from '@models/notifications';
+import { GetNotificationsUnreadRequest } from '@models/notifications';
 
 @Component({
   selector: 'spot-main-nav',
@@ -16,6 +16,8 @@ import { Notification, GetNotificationsUnreadRequest } from '@models/notificatio
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent implements OnInit {
+
+  @Output() titleEvent = new EventEmitter<boolean>();
 
   STRINGS = STRINGS.MAIN.NAV;
 
@@ -85,7 +87,19 @@ export class NavComponent implements OnInit {
   }
 
   navigateHome() {
-    this.router.navigateByUrl('/home');
+    if (this.router.url === '/home') {
+      this.titleEvent.emit(true);
+      const scrollToTop = window.setInterval(() => {
+        const pos = window.pageYOffset;
+        if (pos > 0) {
+            window.scrollTo(0, pos - 20); // how far to scroll on each step
+        } else {
+            window.clearInterval(scrollToTop);
+        }
+    }, 16);
+    } else {
+      this.router.navigateByUrl('/home');
+    }
   }
 
   navigateLogin() {
