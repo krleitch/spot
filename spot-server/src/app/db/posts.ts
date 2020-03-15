@@ -12,7 +12,7 @@ function getPosts(accountId: string, sort: string, offset: number, limit: number
                       WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                       ELSE NULL END) AS rated,
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
-                (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
+                (SELECT COUNT(*) FROM comments where post_id = posts.id AND deletion_date IS NULL) as comments
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.deletion_date IS NULL GROUP BY posts.id`;
     var sortSql;
     if ( sort === 'new' ) {
@@ -34,7 +34,7 @@ function getPostById(postId: string, accountId: string): Promise<any> {
                     WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                     ELSE NULL END) AS rated,
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
-                (SELECT COUNT(*) FROM comments where post_id = posts.id) as comments
+                (SELECT COUNT(*) FROM comments where post_id = posts.id AND deletion_date IS NULL) as comments
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? AND posts.deletion_date IS NULL GROUP BY posts.id ORDER BY posts.creation_date DESC`;
     var values = [accountId, accountId, accountId, postId];
     return db.query(sql, values);
