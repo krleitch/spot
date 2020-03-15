@@ -185,7 +185,7 @@ export const STRINGS = {
 
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
-            COPYRIGHT: '2020 Spot from REM',
+            COPYRIGHT: '2020 Spot',
 
             // ERROR MESSAGES
             EMAIL_ERROR: 'Email is required',
@@ -260,7 +260,7 @@ export const STRINGS = {
 
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
-            COPYRIGHT: '2020 Spot from REM',
+            COPYRIGHT: '2020 Spot',
 
             // ERRORS
             EMAIL_OR_USER_ERROR: 'Email/Username is required',
