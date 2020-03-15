@@ -10,8 +10,8 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 router.delete('/delete', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
-    const user = req.user;
-    accounts.deleteAccount(user.id).then( (rows: any) => {
+    const accountId = req.user.id;
+    accounts.deleteAccount(accountId).then( (rows: any) => {
         res.status(200);   
     }, (err: any) => {
         res.status(500).send('Error deleting account');
@@ -19,8 +19,8 @@ router.delete('/delete', passport.authenticate('jwt', {session: false}), functio
 })
 
 router.get('/account', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
-    const user = req.user;
-    accounts.getAccountById(user.id).then((rows: any) => {
+    const accountId = req.user.id;
+    accounts.getAccountById(accountId).then((rows: any) => {
         res.status(200).json({ account: rows[0] });
     }, (err: any) => {
         res.status(500).send("Error getting the account");

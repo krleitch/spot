@@ -46,9 +46,9 @@ function getAccountById(id: string) {
     return db.query(sql, values);
 }
 
-function deleteAccount(id: string) {
+function deleteAccount(accountId: string) {
     var sql = 'UPDATE accounts SET deletion_date = ? WHERE id = ?';
-    var values = [new Date(), id];
+    var values = [new Date(), accountId];
     return db.query(sql, values);
 }
 
