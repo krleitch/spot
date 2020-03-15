@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const posts = require('../db/posts');
+const reports = require('../db/reports');
 const postsService = require('../services/posts');
 
 router.use(function timeLog (req: any, res: any, next: any) {
@@ -87,6 +88,21 @@ router.delete('/:postId', function(req: any, res: any) {
     }, (err: any) => {
         res.status(500).send('Error deleting post');
     })
+})
+
+// report a post
+router.put('/:postId/report', function(req: any, res: any) {
+
+    const postId = req.params.postId;
+    const accountId = req.user.id;
+    const { content } = req.body;
+
+    reports.addPostReport( postId, accountId, content ).then((rows: any) => {
+        res.status(200).send({})
+    }, (err: any) => {
+        res.status(500).send('Error reporting post');
+    });
+
 })
 
 export = router;

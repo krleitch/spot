@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const posts = require('../db/posts');
+const reports = require('../db/reports');
 const comments = require('../db/comments');
 const commentsService = require('../services/comments');
 
@@ -175,7 +176,23 @@ router.put('/:postId/:parentId/:commentId/dislike', function(req: any, res: any)
         res.status(200).json({ postId: postId, parentId: parentId, commentId: commentId });
     }, (err: any) => {
         res.status(500).send('Error disliking reply');
-    })
+    });
+})
+
+// report a comment
+router.put('/:postId/:commentId/report', function(req: any, res: any) {
+
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const accountId = req.user.id;
+    const { content } = req.body;
+
+    reports.addCommentReport( postId, commentId, accountId, content ).then((rows: any) => {
+        res.status(200).send({});
+    }, (err: any) => {
+        res.status(500).send('Error reporting comment');
+    });
+
 })
 
 export = router;

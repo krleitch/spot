@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 
 import { AddPostRequest, AddPostSuccess, LikePostRequest, DislikePostRequest, LikePostSuccess, DislikePostSuccess,
-          DeletePostRequest, DeletePostSuccess, LoadPostSuccess, LoadPostRequest  } from '@models/posts';
+          DeletePostRequest, DeletePostSuccess, LoadPostSuccess, LoadPostRequest, ReportPostRequest,
+          ReportPostSuccess } from '@models/posts';
 
 export enum ActionTypes {
   LIKE_REQUEST = '[Posts] Like Request',
@@ -14,6 +15,8 @@ export enum ActionTypes {
   ADD_SUCCESS = '[Posts] Add Success',
   LOAD_REQUEST = '[Posts] Load Request',
   LOAD_SUCCESS = '[Posts] Load Success',
+  REPORT_REQUEST = '[Posts] Report Request',
+  REPORT_SUCCESS = '[Posts] Report Success',
   GENERIC_FAILURE = '[Posts] Generic Failure'
 }
 
@@ -72,7 +75,18 @@ export class LoadSuccessAction implements Action {
   constructor(public response: LoadPostSuccess) {}
 }
 
+export class ReportRequestAction implements Action {
+  readonly type = ActionTypes.REPORT_REQUEST;
+  constructor(public request: ReportPostRequest ) {}
+}
+
+export class ReportSuccessAction implements Action {
+  readonly type = ActionTypes.REPORT_SUCCESS;
+  constructor(public response: ReportPostSuccess) {}
+}
+
 export type Actions = GenericFailureAction | LoadRequestAction | LoadSuccessAction |
                       AddRequestAction | AddSuccessAction | DeleteRequestAction |
                       DeleteSuccessAction | LikeRequestAction | LikeSuccessAction |
-                      DislikeRequestAction | DislikeSuccessAction;
+                      DislikeRequestAction | DislikeSuccessAction | ReportRequestAction |
+                      ReportSuccessAction;

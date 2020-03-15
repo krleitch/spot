@@ -140,6 +140,17 @@ export interface DislikeReplySuccess {
     commentId: string;
 }
 
+// report
+export interface ReportCommentRequest {
+    postId: string;
+    commentId: string;
+    content: string;
+}
+
+export interface ReportCommentSuccess {
+
+}
+
 // Hash used for storing comments in ngrx
 export interface CommentsHash {
     [post_id: string] : Comment[];

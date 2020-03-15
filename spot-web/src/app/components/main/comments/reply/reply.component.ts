@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest, DislikeReplyRequest } from '@models/comments';
+import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest, DislikeReplyRequest, ReportCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 
 @Component({
@@ -118,6 +118,17 @@ export class ReplyComponent implements OnInit {
     };
     this.store$.dispatch(
       new CommentsStoreActions.DeleteReplyRequestAction(request)
+    );
+  }
+
+  reportReply() {
+    const request: ReportCommentRequest = {
+      postId: this.reply.post_id,
+      commentId: this.reply.id,
+      content: ''
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.ReportRequestAction(request)
     );
   }
 

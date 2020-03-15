@@ -83,7 +83,7 @@ export function featureReducer(state = initialState, action: Actions): State {
           totalReplies: 0
         };
       }
-      state.replies[action.response.postId][action.response.commentId].replies.unshift(action.response.reply);
+      state.replies[action.response.postId][action.response.commentId].replies.push(action.response.reply);
       return {
           ...state,
       };

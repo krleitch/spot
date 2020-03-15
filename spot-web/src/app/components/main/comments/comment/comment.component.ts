@@ -7,7 +7,7 @@ import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
-         LikeCommentRequest, DislikeCommentRequest } from '@models/comments';
+         LikeCommentRequest, DislikeCommentRequest, ReportCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 
 @Component({
@@ -172,6 +172,17 @@ export class CommentComponent implements OnInit {
     };
     this.store$.dispatch(
       new CommentsStoreActions.DeleteRequestAction(request)
+    );
+  }
+
+  reportComment() {
+    const request: ReportCommentRequest = {
+      postId: this.comment.post_id,
+      commentId: this.comment.id,
+      content: ''
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.ReportRequestAction(request)
     );
   }
 

@@ -8,7 +8,7 @@ import * as featureActions from './actions';
 import { CommentService } from '../../services/comments.service';
 import { AddCommentSuccess, LoadCommentsSuccess, DeleteCommentSuccess, AddReplySuccess,
           DislikeCommentSuccess, LikeCommentSuccess, LoadRepliesSuccess, DeleteReplySuccess,
-          DislikeReplySuccess, LikeReplySuccess} from '@models/comments';
+          DislikeReplySuccess, LikeReplySuccess, ReportCommentSuccess} from '@models/comments';
 
 @Injectable()
 export class CommentsStoreEffects {
@@ -193,6 +193,26 @@ export class CommentsStoreEffects {
         .likeReply(action.request)
         .pipe(
           map( (response: LikeReplySuccess) => new featureActions.LikeReplySuccessAction(response)),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  reportEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.ReportRequestAction>(
+      featureActions.ActionTypes.REPORT_REQUEST
+    ),
+    switchMap(action =>
+      this.commentService
+        .reportComment(action.request)
+        .pipe(
+          map( (response: ReportCommentSuccess) => {
+            this.commentService.onReportSuccess();
+            return new featureActions.ReportSuccessAction(response);
+          }),
           catchError(errorResponse =>
             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
           )

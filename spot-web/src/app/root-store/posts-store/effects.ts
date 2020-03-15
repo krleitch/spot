@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PostsService } from '@services/posts.service';
 import * as featureActions from './actions';
 
-import { DislikePostSuccess, LikePostSuccess, DeletePostSuccess, LoadPostSuccess, AddPostSuccess } from '@models/posts';
+import { DislikePostSuccess, LikePostSuccess, DeletePostSuccess, LoadPostSuccess, AddPostSuccess, ReportPostSuccess } from '@models/posts';
 
 @Injectable()
 export class PostsStoreEffects {
@@ -109,4 +109,25 @@ export class PostsStoreEffects {
         )
     )
   );
+
+  @Effect()
+  reportPostEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.ReportRequestAction>(
+      featureActions.ActionTypes.REPORT_REQUEST
+    ),
+    switchMap(action =>
+      this.postsService
+        .reportPost(action.request)
+        .pipe(
+          map( (response: ReportPostSuccess) => {
+            this.postsService.onReportSuccess();
+            return new featureActions.ReportSuccessAction(response);
+          }),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
 }

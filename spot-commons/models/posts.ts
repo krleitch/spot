@@ -78,3 +78,13 @@ export interface DeletePostRequest {
 export interface DeletePostSuccess {
     postId: string;
 }
+
+// report
+export interface ReportPostRequest {
+    postId: string;
+    content: string;
+}
+
+export interface ReportPostSuccess {
+
+}

@@ -56,7 +56,7 @@
         <div class="dropdown align-bottom">
           <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
             <div *ngIf="comment.owned" class="button" (click)="deleteComment()"> {{ STRINGS.DELETE }} </div>
-            <div class="button"> {{ STRINGS.REPORT }} </div>
+            <div class="button" (click)="reportComment()"> {{ STRINGS.REPORT }} </div>
           </div>
         </div>
       </div>

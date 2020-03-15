@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
-import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post } from '@models/posts';
+import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, ReportPostRequest } from '@models/posts';
 import { Location } from '@models/accounts';
 import { PostsService } from '@services/posts.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
@@ -65,6 +65,16 @@ export class PostComponent implements OnInit {
 
   setOptions(value) {
     this.optionsEnabled = value;
+  }
+
+  reportPost() {
+    const request: ReportPostRequest = {
+      postId: this.post.id,
+      content: ''
+    };
+    this.store$.dispatch(
+      new PostsStoreActions.ReportRequestAction(request)
+    );
   }
 
   deletePost() {

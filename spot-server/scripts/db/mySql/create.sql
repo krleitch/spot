@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS reports;
 DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS comments_rating;
 DROP TABLE IF EXISTS posts_rating;
@@ -81,4 +82,17 @@ CREATE TABLE notifications (
     PRIMARY KEY (id),
     FOREIGN KEY (sender_id) REFERENCES accounts (id),
     FOREIGN KEY (receiver_id) REFERENCES accounts (id)
+);
+
+CREATE TABLE reports (
+    id VARCHAR(36) NOT NULL,
+    reporter_id VARCHAR(36) NOT NULL,
+    post_id VARCHAR(36) NOT NULL,
+    comment_id VARCHAR(36),
+    content VARCHAR(200),
+    creation_date DATETIME,
+    PRIMARY KEY (id),
+    FOREIGN KEY (reporter_id) REFERENCES accounts (id),
+    FOREIGN KEY (post_id) REFERENCES posts (id),
+    FOREIGN KEY (comment_id) REFERENCES comments (id)
 );

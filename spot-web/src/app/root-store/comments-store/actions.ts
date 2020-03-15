@@ -4,7 +4,8 @@ import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddComment
           DeleteCommentRequest, DeleteCommentSuccess, AddReplyRequest, AddReplySuccess,
           LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
-          LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess} from '@models/comments';
+          LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess,
+          ReportCommentRequest, ReportCommentSuccess} from '@models/comments';
 
 export enum ActionTypes {
   ADD_REQUEST = '[Comments] Add Request',
@@ -27,6 +28,8 @@ export enum ActionTypes {
   LIKE_REPLY_SUCCESS = '[Comments] Like Reply Success',
   DISLIKE_REPLY_REQUEST = '[Comments] Dislike Reply Request',
   DISLIKE_REPLY_SUCCESS = '[Comments] Dislike Reply Success',
+  REPORT_REQUEST = '[Comments] Report Request',
+  REPORT_SUCCESS = '[Comments] Report Success',
   GENERIC_FAILURE = '[Comments] Generic Failure'
 }
 
@@ -133,6 +136,16 @@ export class DislikeReplyRequestAction implements Action {
 export class DislikeReplySuccessAction implements Action {
   readonly type = ActionTypes.DISLIKE_REPLY_SUCCESS;
   constructor(public response: DislikeReplySuccess) {}
+}
+
+export class ReportRequestAction implements Action {
+  readonly type = ActionTypes.REPORT_REQUEST;
+  constructor(public request: ReportCommentRequest) {}
+}
+
+export class ReportSuccessAction implements Action {
+  readonly type = ActionTypes.REPORT_SUCCESS;
+  constructor(public response: ReportCommentSuccess) {}
 }
 
 export type Actions = AddRequestAction | AddSuccessAction |

@@ -8,7 +8,7 @@ import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddComment
           DeleteCommentSuccess, LoadRepliesRequest, LoadRepliesSuccess, AddReplyRequest, AddReplySuccess,
           DeleteReplyRequest, DeleteReplySuccess, LikeCommentRequest, DislikeCommentRequest,
           LikeCommentSuccess, DislikeCommentSuccess, LikeReplyRequest, DislikeReplyRequest,
-          LikeReplySuccess, DislikeReplySuccess } from '@models/comments';
+          LikeReplySuccess, DislikeReplySuccess, ReportCommentRequest, ReportCommentSuccess } from '@models/comments';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -91,6 +91,10 @@ export class CommentService {
     return this.http.put<DislikeCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/dislike`, request);
   }
 
+  reportComment(request: ReportCommentRequest): Observable<ReportCommentSuccess> {
+    return this.http.put<ReportCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/report`, request);
+  }
+
   likeReply(request: LikeReplyRequest): Observable<LikeReplySuccess> {
     return this.http.put<LikeReplySuccess>
     (`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}/like`, request);
@@ -117,6 +121,10 @@ export class CommentService {
       return 'OP';
     }
     return this.profilePictures[index % this.PICTURES_LENGTH];
+  }
+
+  onReportSuccess() {
+    this.alertService.success('Report sent');
   }
 
 }
