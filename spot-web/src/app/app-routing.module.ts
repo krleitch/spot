@@ -6,6 +6,8 @@ import { LandingComponent } from './components/pre-auth/landing/landing.componen
 import { LoginComponent } from './components/pre-auth/login/login.component';
 import { RegisterComponent } from './components/pre-auth/register/register.component';
 import { UsernameComponent } from './components/pre-auth/username/username.component';
+import { ContactComponent } from './components/pre-auth/contact/contact.component';
+import { AboutComponent } from './components/pre-auth/about/about.component';
 
 import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
@@ -39,6 +41,14 @@ export const routes: Routes = [
   {
     path: 'username',
     component: UsernameComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
+  },
+  {
+    path: 'contact',
+    component: ContactComponent
   }
 ];
 

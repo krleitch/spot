@@ -121,7 +121,9 @@ export class AccountsStoreEffects {
       this.accountsService
         .deleteAccount()
         .pipe(
-            map(response => new featureActions.DeleteSuccessAction()),
+            map(response => {
+              return new featureActions.DeleteSuccessAction();
+            }),
             catchError(error =>
               observableOf(new featureActions.DeleteFailureAction(error))
             )

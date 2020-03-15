@@ -23,6 +23,8 @@ import { NotificationsComponent } from './components/main/social/notifications/n
 import { NotificationItemComponent } from './components/main/social/notification-item/notification-item.component';
 import { ImageComponent } from './components/helpers/image/image.component';
 import { UsernameComponent } from './components/pre-auth/username/username.component';
+import { AboutComponent } from './components/pre-auth/about/about.component';
+import { ContactComponent } from './components/pre-auth/contact/contact.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -50,7 +52,9 @@ import { UsernameComponent } from './components/pre-auth/username/username.compo
     NotificationsComponent,
     NotificationItemComponent,
     ImageComponent,
-    UsernameComponent
+    UsernameComponent,
+    AboutComponent,
+    ContactComponent
   ],
   imports: [
     NativeScriptModule,
