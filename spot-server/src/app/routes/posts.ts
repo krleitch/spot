@@ -21,6 +21,8 @@ router.get('/', function (req: any, res: any) {
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
+    // https://gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql
+    // USE THIS
     posts.getPosts(accountId, sort, offset, limit).then((rows: any) => {
         rows = rows.filter( ( post: any ) => postsService.filterLocation(post, location, latitude, longitude));
         res.status(200).json({ posts: rows });
