@@ -1,11 +1,11 @@
 <spot-main-nav (titleEvent)="refresh()"></spot-main-nav>
 <div class="locationToggle">
-  <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
   <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
+  <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
 </div>
 <div class="postFilterToggle">
-  <div class="new" [ngClass]="{'selectedSort': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
   <div class="hot" [ngClass]="{'selectedSort': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
+  <div class="new" [ngClass]="{'selectedSort': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
 </div>
 <div class="container">
   <div *ngIf="locationEnabled; else noLocation" class="content">

@@ -23,11 +23,11 @@ export class HomeComponent implements OnInit {
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
-  postlocation = 'global';
+  postlocation = 'local';
   location$: Observable<Location>;
   myLocation: Location;
 
-  postSort = 'new';
+  postSort = 'hot';
 
   loadedPosts = 0;
   POSTS_LIMIT = 5;
