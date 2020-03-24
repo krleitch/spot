@@ -45,8 +45,17 @@ export class ShareComponent implements OnInit {
   }
 
   copyLink() {
-    // https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-    // probably create text area hidden and copy its contents??
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = window.location.origin + '/posts/' + this.postLink;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
 }
