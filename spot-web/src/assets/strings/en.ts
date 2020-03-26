@@ -38,6 +38,11 @@ export const STRINGS = {
             EMAIL: 'Email',
             USERNAME: 'Username',
             PHONE: 'Phone number',
+            SCORE: 'Spot Score',
+
+            EDIT_USERNAME: 'Edit',
+
+            SCORE_DESCRIPTION: 'Gain score by posting and and commenting on spots!',
 
             // Account options
             ACCOUNT_OPTIONS: 'Account Options',

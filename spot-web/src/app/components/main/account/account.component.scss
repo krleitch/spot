@@ -33,9 +33,31 @@ spot-main-nav {
 }
 
 .value {
+  display: flex;
+  align-items: center;
   padding: 10px 5px;
   background-color: white;
   margin-bottom: 5px;
+}
+
+.link {
+  font-size: 14px;
+  color: $button-highlight;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.username {
+  justify-content: space-between;
+}
+
+.description {
+  color: $subtle-grey;
+}
+
+.hot {
+  color: $error-red;
+  margin-right: 5px;
 }
 
 .button {

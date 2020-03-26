@@ -6,9 +6,12 @@
       <div class="subheading"> {{ STRINGS.EMAIL }} </div>
       <div class="value"> {{ account.email }} </div>
       <div class="subheading"> {{ STRINGS.USERNAME }} </div>
-      <div class="value"> {{ account.username }} </div>
+      <div class="value username"> {{ account.username }} <span class="link"> {{ STRINGS.EDIT_USERNAME }} </span> </div>
       <div class="subheading"> {{ STRINGS.PHONE }} </div>
       <div class="value"> {{ account.phone }} </div>
+      <div class="subheading"> {{ STRINGS.SCORE }} </div>
+      <div class="value"> <i class="material-icons hot"> whatshot </i> {{ account.score }} </div>
+      <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
       <br/>
       <div class="title"> {{ STRINGS.ACCOUNT_OPTIONS }} </div>
       <div class="button" (click)="deleteUser()"> {{ STRINGS.DELETE }} </div>
