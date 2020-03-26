@@ -1,4 +1,4 @@
-export { filterLocation, generateLink }
+export { calcDistance, generateLink }
 
 const shortid = require('shortid');
 
@@ -6,14 +6,6 @@ const LOCAL_DISTANCE = 10;
 
 function generateLink(): string {
 	return shortid.generate();
-}
-
-function filterLocation(post: any, location: string, latitude: number, longitude: number) {
-    if ( location === 'local' ) {
-        return calcDistance(latitude, longitude, post.latitude, post.longitude, 'M') <= LOCAL_DISTANCE;
-    } else {
-        return true;
-    }
 }
 
 function calcDistance(lat1: number, lon1: number, lat2: number, lon2: number, unit: string) {

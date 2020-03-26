@@ -4,7 +4,11 @@ const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function getPosts(accountId: string, sort: string, offset: number, limit: number): Promise<any> {
+function getPosts(accountId: string, sort: string, location: string, latitude: string, longitude: string,  offset: number, limit: number): Promise<any> {
+
+    // 10 miles if location === local
+    const distance = 10;
+
     var selectSql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
                 SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
                 SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
@@ -12,8 +16,26 @@ function getPosts(accountId: string, sort: string, offset: number, limit: number
                       WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                       ELSE NULL END) AS rated,
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned,
-                (SELECT COUNT(*) FROM comments where post_id = posts.id AND deletion_date IS NULL) as comments
-                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.deletion_date IS NULL GROUP BY posts.id`;
+                (SELECT COUNT(*) FROM comments WHERE post_id = posts.id AND deletion_date IS NULL) as comments
+                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.deletion_date IS NULL `;
+
+    var locationSql;
+    if ( location === 'local' ) {
+        locationSql =`AND (
+                            3959 * acos (
+                            cos ( radians( ? ) )
+                            * cos( radians( posts.latitude ) )
+                            * cos( radians( posts.longitude ) - radians( ? ) )
+                            + sin ( radians( ? ) )
+                            * sin( radians( posts.latitude ) )
+                            )
+                          ) < ? `;
+    } else {
+        locationSql = '';
+    }
+
+    var groupSql = 'GROUP BY posts.id';
+
     var sortSql;
     if ( sort === 'new' ) {
         sortSql = ' ORDER BY posts.creation_date DESC';
@@ -21,8 +43,16 @@ function getPosts(accountId: string, sort: string, offset: number, limit: number
         sortSql = ' ORDER BY IF( likes - dislikes >= 0, IF( likes - dislikes > 0, 1, 0 ), -1 ) * ( LOG( 10, GREATEST( ABS( likes - dislikes ), 1 ) ) + ( ( UNIX_TIMESTAMP(posts.creation_date) - 1134028003 ) / 45000 ) ) ASC';
     }
     var limitOffsetSql = ' LIMIT ? OFFSET ?';
-    var sql = selectSql + sortSql + limitOffsetSql;
-    var values = [accountId, accountId, accountId, limit, offset];
+
+    var sql = selectSql + locationSql + groupSql + sortSql + limitOffsetSql;
+
+    var values;
+    if ( location === 'local' ) {
+        values = [accountId, accountId, accountId, latitude, longitude, latitude, distance, limit, offset];
+    } else {
+        values = [accountId, accountId, accountId, limit, offset];
+    }
+
     return db.query(sql, values);
 }
 
