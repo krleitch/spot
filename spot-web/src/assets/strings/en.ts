@@ -46,6 +46,7 @@ export const STRINGS = {
 
             // Account options
             ACCOUNT_OPTIONS: 'Account Options',
+            ENABLE_OPTIONS: 'Enable Options',
             DELETE: 'Delete Account'
 
         },

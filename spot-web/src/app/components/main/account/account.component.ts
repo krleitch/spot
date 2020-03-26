@@ -18,6 +18,8 @@ export class AccountComponent implements OnInit {
 
   account$: Observable<Account>;
 
+  accountOptionsEnabled: boolean;
+
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
@@ -27,9 +29,11 @@ export class AccountComponent implements OnInit {
   }
 
   deleteUser() {
-    this.store$.dispatch(
-      new AccountsActions.DeleteRequestAction()
-    );
+    if ( this.accountOptionsEnabled ) {
+      this.store$.dispatch(
+        new AccountsActions.DeleteRequestAction()
+      );
+    }
   }
 
 }

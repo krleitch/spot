@@ -13,11 +13,18 @@
       <div class="value"> <i class="material-icons hot"> whatshot </i> {{ account.score }} </div>
       <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
       <br/>
-      <div class="title"> {{ STRINGS.ACCOUNT_OPTIONS }} </div>
-      <div class="button" (click)="deleteUser()"> {{ STRINGS.DELETE }} </div>
+      <div class="title">
+        {{ STRINGS.ACCOUNT_OPTIONS }}
+        <label class="checkbox-container">
+          <span> {{ STRINGS.ENABLE_OPTIONS }} </span>
+          <input type="checkbox" [(ngModel)]="accountOptionsEnabled">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <div class="button" [ngClass]="{'disabled': !accountOptionsEnabled}" (click)="deleteUser()"> {{ STRINGS.DELETE }} </div>
     </div>
     <ng-template #noAccount>
-        {{ STRINGS.NO_ACCOUNT }}
+        <span class="no-account"> {{ STRINGS.NO_ACCOUNT }} </span>
     </ng-template>
   </div>
 </div>
