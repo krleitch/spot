@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
-import { SocialStoreActions, SocialStoreSelectors } from '@store/social-store';
+import { SocialStoreNotificationsActions, SocialStoreSelectors } from '@store/social-store';
 import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest,
           SetAllNotificationsSeenRequest } from '@models/notifications';
 import { STRINGS } from '@assets/strings/en';
@@ -39,7 +39,7 @@ export class NotificationsComponent implements OnInit {
 
     // load the notifications
     this.store$.dispatch(
-      new SocialStoreActions.GetNotificationsAction(request)
+      new SocialStoreNotificationsActions.GetNotificationsAction(request)
     );
 
     this.notificationsLoaded += this.loadLimit;
@@ -61,7 +61,7 @@ export class NotificationsComponent implements OnInit {
 
       // load the notifications
       this.store$.dispatch(
-        new SocialStoreActions.GetNotificationsAction(request)
+        new SocialStoreNotificationsActions.GetNotificationsAction(request)
       );
 
       this.notificationsLoaded += this.loadLimit;
@@ -75,7 +75,7 @@ export class NotificationsComponent implements OnInit {
     const request: DeleteAllNotificationsRequest = {};
 
     this.store$.dispatch(
-      new SocialStoreActions.DeleteAllNotificationsAction(request)
+      new SocialStoreNotificationsActions.DeleteAllNotificationsAction(request)
     );
 
   }
@@ -85,7 +85,7 @@ export class NotificationsComponent implements OnInit {
     const request: SetAllNotificationsSeenRequest = {};
 
     this.store$.dispatch(
-      new SocialStoreActions.SetAllNotificationsSeenAction(request)
+      new SocialStoreNotificationsActions.SetAllNotificationsSeenAction(request)
     );
 
   }

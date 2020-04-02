@@ -12,6 +12,6 @@ import { featureReducer } from './reducer';
     StoreModule.forFeature('accounts', featureReducer),
     EffectsModule.forFeature([AccountsStoreEffects, FacebookStoreEffects])
   ],
-  providers: [AccountsStoreEffects]
+  providers: [AccountsStoreEffects, FacebookStoreEffects]
 })
 export class AccountsStoreModule {}

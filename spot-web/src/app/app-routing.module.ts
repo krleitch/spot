@@ -12,6 +12,7 @@ import { AboutComponent } from './components/pre-auth/about/about.component';
 import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
 import { PostDetailComponent } from './components/main/post-detail/post-detail.component';
+import { FriendsComponent } from './components/main/social/friends/friends.component';
 
 export const routes: Routes = [
   {
@@ -33,6 +34,10 @@ export const routes: Routes = [
   {
     path: 'account',
     component: AccountComponent
+  },
+  {
+    path: 'friends',
+    component: FriendsComponent
   },
   {
     path: 'posts/:postId',

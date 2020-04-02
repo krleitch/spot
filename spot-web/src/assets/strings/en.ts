@@ -10,7 +10,13 @@ export const STRINGS = {
         NAV: {
 
             TITLE: 'Spot',
-            LOGIN: 'Login'
+            LOGIN: 'Login',
+
+            // Options
+            MY_SPOTS: 'My Spots',
+            FRIENDS: 'Friends',
+            ACCOUNT: 'Account',
+            LOGOUT: 'Logout'
 
         },
 
@@ -147,7 +153,18 @@ export const STRINGS = {
 
           PROMPT: 'sent a spot!'
 
+        },
+
+        FRIENDS: {
+
+          TITLE: 'Friends',
+
+          REQUESTS: 'Requests',
+          PENDING: 'Pending',
+          ADD: 'Add Friends'
+
         }
+
 
     },
 

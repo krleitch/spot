@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
-import { SocialStoreActions } from '@store/social-store';
+import { SocialStoreNotificationsActions } from '@store/social-store';
 import { AddNotificationRequest } from '@models/notifications';
 
 import { STRINGS } from '@assets/strings/en';
@@ -35,7 +35,7 @@ export class ShareComponent implements OnInit {
 
     // send the notification
     this.store$.dispatch(
-      new SocialStoreActions.AddNotificationAction(request)
+      new SocialStoreNotificationsActions.AddNotificationAction(request)
     );
 
   }

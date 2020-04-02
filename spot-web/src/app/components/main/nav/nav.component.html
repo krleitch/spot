@@ -14,8 +14,10 @@
       <i class="material-icons icon"> person_outline </i>
       <span class="username"> {{ myaccount.username }} </span>
       <div class="dropdown-content" [ngClass]="{'show': accountShowDropdown }">
-        <div class="button" (click)="navigateAccount()"> Account </div>
-        <div class="button" (click)="logout()"> Logout </div>
+        <div class="button" (click)="mySpots()"> {{ STRINGS.MY_SPOTS }} </div>
+        <div class="button" (click)="friends()"> {{ STRINGS.FRIENDS }} </div>
+        <div class="button" (click)="navigateAccount()"> {{ STRINGS.ACCOUNT }} </div>
+        <div class="button" (click)="logout()"> {{ STRINGS.LOGOUT }} </div>
       </div>
     </div>
   </div>

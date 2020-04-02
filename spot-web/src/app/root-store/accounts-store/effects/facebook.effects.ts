@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import * as facebookActions from '../actions/facebook.action';
+import * as facebookActions from '../actions/facebook.actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { FacebookLoginResponse } from '@models/authentication';
 

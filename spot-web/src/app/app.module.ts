@@ -31,6 +31,7 @@ import { ImageComponent } from './components/helpers/image/image.component';
 import { UsernameComponent } from './components/pre-auth/username/username.component';
 import { AboutComponent } from './components/pre-auth/about/about.component';
 import { ContactComponent } from './components/pre-auth/contact/contact.component';
+import { FriendsComponent } from './components/main/social/friends/friends.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { ContactComponent } from './components/pre-auth/contact/contact.componen
     ImageComponent,
     UsernameComponent,
     AboutComponent,
-    ContactComponent
+    ContactComponent,
+    FriendsComponent
   ],
   imports: [
     BrowserModule,

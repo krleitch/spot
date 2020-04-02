@@ -1,5 +1,3 @@
-import { Connection } from "mysql";
-
 const mysql = require('mysql');
 
 // const db: Connection  = mysql.createConnection({

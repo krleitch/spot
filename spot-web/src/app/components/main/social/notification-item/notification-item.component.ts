@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
-import { SocialStoreActions } from '@store/social-store';
+import { SocialStoreNotificationsActions } from '@store/social-store';
 import { SetNotificationSeenRequest, DeleteNotificationRequest } from '@models/notifications';
 
 import { STRINGS } from '@assets/strings/en';
@@ -58,7 +58,7 @@ export class NotificationItemComponent implements OnInit {
 
     // set seen
     this.store$.dispatch(
-      new SocialStoreActions.SetNotificationSeenAction(request)
+      new SocialStoreNotificationsActions.SetNotificationSeenAction(request)
     );
 
     this.router.navigateByUrl(/posts/ + this.notification.link);
@@ -72,7 +72,7 @@ export class NotificationItemComponent implements OnInit {
 
     // delete the notification
     this.store$.dispatch(
-      new SocialStoreActions.DeleteNotificationAction(request)
+      new SocialStoreNotificationsActions.DeleteNotificationAction(request)
     );
 
   }

@@ -1,4 +1,4 @@
-import { Actions, ActionTypes } from './actions';
+import { Actions, ActionTypes } from './actions/notifications.actions';
 import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions): State {

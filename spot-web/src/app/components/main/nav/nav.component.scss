@@ -115,13 +115,15 @@
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: white;
-    top: 25px;
+    width: 80px;
+    top: 35px;
     right: 0;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
 }
 
 .dropdown-content .button {
+    background: #efefef;
+    background: linear-gradient(0deg, #efefef 6%, white 94%);
     color: black;
     padding: 12px 8px;
     font-size: 14px;
@@ -130,8 +132,9 @@
 }
 
 .dropdown-content .button:hover {
-    background-color: darken(white, 10%);
-}
+    background: $lighter-grey;
+    color: $button-highlight;
+  }
 
 .show {
     display: block;

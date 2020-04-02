@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS comments_rating;
 DROP TABLE IF EXISTS posts_rating;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS friend_requests;
+DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE accounts (
@@ -95,4 +97,24 @@ CREATE TABLE reports (
     FOREIGN KEY (reporter_id) REFERENCES accounts (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (comment_id) REFERENCES comments (id)
+);
+
+CREATE TABLE friend_requests (
+    id VARCHAR(36) NOT NULL,
+    sender_id VARCHAR(36) NOT NULL,
+    receiver_id VARCHAR(36) NOT NULL,
+    creation_date DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (sender_id) REFERENCES accounts (id),
+    FOREIGN KEY (receiver_id) REFERENCES accounts (id)
+);
+
+CREATE TABLE friends (
+    id VARCHAR(36) NOT NULL,
+    requester_id VARCHAR(36) NOT NULL,
+    acceptor_id VARCHAR(36) NOT NULL,
+    creation_date DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (requester_id) REFERENCES accounts (id),
+    FOREIGN KEY (acceptor_id) REFERENCES accounts (id)
 );

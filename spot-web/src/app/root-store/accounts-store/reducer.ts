@@ -1,5 +1,5 @@
 import { Actions, ActionTypes } from './actions/actions';
-import { FacebookActions, FacebookActionTypes } from './actions/facebook.action';
+import { FacebookActions, FacebookActionTypes } from './actions/facebook.actions';
 import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions | FacebookActions): State {

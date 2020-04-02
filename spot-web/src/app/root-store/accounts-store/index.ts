@@ -1,5 +1,5 @@
 import * as AccountsActions from './actions/actions';
-import * as AccountsFacebookActions from './actions/facebook.action';
+import * as AccountsFacebookActions from './actions/facebook.actions';
 import * as AccountsStoreSelectors from './selectors';
 import * as AccountsStoreState from './state';
 

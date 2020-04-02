@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { NotificationsService } from '@services/notifications.service';
-import * as featureActions from './actions';
+import * as featureActions from '../actions/notifications.actions';
 import { GetNotificationsSuccess, AddNotificationSuccess, SetNotificationSeenSuccess,
           DeleteNotificationSuccess, DeleteAllNotificationsSuccess, SetAllNotificationsSeenSuccess,
           GetNotificationsUnreadSuccess } from '@models/notifications';

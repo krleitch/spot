@@ -172,3 +172,9 @@ spot-main-nav {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+.enable-text {
+  &:hover {
+    color: $button-highlight;
+  }
+}

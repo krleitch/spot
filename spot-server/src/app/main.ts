@@ -19,7 +19,7 @@ const passport = require('./services/auth/passport');
 const port = 3000;
 
 mySql.initDb();
-mongo.initDb();
+// mongo.initDb();
 
 app.use(passport.initialize());
 app.use(passport.session());

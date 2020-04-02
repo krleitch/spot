@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions } from '@store/accounts-store';
-import { SocialStoreSelectors, SocialStoreActions } from '@store/social-store';
+import { SocialStoreSelectors, SocialStoreNotificationsActions } from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { Account } from '@models/accounts';
 import { GetNotificationsUnreadRequest } from '@models/notifications';
@@ -48,7 +48,7 @@ export class NavComponent implements OnInit {
     const request: GetNotificationsUnreadRequest = {};
 
     this.store$.dispatch(
-      new SocialStoreActions.GetNotificationsUnreadAction(request)
+      new SocialStoreNotificationsActions.GetNotificationsUnreadAction(request)
     );
 
     this.unread$.subscribe( (numberUnread: number) => {
@@ -74,6 +74,14 @@ export class NavComponent implements OnInit {
 
   accountSetDropdown(value: boolean) {
     this.accountShowDropdown = value;
+  }
+
+  mySpots() {
+
+  }
+
+  friends() {
+    this.router.navigateByUrl('/friends');
   }
 
   logout() {
