@@ -24,7 +24,7 @@ router.get('/', function (req: any, res: any) {
 
 });
 
-// get notifications
+// get # of unread notifications
 router.get('/unread', function (req: any, res: any) {
 
     const id = req.user.id;

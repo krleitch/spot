@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { AlertService } from '@services/alert.service';
-import { } from '@models/friends';
+import { GetFriendRequestsRequest, GetFriendRequestsSuccess, AddFriendRequestsRequest, 
+            AddFriendRequestsSuccess } from '@models/friends';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,13 @@ export class FriendsService {
 
   baseUrl = environment.baseUrl;
 
-//   getNotifications(request: GetNotificationsRequest): Observable<GetNotificationsSuccess> {
-//     let params = new HttpParams();
-//     params = params.append('offset', request.offset.toString());
-//     params = params.append('limit', request.limit.toString());
-//     return this.http.get<GetNotificationsSuccess>(`${this.baseUrl}/notifications`, { params });
-//   }
+  getFriendRequests(request: GetFriendRequestsRequest): Observable<GetFriendRequestsSuccess> {
+    return this.http.get<GetFriendRequestsSuccess>(`${this.baseUrl}/friends/requests`);
+  }
+
+  addFriendRequests(request: AddFriendRequestsRequest): Observable<AddFriendRequestsSuccess> {
+    return this.http.post<AddFriendRequestsSuccess>(`${this.baseUrl}/friends/requests`, request);
+  }
 
   failureMessage(message: string) {
     this.alertService.error(message);

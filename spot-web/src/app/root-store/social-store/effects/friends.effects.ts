@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { FriendsService } from '@services/friends.service';
 import * as friendsActions from '../actions/friends.actions';
-import { } from '@models/friends';
+import { GetFriendRequestsSuccess, AddFriendRequestsSuccess } from '@models/friends';
 
 
 @Injectable()
@@ -23,24 +23,42 @@ export class FriendsEffects {
     })
   );
 
-//   @Effect()
-//   getNotificationsEffect$: Observable<Action> = this.actions$.pipe(
-//     ofType<featureActions.GetNotificationsAction>(
-//       featureActions.ActionTypes.GET_NOTIFICATIONS_REQUEST
-//     ),
-//     switchMap(action =>
-//       this.notificationsService
-//         .getNotifications(action.request)
-//         .pipe(
-//           map((response: GetNotificationsSuccess) => {
-//             response.offset = action.request.offset;
-//             return new featureActions.GetNotificationsSuccessAction( response );
-//           }),
-//           catchError(errorResponse =>
-//             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
-//           )
-//         )
-//     )
-//   );
+  @Effect()
+  getFriendRequestsEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<friendsActions.GetFriendRequestsAction>(
+      friendsActions.ActionTypes.GET_FRIEND_REQUESTS_REQUEST
+    ),
+    switchMap(action =>
+      this.friendsService
+        .getFriendRequests(action.request)
+        .pipe(
+          map((response: GetFriendRequestsSuccess) => {
+            return new friendsActions.GetFriendRequestsSuccessAction( response );
+          }),
+          catchError(errorResponse =>
+            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  addFriendRequestsEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<friendsActions.AddFriendRequestsAction>(
+      friendsActions.ActionTypes.ADD_FRIEND_REQUESTS_REQUEST
+    ),
+    switchMap(action =>
+      this.friendsService
+        .addFriendRequests(action.request)
+        .pipe(
+          map((response: AddFriendRequestsSuccess) => {
+            return new friendsActions.AddFriendRequestsSuccessAction( response );
+          }),
+          catchError(errorResponse =>
+            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
 
 }
