@@ -1,4 +1,4 @@
-export { getFriendRequests, getFriendRequestsById, addFriendRequest }
+export { getFriendRequests, getFriendRequestsById, addFriendRequest, deleteFriendRequestsById }
 
 const uuid = require('uuid');
 
@@ -23,5 +23,11 @@ function addFriendRequest(senderId: string, receiverId: string) {
     return db.query(sql, values).then ( (rows: any) => {
         return getFriendRequestsById(friendRequestId);
     });
+}
+
+function deleteFriendRequestsById(id: string, accountId: string) {
+    var sql = `DELETE FROM friend_requests WHERE id = ? AND sender_id = ?`;
+    var values = [id, accountId];
+    return db.query(sql, values);
 }
 

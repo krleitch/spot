@@ -1,8 +1,11 @@
 import { createSelector, createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
 import { Notification } from '@models/notifications';
+import { Friend, FriendRequest } from '@models/friends';
 import { State } from './state';
 
+export const selectFriendRequests = (state: State): FriendRequest[] => state.friendRequests;
+export const selectFriends = (state: State): Friend[] => state.friends;
 export const selectNotifications = (state: State): Notification[] => state.notifications;
 export const selectUnread = (state: State): number => state.unread;
 
@@ -25,4 +28,20 @@ export const selectMyFeatureUnread: MemoizedSelector<
 > = createSelector(
   selectMyFeatureState,
   selectUnread
+);
+
+export const selectMyFeatureFriends: MemoizedSelector<
+  object,
+  Friend[]
+> = createSelector(
+  selectMyFeatureState,
+  selectFriends
+);
+
+export const selectMyFeatureFriendRequests: MemoizedSelector<
+  object,
+  FriendRequest[]
+> = createSelector(
+  selectMyFeatureState,
+  selectFriendRequests
 );

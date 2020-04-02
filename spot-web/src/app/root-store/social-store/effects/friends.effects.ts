@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { FriendsService } from '@services/friends.service';
 import * as friendsActions from '../actions/friends.actions';
-import { GetFriendRequestsSuccess, AddFriendRequestsSuccess } from '@models/friends';
+import { GetFriendRequestsSuccess, AddFriendRequestsSuccess, DeleteFriendRequestsSuccess } from '@models/friends';
 
 
 @Injectable()
@@ -53,6 +53,24 @@ export class FriendsEffects {
         .pipe(
           map((response: AddFriendRequestsSuccess) => {
             return new friendsActions.AddFriendRequestsSuccessAction( response );
+          }),
+          catchError(errorResponse =>
+            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  deleteFriendRequestsEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<friendsActions.DeleteFriendRequestsAction>(
+      friendsActions.ActionTypes.DELETE_FRIEND_REQUESTS_REQUEST
+    ),
+    switchMap(action =>
+      this.friendsService
+        .deleteFriendRequests(action.request)
+        .pipe(
+          map((response: DeleteFriendRequestsSuccess) => {
+            return new friendsActions.DeleteFriendRequestsSuccessAction( response );
           }),
           catchError(errorResponse =>
             observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))

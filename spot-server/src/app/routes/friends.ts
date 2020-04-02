@@ -43,4 +43,17 @@ router.post('/requests', function (req: any, res: any) {
 
 });
 
+// delete a friend request
+router.delete('/requests/:friendRequestId', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+    const friendRequestId = req.params.friendRequestId;
+
+    friends.addNotification(friendRequestId, accountId).then((rows: any) => {
+        res.status(200).json({ friendRequest: rows[0] });
+    }, (err: any) => {
+        res.status(500).send('Error deleting friend request');
+    });
+});
+
 export = router;
