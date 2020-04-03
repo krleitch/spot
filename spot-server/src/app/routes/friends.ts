@@ -13,11 +13,12 @@ router.get('/requests', function (req: any, res: any) {
 
     const accountId = req.user.id;
 
-    notifications.getFriendRequests(accountId).then((rows: any) => {
+    friends.getFriendRequests(accountId).then((rows: any) => {
         res.status(200).json({ friendRequests: rows });
     }, (err: any) => {
+        console.log(err);
         res.status(500).send('Error getting friend requests');
-    })
+    });
 
 });
 
@@ -31,7 +32,7 @@ router.post('/requests', function (req: any, res: any) {
         if ( receiverId[0] === undefined ) {
             res.status(500).send('No user exists with that username');
         } else {
-            friends.addNotification(accountId, receiverId[0].id).then((rows: any) => {
+            friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
                 res.status(200).json({ friendRequest: rows[0] });
             }, (err: any) => {
                 return Promise.reject(err);
@@ -39,7 +40,7 @@ router.post('/requests', function (req: any, res: any) {
         }
     }, (err: any) => {
         res.status(500).send('Error sending friend request');
-    })
+    });
 
 });
 
@@ -49,7 +50,7 @@ router.delete('/requests/:friendRequestId', function (req: any, res: any) {
     const accountId = req.user.id;
     const friendRequestId = req.params.friendRequestId;
 
-    friends.addNotification(friendRequestId, accountId).then((rows: any) => {
+    friends.deleteFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
         res.status(200).json({ friendRequest: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error deleting friend request');

@@ -3,7 +3,25 @@
   <div class="friends-content">
     <div class="friends-title"> {{ STRINGS.TITLE }} </div>
     <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
-    <div class="friends-subtitle"> {{ STRINGS.PENDING }} </div>
+    <div class="friend-content-section">
+      <div class="friend-request-container" *ngFor="let friendRequest of friendRequests$ | async">
+        {{ friendRequest.username }} {{ STRINGS.FRIEND_REQUEST_PROMPT }}
+        <div class="friend-request-options">
+          <div class="accept friend-request-button" (click)="acceptFriendRequest()">
+            <span class="material-icons"> done </span>
+          </div>
+          <div class="decline friend-request-button" (click)="declineFriendRequest()">
+            <span class="material-icons"> clear </span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="friends-subtitle"> {{ STRINGS.ADD }} </div>
+    <div class="friend-content-section">
+      <div class="friend-request-input-container">
+        <input [(ngModel)]="friendRequestUsername" [placeholder]="STRINGS.FRIEND_REQUEST_PLACEHOLDER" type="text">
+        <span (click)="addFriendRequest()"> <i class="material-icons send"> send </i> </span>
+      </div>
+    </div>
   </div>
 </div>

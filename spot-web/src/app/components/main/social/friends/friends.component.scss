@@ -22,6 +22,7 @@ spot-main-nav {
 .friends-content {
     display: flex;
     flex-flow: column;
+    width: 50%;
     margin-top: 25px;
 }
 
@@ -33,4 +34,79 @@ spot-main-nav {
 .friends-subtitle {
     font-size: 20px;
     margin-bottom: 5px;
+}
+
+.friend-content-section {
+    width: 100%;
+    padding: 5px 5px;
+    background-color: white;
+    margin-bottom: 5px;
+}
+
+// Requests
+
+.friend-request-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
+.friend-request-options {
+    display: flex;
+}
+
+.friend-request-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    color: white;
+    cursor: pointer;
+}
+
+.accept {
+    background-color: $success-green;
+    margin-right: 5px;
+}
+
+.accept:hover {
+    background-color: darken($success-green, 10%);
+}
+
+.decline {
+    background-color: $error-red;
+}
+
+.decline:hover {
+    background-color: darken($error-red, 10%);
+}
+
+// Send Friend Requests
+
+.friend-request-input-container {
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+    margin: 5px 15px;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+  
+input {
+    padding: 5px;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.send:hover {
+    color: $button-highlight;
+    cursor: pointer;
 }

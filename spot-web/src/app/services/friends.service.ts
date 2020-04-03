@@ -4,8 +4,10 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { AlertService } from '@services/alert.service';
-import { GetFriendRequestsRequest, GetFriendRequestsSuccess, AddFriendRequestsRequest, 
-            AddFriendRequestsSuccess, DeleteFriendRequestsRequest, DeleteFriendRequestsSuccess } from '@models/friends';
+import { GetFriendRequestsRequest, GetFriendRequestsSuccess, AddFriendRequestsRequest,
+            AddFriendRequestsSuccess, DeleteFriendRequestsRequest, DeleteFriendRequestsSuccess,
+            AcceptFriendRequestsRequest, AcceptFriendRequestsSuccess, DeclineFriendRequestsRequest,
+            DeclineFriendRequestsSuccess } from '@models/friends';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,14 @@ export class FriendsService {
 
   deleteFriendRequests(request: DeleteFriendRequestsRequest): Observable<DeleteFriendRequestsSuccess> {
     return this.http.delete<DeleteFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/${request.friendRequestId}`);
+  }
+
+  acceptFriendRequests(request: AcceptFriendRequestsRequest): Observable<AcceptFriendRequestsSuccess> {
+    return this.http.post<AcceptFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/accept`, request);
+  }
+
+  declineFriendRequests(request: DeclineFriendRequestsRequest): Observable<DeclineFriendRequestsSuccess> {
+    return this.http.post<DeclineFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/decline`, request);
   }
 
   failureMessage(message: string) {

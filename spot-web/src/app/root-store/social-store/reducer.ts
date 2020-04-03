@@ -1,7 +1,8 @@
 import { Actions, ActionTypes } from './actions/notifications.actions';
+import { FriendsActions, FriendsActionTypes } from './actions/friends.actions';
 import { initialState, State } from './state';
 
-export function featureReducer(state = initialState, action: Actions): State {
+export function featureReducer(state = initialState, action: Actions | FriendsActions): State {
   switch (action.type) {
     case ActionTypes.GET_NOTIFICATIONS_SUCCESS: {
       if (action.response.offset === 0) {
@@ -43,6 +44,12 @@ export function featureReducer(state = initialState, action: Actions): State {
       return {
         ...state,
         unread: 0
+      };
+    }
+    case FriendsActionTypes.GET_FRIEND_REQUESTS_SUCCESS: {
+      return {
+        ...state,
+        friendRequests: action.response.friendRequests
       };
     }
     default: {

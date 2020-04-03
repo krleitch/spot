@@ -5,7 +5,8 @@ const uuid = require('uuid');
 const db = require('./mySql');
 
 function getFriendRequests(accountId: string) {
-    var sql = `SELECT * FROM friend_requests WHERE receiver = ?`;
+    var sql = `SELECT friend_requests.id, friend_requests.creation_date, accounts.username FROM friend_requests 
+                LEFT JOIN accounts ON friend_requests.sender_id = accounts.id WHERE receiver_id = ?`;
     var values = [accountId];
     return db.query(sql, values);
 }
