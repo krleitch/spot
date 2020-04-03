@@ -3,9 +3,14 @@ import { Action } from '@ngrx/store';
 import { GetFriendRequestsRequest, GetFriendRequestsSuccess, AddFriendRequestsRequest,
             AddFriendRequestsSuccess, DeleteFriendRequestsRequest, DeleteFriendRequestsSuccess,
             AcceptFriendRequestsRequest, AcceptFriendRequestsSuccess, DeclineFriendRequestsRequest,
-            DeclineFriendRequestsSuccess } from '@models/friends';
+            DeclineFriendRequestsSuccess, GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest,
+            DeleteFriendsSuccess } from '@models/friends';
 
 export enum FriendsActionTypes {
+  GET_FRIENDS_REQUEST = '[Social Friends] Get Friends Request',
+  GET_FRIENDS_SUCCESS = '[Social Friends] Get Friends Success',
+  DELETE_FRIENDS_REQUEST = '[Social Friends] Delete Friends Request',
+  DELETE_FRIENDS_SUCCESS = '[Social Friends] Delete Friends Success',
   GET_FRIEND_REQUESTS_REQUEST = '[Social Friends] Get Friend Requests Request',
   GET_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Get Friend Requests Success',
   ADD_FRIEND_REQUESTS_REQUEST = '[Social Friends] Add Friend Requests Request',
@@ -14,14 +19,34 @@ export enum FriendsActionTypes {
   ACCEPT_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Accept Friend Requests Success',
   DECLINE_FRIEND_REQUESTS_REQUEST = '[Social Friends] Decline Friend Requests Request',
   DECLINE_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Decline Friend Requests Success',
-  DELETE_FRIEND_REQUESTS_REQUEST = '[Social Friends] Delete Friend Requests Request',
-  DELETE_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Delete Friend Requests Success',
+  DELETE_FRIEND_REQUESTS_REQUEST = '[Social Friends] Delete Friend Requests Request', // unused
+  DELETE_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Delete Friend Requests Success', // unused
   GENERIC_FAILURE = '[Social Friends] Generic Failure'
 }
 
 export class GenericFailureAction implements Action {
   readonly type = FriendsActionTypes.GENERIC_FAILURE;
   constructor(public error: string) {}
+}
+
+export class GetFriendsAction implements Action {
+    readonly type = FriendsActionTypes.GET_FRIENDS_REQUEST;
+    constructor(public request: GetFriendsRequest) {}
+}
+
+export class GetFriendsSuccessAction implements Action {
+    readonly type = FriendsActionTypes.GET_FRIENDS_SUCCESS;
+    constructor(public response: GetFriendsSuccess) {}
+}
+
+export class DeleteFriendsAction implements Action {
+    readonly type = FriendsActionTypes.DELETE_FRIENDS_REQUEST;
+    constructor(public request: DeleteFriendsRequest) {}
+}
+
+export class DeleteFriendsSuccessAction implements Action {
+    readonly type = FriendsActionTypes.DELETE_FRIENDS_SUCCESS;
+    constructor(public response: DeleteFriendsSuccess) {}
 }
 
 export class GetFriendRequestsAction implements Action {
@@ -77,5 +102,6 @@ export class DeclineFriendRequestsSuccessAction implements Action {
 export type FriendsActions = GenericFailureAction | GetFriendRequestsAction | GetFriendRequestsSuccessAction |
                         AddFriendRequestsAction | AddFriendRequestsSuccessAction | DeleteFriendRequestsAction |
                         DeleteFriendRequestsSuccessAction | AcceptFriendRequestsAction | AcceptFriendRequestsSuccessAction |
-                        DeclineFriendRequestsAction | DeclineFriendRequestsSuccessAction;
+                        DeclineFriendRequestsAction | DeclineFriendRequestsSuccessAction | GetFriendsAction |
+                        GetFriendsSuccessAction | DeleteFriendsAction | DeleteFriendsSuccessAction;
 

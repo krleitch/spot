@@ -1,8 +1,16 @@
-export { getFriendRequests, getFriendRequestsById, addFriendRequest, deleteFriendRequestsById }
+export { getFriends, getFriendRequests, getFriendRequestsById, addFriendRequest }
 
 const uuid = require('uuid');
 
 const db = require('./mySql');
+
+// easier to get both ids, and then make another query for the username we actually need
+function getFriends(accountId: string) {
+    var sql = `SELECT id, requester_id, acceptor_id, creation_date FROM friends 
+                WHERE acceptor_id = ? OR requester_id = ?`;
+    var values = [accountId];
+    return db.query(sql, values);
+}
 
 function getFriendRequests(accountId: string) {
     var sql = `SELECT friend_requests.id, friend_requests.creation_date, accounts.username FROM friend_requests 
@@ -26,9 +34,14 @@ function addFriendRequest(senderId: string, receiverId: string) {
     });
 }
 
-function deleteFriendRequestsById(id: string, accountId: string) {
+// function deleteFriendRequestsByReceiverId(id: string, accountId: string) {
+//     var sql = `DELETE FROM friend_requests WHERE id = ? AND receiver_id = ?`;
+//     var values = [id, accountId];
+//     return db.query(sql, values);
+// }
+
+function addFriend(id: string, accountId: string) {
     var sql = `DELETE FROM friend_requests WHERE id = ? AND sender_id = ?`;
     var values = [id, accountId];
     return db.query(sql, values);
 }
-

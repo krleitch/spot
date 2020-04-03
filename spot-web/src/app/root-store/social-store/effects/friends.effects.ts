@@ -7,7 +7,8 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { FriendsService } from '@services/friends.service';
 import * as friendsActions from '../actions/friends.actions';
 import { GetFriendRequestsSuccess, AddFriendRequestsSuccess, DeleteFriendRequestsSuccess,
-            AcceptFriendRequestsSuccess, DeclineFriendRequestsSuccess } from '@models/friends';
+            AcceptFriendRequestsSuccess, DeclineFriendRequestsSuccess, GetFriendsSuccess,
+            DeleteFriendsSuccess } from '@models/friends';
 
 
 @Injectable()
@@ -22,6 +23,44 @@ export class FriendsEffects {
     tap((action: friendsActions.GenericFailureAction) => {
       this.friendsService.failureMessage(action.error);
     })
+  );
+
+  @Effect()
+  getFriendsEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<friendsActions.GetFriendsAction>(
+      friendsActions.FriendsActionTypes.GET_FRIENDS_REQUEST
+    ),
+    switchMap(action =>
+      this.friendsService
+        .getFriends(action.request)
+        .pipe(
+          map((response: GetFriendsSuccess) => {
+            return new friendsActions.GetFriendsSuccessAction( response );
+          }),
+          catchError(errorResponse =>
+            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  deleteFriendsEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<friendsActions.DeleteFriendsAction>(
+      friendsActions.FriendsActionTypes.DELETE_FRIENDS_REQUEST
+    ),
+    switchMap(action =>
+      this.friendsService
+        .deleteFriends(action.request)
+        .pipe(
+          map((response: DeleteFriendsSuccess) => {
+            return new friendsActions.DeleteFriendsSuccessAction( response );
+          }),
+          catchError(errorResponse =>
+            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
   );
 
   @Effect()

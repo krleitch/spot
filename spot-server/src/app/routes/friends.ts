@@ -8,6 +8,27 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
+// make one table with confirmed_at
+// https://dba.stackexchange.com/questions/24042/friends-relations-in-mysql unique key
+// use union https://stackoverflow.com/questions/1961711/friendship-system-sql-structure-query
+// get friends
+router.get('/', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    friends.getFriends(accountId).then((rows: any) => {
+
+
+
+
+        res.status(200).json({ friendRequests: rows });
+    }, (err: any) => {
+        console.log(err);
+        res.status(500).send('Error getting friend requests');
+    });
+
+});
+
 // get friend requests
 router.get('/requests', function (req: any, res: any) {
 
@@ -45,16 +66,30 @@ router.post('/requests', function (req: any, res: any) {
 });
 
 // delete a friend request
-router.delete('/requests/:friendRequestId', function (req: any, res: any) {
+// router.delete('/requests/:friendRequestId', function (req: any, res: any) {
+
+//     const accountId = req.user.id;
+//     const friendRequestId = req.params.friendRequestId;
+
+//     friends.deleteFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
+//         res.status(200).json({ friendRequest: rows[0] });
+//     }, (err: any) => {
+//         res.status(500).send('Error deleting friend request');
+//     });
+// });
+
+// accept a friend request
+router.post('/requests/accept', function (req: any, res: any) {
 
     const accountId = req.user.id;
-    const friendRequestId = req.params.friendRequestId;
+    const { friendRequestId } = req.body
 
-    friends.deleteFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
+    friends.getFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
         res.status(200).json({ friendRequest: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error deleting friend request');
     });
 });
+
 
 export = router;

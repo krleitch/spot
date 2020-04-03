@@ -4,6 +4,24 @@ export interface Friend {
     creation_date: string;
 }
 
+// get
+export interface GetFriendsRequest {
+
+}
+
+export interface GetFriendsSuccess {
+
+}
+
+// delete
+export interface DeleteFriendsRequest {
+    friendId: string;
+}
+
+export interface DeleteFriendsSuccess {
+
+}
+
 // Friend Requests
 export interface FriendRequest {
     id: string;
