@@ -58,6 +58,36 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
         friends: action.response.friends
       };
     }
+    case FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_SUCCESS: {
+      state.friendRequests.forEach( (friend , i) => {
+        if (friend.id === action.response.friendRequestId) {
+          state.friendRequests.splice(i, 1);
+        }
+      });
+      return {
+        ...state,
+      };
+    }
+    case FriendsActionTypes.DECLINE_FRIEND_REQUESTS_SUCCESS: {
+      state.friendRequests.forEach( (friend , i) => {
+        if (friend.id === action.response.friendRequestId) {
+          state.friendRequests.splice(i, 1);
+        }
+      });
+      return {
+        ...state,
+      };
+    }
+    case FriendsActionTypes.DELETE_FRIENDS_SUCCESS: {
+      state.friends.forEach( (friend , i) => {
+        if (friend.id === action.response.friendId) {
+          state.friends.splice(i, 1);
+        }
+      });
+      return {
+        ...state,
+      };
+    }
     default: {
       return state;
     }

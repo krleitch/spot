@@ -28,7 +28,7 @@ router.delete('/:friendId', function (req: any, res: any) {
     const friendId = req.params.friendId;
 
     friends.deleteFriendById(friendId, accountId).then((rows: any) => {
-        res.status(200).json({ friendRequest: rows[0] });
+        res.status(200).json({ friendId: friendId });
     }, (err: any) => {
         console.log(err);
         res.status(500).send('Error deleting friend');
@@ -92,7 +92,7 @@ router.post('/requests/accept', function (req: any, res: any) {
     const { friendRequestId } = req.body
 
     friends.acceptFriendRequest(friendRequestId, accountId).then((rows: any) => {
-        res.status(200).json({ friendRequest: rows[0] });
+        res.status(200).json({ friendRequestId: friendRequestId });
     }, (err: any) => {
         res.status(500).send('Error accepting friend request');
     });
@@ -105,7 +105,7 @@ router.post('/requests/decline', function (req: any, res: any) {
     const { friendRequestId } = req.body
 
     friends.declineFriendRequest(friendRequestId, accountId).then((rows: any) => {
-        res.status(200).json({ friendRequest: rows[0] });
+        res.status(200).json({ friendRequestId: friendRequestId });
     }, (err: any) => {
         res.status(500).send('Error declining friend request');
     });

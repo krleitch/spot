@@ -1,5 +1,6 @@
 // Friends
 export interface Friend {
+    id: string;
     username: string;
     creation_date: string;
 }
@@ -19,7 +20,7 @@ export interface DeleteFriendsRequest {
 }
 
 export interface DeleteFriendsSuccess {
-
+    friendId: string;
 }
 
 // Friend Requests
@@ -63,7 +64,7 @@ export interface AcceptFriendRequestsRequest {
 }
 
 export interface AcceptFriendRequestsSuccess {
-    
+    friendRequestId: string;
 }
 
 export interface DeclineFriendRequestsRequest {
@@ -71,5 +72,5 @@ export interface DeclineFriendRequestsRequest {
 }
 
 export interface DeclineFriendRequestsSuccess {
-    
+    friendRequestId: string;
 }
