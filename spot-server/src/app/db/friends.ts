@@ -58,7 +58,7 @@ function acceptFriendRequest(id: string, accountId: string) {
 }
 
 function declineFriendRequest(id: string, accountId: string) {
-    var sql = `DELETE * FROM friends WHERE id = ? AND friend_id = ? AND confirmed_date IS NULL`;
-    var values = [new Date(), id, accountId];
+    var sql = `DELETE FROM friends WHERE id = ? AND friend_id = ? AND confirmed_date IS NULL`;
+    var values = [id, accountId];
     return db.query(sql, values);
 }
