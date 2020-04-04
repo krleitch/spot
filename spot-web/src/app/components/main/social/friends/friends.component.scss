@@ -110,3 +110,20 @@ input {
     color: $button-highlight;
     cursor: pointer;
 }
+
+// Friends list
+
+.friend-remove {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 25px;
+    color: white;
+    cursor: pointer;
+    background-color: $error-red;
+}
+
+.friend-remove:hover {
+    background-color: darken($error-red, 10%);
+}

@@ -10,7 +10,7 @@ export interface GetFriendsRequest {
 }
 
 export interface GetFriendsSuccess {
-
+    friends: Friend[];
 }
 
 // delete

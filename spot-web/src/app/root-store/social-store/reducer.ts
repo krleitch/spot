@@ -52,6 +52,12 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
         friendRequests: action.response.friendRequests
       };
     }
+    case FriendsActionTypes.GET_FRIENDS_SUCCESS: {
+      return {
+        ...state,
+        friends: action.response.friends
+      };
+    }
     default: {
       return state;
     }

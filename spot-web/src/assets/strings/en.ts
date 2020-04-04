@@ -164,7 +164,8 @@ export const STRINGS = {
           FRIEND_REQUEST_PLACEHOLDER: 'Enter Username',
           FRIEND_REQUEST_PROMPT: 'sent you a friend request!',
           ADD: 'Add Friends',
-          FRIENDS_LIST: 'Friends List'
+          FRIENDS_LIST: 'Friends List',
+          REMOVE: 'Remove'
 
         }
 

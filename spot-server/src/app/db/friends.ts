@@ -1,4 +1,4 @@
-export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest }
+export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest, deleteFriendById }
 
 const uuid = require('uuid');
 
@@ -12,6 +12,13 @@ function getFriends(accountId: string) {
                 SELECT friends.id, friends.creation_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.account_id = accounts.id WHERE friend_id = ? AND friends.confirmed_date IS NOT NULL`;
     var values = [accountId, accountId];
+    return db.query(sql, values);
+}
+
+// delete friend
+function deleteFriendById(id: string, accountId: string) {
+    var sql = `DELETE FROM friends WHERE id = ? AND (account_id = ? OR friend_id = ?)`;
+    var values = [id, accountId, accountId];
     return db.query(sql, values);
 }
 

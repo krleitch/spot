@@ -6,7 +6,8 @@ import { RootStoreState } from '@store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
 import { FriendRequest, GetFriendRequestsRequest, AddFriendRequestsRequest,
-          AcceptFriendRequestsRequest, DeclineFriendRequestsRequest, Friend, GetFriendsRequest } from '@models/friends';
+          AcceptFriendRequestsRequest, DeclineFriendRequestsRequest, Friend,
+          GetFriendsRequest, DeleteFriendsRequest } from '@models/friends';
 
 @Component({
   selector: 'spot-friends',
@@ -84,6 +85,19 @@ export class FriendsComponent implements OnInit {
     // decline
     this.store$.dispatch(
       new SocialStoreFriendsActions.DeclineFriendRequestsAction(request)
+    );
+
+  }
+
+  deleteFriendRequest(id: string) {
+
+    const request: DeleteFriendsRequest = {
+      friendId: id
+    };
+
+    // delete
+    this.store$.dispatch(
+      new SocialStoreFriendsActions.DeleteFriendsAction(request)
     );
 
   }
