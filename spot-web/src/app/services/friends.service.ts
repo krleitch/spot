@@ -35,9 +35,9 @@ export class FriendsService {
     return this.http.post<AddFriendRequestsSuccess>(`${this.baseUrl}/friends/requests`, request);
   }
 
-  deleteFriendRequests(request: DeleteFriendRequestsRequest): Observable<DeleteFriendRequestsSuccess> {
-    return this.http.delete<DeleteFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/${request.friendRequestId}`);
-  }
+//   deleteFriendRequests(request: DeleteFriendRequestsRequest): Observable<DeleteFriendRequestsSuccess> {
+//     return this.http.delete<DeleteFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/${request.friendRequestId}`);
+//   }
 
   acceptFriendRequests(request: AcceptFriendRequestsRequest): Observable<AcceptFriendRequestsSuccess> {
     return this.http.post<AcceptFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/accept`, request);

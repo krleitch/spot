@@ -99,22 +99,14 @@ CREATE TABLE reports (
     FOREIGN KEY (comment_id) REFERENCES comments (id)
 );
 
-CREATE TABLE friend_requests (
-    id VARCHAR(36) NOT NULL,
-    sender_id VARCHAR(36) NOT NULL,
-    receiver_id VARCHAR(36) NOT NULL,
-    creation_date DATETIME NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (sender_id) REFERENCES accounts (id),
-    FOREIGN KEY (receiver_id) REFERENCES accounts (id)
-);
-
 CREATE TABLE friends (
     id VARCHAR(36) NOT NULL,
-    requester_id VARCHAR(36) NOT NULL,
-    acceptor_id VARCHAR(36) NOT NULL,
+    account_id VARCHAR(36) NOT NULL,
+    friend_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
+    confirmed_date DATETIME,
     PRIMARY KEY (id),
-    FOREIGN KEY (requester_id) REFERENCES accounts (id),
-    FOREIGN KEY (acceptor_id) REFERENCES accounts (id)
+    UNIQUE KEY (account_id, friend_id),
+    FOREIGN KEY (account_id) REFERENCES accounts (id),
+    FOREIGN KEY (friend_id) REFERENCES accounts (id)
 );

@@ -102,24 +102,26 @@ export class FriendsEffects {
     )
   );
 
-  deleteFriendRequestsEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<friendsActions.DeleteFriendRequestsAction>(
-      friendsActions.FriendsActionTypes.DELETE_FRIEND_REQUESTS_REQUEST
-    ),
-    switchMap(action =>
-      this.friendsService
-        .deleteFriendRequests(action.request)
-        .pipe(
-          map((response: DeleteFriendRequestsSuccess) => {
-            return new friendsActions.DeleteFriendRequestsSuccessAction( response );
-          }),
-          catchError(errorResponse =>
-            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
-          )
-        )
-    )
-  );
+//   @Effect()
+//   deleteFriendRequestsEffect$: Observable<Action> = this.actions$.pipe(
+//     ofType<friendsActions.DeleteFriendRequestsAction>(
+//       friendsActions.FriendsActionTypes.DELETE_FRIEND_REQUESTS_REQUEST
+//     ),
+//     switchMap(action =>
+//       this.friendsService
+//         .deleteFriendRequests(action.request)
+//         .pipe(
+//           map((response: DeleteFriendRequestsSuccess) => {
+//             return new friendsActions.DeleteFriendRequestsSuccessAction( response );
+//           }),
+//           catchError(errorResponse =>
+//             observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+//           )
+//         )
+//     )
+//   );
 
+  @Effect()
   acceptFriendRequestsEffect$: Observable<Action> = this.actions$.pipe(
     ofType<friendsActions.AcceptFriendRequestsAction>(
       friendsActions.FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_REQUEST
@@ -138,6 +140,7 @@ export class FriendsEffects {
     )
   );
 
+  @Effect()
   declineFriendRequestsEffect$: Observable<Action> = this.actions$.pipe(
     ofType<friendsActions.DeclineFriendRequestsAction>(
       friendsActions.FriendsActionTypes.DECLINE_FRIEND_REQUESTS_REQUEST

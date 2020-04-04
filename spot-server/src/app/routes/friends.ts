@@ -8,23 +8,15 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// make one table with confirmed_at
-// https://dba.stackexchange.com/questions/24042/friends-relations-in-mysql unique key
-// use union https://stackoverflow.com/questions/1961711/friendship-system-sql-structure-query
 // get friends
 router.get('/', function (req: any, res: any) {
 
     const accountId = req.user.id;
 
     friends.getFriends(accountId).then((rows: any) => {
-
-
-
-
-        res.status(200).json({ friendRequests: rows });
+        res.status(200).json({ friends: rows });
     }, (err: any) => {
-        console.log(err);
-        res.status(500).send('Error getting friend requests');
+        res.status(500).send('Error getting friends');
     });
 
 });
@@ -37,7 +29,6 @@ router.get('/requests', function (req: any, res: any) {
     friends.getFriendRequests(accountId).then((rows: any) => {
         res.status(200).json({ friendRequests: rows });
     }, (err: any) => {
-        console.log(err);
         res.status(500).send('Error getting friend requests');
     });
 
@@ -49,6 +40,8 @@ router.post('/requests', function (req: any, res: any) {
     const accountId = req.user.id;
     const { username } = req.body;
 
+    // TODO: what if you send a request to someone who sent you a request
+
     accounts.getAccountByUsername(username).then((receiverId: any) => {
         if ( receiverId[0] === undefined ) {
             res.status(500).send('No user exists with that username');
@@ -56,7 +49,7 @@ router.post('/requests', function (req: any, res: any) {
             friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
                 res.status(200).json({ friendRequest: rows[0] });
             }, (err: any) => {
-                return Promise.reject(err);
+                res.status(500).send('Error sending friend request');
             });
         }
     }, (err: any) => {
@@ -84,12 +77,24 @@ router.post('/requests/accept', function (req: any, res: any) {
     const accountId = req.user.id;
     const { friendRequestId } = req.body
 
-    friends.getFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
+    friends.acceptFriendRequest(friendRequestId, accountId).then((rows: any) => {
         res.status(200).json({ friendRequest: rows[0] });
     }, (err: any) => {
-        res.status(500).send('Error deleting friend request');
+        res.status(500).send('Error accepting friend request');
     });
 });
 
+// decline a friend request
+router.post('/requests/decline', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+    const { friendRequestId } = req.body
+
+    friends.declineFriendRequest(friendRequestId, accountId).then((rows: any) => {
+        res.status(200).json({ friendRequest: rows[0] });
+    }, (err: any) => {
+        res.status(500).send('Error declining friend request');
+    });
+});
 
 export = router;

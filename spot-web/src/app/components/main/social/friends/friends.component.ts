@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { RootStoreState } from '@store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
-import { FriendRequest, GetFriendRequestsRequest, AddFriendRequestsRequest } from '@models/friends';
+import { FriendRequest, GetFriendRequestsRequest, AddFriendRequestsRequest,
+          AcceptFriendRequestsRequest, DeclineFriendRequestsRequest, Friend, GetFriendsRequest } from '@models/friends';
 
 @Component({
   selector: 'spot-friends',
@@ -17,22 +18,33 @@ export class FriendsComponent implements OnInit {
   STRINGS = STRINGS.MAIN.FRIENDS;
 
   friendRequests$: Observable<FriendRequest[]>;
+  friends$: Observable<Friend[]>;
   friendRequestUsername: string;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
 
-    // setup observable for friend requests
+    // setup observables
     this.friendRequests$ = this.store$.pipe(
       select(SocialStoreSelectors.selectMyFeatureFriendRequests)
     );
 
-    const request: GetFriendRequestsRequest = {};
+    this.friends$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectMyFeatureFriends)
+    );
 
-    // load the friend requests
+    // get friends and friend requests
+    const friendRequestsRequest: GetFriendRequestsRequest = {};
+
     this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendRequestsAction(request)
+      new SocialStoreFriendsActions.GetFriendRequestsAction(friendRequestsRequest)
+    );
+
+    const friendRequest: GetFriendsRequest = {};
+
+    this.store$.dispatch(
+      new SocialStoreFriendsActions.GetFriendsAction(friendRequest)
     );
 
   }
@@ -43,9 +55,35 @@ export class FriendsComponent implements OnInit {
       username: this.friendRequestUsername
     };
 
-    // load the friend requests
+    // accept
     this.store$.dispatch(
       new SocialStoreFriendsActions.AddFriendRequestsAction(request)
+    );
+
+  }
+
+  acceptFriendRequest(id: string) {
+
+    const request: AcceptFriendRequestsRequest = {
+      friendRequestId: id
+    };
+
+    // accept
+    this.store$.dispatch(
+      new SocialStoreFriendsActions.AcceptFriendRequestsAction(request)
+    );
+
+  }
+
+  declineFriendRequest(id: string) {
+
+    const request: DeclineFriendRequestsRequest = {
+      friendRequestId: id
+    };
+
+    // decline
+    this.store$.dispatch(
+      new SocialStoreFriendsActions.DeclineFriendRequestsAction(request)
     );
 
   }

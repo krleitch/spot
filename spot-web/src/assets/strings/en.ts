@@ -163,8 +163,8 @@ export const STRINGS = {
           REQUESTS: 'Requests',
           FRIEND_REQUEST_PLACEHOLDER: 'Enter Username',
           FRIEND_REQUEST_PROMPT: 'sent you a friend request!',
-          PENDING: 'Pending',
-          ADD: 'Add Friends'
+          ADD: 'Add Friends',
+          FRIENDS_LIST: 'Friends List'
 
         }
 
