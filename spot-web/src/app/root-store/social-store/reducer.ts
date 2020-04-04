@@ -61,6 +61,7 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
     case FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_SUCCESS: {
       state.friendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friendRequestId) {
+          state.friends.unshift(state.friendRequests[i]);
           state.friendRequests.splice(i, 1);
         }
       });
