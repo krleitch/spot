@@ -25,7 +25,7 @@
     </div>
     <div class="friends-subtitle"> {{ STRINGS.FRIENDS_LIST }} </div>
     <div class="friend-content-section">
-      <div class="friend-request-container" *ngFor="let friend of friends$ | async">
+      <div class="friend-list-container" *ngFor="let friend of friends$ | async">
         {{ friend.username }}
         <div class="friend-remove" (click)="deleteFriendRequest(friend.id)">
           {{ STRINGS.REMOVE }}

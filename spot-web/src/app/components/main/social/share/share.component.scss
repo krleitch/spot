@@ -85,6 +85,35 @@ input {
   }
 }
 
+// friends
+
+.share-friend-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 3px;
+  margin-bottom: 5px;
+}
+
+.share-friend-send {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 25px;
+  color: white;
+  cursor: pointer;
+  background-color: $info-blue;
+}
+
+.share-friend-send:hover {
+  background-color: darken($info-blue, 10%);
+}
+
+// copy
+
 .copy {
   cursor: pointer;
   margin-bottom: 10px;

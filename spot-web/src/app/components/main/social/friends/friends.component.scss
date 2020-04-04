@@ -113,6 +113,16 @@ input {
 
 // Friends list
 
+.friend-list-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
 .friend-remove {
     display: flex;
     justify-content: center;
