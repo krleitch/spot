@@ -47,6 +47,7 @@ export const STRINGS = {
             SCORE: 'Spot Score',
 
             EDIT_USERNAME: 'Edit',
+            EDIT_USERNAME_SUBMIT: 'Submit',
 
             SCORE_DESCRIPTION: 'Gain score by posting and and commenting on spots!',
 

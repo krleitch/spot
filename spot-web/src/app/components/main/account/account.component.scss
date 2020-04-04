@@ -57,6 +57,14 @@ spot-main-nav {
   justify-content: space-between;
 }
 
+input {
+  border: none;
+  outline: none;
+  color: black;
+  padding: 0px 0px;
+  font-size: 14px;
+}
+
 .description {
   color: $subtle-grey;
 }
