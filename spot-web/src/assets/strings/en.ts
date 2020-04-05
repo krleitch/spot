@@ -135,11 +135,14 @@ export const STRINGS = {
 
         SHARE: {
 
-          TITLE: 'Share a spot!',
-          USERNAME_PLACEHOLDER: 'Enter username',
+          TITLE: 'Share a Spot!',
+          USERNAME_PLACEHOLDER: 'Enter Username',
           COPY_LINK: 'Copy link',
           SEND: 'Send',
-          SENT: 'Sent'
+          SENT: 'Sent',
+
+          FRIENDS: 'Friends',
+          NO_FRIENDS: 'Add Friends to share spots quickly'
 
         },
 

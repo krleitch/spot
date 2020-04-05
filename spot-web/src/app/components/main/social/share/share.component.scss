@@ -24,14 +24,16 @@
   transform: translateX(-50%);
   display: flex;
   flex-flow: column;
-  align-items: center;
   background-color: white;
   box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
   z-index: 100;
 }
 
 .header {
-  padding: 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
   background-color: $lighter-grey;
   width: 100%;
   border-bottom: 1px solid $subtle-grey;
@@ -45,6 +47,7 @@
 }
 
 .close {
+  display: flex;
   cursor: pointer;
   float: right;
   &:hover {
@@ -52,9 +55,34 @@
   }
 }
 
+// social media
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .social-media {
   display: flex;
+  align-items: center;
 }
+
+.fb-share-button {
+  margin-right: 5px;
+  margin-left: 15px;
+}
+
+.copy {
+  cursor: pointer;
+  margin-right: 15px;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+// username search
 
 .input-container {
   color: black;
@@ -62,9 +90,9 @@
   justify-content: space-between;
   align-items: center;
   width: auto;
-  margin: 5px 15px;
-  width: 80%;
+  margin: 5px 15px 5px 15px;
   box-sizing: border-box;
+  width: 300px;
   border: 1px solid black;
 }
 
@@ -93,19 +121,28 @@ input {
 
 // friends
 
+.friends-title {
+  margin-left: 15px;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
 .share-friend-section {
-  width: 90%;
-  padding: 5px 5px;
+  margin-left: 15px;
+  width: 300px;
+  max-height: 250px;
+  padding-right: 10px;
+  margin-bottom: 15px;
+  overflow: scroll;
 }
 
 .share-friend-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid black;
-  border-radius: 3px;
-  padding: 3px;
+  padding: 3px 7px;
   margin-bottom: 5px;
+  background-color: $lighter-grey;
 }
 
 .share-friend-send {
@@ -133,12 +170,8 @@ input {
   background-color: $subtle-grey;
 }
 
-// copy
-
-.copy {
-  cursor: pointer;
-  margin-bottom: 10px;
-  &:hover {
-    @extend .highlight;
-  }
+.no-friends {
+  margin-left: 15px;
+  color: $subtle-grey;
+  margin-bottom: 15px;
 }
