@@ -5,11 +5,11 @@
     <span class="close" (click)="closeShare()"> x </span>
   </div>
   <div class="input-container">
-    <input [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
+    <input (input)="onUsernameInput($event)" [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
     <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
   </div>
   <div class="share-friend-section">
-    <div class="share-friend-container" *ngFor="let friend of friends$ | async">
+    <div class="share-friend-container" *ngFor="let friend of filteredFriendsList">
       {{ friend.username }}
       <div class="share-friend-send" (click)="sendNotificationToFriend(friend.username)">
         {{ STRINGS.SEND }}

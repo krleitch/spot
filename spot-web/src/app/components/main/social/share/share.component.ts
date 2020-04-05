@@ -23,6 +23,8 @@ export class ShareComponent implements OnInit {
   STRINGS = STRINGS.MAIN.SHARE;
 
   friends$: Observable<Friend[]>;
+  friendsList: Friend[];
+  filteredFriendsList: Friend[];
 
   username: string;
 
@@ -40,6 +42,11 @@ export class ShareComponent implements OnInit {
     this.store$.dispatch(
       new SocialStoreFriendsActions.GetFriendsAction(friendRequest)
     );
+
+    this.friends$.subscribe ( friends => {
+      this.friendsList = friends;
+      this.filteredFriendsList = friends;
+    });
 
   }
 
@@ -73,6 +80,12 @@ export class ShareComponent implements OnInit {
 
   closeShare() {
     this.close.emit(true);
+  }
+
+  onUsernameInput(event: any) {
+    this.filteredFriendsList = this.friendsList.filter( friend => {
+      return friend.username.toUpperCase().indexOf(this.username.toUpperCase()) !== -1;
+    });
   }
 
   copyLink() {

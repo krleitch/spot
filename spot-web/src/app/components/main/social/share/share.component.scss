@@ -110,11 +110,11 @@ input {
   height: 25px;
   color: white;
   cursor: pointer;
-  background-color: $info-blue;
+  background-color: $button-highlight;
 }
 
 .share-friend-send:hover {
-  background-color: darken($info-blue, 10%);
+  background-color: darken($button-highlight, 10%);
 }
 
 // copy
