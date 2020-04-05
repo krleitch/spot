@@ -59,6 +59,7 @@ export class PostComponent implements OnInit {
     }
 
     if (!this.share.nativeElement.contains(event.target)) {
+      console.log(event.target);
       this.showShare = false;
     }
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -19,6 +19,8 @@ export class ShareComponent implements OnInit {
 
   @Input() postLink;
   @Output() close = new EventEmitter<boolean>();
+
+  @ViewChild('usernameinput') usernameinput: ElementRef;
 
   STRINGS = STRINGS.MAIN.SHARE;
 

@@ -138,7 +138,8 @@ export const STRINGS = {
           TITLE: 'Share a spot!',
           USERNAME_PLACEHOLDER: 'Enter username',
           COPY_LINK: 'Copy link',
-          SEND: 'Send'
+          SEND: 'Send',
+          SENT: 'Sent'
 
         },
 
