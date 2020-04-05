@@ -50,6 +50,11 @@ export class ShareComponent implements OnInit {
       this.filteredFriendsList = friends;
     });
 
+    // Since these buttons are hidden by default we need to call to parse them
+    // todo pass in element so not parse entire page
+    window['FB'].XFBML.parse();
+    window['twttr'].widgets.load();
+
   }
 
   sendNotification() {
