@@ -8,10 +8,12 @@
     <input [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
     <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
   </div>
-  <div class="share-friend-container" *ngFor="let friend of friends$ | async">
-    {{ friend.username }}
-    <div class="share-friend-send" (click)="sendNotificationToFriend(friend.username)">
-      {{ STRINGS.SEND }}
+  <div class="share-friend-section">
+    <div class="share-friend-container" *ngFor="let friend of friends$ | async">
+      {{ friend.username }}
+      <div class="share-friend-send" (click)="sendNotificationToFriend(friend.username)">
+        {{ STRINGS.SEND }}
+      </div>
     </div>
   </div>
   <span class="copy" (click)="copyLink()"> {{ STRINGS.COPY_LINK }} </span>
