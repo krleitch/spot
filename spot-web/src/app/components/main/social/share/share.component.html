@@ -2,11 +2,11 @@
 <div class="share">
   <div class="header">
     <span class="title"> {{ STRINGS.TITLE }} </span>
-    <span class="close" (click)="closeShare()"> x </span>
+    <span class="close" (click)="closeShare()"> <span class="material-icons"> clear </span> </span>
   </div>
   <div class="social-media">
     <div class="fb-share-button"
-          data-href="https://developers.facebook.com/docs/plugins/"
+          attr.data-href="{{ link }}"
           data-layout="button_count"
           data-size="large">
           <a target="_blank"
@@ -16,7 +16,8 @@
           </a>
     </div>
     <a class="twitter-share-button"
-      href="https://twitter.com/intent/tweet?text=Hello%20world"
+      href="https://twitter.com/intent/tweet?text=Spot!"
+      attr.data-url="{{ link }}"
       data-size="large">
       Tweet
     </a>

@@ -30,6 +30,8 @@ export class ShareComponent implements OnInit {
 
   username: string;
 
+  link: string;
+
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
@@ -54,6 +56,8 @@ export class ShareComponent implements OnInit {
     // todo pass in element so not parse entire page
     window['FB'].XFBML.parse();
     window['twttr'].widgets.load();
+
+    this.link = window.location.origin + '/posts/' + this.postLink;
 
   }
 
@@ -101,7 +105,7 @@ export class ShareComponent implements OnInit {
     selBox.style.left = '0';
     selBox.style.top = '0';
     selBox.style.opacity = '0';
-    selBox.value = window.location.origin + '/posts/' + this.postLink;
+    selBox.value = this.link;
     document.body.appendChild(selBox);
     selBox.focus();
     selBox.select();
