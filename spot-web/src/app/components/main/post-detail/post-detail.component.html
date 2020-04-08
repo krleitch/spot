@@ -1,6 +1,12 @@
+
 <spot-main-nav></spot-main-nav>
 <div class="container">
   <div class="content" *ngIf="post$ | async as post">
+    <meta property="og:url"           content="{{ getPostLink(post) }}" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Spot" />
+    <meta property="og:description"   content="A friend has sent you a spot" />
+    <meta property="og:image"         content="{{ post.image_src }}" />
     <spot-post [post]="post" [detailed]="true"></spot-post>
   </div>
 </div>

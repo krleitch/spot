@@ -33,4 +33,8 @@ export class PostDetailComponent implements OnInit {
     });
   }
 
+  getPostLink(post: Post) {
+    return window.location.origin + '/posts/' + post.link;
+  }
+
 }

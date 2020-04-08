@@ -90,10 +90,6 @@ export class PostComponent implements OnInit {
     this.router.navigateByUrl('posts/' + this.post.link);
   }
 
-  getPostLink() {
-    return window.location.origin + '/posts/' + this.post.link;
-  }
-
   getTime() {
     const curTime = new Date();
     const postTime = new Date(this.post.creation_date);
