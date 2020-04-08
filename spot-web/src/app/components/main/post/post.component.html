@@ -1,3 +1,8 @@
+<meta property="og:url"           content="{{ window.location.origin + '/posts/' + post.link }}" />
+<meta property="og:type"          content="website" />
+<meta property="og:title"         content="Spot" />
+<meta property="og:description"   content="A friend has sent you a spot" />
+<meta property="og:image"         content="{{ post.image_src }}" />
 <spot-image *ngIf="expandImage" [imageSrc]="post.image_src" (closeEvent)="setExpandImageFalse()"></spot-image>
 <div class="container">
   <div class="post">
