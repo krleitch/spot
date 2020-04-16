@@ -13,7 +13,7 @@ export const STRINGS = {
             LOGIN: 'Login',
 
             // Options
-            MY_SPOTS: 'My Spots',
+            ACTIVITY: 'Activity',
             FRIENDS: 'Friends',
             ACCOUNT: 'Account',
             LOGOUT: 'Logout'

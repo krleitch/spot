@@ -13,6 +13,7 @@ import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
 import { PostDetailComponent } from './components/main/post-detail/post-detail.component';
 import { FriendsComponent } from './components/main/social/friends/friends.component';
+import { ActivityComponent } from './components/main/activity/activity.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,10 @@ export const routes: Routes = [
   {
     path: 'friends',
     component: FriendsComponent
+  },
+  {
+    path: 'activity',
+    component: ActivityComponent
   },
   {
     path: 'posts/:postId',

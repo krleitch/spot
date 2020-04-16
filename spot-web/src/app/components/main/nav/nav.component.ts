@@ -76,8 +76,8 @@ export class NavComponent implements OnInit {
     this.accountShowDropdown = value;
   }
 
-  mySpots() {
-
+  activity() {
+    this.router.navigateByUrl('/activity');
   }
 
   friends() {

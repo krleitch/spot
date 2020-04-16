@@ -32,6 +32,7 @@ import { UsernameComponent } from './components/pre-auth/username/username.compo
 import { AboutComponent } from './components/pre-auth/about/about.component';
 import { ContactComponent } from './components/pre-auth/contact/contact.component';
 import { FriendsComponent } from './components/main/social/friends/friends.component';
+import { ActivityComponent } from './components/main/activity/activity.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { FriendsComponent } from './components/main/social/friends/friends.compo
     UsernameComponent,
     AboutComponent,
     ContactComponent,
-    FriendsComponent
+    FriendsComponent,
+    ActivityComponent
   ],
   imports: [
     BrowserModule,
