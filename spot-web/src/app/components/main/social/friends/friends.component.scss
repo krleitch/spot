@@ -49,10 +49,13 @@ spot-main-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid black;
-    border-radius: 3px;
-    padding: 3px;
+    background-color: $lighter-grey;
+    padding: 5px;
     margin-bottom: 5px;
+}
+
+.friend-name {
+  color: $info-blue;
 }
 
 .friend-request-options {
@@ -94,11 +97,15 @@ spot-main-nav {
     justify-content: space-between;
     align-items: center;
     width: auto;
-    margin: 5px 15px;
+    margin: 3px 15px;
     box-sizing: border-box;
-    border: 1px solid black;
 }
-  
+
+.send-container {
+  display: flex;
+  align-items: center;
+}
+
 input {
     padding: 5px;
     width: 100%;
@@ -117,9 +124,8 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid black;
-    border-radius: 3px;
-    padding: 3px;
+    background-color: $lighter-grey;
+    padding: 5px;
     margin-bottom: 5px;
 }
 

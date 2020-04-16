@@ -170,7 +170,9 @@ export const STRINGS = {
           FRIEND_REQUEST_PROMPT: 'sent you a friend request!',
           ADD: 'Add Friends',
           FRIENDS_LIST: 'Friends List',
-          REMOVE: 'Remove'
+          REMOVE: 'Remove',
+
+          NO_FRIENDS: 'Add Friends to share spots quickly'
 
         }
 
