@@ -97,7 +97,7 @@
 }
 
 input {
-  padding: 5px;
+  padding: 7px;
   width: 100%;
   border: none;
   outline: none;
@@ -133,7 +133,7 @@ input {
   max-height: 250px;
   padding-right: 10px;
   margin-bottom: 15px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .share-friend-container {
