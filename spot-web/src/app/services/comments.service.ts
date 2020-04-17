@@ -8,7 +8,8 @@ import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddComment
           DeleteCommentSuccess, LoadRepliesRequest, LoadRepliesSuccess, AddReplyRequest, AddReplySuccess,
           DeleteReplyRequest, DeleteReplySuccess, LikeCommentRequest, DislikeCommentRequest,
           LikeCommentSuccess, DislikeCommentSuccess, LikeReplyRequest, DislikeReplyRequest,
-          LikeReplySuccess, DislikeReplySuccess, ReportCommentRequest, ReportCommentSuccess } from '@models/comments';
+          LikeReplySuccess, DislikeReplySuccess, ReportCommentRequest, ReportCommentSuccess,
+          ActivityCommentRequest, ActivityCommentSuccess } from '@models/comments';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -93,6 +94,13 @@ export class CommentService {
 
   reportComment(request: ReportCommentRequest): Observable<ReportCommentSuccess> {
     return this.http.put<ReportCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/report`, request);
+  }
+
+  getActivity(request: ActivityCommentRequest): Observable<ActivityCommentSuccess> {
+    let params = new HttpParams();
+    params = params.append('offset', request.offset.toString());
+    params = params.append('limit', request.limit.toString());
+    return this.http.get<ActivityCommentSuccess>(`${this.baseUrl}/comments/activity`, { params });
   }
 
   likeReply(request: LikeReplyRequest): Observable<LikeReplySuccess> {

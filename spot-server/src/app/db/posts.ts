@@ -1,4 +1,4 @@
-export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink }
+export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink, getPostsActivity }
 
 const uuid = require('uuid');
 
@@ -109,4 +109,10 @@ function getPostByLink(link: string, accountId: string) {
     return db.query(sql, values).then( (rows: any) => {
         return getPostById(rows[0].id, accountId);
     });
+}
+
+function getPostsActivity(accountId: string, offset: number, limit: number) {
+    var sql = 'SELECT * FROM posts WHERE account_id = ? AND deletion_date IS NULL LIMIT ? OFFSET ?';
+    var values = [accountId, limit, offset];
+    return db.query(sql, values);
 }

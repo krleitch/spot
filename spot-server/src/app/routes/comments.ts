@@ -10,6 +10,21 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
+// Get post activity
+router.get('/activity', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+    
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
+
+    comments.getCommentsActivity(accountId, offset, limit).then((rows: any) => {
+        res.status(200).json({ activity: rows });
+    }, (err: any) => {
+        res.status(500).send('Error getting activity');
+    })
+});
+
 // Get all comments for a post
 router.get('/:postId', function (req: any, res: any) {
     

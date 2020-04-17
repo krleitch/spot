@@ -88,3 +88,13 @@ export interface ReportPostRequest {
 export interface ReportPostSuccess {
 
 }
+
+// activity
+export interface ActivityPostRequest {
+    offset: number;
+    limit: number;
+}
+
+export interface ActivityPostSuccess {
+    activity: Post[];
+}

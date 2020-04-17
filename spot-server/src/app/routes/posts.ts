@@ -24,19 +24,7 @@ router.get('/', function (req: any, res: any) {
     posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit).then((rows: any) => {
         res.status(200).json({ posts: rows });
     }, (err: any) => {
-        console.log(err);
         res.status(500).send('Error getting posts');
-    })
-});
-
-// Get a single post
-router.get('/:postLink', function (req: any, res: any) {
-    const postLink = req.params.postLink;
-    const accountId = req.user.id;
-    posts.getPostByLink(postLink, accountId).then((rows: any) => {
-        res.status(200).json({ post: rows[0] });
-    }, (err: any) => {
-        res.status(500).send('Error getting post');
     })
 });
 
@@ -104,5 +92,32 @@ router.put('/:postId/report', function(req: any, res: any) {
     });
 
 })
+
+// Get post activity
+router.get('/activity', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+    
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
+
+    posts.getPostsActivity(accountId, offset, limit).then((rows: any) => {
+        res.status(200).json({ activity: rows });
+    }, (err: any) => {
+        console.log(err)
+        res.status(500).send('Error getting activity');
+    })
+});
+
+// Get a single post
+router.get('/:postLink', function (req: any, res: any) {
+    const postLink = req.params.postLink;
+    const accountId = req.user.id;
+    posts.getPostByLink(postLink, accountId).then((rows: any) => {
+        res.status(200).json({ post: rows[0] });
+    }, (err: any) => {
+        res.status(500).send('Error getting post');
+    })
+});
 
 export = router;

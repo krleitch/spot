@@ -6,7 +6,8 @@ import { environment } from 'src/environments/environment';
 
 import { DeletePostRequest, DeletePostSuccess, AddPostRequest, AddPostSuccess, LoadPostSuccess, LikePostSuccess,
           LikePostRequest, DislikePostRequest, DislikePostSuccess, LoadPostRequest,
-          LoadSinglePostRequest, LoadSinglePostSuccess, ReportPostRequest, ReportPostSuccess } from '@models/posts';
+          LoadSinglePostRequest, LoadSinglePostSuccess, ReportPostRequest, ReportPostSuccess,
+          ActivityPostRequest, ActivityPostSuccess } from '@models/posts';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -60,6 +61,13 @@ export class PostsService {
 
   likePost(request: LikePostRequest): Observable<LikePostSuccess> {
     return this.http.put<LikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/like`, request);
+  }
+
+  getActivity(request: ActivityPostRequest): Observable<ActivityPostSuccess> {
+    let params = new HttpParams();
+    params = params.append('offset', request.offset.toString());
+    params = params.append('limit', request.limit.toString());
+    return this.http.get<ActivityPostSuccess>(`${this.baseUrl}/posts/activity`, { params });
   }
 
   dislikePost(request: DislikePostRequest): Observable<DislikePostSuccess> {

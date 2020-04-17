@@ -1,4 +1,12 @@
 <spot-main-nav></spot-main-nav>
 <div class="activity-container">
 
+  <div *ngFor="let activity of postActivity$ | async">
+    hi post
+  </div>
+
+  <div *ngFor="let activity of commentActivity$ | async">
+    hi comments
+  </div>
+
 </div>

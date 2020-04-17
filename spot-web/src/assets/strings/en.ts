@@ -174,8 +174,13 @@ export const STRINGS = {
 
           NO_FRIENDS: 'Add Friends to share spots quickly'
 
-        }
+        },
 
+        ACTIVITY: {
+
+          TITLE: 'Activity'
+
+        }
 
     },
 

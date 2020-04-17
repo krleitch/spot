@@ -151,6 +151,16 @@ export interface ReportCommentSuccess {
 
 }
 
+// activity
+export interface ActivityCommentRequest {
+    offset: number;
+    limit: number;
+}
+
+export interface ActivityCommentSuccess {
+    activity: Comment[];
+}
+
 // Hash used for storing comments in ngrx
 export interface CommentsHash {
     [post_id: string] : Comment[];
