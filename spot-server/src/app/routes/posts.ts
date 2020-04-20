@@ -104,7 +104,6 @@ router.get('/activity', function (req: any, res: any) {
     posts.getPostsActivity(accountId, offset, limit).then((rows: any) => {
         res.status(200).json({ activity: rows });
     }, (err: any) => {
-        console.log(err)
         res.status(500).send('Error getting activity');
     })
 });

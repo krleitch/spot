@@ -32,6 +32,9 @@ CREATE TABLE posts (
     content VARCHAR(3000) NOT NULL,
     link VARCHAR(14) NOT NULL UNIQUE,
     image_src VARCHAR(200),
+    likes INT,
+    dislikes INT,
+    comments INT,
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     PRIMARY KEY (id)
 );
@@ -45,6 +48,8 @@ CREATE TABLE comments (
     deletion_date DATETIME,
     content varchar(400) NOT NULL,
     image_src VARCHAR(200),
+    likes INT,
+    dislikes INT,
     PRIMARY KEY (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id)
