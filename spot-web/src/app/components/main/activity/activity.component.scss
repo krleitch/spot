@@ -18,3 +18,88 @@ spot-main-nav {
     background-color: $background-grey;
     box-sizing: border-box;
 }
+
+.activity-content {
+  display: flex;
+  flex-flow: column;
+  width: 50%;
+  margin-top: 25px;
+}
+
+// Tabs
+
+.tab-container {
+  display: flex;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.selected {
+  height: 5px;
+  background-color: $button-highlight;
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+// common
+
+.date {
+  color: $subtle-grey;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.bar-wrapper {
+  display: flex;
+}
+
+.bar {
+  background-color: $subtle-grey;
+  width: 3px;
+  margin-right: 10px;
+  margin-left: 20px;
+}
+
+.image {
+  display: flex;
+  margin-right: 5px;
+}
+
+img {
+  max-height: 100px;
+  max-width: 120px;
+}
+
+.content-preview {
+  color: $subtle-grey;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+// posts
+
+.activity-post {
+  margin-bottom: 15px;
+}
+
+.post-content {
+  display: flex;
+  width: 90%;
+}
+
+.post-info {
+  width: 100%;
+}
+
+// comments and replies

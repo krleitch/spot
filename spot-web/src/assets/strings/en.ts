@@ -178,7 +178,16 @@ export const STRINGS = {
 
         ACTIVITY: {
 
-          TITLE: 'Activity'
+          TITLE: 'Activity',
+
+          // Tabs
+          POSTS: 'Posts',
+          COMMENTS_REPLIES: 'Comments and Replies',
+
+          DATE_POST_PROMPT: 'You posted',
+          DATE_COMMENT_PROMPT: 'You commented',
+          DATE_REPLY_PROMPT: 'You repllied',
+          DATE_PROMPT_END: 'ago.'
 
         }
 

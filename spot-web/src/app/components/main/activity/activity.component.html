@@ -1,12 +1,44 @@
 <spot-main-nav></spot-main-nav>
 <div class="activity-container">
+  <div class="activity-content">
+    <div class="tab-container">
+      <div class="tab" (click)="setTab('posts')">
+        {{ STRINGS.POSTS }}
+        <div class="selected" [ngClass]="{'show': selectedTab == 'posts'}"></div>
+      </div>
+      <div class="tab" (click)="setTab('commentsreplies')">
+        {{ STRINGS.COMMENTS_REPLIES }}
+        <div class="selected" [ngClass]="{'show': selectedTab == 'commentsreplies'}"></div>
+      </div>
+    </div>
+    <div class="content-container">
 
-  <div *ngFor="let activity of postActivity$ | async">
-    hi post
+      <div class="activity-posts-container" *ngIf="selectedTab == 'posts'">
+        <div class="activity-post" *ngFor="let activity of postActivity$ | async">
+          <div class="date">
+            {{ STRINGS.DATE_POST_PROMPT }} {{ formatDate(activity.creation_date) }} {{ STRINGS.DATE_PROMPT_END }}
+          </div>
+          <div class="bar-wrapper">
+            <div class="bar"></div>
+            <div class="post-content">
+              <div class="image" *ngIf="activity.image_src">
+                <img [src]="activity.image_src">
+              </div>
+              <div class="post-info">
+                <div class="content-preview"> {{ activity.content }} </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="activity-comments-replies-container" *ngIf="selectedTab == 'commentsreplies'">
+        <div class="activity-comment-reply-container" *ngFor="let activity of commentActivity$ | async">
+          {{ activity.id }}
+        </div>
+      </div>
+
+
+    </div>
   </div>
-
-  <div *ngFor="let activity of commentActivity$ | async">
-    hi comments
-  </div>
-
 </div>

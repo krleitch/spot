@@ -112,7 +112,11 @@ function getPostByLink(link: string, accountId: string) {
 }
 
 function getPostsActivity(accountId: string, offset: number, limit: number) {
-    var sql = 'SELECT * FROM posts WHERE account_id = ? AND deletion_date IS NULL LIMIT ? OFFSET ?';
+    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
+                SUM(CASE WHEN posts_rating.rating = 1 THEN 1 ELSE 0 END) AS likes,
+                SUM(CASE WHEN posts_rating.rating = 0 THEN 1 ELSE 0 END) AS dislikes,
+                (SELECT COUNT(*) FROM comments WHERE post_id = posts.id AND deletion_date IS NULL) as comments
+                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.account_id = ? AND posts.deletion_date IS NULL LIMIT ? OFFSET ?`;
     var values = [accountId, limit, offset];
     return db.query(sql, values);
 }
