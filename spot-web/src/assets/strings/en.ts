@@ -187,7 +187,12 @@ export const STRINGS = {
           DATE_POST_PROMPT: 'You posted',
           DATE_COMMENT_PROMPT: 'You commented',
           DATE_REPLY_PROMPT: 'You repllied',
-          DATE_PROMPT_END: 'ago.'
+          DATE_PROMPT_END: 'ago.',
+
+          POSTS_SCORE: 'Score: ',
+          POSTS_COMMENTS: 'Comments: ',
+          POSTS_LOCATION: 'Location: ',
+          POSTS_OPEN: 'Open'
 
         }
 

@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
+import { RootStoreState } from '@store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 import { PostsService } from '@services/posts.service';
 import { CommentService } from '@services/comments.service';
 import { ActivityPostRequest, ActivityPostSuccess, Post } from '@models/posts';
 import { ActivityCommentRequest, ActivityCommentSuccess, Comment } from '@models/comments';
+import { Location } from '@models/accounts';
 
 @Component({
   selector: 'spot-activity',
@@ -17,14 +22,26 @@ export class ActivityComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.ACTIVITY;
 
+  location$: Observable<Location>;
+  myLocation: Location;
+
   selectedTab = 'posts';
 
-  constructor( private postsService: PostsService, private commentService: CommentService ) { }
+  constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
+               private commentService: CommentService, private router: Router ) { }
 
   postActivity$: Observable<Post[]>;
   commentActivity$: Observable<Comment[]>;
 
   ngOnInit() {
+
+    this.location$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsLocation)
+    );
+
+    this.location$.subscribe( (location: Location) => {
+      this.myLocation = location;
+    });
 
     // TODO: these should move
 
@@ -76,6 +93,15 @@ export class ActivityComponent implements OnInit {
       const yearDiff = Math.round(timeDiff / 31536000000);
       return yearDiff + ( yearDiff === 1 ? ' year' : ' years' );
     }
+  }
+
+  getDistance( latitude: number, longitude: number ) {
+    return this.postsService.calcDistance(latitude, longitude, this.myLocation.latitude,
+                                           this.myLocation.longitude, 'M').toFixed(1) + ' miles';
+  }
+
+  openPost( link: string ) {
+    this.router.navigateByUrl(/posts/ + link);
   }
 
 }
