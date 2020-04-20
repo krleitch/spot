@@ -108,9 +108,8 @@ function getPostByLink(link: string, accountId: string) {
 }
 
 function getPostsActivity(accountId: string, offset: number, limit: number) {
-    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
-                    posts.likes, posts.dislikes, posts.comments
-                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.account_id = ? AND posts.deletion_date IS NULL LIMIT ? OFFSET ?`;
+    var sql = `SELECT id, creation_date, longitude, latitude, content, link, image_src, likes, dislikes, comments
+                FROM posts WHERE account_id = ? AND deletion_date IS NULL ORDER BY creation_date DESC LIMIT ? OFFSET ?`;
     var values = [accountId, limit, offset];
     return db.query(sql, values);
 }
