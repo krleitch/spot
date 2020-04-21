@@ -27,9 +27,9 @@
               <div class="post-info">
                 <div class="content-preview"> {{ activity.content }} </div>
                 <div class="info-bar">
-                  <span> {{ STRINGS.POSTS_SCORE }} {{ activity.likes - activity.dislikes }} </span>
-                  <span> {{ STRINGS.POSTS_COMMENTS }} {{ activity.comments }}  </span>
-                  <span> {{ STRINGS.POSTS_SCORE }} {{ getDistance(activity.latitude, activity.longitude) }} </span>
+                  <span class="info-bar-item"> {{ STRINGS.POSTS_SCORE }} {{ activity.likes - activity.dislikes }} </span>
+                  <span class="info-bar-item"> {{ STRINGS.POSTS_COMMENTS }} {{ activity.comments }}  </span>
+                  <span class="info-bar-item"> {{ STRINGS.POSTS_LOCATION }} {{ getDistance(activity.latitude, activity.longitude) }} </span>
                 </div>
               </div>
               <div class="post-link" (click)="openPost(activity.link)">

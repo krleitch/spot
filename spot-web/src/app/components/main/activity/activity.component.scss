@@ -79,7 +79,6 @@ img {
 }
 
 .content-preview {
-  color: $subtle-grey;
   max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -95,11 +94,38 @@ img {
 
 .post-content {
   display: flex;
+  padding: 5px 0px;
   width: 90%;
 }
 
 .post-info {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
   width: 100%;
+}
+
+.info-bar {
+  margin-top: 5px;
+  color: $subtle-grey;
+}
+
+.info-bar-item {
+  margin-right: 10px;
+}
+
+.post-link {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 3px 7px;
+  height: 25px;
+  width: 35px;
+  color: white;
+  background-color: $button-black;
+  &:hover {
+    background-color: lighten($button-black, 10%);
+  }
 }
 
 // comments and replies
