@@ -12,8 +12,6 @@ router.use(function timeLog (req: any, res: any, next: any) {
 // Upload a photo
 router.post('/upload', function (req: any, res: any) {
 
-    console.log('got it');
-
     singleUpload(req, res, function(err: any) {
 
         if (err) {
