@@ -79,7 +79,7 @@ img {
 }
 
 .content-preview {
-  max-width: 100%;
+  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,3 +129,16 @@ img {
 }
 
 // comments and replies
+
+.comment-content {
+  display: flex;
+  align-items: center;
+  padding: 5px 0px;
+  width: 90%;
+}
+
+.post-comment {
+  display: flex;
+  flex: 1;
+  flex-flow: column;
+}

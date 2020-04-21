@@ -10,7 +10,7 @@ import { AccountsStoreSelectors } from '@store/accounts-store';
 import { PostsService } from '@services/posts.service';
 import { CommentService } from '@services/comments.service';
 import { ActivityPostRequest, ActivityPostSuccess, Post } from '@models/posts';
-import { ActivityCommentRequest, ActivityCommentSuccess, Comment } from '@models/comments';
+import { ActivityCommentRequest, ActivityCommentSuccess, CommentActivity } from '@models/comments';
 import { Location } from '@models/accounts';
 
 @Component({
@@ -25,13 +25,13 @@ export class ActivityComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
-  selectedTab = 'posts';
+  selectedTab = 'commentsreplies';
 
   constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
                private commentService: CommentService, private router: Router ) { }
 
   postActivity$: Observable<Post[]>;
-  commentActivity$: Observable<Comment[]>;
+  commentActivity$: Observable<CommentActivity[]>;
 
   ngOnInit() {
 

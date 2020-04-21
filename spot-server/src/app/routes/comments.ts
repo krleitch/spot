@@ -18,8 +18,8 @@ router.get('/activity', function (req: any, res: any) {
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
-    comments.getCommentsActivity(accountId, offset, limit).then((rows: any) => {
-        res.status(200).json({ activity: rows });
+    comments.getCommentsActivity(accountId, offset, limit).then((activities: any) => {
+        res.status(200).json({ activity: activities });
     }, (err: any) => {
         res.status(500).send('Error getting activity');
     })

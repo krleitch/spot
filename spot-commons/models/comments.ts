@@ -157,8 +157,23 @@ export interface ActivityCommentRequest {
     limit: number;
 }
 
+export interface CommentActivity {
+    id: string;
+    creation_date: string;
+    likes: number;
+    dislikes: number;
+    content: string;
+    image_src: string;
+    parent_id: string;
+    post_content: string;
+    post_image_src: string;
+    post_link: string;
+    parent_content: string;
+    parent_image_src: string;
+}
+
 export interface ActivityCommentSuccess {
-    activity: Comment[];
+    activity: CommentActivity[];
 }
 
 // Hash used for storing comments in ngrx

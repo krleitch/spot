@@ -42,10 +42,67 @@
 
       <div class="activity-comments-replies-container" *ngIf="selectedTab == 'commentsreplies'">
         <div class="activity-comment-reply-container" *ngFor="let activity of commentActivity$ | async">
-          {{ activity.id }}
+
+          <div class="date">
+            <span *ngIf="activity.parent_id == null; else replyDate"> {{ STRINGS.DATE_COMMENT_PROMPT }} </span>
+            <ng-template #replyDate> {{ STRINGS.DATE_REPLY_PROMPT }} </ng-template>
+            {{ formatDate(activity.creation_date) }}
+            {{ STRINGS.DATE_PROMPT_END }}
+          </div>
+
+          <div class="bar-wrapper">
+            <div class="bar"></div>
+            <div class="post-comment">
+              <div class="comment-content">
+                <div class="image" *ngIf="activity.post_image_src">
+                  <img [src]="activity.post_image_src">
+                </div>
+                <div class="content-preview"> {{ activity.content }} </div>
+                <div class="post-link" (click)="openPost(activity.post_link)">
+                  {{ STRINGS.POSTS_OPEN }}
+                </div>
+              </div>
+
+              <div class="bar-wrapper" *ngIf="activity.parent_id == null; else reply">
+                <div class="bar"></div>
+                <div class="comment-content">
+                  <div class="image" *ngIf="activity.image_src">
+                    <img [src]="activity.image_src">
+                  </div>
+                  <div class="content-preview"> {{ activity.content }} </div>
+                </div>
+              </div>
+
+              <ng-template #reply>
+                <div class="bar-wrapper">
+                  <div class="bar"></div>
+                  <div class="parent-comment">
+                    <div class="comment-content">
+                      <div class="image" *ngIf="activity.parent_image_src">
+                        <img [src]="activity.parent_image_src">
+                      </div>
+                      <div class="content-preview"> {{ activity.parent_content }} </div>
+                    </div>
+
+                    <div class="bar-wrapper">
+                      <div class="bar"></div>
+                      <div class="comment-content">
+                        <div class="image" *ngIf="activity.image_src">
+                          <img [src]="activity.image_src">
+                        </div>
+                        <div class="content-preview"> {{ activity.content }} </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </ng-template>
+
+            </div>
+          </div>
+
         </div>
       </div>
-
 
     </div>
   </div>
