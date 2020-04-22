@@ -110,7 +110,7 @@ function getCommentsActivity(accountId: string, offset: number, limit: number) {
                  p.content as post_content, p.image_src as post_image_src, p.link as post_link,
                  c2.content as parent_content, c2.image_src as parent_image_src
                  FROM comments c1 LEFT JOIN posts p ON p.id = c1.post_id LEFT JOIN comments c2 ON c1.parent_id = c2.id
-                 WHERE c1.account_id = ? AND c1.deletion_date IS NULL ORDER BY creation_date DESC LIMIT ? OFFSET ?`;
+                 WHERE c1.account_id = ? AND c1.deletion_date IS NULL AND c2.deletion_date IS NULL AND p.deletion_date IS NULL ORDER BY creation_date DESC LIMIT ? OFFSET ?`;
     var values = [accountId, limit, offset];
     return db.query(sql, values);
 }

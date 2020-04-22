@@ -57,7 +57,7 @@
                 <div class="image" *ngIf="activity.post_image_src">
                   <img [src]="activity.post_image_src">
                 </div>
-                <div class="content-preview"> {{ activity.content }} </div>
+                <div class="content-preview"> {{ activity.post_content }} </div>
                 <div class="post-link" (click)="openPost(activity.post_link)">
                   {{ STRINGS.POSTS_OPEN }}
                 </div>
