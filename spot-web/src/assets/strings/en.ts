@@ -194,6 +194,12 @@ export const STRINGS = {
           POSTS_LOCATION: 'Location: ',
           POSTS_OPEN: 'Open'
 
+        },
+
+        REPORT: {
+
+          TITLE: 'Report'
+
         }
 
     },

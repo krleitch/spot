@@ -33,6 +33,8 @@ import { AboutComponent } from './components/pre-auth/about/about.component';
 import { ContactComponent } from './components/pre-auth/contact/contact.component';
 import { FriendsComponent } from './components/main/social/friends/friends.component';
 import { ActivityComponent } from './components/main/activity/activity.component';
+import { ReportComponent } from './components/main/social/report/report.component';
+import { ModalComponent } from './components/helpers/modal/modal.component';
 
 
 @NgModule({
@@ -65,7 +67,9 @@ import { ActivityComponent } from './components/main/activity/activity.component
     AboutComponent,
     ContactComponent,
     FriendsComponent,
-    ActivityComponent
+    ActivityComponent,
+    ReportComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,

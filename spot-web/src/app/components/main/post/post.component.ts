@@ -8,6 +8,7 @@ import { PostsStoreActions } from '@store/posts-store';
 import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, ReportPostRequest } from '@models/posts';
 import { Location } from '@models/accounts';
 import { PostsService } from '@services/posts.service';
+import { ModalService } from '@services/modal.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 
 import { STRINGS } from '@assets/strings/en';
@@ -34,10 +35,12 @@ export class PostComponent implements OnInit {
 
   optionsEnabled = false;
   showShare = false;
+  showReport = false;
 
   expandImage = false;
 
-  constructor(private store$: Store<RootStoreState.State>, private router: Router, private postsService: PostsService) {
+  constructor(private store$: Store<RootStoreState.State>, private router: Router, private postsService: PostsService,
+              private modalService: ModalService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -68,13 +71,14 @@ export class PostComponent implements OnInit {
   }
 
   reportPost() {
-    const request: ReportPostRequest = {
-      postId: this.post.id,
-      content: ''
-    };
-    this.store$.dispatch(
-      new PostsStoreActions.ReportRequestAction(request)
-    );
+    this.showReport = true;
+    // const request: ReportPostRequest = {
+    //   postId: this.post.id,
+    //   content: ''
+    // };
+    // this.store$.dispatch(
+    //   new PostsStoreActions.ReportRequestAction(request)
+    // );
   }
 
   deletePost() {
@@ -170,6 +174,10 @@ export class PostComponent implements OnInit {
     this.showShare = false;
   }
 
+  onReportClose() {
+    this.showReport = false;
+  }
+
   // For expanding images
   setExpandImageTrue() {
     this.expandImage = true;
@@ -177,6 +185,14 @@ export class PostComponent implements OnInit {
 
   setExpandImageFalse() {
     this.expandImage = false;
+  }
+
+  openModal(id: string) {
+    this.modalService.open(id);
+  }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
   }
 
 }

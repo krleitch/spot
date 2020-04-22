@@ -27,6 +27,8 @@ import { AboutComponent } from './components/pre-auth/about/about.component';
 import { ContactComponent } from './components/pre-auth/contact/contact.component';
 import { FriendsComponent } from './components/main/social/friends/friends.component';
 import { ActivityComponent } from './components/main/activity/activity.component';
+import { ReportComponent } from './components/main/social/report/report.component';
+import { ModalComponent } from './components/helpers/modal/modal.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -58,7 +60,9 @@ import { ActivityComponent } from './components/main/activity/activity.component
     AboutComponent,
     ContactComponent,
     FriendsComponent,
-    ActivityComponent
+    ActivityComponent,
+    ReportComponent,
+    ModalComponent
   ],
   imports: [
     NativeScriptModule,
