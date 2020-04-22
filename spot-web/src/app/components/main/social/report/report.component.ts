@@ -1,6 +1,11 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
 
+import { RootStoreState } from '@store';
+import { PostsStoreActions } from '@store/posts-store';
+import { ReportPostRequest } from '@models/posts';
 import { STRINGS } from '@assets/strings/en';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-report',
@@ -9,17 +14,28 @@ import { STRINGS } from '@assets/strings/en';
 })
 export class ReportComponent implements OnInit {
 
-  @Output() close = new EventEmitter<boolean>();
+  @Input() modalId: string;
+  @Input() itemId: string;
 
   STRINGS = STRINGS.MAIN.REPORT;
 
-  constructor() { }
+  constructor(private store$: Store<RootStoreState.State>, private modalService: ModalService) { }
 
   ngOnInit() {
   }
 
   closeReport() {
-    this.close.emit(true);
+    this.modalService.close(this.modalId);
+  }
+
+  sendReport() {
+    const request: ReportPostRequest = {
+      postId: this.itemId,
+      content: ''
+    };
+    this.store$.dispatch(
+      new PostsStoreActions.ReportRequestAction(request)
+    );
   }
 
 }

@@ -10,6 +10,8 @@ import { ModalService } from '@services/modal.service';
 export class ModalComponent implements OnInit, OnDestroy {
 
   @Input() id: string;
+  @Input() width: number;
+  @Input() height: number;
   private element: any;
 
   constructor(private modalService: ModalService, private el: ElementRef) {

@@ -198,7 +198,10 @@ export const STRINGS = {
 
         REPORT: {
 
-          TITLE: 'Report'
+          TITLE: 'Report',
+
+          REPORT_PLACEHOLDER: 'Enter report message',
+          REPORT_BUTTON: 'Send Report'
 
         }
 

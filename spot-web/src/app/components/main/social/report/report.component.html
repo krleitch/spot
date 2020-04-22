@@ -1,7 +1,12 @@
-<div class="background" (click)="closeReport()"></div>
 <div class="report">
-  <div class="header">
+  <div class="report-header">
     <span class="title"> {{ STRINGS.TITLE }} </span>
     <span class="close" (click)="closeReport()"> <span class="material-icons"> clear </span> </span>
+  </div>
+  <div class="report-body">
+    <textarea [placeholder]="STRINGS.REPORT_PLACEHOLDER" rows="10" ></textarea>
+    <div class="button" (click)="sendReport()">
+      {{ STRINGS.REPORT_BUTTON }}
+    </div>
   </div>
 </div>

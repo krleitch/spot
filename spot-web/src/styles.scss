@@ -38,11 +38,14 @@ spot-modal {
       overflow: auto;
 
       .spot-modal-body {
-          padding: 20px;
-          background: #fff;
+        background: #fff;
 
-          /* margin exposes part of the modal background */
-          margin: 40px;
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+
       }
   }
 
@@ -56,7 +59,7 @@ spot-modal {
 
       /* semi-transparent black  */
       background-color: #000;
-      opacity: 0.75;
+      opacity: 20%;
 
       /* z-index must be below .jw-modal and above everything else  */
       z-index: 900;
