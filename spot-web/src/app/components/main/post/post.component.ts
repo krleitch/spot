@@ -70,17 +70,6 @@ export class PostComponent implements OnInit {
     this.optionsEnabled = value;
   }
 
-  reportPost() {
-    this.showReport = true;
-    // const request: ReportPostRequest = {
-    //   postId: this.post.id,
-    //   content: ''
-    // };
-    // this.store$.dispatch(
-    //   new PostsStoreActions.ReportRequestAction(request)
-    // );
-  }
-
   deletePost() {
     const request: DeletePostRequest = {
       postId: this.post.id

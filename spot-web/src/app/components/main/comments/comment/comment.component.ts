@@ -9,6 +9,7 @@ import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
          LikeCommentRequest, DislikeCommentRequest, ReportCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-comment',
@@ -53,7 +54,8 @@ export class CommentComponent implements OnInit {
 
   constructor(private store$: Store<RootStoreState.State>,
               private commentService: CommentService,
-              public domSanitizer: DomSanitizer) {
+              public domSanitizer: DomSanitizer,
+              private modalService: ModalService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -175,17 +177,6 @@ export class CommentComponent implements OnInit {
     );
   }
 
-  reportComment() {
-    const request: ReportCommentRequest = {
-      postId: this.comment.post_id,
-      commentId: this.comment.id,
-      content: ''
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.ReportRequestAction(request)
-    );
-  }
-
   setShowAddReply(val: boolean) {
     this.showAddReply = val;
   }
@@ -274,6 +265,14 @@ export class CommentComponent implements OnInit {
 
   setExpandImageFalse() {
     this.expandImage = false;
+  }
+
+  openModal(id: string) {
+    this.modalService.open(id);
+  }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
   }
 
 }

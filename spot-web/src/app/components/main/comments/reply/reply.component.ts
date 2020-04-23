@@ -5,8 +5,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest, DislikeReplyRequest, ReportCommentRequest } from '@models/comments';
+import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest,
+         DislikeReplyRequest, ReportCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-reply',
@@ -44,7 +46,8 @@ export class ReplyComponent implements OnInit {
 
   constructor(private store$: Store<RootStoreState.State>,
               private commentService: CommentService,
-              public domSanitizer: DomSanitizer) {
+              public domSanitizer: DomSanitizer,
+              private modalService: ModalService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -118,17 +121,6 @@ export class ReplyComponent implements OnInit {
     };
     this.store$.dispatch(
       new CommentsStoreActions.DeleteReplyRequestAction(request)
-    );
-  }
-
-  reportReply() {
-    const request: ReportCommentRequest = {
-      postId: this.reply.post_id,
-      commentId: this.reply.id,
-      content: ''
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.ReportRequestAction(request)
     );
   }
 
@@ -223,6 +215,14 @@ export class ReplyComponent implements OnInit {
 
   setExpandImageFalse() {
     this.expandImage = false;
+  }
+
+  openModal(id: string) {
+    this.modalService.open(id);
+  }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
   }
 
 }

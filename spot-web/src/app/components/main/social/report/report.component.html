@@ -4,7 +4,7 @@
     <span class="close" (click)="closeReport()"> <span class="material-icons"> clear </span> </span>
   </div>
   <div class="report-body">
-    <textarea [placeholder]="STRINGS.REPORT_PLACEHOLDER" rows="10" ></textarea>
+    <textarea [(ngModel)]="content" [placeholder]="STRINGS.REPORT_PLACEHOLDER" rows="10" ></textarea>
     <div class="button" (click)="sendReport()">
       {{ STRINGS.REPORT_BUTTON }}
     </div>

@@ -39,7 +39,7 @@
           <div class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
             <div class="button" (click)="openPost()"> {{ STRINGS.OPEN_POST }} </div>
             <div *ngIf="post.owned" class="button" (click)="deletePost()"> {{ STRINGS.DELETE }} </div>
-            <div class="button" (click)="openModal('spot-report-modal')"> {{ STRINGS.REPORT }} </div>
+            <div class="button" (click)="openModal('spot-report-post-modal')"> {{ STRINGS.REPORT }} </div>
           </div>
         </div>
       </div>
@@ -51,6 +51,6 @@
   </div>
   <spot-comments-container [post]="post" [detailed]="detailed"></spot-comments-container>
 </div>
-<spot-modal [id]="'spot-report-modal'" [width]="400" [height]="'auto'">
-  <spot-report [modalId]="'spot-report-modal'" [itemId]="post.id"></spot-report>
+<spot-modal [id]="'spot-report-post-modal'" [width]="400" [height]="'auto'">
+  <spot-report [modalId]="'spot-report-post-modal'" [postId]="post.id"></spot-report>
 </spot-modal>
