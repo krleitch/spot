@@ -116,7 +116,12 @@ input.ng-dirty.ng-invalid {
 }
 
 .forgot-password {
+    cursor: pointer;
+    color: $subtle-grey;
     margin-bottom: 10px;
+    &:hover {
+      color: $button-highlight;
+    }
 }
 
 .sign-up-alternate {

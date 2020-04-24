@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS friends;
+DROP TABLE IF EXISTS password_reset;
 DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE accounts (
@@ -114,4 +115,13 @@ CREATE TABLE friends (
     UNIQUE KEY (account_id, friend_id),
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     FOREIGN KEY (friend_id) REFERENCES accounts (id)
+);
+
+CREATE TABLE password_reset (
+    id VARCHAR(36) NOT NULL,
+    account_id VARCHAR(36) NOT NULL,
+    creation_date DATETIME NOT NULL,
+    token VARCHAR(36) NOT NULL UNIQUE,
+    PRIMARY KEY (id),
+    FOREIGN KEY (account_id) REFERENCES accounts (id)
 );

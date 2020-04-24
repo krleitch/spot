@@ -35,6 +35,8 @@ import { FriendsComponent } from './components/main/social/friends/friends.compo
 import { ActivityComponent } from './components/main/activity/activity.component';
 import { ReportComponent } from './components/main/social/report/report.component';
 import { ModalComponent } from './components/helpers/modal/modal.component';
+import { PasswordResetComponent } from './components/pre-auth/password-reset/password-reset.component';
+import { NewPasswordComponent } from './components/pre-auth/new-password/new-password.component';
 
 
 @NgModule({
@@ -69,7 +71,9 @@ import { ModalComponent } from './components/helpers/modal/modal.component';
     FriendsComponent,
     ActivityComponent,
     ReportComponent,
-    ModalComponent
+    ModalComponent,
+    PasswordResetComponent,
+    NewPasswordComponent
   ],
   imports: [
     BrowserModule,

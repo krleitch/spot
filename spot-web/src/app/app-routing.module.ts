@@ -8,6 +8,8 @@ import { RegisterComponent } from './components/pre-auth/register/register.compo
 import { UsernameComponent } from './components/pre-auth/username/username.component';
 import { ContactComponent } from './components/pre-auth/contact/contact.component';
 import { AboutComponent } from './components/pre-auth/about/about.component';
+import { PasswordResetComponent } from './components/pre-auth/password-reset/password-reset.component';
+import { NewPasswordComponent } from './components/pre-auth/new-password/new-password.component';
 
 import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
@@ -59,6 +61,14 @@ export const routes: Routes = [
   {
     path: 'contact',
     component: ContactComponent
+  },
+  {
+    path: 'password-reset',
+    component: PasswordResetComponent
+  },
+  {
+    path: 'new-password',
+    component: NewPasswordComponent
   }
 ];
 

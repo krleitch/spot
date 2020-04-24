@@ -338,6 +338,17 @@ export const STRINGS = {
           USERNAME_PLACEHOLDER: 'Enter username',
           CONTINUE: 'Continue to Spot'
 
+        },
+
+        PASSWORD_RESET: {
+
+          EMAIL_PLACEHOLDER: 'Enter email',
+          REQUEST_RESET: 'Request Reset'
+
+        },
+
+        NEW_PASSWORD: {
+
         }
 
     }
