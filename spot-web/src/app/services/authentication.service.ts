@@ -5,7 +5,8 @@ import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
-import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginResponse, LoginResponse } from '@models/authentication';
+import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginResponse, LoginResponse,
+         PasswordResetRequest, PasswordResetSuccess } from '@models/authentication';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +30,10 @@ export class AuthenticationService {
 
     loginAccount(loginAccountRequest: any): Observable<any> {
         return this.http.post<any>(`${this.baseUrl}/auth/login`, loginAccountRequest);
+    }
+
+    passwordReset(request: PasswordResetRequest): Observable<PasswordResetSuccess> {
+        return this.http.post<PasswordResetSuccess>(`${this.baseUrl}/auth/password-reset`, request);
     }
 
     validateEmail(email: string): boolean {

@@ -103,4 +103,22 @@ router.post('/login/facebook', function (req: any, res: any) {
     });
 });
 
+// password reset
+router.post('/password-reset', function (req: any, res: any) {
+
+    const { email } = req.body;
+
+    accounts.getAccountByEmail(email).then( (rows: any) => {
+        if ( rows.length > 0 ) {
+            
+            console.log(rows[0].email);
+
+            // send email with nodemailer
+
+        }
+        res.status(200).send({});
+    });
+                      
+});
+
 export = router;

@@ -343,7 +343,11 @@ export const STRINGS = {
         PASSWORD_RESET: {
 
           EMAIL_PLACEHOLDER: 'Enter email',
-          REQUEST_RESET: 'Request Reset'
+          REQUEST_RESET: 'Request Reset',
+
+          EMAIL_NONE: 'Email is required',
+          EMAIL_FORMAT: 'Invalid email format',
+          REQUEST_SUCCESS: 'An email for recovery has been sent if an account exists under this email'
 
         },
 

@@ -33,3 +33,13 @@ export interface FacebookLoginResponse {
     jwt: { token: string, expiresIn: string };
     account: Account;
 }
+
+// password reset
+
+export interface PasswordResetRequest {
+    email: string;
+}
+
+export interface PasswordResetSuccess {
+
+}
