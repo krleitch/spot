@@ -43,3 +43,20 @@ export interface PasswordResetRequest {
 export interface PasswordResetSuccess {
 
 }
+
+export interface ValidateTokenRequest {
+    token: string;
+}
+
+export interface ValidateTokenSuccess {
+
+}
+
+export interface NewPasswordRequest {
+    token: string;
+    password: string;
+}
+
+export interface NewPasswordSuccess {
+
+}

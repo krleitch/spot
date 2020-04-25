@@ -353,6 +353,13 @@ export const STRINGS = {
 
         NEW_PASSWORD: {
 
+          TOKEN_PLACEHOLDER: 'Enter validation token',
+          VALIDATE: 'Validate',
+
+          PASSWORD_PLACEHOLDER: 'Enter password',
+          CONFIRM_PLACEHOLDER: 'Re-enter password',
+          RESET_PASSWORD: 'Reset Password'
+
         }
 
     }
