@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const accounts = require('../db/accounts');
+const passwordReset = require('../db/passwordReset');
 const auth = require('../services/auth/auth')
+
+const shortid = require('shortid');
 
 const passport = require('../services/auth/passport');
 
@@ -111,12 +114,57 @@ router.post('/password-reset', function (req: any, res: any) {
     accounts.getAccountByEmail(email).then( (rows: any) => {
         if ( rows.length > 0 ) {
             
-            console.log(rows[0].email);
+            const token = shortid.generate();
 
             // send email with nodemailer
 
+            // add to table
+
+            passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
+                res.status(200).send({});
+            });
+
         }
         res.status(200).send({});
+    });
+                      
+});
+
+// password reset
+router.post('/new-password/validate', function (req: any, res: any) {
+
+    const { token } = req.body;
+
+    passwordReset.getByToken(token).then( (rows: any) => {
+        if ( rows.length > 0 ) {
+            res.status(200).send({});
+        } else {
+            // FIX
+            res.status(500).send({});
+        }
+    });
+                      
+});
+
+// password reset
+router.post('/password-reset', function (req: any, res: any) {
+
+    const { password, token } = req.body;
+
+    accounts.getByToken(token).then( (rows: any) => {
+
+        const validDate = new Date( new Date(rows[0].creation_date).valueOf() + 5 * 60000 )
+
+        if ( rows.length > 0 && ( new Date().valueOf() < validDate.valueOf() ) ) {
+
+            accounts.changePassword( rows[0].account_id, password ).then( (r: any) => {
+                res.status(200).send({});
+            });
+
+        } else {
+            // error
+            res.status(500).send({});
+        }
     });
                       
 });

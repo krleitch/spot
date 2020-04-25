@@ -1,4 +1,5 @@
-export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, getAccountById, addFacebookAccount, getFacebookAccount, updateUsername }
+export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, changePassword,
+         getAccountById, addFacebookAccount, getFacebookAccount, updateUsername }
 
 const uuid = require('uuid');
 
@@ -57,5 +58,13 @@ function updateUsername(username: string, accountId: string) {
     var values = [username, accountId];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(accountId);
+    });;  
+}
+
+function changePassword( account_id: string, password: string) {
+    var sql = 'UPDATE accounts SET password = ? WHERE id = ? AND deletion_date IS NULL';
+    var values = [password, account_id];
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(account_id);
     });;  
 }
