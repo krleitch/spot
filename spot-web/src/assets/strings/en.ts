@@ -355,10 +355,16 @@ export const STRINGS = {
 
           TOKEN_PLACEHOLDER: 'Enter validation token',
           VALIDATE: 'Validate',
+          TOKEN_NONE: 'Token is required',
+          INVALID_TOKEN: 'The token has expired or is invalid',
 
           PASSWORD_PLACEHOLDER: 'Enter password',
           CONFIRM_PLACEHOLDER: 'Re-enter password',
-          RESET_PASSWORD: 'Reset Password'
+          RESET_PASSWORD: 'Reset Password',
+          PASSWORD_NONE: 'Password is required',
+          CONFIRM_NONE: 'Password confirmation is required',
+          INVALID_MATCH: 'Passwords must match',
+          NEW_PASSWORD_SUCCESS: 'Password has been reset'
 
         }
 

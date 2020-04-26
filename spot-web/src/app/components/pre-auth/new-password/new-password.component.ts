@@ -34,4 +34,72 @@ export class NewPasswordComponent implements OnInit {
   ngOnInit() {
   }
 
+  validateToken() {
+
+    const val = this.formToken.value;
+
+    if ( !val.token ) {
+      this.errorMessage = this.STRINGS.TOKEN_NONE;
+      this.formToken.controls.token.markAsDirty();
+      return;
+    }
+
+    this.errorMessage = '';
+
+    // Send request
+
+    const request: ValidateTokenRequest = {
+      token: val.token
+    };
+
+    this.authenticationService.validateToken(request).subscribe((response: ValidateTokenSuccess) => {
+      this.token = val.token;
+    }, ( error: any ) => {
+      this.errorMessage = this.STRINGS.INVALID_TOKEN;
+    });
+
+  }
+
+  resetPassword() {
+
+    const val = this.formPassword.value;
+
+    if ( !val.password ) {
+      this.errorMessage = this.STRINGS.PASSWORD_NONE;
+      this.formPassword.controls.password.markAsDirty();
+      return;
+    }
+
+    if ( !val.confirm ) {
+      this.errorMessage = this.STRINGS.CONFIRM_NONE;
+      this.formPassword.controls.confirm.markAsDirty();
+      return;
+    }
+
+    if ( val.password !== val.confirm ) {
+      this.errorMessage = this.STRINGS.INVALID_MATCH;
+      this.formPassword.controls.password.markAsDirty();
+      this.formPassword.controls.password.setErrors([{'incorrect': true}]);
+      this.formPassword.controls.confirm.markAsDirty();
+      this.formPassword.controls.confirm.setErrors([{'incorrect': true}]);
+      return;
+    }
+
+    this.errorMessage = '';
+
+    // Send request
+
+    const request: NewPasswordRequest = {
+      token: this.token,
+      password: val.password
+    };
+
+    this.authenticationService.newPassword(request).subscribe((response: NewPasswordSuccess) => {
+      this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
+    }, ( error: any ) => {
+      // TODO
+    });
+
+  }
+
 }

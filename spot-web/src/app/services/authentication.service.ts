@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginResponse, LoginResponse,
-         PasswordResetRequest, PasswordResetSuccess } from '@models/authentication';
+         PasswordResetRequest, PasswordResetSuccess, ValidateTokenRequest, ValidateTokenSuccess,
+         NewPasswordRequest, NewPasswordSuccess } from '@models/authentication';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({ providedIn: 'root' })
@@ -34,6 +35,14 @@ export class AuthenticationService {
 
     passwordReset(request: PasswordResetRequest): Observable<PasswordResetSuccess> {
         return this.http.post<PasswordResetSuccess>(`${this.baseUrl}/auth/password-reset`, request);
+    }
+
+    validateToken(request: ValidateTokenRequest): Observable<ValidateTokenSuccess> {
+      return this.http.post<ValidateTokenSuccess>(`${this.baseUrl}/auth/new-password/validate`, request);
+    }
+
+    newPassword(request: NewPasswordRequest): Observable<NewPasswordSuccess> {
+      return this.http.post<NewPasswordSuccess>(`${this.baseUrl}/auth/new-password`, request);
     }
 
     validateEmail(email: string): boolean {
