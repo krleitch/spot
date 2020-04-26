@@ -96,8 +96,9 @@ export class NewPasswordComponent implements OnInit {
 
     this.authenticationService.newPassword(request).subscribe((response: NewPasswordSuccess) => {
       this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
+      // Route to /login
     }, ( error: any ) => {
-      // TODO
+      this.errorMessage = this.STRINGS.INVALID_TOKEN;
     });
 
   }
