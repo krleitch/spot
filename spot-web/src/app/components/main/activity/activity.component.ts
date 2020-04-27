@@ -33,6 +33,11 @@ export class ActivityComponent implements OnInit {
   postActivity$: Observable<Post[]>;
   commentActivity$: Observable<CommentActivity[]>;
 
+  postOffset = 0;
+  postLimit = 10;
+  commentOffset = 0;
+  commentLimit = 10;
+
   ngOnInit() {
 
     this.location$ = this.store$.pipe(
@@ -46,23 +51,25 @@ export class ActivityComponent implements OnInit {
     // TODO: these should move
 
     const activityPostRequest: ActivityPostRequest = {
-      offset: 0,
-      limit: 10
+      offset: this.postOffset,
+      limit: this.postLimit
     };
 
     this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
       map( (activitySuccess: ActivityPostSuccess ) => {
+        this.postOffset += this.postLimit;
         return activitySuccess.activity;
       })
     );
 
     const activityCommentRequest: ActivityCommentRequest = {
-      offset: 0,
-      limit: 10
+      offset: this.postOffset,
+      limit: this.postLimit
     };
 
     this.commentActivity$ = this.commentService.getActivity( activityCommentRequest ).pipe(
       map( (activitySuccess: ActivityCommentSuccess ) => {
+        this.commentOffset += this.commentLimit;
         return activitySuccess.activity;
       })
     );
@@ -102,6 +109,18 @@ export class ActivityComponent implements OnInit {
 
   openPost( link: string ) {
     this.router.navigateByUrl(/posts/ + link);
+  }
+
+  onScroll() {
+
+    // TODO
+
+    if ( this.selectedTab === 'posts' ) {
+
+    } else {
+
+    }
+
   }
 
 }

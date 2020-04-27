@@ -1,6 +1,7 @@
 <spot-main-nav></spot-main-nav>
 <div class="activity-container">
   <div class="activity-content">
+
     <div class="tab-container">
       <div class="tab" (click)="setTab('posts')">
         {{ STRINGS.POSTS }}
@@ -11,7 +12,10 @@
         <div class="selected" [ngClass]="{'show': selectedTab == 'commentsreplies'}"></div>
       </div>
     </div>
+
     <div class="content-container">
+
+      <spot-infinite-scroll (scrolled)="onScroll()">
 
       <div class="activity-posts-container" *ngIf="selectedTab == 'posts'">
         <div class="activity-post" *ngFor="let activity of postActivity$ | async">
@@ -103,6 +107,8 @@
 
         </div>
       </div>
+
+      </spot-infinite-scroll>
 
     </div>
   </div>
