@@ -4,6 +4,7 @@ const router = express.Router();
 const accounts = require('../db/accounts');
 const passwordReset = require('../db/passwordReset');
 const auth = require('../services/auth/auth')
+const nodemailer = require('nodemailer');
 
 const shortid = require('shortid');
 
@@ -118,6 +119,32 @@ router.post('/password-reset', function (req: any, res: any) {
 
             // send email with nodemailer
 
+            nodemailer.createTestAccount().then( ( testAccount: any) => {
+
+                // create reusable transporter object using the default SMTP transport
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.ethereal.email",
+                    port: 587,
+                    secure: false, // true for 465, false for other ports
+                    auth: {
+                        user: testAccount.user, // generated ethereal user
+                        pass: testAccount.pass // generated ethereal password
+                    }
+                });
+
+                // send mail with defined transport object
+                transporter.sendMail({
+                    from: '"SPOT" <spot@example.com>', // sender address
+                    to: "test1@example.com, test2@example.com", // list of receivers
+                    subject: "SPOT", // Subject line
+                    text: "Password Reset?", // plain text body
+                    html: "<b>Token: </b>" + token // html body
+                }).then( ( info: any ) => {
+                    console.log("Password Reset URL: %s", nodemailer.getTestMessageUrl(info));
+                });
+
+            });
+
             // add to table
 
             passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
@@ -125,7 +152,7 @@ router.post('/password-reset', function (req: any, res: any) {
             });
 
         }
-        res.status(200).send({});
+
     });
                       
 });
@@ -147,22 +174,26 @@ router.post('/new-password/validate', function (req: any, res: any) {
 });
 
 // password reset
-router.post('/password-reset', function (req: any, res: any) {
+router.post('/new-password', function (req: any, res: any) {
 
     const { password, token } = req.body;
 
-    accounts.getByToken(token).then( (rows: any) => {
+    passwordReset.getByToken(token).then( (rows: any) => {
 
         const validDate = new Date( new Date(rows[0].creation_date).valueOf() + 5 * 60000 )
 
         if ( rows.length > 0 && ( new Date().valueOf() < validDate.valueOf() ) ) {
 
-            accounts.changePassword( rows[0].account_id, password ).then( (r: any) => {
+            const salt = auth.generateSalt();
+            const hash = auth.hashPassword(password, salt);
+
+            accounts.changePassword( rows[0].account_id, hash, salt ).then( (r: any) => {
                 res.status(200).send({});
             });
 
         } else {
             // error
+            console.log('test')
             res.status(500).send({});
         }
     });

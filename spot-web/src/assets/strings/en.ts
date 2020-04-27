@@ -363,8 +363,7 @@ export const STRINGS = {
           RESET_PASSWORD: 'Reset Password',
           PASSWORD_NONE: 'Password is required',
           CONFIRM_NONE: 'Password confirmation is required',
-          INVALID_MATCH: 'Passwords must match',
-          NEW_PASSWORD_SUCCESS: 'Password has been reset'
+          INVALID_MATCH: 'Passwords must match'
 
         }
 

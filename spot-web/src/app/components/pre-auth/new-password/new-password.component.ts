@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { STRINGS } from '@assets/strings/en';
@@ -20,7 +21,7 @@ export class NewPasswordComponent implements OnInit {
   successMessage = '';
   token = '';
 
-  constructor(private fb: FormBuilder, private authenticationService: AuthenticationService) {
+  constructor(private fb: FormBuilder, private authenticationService: AuthenticationService, private router: Router) {
     this.formToken = this.fb.group({
       token: ['', Validators.required]
     });
@@ -91,11 +92,11 @@ export class NewPasswordComponent implements OnInit {
 
     const request: NewPasswordRequest = {
       token: this.token,
-      password: val.password
+      password: this.authenticationService.md5Hash(val.password)
     };
 
     this.authenticationService.newPassword(request).subscribe((response: NewPasswordSuccess) => {
-      this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
+      this.router.navigateByUrl('/login');
       // Route to /login
     }, ( error: any ) => {
       this.errorMessage = this.STRINGS.INVALID_TOKEN;

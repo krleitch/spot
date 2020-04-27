@@ -61,9 +61,9 @@ function updateUsername(username: string, accountId: string) {
     });;  
 }
 
-function changePassword( account_id: string, password: string) {
-    var sql = 'UPDATE accounts SET password = ? WHERE id = ? AND deletion_date IS NULL';
-    var values = [password, account_id];
+function changePassword( account_id: string, password: string, salt: string) {
+    var sql = 'UPDATE accounts SET pass = ?, salt = ? WHERE id = ? AND deletion_date IS NULL';
+    var values = [password, salt, account_id];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(account_id);
     });;  
