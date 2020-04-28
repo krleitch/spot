@@ -38,7 +38,7 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
     if ( sort === 'new' ) {
         sortSql = ' ORDER BY posts.creation_date DESC';
     } else {
-        sortSql = ' ORDER BY IF( likes - dislikes >= 0, IF( likes - dislikes > 0, 1, 0 ), -1 ) * ( LOG( 10, GREATEST( ABS( likes - dislikes ), 1 ) ) + ( ( UNIX_TIMESTAMP(posts.creation_date) - 1134028003 ) / 45000 ) ) ASC';
+        sortSql = ' ORDER BY IF( likes - dislikes >= 0, IF( likes - dislikes > 0, 1, 0 ), -1 ) * ( LOG( 10, GREATEST( ABS( likes - dislikes ), 1 ) ) + ( ( UNIX_TIMESTAMP(posts.creation_date) - 1134028003 ) / 45000 ) ) DESC';
     }
     var limitOffsetSql = ' LIMIT ? OFFSET ?';
 

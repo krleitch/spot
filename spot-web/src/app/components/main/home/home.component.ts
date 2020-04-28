@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   postSort = 'hot';
 
   loadedPosts = 0;
-  POSTS_LIMIT = 1;
+  POSTS_LIMIT = 5;
 
   // keep track of whether the initial load was made
   // needed so the infinite scroll doesnt get called right away to overwrite
@@ -56,27 +56,27 @@ export class HomeComponent implements OnInit {
       }
 
       // Loads the initial posts
-      const request: LoadPostRequest = {
-        offset: this.loadedPosts,
-        limit: this.POSTS_LIMIT,
-        location: this.myLocation,
-        filter: { location: this.postlocation, sort: this.postSort }
-      };
+      // const request: LoadPostRequest = {
+      //   offset: this.loadedPosts,
+      //   limit: this.POSTS_LIMIT,
+      //   location: this.myLocation,
+      //   filter: { location: this.postlocation, sort: this.postSort }
+      // };
 
-      // Load POSTS_LIMIT posts
-      this.store$.dispatch(
-        new PostsStoreActions.LoadRequestAction(request)
-      );
+      // // Load POSTS_LIMIT posts
+      // this.store$.dispatch(
+      //   new PostsStoreActions.LoadRequestAction(request)
+      // );
 
-      this.loadedPosts += this.POSTS_LIMIT;
+      // this.loadedPosts += this.POSTS_LIMIT;
 
       this.posts$ = this.store$.pipe(
         select(PostsStoreSelectors.selectMyFeaturePosts)
       );
 
-      this.posts$.subscribe( elem => {
-        this.initialLoad = elem.length !== 0;
-      });
+      // this.posts$.subscribe( elem => {
+      //   this.initialLoad = elem.length !== 0;
+      // });
 
     });
 
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
 
   onScroll() {
 
-    if ( this.initialLoad ) {
+    // if ( this.initialLoad ) {
 
       const request: LoadPostRequest = {
         offset: this.loadedPosts,
@@ -103,7 +103,7 @@ export class HomeComponent implements OnInit {
       );
 
       this.loadedPosts += this.POSTS_LIMIT;
-    }
+    // }
 
   }
 

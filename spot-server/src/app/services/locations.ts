@@ -1,4 +1,4 @@
-export { verifyLocation }
+export { verifyLocation, distanceBetween }
 
 const locations = require('../db/locations');
 
@@ -31,7 +31,6 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
     });
 
 }
-
 
 function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number, unit: string) {
 	if ((lat1 == lat2) && (lon1 == lon2)) {
