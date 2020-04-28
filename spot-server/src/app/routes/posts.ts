@@ -4,6 +4,7 @@ const router = express.Router();
 const posts = require('../db/posts');
 const reports = require('../db/reports');
 const postsService = require('../services/posts');
+const locationsService = require('../services/locations');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -35,13 +36,16 @@ router.post('/', function (req: any, res: any) {
     const { content, location, image } = req.body;
     const link = postsService.generateLink();
 
-    posts.addPost(content, location, image, link, accountId).then((rows: any) => {
-        res.status(200).json({ post: rows[0] });
-    }, (err: any) => {
-        console.log(err);
-        res.status(500).send('Error adding post');
-    })
+    locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: any) => {
 
+        posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
+            res.status(200).json({ post: rows[0] });
+        }, (err: any) => {
+            console.log(err);
+            res.status(500).send('Error adding post');
+        })
+
+    });
 
 });
 

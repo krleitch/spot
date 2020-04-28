@@ -7,4 +7,4 @@ build/
 # Ignore files
 secret.json
 awskey.json
-
+googlekey.json

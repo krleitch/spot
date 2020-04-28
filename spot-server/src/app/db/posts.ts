@@ -10,7 +10,7 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
     const distance = 10;
 
     var selectSql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
-                        posts.likes, posts.dislikes, posts.comments,
+                        posts.likes, posts.dislikes, posts.comments, posts.geolocation,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
                       WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                       ELSE NULL END) AS rated,
@@ -56,7 +56,7 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
 
 function getPostById(postId: string, accountId: string): Promise<any> {
     var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
-                    posts.likes, posts.dislikes, posts.comments,
+                    posts.likes, posts.dislikes, posts.comments, posts.geolocation,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
                     WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                     ELSE NULL END) AS rated,
@@ -66,10 +66,10 @@ function getPostById(postId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function addPost(content: string, location: any, imageSrc: string, link: string, accountId: string): Promise<any> {
+function addPost(content: string, location: any, imageSrc: string, link: string, accountId: string, geolocation: string): Promise<any> {
     var postId = uuid.v4();
-    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, likes, dislikes, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, link, imageSrc, 0, 0, 0];
+    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, likes, dislikes, comments, geolocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, link, imageSrc, 0, 0, 0, geolocation];
     return db.query(sql, values).then( (rows: any) => {
         return getPostById(postId, accountId);
     });
@@ -108,7 +108,7 @@ function getPostByLink(link: string, accountId: string) {
 }
 
 function getPostsActivity(accountId: string, offset: number, limit: number) {
-    var sql = `SELECT id, creation_date, longitude, latitude, content, link, image_src, likes, dislikes, comments
+    var sql = `SELECT id, creation_date, longitude, latitude, geolocation, content, link, image_src, likes, dislikes, comments
                 FROM posts WHERE account_id = ? AND deletion_date IS NULL ORDER BY creation_date DESC LIMIT ? OFFSET ?`;
     var values = [accountId, limit, offset];
     return db.query(sql, values);

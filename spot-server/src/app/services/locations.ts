@@ -1,4 +1,8 @@
-export { verifyLocation, distanceBetween }
+export { verifyLocation, distanceBetween, getGeolocation }
+
+const request = require('request');
+
+const googleconfig = require('../../../googlekey.json');
 
 const locations = require('../db/locations');
 
@@ -52,4 +56,34 @@ function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number,
 		if (unit=="N") { dist = dist * 0.8684 }
 		return dist;
 	}
+}
+
+
+function getGeolocation( latitude: string, longitude: string ): Promise<string> {
+
+	// https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
+
+	const baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?";
+	const latlng = "latlng=" + parseFloat(latitude) + "," + parseFloat(longitude);
+	const filter = "&result_type=neighborhood";
+	const key = "&key=" + googleconfig.APIKey;
+
+	const url = baseUrl + latlng + filter + key;
+
+	// we don't want to give away street address
+
+	return new Promise((resolve, reject) => {
+		request(url, ( error: any, response: any, body: any ) => {
+
+			if ( error ) {
+				reject(error);
+			}
+
+			const res = JSON.parse(body);
+
+			resolve(res.results[0].address_components[0].short_name);
+
+		});
+	});
+
 }

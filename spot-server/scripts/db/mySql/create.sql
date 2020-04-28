@@ -31,6 +31,7 @@ CREATE TABLE posts (
     account_id VARCHAR(36) NOT NULL,
     longitude DECIMAL(9,6) NOT NULL,
     latitude DECIMAL(9,6) NOT NULL,
+    geolocation VARCHAR(255),
     content VARCHAR(3000) NOT NULL,
     link VARCHAR(14) NOT NULL UNIQUE,
     image_src VARCHAR(200),
