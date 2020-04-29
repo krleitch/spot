@@ -7,12 +7,12 @@ const googleconfig = require('../../../googlekey.json');
 const locations = require('../db/locations');
 
 // Returns True if the location given is accurate for the user with account_id
-function verifyLocation( account_id: string, myLatitude: number, myLongitude: number ): boolean {
+function verifyLocation( account_id: string, myLatitude: number, myLongitude: number ): Promise<boolean> {
 
     return locations.getLatestLocation(account_id).then( (location: any) => {
 
         // 40 mph is allowed rate of change of location
-        const MAX_DISTANCE_CHANGE = 40;
+        const MAX_DISTANCE_CHANGE = 80;
 
         // Max time is 1 day
         const MAX_TIME_CHANGE = 24;
@@ -36,24 +36,24 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
 }
 
-function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number, unit: string) {
+function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number, unit: string): number {
 	if ((lat1 == lat2) && (lon1 == lon2)) {
 		return 0;
 	}
 	else {
-		var radlat1 = Math.PI * lat1/180;
-		var radlat2 = Math.PI * lat2/180;
-		var theta = lon1-lon2;
-		var radtheta = Math.PI * theta/180;
+		var radlat1 = Math.PI * lat1 / 180;
+		var radlat2 = Math.PI * lat2 / 180;
+		var theta = lon1 - lon2;
+		var radtheta = Math.PI * theta / 180;
 		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
 		if (dist > 1) {
 			dist = 1;
 		}
 		dist = Math.acos(dist);
-		dist = dist * 180/Math.PI;
+		dist = dist * 180 / Math.PI;
 		dist = dist * 60 * 1.1515;
-		if (unit=="K") { dist = dist * 1.609344 }
-		if (unit=="N") { dist = dist * 0.8684 }
+		if (unit=="K") { dist = dist * 1.609344; }
+		if (unit=="N") { dist = dist * 0.8684; }
 		return dist;
 	}
 }
@@ -67,6 +67,8 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 	const latlng = "latlng=" + parseFloat(latitude) + "," + parseFloat(longitude);
 	const filter = "&result_type=neighborhood";
 	const key = "&key=" + googleconfig.APIKey;
+
+	// types: neighborhood, establishment, point_of_interest, university
 
 	const url = baseUrl + latlng + filter + key;
 

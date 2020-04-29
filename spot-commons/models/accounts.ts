@@ -25,3 +25,12 @@ export interface UpdateUsernameRequest {
 export interface UpdateUsernameResponse {
     account: Account;
 }
+
+// get account
+export interface GetAccountRequest {
+
+}
+
+export interface GetAccountSuccess {
+    account: Account;
+}

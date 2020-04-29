@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
-import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse } from '@models/accounts';
+import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess } from '@models/accounts';
 
 export enum ActionTypes {
   LOGIN_REQUEST = '[Accounts] Login Request',
@@ -79,11 +79,12 @@ export class DeleteFailureAction implements Action {
 
 export class AccountRequestAction implements Action {
     readonly type = ActionTypes.ACCOUNT_REQUEST;
+    constructor(public request: GetAccountRequest) {}
 }
 
 export class AccountSuccessAction implements Action {
     readonly type = ActionTypes.ACCOUNT_SUCCESS;
-    constructor(public response: any) {}
+    constructor(public response: GetAccountSuccess) {}
 }
 
 export class AccountFailureAction implements Action {

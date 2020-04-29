@@ -35,4 +35,10 @@ export class AccountsService {
     this.alertService.error(message);
   }
 
+  getAccountRedirect() {
+    if ( this.router.url === '/' ) {
+      this.router.navigateByUrl('/home');
+    }
+  }
+
 }

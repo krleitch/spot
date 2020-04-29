@@ -3,6 +3,7 @@ const router = express.Router();
 
 const posts = require('../db/posts');
 const reports = require('../db/reports');
+const locations = require('../db/locations');
 const postsService = require('../services/posts');
 const locationsService = require('../services/locations');
 
@@ -38,12 +39,24 @@ router.post('/', function (req: any, res: any) {
 
     locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: any) => {
 
-        posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
-            res.status(200).json({ post: rows[0] });
-        }, (err: any) => {
-            console.log(err);
-            res.status(500).send('Error adding post');
-        })
+        // locationsService.verifyLocation( accountId, location.latitude, location.longitude ).then( (valid: boolean) => {
+
+            // if ( valid ) {
+
+                // locations.addLocation( accountId, location.latitude, location.longitude );
+
+                posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
+                    res.status(200).json({ post: rows[0] });
+                }, (err: any) => {
+                    console.log(err);
+                    res.status(500).send('Error adding post');
+                });
+                
+            // } else {
+                // res.status(500).send('Error adding post');
+            // }
+
+        // });
 
     });
 

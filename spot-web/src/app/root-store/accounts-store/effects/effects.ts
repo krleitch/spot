@@ -150,7 +150,10 @@ export class AccountsStoreEffects {
       this.accountsService
         .getAccount()
         .pipe(
-            map(response => new featureActions.AccountSuccessAction(response)),
+            map(response => {
+              this.accountsService.getAccountRedirect();
+              return new featureActions.AccountSuccessAction(response)
+            }),
             catchError(error =>
               observableOf(new featureActions.AccountFailureAction(error))
             )
