@@ -73,10 +73,18 @@ export function featureReducer(state = initialState, action: Actions): State {
             totalReplies: action.response.totalReplies
           };
         } else {
-          replies[action.response.postId][action.response.commentId] = {
-            replies: replies[action.response.postId][action.response.commentId].replies.concat(action.response.replies),
-            totalReplies: action.response.totalReplies
-          };
+          const r = { ... replies[action.response.postId][action.response.commentId] };
+          r.replies = replies[action.response.postId][action.response.commentId].replies.concat(action.response.replies);
+          r.totalReplies = action.response.totalReplies;
+          // replies[action.response.postId][action.response.commentId] = {
+          //   replies: replies[action.response.postId][action.response.commentId].replies.concat(action.response.replies),
+          //   totalReplies: action.response.totalReplies
+          // };
+          replies = {
+            ...replies,
+            [action.response.postId]: { ...replies[action.response.postId], [action.response.commentId]:
+               { ...replies[action.response.postId][action.response.commentId], r }}
+          }
         }
         return {
           ...state,
