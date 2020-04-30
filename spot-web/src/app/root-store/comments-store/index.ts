@@ -7,5 +7,5 @@ export { CommentsStoreModule } from './comments-store.module';
 export {
   CommentsStoreActions,
   CommentsStoreSelectors,
-  CommentsStoreState,
+  CommentsStoreState
 };

@@ -1,27 +1,27 @@
-# Spot-Web
+# SpotWeb
 
-## Setup
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.3.
 
-* Install Node.js
-* Install the Angular CLI "npm install -g @angular/cli"
-* Install NativeScript CLI "npm install -g nativescript"
-* Install the NativeScript schematics "npm install --global @nativescript/schematics"
-* Compelte the NativeScript full setup at https://docs.nativescript.org/start/quick-setup#full-setup
-* Make sure ANDROID_HOME and ANDROID_SDK_ROOT system path variables are set to your android sdk location
-* Make sure you have Android SDK 28 or later
-* Create an android virtual device (API 28) (Currently tested with Pixel_2_API_28)
-* Run your avd with your android sdk emulator "emulator.exe -avd avd_name"
-* ng serve to run web app on localhost:4200
-* tns run (android || ios) --bundle to serve to mobile device
-* tns debug android --bundle to debug in chrome
+## Development server
 
-* You will need to enable HTTPS for interaction with facebook api
-* Server with ng serve --ssl after creating, signing, and updating angular.json
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Resources
+## Code scaffolding
 
-* Learn ngrx here https://wesleygrimes.com/angular/2018/05/30/ngrx-best-practices-for-enterprise-angular-applications
-* Configure for HTTPS https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/
-* Windows HTTPS https://zeropointdevelopment.com/how-to-get-https-working-in-windows-10-localhost-dev-environment/
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-Get Spot-Server at https://github.com/krleitch/spot-server 
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

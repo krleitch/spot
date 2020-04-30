@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to spot-web!');
+    expect(page.getTitleText()).toEqual('spot-web app is running!');
   });
 
   afterEach(async () => {

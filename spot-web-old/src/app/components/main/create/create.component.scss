@@ -1,0 +1,101 @@
+@import '../../../styles/colors';
+
+.container {
+    height: auto;
+}
+
+// EDITOR
+
+.editor {
+    background: white;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.content {
+    padding: 12px 12px;
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+  padding: 6px 12px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  max-height: 500px;
+}
+
+// include a placeholder
+[contentEditable=true]:empty:not(:focus):before{
+    content:attr(ph);
+    color: $subtle-grey;
+    font-style: italic;
+    cursor: text;
+}
+
+[contenteditable]:focus {
+    outline: 0px solid transparent;
+}
+
+// OPTION BAR
+
+.option-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 12px 12px;
+    background-color: white;
+}
+
+.highlight {
+  color: $button-highlight;
+}
+
+.file-options {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.file-title {
+  margin-right: 5px;
+}
+
+.file-remove {
+  color: $subtle-grey;
+  cursor: pointer;
+  &:hover {
+    color: $error-red;
+  }
+}
+
+.counter {
+  color: $subtle-grey;
+  margin-right: 7px;
+}
+
+.counter-error {
+  color: $error-red;
+}
+
+.photo {
+    cursor: pointer;
+    color: $subtle-grey;
+    margin-right: 7px;
+    &:hover {
+      @extend .highlight;
+    }
+}
+
+.submit {
+    font-size: 14px;
+    color: $subtle-grey;
+    cursor: pointer;
+    &:hover {
+      @extend .highlight;
+    }
+}

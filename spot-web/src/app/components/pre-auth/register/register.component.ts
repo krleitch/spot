@@ -97,4 +97,12 @@ export class RegisterComponent implements OnInit {
     this.router.navigateByUrl('/login');
   }
 
+  facebookLogin() {
+
+  }
+
+  googleLogin() {
+
+  }
+
 }

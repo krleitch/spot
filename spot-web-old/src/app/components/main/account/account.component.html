@@ -1,0 +1,38 @@
+<spot-main-nav></spot-main-nav>
+<div class="account">
+  <div class="account-info">
+    <div *ngIf="account$ | async as account; else noAccount">
+      <div class="title"> {{ STRINGS.MY_ACCOUNT }}</div>
+      <div class="subheading"> {{ STRINGS.EMAIL }} </div>
+      <div class="value"> {{ account.email }} </div>
+      <div class="subheading"> {{ STRINGS.USERNAME }} </div>
+      <div class="value username"> 
+        <input #editUsername [disabled]="!editUsernameEnabled" [(ngModel)]="username" type="text" spellcheck="false">
+        <div *ngIf="editUsernameEnabled; else elseBlock">
+          <span class="link" (click)="submitEditUsername()"> {{ STRINGS.EDIT_USERNAME_SUBMIT }} </span> 
+        </div>
+        <ng-template #elseBlock>
+          <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT_USERNAME }} </span> 
+        </ng-template>
+      </div>
+      <div class="subheading"> {{ STRINGS.PHONE }} </div>
+      <div class="value"> {{ account.phone }} </div>
+      <div class="subheading"> {{ STRINGS.SCORE }} </div>
+      <div class="value"> <i class="material-icons hot"> whatshot </i> {{ account.score }} </div>
+      <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
+      <br/>
+      <div class="title">
+        {{ STRINGS.ACCOUNT_OPTIONS }}
+        <label class="checkbox-container">
+          <span class="enable-text"> {{ STRINGS.ENABLE_OPTIONS }} </span>
+          <input type="checkbox" [(ngModel)]="accountOptionsEnabled">
+          <span class="checkmark"> <span class="checkmark-inner"> </span> </span>
+        </label>
+      </div>
+      <div class="button" [ngClass]="{'disabled': !accountOptionsEnabled}" (click)="deleteUser()"> {{ STRINGS.DELETE }} </div>
+    </div>
+    <ng-template #noAccount>
+        <span class="no-account"> {{ STRINGS.NO_ACCOUNT }} </span>
+    </ng-template>
+  </div>
+</div>

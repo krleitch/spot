@@ -37,6 +37,8 @@ import { ReportComponent } from './components/main/social/report/report.componen
 import { ModalComponent } from './components/helpers/modal/modal.component';
 import { PasswordResetComponent } from './components/pre-auth/password-reset/password-reset.component';
 import { NewPasswordComponent } from './components/pre-auth/new-password/new-password.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 
 @NgModule({
@@ -81,7 +83,9 @@ import { NewPasswordComponent } from './components/pre-auth/new-password/new-pas
     RootStoreModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([])
   ],
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ],
   bootstrap: [AppComponent]

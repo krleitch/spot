@@ -1,0 +1,18 @@
+<div class="wrapper">
+  <div class="notification-item" (click)="goToPost()" [ngClass]="{'seen': !notification.seen}">
+    <div class="prompt-container">
+      <div class="prompt">
+        <span class="username"> {{ notification.username }} </span>
+        <span> {{ STRINGS.PROMPT }} </span>
+      </div>
+      <div class="content-preview"> {{ notification.content }} </div>
+    </div>
+    <div class="right-group">
+      <div class="image-container" *ngIf="notification.image_src">
+        <img [src]="notification.image_src">
+      </div>
+      <div class="date"> {{ getTime(notification.creation_date) }} </div>
+    </div>
+  </div>
+  <span class="delete" (click)="delete()"> x </span>
+</div>

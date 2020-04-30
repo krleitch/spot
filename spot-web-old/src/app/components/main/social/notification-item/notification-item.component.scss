@@ -1,0 +1,92 @@
+@import '../../../../styles/colors';
+
+.wrapper {
+  position: relative;
+  max-width: 100%;
+}
+
+.notification-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  height: 60px;
+  width: 100%;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: black;
+  border-top: 1px solid $subtle-grey;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+.delete {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  color: $subtle-grey;
+  cursor: pointer;
+  &:hover {
+    color: $error-red;
+  }
+}
+
+
+.seen {
+  background-color: $lighter-grey;
+}
+
+
+.highlight {
+  color: $button-highlight;
+}
+
+.prompt-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  width: 60%;
+}
+
+.prompt {
+  font-size: 16px;
+}
+
+.username {
+  // username styles
+}
+
+.content-preview {
+  color: $subtle-grey;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+.right-group {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 40%;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+img {
+  max-height: 45px;
+  max-width: 70px;
+}
+
+.date {
+  font-size: 10px;
+  color: $subtle-grey;
+}

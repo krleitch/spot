@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'spot-infinite-scroll',
   templateUrl: './infinite-scroll.component.html',
   styleUrls: ['./infinite-scroll.component.scss']
 })
-export class InfiniteScrollComponent implements OnInit, OnDestroy {
+export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() options = {};
   @Output() scrolled = new EventEmitter();
@@ -23,6 +23,10 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+  }
+
+  ngAfterViewInit() {
 
     const options = {
       root: this.isHostScrollable() ? this.host.nativeElement : null,

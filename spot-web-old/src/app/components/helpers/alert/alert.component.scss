@@ -1,0 +1,47 @@
+@import '../../../styles/colors';
+
+.container {
+    position: fixed;
+    top: 75px;
+    left: 50%;
+    width: 500px;
+    margin-left: -250px;
+}
+
+.close {
+
+}
+
+.alert {
+    opacity: 1;
+    -webkit-transition: opacity 1000ms linear;
+    transition: opacity 1000ms linear;
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
+    margin-bottom: 10px;
+    height: auto;
+}
+
+.fade {
+    opacity: 0;
+}
+
+.alert-success {
+    background-color: $success-green;
+}
+
+.alert-danger {
+    background-color: $error-red-light;
+}
+
+.alert-info {
+    background-color: $info-blue;
+}
+
+.alert-warning {
+    background-color: $warning-yellow;
+}

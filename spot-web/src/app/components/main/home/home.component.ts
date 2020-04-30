@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
-import { Post, LoadPostRequest } from '@models/posts';
+import { Post, LoadPostRequest, LoadPostSuccess } from '@models/posts';
 import { SetLocationRequest, Location } from '@models/accounts';
+import { PostsService } from '@services/posts.service';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -17,11 +18,12 @@ import { STRINGS } from '@assets/strings/en';
 export class HomeComponent implements OnInit {
 
   posts$: Observable<Post[]>;
+  posts: Post[];
   loading$: Observable<boolean>;
 
   STRINGS = STRINGS.MAIN.HOME;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>, private postsService: PostsService) { }
 
   postlocation = 'local';
   location$: Observable<Location>;
@@ -88,8 +90,6 @@ export class HomeComponent implements OnInit {
 
   onScroll() {
 
-    // if ( this.initialLoad ) {
-
       const request: LoadPostRequest = {
         offset: this.loadedPosts,
         limit: this.POSTS_LIMIT,
@@ -97,13 +97,18 @@ export class HomeComponent implements OnInit {
         filter: { location: this.postlocation, sort: this.postSort }
       };
 
-      // Load POSTS_LIMIT posts
-      this.store$.dispatch(
-        new PostsStoreActions.LoadRequestAction(request)
-      );
+
+      this.postsService.getPosts(request).subscribe( ( response: LoadPostSuccess) => {
+        if ( response.offset === 0 ) {
+          this.posts = response.posts;
+        } else {
+          this.posts.concat(response.posts);
+        }
+      }, ( err: any ) => {
+        // TODO ERROR
+      });
 
       this.loadedPosts += this.POSTS_LIMIT;
-    // }
 
   }
 

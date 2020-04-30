@@ -1,0 +1,52 @@
+<div>
+  <spot-nav></spot-nav>
+  <div class="signup">
+    <div class="signup-text">
+      {{ STRINGS.COMMUNITY }}
+    </div>
+    <form [formGroup]="form">
+      <fieldset>
+        <div class="form-field">
+            <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+        </div>
+        <div class="form-field">
+            <input name="username" formControlName="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
+        </div>
+        <div class="form-field">
+            <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+        </div>
+        <div class="form-field">
+            <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
+        </div>
+      </fieldset>
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+      <div class="form-buttons">
+        <button type="button" class="button" (click)="signUp()"> {{ STRINGS.SIGN_UP }} </button>
+      </div>
+      <div class="sign-up-alternate">
+        <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
+      </div>
+      <div class="login-options">
+        <div type="button" class="facebook" (click)="facebookLogin()">
+          <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+          {{ STRINGS.FACEBOOK_LOGIN }}
+        </div>
+        <div type="button" class="google" (click)="googleLogin()">
+          <img src="../../../assets/images/google_login.png" class="google-logo">
+          {{ STRINGS.GOOGLE_LOGIN }}
+        </div>
+      </div>
+    </form>
+    <div class="bar"></div>
+    <div class="existing-account" (click)="login()">
+      <span> {{ STRINGS.EXISTING_ACCOUNT }} </span>
+      <span class="sign-in-highlight"> {{ STRINGS.SIGN_IN }} </span>
+    </div>
+  </div>
+  <div class="copyright">
+    <span> &#169; {{ STRINGS.COPYRIGHT }} </span>
+  </div>
+</div>
+  

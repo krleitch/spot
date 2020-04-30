@@ -1,0 +1,56 @@
+@import '../../../../styles/colors';
+
+.report {
+  display: flex;
+  flex-flow: column;
+}
+
+.report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  background-color: $lighter-grey;
+  width: 100%;
+  border-bottom: 1px solid $subtle-grey;
+  box-sizing: border-box;
+
+  .close {
+    display: flex;
+    cursor: pointer;
+    float: right;
+    &:hover {
+      color: $error-red;
+    }
+  }
+
+}
+
+.report-body {
+
+  padding: 8px;
+
+  textarea {
+    resize: none;
+    margin: 0px;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .button {
+    cursor: pointer;
+    float: right;
+    padding: 7px 10px;
+    background-color: $button-black;
+    color: white;
+    &:hover {
+      background-color: lighten($button-black, 10%);
+    }
+  }
+
+}
+
+

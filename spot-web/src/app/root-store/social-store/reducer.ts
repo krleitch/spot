@@ -5,13 +5,15 @@ import { initialState, State } from './state';
 export function featureReducer(state = initialState, action: Actions | FriendsActions): State {
   switch (action.type) {
     case ActionTypes.GET_NOTIFICATIONS_SUCCESS: {
+      let notifications = [ ...state.notifications ];
       if (action.response.offset === 0) {
-        state.notifications = action.response.notifications;
+        notifications = action.response.notifications;
       } else {
-        state.notifications = state.notifications.concat(action.response.notifications);
+        notifications = notifications.concat(action.response.notifications);
       }
       return {
         ...state,
+        notifications
       };
     }
     case ActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS: {
@@ -32,18 +34,22 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
       };
     }
     case ActionTypes.DELETE_NOTIFICATION_SUCCESS: {
-      state.notifications = state.notifications.filter( item => item.id !== action.response.notificationId );
+      let notifications = [ ...state.notifications ];
+      notifications = notifications.filter( item => item.id !== action.response.notificationId );
       return {
         ...state,
+        notifications
       };
     }
     case ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS: {
-      state.notifications.forEach( notif => {
+      const notifications = [ ...state.notifications ];
+      notifications.forEach( notif => {
         notif.seen = 1;
       });
       return {
         ...state,
-        unread: 0
+        unread: 0,
+        notifications
       };
     }
     case FriendsActionTypes.GET_FRIEND_REQUESTS_SUCCESS: {
@@ -59,34 +65,42 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
       };
     }
     case FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_SUCCESS: {
-      state.friendRequests.forEach( (friend , i) => {
+      const friendRequests = [ ...state.friendRequests ];
+      const friends = [ ...state.friends ];
+      friendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friendRequestId) {
-          state.friends.unshift(state.friendRequests[i]);
-          state.friendRequests.splice(i, 1);
+          friends.unshift(friendRequests[i]);
+          friendRequests.splice(i, 1);
         }
       });
       return {
         ...state,
+        friendRequests,
+        friends
       };
     }
     case FriendsActionTypes.DECLINE_FRIEND_REQUESTS_SUCCESS: {
-      state.friendRequests.forEach( (friend , i) => {
+      const friendRequests = [ ...state.friendRequests ];
+      friendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friendRequestId) {
-          state.friendRequests.splice(i, 1);
+          friendRequests.splice(i, 1);
         }
       });
       return {
         ...state,
+        friendRequests
       };
     }
     case FriendsActionTypes.DELETE_FRIENDS_SUCCESS: {
-      state.friends.forEach( (friend , i) => {
+      const friends = [ ...state.friends ];
+      friends.forEach( (friend , i) => {
         if (friend.id === action.response.friendId) {
-          state.friends.splice(i, 1);
+          friends.splice(i, 1);
         }
       });
       return {
         ...state,
+        friends
       };
     }
     default: {

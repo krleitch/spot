@@ -1,0 +1,156 @@
+@import '../../../styles/colors';
+
+.container {
+  display: flex;
+  flex-flow: column;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.post {
+    display: flex;
+    padding: 12px 12px 0px 12px;
+}
+
+.left-bar {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 30px;
+    margin-right: 5px;
+}
+
+.highlight {
+  color: $button-highlight;
+}
+
+.vote {
+    cursor: pointer;
+    &:hover {
+      @extend .highlight;
+    }
+}
+
+.time {
+  font-size: 12px;
+  color: $subtle-grey;
+}
+
+.distance {
+  color: $subtle-grey;
+}
+
+.content-container {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    padding-top: 5px;
+}
+
+.content {
+    font-size: 14px;
+    line-height: 1.2em;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  max-height: 500px;
+}
+
+// Click see more
+.content-expanded {
+    height: auto;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.comment-number {
+    color: $subtle-grey;
+    text-align: left;
+}
+
+.highlight {
+  color: $button-highlight;
+}
+
+.expand {
+    flex: 1;
+    text-align: center;
+    color: $subtle-grey;
+    cursor: pointer;
+    &:hover {
+        @extend .highlight;
+    }
+}
+
+// right-bar
+
+.right-bar {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.share {
+  color: $subtle-grey;
+  cursor: pointer;
+  text-align: right;
+  &:hover {
+    @extend .highlight;
+  }
+}
+
+.dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 50px;
+  top: 5px;
+  right: 0;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content .button {
+  cursor: pointer;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content .button:hover {background-color: #ddd}
+
+.show {display:block;}
+
+.icon-size {
+  cursor: pointer;
+  font-size: 20px;
+  &:hover {
+    @extend .highlight;
+  }
+}

@@ -1,0 +1,150 @@
+@import '../../../../styles/colors';
+
+spot-main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 99;
+  }
+
+.friends-container {
+    display: flex;
+    justify-content: center;
+    min-height: 100%;
+    width: 100%;
+    padding-top: 60px;
+    background-color: $background-grey;
+    box-sizing: border-box;
+}
+
+.friends-content {
+    display: flex;
+    flex-flow: column;
+    width: 50%;
+    margin-top: 25px;
+}
+
+.friends-title {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.friends-subtitle {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.friend-content-section {
+    width: 100%;
+    padding: 5px 5px;
+    background-color: white;
+    margin-bottom: 5px;
+}
+
+// Requests
+
+.friend-request-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $lighter-grey;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.friend-name {
+  color: $info-blue;
+}
+
+.friend-request-options {
+    display: flex;
+}
+
+.friend-request-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    color: white;
+    cursor: pointer;
+}
+
+.accept {
+    background-color: $success-green;
+    margin-right: 5px;
+}
+
+.accept:hover {
+    background-color: darken($success-green, 10%);
+}
+
+.decline {
+    background-color: $error-red;
+}
+
+.decline:hover {
+    background-color: darken($error-red, 10%);
+}
+
+// Send Friend Requests
+
+.friend-request-input-container {
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+    margin: 3px 15px;
+    box-sizing: border-box;
+}
+
+.send-container {
+  display: flex;
+  align-items: center;
+}
+
+input {
+    padding: 5px;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.send:hover {
+    color: $button-highlight;
+    cursor: pointer;
+}
+
+// Friends list
+
+.friend-list-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $lighter-grey;
+    padding: 5px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.friend-remove {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 25px;
+    color: white;
+    cursor: pointer;
+    background-color: $error-red;
+}
+
+.friend-remove:hover {
+    background-color: darken($error-red, 10%);
+}
+
+.no-friends {
+  padding: 5px;
+}

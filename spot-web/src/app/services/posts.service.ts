@@ -36,18 +36,20 @@ export class PostsService {
 
   addPost(request: AddPostRequest): Observable<AddPostSuccess> {
 
-    if ( request.image ) {
+    const myRequest = { ...request } ;
+
+    if ( myRequest.image ) {
       const formData = new FormData();
-      formData.append('image', request.image);
+      formData.append('image', myRequest.image);
 
       return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
-        request.image = response.imageSrc;
-        return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, request);
+        myRequest.image = response.imageSrc;
+        return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, myRequest);
       }));
 
     } else {
-      request.image = null;
-      return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, request);
+      myRequest.image = null;
+      return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, myRequest);
     }
   }
 

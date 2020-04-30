@@ -35,18 +35,20 @@ export class CommentService {
 
   addComment(request: AddCommentRequest): Observable<AddCommentSuccess> {
 
-    if ( request.image ) {
+    const myRequest = { ...request };
+
+    if ( myRequest.image ) {
       const formData = new FormData();
-      formData.append('image', request.image);
+      formData.append('image', myRequest.image);
 
       return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
-        request.image = response.imageSrc;
-        return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/add`, request);
+        myRequest.image = response.imageSrc;
+        return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${myRequest.postId}/add`, myRequest);
       }));
 
     } else {
-      request.image = null;
-      return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/add`, request);
+      myRequest.image = null;
+      return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${myRequest.postId}/add`, myRequest);
     }
 
   }
@@ -64,18 +66,20 @@ export class CommentService {
 
   addReply(request: AddReplyRequest): Observable<AddReplySuccess> {
 
-    if ( request.image ) {
+    const myRequest = { ...request };
+
+    if ( myRequest.image ) {
       const formData = new FormData();
-      formData.append('image', request.image);
+      formData.append('image', myRequest.image);
 
       return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
-        request.image = response.imageSrc;
-        return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/add`, request);
+        myRequest.image = response.imageSrc;
+        return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${myRequest.postId}/${myRequest.commentId}/add`, myRequest);
       }));
 
     } else {
-      request.image = null;
-      return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/add`, request);
+      myRequest.image = null;
+      return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${myRequest.postId}/${myRequest.commentId}/add`, myRequest);
     }
 
   }

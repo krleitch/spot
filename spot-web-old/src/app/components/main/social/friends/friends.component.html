@@ -1,0 +1,45 @@
+<spot-main-nav></spot-main-nav>
+<div class="friends-container">
+<div class="friends-content">
+    <div class="friends-title"> {{ STRINGS.TITLE }} </div>
+    <div *ngIf="(friendRequests$ | async)?.length > 0">
+      <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
+      <div class="friend-content-section">
+        <div class="friend-request-container" *ngFor="let friendRequest of friendRequests$ | async">
+          <div>
+            <span class="friend-name"> {{ friendRequest.username }} </span> {{ STRINGS.FRIEND_REQUEST_PROMPT }}
+          </div>
+          <div class="friend-request-options">
+            <div class="accept friend-request-button" (click)="acceptFriendRequest(friendRequest.id)">
+              <span class="material-icons"> done </span>
+            </div>
+            <div class="decline friend-request-button" (click)="declineFriendRequest(friendRequest.id)">
+              <span class="material-icons"> clear </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="friends-subtitle"> {{ STRINGS.ADD }} </div>
+    <div class="friend-content-section">
+      <div class="friend-request-input-container">
+        <input [(ngModel)]="friendRequestUsername" [placeholder]="STRINGS.FRIEND_REQUEST_PLACEHOLDER" type="text">
+        <span class="send-container" (click)="addFriendRequest()"> <i class="material-icons send"> send </i> </span>
+      </div>
+    </div>
+    <div class="friends-subtitle"> {{ STRINGS.FRIENDS_LIST }} </div>
+      <div class="friend-content-section">
+        <div *ngIf="(friends$ | async)?.length > 0; else noFriends">
+        <div class="friend-list-container" *ngFor="let friend of friends$ | async">
+          {{ friend.username }}
+          <div class="friend-remove" (click)="deleteFriendRequest(friend.id)">
+            {{ STRINGS.REMOVE }}
+          </div>
+        </div>
+      </div>
+      <ng-template #noFriends>
+        <span class="no-friends"> {{ STRINGS.NO_FRIENDS }} </span>
+      </ng-template>
+    </div>
+  </div>
+</div>
