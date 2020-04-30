@@ -25,16 +25,13 @@ export function featureReducer(state = initialState, action: Actions): State {
       }
     }
     case ActionTypes.ADD_SUCCESS: {
-      const posts = [ ...state.posts ];
-      posts.unshift(action.response.post);
+      state.posts.unshift(action.response.post);
       return {
-        ...state,
-        posts
+        ...state
       };
     }
     case ActionTypes.LIKE_SUCCESS: {
-      const posts = [ ...state.posts ];
-      posts.forEach( (post , i) => {
+      state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
           post.likes += 1;
           if (post.rated === 0) {
@@ -44,13 +41,11 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state,
-        posts
+        ...state
       };
     }
     case ActionTypes.DISLIKE_SUCCESS: {
-      const posts = [ ...state.posts ];
-      posts.forEach( (post , i) => {
+      state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
           post.dislikes += 1;
           if (post.rated === 1) {
@@ -60,20 +55,17 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state,
-        posts
+        ...state
       };
     }
     case ActionTypes.DELETE_SUCCESS: {
-      const posts = [ ...state.posts ];
-      posts.forEach( (post , i) => {
+      state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
           state.posts.splice(i, 1);
         }
       });
       return {
         ...state,
-        posts
       };
     }
     default: {
