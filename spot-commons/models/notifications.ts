@@ -72,3 +72,10 @@ export interface GetNotificationsUnreadRequest {
 export interface GetNotificationsUnreadSuccess {
     unread: number;
 }
+
+
+// Tags
+export interface Tag {
+    receiver: string;
+    postLink: string;
+}

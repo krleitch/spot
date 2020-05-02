@@ -1,0 +1,41 @@
+@import '../../../../styles/colors';
+
+.tag {
+
+  position: relative;
+
+  .content {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    width: 200px;
+    padding: 10px;
+    margin-left: 47px;
+    box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+
+    .heading {
+
+      font-size: 20px;
+      margin-bottom: 5px;
+
+    }
+
+    .name {
+
+      cursor: pointer;
+      box-sizing: border-box;
+      width: 100%;
+      background-color: $lighter-grey;
+      padding: 3px 5px;
+
+      &:hover {
+        color: $button-highlight;
+      }
+
+    }
+
+  }
+
+}

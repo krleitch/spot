@@ -1,3 +1,26 @@
-<p>
-  tag works!
-</p>
+<div class="tag">
+  <div class="content">
+
+    <div class="heading">
+      {{ STRINGS.TAG }}
+    </div>
+
+    <div class="name" *ngIf="name">
+      {{ name }}
+    </div>
+
+    <div class="heading">
+      {{ STRINGS.FRIENDS }}
+    </div>
+
+    <div class="friend-container" *ngIf="friendsList.length > 0; else noFriends">
+      <div class="name" *ngFor="let friend of filteredFriendsList">
+        {{ friend.username }}
+      </div>
+    </div>
+    <ng-template #noFriends>
+      <div class="no-friends"> {{ STRINGS.NO_FRIENDS }} </div>
+    </ng-template>
+
+  </div>
+</div>

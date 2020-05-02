@@ -203,6 +203,15 @@ export const STRINGS = {
           REPORT_PLACEHOLDER: 'Enter report message',
           REPORT_BUTTON: 'Send Report'
 
+        },
+
+        TAG: {
+
+          TAG: 'Tag',
+
+          FRIENDS: 'Friends',
+          NO_FRIENDS: 'No match'
+
         }
 
     },

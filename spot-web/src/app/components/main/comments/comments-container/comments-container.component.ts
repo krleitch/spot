@@ -21,6 +21,9 @@ export class CommentsContainerComponent implements OnInit {
 
   commentText: string;
 
+  showTag = false;
+  tagName = '';
+
   // fix this type
   comments$: Observable<any>;
 
@@ -79,9 +82,34 @@ export class CommentsContainerComponent implements OnInit {
   }
 
   onTextInput(event) {
-    console.log(event)
+
     this.commentText = event.target.textContent;
     this.currentLength = this.commentText.length;
+
+    const words = this.commentText.split(' ');
+    const lastWord = words[words.length - 1];
+
+    if ( lastWord.length >= 1 ) {
+
+      if ( lastWord[0] === '@' ) {
+
+        this.showTag = true;
+        this.tagName = lastWord.substr(1);
+
+      } else {
+
+        this.showTag = false;
+        this.tagName = '';
+
+      }
+
+    } else {
+
+      this.showTag = false;
+      this.tagName = '';
+
+    }
+
   }
 
   loadMoreComments() {
