@@ -6,7 +6,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
-import { LoadCommentsRequest, AddCommentRequest, Comment } from '@models/comments';
+import { LoadCommentsRequest, AddCommentRequest } from '@models/comments';
+import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 
 @Component({
@@ -21,6 +22,7 @@ export class CommentsContainerComponent implements OnInit {
 
   commentText: string;
 
+  tags: Tag[] = [];
   showTag = false;
   tagName = '';
 
@@ -169,6 +171,15 @@ export class CommentsContainerComponent implements OnInit {
     } else {
       return name;
     }
+  }
+
+  sendTag(tag: Tag) {
+
+    // replace last word with an object, identify that with a tag
+    // Need a way to delete the tag if you backspace an entire object
+
+    this.tags.push(tag);
+
   }
 
 }

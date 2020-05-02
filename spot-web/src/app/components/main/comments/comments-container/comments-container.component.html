@@ -28,5 +28,5 @@
       </div>
     </div>
   </div>
-  <spot-tag *ngIf="showTag" [name]="tagName"></spot-tag>
+  <spot-tag *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="sendTag($event)"></spot-tag>
 </div>

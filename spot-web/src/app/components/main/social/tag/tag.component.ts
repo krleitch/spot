@@ -15,6 +15,7 @@ import { Tag } from '@models/notifications';
 })
 export class TagComponent implements OnInit, OnChanges {
 
+  @Input() postLink;
   @Input() name;
   @Output() tag = new EventEmitter<Tag>();
 
@@ -25,6 +26,8 @@ export class TagComponent implements OnInit, OnChanges {
   friends$: Observable<Friend[]>;
   friendsList: Friend[];
   filteredFriendsList: Friend[];
+
+  link: string;
 
   ngOnInit() {
 
@@ -45,6 +48,8 @@ export class TagComponent implements OnInit, OnChanges {
       this.findFriend();
     });
 
+    this.link = window.location.origin + '/posts/' + this.postLink;
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -60,6 +65,17 @@ export class TagComponent implements OnInit, OnChanges {
     } else {
       this.filteredFriendsList = this.friendsList;
     }
+
+  }
+
+  sendTag(username: string) {
+
+    const tag: Tag = {
+      receiver: username,
+      postLink: this.postLink
+    };
+
+    this.tag.emit(tag);
 
   }
 
