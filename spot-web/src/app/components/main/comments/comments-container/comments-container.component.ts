@@ -79,6 +79,7 @@ export class CommentsContainerComponent implements OnInit {
   }
 
   onTextInput(event) {
+    console.log(event)
     this.commentText = event.target.textContent;
     this.currentLength = this.commentText.length;
   }

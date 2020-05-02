@@ -39,6 +39,7 @@ import { PasswordResetComponent } from './components/pre-auth/password-reset/pas
 import { NewPasswordComponent } from './components/pre-auth/new-password/new-password.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { TagComponent } from './components/main/social/tag/tag.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { EffectsModule } from '@ngrx/effects';
     ReportComponent,
     ModalComponent,
     PasswordResetComponent,
-    NewPasswordComponent
+    NewPasswordComponent,
+    TagComponent
   ],
   imports: [
     BrowserModule,
