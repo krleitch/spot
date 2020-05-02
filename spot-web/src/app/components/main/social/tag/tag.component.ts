@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, from } from 'rxjs';
 
@@ -16,6 +16,7 @@ import { Tag } from '@models/notifications';
 export class TagComponent implements OnInit, OnChanges {
 
   @Input() name;
+  @Output() tag = new EventEmitter<Tag>();
 
   constructor(private store$: Store<RootStoreState.State>) { }
 

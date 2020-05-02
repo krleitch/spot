@@ -77,5 +77,6 @@ export interface GetNotificationsUnreadSuccess {
 // Tags
 export interface Tag {
     receiver: string;
+    username: string;
     postLink: string;
 }
