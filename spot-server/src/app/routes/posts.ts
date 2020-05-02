@@ -23,11 +23,25 @@ router.get('/', function (req: any, res: any) {
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
-    posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit).then((rows: any) => {
-        res.status(200).json({ posts: rows });
-    }, (err: any) => {
-        res.status(500).send('Error getting posts');
-    })
+    locationsService.verifyLocation( accountId, latitude, longitude ).then( (valid: boolean) => {
+
+        if ( valid ) {
+
+            locations.addLocation( accountId, latitude, longitude ).then( () => {
+
+                posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit).then((rows: any) => {
+                    res.status(200).json({ posts: rows });
+                }, (err: any) => {
+                    res.status(500).send('Error getting posts');
+                });
+
+            });
+
+        } else {
+            res.status(500).send('Error gettings posts from your location');
+        }
+
+    });
 });
 
 // Add a post
@@ -39,24 +53,26 @@ router.post('/', function (req: any, res: any) {
 
     locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: any) => {
 
-        // locationsService.verifyLocation( accountId, location.latitude, location.longitude ).then( (valid: boolean) => {
+        locationsService.verifyLocation( accountId, location.latitude, location.longitude ).then( (valid: boolean) => {
 
-            // if ( valid ) {
+            if ( valid ) {
 
-                // locations.addLocation( accountId, location.latitude, location.longitude );
+                locations.addLocation( accountId, location.latitude, location.longitude ).then( () => {
 
-                posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
-                    res.status(200).json({ post: rows[0] });
-                }, (err: any) => {
-                    console.log(err);
-                    res.status(500).send('Error adding post');
+                    posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
+                        res.status(200).json({ post: rows[0] });
+                    }, (err: any) => {
+                        console.log(err);
+                        res.status(500).send('Error adding post');
+                    });
+
                 });
                 
-            // } else {
-                // res.status(500).send('Error adding post');
-            // }
+            } else {
+                res.status(500).send('Error adding post from your location');
+            }
 
-        // });
+        });
 
     });
 

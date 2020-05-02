@@ -6,6 +6,9 @@ const googleconfig = require('../../../googlekey.json');
 
 const locations = require('../db/locations');
 
+// Returns if  you are allowed to commnet/post on something
+// TODO
+
 // Returns True if the location given is accurate for the user with account_id
 function verifyLocation( account_id: string, myLatitude: number, myLongitude: number ): Promise<boolean> {
 
@@ -17,7 +20,12 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
         // Max time is 1 day
         const MAX_TIME_CHANGE = 24;
 
-        const { latitude, longitude, creation_date } = location[0];
+		// No previous info
+		if ( location.length < 1 ) {
+			return true;
+		}
+
+		const { latitude, longitude, creation_date } = location[0];
 
         // The max time delay has passed
         if ( new Date().valueOf() >= new Date( new Date(creation_date).valueOf() + MAX_TIME_CHANGE * 3600000).valueOf() ) {
