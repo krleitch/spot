@@ -1,3 +1,5 @@
+import { Tag } from './notifications';
+
 export interface Comment {
     id: string;
     post_id: string;
@@ -31,6 +33,7 @@ export interface AddCommentRequest {
     postId: string;
     content: string;
     image: File;
+    tags: Tag[];
 }
 
 export interface AddCommentSuccess {

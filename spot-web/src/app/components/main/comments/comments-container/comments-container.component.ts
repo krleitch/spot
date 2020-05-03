@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -20,6 +20,7 @@ export class CommentsContainerComponent implements OnInit {
   @Input() detailed: boolean;
   @Input() post: Post;
 
+  @ViewChild('comment') comment: ElementRef;
   commentText: string;
 
   tags: Tag[] = [];
@@ -85,6 +86,8 @@ export class CommentsContainerComponent implements OnInit {
 
   onTextInput(event) {
 
+    // TODO: A space should add a tag
+
     this.commentText = event.target.textContent;
     this.currentLength = this.commentText.length;
 
@@ -138,7 +141,8 @@ export class CommentsContainerComponent implements OnInit {
       const request: AddCommentRequest = {
         postId: this.post.id,
         content,
-        image: this.imageFile
+        image: this.imageFile,
+        tags: this.tags
       };
 
       this.store$.dispatch(
@@ -173,12 +177,24 @@ export class CommentsContainerComponent implements OnInit {
     }
   }
 
-  sendTag(tag: Tag) {
+  addTag(tag: Tag) {
 
-    // replace last word with an object, identify that with a tag
-    // Need a way to delete the tag if you backspace an entire object
-
+    tag.id = this.tags.length;
     this.tags.push(tag);
+
+    const words = this.commentText.split(' ');
+    words.pop();
+    this.commentText = words.join(' ');
+
+  }
+
+  removeTag(id: number) {
+
+    this.tags.forEach( (tag: Tag, index: number) => {
+      if ( tag.id === id ) {
+        this.tags.splice(index, 1);
+      }
+    });
 
   }
 

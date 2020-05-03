@@ -4,13 +4,15 @@ const router = express.Router();
 const posts = require('../db/posts');
 const reports = require('../db/reports');
 const comments = require('../db/comments');
+const tags = require('../db/tags');
 const commentsService = require('../services/comments');
+const locationsService = require('../services/locations');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// Get post activity
+// Get comment activity
 router.get('/activity', function (req: any, res: any) {
 
     const accountId = req.user.id;
@@ -33,6 +35,8 @@ router.get('/:postId', function (req: any, res: any) {
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
+    // TODO: get tags as well and use profile picture on that too
+
     comments.getCommentByPostId(postId, accountId, offset, limit).then( (rows: any) => {
         comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
             posts.getPostCreator(postId).then( (postCreator: any) => {
@@ -52,9 +56,11 @@ router.get('/:postId', function (req: any, res: any) {
 // Create a comment
 router.post('/:postId/add', function (req: any, res: any) {
 
-    const { content, image } = req.body;
+    const { content, image, tags } = req.body;
     const accountId = req.user.id;
     const postId = req.params.postId;
+
+    console.log(tags)
 
     comments.addComment(postId, accountId, content, image).then( (rows: any) => {
         posts.getPostCreator(postId).then( (postCreator: any) => {
@@ -104,7 +110,7 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
             return Promise.reject(err);
         });
     }, (err: any) => {
-        res.status(500).send('Error getting comments');
+        res.status(500).send('Error getting replies');
     });
 });
 

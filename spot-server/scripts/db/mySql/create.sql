@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS password_reset;
 DROP TABLE IF EXISTS locations;
+DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE accounts (
@@ -136,4 +137,14 @@ CREATE TABLE locations (
     latitude DECIMAL(9,6) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id)
+);
+
+CREATE TABLE tags (
+    id VARCHAR(36) NOT NULL,
+    account_id VARCHAR(36) NOT NULL,
+    comment_id VARCHAR(36) NOT NULL,
+    creation_date DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (account_id) REFERENCES accounts (id),
+    FOREIGN KEY (comment) REFERENCES comments (id)
 );

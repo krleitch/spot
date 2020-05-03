@@ -75,7 +75,10 @@ export interface GetNotificationsUnreadSuccess {
 
 
 // Tags
+// Tag is only used on the front end / Converted to notifcation request
 export interface Tag {
+    // a positional id used for the tag list
+    id: number;
     receiver: string;
     postLink: string;
 }

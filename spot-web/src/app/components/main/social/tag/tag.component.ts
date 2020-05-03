@@ -71,6 +71,7 @@ export class TagComponent implements OnInit, OnChanges {
   sendTag(username: string) {
 
     const tag: Tag = {
+      id: -1, // Tag not placed yet
       receiver: username,
       postLink: this.postLink
     };
