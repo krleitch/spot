@@ -34,5 +34,5 @@
       </div>
     </div>
   </div>
-  <spot-tag *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
+  <span #tag ><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
 </div>

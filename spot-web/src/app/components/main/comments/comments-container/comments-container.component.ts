@@ -23,6 +23,7 @@ export class CommentsContainerComponent implements OnInit {
   @ViewChild('comment') comment: ElementRef;
   commentText: string;
 
+  @ViewChild('tag') tag: ElementRef;
   tags: Tag[] = [];
   showTag = false;
   tagName = '';
@@ -49,6 +50,7 @@ export class CommentsContainerComponent implements OnInit {
 
   constructor(private store$: Store<RootStoreState.State>,
               public domSanitizer: DomSanitizer) {
+    document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
   ngOnInit() {
@@ -82,6 +84,12 @@ export class CommentsContainerComponent implements OnInit {
     this.numLoaded += initialLimit;
     this.currentOffset += initialLimit;
 
+  }
+
+  offClickHandler(event: MouseEvent) {
+    if (!this.tag.nativeElement.contains(event.target)) {
+      this.showTag = false;
+    }
   }
 
   onTextInput(event) {
