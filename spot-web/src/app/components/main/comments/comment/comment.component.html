@@ -14,26 +14,27 @@
     <div class="content-wrapper">
       <div class="content">
 
-        <span *ngIf="comment.tag.numTagged > 0">
-          <span class="tag" *ngIf="comment.tag.owned; else notOwned">
-            You tagged
-            <span *ngFor="let name of comment.tag.names">
+        <span class="content-tag-container" *ngIf="comment.tag.numTagged > 0">
+          <span class="tag-name-container" *ngIf="comment.tag.owned; else notOwned">
+            <span class="tag" *ngFor="let name of comment.tag.names">
               {{ name }}
             </span>
           </span>
           <ng-template #notOwned>
             <span class="tag" *ngIf="comment.tag.tagged; else notTagged">
-              You and {{ comment.tag.numTagged - 1 }} Were tagged by {{ comment.tag.tagger }}
+              {{ comment.tag.tagger }} Tagged You
+              <span *ngIf="comment.tag.numTagged - 1 > 0"> and {{ comment.tag.numTagged - 1 }} <span class="material-icons person"> person </span> </span>
             </span>
             <ng-template #notTagged>
               <span class="tag">
-                {{ comment.tag.numTagged }} Were tagged
+                <span class="material-icons person"> person </span> {{ comment.tag.numTagged }}
               </span>
             </ng-template>
           </ng-template>
         </span>
 
         {{ getContent() }}
+
         <div class="image" (click)="setExpandImageTrue()" *ngIf="comment.image_src != null">
           <img [src]="comment.image_src" />
         </div>

@@ -15,10 +15,32 @@
   margin-top: 15px;
 }
 
-.tag {
-  padding: 3px;
-  margin: 1px 2px;
-  background-color: $lighter-grey;
+.content-tag-container{
+
+  display: flex;
+  align-items: center;
+
+  .tag-name-container {
+    display: flex;
+  }
+
+  .tag {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 3px;
+    margin-right: 3px;
+    background-color: $lighter-grey;
+
+    .person {
+      color: $subtle-grey;
+      font-size: 20px;
+    }
+
+  }
+
 }
 
 .tag-container {

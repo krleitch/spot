@@ -14,20 +14,20 @@
     <div class="content-wrapper">
       <div class="content">
 
-        <span *ngIf="reply.tag.numTagged > 0">
-          <span class="tag" *ngIf="reply.tag.owned; else notOwned">
-            You tagged
-            <span *ngFor="let name of reply.tag.names">
+        <span class="content-tag-container" *ngIf="reply.tag.numTagged > 0">
+          <span class="tag-name-container" *ngIf="reply.tag.owned; else notOwned">
+            <span class="tag" *ngFor="let name of reply.tag.names">
               {{ name }}
             </span>
           </span>
           <ng-template #notOwned>
             <span class="tag" *ngIf="reply.tag.tagged; else notTagged">
-              You and {{ reply.tag.numTagged - 1 }} Were tagged by {{ reply.tag.tagger }}
+              {{ reply.tag.tagger }} Tagged You
+              <span *ngIf="reply.tag.numTagged - 1 > 0"> and {{ reply.tag.numTagged - 1 }} <span class="material-icons person"> person </span> </span>
             </span>
             <ng-template #notTagged>
               <span class="tag">
-                {{ reply.tag.numTagged }} Were tagged
+                <span class="material-icons person"> person </span> {{ reply.tag.numTagged }}
               </span>
             </ng-template>
           </ng-template>
