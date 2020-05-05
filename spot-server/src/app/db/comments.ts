@@ -27,7 +27,7 @@ function getCommentByPostId(postId: string, accountId: string, offset: number, l
             WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
             ELSE NULL END) AS rated,
         (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned
-        FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
+        FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id
         WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
     var values = [accountId, accountId, accountId, postId, limit, offset];
     return db.query(sql, values);

@@ -13,6 +13,11 @@
     </div>
     <div class="content-wrapper">
       <div class="content">
+
+        <span class="tag" *ngFor="let tag of comment.tagList">
+          {{ getProfilePictureSymbol(tag.profilePicture) }}
+        </span>
+
         {{ getContent() }}
         <div class="image" (click)="setExpandImageTrue()" *ngIf="comment.image_src != null">
           <img [src]="comment.image_src" />

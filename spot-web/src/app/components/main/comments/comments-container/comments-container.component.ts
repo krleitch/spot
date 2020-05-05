@@ -150,7 +150,7 @@ export class CommentsContainerComponent implements OnInit {
         postId: this.post.id,
         content,
         image: this.imageFile,
-        tags: this.tags
+        tagsList: this.tags
       };
 
       this.store$.dispatch(

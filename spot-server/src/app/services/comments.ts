@@ -14,6 +14,16 @@ function addProfilePicture( comments: any, postCreator: string) {
 
     comments.forEach( (comment: any) => {
 
+        // Add profiles to tags
+        comment.tagList.forEach( (tag: any ) => {
+            let profilePicture = stringToIntHash( tag.account_id + comment.post_id , 363, 0);
+            if ( tag.account_id == postCreator ) {
+                profilePicture = -1;
+            }
+            tag.profilePicture = profilePicture;
+            delete tag.account_id;
+        });
+
         let profilePicture = stringToIntHash( comment.account_id + comment.post_id , 363, 0);
         if ( comment.account_id == postCreator ) {
             profilePicture = -1;

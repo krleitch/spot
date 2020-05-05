@@ -146,5 +146,5 @@ CREATE TABLE tags (
     creation_date DATETIME NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id),
-    FOREIGN KEY (comment) REFERENCES comments (id)
+    FOREIGN KEY (comment_id) REFERENCES comments (id)
 );

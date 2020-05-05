@@ -4,6 +4,7 @@ const router = express.Router();
 const posts = require('../db/posts');
 const reports = require('../db/reports');
 const comments = require('../db/comments');
+const accounts = require('../db/accounts');
 const tags = require('../db/tags');
 const commentsService = require('../services/comments');
 const locationsService = require('../services/locations');
@@ -37,16 +38,24 @@ router.get('/:postId', function (req: any, res: any) {
 
     // TODO: get tags as well and use profile picture on that too
 
-    comments.getCommentByPostId(postId, accountId, offset, limit).then( (rows: any) => {
+    comments.getCommentByPostId(postId, accountId, offset, limit).then( async (rows: any) => {
+
+        // get tags for each comment
+        for ( let index = 0; index < rows.length; index++ ) {
+            await tags.getTagsByCommentId(rows[index].id).then( (tagList: any) => {
+                rows[index].tagList = tagList;
+            });
+        }
+
         comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
             posts.getPostCreator(postId).then( (postCreator: any) => {
                 commentsService.addProfilePicture(rows, postCreator[0].account_id);
                 res.status(200).json({ postId: postId, comments: rows, totalComments: num[0].total });
             }, (err: any) => {
-                return Promise.reject(err);
+                res.status(500).send('Error getting comments');
             });
         }, (err: any) => {
-            return Promise.reject(err);
+            res.status(500).send('Error getting comments');
         });
     }, (err: any) => {
         res.status(500).send('Error getting comments');
@@ -56,13 +65,20 @@ router.get('/:postId', function (req: any, res: any) {
 // Create a comment
 router.post('/:postId/add', function (req: any, res: any) {
 
-    const { content, image, tags } = req.body;
+    const { content, image, tagsList } = req.body;
     const accountId = req.user.id;
     const postId = req.params.postId;
 
-    console.log(tags)
+    comments.addComment(postId, accountId, content, image).then( async (rows: any) => {
 
-    comments.addComment(postId, accountId, content, image).then( (rows: any) => {
+        // TODO: confirm this async call is correct
+        // Add tags
+        for ( let index = 0; index < tagsList.length; index++ ) {
+            await accounts.getAccountByUsername(tagsList[index].receiver).then(  (account: any) => {
+                tags.addTag( account[0].id, rows[0].id );
+            });
+        }
+
         posts.getPostCreator(postId).then( (postCreator: any) => {
             commentsService.addProfilePicture(rows, postCreator[0].account_id);
             res.status(200).json({ postId: postId, comment: rows[0] } );
@@ -70,7 +86,6 @@ router.post('/:postId/add', function (req: any, res: any) {
             return Promise.reject(err);
         });
     }, (err: any) => {
-        console.log(err);
         res.status(500).send('Error adding comment');
     });
 });
@@ -98,7 +113,15 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
-    comments.getRepliesByCommentId(postId, commentId, accountId, offset, limit).then( (rows: any) => {
+    comments.getRepliesByCommentId(postId, commentId, accountId, offset, limit).then( async (rows: any) => {
+
+        // get tags for each reply
+        for ( let index = 0; index < rows.length; index++ ) {
+            await tags.getTagsByCommentId(rows[index].id).then( (tagList: any) => {
+                rows[index].tagList = tagList;
+            });
+        }
+
         comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
             posts.getPostCreator(postId).then( (postCreator: any) => {
                 commentsService.addProfilePicture(rows, postCreator[0].account_id);

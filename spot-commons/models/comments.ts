@@ -12,6 +12,13 @@ export interface Comment {
     rated: number;
     profilePicture: number;
     owned: boolean;
+    tagList: CommentTag[];
+}
+
+export interface CommentTag {
+    comment_id: string;
+    profilePicture: number;
+    creation_date: string;
 }
 
 // Load all comments
@@ -33,7 +40,7 @@ export interface AddCommentRequest {
     postId: string;
     content: string;
     image: File;
-    tags: Tag[];
+    tagsList: Tag[];
 }
 
 export interface AddCommentSuccess {
