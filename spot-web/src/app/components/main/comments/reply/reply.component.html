@@ -13,6 +13,26 @@
     </div>
     <div class="content-wrapper">
       <div class="content">
+
+        <span *ngIf="reply.tag.numTagged > 0">
+          <span class="tag" *ngIf="reply.tag.owned; else notOwned">
+            You tagged
+            <span *ngFor="let name of reply.tag.names">
+              {{ name }}
+            </span>
+          </span>
+          <ng-template #notOwned>
+            <span class="tag" *ngIf="reply.tag.tagged; else notTagged">
+              You and {{ reply.tag.numTagged - 1 }} Were tagged by {{ reply.tag.tagger }}
+            </span>
+            <ng-template #notTagged>
+              <span class="tag">
+                {{ reply.tag.numTagged }} Were tagged
+              </span>
+            </ng-template>
+          </ng-template>
+        </span>
+
         {{ getContent() }}
         <div class="image" (click)="setExpandImageTrue()" *ngIf="reply.image_src != null">
           <img [src]="reply.image_src" />
@@ -49,6 +69,7 @@
           </div>
         </div>
       </div>
+      <span #tag ><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="postLink" (tag)="addTag($event)"></spot-tag></span>
     </div>
     <div class="right-bar">
       <div #options>

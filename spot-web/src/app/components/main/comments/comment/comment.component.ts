@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,6 +10,7 @@ import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
          LikeCommentRequest, DislikeCommentRequest, ReportCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
+import { Tag } from '@models/notifications';
 
 @Component({
   selector: 'spot-comment',
@@ -20,6 +21,7 @@ export class CommentComponent implements OnInit {
 
   @Input() detailed: boolean;
   @Input() comment: Comment;
+  @Input() postLink: string;
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
@@ -27,6 +29,11 @@ export class CommentComponent implements OnInit {
   // Show ... for content
   MAX_SHOW_COMMENT_LENGTH = 100;
   expanded = false;
+
+  @ViewChild('tag') tag: ElementRef;
+  tags: Tag[] = [];
+  showTag = false;
+  tagName = '';
 
   replyText: string;
 
@@ -97,11 +104,65 @@ export class CommentComponent implements OnInit {
     if (!this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
+
+    if (!this.tag.nativeElement.contains(event.target)) {
+      this.showTag = false;
+    }
+
   }
 
   onTextInput(event) {
+
+    // TODO: A space should add a tag
+
     this.replyText = event.target.textContent;
     this.currentLength = this.replyText.length;
+
+    const words = this.replyText.split(' ');
+    const lastWord = words[words.length - 1];
+
+    if ( lastWord.length >= 1 ) {
+
+      if ( lastWord[0] === '@' ) {
+
+        this.showTag = true;
+        this.tagName = lastWord.substr(1);
+
+      } else {
+
+        this.showTag = false;
+        this.tagName = '';
+
+      }
+
+    } else {
+
+      this.showTag = false;
+      this.tagName = '';
+
+    }
+
+  }
+
+  addTag(tag: Tag) {
+
+    tag.id = this.tags.length;
+    this.tags.push(tag);
+
+    const words = this.replyText.split(' ');
+    words.pop();
+    this.replyText = words.join(' ');
+
+  }
+
+  removeTag(id: number) {
+
+    this.tags.forEach( (tag: Tag, index: number) => {
+      if ( tag.id === id ) {
+        this.tags.splice(index, 1);
+      }
+    });
+
   }
 
   getContent(): string {
@@ -190,7 +251,8 @@ export class CommentComponent implements OnInit {
         postId: this.comment.post_id,
         commentId: this.comment.id,
         content,
-        image: this.imageFile
+        image: this.imageFile,
+        tagsList: this.tags
       };
 
       this.store$.dispatch(

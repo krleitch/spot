@@ -12,13 +12,15 @@ export interface Comment {
     rated: number;
     profilePicture: number;
     owned: boolean;
-    tagList: CommentTag[];
+    tag: CommentTag;
 }
 
 export interface CommentTag {
-    comment_id: string;
-    profilePicture: number;
-    creation_date: string;
+    owned: boolean;
+    numTagged: number;
+    tagged: boolean;
+    tagger?: string;
+    names?: string[];
 }
 
 // Load all comments
@@ -81,6 +83,7 @@ export interface AddReplyRequest {
     commentId: string;
     content: string;
     image: File;
+    tagsList: Tag[];
 }
 
 export interface AddReplySuccess {

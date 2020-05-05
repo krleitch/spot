@@ -69,7 +69,7 @@ export class CommentsContainerComponent implements OnInit {
     if ( this.detailed ) {
       initialLimit = 10;
     } else {
-      initialLimit = 1;
+      initialLimit = 2;
     }
 
     const request: LoadCommentsRequest = {

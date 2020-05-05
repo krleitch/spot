@@ -15,6 +15,37 @@
   margin-top: 15px;
 }
 
+.tag {
+  padding: 3px;
+  margin: 1px 2px;
+  background-color: $lighter-grey;
+}
+
+.tag-container {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .tag {
+    padding: 3px;
+    margin: 1px 2px;
+    background-color: $lighter-grey;
+  }
+
+  .tag-close {
+
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      color: $error-red;
+    }
+
+  }
+
+}
+
 .image {
   display: flex;
   justify-content: center;

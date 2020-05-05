@@ -14,8 +14,23 @@
     <div class="content-wrapper">
       <div class="content">
 
-        <span class="tag" *ngFor="let tag of comment.tagList">
-          {{ getProfilePictureSymbol(tag.profilePicture) }}
+        <span *ngIf="comment.tag.numTagged > 0">
+          <span class="tag" *ngIf="comment.tag.owned; else notOwned">
+            You tagged
+            <span *ngFor="let name of comment.tag.names">
+              {{ name }}
+            </span>
+          </span>
+          <ng-template #notOwned>
+            <span class="tag" *ngIf="comment.tag.tagged; else notTagged">
+              You and {{ comment.tag.numTagged - 1 }} Were tagged by {{ comment.tag.tagger }}
+            </span>
+            <ng-template #notTagged>
+              <span class="tag">
+                {{ comment.tag.numTagged }} Were tagged
+              </span>
+            </ng-template>
+          </ng-template>
         </span>
 
         {{ getContent() }}
@@ -33,6 +48,12 @@
       </div>
       <div [hidden]="!showAddReply" class="add">
         <div class="editor">
+          <div class="tag-container" *ngFor="let tag of tags">
+            <div class="tag">
+              {{ tag.receiver }}
+              <i class="material-icons tag-close" (click)="removeTag(tag.id)"> close </i>
+            </div>
+          </div>
           <div contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply-content" [textContent]="replyText" (input)="onTextInput($event)"></div>
           <div class="image" *ngIf="imgSrc != null">
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
@@ -54,6 +75,7 @@
           </div>
         </div>
       </div>
+      <span #tag ><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="postLink" (tag)="addTag($event)"></spot-tag></span>
     </div>
     <div class="right-bar">
       <div #options>
@@ -74,7 +96,7 @@
     </div>
   </div>
   <div *ngFor="let reply of replies">
-    <spot-reply [reply]="reply" [detailed]="detailed"></spot-reply>
+    <spot-reply [reply]="reply" [postLink]="postLink" [detailed]="detailed"></spot-reply>
   </div>
   <div *ngIf="numLoaded < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
 </div>

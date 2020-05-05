@@ -42,9 +42,44 @@ router.get('/:postId', function (req: any, res: any) {
 
         // get tags for each comment
         for ( let index = 0; index < rows.length; index++ ) {
-            await tags.getTagsByCommentId(rows[index].id).then( (tagList: any) => {
-                rows[index].tagList = tagList;
+            await tags.getTagsByCommentId(rows[index].id).then( async (tagList: any) => {
+
+                // The required properties
+                let tagObject = {
+                    owned: false,
+                    numTagged: tagList.length,
+                    tagged: false
+                };
+
+                if ( accountId == rows[index].account_id ) {
+                    // You are the tagger
+
+                    tagObject.owned = true;
+                    let names: any[] = [];
+
+                    for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
+                        await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
+                            names.push(account[0].username);
+                        });
+                    }
+
+                    tagObject.names = names;
+
+                } else if ( tagList.map( (t: any) => t.account_id ).includes( accountId )) {
+                    // you got tagged
+
+                    tagObject.tagged = true;
+
+                    await accounts.getAccountById(rows[index].account_id).then( (account: any) => {
+                        tagObject.tagger = account[0].username;
+                    });
+
+                } else {
+                    // you have no relation
+                }
+                rows[index].tag = tagObject;
             });
+
         }
 
         comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
@@ -71,7 +106,6 @@ router.post('/:postId/add', function (req: any, res: any) {
 
     comments.addComment(postId, accountId, content, image).then( async (rows: any) => {
 
-        // TODO: confirm this async call is correct
         // Add tags
         for ( let index = 0; index < tagsList.length; index++ ) {
             await accounts.getAccountByUsername(tagsList[index].receiver).then(  (account: any) => {
@@ -117,9 +151,44 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
 
         // get tags for each reply
         for ( let index = 0; index < rows.length; index++ ) {
-            await tags.getTagsByCommentId(rows[index].id).then( (tagList: any) => {
-                rows[index].tagList = tagList;
+            await tags.getTagsByCommentId(rows[index].id).then( async (tagList: any) => {
+
+                // The required properties
+                let tagObject = {
+                    owned: false,
+                    numTagged: tagList.length,
+                    tagged: false
+                };
+
+                if ( accountId == rows[index].account_id ) {
+                    // You are the tagger
+
+                    tagObject.owned = true;
+                    let names: any[] = [];
+
+                    for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
+                        await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
+                            names.push(account[0].username);
+                        });
+                    }
+
+                    tagObject.names = names;
+
+                } else if ( tagList.map( (t: any) => t.account_id ).includes( accountId )) {
+                    // you got tagged
+
+                    tagObject.tagged = true;
+
+                    await accounts.getAccountById(rows[index].account_id).then( (account: any) => {
+                        tagObject.tagger = account[0].username;
+                    });
+
+                } else {
+                    // you have no relation
+                }
+                rows[index].tag = tagObject;
             });
+
         }
 
         comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
@@ -142,10 +211,18 @@ router.post('/:postId/:commentId/add', function (req: any, res: any) {
 
     const postId = req.params.postId;
     const commentId = req.params.commentId;
-    const { content, image } = req.body;
+    const { content, image, tagsList } = req.body;
     const accountId = req.user.id;
 
-    comments.addReply(postId, commentId, accountId, content, image).then( (rows: any) => {
+    comments.addReply(postId, commentId, accountId, content, image).then( async (rows: any) => {
+
+        // Add tags
+        for ( let index = 0; index < tagsList.length; index++ ) {
+            await accounts.getAccountByUsername(tagsList[index].receiver).then( (account: any) => {
+                tags.addTag( account[0].id, rows[0].id );
+            });
+        }
+
         posts.getPostCreator(postId).then( (postCreator: any) => {
             commentsService.addProfilePicture(rows, postCreator[0].account_id);
             res.status(200).json({ postId: postId, commentId: commentId, reply: rows[0] } );
