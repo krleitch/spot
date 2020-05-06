@@ -82,7 +82,7 @@ export class CommentComponent implements OnInit {
     if ( this.detailed ) {
       initialLimit = 10;
     } else {
-      initialLimit = 1;
+      initialLimit = 5;
     }
 
     const request: LoadRepliesRequest = {

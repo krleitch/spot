@@ -6,6 +6,7 @@ const reports = require('../db/reports');
 const comments = require('../db/comments');
 const accounts = require('../db/accounts');
 const tags = require('../db/tags');
+const notifications = require('../db/notifications');
 const commentsService = require('../services/comments');
 const locationsService = require('../services/locations');
 
@@ -69,16 +70,19 @@ router.post('/:postId/add', function (req: any, res: any) {
 
     comments.addComment(postId, accountId, content, image).then( async (rows: any) => {
 
-        // Add tags
+        // Add tags and send notifications
         for ( let index = 0; index < tagsList.length; index++ ) {
+
             await accounts.getAccountByUsername(tagsList[index].receiver).then( async (account: any) => {
                 await tags.addTag( account[0].id, rows[0].id );
+                await notifications.addNotification( rows[0].account_id, account[0].id, rows[0].post_id );
             });
+
         }
 
         await commentsService.getTags( rows, accountId ).then( (taggedComments: any) => {
             rows = taggedComments;
-        })
+        });
 
         posts.getPostCreator(postId).then( (postCreator: any) => {
             commentsService.addProfilePicture(rows, postCreator[0].account_id);
@@ -149,12 +153,13 @@ router.post('/:postId/:commentId/add', function (req: any, res: any) {
         for ( let index = 0; index < tagsList.length; index++ ) {
             await accounts.getAccountByUsername(tagsList[index].receiver).then( async (account: any) => {
                 await tags.addTag( account[0].id, rows[0].id );
+                await notifications.addNotification( rows[0].account_id, account[0].id, rows[0].post_id );
             });
         }
 
         await commentsService.getTags( rows, accountId ).then( (taggedComments: any) => {
             rows = taggedComments;
-        })
+        });
 
         posts.getPostCreator(postId).then( (postCreator: any) => {
             commentsService.addProfilePicture(rows, postCreator[0].account_id);

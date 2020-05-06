@@ -127,6 +127,7 @@ img {
 }
 
 .profile {
+  position: relative;
   margin-top: 3px;
   width: 30px;
   height: 30px;
@@ -136,6 +137,20 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.profile-owned {
+
+  top: 0;
+  left: 0;
+  margin: 4px 4px;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  border: 1px solid white;
+  box-sizing: border-box;
+
 }
 
 // right-bar
