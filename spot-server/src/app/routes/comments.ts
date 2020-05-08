@@ -75,7 +75,7 @@ router.post('/:postId/add', function (req: any, res: any) {
 
             await accounts.getAccountByUsername(tagsList[index].receiver).then( async (account: any) => {
                 await tags.addTag( account[0].id, rows[0].id );
-                await notifications.addNotification( rows[0].account_id, account[0].id, rows[0].post_id );
+                await notifications.addCommentNotification( rows[0].account_id, account[0].id, rows[0].post_id, rows[0].id );
             });
 
         }
@@ -153,7 +153,7 @@ router.post('/:postId/:commentId/add', function (req: any, res: any) {
         for ( let index = 0; index < tagsList.length; index++ ) {
             await accounts.getAccountByUsername(tagsList[index].receiver).then( async (account: any) => {
                 await tags.addTag( account[0].id, rows[0].id );
-                await notifications.addNotification( rows[0].account_id, account[0].id, rows[0].post_id );
+                await notifications.addCommentNotification( rows[0].account_id, account[0].id, rows[0].post_id, rows[0].parent_id );
             });
         }
 

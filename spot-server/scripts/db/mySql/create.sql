@@ -61,6 +61,8 @@ CREATE TABLE comments (
 
 ALTER TABLE comments ADD FOREIGN KEY (parent_id) REFERENCES comments (id) ON DELETE CASCADE;
 
+CREATE INDEX idx_comment_date ON comments(creation_date);
+
 CREATE TABLE posts_rating (
     id VARCHAR(36) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
@@ -89,10 +91,13 @@ CREATE TABLE notifications (
     receiver_id VARCHAR(36) NOT NULL,
     creation_date VARCHAR(255) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
+    comment_id VARCHAR(36),
     seen BOOLEAN,
     PRIMARY KEY (id),
     FOREIGN KEY (sender_id) REFERENCES accounts (id),
-    FOREIGN KEY (receiver_id) REFERENCES accounts (id)
+    FOREIGN KEY (receiver_id) REFERENCES accounts (id),
+    FOREIGN KEY (post_id) REFERENCES posts (id),
+    FOREIGN KEY (comment_id) REFERENCES comments (id)
 );
 
 CREATE TABLE reports (
