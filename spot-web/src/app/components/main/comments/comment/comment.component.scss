@@ -141,15 +141,11 @@ img {
 
 .profile-owned {
 
-  top: 0;
-  left: 0;
-  margin: 4px 4px;
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
   position: absolute;
-  width: 22px;
-  height: 22px;
-  border-radius: 11px;
-  border: 1px solid white;
-  box-sizing: border-box;
+  box-shadow: 0 0 0 5px black;
 
 }
 
