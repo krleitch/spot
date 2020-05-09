@@ -28,7 +28,11 @@ export class CommentService {
 
   getComments(request: LoadCommentsRequest): Observable<LoadCommentsSuccess> {
     let params = new HttpParams();
-    params = params.append('offset', request.offset.toString());
+    params = params.append('date', request.date);
+    if ( request.commentId ) {
+      params = params.append('comment', request.commentId);
+    }
+    params = params.append('type', request.type);
     params = params.append('limit', request.limit.toString());
     return this.http.get<LoadCommentsSuccess>(`${this.baseUrl}/comments/${request.postId}`, { params });
   }

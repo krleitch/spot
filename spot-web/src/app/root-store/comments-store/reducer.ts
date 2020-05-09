@@ -33,9 +33,9 @@ export function featureReducer(state = initialState, action: Actions): State {
           totalComments: 0
         };
       }
-      if ( action.response.offset === 0 ) {
+      if ( action.response.type === 'before' ) {
         state.comments[action.response.postId] = {
-          comments: action.response.comments,
+          comments: action.response.comments.concat(state.comments[action.response.postId].comments),
           totalComments: action.response.totalComments
         };
       } else {

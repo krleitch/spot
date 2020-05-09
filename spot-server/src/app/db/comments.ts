@@ -1,6 +1,6 @@
 export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
-          likeComment, dislikeComment, getCommentsActivity }
+          likeComment, dislikeComment, getCommentsActivity, getCommentById }
 
 const uuid = require('uuid');
 const db = require('./mySql');
@@ -19,17 +19,27 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
+// postId, accountId, date, limit, type
 // Used for getting just the comments of a post
-function getCommentByPostId(postId: string, accountId: string, offset: number, limit: number): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
+function getCommentByPostId(postId: string, accountId: string, date: string, limit: number, type: string): Promise<any> {
+    var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
                         comments.likes, comments.dislikes,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
             WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
             ELSE NULL END) AS rated,
         (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id
-        WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
-    var values = [accountId, accountId, accountId, postId, limit, offset];
+        WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL `;
+
+    var orderSql;
+    if ( type == 'after' ) {
+        orderSql = ` AND comments.creation_date > ? GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? `
+    } else {
+        orderSql = `  AND comments.creation_date < ? GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ? `
+    }
+
+    var sql = selectSql + orderSql;
+    var values = [accountId, accountId, accountId, postId, new Date(date), limit];
     return db.query(sql, values);
 }
 

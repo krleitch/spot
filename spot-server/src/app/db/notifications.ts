@@ -29,7 +29,7 @@ function addNotification(senderId: string, receiverId: string, postId: string ) 
 
 function addCommentNotification(senderId: string, receiverId: string, postId: string, commentId: string ) {
     var notificationId = uuid.v4();
-    var sql = `Insert INTO notifications (id, sender_id, receiver_id, creation_date, post_id, commentId, seen) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    var sql = `Insert INTO notifications (id, sender_id, receiver_id, creation_date, post_id, comment_id, seen) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     var values = [notificationId, senderId, receiverId, new Date(), postId, commentId, false];
     return db.query(sql, values).then ( (rows: any) => {
         return getNotificationById(notificationId);

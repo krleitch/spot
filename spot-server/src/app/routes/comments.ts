@@ -30,17 +30,38 @@ router.get('/activity', function (req: any, res: any) {
 });
 
 // Get all comments for a post
-router.get('/:postId', function (req: any, res: any) {
+router.get('/:postId', async function (req: any, res: any) {
     
     const postId = req.params.postId;
     const accountId = req.user.id;
-    const offset = Number(req.query.offset);
-    const limit = Number(req.query.limit);
 
-    // TODO: get tags as well and use profile picture on that too
+    const commentId = req.query.comment;
+    let date = req.query.date;
+    let type = req.query.type;
+    let limit = Number(req.query.limit);
 
-    comments.getCommentByPostId(postId, accountId, offset, limit).then( async (rows: any) => {
+    // If comment id given, get that comment, then get limit-1 posts after that time stamp
+    // otherwise get limit timestamps from the given date
 
+    // Type means get before the date or after the date LIMIT #
+
+    // TYPE CAHNGES THE SQL SORT ASC / DESC
+
+    // 
+
+    let commentsArray: any[] = []
+
+    // If given a commentId we fetch that comment and everything after
+    if ( commentId ) {
+        await comments.getCommentById( commentId , accountId ).then( (rows: any) => {
+            date = rows[0].creation_date;
+            type = 'after';
+            limit = limit -= 1 || 0;
+            commentsArray = commentsArray.concat(rows)
+        });
+    }
+
+    comments.getCommentByPostId(postId, accountId, date, limit, type).then( async (rows: any) => {
 
         await commentsService.getTags( rows, accountId ).then( (taggedComments: any) => {
             rows = taggedComments;
@@ -49,7 +70,8 @@ router.get('/:postId', function (req: any, res: any) {
         comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
             posts.getPostCreator(postId).then( (postCreator: any) => {
                 commentsService.addProfilePicture(rows, postCreator[0].account_id);
-                res.status(200).json({ postId: postId, comments: rows, totalComments: num[0].total });
+                commentsArray = commentsArray.concat(rows)
+                res.status(200).json({ postId: postId, comments: commentsArray, totalComments: num[0].total, type: type });
             }, (err: any) => {
                 res.status(500).send('Error getting comments');
             });
@@ -57,6 +79,7 @@ router.get('/:postId', function (req: any, res: any) {
             res.status(500).send('Error getting comments');
         });
     }, (err: any) => {
+        console.log(err);
         res.status(500).send('Error getting comments');
     });
 });

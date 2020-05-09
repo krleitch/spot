@@ -26,7 +26,9 @@ export interface CommentTag {
 // Load all comments
 export interface LoadCommentsRequest {
     postId: string;
-    offset: number;
+    commentId?: string; // Will load starting from this comment
+    type: string; // before / after
+    date: string; // not used if commentId supplied
     limit: number;
 }
 
@@ -35,6 +37,7 @@ export interface LoadCommentsSuccess {
     totalComments: number;
     comments: Comment[];
     offset: number;
+    type: string;
 }
 
 // Add a comment

@@ -1,14 +1,15 @@
 DROP TABLE IF EXISTS reports;
-DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS comments_rating;
 DROP TABLE IF EXISTS posts_rating;
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS password_reset;
 DROP TABLE IF EXISTS locations;
-DROP TABLE IF EXISTS tags;
+
 DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE accounts (

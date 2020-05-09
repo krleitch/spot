@@ -72,9 +72,11 @@ export class CommentsContainerComponent implements OnInit {
       initialLimit = 5;
     }
 
+    // Get the latests limit # of comments
     const request: LoadCommentsRequest = {
       postId: this.post.id,
-      offset: this.currentOffset,
+      date: new Date().toString(),
+      type: 'before',
       limit: initialLimit
     };
 
@@ -130,7 +132,8 @@ export class CommentsContainerComponent implements OnInit {
     const limit = 1;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
-      offset: this.currentOffset,
+      date: this.comments.slice(-1).pop().creation_date,
+      type: 'after',
       limit
     };
     this.store$.dispatch(
