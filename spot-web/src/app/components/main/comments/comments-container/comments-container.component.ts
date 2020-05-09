@@ -127,13 +127,29 @@ export class CommentsContainerComponent implements OnInit {
 
   }
 
+  loadRecentComments() {
+    // Load 1 more comments
+    const limit = 1;
+    const request: LoadCommentsRequest = {
+      postId: this.post.id,
+      date: this.comments.pop().creation_date,
+      type: 'after',
+      limit
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.GetRequestAction(request)
+    );
+    this.numLoaded += limit;
+    this.currentOffset += limit;
+  }
+
   loadMoreComments() {
     // Load 1 more comments
     const limit = 1;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       date: this.comments.slice(-1).pop().creation_date,
-      type: 'after',
+      type: 'before',
       limit
     };
     this.store$.dispatch(

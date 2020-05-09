@@ -33,7 +33,7 @@ export function featureReducer(state = initialState, action: Actions): State {
           totalComments: 0
         };
       }
-      if ( action.response.type === 'before' ) {
+      if ( action.response.type === 'after' ) {
         state.comments[action.response.postId] = {
           comments: action.response.comments.concat(state.comments[action.response.postId].comments),
           totalComments: action.response.totalComments
