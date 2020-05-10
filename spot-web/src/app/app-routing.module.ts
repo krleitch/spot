@@ -51,6 +51,10 @@ export const routes: Routes = [
     component: PostDetailComponent
   },
   {
+    path: 'posts/:postId/comments/:commentId',
+    component: PostDetailComponent
+  },
+  {
     path: 'username',
     component: UsernameComponent
   },

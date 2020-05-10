@@ -1,6 +1,6 @@
 export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
-          likeComment, dislikeComment, getCommentsActivity, getCommentById }
+          likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink }
 
 const uuid = require('uuid');
 const db = require('./mySql');
@@ -43,11 +43,11 @@ function getCommentByPostId(postId: string, accountId: string, date: string, lim
     return db.query(sql, values);
 }
 
-function addComment(postId: string, accountId: string, content: string, image: string): Promise<any> {
+function addComment(postId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
     const commentId = uuid.v4();
     // Note the parent_id is NULL
-    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, content, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [commentId, postId, accountId, new Date(), content, image, 0, 0];
+    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [commentId, postId, accountId, new Date(), content, link, image, 0, 0];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(commentId, accountId);  
     });
@@ -66,10 +66,10 @@ function deleteCommentByPostId(postId: string, accountId: string): Promise<any> 
 }
 
 // Add a reply
-function addReply(postId: string, commentId: string, accountId: string, content: string, image: string): Promise<any> {
+function addReply(postId: string, commentId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
     const replyId = uuid.v4();
-    var sql = 'INSERT INTO comments (id, post_id, parent_id, account_id, creation_date, content, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [replyId, postId, commentId, accountId, new Date(), content, image, 0, 0];
+    var sql = 'INSERT INTO comments (id, post_id, parent_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [replyId, postId, commentId, accountId, new Date(), content, link, image, 0, 0];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(replyId, accountId);  
     });    
@@ -123,4 +123,12 @@ function getCommentsActivity(accountId: string, offset: number, limit: number) {
                  WHERE c1.account_id = ? AND c1.deletion_date IS NULL AND c2.deletion_date IS NULL AND p.deletion_date IS NULL ORDER BY creation_date DESC LIMIT ? OFFSET ?`;
     var values = [accountId, limit, offset];
     return db.query(sql, values);
+}
+
+function getCommentByLink(link: string, accountId: string) {
+    var sql = 'SELECT id FROM comments WHERE link = ?';
+    var values = [link];
+    return db.query(sql, values).then( (rows: any) => {
+        return getCommentById(rows[0].id, accountId);
+    });
 }

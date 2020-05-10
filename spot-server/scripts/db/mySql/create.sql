@@ -52,6 +52,7 @@ CREATE TABLE comments (
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,
     content varchar(400) NOT NULL,
+    link VARCHAR(14) NOT NULL UNIQUE,
     image_src VARCHAR(200),
     likes INT,
     dislikes INT,

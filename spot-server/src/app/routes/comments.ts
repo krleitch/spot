@@ -35,7 +35,7 @@ router.get('/:postId', async function (req: any, res: any) {
     const postId = req.params.postId;
     const accountId = req.user.id;
 
-    const commentId = req.query.comment;
+    const commentLink = req.query.comment;
     let date = req.query.date;
     let type = req.query.type;
     let limit = Number(req.query.limit);
@@ -52,8 +52,8 @@ router.get('/:postId', async function (req: any, res: any) {
     let commentsArray: any[] = []
 
     // If given a commentId we fetch that comment and everything after
-    if ( commentId ) {
-        await comments.getCommentById( commentId , accountId ).then( (rows: any) => {
+    if ( commentLink ) {
+        await comments.getCommentByLink( commentLink , accountId ).then( (rows: any) => {
             date = rows[0].creation_date;
             type = 'after';
             limit = limit -= 1 || 0;
@@ -90,8 +90,9 @@ router.post('/:postId/add', function (req: any, res: any) {
     const { content, image, tagsList } = req.body;
     const accountId = req.user.id;
     const postId = req.params.postId;
+    const link = commentsService.generateLink();
 
-    comments.addComment(postId, accountId, content, image).then( async (rows: any) => {
+    comments.addComment(postId, accountId, content, image, link).then( async (rows: any) => {
 
         // Add tags and send notifications
         for ( let index = 0; index < tagsList.length; index++ ) {
@@ -169,8 +170,9 @@ router.post('/:postId/:commentId/add', function (req: any, res: any) {
     const commentId = req.params.commentId;
     const { content, image, tagsList } = req.body;
     const accountId = req.user.id;
+    const link = commentsService.generateLink();
 
-    comments.addReply(postId, commentId, accountId, content, image).then( async (rows: any) => {
+    comments.addReply(postId, commentId, accountId, content, image, link).then( async (rows: any) => {
 
         // Add tags
         for ( let index = 0; index < tagsList.length; index++ ) {

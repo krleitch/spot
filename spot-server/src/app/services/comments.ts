@@ -1,4 +1,6 @@
-export { addProfilePicture, getTags }
+export { addProfilePicture, getTags, generateLink }
+
+const shortid = require('shortid');
 
 const accounts = require('../db/accounts');
 const tags = require('../db/tags');
@@ -71,4 +73,8 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
     return comments;
 
+}
+
+function generateLink(): string {
+	return shortid.generate();
 }
