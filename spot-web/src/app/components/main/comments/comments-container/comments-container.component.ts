@@ -30,6 +30,8 @@ export class CommentsContainerComponent implements OnInit {
 
   // fix this type
   comments$: Observable<any>;
+  loadingCommentsBefore$: Observable<boolean>;
+  loadingCommentsAfter$: Observable<boolean>;
 
   comments = [];
   totalComments = 0;
@@ -59,6 +61,14 @@ export class CommentsContainerComponent implements OnInit {
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
     );
 
+    this.loadingCommentsBefore$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsBefore)
+    );
+
+    this.loadingCommentsAfter$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsAfter)
+    );
+
     this.comments$.subscribe( comments => {
       this.comments = comments.comments;
       this.totalComments = comments.totalComments;
@@ -72,13 +82,26 @@ export class CommentsContainerComponent implements OnInit {
       initialLimit = 1;
     }
 
-    // Get the latests limit # of comments
-    const request: LoadCommentsRequest = {
-      postId: this.post.id,
-      date: new Date().toString(),
-      type: 'before',
-      limit: initialLimit
-    };
+    let request: LoadCommentsRequest;
+
+    if ( this.post.startCommentId ) {
+      // Get the latests limit # of comments
+      request = {
+        postId: this.post.id,
+        date: new Date().toString(),
+        type: 'before',
+        limit: initialLimit,
+        commentId: this.post.startCommentId
+      };
+    } else {
+      // Get the latests limit # of comments
+      request = {
+        postId: this.post.id,
+        date: new Date().toString(),
+        type: 'before',
+        limit: initialLimit
+      };
+    }
 
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)

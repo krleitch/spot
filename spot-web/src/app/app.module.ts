@@ -40,6 +40,7 @@ import { NewPasswordComponent } from './components/pre-auth/new-password/new-pas
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { TagComponent } from './components/main/social/tag/tag.component';
+import { SpinnerComponent } from './components/helpers/spinner/spinner.component';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { TagComponent } from './components/main/social/tag/tag.component';
     ModalComponent,
     PasswordResetComponent,
     NewPasswordComponent,
-    TagComponent
+    TagComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

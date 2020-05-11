@@ -1,0 +1,32 @@
+@import '/../../../styles/colors';
+
+.small {
+  width: 15px;
+  height: 15px;
+  border: 3px solid $lighter-grey;
+  border-top: 3px solid $button-highlight;
+}
+
+.medium {
+  width: 30px;
+  height: 30px;
+  border: 5px solid $lighter-grey;
+  border-top: 5px solid $button-highlight;
+}
+
+.large {
+  width: 50px;
+  height: 50px;
+  border: 7px solid $lighter-grey;
+  border-top: 7px solid $button-highlight;
+}
+
+.spinner {
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

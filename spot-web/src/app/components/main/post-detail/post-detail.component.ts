@@ -17,8 +17,13 @@ export class PostDetailComponent implements OnInit {
 
   post$: Observable<Post>;
 
+  commentId: string;
+
   ngOnInit() {
+
     this.route.paramMap.subscribe( p => {
+
+      this.commentId = p.get('commentId');
 
       const request: LoadSinglePostRequest = {
         postLink: p.get('postId')
@@ -26,6 +31,9 @@ export class PostDetailComponent implements OnInit {
 
       this.post$ = this.postsService.getPost(request).pipe(
         map( postSuccess =>  {
+          if ( this.commentId ) {
+            postSuccess.post.startCommentId = this.commentId;
+          }
           return postSuccess.post;
         })
       );

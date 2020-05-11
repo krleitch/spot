@@ -26,6 +26,19 @@ export function featureReducer(state = initialState, action: Actions): State {
           ...state
       };
     }
+    case ActionTypes.GET_REQUEST: {
+      if ( action.request.type === 'after' ) {
+        return {
+          ...state,
+          loadingCommentsAfter: true
+        };
+      } else {
+        return {
+          ...state,
+          loadingCommentsBefore: true
+        };
+      }
+    }
     case ActionTypes.GET_SUCCESS: {
       if (state.comments[action.response.postId] === undefined) {
         state.comments[action.response.postId] = {
@@ -39,11 +52,13 @@ export function featureReducer(state = initialState, action: Actions): State {
           comments: action.response.comments.concat(state.comments[action.response.postId].comments),
           totalComments: action.response.totalComments
         };
+        state.loadingCommentsAfter = false;
       } else {
         state.comments[action.response.postId] = {
           comments: state.comments[action.response.postId].comments.concat(action.response.comments),
           totalComments: action.response.totalComments
         };
+        state.loadingCommentsBefore = false;
       }
       return {
         ...state

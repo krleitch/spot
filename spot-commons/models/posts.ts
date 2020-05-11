@@ -14,6 +14,7 @@ export interface Post {
     comments: number;
     owned: boolean;
     link: string;
+    startCommentId?: string; // The comment Id to mkae first request from
 }
 
 export interface PostFilter {

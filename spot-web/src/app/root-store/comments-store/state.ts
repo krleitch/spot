@@ -4,10 +4,14 @@ export interface State {
     replies: any;
     commentsLeft: number;
     repliesLeft: number;
+    loadingCommentsBefore: boolean;
+    loadingCommentsAfter: boolean;
 }
 
 export const initialState: State = (
   {
+    loadingCommentsBefore: false,
+    loadingCommentsAfter: false,
     comments: {},
     replies: {},
     commentsLeft: 0,
