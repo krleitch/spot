@@ -61,7 +61,12 @@ export class NotificationItemComponent implements OnInit {
       new SocialStoreNotificationsActions.SetNotificationSeenAction(request)
     );
 
-    this.router.navigateByUrl(/posts/ + this.notification.link);
+    if ( this.notification.comment_link ) {
+      this.router.navigateByUrl('/posts/' + this.notification.link + '/comments/' + this.notification.comment_link);
+    } else {
+      this.router.navigateByUrl('/posts/' + this.notification.link);
+    }
+
   }
 
   delete() {

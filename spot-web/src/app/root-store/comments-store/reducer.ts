@@ -46,7 +46,6 @@ export function featureReducer(state = initialState, action: Actions): State {
           totalComments: 0
         };
       }
-      console.log(state.comments[action.response.postId].comments);
       if ( action.response.type === 'after' ) {
         state.comments[action.response.postId] = {
           comments: action.response.comments.concat(state.comments[action.response.postId].comments),

@@ -63,14 +63,17 @@ router.get('/:postId', async function (req: any, res: any) {
 
     comments.getCommentByPostId(postId, accountId, date, limit, type).then( async (rows: any) => {
 
-        await commentsService.getTags( rows, accountId ).then( (taggedComments: any) => {
-            rows = taggedComments;
+        commentsArray = commentsArray.concat(rows)
+
+        await commentsService.getTags( commentsArray, accountId ).then( (taggedComments: any) => {
+            commentsArray = taggedComments;
         })
 
         comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
             posts.getPostCreator(postId).then( (postCreator: any) => {
-                commentsService.addProfilePicture(rows, postCreator[0].account_id);
-                commentsArray = commentsArray.concat(rows)
+                commentsService.addProfilePicture(commentsArray, postCreator[0].account_id);
+                
+                console.log(commentsArray);
                 res.status(200).json({ postId: postId, comments: commentsArray, totalComments: num[0].total, type: type });
             }, (err: any) => {
                 res.status(500).send('Error getting comments');

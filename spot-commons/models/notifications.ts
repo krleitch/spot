@@ -1,12 +1,14 @@
 export interface Notification {
     id: string;
     post_id: string;
+    comment_id: string;
     creation_date: string;
     username: string;
     image_src: string;
     content: string;
     seen: number;
     link: string;
+    comment_link: string;
 }
 
 // Get notifications
