@@ -55,7 +55,7 @@ router.get('/:postId', async function (req: any, res: any) {
     if ( commentLink ) {
         await comments.getCommentByLink( commentLink , accountId ).then( (rows: any) => {
             date = rows[0].creation_date;
-            type = 'after';
+            type = 'before';
             limit = limit -= 1 || 0;
             commentsArray = commentsArray.concat(rows)
         });
@@ -72,8 +72,6 @@ router.get('/:postId', async function (req: any, res: any) {
         comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
             posts.getPostCreator(postId).then( (postCreator: any) => {
                 commentsService.addProfilePicture(commentsArray, postCreator[0].account_id);
-                
-                console.log(commentsArray);
                 res.status(200).json({ postId: postId, comments: commentsArray, totalComments: num[0].total, type: type });
             }, (err: any) => {
                 res.status(500).send('Error getting comments');

@@ -30,6 +30,7 @@ export interface LoadCommentsRequest {
     type: string; // before / after
     date: string; // not used if commentId supplied
     limit: number;
+    initialLoad: boolean;
 }
 
 export interface LoadCommentsSuccess {
@@ -38,6 +39,7 @@ export interface LoadCommentsSuccess {
     comments: Comment[];
     offset: number;
     type: string;
+    initialLoad: boolean;
 }
 
 // Add a comment

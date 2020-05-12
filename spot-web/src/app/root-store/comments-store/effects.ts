@@ -51,7 +51,7 @@ export class CommentsStoreEffects {
         .getComments(action.request)
         .pipe(
             map( (response: LoadCommentsSuccess) => {
-              // response.type = action.request.type;
+              response.initialLoad = action.request.initialLoad;
               return new featureActions.GetSuccessAction(response);
             }),
             catchError( errorResponse =>

@@ -40,7 +40,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       }
     }
     case ActionTypes.GET_SUCCESS: {
-      if (state.comments[action.response.postId] === undefined) {
+      if (state.comments[action.response.postId] === undefined || action.response.initialLoad) {
         state.comments[action.response.postId] = {
           comments: [],
           totalComments: 0

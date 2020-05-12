@@ -9,7 +9,7 @@
     <div *ngFor="let comment of comments">
         <spot-comment [comment]="comment" [postLink]="post.link" [detailed]="detailed"></spot-comment>
     </div>
-    <div *ngIf="numLoaded < totalComments" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
+    <div *ngIf="comments.length < totalComments" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
   </div>
   <div class="add">
     <div class="editor">

@@ -33,9 +33,9 @@ function getCommentByPostId(postId: string, accountId: string, date: string, lim
 
     var orderSql;
     if ( type == 'after' ) {
-        orderSql = ` AND comments.creation_date > ? GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? `
+        orderSql = ` AND comments.creation_date > ? GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ? `
     } else {
-        orderSql = `  AND comments.creation_date < ? GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ? `
+        orderSql = `  AND comments.creation_date < ? GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? `
     }
 
     var sql = selectSql + orderSql;

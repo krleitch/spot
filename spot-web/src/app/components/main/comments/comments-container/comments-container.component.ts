@@ -32,6 +32,7 @@ export class CommentsContainerComponent implements OnInit {
   comments$: Observable<any>;
   loadingCommentsBefore$: Observable<boolean>;
   loadingCommentsAfter$: Observable<boolean>;
+  initialLoad = true;
 
   comments = [];
   totalComments = 0;
@@ -46,9 +47,6 @@ export class CommentsContainerComponent implements OnInit {
   // displaying used characters for add comment
   MAX_COMMENT_LENGTH = 300;
   currentLength = 0;
-
-  // for dynamic loading
-  currentOffset = 0;
 
   constructor(private store$: Store<RootStoreState.State>,
               public domSanitizer: DomSanitizer) {
@@ -91,7 +89,8 @@ export class CommentsContainerComponent implements OnInit {
         date: new Date().toString(),
         type: 'before',
         limit: initialLimit,
-        commentId: this.post.startCommentId
+        commentId: this.post.startCommentId,
+        initialLoad: this.initialLoad
       };
     } else {
       // Get the latests limit # of comments
@@ -99,15 +98,17 @@ export class CommentsContainerComponent implements OnInit {
         postId: this.post.id,
         date: new Date().toString(),
         type: 'before',
-        limit: initialLimit
+        limit: initialLimit,
+        initialLoad: this.initialLoad
       };
     }
+
+    this.initialLoad = false;
 
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
     this.numLoaded += initialLimit;
-    this.currentOffset += initialLimit;
 
   }
 
@@ -157,13 +158,13 @@ export class CommentsContainerComponent implements OnInit {
       postId: this.post.id,
       date: this.comments[0].creation_date,
       type: 'after',
-      limit
+      limit,
+      initialLoad: this.initialLoad
     };
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
     this.numLoaded += limit;
-    this.currentOffset += limit;
   }
 
   loadMoreComments() {
@@ -173,13 +174,13 @@ export class CommentsContainerComponent implements OnInit {
       postId: this.post.id,
       date: this.comments.slice(-1).pop().creation_date,
       type: 'before',
-      limit
+      limit,
+      initialLoad: this.initialLoad
     };
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
     this.numLoaded += limit;
-    this.currentOffset += limit;
   }
 
   addComment() {
