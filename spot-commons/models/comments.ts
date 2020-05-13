@@ -35,7 +35,7 @@ export interface LoadCommentsRequest {
 
 export interface LoadCommentsSuccess {
     postId: string;
-    totalComments: number;
+    totalCommentsBefore: number;
     comments: Comment[];
     offset: number;
     type: string;

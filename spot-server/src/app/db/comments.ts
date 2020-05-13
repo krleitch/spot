@@ -1,6 +1,7 @@
 export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
-          likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink }
+          likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink,
+          getNumberOfCommentsForPostBeforeDate }
 
 const uuid = require('uuid');
 const db = require('./mySql');
@@ -91,14 +92,21 @@ function getRepliesByCommentId(postId: string, commentId: string, accountId: str
 
 // Return the number of comments
 function getNumberOfCommentsForPost(postId: string): Promise<any> {
-    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND deletion_date IS NULL AND parent_id IS NULL';
+    var sql = 'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL';
     var values = [postId];
+    return db.query(sql, values);
+}
+
+// Return the number of comments before a date
+function getNumberOfCommentsForPostBeforeDate(postId: string, date: string): Promise<any> {
+    var sql = 'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL AND creation_date < ?';
+    var values = [postId, new Date(date)];
     return db.query(sql, values);
 }
 
 // Return the number of replies for comment for post
 function getNumberOfRepliesForComment(postId: string, commentId: string): Promise<any> {
-    var sql = 'SELECT COUNT(*) as total FROM comments where post_id = ? AND parent_id = ? AND deletion_date IS NULL';
+    var sql = 'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND parent_id = ? AND deletion_date IS NULL';
     var values = [postId, commentId];
     return db.query(sql, values);
 }

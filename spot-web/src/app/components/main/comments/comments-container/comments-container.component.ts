@@ -35,7 +35,7 @@ export class CommentsContainerComponent implements OnInit {
   initialLoad = true;
 
   comments = [];
-  totalComments = 0;
+  totalCommentsBefore = 0;
   numLoaded = 0;
 
   FILENAME_MAX_SIZE = 25;
@@ -69,7 +69,9 @@ export class CommentsContainerComponent implements OnInit {
 
     this.comments$.subscribe( comments => {
       this.comments = comments.comments;
-      this.totalComments = comments.totalComments;
+      if ( comments.totalCommentsBefore != - 1 ) {
+        this.totalCommentsBefore = comments.totalCommentsBefore;
+      }
     });
 
     // if detailed load more comments

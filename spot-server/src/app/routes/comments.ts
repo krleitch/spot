@@ -67,20 +67,30 @@ router.get('/:postId', async function (req: any, res: any) {
 
         await commentsService.getTags( commentsArray, accountId ).then( (taggedComments: any) => {
             commentsArray = taggedComments;
-        })
+        });
 
-        comments.getNumberOfCommentsForPost(postId).then( (num: any) => {
-            posts.getPostCreator(postId).then( (postCreator: any) => {
-                commentsService.addProfilePicture(commentsArray, postCreator[0].account_id);
-                res.status(200).json({ postId: postId, comments: commentsArray, totalComments: num[0].total, type: type });
+
+        let numCommentsBefore = -1;
+        if ( type == 'before' ) {
+          let lastDate;
+          if ( commentsArray.length > 0 ) {
+            lastDate = commentsArray[commentsArray.length-1].creation_date;
+            await comments.getNumberOfCommentsForPostBeforeDate(postId, lastDate).then( (num: any) => {
+              numCommentsBefore = num[0].total
             }, (err: any) => {
-                res.status(500).send('Error getting comments');
+              res.status(500).send('Error getting comments');
             });
+          }
+        }
+
+        posts.getPostCreator(postId).then( (postCreator: any) => {
+            commentsService.addProfilePicture(commentsArray, postCreator[0].account_id);
+            res.status(200).json({ postId: postId, comments: commentsArray, totalCommentsBefore: numCommentsBefore, type: type });
         }, (err: any) => {
             res.status(500).send('Error getting comments');
         });
+        
     }, (err: any) => {
-        console.log(err);
         res.status(500).send('Error getting comments');
     });
 });
