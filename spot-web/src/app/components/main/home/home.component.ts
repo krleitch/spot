@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
 
   // keep track of whether the initial load was made
   // needed so the infinite scroll doesnt get called right away to overwrite
-  initialLoad = false;
+  initialLoad = true;
 
   locationEnabled = false;
 
@@ -92,6 +92,7 @@ export class HomeComponent implements OnInit {
         offset: this.loadedPosts,
         limit: this.POSTS_LIMIT,
         date: new Date().toString(),
+        initialLoad: this.initialLoad,
         location: this.myLocation,
         filter: { location: this.postlocation, sort: this.postSort }
       };
@@ -101,6 +102,8 @@ export class HomeComponent implements OnInit {
         new PostsStoreActions.LoadRequestAction(request)
       );
 
+      this.initialLoad = false;
+
       this.loadedPosts += this.POSTS_LIMIT;
 
   }
@@ -109,12 +112,15 @@ export class HomeComponent implements OnInit {
 
     this.loadedPosts = 0;
 
+    this.initialLoad = true;
+
     // Loads the initial posts
     const request: LoadPostRequest = {
       offset: this.loadedPosts,
       limit: this.POSTS_LIMIT,
       location: this.myLocation,
       date: new Date().toString(),
+      initialLoad: this.initialLoad,
       filter: { location: this.postlocation, sort: this.postSort }
     };
 
@@ -122,6 +128,8 @@ export class HomeComponent implements OnInit {
     this.store$.dispatch(
       new PostsStoreActions.LoadRequestAction(request)
     );
+
+    this.initialLoad = false;
 
     this.loadedPosts += this.POSTS_LIMIT;
 
