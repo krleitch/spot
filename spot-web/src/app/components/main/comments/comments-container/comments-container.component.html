@@ -1,9 +1,11 @@
 <div class="container">
   <div class="comments-container">
 
-    <div class="load-more" (click)="loadRecentComments()"> {{ STRINGS.LOAD_RECENT_COMMENTS }} </div>
-    <div *ngIf="loadingCommentsAfter$ | async">
-      <spot-spinner size="small"></spot-spinner>
+    <div class="load-more-container">
+      <div class="load-more" (click)="loadRecentComments()"> {{ STRINGS.LOAD_RECENT_COMMENTS }} </div>
+      <div *ngIf="loadingCommentsAfter$ | async">
+        <spot-spinner size="small"></spot-spinner>
+      </div>
     </div>
 
     <div *ngFor="let comment of comments">
