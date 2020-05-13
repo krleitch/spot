@@ -1,4 +1,3 @@
-<spot-image *ngIf="expandImage" [imageSrc]="comment.image_src" (closeEvent)="setExpandImageFalse()"></spot-image>
 <div class="container">
   <div class="comment">
     <div class="left-bar">
@@ -38,7 +37,7 @@
 
         {{ getContent() }}
 
-        <div class="image" (click)="setExpandImageTrue()" *ngIf="comment.image_src != null">
+        <div class="image" (click)="openModal('spot-image-comment-modal')" *ngIf="comment.image_src != null">
           <img [src]="comment.image_src" />
         </div>
         <span *ngIf="expandable()">
@@ -106,4 +105,7 @@
 </div>
 <spot-modal [id]="'spot-report-comment-modal'" [width]="400" [height]="'auto'">
   <spot-report [modalId]="'spot-report-comment-modal'" [postId]="comment.post_id" [commentId]="comment.id"></spot-report>
+</spot-modal>
+<spot-modal [id]="'spot-image-comment-modal'" [width]="'auto'" [height]="'auto'">
+  <spot-image [imageSrc]="comment.image_src"></spot-image>
 </spot-modal>

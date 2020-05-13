@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -7,6 +7,7 @@ import { SocialStoreNotificationsActions } from '@store/social-store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
 import { AddNotificationRequest } from '@models/notifications';
 import { Friend, GetFriendsRequest } from '@models/friends';
+import { ModalService } from '@services/modal.service';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -18,7 +19,7 @@ import { STRINGS } from '@assets/strings/en';
 export class ShareComponent implements OnInit {
 
   @Input() postLink;
-  @Output() close = new EventEmitter<boolean>();
+  @Input() modalId;
 
   @ViewChild('usernameinput') usernameinput: ElementRef;
 
@@ -32,7 +33,7 @@ export class ShareComponent implements OnInit {
 
   link: string;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>, private modalService: ModalService) { }
 
   ngOnInit() {
 
@@ -54,11 +55,16 @@ export class ShareComponent implements OnInit {
 
     // Since these buttons are hidden by default we need to call to parse them
     // todo pass in element so not parse entire page
+    // TODO
     window['FB'].XFBML.parse();
     window['twttr'].widgets.load();
 
     this.link = window.location.origin + '/posts/' + this.postLink;
 
+  }
+
+  closeShare() {
+    this.modalService.close(this.modalId);
   }
 
   sendNotification() {
@@ -87,10 +93,6 @@ export class ShareComponent implements OnInit {
       new SocialStoreNotificationsActions.AddNotificationAction(request)
     );
 
-  }
-
-  closeShare() {
-    this.close.emit(true);
   }
 
   onUsernameInput(event: any) {

@@ -39,7 +39,6 @@ export class ReplyComponent implements OnInit {
   FILENAME_MAX_SIZE = 20;
   imageFile: File;
   imgSrc: string = null;
-  expandImage = false;
 
   // displaying used characters for add reply
   MAX_REPLY_LENGTH = 300;
@@ -269,14 +268,7 @@ export class ReplyComponent implements OnInit {
     }
   }
 
-  // For expanding images
-  setExpandImageTrue() {
-    this.expandImage = true;
-  }
-
-  setExpandImageFalse() {
-    this.expandImage = false;
-  }
+  // TODO: for comments and replies want to add id to modal id's so unique
 
   openModal(id: string) {
     this.modalService.open(id);

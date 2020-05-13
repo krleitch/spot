@@ -1,5 +1,3 @@
-<spot-image *ngIf="expandImage" [imageSrc]="post.image_src" (closeEvent)="setExpandImageFalse()"></spot-image>
-<!-- <spot-report *ngIf="showReport" (close)="onReportClose($event)"></spot-report> -->
 <div class="container">
   <div class="post">
     <div class="left-bar">
@@ -14,7 +12,7 @@
       <div class="content" [ngClass]="{'content-expanded': expanded}">
         {{ getContent() }}
       </div>
-      <div (click)="setExpandImageTrue()" class="image" *ngIf="post.image_src != null">
+      <div (click)="openModal('spot-image-post-modal')" class="image" *ngIf="post.image_src != null">
         <img [src]="post.image_src" />
       </div>
       <div class="options">
@@ -44,8 +42,7 @@
         </div>
       </div>
       <div #share>
-        <i class="material-icons share" (click)="toggleShare()"> share </i>
-        <spot-share *ngIf="showShare" [postLink]="post.link" (close)="onClose($event)"></spot-share>
+        <i class="material-icons share" (click)="openModal('spot-share-post-modal')"> share </i>
       </div>
     </div>
   </div>
@@ -53,4 +50,10 @@
 </div>
 <spot-modal [id]="'spot-report-post-modal'" [width]="400" [height]="'auto'">
   <spot-report [modalId]="'spot-report-post-modal'" [postId]="post.id"></spot-report>
+</spot-modal>
+<spot-modal [id]="'spot-image-post-modal'" [width]="'auto'" [height]="'auto'">
+  <spot-image [imageSrc]="post.image_src"></spot-image>
+</spot-modal>
+<spot-modal [id]="'spot-share-post-modal'" [width]="400" [height]="'auto'">
+  <spot-share [modalId]="'spot-share-post-modal'" [postLink]="post.link"></spot-share>
 </spot-modal>

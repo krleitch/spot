@@ -41,9 +41,10 @@ spot-modal {
         background: #fff;
 
         position: fixed;
-        top: 30%;
+        top: 50%;
         left: 50%;
         transform: translateX(-50%);
+        transform: translateY(-50%);
         box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
 
       }

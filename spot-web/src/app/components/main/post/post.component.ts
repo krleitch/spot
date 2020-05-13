@@ -35,9 +35,6 @@ export class PostComponent implements OnInit {
 
   optionsEnabled = false;
   showShare = false;
-  showReport = false;
-
-  expandImage = false;
 
   constructor(private store$: Store<RootStoreState.State>, private router: Router, private postsService: PostsService,
               private modalService: ModalService) {
@@ -161,19 +158,6 @@ export class PostComponent implements OnInit {
 
   onClose(event: any) {
     this.showShare = false;
-  }
-
-  onReportClose() {
-    this.showReport = false;
-  }
-
-  // For expanding images
-  setExpandImageTrue() {
-    this.expandImage = true;
-  }
-
-  setExpandImageFalse() {
-    this.expandImage = false;
   }
 
   openModal(id: string) {
