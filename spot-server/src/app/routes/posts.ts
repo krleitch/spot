@@ -22,6 +22,7 @@ router.get('/', function (req: any, res: any) {
     const sort = req.query.sort;
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
+    const date = req.query.date;
 
     locationsService.verifyLocation( accountId, latitude, longitude ).then( (valid: boolean) => {
 
@@ -29,7 +30,7 @@ router.get('/', function (req: any, res: any) {
 
             locations.addLocation( accountId, latitude, longitude ).then( () => {
 
-                posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit).then((rows: any) => {
+                posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
                     res.status(200).json({ posts: rows });
                 }, (err: any) => {
                     res.status(500).send('Error getting posts');

@@ -91,6 +91,7 @@ export class HomeComponent implements OnInit {
       const request: LoadPostRequest = {
         offset: this.loadedPosts,
         limit: this.POSTS_LIMIT,
+        date: new Date().toString(),
         location: this.myLocation,
         filter: { location: this.postlocation, sort: this.postSort }
       };
@@ -113,6 +114,7 @@ export class HomeComponent implements OnInit {
       offset: this.loadedPosts,
       limit: this.POSTS_LIMIT,
       location: this.myLocation,
+      date: new Date().toString(),
       filter: { location: this.postlocation, sort: this.postSort }
     };
 

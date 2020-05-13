@@ -27,6 +27,7 @@ export class PostsService {
     params = params.append('sort', request.filter.sort);
     params = params.append('offset', request.offset.toString());
     params = params.append('limit', request.limit.toString());
+    params = params.append('date', request.date);
     return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`, { params });
   }
 

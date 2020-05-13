@@ -4,7 +4,7 @@ const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function getPosts(accountId: string, sort: string, location: string, latitude: string, longitude: string,  offset: number, limit: number): Promise<any> {
+function getPosts(accountId: string, sort: string, location: string, latitude: string, longitude: string,  offset: number, limit: number, date: string): Promise<any> {
 
     // 10 miles if location === local
     const distance = 10;

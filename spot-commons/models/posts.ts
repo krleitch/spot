@@ -26,6 +26,7 @@ export interface PostFilter {
 export interface LoadPostRequest {
     offset: number;
     limit: number;
+    date: string;
     location: Location;
     filter: PostFilter;
 }
