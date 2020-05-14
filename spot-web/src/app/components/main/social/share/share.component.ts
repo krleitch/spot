@@ -56,8 +56,8 @@ export class ShareComponent implements OnInit {
     // Since these buttons are hidden by default we need to call to parse them
     // todo pass in element so not parse entire page
     // TODO
-    window['FB'].XFBML.parse();
-    window['twttr'].widgets.load();
+    // window['FB'].XFBML.parse();
+    // window['twttr'].widgets.load();
 
     this.link = window.location.origin + '/posts/' + this.postLink;
 

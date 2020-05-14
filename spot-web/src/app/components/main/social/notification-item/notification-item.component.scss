@@ -24,8 +24,9 @@
 
 .delete {
   position: absolute;
-  top: 2px;
+  top: 5px;
   right: 5px;
+  font-size: 14px;
   color: $subtle-grey;
   cursor: pointer;
   &:hover {

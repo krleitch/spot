@@ -158,7 +158,8 @@ export const STRINGS = {
 
         NOTIFICATION_ITEM: {
 
-          PROMPT: 'sent a spot!'
+          PROMPT: 'sent a spot!',
+          COMMENT_PROMPT: 'mentioned you in a comment'
 
         },
 

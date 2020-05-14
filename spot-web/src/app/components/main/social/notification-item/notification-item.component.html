@@ -2,8 +2,14 @@
   <div class="notification-item" (click)="goToPost()" [ngClass]="{'seen': !notification.seen}">
     <div class="prompt-container">
       <div class="prompt">
-        <span class="username"> {{ notification.username }} </span>
-        <span> {{ STRINGS.PROMPT }} </span>
+        <div *ngIf="notification.comment_id; else postLink">
+          <span class="username"> {{ notification.username }} </span>
+          <span> {{ STRINGS.COMMENT_PROMPT }} </span>
+        </div>
+        <ng-template #postLink>
+          <span class="username"> {{ notification.username }} </span>
+          <span> {{ STRINGS.PROMPT }} </span>
+        </ng-template>
       </div>
       <div class="content-preview"> {{ notification.content }} </div>
     </div>
@@ -14,5 +20,5 @@
       <div class="date"> {{ getTime(notification.creation_date) }} </div>
     </div>
   </div>
-  <span class="delete" (click)="delete()"> x </span>
+  <span class="material-icons delete" (click)="delete()"> close </span>
 </div>
