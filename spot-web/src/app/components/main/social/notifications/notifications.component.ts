@@ -19,7 +19,7 @@ export class NotificationsComponent implements OnInit {
   STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
   notificationsLoaded = 0;
-  loadLimit = 10;
+  loadLimit = 1;
   initialLoad = false;
 
   notifications$: Observable<Notification[]>;

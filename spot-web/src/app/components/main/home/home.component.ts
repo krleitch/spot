@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   postSort = 'hot';
 
   loadedPosts = 0;
-  POSTS_LIMIT = 5;
+  POSTS_LIMIT = 1;
 
   // keep track of whether the initial load was made
   // needed so the infinite scroll doesnt get called right away to overwrite
