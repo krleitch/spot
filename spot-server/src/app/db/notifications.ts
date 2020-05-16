@@ -7,10 +7,14 @@ const db = require('./mySql');
 
 function getNotificationByReceiverId(receiverId: string, offset: number, limit: number) {
     var sql = `SELECT n.id, n.post_id, n.comment_id, n.creation_date, n.seen, a.username,
-                p.image_src, p.content, p.link, c.link as comment_link FROM notifications n
+                p.image_src, p.content, p.link, 
+                c.link as comment_link, c.image_src as comment_image_src, c.content as comment_content,
+                r.image_src as reply_image_src, r.content as reply_content
+                FROM notifications n
                 LEFT JOIN accounts a ON a.id = n.sender_id
                 LEFT JOIN posts p ON n.post_id = p.id
-                LEFT JOIN comments c ON n.comment_id = c.id WHERE receiver_id = ?
+                LEFT JOIN comments c ON n.comment_id = c.id
+                LEFT JOIN comments r ON n.reply_id = r.id WHERE receiver_id = ?
                 ORDER BY n.creation_date DESC LIMIT ? OFFSET ?`;
     var values = [receiverId, limit, offset];
     return db.query(sql, values);
@@ -35,6 +39,15 @@ function addCommentNotification(senderId: string, receiverId: string, postId: st
     var notificationId = uuid.v4();
     var sql = `Insert INTO notifications (id, sender_id, receiver_id, creation_date, post_id, comment_id, seen) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     var values = [notificationId, senderId, receiverId, new Date(), postId, commentId, false];
+    return db.query(sql, values).then ( (rows: any) => {
+        return getNotificationById(notificationId);
+    });
+}
+
+function addReplyNotification(senderId: string, receiverId: string, postId: string, commentId: string, replyId: string ) {
+    var notificationId = uuid.v4();
+    var sql = `Insert INTO notifications (id, sender_id, receiver_id, creation_date, post_id, comment_id, reply_id, seen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    var values = [notificationId, senderId, receiverId, new Date(), postId, commentId, replyId, false];
     return db.query(sql, values).then ( (rows: any) => {
         return getNotificationById(notificationId);
     });

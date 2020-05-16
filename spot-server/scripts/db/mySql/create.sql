@@ -94,12 +94,14 @@ CREATE TABLE notifications (
     creation_date VARCHAR(255) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
     comment_id VARCHAR(36),
+    reply_id VARCHAR(36),
     seen BOOLEAN,
     PRIMARY KEY (id),
     FOREIGN KEY (sender_id) REFERENCES accounts (id),
     FOREIGN KEY (receiver_id) REFERENCES accounts (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
-    FOREIGN KEY (comment_id) REFERENCES comments (id)
+    FOREIGN KEY (comment_id) REFERENCES comments (id),
+    FOREIGN KEY (reply_id) REFERENCES comments (id)
 );
 
 CREATE TABLE reports (

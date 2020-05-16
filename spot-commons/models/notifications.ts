@@ -2,6 +2,7 @@ export interface Notification {
     id: string;
     post_id: string;
     comment_id: string;
+    reply_id: string;
     creation_date: string;
     username: string;
     image_src: string;
@@ -9,6 +10,10 @@ export interface Notification {
     seen: number;
     link: string;
     comment_link: string;
+    comment_image_src: string;
+    comment_content: string;
+    reply_image_src: string;
+    reply_content: string;
 }
 
 // Get notifications
