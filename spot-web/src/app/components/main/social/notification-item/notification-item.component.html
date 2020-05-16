@@ -13,15 +13,24 @@
     <div class="text-preview">
       <div class="prompt">
         <div *ngIf="notification.comment_id; else postLink">
-          <span class="username"> {{ notification.username }} </span>
-          <span> {{ STRINGS.COMMENT_PROMPT }} </span>
+          <div *ngIf="notification.reply_id; else commentLink">
+            <span class="username"> {{ notification.username }} </span>
+            <span> {{ STRINGS.REPLY_PROMPT }} </span>
+            <div class="text"> {{ notification.reply_content }} </div>
+          </div>
+          <ng-template #commentLink>
+            <span class="username"> {{ notification.username }} </span>
+            <span> {{ STRINGS.COMMENT_PROMPT }} </span>
+            <div class="text"> {{ notification.comment_content }} </div>
+          </ng-template>
+
         </div>
         <ng-template #postLink>
           <span class="username"> {{ notification.username }} </span>
           <span> {{ STRINGS.PROMPT }} </span>
+          <div class="text"> {{ notification.content }} </div>
         </ng-template>
       </div>
-      <div class="text"> {{ notification.content }} </div>
     </div>
 
     <div class="date"> {{ getTime(notification.creation_date) }} </div>

@@ -72,6 +72,10 @@
       .text {
 
         font-size: 14px;
+        color: $subtle-grey;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
       }
 

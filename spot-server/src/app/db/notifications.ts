@@ -1,12 +1,13 @@
 export { getNotificationByReceiverId, getNotificationById, addNotification, deleteNotificationById, addCommentNotification,
-            setAllNotificationsSeen, setNotificationSeen, deleteAllNotificationsForAccount, getNotificationUnreadByReceiverId }
+            setAllNotificationsSeen, setNotificationSeen, deleteAllNotificationsForAccount, getNotificationUnreadByReceiverId,
+            addReplyNotification }
 
 const uuid = require('uuid');
 
 const db = require('./mySql');
 
 function getNotificationByReceiverId(receiverId: string, offset: number, limit: number) {
-    var sql = `SELECT n.id, n.post_id, n.comment_id, n.creation_date, n.seen, a.username,
+    var sql = `SELECT n.id, n.post_id, n.comment_id, n.reply_id, n.creation_date, n.seen, a.username,
                 p.image_src, p.content, p.link, 
                 c.link as comment_link, c.image_src as comment_image_src, c.content as comment_content,
                 r.image_src as reply_image_src, r.content as reply_content
