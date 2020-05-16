@@ -37,7 +37,7 @@
 
         {{ getContent() }}
 
-        <div class="image" (click)="openModal('spot-image-comment-modal')" *ngIf="comment.image_src != null">
+        <div class="image" (click)="openModal('spot-image-comment-modal' + comment.id)" *ngIf="comment.image_src != null">
           <img [src]="comment.image_src" />
         </div>
         <span *ngIf="expandable()">
@@ -86,7 +86,7 @@
         <div class="dropdown align-bottom">
           <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
             <div *ngIf="comment.owned" class="button" (click)="deleteComment()"> {{ STRINGS.DELETE }} </div>
-            <div class="button" (click)="openModal('spot-report-comment-modal')"> {{ STRINGS.REPORT }} </div>
+            <div class="button" (click)="openModal('spot-report-comment-modal' + comment.id)"> {{ STRINGS.REPORT }} </div>
           </div>
         </div>
       </div>
@@ -103,9 +103,9 @@
   </div>
   <div *ngIf="numLoaded < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
 </div>
-<spot-modal [id]="'spot-report-comment-modal'" [width]="400" [height]="'auto'">
+<spot-modal [id]="'spot-report-comment-modal' + comment.id" [width]="400" [height]="'auto'">
   <spot-report [modalId]="'spot-report-comment-modal'" [postId]="comment.post_id" [commentId]="comment.id"></spot-report>
 </spot-modal>
-<spot-modal [id]="'spot-image-comment-modal'" [width]="'auto'" [height]="'auto'">
+<spot-modal [id]="'spot-image-comment-modal' + comment.id" [width]="'auto'" [height]="'auto'">
   <spot-image [imageSrc]="comment.image_src"></spot-image>
 </spot-modal>
