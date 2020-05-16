@@ -19,7 +19,7 @@ export class NotificationsComponent implements OnInit {
   STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
   notificationsLoaded = 0;
-  loadLimit = 1;
+  loadLimit = 10;
   initialLoad = false;
 
   notifications$: Observable<Notification[]>;
@@ -32,41 +32,21 @@ export class NotificationsComponent implements OnInit {
       select(SocialStoreSelectors.selectMyFeatureNotifications)
     );
 
-    // const request: GetNotificationsRequest = {
-    //   offset: this.notificationsLoaded,
-    //   limit: this.loadLimit
-    // };
-
-    // // load the notifications
-    // this.store$.dispatch(
-    //   new SocialStoreNotificationsActions.GetNotificationsAction(request)
-    // );
-
-    // this.notificationsLoaded += this.loadLimit;
-
-    // this.notifications$.subscribe( elem => {
-    //   this.initialLoad = elem.length !== 0;
-    // });
-
   }
 
   onScroll() {
 
-    // if (this.initialLoad) {
+    const request: GetNotificationsRequest = {
+      offset: this.notificationsLoaded,
+      limit: this.loadLimit
+    };
 
-      const request: GetNotificationsRequest = {
-        offset: this.notificationsLoaded,
-        limit: this.loadLimit
-      };
+    // load the notifications
+    this.store$.dispatch(
+      new SocialStoreNotificationsActions.GetNotificationsAction(request)
+    );
 
-      // load the notifications
-      this.store$.dispatch(
-        new SocialStoreNotificationsActions.GetNotificationsAction(request)
-      );
-
-      this.notificationsLoaded += this.loadLimit;
-
-    // }
+    this.notificationsLoaded += this.loadLimit;
 
   }
 

@@ -1,6 +1,16 @@
-<div class="wrapper">
-  <div class="notification-item" (click)="goToPost()" [ngClass]="{'seen': !notification.seen}">
-    <div class="prompt-container">
+<div class="notification-item">
+  <div class="content" (click)="goToPost()" [ngClass]="{'seen': !notification.seen}">
+
+    <div class="image-preview">
+      <div class="preview-content" *ngIf="notification.image_src; else noImage">
+        <img [src]="notification.image_src">
+      </div>
+      <ng-template #noImage>
+        <span class="no-image-preview"> {{ getImagePreview(notification) }} </span>
+      </ng-template>
+    </div>
+
+    <div class="text-preview">
       <div class="prompt">
         <div *ngIf="notification.comment_id; else postLink">
           <span class="username"> {{ notification.username }} </span>
@@ -11,14 +21,11 @@
           <span> {{ STRINGS.PROMPT }} </span>
         </ng-template>
       </div>
-      <div class="content-preview"> {{ notification.content }} </div>
+      <div class="text"> {{ notification.content }} </div>
     </div>
-    <div class="right-group">
-      <div class="image-container" *ngIf="notification.image_src">
-        <img [src]="notification.image_src">
-      </div>
-      <div class="date"> {{ getTime(notification.creation_date) }} </div>
-    </div>
+
+    <div class="date"> {{ getTime(notification.creation_date) }} </div>
+
   </div>
   <span class="material-icons delete" (click)="delete()"> close </span>
 </div>

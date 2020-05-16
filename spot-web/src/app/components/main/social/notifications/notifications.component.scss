@@ -1,8 +1,8 @@
 @import '../../../../styles/colors';
 @import '../../../../styles/sizes';
 
-.container {
-  position: relative;
+.highlight {
+  color: $button-highlight;
 }
 
 .notifications {
@@ -11,10 +11,62 @@
   right: 0;
   background-color: white;
   box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
-  min-width: 300px;
-  max-width: 300px;
+  min-width: 400px;
+  max-width: 400px;
   height: auto;
-  z-index: 2;
+
+  .header {
+
+    cursor: default;
+    display: flex;
+    justify-content: space-between;
+    color: black;
+    font-size: 16px;
+    padding: 7px 10px;
+    border-bottom: 1px solid $lighter-grey;
+
+    .see {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      &:hover {
+        @extend .highlight;
+      }
+
+      .check {
+
+        margin-left: 3px;
+        font-size: 20px;
+
+      }
+
+    }
+
+    .clear {
+      cursor: pointer;
+      &:hover {
+        @extend .highlight;
+      }
+    }
+
+  }
+
+  // honestly just change heights , make this the scrollable, and remove the fixed
+  .notifications-content {
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: none;
+  }
+
+  .no-notifications {
+    display: flex;
+    justify-content: center;
+    cursor: default;
+    color: $subtle-grey;
+    font-size: 14px;
+    padding: 15px;
+  }
+
 }
 
 // Mobile stylings
@@ -24,52 +76,4 @@
   }
 }
 
-.highlight {
-  color: $button-highlight;
-}
 
-.header {
-  cursor: default;
-  display: flex;
-  justify-content: space-between;
-  color: black;
-  font-size: 16px;
-  padding: 5px 10px;
-}
-
-// honestly just change heights , make this the scrollable, and remove the fixed
-.notifications-container {
-  max-height: 350px;
-  overflow-y: auto;
-  overflow-x: none;
-}
-
-.title {
-
-  // &:hover {
-  //   @extend .highlight;
-  // }
-}
-
-.see {
-  cursor: pointer;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
-.clear {
-  cursor: pointer;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
-.no-notifications {
-  display: flex;
-  justify-content: center;
-  cursor: default;
-  color: $subtle-grey;
-  font-size: 14px;
-  padding: 15px;
-}

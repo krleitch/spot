@@ -1,93 +1,101 @@
 @import '../../../../styles/colors';
 
-.wrapper {
-  position: relative;
-  max-width: 100%;
+.highlight {
+  color: $button-highlight;
 }
 
 .notification-item {
+
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  height: 60px;
   width: 100%;
-  padding: 5px 10px;
-  cursor: pointer;
-  color: black;
-  border-top: 1px solid $subtle-grey;
-  &:hover {
-    @extend .highlight;
+  border-bottom: 1px solid $lighter-grey;
+
+  color: $subtle-grey;
+
+  &:hover .text-preview .prompt {
+    color: $button-highlight;
   }
+
+  .seen {
+    background-color: $item-highlight;
+  }
+
+  .content {
+
+    display: flex;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+
+    .image-preview {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+      overflow: hidden;
+
+      img {
+
+        max-width: 100px;
+        max-height: 100px;
+
+      }
+
+      .no-image-preview {
+        font-size: 20px;
+        color: $subtle-grey;
+      }
+
+    }
+
+    .text-preview {
+
+      flex: 1;
+      padding: 0px 15px;
+
+
+      .prompt {
+
+        font-size: 14px;
+
+        .username {
+
+        }
+
+      }
+
+      .text {
+
+        font-size: 14px;
+
+      }
+
+    }
+
+    .date {
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      color: $subtle-grey;
+    }
+
+  }
+
 }
 
 .delete {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 7px;
+  right: 7px;
   font-size: 14px;
   color: $subtle-grey;
   cursor: pointer;
   &:hover {
     color: $error-red;
   }
-}
-
-
-.seen {
-  background-color: $lighter-grey;
-}
-
-
-.highlight {
-  color: $button-highlight;
-}
-
-.prompt-container {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  width: 60%;
-}
-
-.prompt {
-  font-size: 16px;
-}
-
-.username {
-  // username styles
-}
-
-.content-preview {
-  color: $subtle-grey;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 14px;
-}
-
-.right-group {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 40%;
-}
-
-.image-container {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-  margin-left: 10px;
-}
-
-img {
-  max-height: 45px;
-  max-width: 70px;
-}
-
-.date {
-  font-size: 10px;
-  color: $subtle-grey;
 }

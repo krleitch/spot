@@ -1,21 +1,28 @@
-<div class="container">
-  <div class="notifications">
-    <div class="header">
-      <span class="title"> {{ STRINGS.TITLE }} </span>
-      <span class="see" (click)="seeAll()"> {{ STRINGS.MARK_ALL_AS_SEEN }} </span>
-      <!-- <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span> -->
-    </div>
-    <div class="notifications-container" *ngIf="notifications$ | async as notifications">
-      <spot-infinite-scroll (scrolled)="onScroll()">
-        <ng-container *ngIf="notifications.length; else noNotifications">
-            <div *ngFor="let notification of notifications">
-              <spot-notification-item [notification]="notification"></spot-notification-item>
-            </div>
-        </ng-container>
-      </spot-infinite-scroll>
-      <ng-template #noNotifications>
-        <div class="no-notifications"> {{ STRINGS.NO_NOTIFICATIONS }} </div>
-      </ng-template>
-    </div>
+<div class="notifications">
+
+  <div class="header">
+    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="see" (click)="seeAll()">
+      {{ STRINGS.MARK_ALL_AS_SEEN }}
+      <span class="material-icons check"> check </span>
+    </span>
+    <!-- <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span> -->
   </div>
+
+  <div class="notifications-content" *ngIf="notifications$ | async as notifications">
+
+    <spot-infinite-scroll (scrolled)="onScroll()">
+      <ng-container *ngIf="notifications.length; else noNotifications">
+          <div *ngFor="let notification of notifications">
+            <spot-notification-item [notification]="notification"></spot-notification-item>
+          </div>
+      </ng-container>
+    </spot-infinite-scroll>
+
+    <ng-template #noNotifications>
+      <div class="no-notifications"> {{ STRINGS.NO_NOTIFICATIONS }} </div>
+    </ng-template>
+
+  </div>
+
 </div>

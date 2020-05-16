@@ -82,5 +82,8 @@ export class NotificationItemComponent implements OnInit {
 
   }
 
+  getImagePreview(notification: Notification): string {
+    return notification.username[0].toUpperCase();
+  }
 
 }
