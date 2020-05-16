@@ -57,7 +57,10 @@
 
       flex: 1;
       padding: 0px 15px;
-
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
 
       .prompt {
 
@@ -76,6 +79,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        min-width: 0;
 
       }
 
