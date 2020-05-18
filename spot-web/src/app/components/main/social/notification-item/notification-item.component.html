@@ -2,11 +2,21 @@
   <div class="content" (click)="goToPost()" [ngClass]="{'seen': !notification.seen}">
 
     <div class="image-preview">
-      <div class="preview-content" *ngIf="notification.image_src; else noImage">
-        <img [src]="notification.image_src">
+      <div class="preview-content" *ngIf="notification.reply_image_src; else noImageReply">
+        <img [src]="notification.reply_image_src">
       </div>
-      <ng-template #noImage>
-        <span class="no-image-preview"> {{ getImagePreview(notification) }} </span>
+      <ng-template #noImageReply>
+        <div class="preview-content" *ngIf="notification.comment_image_src; else noImageComment">
+          <img [src]="notification.comment_image_src">
+        </div>
+        <ng-template #noImageComment>
+          <div class="preview-content" *ngIf="notification.image_src; else noImage">
+            <img [src]="notification.image_src">
+          </div>
+          <ng-template #noImage>
+            <span class="no-image-preview"> {{ getImagePreview(notification) }} </span>
+          </ng-template>
+        </ng-template>
       </ng-template>
     </div>
 

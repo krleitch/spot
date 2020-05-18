@@ -72,8 +72,11 @@
 // Mobile stylings
 @media screen and (max-width: $mobile-width) {
   .notifications {
-    right: -30px;
+    min-width: 90%;
+    max-width: 90%;
+    position: fixed;
+    left: 50%;
+    top: 65px;
+    transform: translateX(-50%);
   }
 }
-
-

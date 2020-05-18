@@ -32,6 +32,7 @@
   "_moduleAliases": {
     "@src": "/src",
     "@models": "../spot-commons/models",
+    "@exceptions": "../spot-commons/exceptions",
     "@db": "/src/app/db",
     "@routes": "src/app/routes",
     "@services": "src/app/services"

@@ -4,6 +4,9 @@ const router = express.Router();
 const friends = require('../db/friends');
 const accounts = require('../db/accounts');
 
+//errors
+const UsernameError = require('@exceptions/friends');
+
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
@@ -49,7 +52,7 @@ router.get('/requests', function (req: any, res: any) {
 });
 
 // send a friend request
-router.post('/requests', function (req: any, res: any) {
+router.post('/requests', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
@@ -57,6 +60,11 @@ router.post('/requests', function (req: any, res: any) {
     // TODO: what if you send a request to someone who sent you a request
 
     accounts.getAccountByUsername(username).then((receiverId: any) => {
+
+        if ( receiverId[0].id == accountId ) {
+            next(new UsernameError('Username Error', 404))
+        }
+
         if ( receiverId[0] === undefined ) {
             res.status(500).send('No user exists with that username');
         } else {

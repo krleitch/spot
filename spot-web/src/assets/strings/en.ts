@@ -158,9 +158,9 @@ export const STRINGS = {
 
         NOTIFICATION_ITEM: {
 
-          PROMPT: 'sent a spot!',
-          COMMENT_PROMPT: 'mentioned you in a comment',
-          REPLY_PROMPT: 'mentioned you in a reply'
+          PROMPT: 'sent a spot',
+          COMMENT_PROMPT: 'tagged you',
+          REPLY_PROMPT: 'tagged you'
 
         },
 

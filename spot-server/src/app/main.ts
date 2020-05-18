@@ -38,6 +38,17 @@ app.use('/image', passport.authenticate('jwt', {session: true}), image);
 app.use('/notifications', passport.authenticate('jwt', {session: true}), notifications);
 app.use('/friends', passport.authenticate('jwt', {session: true}), friends);
 
+// Error middleware
+app.use((err: any, req: any, res: any, next: any) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || 'error';
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message
+  });
+});
+
 app.listen(port, (err: any) => {
   if (err) {
     console.log('Error listening: ', err);
