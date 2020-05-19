@@ -15,6 +15,8 @@ const auth = require('./routes/auth');
 const mySql = require('./db/mySql');
 const mongo = require('./db/mongo');
 
+const errorHandler = require('./errorHandler');
+
 const passport = require('./services/auth/passport');
 
 const port = 3000;
@@ -39,15 +41,7 @@ app.use('/notifications', passport.authenticate('jwt', {session: true}), notific
 app.use('/friends', passport.authenticate('jwt', {session: true}), friends);
 
 // Error middleware
-app.use((err: any, req: any, res: any, next: any) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message
-  });
-});
+// app.use(errorHandler.errorMiddleware);
 
 app.listen(port, (err: any) => {
   if (err) {

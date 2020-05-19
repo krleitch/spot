@@ -5,7 +5,7 @@ const friends = require('../db/friends');
 const accounts = require('../db/accounts');
 
 //errors
-const UsernameError = require('@exceptions/friends');
+const FriendsError = require('@exceptions/friends');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -62,7 +62,7 @@ router.post('/requests', function (req: any, res: any, next: any) {
     accounts.getAccountByUsername(username).then((receiverId: any) => {
 
         if ( receiverId[0].id == accountId ) {
-            next(new UsernameError('Username Error', 404))
+            return next(new FriendsError.UsernameError('Username Invalid', 404))
         }
 
         if ( receiverId[0] === undefined ) {
