@@ -8,7 +8,7 @@ export const catchAsync = (fn: any) => {
 
 // the error middleware 
 
-// TDO
+// TODO
 // export errorMiddleware(err: any, req: any, res: any, next: any) => {
 //     err.statusCode = err.statusCode || 500;
 //     err.status = err.status || 'error';
