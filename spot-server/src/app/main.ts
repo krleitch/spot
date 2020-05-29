@@ -41,7 +41,7 @@ app.use('/notifications', passport.authenticate('jwt', {session: true}), notific
 app.use('/friends', passport.authenticate('jwt', {session: true}), friends);
 
 // Error middleware
-// app.use(errorHandler.errorMiddleware);
+app.use(errorHandler.errorMiddleware);
 
 app.listen(port, (err: any) => {
   if (err) {

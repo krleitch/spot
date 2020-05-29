@@ -6,16 +6,12 @@ export const catchAsync = (fn: any) => {
     };
 };
 
-// the error middleware 
+export const errorMiddleware = (err: any, req: any, res: any, next: any) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
 
-// TODO
-// export errorMiddleware(err: any, req: any, res: any, next: any) => {
-//     err.statusCode = err.statusCode || 500;
-//     err.status = err.status || 'error';
-
-//     res.status(err.statusCode).json({
-//         status: err.status,
-//         message: err.message
-//     });
-// }
-
+    res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message
+    });
+}
