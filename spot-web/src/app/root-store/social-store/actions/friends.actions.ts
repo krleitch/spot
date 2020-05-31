@@ -6,6 +6,8 @@ import { GetFriendRequestsRequest, GetFriendRequestsSuccess, AddFriendRequestsRe
             DeclineFriendRequestsSuccess, GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest,
             DeleteFriendsSuccess } from '@models/friends';
 
+import { SpotError } from '@exceptions/error';
+
 export enum FriendsActionTypes {
   GET_FRIENDS_REQUEST = '[Social Friends] Get Friends Request',
   GET_FRIENDS_SUCCESS = '[Social Friends] Get Friends Success',
@@ -26,7 +28,7 @@ export enum FriendsActionTypes {
 
 export class GenericFailureAction implements Action {
   readonly type = FriendsActionTypes.GENERIC_FAILURE;
-  constructor(public error: string) {}
+  constructor(public error: SpotError) {}
 }
 
 export class GetFriendsAction implements Action {

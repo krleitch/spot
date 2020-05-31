@@ -7,10 +7,12 @@ export const catchAsync = (fn: any) => {
 };
 
 export const errorMiddleware = (err: any, req: any, res: any, next: any) => {
+    
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
 
     res.status(err.statusCode).json({
+        name: err.name,
         status: err.status,
         message: err.message
     });

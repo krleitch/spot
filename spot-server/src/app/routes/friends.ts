@@ -6,6 +6,8 @@ const accounts = require('../db/accounts');
 
 //errors
 const FriendsError = require('@exceptions/friends');
+const MESSAGES = require('@exceptions/messages');
+const FRIENDS_ERROR_MESSAGES = MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -61,21 +63,22 @@ router.post('/requests', function (req: any, res: any, next: any) {
 
     accounts.getAccountByUsername(username).then((receiverId: any) => {
 
-        if ( receiverId[0].id == accountId ) {
-            return next(new FriendsError.UsernameError('Username Invalid', 404))
+        if ( receiverId[0] === undefined ) {
+            return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.NO_USER, 400));
         }
 
-        if ( receiverId[0] === undefined ) {
-            res.status(500).send('No user exists with that username');
-        } else {
-            friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
-                res.status(200).json({ friendRequest: rows[0] });
-            }, (err: any) => {
-                res.status(500).send('Error sending friend request');
-            });
+        if ( receiverId[0].id == accountId ) {
+            return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.SELF, 400));
         }
+
+        friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
+            res.status(200).json({ friendRequest: rows[0] });
+        }, (err: any) => {
+            return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500));
+        });
+        
     }, (err: any) => {
-        res.status(500).send('Error sending friend request');
+        return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500))
     });
 
 });

@@ -27,8 +27,18 @@ spot-main-nav {
 }
 
 .friends-title {
+
+    display: flex;
+    align-items: center;
+
     font-size: 32px;
     margin-bottom: 5px;
+
+  .people {
+    font-size: 32px;
+    margin-right: 8px;
+  }
+
 }
 
 .friends-subtitle {
@@ -146,5 +156,16 @@ input {
 }
 
 .no-friends {
-  padding: 5px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+
+  .person {
+    margin-right: 8px;
+  }
+
 }
+
+

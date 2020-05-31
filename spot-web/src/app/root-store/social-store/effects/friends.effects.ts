@@ -21,6 +21,7 @@ export class FriendsEffects {
         friendsActions.FriendsActionTypes.GENERIC_FAILURE
     ),
     tap((action: friendsActions.GenericFailureAction) => {
+      console.log(action.error)
       this.friendsService.failureMessage(action.error);
     })
   );

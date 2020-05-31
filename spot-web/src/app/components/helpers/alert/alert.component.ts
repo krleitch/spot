@@ -31,11 +31,12 @@ export class AlertComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
           alert.fade = true;
-        }, 2000);
+        }, 3000);
 
         setTimeout(() => {
           this.closeAlert(alert);
-        }, 3000);
+        }, 4000);
+
       });
   }
 
@@ -49,6 +50,7 @@ export class AlertComponent implements OnInit, OnDestroy {
   }
 
   cssClass(alert: Alert) {
+
       if (!alert) {
           return;
       }

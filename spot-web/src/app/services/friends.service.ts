@@ -10,6 +10,8 @@ import { GetFriendRequestsRequest, GetFriendRequestsSuccess, AddFriendRequestsRe
             DeclineFriendRequestsSuccess, GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest,
             DeleteFriendsSuccess } from '@models/friends';
 
+import { SpotError } from '@exceptions/error';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -47,8 +49,8 @@ export class FriendsService {
     return this.http.post<DeclineFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/decline`, request);
   }
 
-  failureMessage(message: string) {
-    this.alertService.error(message);
+  failureMessage(error: SpotError) {
+    this.alertService.error(error.message);
   }
 
   successMessage(message: string) {

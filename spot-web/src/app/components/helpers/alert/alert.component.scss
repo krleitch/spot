@@ -9,21 +9,36 @@
 }
 
 .close {
+  cursor: pointer;
+
+  &:hover {
+    color: lighten(black, 30%);
+  }
 
 }
 
 .alert {
+
+    box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+
     opacity: 1;
     -webkit-transition: opacity 1000ms linear;
     transition: opacity 1000ms linear;
 
     width: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
     padding: 20px 10px;
     margin-bottom: 10px;
     height: auto;
+}
+
+.message {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
 }
 
 .fade {
@@ -31,17 +46,17 @@
 }
 
 .alert-success {
-    background-color: $success-green;
+    background-image: linear-gradient($success-green, lighten($success-green, 10%));
 }
 
 .alert-danger {
-    background-color: $error-red-light;
+    background-image: linear-gradient($error-red-light, lighten($error-red-light, 10%));
 }
 
 .alert-info {
-    background-color: $info-blue;
+    background-image: linear-gradient($info-blue, lighten($info-blue, 10%));
 }
 
 .alert-warning {
-    background-color: $warning-yellow;
+    background-image: linear-gradient($warning-yellow, lighten($warning-yellow, 10%));
 }

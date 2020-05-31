@@ -1,6 +1,8 @@
 <div class="container">
   <div *ngFor="let alert of alerts" class="{{cssClass(alert)}}" [ngClass]="{'fade': alert.fade}">
-      {{alert.message}}
+      <div class="message">
+        {{alert.message}}
+      </div>
       <i class="material-icons close" (click)="closeAlert(alert)"> clear </i>
   </div>
 </div>

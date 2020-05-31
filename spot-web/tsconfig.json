@@ -22,6 +22,9 @@
       "@models/*": [
         "../spot-commons/models/*"
       ],
+      "@exceptions/*": [
+        "../spot-commons/exceptions/*"
+      ],
       "@services/*": [
         "src/app/services/*"
       ],

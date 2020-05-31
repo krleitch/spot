@@ -1,7 +1,10 @@
 <spot-main-nav></spot-main-nav>
 <div class="friends-container">
 <div class="friends-content">
-    <div class="friends-title"> {{ STRINGS.TITLE }} </div>
+    <div class="friends-title">
+      <span class="material-icons people"> people_alt </span>
+      {{ STRINGS.TITLE }}
+    </div>
     <div *ngIf="(friendRequests$ | async)?.length > 0">
       <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
       <div class="friend-content-section">
@@ -23,7 +26,7 @@
     <div class="friends-subtitle"> {{ STRINGS.ADD }} </div>
     <div class="friend-content-section">
       <div class="friend-request-input-container">
-        <input [(ngModel)]="friendRequestUsername" [placeholder]="STRINGS.FRIEND_REQUEST_PLACEHOLDER" type="text">
+        <input [(ngModel)]="friendRequestUsername" [placeholder]="STRINGS.FRIEND_REQUEST_PLACEHOLDER" type="text" (keyup.enter)="addFriendRequest()">
         <span class="send-container" (click)="addFriendRequest()"> <i class="material-icons send"> send </i> </span>
       </div>
     </div>
@@ -38,7 +41,10 @@
         </div>
       </div>
       <ng-template #noFriends>
-        <span class="no-friends"> {{ STRINGS.NO_FRIENDS }} </span>
+        <span class="no-friends">
+          <span class="material-icons person"> person_add </span>
+          {{ STRINGS.NO_FRIENDS }}
+        </span>
       </ng-template>
     </div>
   </div>
