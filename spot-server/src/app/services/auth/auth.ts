@@ -1,4 +1,4 @@
-export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails}
+export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -30,6 +30,20 @@ function generateToken(user: any): any {
 function getFacebookDetails(accessToken: String): Promise<any> {
     
     const url = "https://graph.facebook.com/me?fields=id,email&access_token=" + accessToken;
+
+    return new Promise((resolve, reject) => {
+        request(url, function (error: any, response: any, body: any) {
+            if (error) {
+                return reject(error);
+            }
+            resolve({response: response, body: JSON.parse(body)});
+          });
+    })
+}
+
+function getFacebookId(accessToken: String): Promise<any> {
+    
+    const url = "https://graph.facebook.com/me?fields=id&access_token=" + accessToken;
 
     return new Promise((resolve, reject) => {
         request(url, function (error: any, response: any, body: any) {

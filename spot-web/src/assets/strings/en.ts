@@ -16,7 +16,7 @@ export const STRINGS = {
             ACTIVITY: 'Activity',
             FRIENDS: 'Friends',
             ACCOUNT: 'Account',
-            LOGOUT: 'Logout'
+            LOGOUT: 'Logout',
 
         },
 
@@ -175,7 +175,11 @@ export const STRINGS = {
           FRIENDS_LIST: 'Friends List',
           REMOVE: 'Remove',
 
-          NO_FRIENDS: 'Add Friends to share spots quickly'
+          NO_FRIENDS: 'Add Friends to share spots quickly',
+
+          // Social
+          FACEBOOK_CONNECT: 'Connect With Facebook',
+
 
         },
 

@@ -17,6 +17,11 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       };
     }
     case ActionTypes.LOGIN_SUCCESS: {
+
+      if ( action.response.account.facebook_id ) {
+          state.facebookConnected = true;
+      }
+
       return {
         ...state,
         account: action.response.account
@@ -47,6 +52,11 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       };
     }
     case ActionTypes.ACCOUNT_SUCCESS: {
+
+      if ( action.response.account.facebook_id ) {
+        state.facebookConnected = true;
+      }
+
       return {
         ...state,
         account: action.response.account
@@ -61,7 +71,14 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,
-        account: action.response.account
+        account: action.response.account,
+        facebookConnected: true
+      };
+    }
+    case FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS: {
+      return {
+        ...state,
+        facebookConnected: true
       };
     }
     default: {

@@ -4,6 +4,7 @@ import { State } from './state';
 
 export const selectAccount = (state: State): any => state.account;
 export const selectLocation = (state: State): any => state.location;
+export const selectFacebook = (state: State): boolean => state.facebookConnected;
 
 export const selectAccountsState: MemoizedSelector<
   object,
@@ -24,4 +25,12 @@ export const selectAccountsLocation: MemoizedSelector<
 > = createSelector(
   selectAccountsState,
   selectLocation
+);
+
+export const selectFacebookConnected: MemoizedSelector<
+  object,
+  any
+> = createSelector(
+  selectAccountsState,
+  selectFacebook
 );

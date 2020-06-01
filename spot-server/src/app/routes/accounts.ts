@@ -4,6 +4,8 @@ const router = express.Router();
 
 const accounts = require('../db/accounts');
 
+const authService = require('@services/auth/auth')
+
 router.use(function timeLog (req: any, res: any, next: any) {
     // console.log('[ACCOUNTS] ', Date.now());
     next();
@@ -38,5 +40,33 @@ router.put('/account', passport.authenticate('jwt', {session: false}), function 
         res.status(500).send("Error updating username");
     })
 })
+
+// Facebook Connect
+router.post('/facebook', function (req: any, res: any) {
+
+    const { accessToken } = req.body;
+    const accountId = req.user.id;
+
+    authService.getFacebookId(accessToken).then( ( facebookId: any) => {
+        accounts.getFacebookAccount(facebookId.body.id).then(( user: any) => {
+            if ( user.length == 0 ) {
+                // create the account
+                accounts.connectFacebookAccount(facebookId.body.id, accountId).then( (rows: any) => {
+                    res.status(200).json({
+                        created: true
+                    });  
+                }, (err: any) => {
+                    res.status(500).send('Error connecting account with facebook');
+                });            
+            } else {
+                // account already exists
+            }
+        }, (err: any) => {
+            res.status(500).send('Error signing in with facebook');
+        })   
+    }, (err: any) => {
+        res.status(500).send('Error signing in with facebook');
+    });
+});
 
 export = router;

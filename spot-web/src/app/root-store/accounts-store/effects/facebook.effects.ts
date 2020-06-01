@@ -6,11 +6,15 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as facebookActions from '../actions/facebook.actions';
 import { AuthenticationService } from '@services/authentication.service';
+import { AccountsService } from '@services/accounts.service';
 import { FacebookLoginResponse } from '@models/authentication';
+import { FacebookConnectResponse } from '@models/accounts';
 
 @Injectable()
 export class FacebookStoreEffects {
-  constructor(private authenticationService: AuthenticationService, private actions$: Actions) { }
+  constructor(private authenticationService: AuthenticationService,
+              private accountsService: AccountsService,
+              private actions$: Actions) { }
 
   @Effect()
   loginFacebookAccountEffect$: Observable<Action> = this.actions$.pipe(
@@ -36,6 +40,33 @@ export class FacebookStoreEffects {
     ),
     tap( (action: facebookActions.FacebookLoginSuccessAction) => {
       this.authenticationService.loginFacebookAccountSuccess(action.response);
+    })
+  );
+
+  @Effect()
+  connectFacebookAccountEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<facebookActions.FacebookConnectRequestAction>(
+      facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_REQUEST
+    ),
+    switchMap( action =>
+      this.accountsService
+        .connectFacebookAccount( action.request)
+        .pipe(
+            map( (response: FacebookConnectResponse) => new facebookActions.FacebookConnectSuccessAction(response)),
+            catchError(error =>
+              observableOf(new facebookActions.FacebookConnectFailureAction(error))
+            )
+        )
+    )
+  );
+
+  @Effect({dispatch: false})
+  connectFacebookAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<facebookActions.FacebookConnectSuccessAction>(
+      facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS
+    ),
+    tap( (action: facebookActions.FacebookConnectSuccessAction) => {
+      // this.authenticationService.loginFacebookAccountSuccess(action.response);
     })
   );
 

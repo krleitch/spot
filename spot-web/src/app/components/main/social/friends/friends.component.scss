@@ -26,7 +26,13 @@ spot-main-nav {
     margin-top: 25px;
 }
 
-.friends-title {
+.title-wrapper {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .friends-title {
 
     display: flex;
     align-items: center;
@@ -34,12 +40,39 @@ spot-main-nav {
     font-size: 32px;
     margin-bottom: 5px;
 
-  .people {
-    font-size: 32px;
-    margin-right: 8px;
+    .people {
+      font-size: 32px;
+      margin-right: 8px;
+    }
+
+  }
+
+  .facebook {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $facebook-blue;
+    color: white;
+    font-size: 14px;
+    padding: 8px 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    width: 225px;
+    &:hover {
+      background-color: lighten($facebook-blue, 3%);
+    }
+
+    .facebook-logo {
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+    }
+
   }
 
 }
+
+
 
 .friends-subtitle {
     font-size: 20px;

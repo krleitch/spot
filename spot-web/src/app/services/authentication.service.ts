@@ -21,9 +21,13 @@ export class AuthenticationService {
         private alertService: AlertService) {
     }
 
+    // Facebook
+
     loginFacebookAccount(request: FacebookLoginRequest): Observable<FacebookLoginResponse> {
         return this.http.post<FacebookLoginResponse>(`${this.baseUrl}/auth/login/facebook`, request);
     }
+
+    // Normal auth
 
     registerAccount(registerRequest: RegisterRequest): Observable<RegisterResponse> {
         return this.http.post<RegisterResponse>(`${this.baseUrl}/auth/register`, registerRequest);

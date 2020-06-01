@@ -1,9 +1,15 @@
 <spot-main-nav></spot-main-nav>
 <div class="friends-container">
 <div class="friends-content">
-    <div class="friends-title">
-      <span class="material-icons people"> people_alt </span>
-      {{ STRINGS.TITLE }}
+    <div class="title-wrapper">
+      <div class="friends-title">
+        <span class="material-icons people"> people_alt </span>
+        {{ STRINGS.TITLE }}
+      </div>
+      <div *ngIf="!facebookConnected$ | async" type="button" class="facebook" (click)="facebookConnect()">
+        <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+        {{ STRINGS.FACEBOOK_CONNECT }}
+      </div>
     </div>
     <div *ngIf="(friendRequests$ | async)?.length > 0">
       <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>

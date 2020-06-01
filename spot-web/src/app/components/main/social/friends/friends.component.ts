@@ -4,10 +4,12 @@ import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
+import { AccountsFacebookActions, AccountsStoreSelectors } from '@store/accounts-store';
 import { STRINGS } from '@assets/strings/en';
 import { FriendRequest, GetFriendRequestsRequest, AddFriendRequestsRequest,
           AcceptFriendRequestsRequest, DeclineFriendRequestsRequest, Friend,
           GetFriendsRequest, DeleteFriendsRequest } from '@models/friends';
+import { FacebookConnectRequest } from '@models/accounts';
 
 @Component({
   selector: 'spot-friends',
@@ -20,6 +22,7 @@ export class FriendsComponent implements OnInit {
 
   friendRequests$: Observable<FriendRequest[]>;
   friends$: Observable<Friend[]>;
+  facebookConnected$: Observable<boolean>;
   friendRequestUsername: string;
 
   constructor(private store$: Store<RootStoreState.State>) { }
@@ -33,6 +36,10 @@ export class FriendsComponent implements OnInit {
 
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectMyFeatureFriends)
+    );
+
+    this.facebookConnected$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectFacebookConnected)
     );
 
     // get friends and friend requests
@@ -99,6 +106,39 @@ export class FriendsComponent implements OnInit {
     this.store$.dispatch(
       new SocialStoreFriendsActions.DeleteFriendsAction(request)
     );
+
+  }
+
+  facebookConnect() {
+
+    window['FB'].getLoginStatus((statusResponse) => {
+      if (statusResponse.status !== 'connected') {
+          window['FB'].login((loginResponse) => {
+            if (loginResponse.status === 'connected') {
+
+                // localStorage.removeItem('fb_access_token');
+                // localStorage.removeItem('fb_expires_in');
+
+                const request: FacebookConnectRequest = {
+                  accessToken: loginResponse.authResponse.accessToken
+                };
+
+                this.store$.dispatch(
+                  new AccountsFacebookActions.FacebookConnectRequestAction(request)
+                );
+
+            } else {
+              // could not login
+              // TODO some error msg
+            }
+          })
+      } else {
+        // already logged in
+        // this.router.navigateByUrl('/home');
+        // TODO THIS // ALSO LANDING
+        window['FB'].logout();
+      }
+    });
 
   }
 
