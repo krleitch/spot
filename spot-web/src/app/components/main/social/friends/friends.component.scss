@@ -1,4 +1,5 @@
 @import '../../../../styles/colors';
+@import '../../../../styles/sizes';
 
 spot-main-nav {
     position: fixed;
@@ -57,7 +58,7 @@ spot-main-nav {
     padding: 8px 8px;
     box-sizing: border-box;
     cursor: pointer;
-    width: 225px;
+    width: 200px;
     &:hover {
       background-color: lighten($facebook-blue, 3%);
     }
@@ -71,8 +72,6 @@ spot-main-nav {
   }
 
 }
-
-
 
 .friends-subtitle {
     font-size: 20px;
@@ -199,6 +198,14 @@ input {
     margin-right: 8px;
   }
 
+}
+
+// For Mobile
+@media screen and (max-width: $mobile-width) {
+  .friends-content  {
+    width: 95%;
+    min-width: 0;
+  }
 }
 
 

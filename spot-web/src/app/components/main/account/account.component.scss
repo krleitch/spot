@@ -1,4 +1,5 @@
 @import '../../../styles/colors';
+@import '../../../styles/sizes';
 
 spot-main-nav {
   position: fixed;
@@ -22,12 +23,58 @@ spot-main-nav {
   width: 50%;
 }
 
+.title-wrapper {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
 .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 30px;
   margin-bottom: 15px;
+}
+
+.facebook {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $facebook-blue;
+  color: white;
+  font-size: 14px;
+  padding: 8px 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 200px;
+  &:hover {
+    background-color: lighten($facebook-blue, 3%);
+  }
+
+}
+
+.facebook-logo {
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+}
+
+.facebook-connected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .text {
+    margin-right: 5px;
+  }
+
+  .check {
+    color: $success-green;
+  }
+
 }
 
 .subheading {
@@ -184,5 +231,13 @@ input {
 .enable-text {
   &:hover {
     color: $button-highlight;
+  }
+}
+
+// For Mobile
+@media screen and (max-width: $mobile-width) {
+  .account-info  {
+    width: 95%;
+    min-width: 0;
   }
 }

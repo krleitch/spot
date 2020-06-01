@@ -2,17 +2,32 @@
 <div class="account">
   <div class="account-info">
     <div *ngIf="account$ | async as account; else noAccount">
-      <div class="title"> {{ STRINGS.MY_ACCOUNT }}</div>
+      <div class="title-wrapper">
+        <div class="title">
+          {{ STRINGS.MY_ACCOUNT }}
+        </div>
+        <div *ngIf="!(facebookConnected$ | async); else connected" type="button" class="facebook" (click)="facebookConnect()">
+          <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+          {{ STRINGS.FACEBOOK_CONNECT }}
+        </div>
+        <ng-template #connected>
+          <div class="facebook-connected">
+            <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+            <span class="text"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </span>
+            <span class="material-icons check"> check_circle </span>
+          </div>
+        </ng-template>
+      </div>
       <div class="subheading"> {{ STRINGS.EMAIL }} </div>
       <div class="value"> {{ account.email }} </div>
       <div class="subheading"> {{ STRINGS.USERNAME }} </div>
-      <div class="value username"> 
+      <div class="value username">
         <input #editUsername [disabled]="!editUsernameEnabled" [(ngModel)]="username" type="text" spellcheck="false">
         <div *ngIf="editUsernameEnabled; else elseBlock">
-          <span class="link" (click)="submitEditUsername()"> {{ STRINGS.EDIT_USERNAME_SUBMIT }} </span> 
+          <span class="link" (click)="submitEditUsername()"> {{ STRINGS.EDIT_USERNAME_SUBMIT }} </span>
         </div>
         <ng-template #elseBlock>
-          <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT_USERNAME }} </span> 
+          <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT_USERNAME }} </span>
         </ng-template>
       </div>
       <div class="subheading"> {{ STRINGS.PHONE }} </div>

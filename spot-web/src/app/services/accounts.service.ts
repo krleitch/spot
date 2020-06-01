@@ -18,7 +18,7 @@ export class AccountsService {
   // Facebook
 
   connectFacebookAccount(request: FacebookConnectRequest): Observable<FacebookConnectResponse> {
-    return this.http.post<FacebookConnectResponse>(`${this.baseUrl}/auth/facebook`, request);
+    return this.http.post<FacebookConnectResponse>(`${this.baseUrl}/accounts/facebook`, request);
   }
 
   // Normal

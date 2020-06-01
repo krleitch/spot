@@ -6,7 +6,7 @@
         <span class="material-icons people"> people_alt </span>
         {{ STRINGS.TITLE }}
       </div>
-      <div *ngIf="!facebookConnected$ | async" type="button" class="facebook" (click)="facebookConnect()">
+      <div *ngIf="!(facebookConnected$ | async)" type="button" class="facebook" (click)="facebookConnect()">
         <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
         {{ STRINGS.FACEBOOK_CONNECT }}
       </div>

@@ -54,7 +54,11 @@ export const STRINGS = {
             // Account options
             ACCOUNT_OPTIONS: 'Account Options',
             ENABLE_OPTIONS: 'Enable Options',
-            DELETE: 'Delete Account'
+            DELETE: 'Delete Account',
+
+            // Social
+            FACEBOOK_CONNECT: 'Connect With Facebook',
+            FACEBOOK_CONNECT_SUCCESS: 'Connected'
 
         },
 

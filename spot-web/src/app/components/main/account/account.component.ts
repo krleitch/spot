@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
 import { STRINGS } from '@assets/strings/en';
-import { AccountsActions } from '@store/accounts-store';
+import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
-import { Account, UpdateUsernameRequest } from '@models/accounts';
+import { Account, UpdateUsernameRequest, FacebookConnectRequest } from '@models/accounts';
 
 @Component({
   selector: 'spot-account',
@@ -19,6 +19,7 @@ export class AccountComponent implements OnInit {
   STRINGS = STRINGS.MAIN.ACCOUNT;
 
   account$: Observable<Account>;
+  facebookConnected$: Observable<boolean>;
 
   accountOptionsEnabled: boolean;
   editUsernameEnabled = false;
@@ -27,6 +28,11 @@ export class AccountComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
+
+    this.facebookConnected$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectFacebookConnected)
+    );
+
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsUser)
     );
@@ -68,6 +74,39 @@ export class AccountComponent implements OnInit {
         new AccountsActions.DeleteRequestAction()
       );
     }
+  }
+
+  facebookConnect() {
+
+    window['FB'].getLoginStatus((statusResponse) => {
+      if (statusResponse.status !== 'connected') {
+          window['FB'].login((loginResponse) => {
+            if (loginResponse.status === 'connected') {
+
+                // localStorage.removeItem('fb_access_token');
+                // localStorage.removeItem('fb_expires_in');
+
+                const request: FacebookConnectRequest = {
+                  accessToken: loginResponse.authResponse.accessToken
+                };
+
+                this.store$.dispatch(
+                  new AccountsFacebookActions.FacebookConnectRequestAction(request)
+                );
+
+            } else {
+              // could not login
+              // TODO some error msg
+            }
+          })
+      } else {
+        // already logged in
+        // this.router.navigateByUrl('/home');
+        // TODO THIS // ALSO LANDING
+        window['FB'].logout();
+      }
+    });
+
   }
 
 }
