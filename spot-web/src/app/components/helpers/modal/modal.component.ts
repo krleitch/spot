@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
 
 import { ModalService } from '@services/modal.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'spot-modal',
@@ -13,6 +14,9 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() width: number;
   @Input() height: number;
   private element: any;
+
+  data = new Subject<any>();
+  result = new Subject<any>();
 
   constructor(private modalService: ModalService, private el: ElementRef) {
     this.element = el.nativeElement;
@@ -51,6 +55,10 @@ export class ModalComponent implements OnInit, OnDestroy {
   close(): void {
     this.element.style.display = 'none';
     document.body.classList.remove('spot-modal-open');
+  }
+
+  setResult(result: any) {
+    this.result.next(result);
   }
 
 }

@@ -68,12 +68,25 @@ export class PostComponent implements OnInit {
   }
 
   deletePost() {
-    const request: DeletePostRequest = {
-      postId: this.post.id
-    };
-    this.store$.dispatch(
-      new PostsStoreActions.DeleteRequestAction(request)
-    );
+
+    const data = 'test';
+
+    this.modalService.open('spot-confirm-modal', data);
+
+    const result$ = this.modalService.getResult('spot-confirm-modal');
+
+    // NEED TO UNSUBSCRIBE
+    result$.subscribe( result => {
+      console.log('result is: ', result);
+    });
+
+
+    // const request: DeletePostRequest = {
+    //   postId: this.post.id
+    // };
+    // this.store$.dispatch(
+    //   new PostsStoreActions.DeleteRequestAction(request)
+    // );
   }
 
   openPost() {

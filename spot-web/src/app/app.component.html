@@ -1,4 +1,7 @@
 <div class="main">
     <spot-alert></spot-alert>
     <router-outlet></router-outlet>
+    <spot-modal [id]="'spot-confirm-modal'" [width]="400" [height]="'auto'">
+      <spot-confirm [modalId]="'spot-confirm-modal'" ></spot-confirm>
+    </spot-modal>
 </div>

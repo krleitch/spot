@@ -41,6 +41,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { TagComponent } from './components/main/social/tag/tag.component';
 import { SpinnerComponent } from './components/helpers/spinner/spinner.component';
+import { ConfirmComponent } from './components/helpers/confirm/confirm.component';
 
 
 @NgModule({
@@ -79,7 +80,8 @@ import { SpinnerComponent } from './components/helpers/spinner/spinner.component
     PasswordResetComponent,
     NewPasswordComponent,
     TagComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,
