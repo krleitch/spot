@@ -2,8 +2,58 @@
 
 .spot-confirm {
 
+  display: flex;
+  flex-flow: column;
 
+  .header {
+    padding: 5px 10px;
+    background-color: $lighter-grey;
+    width: 100%;
+    border-bottom: 1px solid $subtle-grey;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+  }
 
+  .message {
+    flex: 1;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
 
+  .buttons-container {
+
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+
+    .button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      width: 75px;
+      height: 25px;
+      padding: 5px;
+      margin: 0px 2px;
+      cursor: pointer;
+    }
+
+    .confirm {
+      background-color: $button-highlight;
+
+      &:hover {
+        background-color: darken($button-highlight, 10%);
+      }
+    }
+
+    .cancel {
+      background-color: $error-red-light;
+
+      &:hover {
+        background-color: darken($error-red-light, 10%);
+      }
+    }
+
+  }
 
 }

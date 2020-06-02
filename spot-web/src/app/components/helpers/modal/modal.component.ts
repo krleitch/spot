@@ -16,7 +16,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   private element: any;
 
   data = new Subject<any>();
-  result = new Subject<any>();
+  result: Subject<any>;
 
   constructor(private modalService: ModalService, private el: ElementRef) {
     this.element = el.nativeElement;
@@ -50,11 +50,17 @@ export class ModalComponent implements OnInit, OnDestroy {
   open(): void {
     this.element.style.display = 'block';
     document.body.classList.add('spot-modal-open');
+
+    this.result = new Subject<any>();
+
   }
 
   close(): void {
     this.element.style.display = 'none';
     document.body.classList.remove('spot-modal-open');
+
+    this.result.complete();
+
   }
 
   setResult(result: any) {

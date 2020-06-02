@@ -24,7 +24,7 @@ export class ModalService {
     modal.open();
 
     if ( data ) {
-      this.setData(id, data);
+      modal.data.next(data);
     }
 
   }
@@ -32,11 +32,6 @@ export class ModalService {
   close(id: string) {
     const modal: any = this.modals.filter(x => x.id === id)[0];
     modal.close();
-  }
-
-  setData(id: string, data: any) {
-    const modal: any = this.modals.filter(x => x.id === id)[0];
-    modal.data.next(data);
   }
 
   getData(id: string): Observable<any> {

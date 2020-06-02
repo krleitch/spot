@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
@@ -69,24 +70,25 @@ export class PostComponent implements OnInit {
 
   deletePost() {
 
-    const data = 'test';
+    this.modalService.open('spot-confirm-modal');
 
-    this.modalService.open('spot-confirm-modal', data);
+    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
 
-    const result$ = this.modalService.getResult('spot-confirm-modal');
+    result$.subscribe( (result: { status: string }) => {
 
-    // NEED TO UNSUBSCRIBE
-    result$.subscribe( result => {
-      console.log('result is: ', result);
+      if ( result.status === 'confirm' ) {
+
+        // const request: DeletePostRequest = {
+        //   postId: this.post.id
+        // };
+        // this.store$.dispatch(
+        //   new PostsStoreActions.DeleteRequestAction(request)
+        // );
+
+      }
+
     });
 
-
-    // const request: DeletePostRequest = {
-    //   postId: this.post.id
-    // };
-    // this.store$.dispatch(
-    //   new PostsStoreActions.DeleteRequestAction(request)
-    // );
   }
 
   openPost() {

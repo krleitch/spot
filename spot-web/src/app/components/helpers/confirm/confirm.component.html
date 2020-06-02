@@ -1,7 +1,16 @@
 <div class="spot-confirm">
 
-  <span> {{ data }} </span>
+  <div class="header">
+    {{ STRINGS.TITLE }}
+  </div>
 
-  <button (click)="confirm()"> CONFIRM </button>
+  <div class="message">
+    {{ STRINGS.MESSAGE }}
+  </div>
+
+  <div class="buttons-container">
+    <div class="button confirm" (click)="confirm()"> {{ STRINGS.CONFIRM }} </div>
+    <div class="button cancel" (click)="cancel()"> {{ STRINGS.CANCEL }} </div>
+  </div>
 
 </div>

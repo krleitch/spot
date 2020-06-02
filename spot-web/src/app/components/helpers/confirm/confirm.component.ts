@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ModalService } from '@services/modal.service';
-
 import { Observable } from 'rxjs';
+
+import { ModalService } from '@services/modal.service';
+import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-confirm',
@@ -9,6 +10,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./confirm.component.scss']
 })
 export class ConfirmComponent implements OnInit {
+
+  STRINGS = STRINGS.MAIN.CONFIRM;
 
   @Input() modalId: string;
 
@@ -28,8 +31,14 @@ export class ConfirmComponent implements OnInit {
 
   }
 
+  cancel() {
+    this.modalService.setResult(this.modalId, { status: 'cancel' });
+    this.modalService.close(this.modalId);
+  }
+
   confirm() {
-    this.modalService.setResult(this.modalId, 'CONFIRMED');
+    this.modalService.setResult(this.modalId, { status: 'confirm' });
+    this.modalService.close(this.modalId);
   }
 
 }

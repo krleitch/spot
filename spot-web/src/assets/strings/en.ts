@@ -151,6 +151,19 @@ export const STRINGS = {
 
         },
 
+        CONFIRM: {
+
+          TITLE: 'Confirm / Cancel',
+
+          MESSAGE: 'Are you sure you would like to complete this action?',
+
+          // Options
+
+          CONFIRM: 'Confirm',
+          CANCEL: 'Cancel'
+
+        },
+
         NOTIFICATIONS: {
 
           TITLE: 'Notifications',
