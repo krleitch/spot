@@ -268,12 +268,15 @@ export class ReplyComponent implements OnInit {
     }
   }
 
-  // TODO: for comments and replies want to add id to modal id's so unique
+  openModal(id: string, data?: any) {
 
-  openModal(id: string) {
-    this.modalService.open(id);
+    if ( data ) {
+      this.modalService.open(id, data);
+    } else {
+      this.modalService.open(id);
+    }
+
   }
-
   closeModal(id: string) {
     this.modalService.close(id);
   }

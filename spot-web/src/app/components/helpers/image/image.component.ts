@@ -1,4 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-image',
@@ -7,16 +10,22 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ImageComponent implements OnInit {
 
-  @Input() imageSrc: string;
-  @Output() closeEvent = new EventEmitter<boolean>();
+  @Input() modalId;
 
-  constructor() { }
+  data$: Observable<any>;
+  data: { imageSrc: string } = { imageSrc: null };
+
+  constructor(private modalService: ModalService) { }
 
   ngOnInit() {
-  }
 
-  close() {
-    this.closeEvent.emit(true);
+    this.data$ = this.modalService.getData(this.modalId);
+
+    this.data$.subscribe( (val) => {
+      this.data.imageSrc = val;
+    });
+
+
   }
 
 }

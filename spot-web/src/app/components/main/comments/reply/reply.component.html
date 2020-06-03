@@ -36,7 +36,7 @@
         </span>
 
         {{ getContent() }}
-        <div class="image" (click)="openModal('spot-image-reply-modal' + reply.id)" *ngIf="reply.image_src != null">
+        <div class="image" (click)="openModal('spot-image-modal', reply.image_src)" *ngIf="reply.image_src != null">
           <img [src]="reply.image_src" />
         </div>
         <span *ngIf="expandable()">
@@ -79,7 +79,7 @@
         <div class="dropdown align-bottom">
           <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
             <div *ngIf="reply.owned" class="button" (click)="deleteReply()"> {{ STRINGS.DELETE }} </div>
-            <div class="button" (click)="openModal('spot-report-reply-modal' + reply.id)"> {{ STRINGS.REPORT }} </div>
+            <div class="button" (click)="openModal('spot-report-modal',  { commentId: reply.id, postId: reply.post_id } )"> {{ STRINGS.REPORT }} </div>
           </div>
         </div>
       </div>
@@ -92,9 +92,3 @@
     </div>
   </div>
 </div>
-<spot-modal [id]="'spot-report-reply-modal' + reply.id" [width]="400" [height]="'auto'">
-  <spot-report [modalId]="'spot-report-reply-modal'" [postId]="reply.post_id" [commentId]="reply.id"></spot-report>
-</spot-modal>
-<spot-modal [id]="'spot-image-reply-modal' + reply.id" [width]="'auto'" [height]="'auto'">
-  <spot-image [imageSrc]="reply.image_src"></spot-image>
-</spot-modal>

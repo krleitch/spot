@@ -1,7 +1,22 @@
 <div class="main">
+
     <spot-alert></spot-alert>
+
     <router-outlet></router-outlet>
+
+    <!-- Global Modals-->
+
     <spot-modal [id]="'spot-confirm-modal'" [width]="400" [height]="'auto'">
       <spot-confirm [modalId]="'spot-confirm-modal'" ></spot-confirm>
     </spot-modal>
+    <spot-modal [id]="'spot-report-modal'" [width]="400" [height]="'auto'">
+      <spot-report [modalId]="'spot-report-modal'"></spot-report>
+    </spot-modal>
+    <spot-modal [id]="'spot-share-modal'" [width]="400" [height]="'auto'">
+      <spot-share [modalId]="'spot-share-modal'"></spot-share>
+    </spot-modal>
+    <spot-modal [id]="'spot-image-modal'" [width]="'auto'" [height]="'auto'">
+      <spot-image [modalId]="'spot-image-modal'"></spot-image>
+    </spot-modal>
+
 </div>

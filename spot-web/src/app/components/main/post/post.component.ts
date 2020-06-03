@@ -175,8 +175,14 @@ export class PostComponent implements OnInit {
     this.showShare = false;
   }
 
-  openModal(id: string) {
-    this.modalService.open(id);
+  openModal(id: string, data?: any) {
+
+    if ( data ) {
+      this.modalService.open(id, data);
+    } else {
+      this.modalService.open(id);
+    }
+
   }
 
   closeModal(id: string) {

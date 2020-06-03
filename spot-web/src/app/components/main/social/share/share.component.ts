@@ -18,12 +18,14 @@ import { STRINGS } from '@assets/strings/en';
 })
 export class ShareComponent implements OnInit {
 
-  @Input() postLink;
   @Input() modalId;
 
   @ViewChild('usernameinput') usernameinput: ElementRef;
 
   STRINGS = STRINGS.MAIN.SHARE;
+
+  data$: Observable<any>;
+  data: { postLink: string } = { postLink: null };
 
   friends$: Observable<Friend[]>;
   friendsList: Friend[];
@@ -38,6 +40,14 @@ export class ShareComponent implements OnInit {
   ngOnInit() {
 
     // setup observables
+
+    this.data$ = this.modalService.getData(this.modalId);
+
+    this.data$.subscribe( (val) => {
+      this.data.postLink = val;
+      this.link = window.location.origin + '/posts/' + this.data.postLink;
+    });
+
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
@@ -59,8 +69,6 @@ export class ShareComponent implements OnInit {
     // window['FB'].XFBML.parse();
     // window['twttr'].widgets.load();
 
-    this.link = window.location.origin + '/posts/' + this.postLink;
-
   }
 
   closeShare() {
@@ -71,7 +79,7 @@ export class ShareComponent implements OnInit {
 
     const request: AddNotificationRequest = {
       receiver: this.username,
-      postLink: this.postLink
+      postLink: this.data.postLink
     };
 
     // send the notification
@@ -85,7 +93,7 @@ export class ShareComponent implements OnInit {
 
     const request: AddNotificationRequest = {
       receiver: username,
-      postLink: this.postLink
+      postLink: this.data.postLink
     };
 
     // send the notification

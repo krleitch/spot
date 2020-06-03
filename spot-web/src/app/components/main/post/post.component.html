@@ -12,7 +12,7 @@
       <div class="content" [ngClass]="{'content-expanded': expanded}">
         {{ getContent() }}
       </div>
-      <div (click)="openModal('spot-image-post-modal' + post.id)" class="image" *ngIf="post.image_src != null">
+      <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
         <img [src]="post.image_src" />
       </div>
       <div class="options">
@@ -37,23 +37,14 @@
           <div class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
             <div class="button" (click)="openPost()"> {{ STRINGS.OPEN_POST }} </div>
             <div *ngIf="post.owned" class="button" (click)="deletePost()"> {{ STRINGS.DELETE }} </div>
-            <div class="button" (click)="openModal('spot-report-post-modal' + post.id)"> {{ STRINGS.REPORT }} </div>
+            <div class="button" (click)="openModal('spot-report-modal', { postId: post.id })"> {{ STRINGS.REPORT }} </div>
           </div>
         </div>
       </div>
       <div #share>
-        <i class="material-icons share" (click)="openModal('spot-share-post-modal'  + post.id)"> share </i>
+        <i class="material-icons share" (click)="openModal('spot-share-modal', post.link)"> share </i>
       </div>
     </div>
   </div>
   <spot-comments-container [post]="post" [detailed]="detailed"></spot-comments-container>
 </div>
-<spot-modal [id]="'spot-report-post-modal' + post.id" [width]="400" [height]="'auto'">
-  <spot-report [modalId]="'spot-report-post-modal'" [postId]="post.id"></spot-report>
-</spot-modal>
-<spot-modal [id]="'spot-image-post-modal'  + post.id" [width]="'auto'" [height]="'auto'">
-  <spot-image [imageSrc]="post.image_src"></spot-image>
-</spot-modal>
-<spot-modal [id]="'spot-share-post-modal'  + post.id" [width]="400" [height]="'auto'">
-  <spot-share [modalId]="'spot-share-post-modal'" [postLink]="post.link"></spot-share>
-</spot-modal>
