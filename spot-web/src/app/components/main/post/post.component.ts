@@ -121,9 +121,8 @@ export class PostComponent implements OnInit {
     }
   }
 
-  getDistance() {
-    return this.postsService.calcDistance(this.post.latitude, this.post.longitude, this.myLocation.latitude,
-                                           this.myLocation.longitude, 'M').toFixed(1) + ' miles';
+  getDistance(distance: number) {
+    return distance.toFixed(1) + ' miles';
   }
 
   getContent(): string {

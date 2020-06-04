@@ -70,15 +70,15 @@ export class HomeComponent implements OnInit {
 
       // this.loadedPosts += this.POSTS_LIMIT;
 
-      this.posts$ = this.store$.pipe(
-        select(PostsStoreSelectors.selectMyFeaturePosts)
-      );
-
       // this.posts$.subscribe( elem => {
       //   this.initialLoad = elem.length !== 0;
       // });
 
     });
+
+    this.posts$ = this.store$.pipe(
+      select(PostsStoreSelectors.selectMyFeaturePosts)
+    );
 
     this.loading$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeatureLoading)
@@ -87,6 +87,8 @@ export class HomeComponent implements OnInit {
   }
 
   onScroll() {
+
+    if ( this.locationEnabled ) {
 
       const request: LoadPostRequest = {
         offset: this.loadedPosts,
@@ -105,6 +107,8 @@ export class HomeComponent implements OnInit {
       this.initialLoad = false;
 
       this.loadedPosts += this.POSTS_LIMIT;
+
+    }
 
   }
 

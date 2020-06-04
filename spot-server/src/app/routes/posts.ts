@@ -31,6 +31,16 @@ router.get('/', function (req: any, res: any) {
             locations.addLocation( accountId, latitude, longitude ).then( () => {
 
                 posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
+
+                    // add the distance
+                    rows.map( (row: any) => {
+                        let newRow = row
+                        newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+                        delete newRow.latitude;
+                        delete newRow.longitude;
+                        return newRow;
+                    });
+
                     res.status(200).json({ posts: rows });
                 }, (err: any) => {
                     res.status(500).send('Error getting posts');
@@ -134,8 +144,19 @@ router.get('/activity', function (req: any, res: any) {
     
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
+    const latitude = Number(req.query.latitude);
+    const longitude = Number(req.query.longitude);
 
     posts.getPostsActivity(accountId, offset, limit).then((rows: any) => {
+
+        rows.map( (row: any) => {
+            let newRow = row
+            newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+            delete newRow.latitude;
+            delete newRow.longitude;
+            return newRow;
+        });
+
         res.status(200).json({ activity: rows });
     }, (err: any) => {
         res.status(500).send('Error getting activity');
@@ -146,7 +167,19 @@ router.get('/activity', function (req: any, res: any) {
 router.get('/:postLink', function (req: any, res: any) {
     const postLink = req.params.postLink;
     const accountId = req.user.id;
+    const latitude = Number(req.query.latitude);
+    const longitude = Number(req.query.longitude);
     posts.getPostByLink(postLink, accountId).then((rows: any) => {
+
+        // add the distance
+        rows.map( (row: any) => {
+            let newRow = row
+            newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+            delete newRow.latitude;
+            delete newRow.longitude;
+            return newRow;
+        });
+
         res.status(200).json({ post: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error getting post');

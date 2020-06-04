@@ -5,6 +5,7 @@ export interface Post {
     creation_date: string;
     longitude: number;
     latitude: number;
+    distance: number;
     geolocation: string;
     content: string;
     image_src: string;
@@ -14,7 +15,7 @@ export interface Post {
     comments: number;
     owned: boolean;
     link: string;
-    startCommentId?: string; // The comment Id to mkae first request from
+    startCommentId?: string; // The comment Id to make first request from
 }
 
 export interface PostFilter {
@@ -39,6 +40,7 @@ export interface LoadPostSuccess {
 
 export interface LoadSinglePostRequest {
     postLink: string;
+    location: Location;
 }
 
 export interface LoadSinglePostSuccess {
@@ -97,6 +99,7 @@ export interface ReportPostSuccess {
 export interface ActivityPostRequest {
     offset: number;
     limit: number;
+    location: Location;
 }
 
 export interface ActivityPostSuccess {

@@ -44,6 +44,10 @@ export class ActivityComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountsLocation)
     );
 
+    this.location$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsLocation)
+    );
+
     this.location$.subscribe( (location: Location) => {
       this.myLocation = location;
     });
@@ -52,7 +56,8 @@ export class ActivityComponent implements OnInit {
 
     const activityPostRequest: ActivityPostRequest = {
       offset: this.postOffset,
-      limit: this.postLimit
+      limit: this.postLimit,
+      location: this.myLocation
     };
 
     this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
@@ -102,9 +107,8 @@ export class ActivityComponent implements OnInit {
     }
   }
 
-  getDistance( latitude: number, longitude: number ) {
-    return this.postsService.calcDistance(latitude, longitude, this.myLocation.latitude,
-                                           this.myLocation.longitude, 'M').toFixed(1) + ' miles';
+  getDistance( distance: number) {
+    return distance.toFixed(1) + ' miles';
   }
 
   openPost( link: string ) {
