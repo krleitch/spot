@@ -69,29 +69,89 @@ function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number,
 
 function getGeolocation( latitude: string, longitude: string ): Promise<string> {
 
-	// https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
+	// In order the most preferred location type
+	const typeRanks = [
+		'point_of_interest',
+		'university',
+		'premise',
+		'neighborhood',
+		'locality',
+		'country'
+	];
+
+	// 10 characters
+	const max_name_length = 10;
 
 	const baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?";
 	const latlng = "latlng=" + parseFloat(latitude) + "," + parseFloat(longitude);
-	const filter = "&result_type=neighborhood";
-	const key = "&key=" + googleconfig.APIKey;
+	let filter = "&result_type=";
 
-	// types: neighborhood, establishment, point_of_interest, university
+	typeRanks.forEach( (type: string, index: number) => {
+		filter += type
+		if ( index !== typeRanks.length - 1 ) {
+			filter += '|'
+		}
+	})
+
+	const key = "&key=" + googleconfig.APIKey;
 
 	const url = baseUrl + latlng + filter + key;
 
 	// we don't want to give away street address
-
 	return new Promise((resolve, reject) => {
 		request(url, ( error: any, response: any, body: any ) => {
 
 			if ( error ) {
-				reject(error);
+				return reject(error);
 			}
 
 			const res = JSON.parse(body);
 
-			resolve(res.results[0].address_components[0].short_name);
+			// No place
+			if ( res.results.length === 0 ) {
+				return resolve('');
+			}
+
+			// TODO: can make better?
+			typeRanks.forEach( (type: string) => {
+				res.results.forEach( (place: any) => {
+
+					// Use this place
+
+					if ( place.address_components.length === 0 ) {
+						return resolve('')
+					}
+
+					if ( place.types.includes(type) ) {
+
+						typeRanks.forEach( (typeAddress: string) => {
+							place.address_components.forEach( (address: any) => {
+
+								// use this address
+
+								if ( address.types.includes(typeAddress) ) {
+									if ( address.long_name.length < max_name_length ) {
+										return resolve(address.long_name);
+									} else {
+	
+										if ( address.long_name.length < max_name_length ) {
+											return resolve(address.short_name)
+										} else {
+											return resolve(address.short_name.substring(0, max_name_length - 3) + '...')
+										}
+	
+									}
+								}
+								
+							});
+						})
+
+					}
+				})
+	
+			})
+
+			return resolve('');
 
 		});
 	});
