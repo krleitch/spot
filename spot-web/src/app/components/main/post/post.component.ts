@@ -78,12 +78,12 @@ export class PostComponent implements OnInit {
 
       if ( result.status === 'confirm' ) {
 
-        // const request: DeletePostRequest = {
-        //   postId: this.post.id
-        // };
-        // this.store$.dispatch(
-        //   new PostsStoreActions.DeleteRequestAction(request)
-        // );
+        const request: DeletePostRequest = {
+          postId: this.post.id
+        };
+        this.store$.dispatch(
+          new PostsStoreActions.DeleteRequestAction(request)
+        );
 
       }
 
