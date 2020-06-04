@@ -78,8 +78,14 @@
         <i class="material-icons icon-size" (click)="setOptions(true)"> more_horiz </i>
         <div class="dropdown align-bottom">
           <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
-            <div *ngIf="reply.owned" class="button" (click)="deleteReply()"> {{ STRINGS.DELETE }} </div>
-            <div class="button" (click)="openModal('spot-report-modal',  { commentId: reply.id, postId: reply.post_id } )"> {{ STRINGS.REPORT }} </div>
+            <div class="button" (click)="openModal('spot-report-modal', { commentId: reply.id, postId: reply.post_id })">
+              <span class="material-icons icon"> outlined_flag </span>
+              {{ STRINGS.REPORT }}
+            </div>
+            <div *ngIf="reply.owned" class="button" (click)="deleteReply()">
+              <span class="material-icons icon"> delete </span>
+              {{ STRINGS.DELETE }}
+            </div>
           </div>
         </div>
       </div>
