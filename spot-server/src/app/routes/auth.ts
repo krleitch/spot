@@ -10,7 +10,9 @@ const shortid = require('shortid');
 
 const passport = require('../services/auth/passport');
 
-const RegisterRequest = require('@models/authentication');
+const AuthError = require('@exceptions/authentication');
+const ERROR_MESSAGES = require('@exceptions/messages');
+const AUTH_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
 
 router.use(function timeLog (req: any, res: any, next: any) {
     // console.log('[AUTH] ', Date.now());
@@ -18,10 +20,21 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Register - Given password should already be hashed once
-router.post('/register', function (req: any, res: any) {
+router.post('/register', function (req: any, res: any, next: any) {
     const { email, username, password, phone } = req.body;
+
+    // Validation
+
+    const error = auth.validUsername(username);
+    if ( error) {
+        return next(error);
+    }
+
+    console.log('made it')
+
     const salt = auth.generateSalt();
     const hash = auth.hashPassword(password, salt);
+
     accounts.addAccount(email, username, hash, phone, salt).then( (rows: any) => {
         accounts.getAccountByEmail(email).then ( (rows: any) => {
             const user = rows[0]

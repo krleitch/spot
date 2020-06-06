@@ -2,8 +2,10 @@
 
 export class SpotError extends Error {
 
-    statusCode: string;
-    status: string;
+    statusCode: string; // 200, 400, 404, 500
+    status: string; // Fail or Error 4 / ?
+    name: string; // Used for reference, make sure same as class name
+    body: any; // contains any additional details about the error
 
     constructor(message) {
       super(message);

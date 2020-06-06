@@ -1,7 +1,9 @@
 import { Account, Location } from '@models/accounts';
+import { SpotError } from '@exceptions/error';
 
 export interface State {
     account: Account;
+    authError: SpotError;
     location: Location;
     loadingLocation: boolean;
     facebookConnected: boolean;
@@ -9,9 +11,10 @@ export interface State {
 
 export const initialState: State = (
   {
-    facebookConnected: false,
     account: null,
+    authError: null,
+    facebookConnected: false,
+    loadingLocation: false,
     location: null,
-    loadingLocation: false
   }
 );

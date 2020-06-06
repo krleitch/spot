@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
 import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess } from '@models/accounts';
+import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
   LOGIN_REQUEST = '[Accounts] Login Request',
@@ -42,7 +43,7 @@ export class RegisterSuccessAction implements Action {
 
 export class RegisterFailureAction implements Action {
     readonly type = ActionTypes.REGISTER_FAILURE;
-    constructor(public error: any) {}
+    constructor(public error: SpotError) {}
 }
 
 export class LoginRequestAction implements Action {

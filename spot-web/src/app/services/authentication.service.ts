@@ -49,6 +49,10 @@ export class AuthenticationService {
       return this.http.post<NewPasswordSuccess>(`${this.baseUrl}/auth/new-password`, request);
     }
 
+    validateUsername(username: string): boolean {
+        return true;
+    }
+
     validateEmail(email: string): boolean {
         const regex = /^\S+@\S+\.\S+$/;
         return email.match(regex) != null;

@@ -13,6 +13,7 @@ export const errorMiddleware = (err: any, req: any, res: any, next: any) => {
 
     res.status(err.statusCode).json({
         name: err.name,
+        body: err.body,
         status: err.status,
         message: err.message
     });

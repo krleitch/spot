@@ -30,12 +30,12 @@
     "ts-node-dev": "^1.0.0-pre.32"
   },
   "_moduleAliases": {
-    "@src": "/src",
+    "@src": "./src",
     "@models": "../spot-commons/models",
     "@exceptions": "../spot-commons/exceptions",
-    "@db": "/src/app/db",
-    "@routes": "src/app/routes",
-    "@services": "src/app/services"
+    "@db": "./src/app/db",
+    "@routes": "./src/app/routes",
+    "@services": "./src/app/services"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -22,6 +22,9 @@
       <div class="error-message">
         {{ errorMessage }}
       </div>
+      <div *ngIf="authError$ | async as authError" class="error-message">
+        {{ authError.message }}
+      </div>
       <div class="form-buttons">
         <button type="button" class="button" (click)="signUp()"> {{ STRINGS.SIGN_UP }} </button>
       </div>

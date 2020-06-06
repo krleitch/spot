@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
 import { RegisterRequest } from '@models/authentication';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions } from '@store/accounts-store';
+import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-register',
@@ -20,6 +22,8 @@ export class RegisterComponent implements OnInit {
 
   form: FormGroup;
   errorMessage = '';
+
+  authError$: Observable<SpotError>;
 
   constructor(
     private fb: FormBuilder,
@@ -36,6 +40,11 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.authError$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAuthError)
+    );
+
   }
 
   signUp() {

@@ -8,6 +8,7 @@ import * as featureActions from '../actions/actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { RegisterResponse, LoginResponse } from '@models/authentication';
+import { SpotError } from '@exceptions/error';
 
 @Injectable()
 export class AccountsStoreEffects {
@@ -38,8 +39,8 @@ export class AccountsStoreEffects {
         .registerAccount(registerRequest.request)
         .pipe(
           map((response: RegisterResponse) => new featureActions.RegisterSuccessAction(response)),
-          catchError((errorResponse: any) =>
-            observableOf(new featureActions.RegisterFailureAction(errorResponse.error))
+          catchError((error: SpotError) =>
+            observableOf(new featureActions.RegisterFailureAction(error))
           )
         )
     )
@@ -52,16 +53,6 @@ export class AccountsStoreEffects {
     ),
     tap( (action: featureActions.RegisterSuccessAction) => {
       this.authenticationService.loginAccountSuccess(action.response);
-    })
-  );
-
-  @Effect({dispatch: false})
-  registerAccountFailureEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.RegisterFailureAction>(
-      featureActions.ActionTypes.REGISTER_FAILURE
-    ),
-    tap((action: featureActions.RegisterFailureAction) => {
-      this.authenticationService.failureMessage(action.error);
     })
   );
 

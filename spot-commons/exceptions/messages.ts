@@ -18,6 +18,21 @@ export const ERROR_MESSAGES = {
 
         }
     
+    },
+
+    PRE_AUTH: {
+
+        AUTHENTICATION: {
+
+            // Register Validation
+
+            // Username
+            USERNAME_TAKEN: 'Username is not available',
+            USERNAME_CHARACTER: 'Username of invalid form',
+            USERNAME_LENGTH: 'Username length invalid',
+
+        }
+
     }
 
 };

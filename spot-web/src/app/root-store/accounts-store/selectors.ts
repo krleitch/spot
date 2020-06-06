@@ -1,10 +1,12 @@
 import { createSelector, createFeatureSelector, MemoizedSelector } from '@ngrx/store';
+import { SpotError } from '@exceptions/error';
 
 import { State } from './state';
 
 export const selectAccount = (state: State): any => state.account;
 export const selectLocation = (state: State): any => state.location;
 export const selectFacebook = (state: State): boolean => state.facebookConnected;
+export const selectAuthErr = (state: State): SpotError => state.authError;
 
 export const selectAccountsState: MemoizedSelector<
   object,
@@ -16,7 +18,7 @@ export const selectAccountsUser: MemoizedSelector<
   any
 > = createSelector(
   selectAccountsState,
-  selectAccount
+  selectAccount,
 );
 
 export const selectAccountsLocation: MemoizedSelector<
@@ -24,7 +26,7 @@ export const selectAccountsLocation: MemoizedSelector<
   any
 > = createSelector(
   selectAccountsState,
-  selectLocation
+  selectLocation,
 );
 
 export const selectFacebookConnected: MemoizedSelector<
@@ -32,5 +34,13 @@ export const selectFacebookConnected: MemoizedSelector<
   any
 > = createSelector(
   selectAccountsState,
-  selectFacebook
+  selectFacebook,
+);
+
+export const selectAuthError: MemoizedSelector<
+  object,
+  SpotError
+> = createSelector(
+  selectAccountsState,
+  selectAuthErr,
 );

@@ -6,8 +6,8 @@ const accounts = require('../db/accounts');
 
 //errors
 const FriendsError = require('@exceptions/friends');
-const MESSAGES = require('@exceptions/messages');
-const FRIENDS_ERROR_MESSAGES = MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
+const ERROR_MESSAGES = require('@exceptions/messages');
+const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
