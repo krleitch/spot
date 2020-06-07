@@ -25,12 +25,15 @@ router.post('/register', function (req: any, res: any, next: any) {
 
     // Validation
 
-    const error = auth.validUsername(username);
-    if ( error) {
-        return next(error);
+    const usernameError = auth.validUsername(username);
+    if ( usernameError) {
+        return next(usernameError);
     }
 
-    console.log('made it')
+    const passwordError = auth.validPassword(password);
+    if ( passwordError) {
+        return next(passwordError);
+    }
 
     const salt = auth.generateSalt();
     const hash = auth.hashPassword(password, salt);
@@ -47,7 +50,8 @@ router.post('/register', function (req: any, res: any, next: any) {
             res.status(500).send('Cannot login to account');
         });
     }, (err: any) => {
-        res.status(500).send('Cannot create account');
+        // Account already exists
+        return next(new AuthError.UsernameTakenError(AUTH_ERROR_MESSAGES.USERNAME_TAKEN, 400));
     });
 });
 

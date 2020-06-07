@@ -11,9 +11,6 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       };
     }
     case ActionTypes.REGISTER_FAILURE: {
-
-      console.log(action.error);
-
       return {
         ...state,
         account: null,

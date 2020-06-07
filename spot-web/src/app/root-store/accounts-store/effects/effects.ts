@@ -39,8 +39,8 @@ export class AccountsStoreEffects {
         .registerAccount(registerRequest.request)
         .pipe(
           map((response: RegisterResponse) => new featureActions.RegisterSuccessAction(response)),
-          catchError((error: SpotError) =>
-            observableOf(new featureActions.RegisterFailureAction(error))
+          catchError((errorResponse: any) =>
+            observableOf(new featureActions.RegisterFailureAction(errorResponse.error))
           )
         )
     )

@@ -19,9 +19,9 @@ export class CommentService {
 
   private baseUrl = environment.baseUrl;
 
-  profilePictures = [ 'α', 'β', 'γ', 'δ', 'Δ', 'Σ', 'ε', 'ζ', 'η', 'θ', 'Λ', 'λ',
-                      'μ', 'Ξ', 'π', 'Π', 'ρ', 'Σ', 'μ', 'β', 'Φ', 'φ	', 'Γ', 'Ψ', 'Ω', 'ω'];
-  PICTURES_LENGTH = 26;
+  // profilePictures = [ 'α', 'β', 'γ', 'δ', 'Δ', 'Σ', 'ε', 'ζ', 'η', 'θ', 'Λ', 'λ',
+  //                     'μ', 'Ξ', 'π', 'Π', 'ρ', 'Σ', 'μ', 'β', 'Φ', 'φ	', 'Γ', 'Ψ', 'Ω', 'ω'];
+  PICTURES_LENGTH = 59;
   COLORS_LENGTH = 14;
 
   constructor(private http: HttpClient, private alertService: AlertService) { }
@@ -134,9 +134,9 @@ export class CommentService {
 
   getProfilePictureSymbol(index) {
     if ( index === -1 ) {
-      return 'OP';
+      return 'op';
     }
-    return this.profilePictures[index % this.PICTURES_LENGTH];
+    return index % this.PICTURES_LENGTH;
   }
 
   onReportSuccess() {

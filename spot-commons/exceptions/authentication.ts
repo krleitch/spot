@@ -12,7 +12,7 @@ export class UsernameLengthError extends SpotError {
 }
 
 export class UsernameCharacterError extends SpotError {
-  constructor(message, statusCode, minLength, maxLength) {
+  constructor(message, statusCode) {
     super(message, statusCode);
     this.name = "UsernameCharacterError";
   }
@@ -20,21 +20,29 @@ export class UsernameCharacterError extends SpotError {
 
 
 export class UsernameTakenError extends SpotError {
-  constructor(message, statusCode, minLength, maxLength) {
+  constructor(message, statusCode) {
     super(message, statusCode);
     this.name = "UsernameTakenError";
   }
 }
 
 // Password
-export class PasswordInvalidError extends SpotError {
-  constructor(message, statusCode) {
+export class PasswordLengthError extends SpotError {
+  constructor(message, statusCode, minLength, maxLength) {
     super(message, statusCode);
-    this.name = "PasswordInvalidError";
+    this.name = "PasswordLengthError";
+    this.body = { min: minLength, max: maxLength };
   }
 }
 
 // Email
+export class EmailTakenError extends SpotError {
+  constructor(message, statusCode) {
+    super(message, statusCode);
+    this.name = "EmailTakenError";
+  }
+}
+
 export class EmailInvalidError extends SpotError {
   constructor(message, statusCode) {
     super(message, statusCode);
@@ -43,6 +51,13 @@ export class EmailInvalidError extends SpotError {
 }
 
 // Phone
+export class PhoneTakenError extends SpotError {
+  constructor(message, statusCode) {
+    super(message, statusCode);
+    this.name = "PhoneTakenError";
+  }
+}
+
 export class PhoneInvalidError extends SpotError {
   constructor(message, statusCode) {
     super(message, statusCode);

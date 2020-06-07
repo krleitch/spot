@@ -8,7 +8,7 @@
 
 // Content
 .content-wrapper {
-  width: 100%;
+  flex: 1;
 }
 
 // Tag
@@ -101,7 +101,6 @@ img {
 // left bar
 .left-bar {
   margin-left: 20px;
-  width: 50px;
   margin-right: 8px;
 }
 
@@ -128,24 +127,24 @@ img {
 
 .profile {
   position: relative;
-  margin-top: 3px;
-  width: 30px;
-  height: 30px;
+  width: 48px;
+  height: 48px;
   background-color: black;
-  border-radius: 15px;
+  border-radius: 50%;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .profile-owned {
 
   border-radius: 50%;
-  height: 25px;
-  width: 25px;
+  height: 40px;
+  width: 40px;
   position: absolute;
-  box-shadow:  0 0 0 2px white, 0 0 0 5px $button-highlight;
+  box-shadow: 0 0 0 2px white, 0 0 0 5px $button-highlight;
 
 }
 

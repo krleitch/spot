@@ -9,7 +9,7 @@
         </div>
         <div [class]="getProfilePictureClass(reply.profilePicture)">
           <span class="profile-owned" *ngIf="reply.owned"></span>
-          {{ getProfilePictureSymbol(reply.profilePicture) }}
+          <img [src]="'../../../../../assets/images/profile/' + getProfilePictureSymbol(reply.profilePicture) + '.png'"/>
         </div>
       </div>
     </div>

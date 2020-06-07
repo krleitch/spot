@@ -1,12 +1,11 @@
-export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername }
+export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
+            validPassword }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
 const request = require('request');
 
 const secret = require('../../../../secret.json');
-
-const accounts = require('@db/accounts');
 
 const AuthError = require('@exceptions/authentication');
 const ERROR_MESSAGES = require('@exceptions/messages');
@@ -31,12 +30,20 @@ function validUsername(username: string): Error | null {
         return new AuthError.UsernameCharacterError(AUTH_ERROR_MESSAGES.USERNAME_CHARACTER, 400)
     }
 
-    // Check available
-    accounts.getAccountByUsername(username).then ( (account: any) => {
-        if ( account.length > 0 ) {
-            return new AuthError.UsernameTakenError(AUTH_ERROR_MESSAGES.USERNAME_TAKEN, 400);
-        }
-    });
+    return null;
+
+}
+
+function validPassword(password: string): Error | null {
+
+    const MIN_LENGTH = 8;
+    const MAX_LENGTH = 255;
+
+    // Check length
+    if ( password.length < MIN_LENGTH || password.length > MAX_LENGTH ) {
+        // HASH PASS?
+        return new AuthError.PasswordLengthError(AUTH_ERROR_MESSAGES.PASSWORD_LENGTH, 400, MIN_LENGTH, MAX_LENGTH);
+    }
 
     return null;
 
