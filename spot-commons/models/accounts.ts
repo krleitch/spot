@@ -45,3 +45,11 @@ export interface FacebookConnectRequest {
 export interface FacebookConnectResponse {
     created: boolean;
 }
+
+export interface FacebookDisconnectRequest {
+
+}
+
+export interface FacebookDisconnectResponse {
+
+}

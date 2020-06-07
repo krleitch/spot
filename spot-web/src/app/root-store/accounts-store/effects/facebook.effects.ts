@@ -8,7 +8,7 @@ import * as facebookActions from '../actions/facebook.actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { FacebookLoginResponse } from '@models/authentication';
-import { FacebookConnectResponse } from '@models/accounts';
+import { FacebookConnectResponse, FacebookDisconnectResponse } from '@models/accounts';
 
 @Injectable()
 export class FacebookStoreEffects {
@@ -66,6 +66,33 @@ export class FacebookStoreEffects {
       facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS
     ),
     tap( (action: facebookActions.FacebookConnectSuccessAction) => {
+      // this.authenticationService.loginFacebookAccountSuccess(action.response);
+    })
+  );
+
+  @Effect()
+  disconnectFacebookAccountEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<facebookActions.FacebookDisconnectRequestAction>(
+      facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_REQUEST
+    ),
+    switchMap( action =>
+      this.accountsService
+        .disconnectFacebookAccount( action.request)
+        .pipe(
+            map( (response: FacebookDisconnectResponse) => new facebookActions.FacebookDisconnectSuccessAction(response)),
+            catchError(error =>
+              observableOf(new facebookActions.FacebookDisconnectFailureAction(error))
+            )
+        )
+    )
+  );
+
+  @Effect({dispatch: false})
+  disconnectFacebookAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<facebookActions.FacebookDisconnectSuccessAction>(
+      facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS
+    ),
+    tap( (action: facebookActions.FacebookDisconnectSuccessAction) => {
       // this.authenticationService.loginFacebookAccountSuccess(action.response);
     })
   );

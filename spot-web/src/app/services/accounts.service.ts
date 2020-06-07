@@ -4,7 +4,8 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AlertService } from '@services/alert.service';
-import { UpdateUsernameRequest, UpdateUsernameResponse, FacebookConnectRequest, FacebookConnectResponse } from '@models/accounts';
+import { UpdateUsernameRequest, UpdateUsernameResponse, FacebookConnectRequest, FacebookConnectResponse,
+          FacebookDisconnectResponse, FacebookDisconnectRequest } from '@models/accounts';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,10 @@ export class AccountsService {
 
   connectFacebookAccount(request: FacebookConnectRequest): Observable<FacebookConnectResponse> {
     return this.http.post<FacebookConnectResponse>(`${this.baseUrl}/accounts/facebook`, request);
+  }
+
+  disconnectFacebookAccount(request: FacebookDisconnectRequest): Observable<FacebookDisconnectResponse> {
+    return this.http.post<FacebookDisconnectResponse>(`${this.baseUrl}/accounts/facebook/disconnect`, request);
   }
 
   // Normal

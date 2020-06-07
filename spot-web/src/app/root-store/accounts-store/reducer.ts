@@ -82,6 +82,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         facebookConnected: true
       };
     }
+    case FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS: {
+      return {
+        ...state,
+        facebookConnected: false
+      };
+    }
     default: {
       return state;
     }

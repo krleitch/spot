@@ -4,6 +4,7 @@ const router = express.Router();
 const accounts = require('../db/accounts');
 const passwordReset = require('../db/passwordReset');
 const auth = require('../services/auth/auth')
+const friendsService = require('@services/friends');
 const nodemailer = require('nodemailer');
 
 const shortid = require('shortid');
@@ -98,11 +99,21 @@ router.post('/login/facebook', function (req: any, res: any) {
                 accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email).then( (user2: any) => {
                     user2 = user2[0];
                     const token = auth.generateToken(user2);
-                    res.status(200).json({
-                        created: true,
-                        jwt: { token: token, expiresIn: '2h' },
-                        account: user2
-                    });   
+
+                    // add facebook friends
+                    friendsService.addFacebookFriends(accessToken).then( (res: any) => {
+
+                        res.status(200).json({
+                            created: true,
+                            jwt: { token: token, expiresIn: '2h' },
+                            account: user2
+                        }, ( err: any) => {
+                            // couldnt add your friends
+                            res.status(500).send('Error signing in with facebook');
+                        });  
+
+                    });
+ 
                 }, (err: any) => {
                     return Promise.reject(err);
                 });            

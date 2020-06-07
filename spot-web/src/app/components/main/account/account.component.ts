@@ -5,7 +5,7 @@ import { select, Store } from '@ngrx/store';
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
-import { Account, UpdateUsernameRequest, FacebookConnectRequest } from '@models/accounts';
+import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest } from '@models/accounts';
 
 @Component({
   selector: 'spot-account',
@@ -106,6 +106,18 @@ export class AccountComponent implements OnInit {
         window['FB'].logout();
       }
     });
+
+  }
+
+  facebookDisconnect() {
+
+    const request: FacebookDisconnectRequest = {
+
+    };
+
+    this.store$.dispatch(
+      new AccountsFacebookActions.FacebookDisconnectRequestAction(request)
+    );
 
   }
 

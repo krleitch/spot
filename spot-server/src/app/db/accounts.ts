@@ -1,5 +1,6 @@
 export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, changePassword,
-         getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount }
+         getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
+         disconnectFacebookAccount }
 
 const uuid = require('uuid');
 
@@ -31,6 +32,12 @@ function addFacebookAccount(id: string, email: string): Promise<any> {
 function connectFacebookAccount(facebookId: string, accountId: string): Promise<any> {
     var sql = 'UPDATE accounts SET facebook_id = ? WHERE id = ?';
     var values = [facebookId, accountId];
+    return db.query(sql, values);
+}
+
+function disconnectFacebookAccount(accountId: string): Promise<any> {
+    var sql = 'UPDATE accounts SET facebook_id = NULL WHERE id = ?';
+    var values = [accountId];
     return db.query(sql, values);
 }
 

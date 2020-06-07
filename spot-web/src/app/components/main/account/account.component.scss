@@ -68,11 +68,19 @@ spot-main-nav {
   align-items: center;
 
   .text {
-    margin-right: 5px;
+
+    margin-right: 3px;
+
+    &:hover {
+      color: $button-highlight;
+      cursor: pointer;
+    }
+
   }
 
   .check {
     color: $success-green;
+    margin-right: 3px;
   }
 
 }

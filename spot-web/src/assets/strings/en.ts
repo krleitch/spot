@@ -58,7 +58,7 @@ export const STRINGS = {
 
             // Social
             FACEBOOK_CONNECT: 'Connect With Facebook',
-            FACEBOOK_CONNECT_SUCCESS: 'Connected'
+            FACEBOOK_CONNECT_SUCCESS: 'Disconnect'
 
         },
 

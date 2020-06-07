@@ -13,8 +13,8 @@
         <ng-template #connected>
           <div class="facebook-connected">
             <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
-            <span class="text"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </span>
             <span class="material-icons check"> check_circle </span>
+            <span class="text" (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </span>
           </div>
         </ng-template>
       </div>
