@@ -17,7 +17,8 @@ const mongo = require('./db/mongo');
 
 const errorHandler = require('./errorHandler');
 
-const passport = require('./services/auth/passport');
+const passport = require('@services/auth/passport');
+const locationService = require('@services/locations');
 
 const port = 3000;
 
@@ -30,6 +31,9 @@ app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(Cors());
+
+// Check the users location data on each request
+app.use(locationService.checkLocation)
 
 app.use('/', root);
 app.use('/auth', auth);

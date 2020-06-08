@@ -1,4 +1,4 @@
-export { verifyLocation, distanceBetween, getGeolocation }
+export { checkLocation, verifyLocation, distanceBetween, getGeolocation }
 
 const request = require('request');
 
@@ -8,6 +8,13 @@ const locations = require('../db/locations');
 
 // Returns if  you are allowed to commnet/post on something
 // TODO
+const checkLocation = (req: any, res: any, next: any) => {
+
+
+
+	next();
+}
+
 
 // Returns True if the location given is accurate for the user with account_id
 function verifyLocation( account_id: string, myLatitude: number, myLongitude: number ): Promise<boolean> {

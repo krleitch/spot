@@ -52,6 +52,7 @@ router.post('/register', function (req: any, res: any, next: any) {
         });
     }, (err: any) => {
         // Account already exists
+        console.log(err);
         return next(new AuthError.UsernameTakenError(AUTH_ERROR_MESSAGES.USERNAME_TAKEN, 400));
     });
 });
