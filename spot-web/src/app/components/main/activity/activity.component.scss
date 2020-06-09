@@ -98,7 +98,7 @@ img {
 .post-content {
   display: flex;
   padding: 5px 0px;
-  width: 90%;
+  width: 100%;
 }
 
 .post-info {
@@ -147,21 +147,21 @@ img {
   display: flex;
   align-items: center;
   padding: 5px 0px;
-  margin-left: 5px;
+  margin-left: 15px;
 }
 
 .parent-comment {
   display: flex;
   flex: 1;
   flex-flow: column;
-  margin-left: 5px;
+  margin-left: 15px;
 }
 
 .comment-content-reply {
   display: flex;
   align-items: center;
   padding: 5px 0px;
-  margin-left: 20px;
+  margin-left: 45px;
 }
 
 .comment-info {
@@ -169,6 +169,17 @@ img {
   flex-flow: column;
   justify-content: center;
   width: calc(100% - 120px);
+}
+
+.comment-link {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: $subtle-grey;
+  margin-bottom: 5px;
+  &:hover {
+    color: $button-highlight;
+  }
 }
 
 // For Mobile

@@ -217,6 +217,7 @@ export const STRINGS = {
           POSTS_COMMENTS: 'Comments: ',
           POSTS_LOCATION: 'Location: ',
           POSTS_OPEN: 'Open',
+          COMMENTS_OPEN: 'Open Comment Chain'
 
         },
 

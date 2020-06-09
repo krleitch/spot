@@ -73,17 +73,19 @@
               </div>
 
               <!-- The comment -->
+
+              <div class="comment-link" (click)="openComment(activity.post_link, activity.link)">
+                <span class="material-icons icon"> chevron_right </span>
+                {{ STRINGS.COMMENTS_OPEN }}
+              </div>
+
               <div *ngIf="activity.parent_id == null; else reply">
                 <div class="comment-content">
                   <div class="image" *ngIf="activity.image_src">
                     <img [src]="activity.image_src">
                   </div>
                   <div class="comment-info">
-                    <div class="post-link" (click)="openComment(activity.post_link, activity.link)">
-                      <span class="material-icons icon"> chevron_right </span>
-                      {{ STRINGS.POSTS_OPEN }}
-                    </div>
-                    <div class="content-preview"> > {{ activity.content }} </div>
+                    <div class="content-preview"> {{ activity.content }} </div>
                   </div>
                 </div>
               </div>
@@ -96,7 +98,9 @@
                     <div class="image" *ngIf="activity.parent_image_src">
                       <img [src]="activity.parent_image_src">
                     </div>
-                    <div class="content-preview"> > {{ activity.parent_content }} </div>
+                    <div class="comment-info">
+                      <div class="content-preview"> {{ activity.parent_content }} </div>
+                    </div>
                   </div>
 
                   <!-- The reply -->
@@ -104,15 +108,8 @@
                     <div class="image" *ngIf="activity.image_src">
                       <img [src]="activity.image_src">
                     </div>
-                    <div class="comment-info">
-                      <div class="post-link" (click)="openComment(activity.post_link, activity.parent_link)">
-                        <span class="material-icons icon"> chevron_right </span>
-                        {{ STRINGS.POSTS_OPEN }}
-                      </div>
-                      <div class="content-preview"> > {{ activity.content }} </div>
-                    </div>
+                    <div class="content-preview"> {{ activity.content }} </div>
                   </div>
-
 
                 </div>
 
