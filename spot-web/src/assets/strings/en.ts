@@ -216,7 +216,7 @@ export const STRINGS = {
           POSTS_SCORE: 'Score: ',
           POSTS_COMMENTS: 'Comments: ',
           POSTS_LOCATION: 'Location: ',
-          POSTS_OPEN: 'Open'
+          POSTS_OPEN: 'Open',
 
         },
 

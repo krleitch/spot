@@ -114,6 +114,10 @@ export class ActivityComponent implements OnInit {
     this.router.navigateByUrl(/posts/ + link);
   }
 
+  openComment( postLink: string, commentlink: string ) {
+    this.router.navigateByUrl(/posts/ + postLink + '/comments/' + commentlink);
+  }
+
   onScroll() {
 
     // TODO

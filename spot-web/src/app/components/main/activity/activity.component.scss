@@ -136,22 +136,39 @@ img {
 
 // comments and replies
 
+.post-content-comment {
+  flex-flow: column;
+  width: 90%;
+  display: flex;
+  padding: 5px 0px;
+}
+
 .comment-content {
   display: flex;
   align-items: center;
   padding: 5px 0px;
-}
-
-.post-comment {
-  display: flex;
-  flex: 1;
-  flex-flow: column;
+  margin-left: 5px;
 }
 
 .parent-comment {
   display: flex;
   flex: 1;
   flex-flow: column;
+  margin-left: 5px;
+}
+
+.comment-content-reply {
+  display: flex;
+  align-items: center;
+  padding: 5px 0px;
+  margin-left: 20px;
+}
+
+.comment-info {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  width: calc(100% - 120px);
 }
 
 // For Mobile

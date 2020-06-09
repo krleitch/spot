@@ -183,11 +183,13 @@ export interface CommentActivity {
     content: string;
     image_src: string;
     parent_id: string;
+    link: string;
     post_content: string;
     post_image_src: string;
     post_link: string;
     parent_content: string;
     parent_image_src: string;
+    parent_link: string;
 }
 
 export interface ActivityCommentSuccess {
