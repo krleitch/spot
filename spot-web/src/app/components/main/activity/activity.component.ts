@@ -25,7 +25,7 @@ export class ActivityComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
-  selectedTab = 'commentsreplies';
+  selectedTab = 'posts';
 
   constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
                private commentService: CommentService, private router: Router ) { }
@@ -33,10 +33,10 @@ export class ActivityComponent implements OnInit {
   postActivity$: Observable<Post[]>;
   commentActivity$: Observable<CommentActivity[]>;
 
-  postOffset = 0;
   postLimit = 10;
-  commentOffset = 0;
+  postLastDate = null;
   commentLimit = 10;
+  commentLastDate = null;
 
   ngOnInit() {
 
@@ -55,26 +55,26 @@ export class ActivityComponent implements OnInit {
     // TODO: these should move
 
     const activityPostRequest: ActivityPostRequest = {
-      offset: this.postOffset,
+      date: new Date().toString(),
       limit: this.postLimit,
       location: this.myLocation
     };
 
     this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
       map( (activitySuccess: ActivityPostSuccess ) => {
-        this.postOffset += this.postLimit;
+        this.postLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
         return activitySuccess.activity;
       })
     );
 
     const activityCommentRequest: ActivityCommentRequest = {
-      offset: this.postOffset,
+      date: new Date().toString(),
       limit: this.postLimit
     };
 
     this.commentActivity$ = this.commentService.getActivity( activityCommentRequest ).pipe(
       map( (activitySuccess: ActivityCommentSuccess ) => {
-        this.commentOffset += this.commentLimit;
+        this.commentLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
         return activitySuccess.activity;
       })
     );

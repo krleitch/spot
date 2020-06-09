@@ -97,9 +97,9 @@ export interface ReportPostSuccess {
 
 // activity
 export interface ActivityPostRequest {
-    offset: number;
     limit: number;
     location: Location;
+    date: string;
 }
 
 export interface ActivityPostSuccess {

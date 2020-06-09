@@ -123,13 +123,14 @@ function dislikeComment(commentId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function getCommentsActivity(accountId: string, offset: number, limit: number) {
+function getCommentsActivity(accountId: string, date: string, limit: number) {
     var sql = `SELECT c1.id, c1.creation_date, c1.likes, c1.dislikes, c1.parent_id, c1.content, c1.image_src,
                  p.content as post_content, p.image_src as post_image_src, p.link as post_link,
                  c2.content as parent_content, c2.image_src as parent_image_src
                  FROM comments c1 LEFT JOIN posts p ON p.id = c1.post_id LEFT JOIN comments c2 ON c1.parent_id = c2.id
-                 WHERE c1.account_id = ? AND c1.deletion_date IS NULL AND c2.deletion_date IS NULL AND p.deletion_date IS NULL ORDER BY creation_date DESC LIMIT ? OFFSET ?`;
-    var values = [accountId, limit, offset];
+                 WHERE c1.account_id = ? AND c1.deletion_date IS NULL AND c2.deletion_date IS NULL AND p.deletion_date IS NULL 
+                 AND creation_date < ? ORDER BY creation_date DESC LIMIT ?`;
+    var values = [accountId, new Date(date), limit];
     return db.query(sql, values);
 }
 

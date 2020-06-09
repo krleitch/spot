@@ -142,12 +142,12 @@ router.get('/activity', function (req: any, res: any) {
 
     const accountId = req.user.id;
     
-    const offset = Number(req.query.offset);
+    const date = req.query.date;
     const limit = Number(req.query.limit);
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
 
-    posts.getPostsActivity(accountId, offset, limit).then((rows: any) => {
+    posts.getPostsActivity(accountId, date, limit).then((rows: any) => {
 
         rows.map( (row: any) => {
             let newRow = row

@@ -171,7 +171,7 @@ export interface ReportCommentSuccess {
 
 // activity
 export interface ActivityCommentRequest {
-    offset: number;
+    date: string;
     limit: number;
 }
 

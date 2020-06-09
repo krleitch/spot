@@ -106,7 +106,7 @@ export class CommentService {
 
   getActivity(request: ActivityCommentRequest): Observable<ActivityCommentSuccess> {
     let params = new HttpParams();
-    params = params.append('offset', request.offset.toString());
+    params = params.append('date', request.date);
     params = params.append('limit', request.limit.toString());
     return this.http.get<ActivityCommentSuccess>(`${this.baseUrl}/comments/activity`, { params });
   }
