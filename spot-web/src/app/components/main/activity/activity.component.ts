@@ -25,7 +25,7 @@ export class ActivityComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
-  selectedTab = 'posts';
+  selectedTab = 'commentsreplies';
 
   constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
                private commentService: CommentService, private router: Router ) { }
@@ -44,40 +44,39 @@ export class ActivityComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountsLocation)
     );
 
-    this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsLocation)
-    );
-
     this.location$.subscribe( (location: Location) => {
+
       this.myLocation = location;
+      if ( this.myLocation ) {
+
+        const activityPostRequest: ActivityPostRequest = {
+          date: new Date().toString(),
+          limit: this.postLimit,
+          location: this.myLocation
+        };
+
+        this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
+          map( (activitySuccess: ActivityPostSuccess ) => {
+            this.postLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
+            return activitySuccess.activity;
+          })
+        );
+
+        const activityCommentRequest: ActivityCommentRequest = {
+          date: new Date().toString(),
+          limit: this.postLimit
+        };
+
+        this.commentActivity$ = this.commentService.getActivity( activityCommentRequest ).pipe(
+          map( (activitySuccess: ActivityCommentSuccess ) => {
+            this.commentLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
+            return activitySuccess.activity;
+          })
+        );
+
+      }
+
     });
-
-    // TODO: these should move
-
-    const activityPostRequest: ActivityPostRequest = {
-      date: new Date().toString(),
-      limit: this.postLimit,
-      location: this.myLocation
-    };
-
-    this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
-      map( (activitySuccess: ActivityPostSuccess ) => {
-        this.postLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
-        return activitySuccess.activity;
-      })
-    );
-
-    const activityCommentRequest: ActivityCommentRequest = {
-      date: new Date().toString(),
-      limit: this.postLimit
-    };
-
-    this.commentActivity$ = this.commentService.getActivity( activityCommentRequest ).pipe(
-      map( (activitySuccess: ActivityCommentSuccess ) => {
-        this.commentLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
-        return activitySuccess.activity;
-      })
-    );
 
   }
 

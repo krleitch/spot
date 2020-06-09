@@ -29,15 +29,16 @@
                 <img [src]="activity.image_src">
               </div>
               <div class="post-info">
+                <div class="post-link" (click)="openPost(activity.link)">
+                  <span class="material-icons icon"> chevron_right </span>
+                  {{ STRINGS.POSTS_OPEN }}
+                </div>
                 <div class="content-preview"> {{ activity.content }} </div>
                 <div class="info-bar">
                   <span class="info-bar-item"> {{ STRINGS.POSTS_SCORE }} {{ activity.likes - activity.dislikes }} </span>
                   <span class="info-bar-item"> {{ STRINGS.POSTS_COMMENTS }} {{ activity.comments }}  </span>
-                  <span class="info-bar-item"> {{ STRINGS.POSTS_LOCATION }} {{ getDistance(activity.distance) }} </span>
+                  <span class="info-bar-item"> {{ STRINGS.POSTS_LOCATION }} {{ getDistance(activity.distance) }} - {{ activity.geolocation }} </span>
                 </div>
-              </div>
-              <div class="post-link" (click)="openPost(activity.link)">
-                {{ STRINGS.POSTS_OPEN }}
               </div>
             </div>
           </div>
