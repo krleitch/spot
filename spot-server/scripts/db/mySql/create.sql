@@ -20,6 +20,7 @@ CREATE TABLE accounts (
     phone VARCHAR(255) UNIQUE,
     score INT,
     salt VARCHAR(256),
+    role VARCHAR(36),
     facebook_id VARCHAR(36) UNIQUE,
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,

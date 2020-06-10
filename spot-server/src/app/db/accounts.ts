@@ -3,12 +3,13 @@ export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, cha
          disconnectFacebookAccount }
 
 const uuid = require('uuid');
+const roles = require('../authorization/roles');
 
 const db = require('./mySql');
 
 function addAccount(email: string, username: string, pass: string, phone: string, salt: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, creation_date, email, username, pass, phone, score, salt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), new Date(), email, username, pass, phone, 0, salt, false];
+    var sql = 'INSERT INTO accounts (id, creation_date, email, username, pass, phone, score, salt, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), new Date(), email, username, pass, phone, 0, salt, false, roles.user];
     return db.query(sql, values);
 }
 
@@ -22,8 +23,8 @@ function addFacebookAccount(id: string, email: string): Promise<any> {
     const index = email.indexOf('@');
     // TODO THIS IS A BAD USERNAME GENERATOR
     var username = email.substring(0, index);
-    var sql = 'INSERT INTO accounts (id, email, username, facebook_id, score) VALUES (?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), email, username, id, 0];
+    var sql = 'INSERT INTO accounts (id, email, username, facebook_id, score, role) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), email, username, id, 0, roles.user];
     return db.query(sql, values).then( (rows: any) => {
         return getFacebookAccount(id);
     });
