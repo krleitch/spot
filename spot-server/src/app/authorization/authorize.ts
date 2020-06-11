@@ -1,5 +1,6 @@
-
-const checkRole = ( roles: [] ) => (req: any, res: any, next: any) => {
+// Middleware used on routes
+// TODO these error msgs
+const checkRoleMiddleware = ( roles: [] ) => (req: any, res: any, next: any) => {
 
     if (!req.user) {
         return res.status(400).send('not authorized');
@@ -14,4 +15,9 @@ const checkRole = ( roles: [] ) => (req: any, res: any, next: any) => {
 
 }
 
-export { checkRole }
+// Used within a function given auser
+function checkRole( user: any, roles: [] ) {
+    return  roles.find(role => user.role === role)
+}
+
+export { checkRoleMiddleware, checkRole }

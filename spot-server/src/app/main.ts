@@ -58,7 +58,7 @@ app.use('/notifications', passport.authenticate('jwt', {session: true}), notific
 app.use('/friends', passport.authenticate('jwt', {session: true}), friends);
 
 // Auth + roles
-app.use('/admin', passport.authenticate('jwt', {session: true}), authorization.checkRole([roles.owner, roles.admin]), admin);
+app.use('/admin', passport.authenticate('jwt', {session: true}), authorization.checkRoleMiddleware([roles.owner, roles.admin]), admin);
 
 // Error middleware
 app.use(errorHandler.errorMiddleware);
