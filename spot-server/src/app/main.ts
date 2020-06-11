@@ -23,6 +23,7 @@ const mongo = require('./db/mongo');
 // Utils
 const errorHandler = require('./errorHandler');
 const passport = require('@services/auth/passport');
+const authentication = require('@services/auth/auth');
 const locationService = require('@services/locations');
 const authorization = require('./authorization/authorize');
 const roles = require('./authorization/roles');
@@ -46,10 +47,12 @@ app.use(locationService.checkLocation)
 app.use('/', root);
 app.use('/auth', auth);
 
+// Optional auth, user may or may not be filled check req.authenticated
+app.use('/posts', authentication.optionalAuth , posts);
+app.use('/comments', authentication.optionalAuth, comments);
+
 // Auth
-app.use('/posts', passport.authenticate('jwt', {session: true}), posts);
 app.use('/accounts', passport.authenticate('jwt', {session: true}), accounts);
-app.use('/comments', passport.authenticate('jwt', {session: true}), comments);
 app.use('/image', passport.authenticate('jwt', {session: true}), image);
 app.use('/notifications', passport.authenticate('jwt', {session: true}), notifications);
 app.use('/friends', passport.authenticate('jwt', {session: true}), friends);

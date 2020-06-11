@@ -1,7 +1,7 @@
 export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
           likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink,
-          getNumberOfCommentsForPostBeforeDate }
+          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount }
 
 const uuid = require('uuid');
 const db = require('./mySql');
@@ -20,15 +20,49 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
+function getCommentByIdNoAccount(commentId: string): Promise<any> {
+    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
+                        comments.likes, comments.dislikes
+        FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
+        WHERE comments.id = ? AND comments.deletion_date IS NULL GROUP BY comments.id`;
+    var values = [commentId];
+    return db.query(sql, values);
+}
+
 // postId, accountId, date, limit, type
 // Used for getting just the comments of a post
-function getCommentByPostId(postId: string, accountId: string, date: string, limit: number, type: string): Promise<any> {
+function getCommentByPostId(postId: string, date: string, limit: number, type: string, accountId: string): Promise<any> {
+    var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
+                        comments.likes, comments.dislikes`
+
+    var accountSql = '';
+    var accountValues: any[] = [];
+    if ( accountId ) {
+        accountSql = `, (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
+                        WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
+                        ELSE NULL END) AS rated,
+                        (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned`
+        accountValues = [accountId, accountId, accountId];
+    }
+
+    var joinSql =  ` FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id
+                        WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL `;
+
+    var orderSql;
+    if ( type == 'after' ) {
+        orderSql = ` AND comments.creation_date > ? GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ? `
+    } else {
+        orderSql = `  AND comments.creation_date < ? GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? `
+    }
+
+    var sql = selectSql + accountSql + joinSql + orderSql;
+    var values = accountValues.concat([postId, new Date(date), limit]);
+    return db.query(sql, values);
+}
+
+function getCommentByPostIdNoAccount(postId: string, date: string, limit: number, type: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
                         comments.likes, comments.dislikes,
-        (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
-            WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
-            ELSE NULL END) AS rated,
-        (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id
         WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL `;
 
@@ -40,7 +74,7 @@ function getCommentByPostId(postId: string, accountId: string, date: string, lim
     }
 
     var sql = selectSql + orderSql;
-    var values = [accountId, accountId, accountId, postId, new Date(date), limit];
+    var values = [postId, new Date(date), limit];
     return db.query(sql, values);
 }
 
@@ -77,16 +111,25 @@ function addReply(postId: string, commentId: string, accountId: string, content:
 }
 
 // Used for getting just the comments of a post
-function getRepliesByCommentId(postId: string, commentId: string, accountId: string, offset: number, limit: number): Promise<any> {
-    var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes,
-        (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
-            WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
-            ELSE NULL END) AS rated,
-        (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned
-        FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
-        WHERE comments.post_id = ? AND comments.parent_id = ? AND comments.deletion_date IS NULL GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
-    var values = [accountId, accountId, accountId, postId, commentId, limit, offset];
+function getRepliesByCommentId(postId: string, commentId: string, offset: number, limit: number, accountId?: string): Promise<any> {
+    var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
+                        comments.likes, comments.dislikes`
+
+    var accountSql = '';
+    var accountValues: any[] = [];
+    if ( accountId ) {
+        accountSql = `, (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
+                        WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
+                        ELSE NULL END) AS rated,
+                        (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned`;
+                        accountValues = [accountId, accountId, accountId];
+    }
+
+    var joinSql =     ` FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
+                        WHERE comments.post_id = ? AND comments.parent_id = ? AND comments.deletion_date IS NULL
+                        GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
+    var sql = selectSql + accountSql + joinSql;
+    var values = accountValues.concat([postId, commentId, limit, offset]);
     return db.query(sql, values);
 }
 
@@ -134,10 +177,17 @@ function getCommentsActivity(accountId: string, date: string, limit: number) {
     return db.query(sql, values);
 }
 
-function getCommentByLink(link: string, accountId: string) {
+function getCommentByLink(link: string, accountId?: string) {
     var sql = 'SELECT id FROM comments WHERE link = ?';
     var values = [link];
-    return db.query(sql, values).then( (rows: any) => {
-        return getCommentById(rows[0].id, accountId);
-    });
+    if ( accountId ) {
+        return db.query(sql, values).then( (rows: any) => {
+            return getCommentById(rows[0].id, accountId);
+        });
+    } else {
+        return db.query(sql, values).then( (rows: any) => {
+            return getCommentByIdNoAccount(rows[0].id);
+        });
+    }
+
 }

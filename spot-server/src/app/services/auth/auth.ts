@@ -1,9 +1,10 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
-            validPassword }
+            validPassword, optionalAuth }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
 const request = require('request');
+const passport = require('@services/auth/passport');
 
 const secret = require('../../../../secret.json');
 
@@ -48,6 +49,15 @@ function validPassword(password: string): Error | null {
     return null;
 
 }
+
+// Optional Authentication Middleware
+const optionalAuth = function(req: any, res: any, next: any) {
+    passport.authenticate('jwt', {session: true} , function(err: any, user: any, info: any) {
+      req.authenticated = !! user;
+      req.user = user || null;
+      next();
+    })(req, res, next);
+};
 
 // Password Generation
 

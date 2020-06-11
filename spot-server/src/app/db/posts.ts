@@ -1,4 +1,5 @@
-export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink, getPostsActivity }
+export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink, getPostsActivity,
+            getPostByIdNoAccount }
 
 const uuid = require('uuid');
 
@@ -66,6 +67,14 @@ function getPostById(postId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
+function getPostByIdNoAccount(postId: string): Promise<any> {
+    var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
+                    posts.likes, posts.dislikes, posts.comments, posts.geolocation
+                FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? AND posts.deletion_date IS NULL GROUP BY posts.id ORDER BY posts.creation_date DESC`;
+    var values = [postId];
+    return db.query(sql, values);
+}
+
 function addPost(content: string, location: any, imageSrc: string, link: string, accountId: string, geolocation: string): Promise<any> {
     var postId = uuid.v4();
     var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, likes, dislikes, comments, geolocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -99,12 +108,21 @@ function getPostCreator(postId: string) {
     return db.query(sql, values);
 }
 
-function getPostByLink(link: string, accountId: string) {
+function getPostByLink(link: string, accountId?: string) {
+    
     var sql = 'SELECT id FROM posts WHERE link = ?';
     var values = [link];
-    return db.query(sql, values).then( (rows: any) => {
-        return getPostById(rows[0].id, accountId);
-    });
+
+    if ( accountId ) {
+        return db.query(sql, values).then( (rows: any) => {
+            return getPostById(rows[0].id, accountId);
+        });
+    } else {
+        return db.query(sql, values).then( (rows: any) => {
+            return getPostByIdNoAccount(rows[0].id);
+        });
+    }
+
 }
 
 function getPostsActivity(accountId: string, date: string, limit: number) {

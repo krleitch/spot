@@ -33,7 +33,6 @@ router.get('/activity', function (req: any, res: any) {
 router.get('/:postId', async function (req: any, res: any) {
     
     const postId = req.params.postId;
-    const accountId = req.user.id;
 
     const commentLink = req.query.comment;
     let date = req.query.date;
@@ -53,7 +52,7 @@ router.get('/:postId', async function (req: any, res: any) {
 
     // If given a commentId we fetch that comment and everything after
     if ( commentLink ) {
-        await comments.getCommentByLink( commentLink , accountId ).then( (rows: any) => {
+        await comments.getCommentByLink( commentLink , req.authenticated ? req.user.id : null ).then( (rows: any) => {
             date = rows[0].creation_date;
             type = 'before';
             limit = limit -= 1 || 0;
@@ -61,11 +60,11 @@ router.get('/:postId', async function (req: any, res: any) {
         });
     }
 
-    comments.getCommentByPostId(postId, accountId, date, limit, type).then( async (rows: any) => {
+    comments.getCommentByPostId(postId, date, limit, type, req.authenticated ? req.user.id : null).then( async (rows: any) => {
 
         commentsArray = commentsArray.concat(rows)
 
-        await commentsService.getTags( commentsArray, accountId ).then( (taggedComments: any) => {
+        await commentsService.getTags( commentsArray, req.authenticated ? req.user.id : null ).then( (taggedComments: any) => {
             commentsArray = taggedComments;
         });
 
@@ -149,13 +148,12 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
     
     const postId = req.params.postId;
     const commentId = req.params.commentId;
-    const accountId = req.user.id;
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
-    comments.getRepliesByCommentId(postId, commentId, accountId, offset, limit).then( async (rows: any) => {
+    comments.getRepliesByCommentId(postId, commentId, offset, limit, req.authenticated ? req.user.id : null).then( async (rows: any) => {
 
-        await commentsService.getTags( rows, accountId ).then( (taggedComments: any) => {
+        await commentsService.getTags( rows, req.authenticated ? req.user.id : null ).then( (taggedComments: any) => {
             rows = taggedComments;
         })
 

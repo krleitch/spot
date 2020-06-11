@@ -164,12 +164,13 @@ router.get('/activity', function (req: any, res: any) {
 });
 
 // Get a single post
-router.get('/:postLink', function (req: any, res: any) {
+router.get('/:postLink',  function (req: any, res: any) {
+
     const postLink = req.params.postLink;
-    const accountId = req.user.id;
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
-    posts.getPostByLink(postLink, accountId).then((rows: any) => {
+
+    posts.getPostByLink(postLink, req.authenticated ? req.user.id: null).then((rows: any) => {
 
         // add the distance
         rows.map( (row: any) => {

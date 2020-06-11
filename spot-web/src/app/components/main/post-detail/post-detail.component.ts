@@ -37,34 +37,32 @@ export class PostDetailComponent implements OnInit {
       this.myLocation = location;
 
       // don't load unless we have a location
-      if (location === null) {
-        this.locationEnabled = false;
-        return;
-      } else {
-        this.locationEnabled = true;
+      if ( this.myLocation ) {
+
+        this.route.paramMap.subscribe( p => {
+
+          this.commentId = p.get('commentId');
+
+          const request: LoadSinglePostRequest = {
+            postLink: p.get('postId'),
+            location: this.myLocation
+          };
+
+          this.post$ = this.postsService.getPost(request).pipe(
+            map( postSuccess =>  {
+              if ( this.commentId ) {
+                postSuccess.post.startCommentId = this.commentId;
+              }
+              return postSuccess.post;
+            })
+          );
+
+        });
+
       }
 
     });
 
-    this.route.paramMap.subscribe( p => {
-
-      this.commentId = p.get('commentId');
-
-      const request: LoadSinglePostRequest = {
-        postLink: p.get('postId'),
-        location: this.myLocation
-      };
-
-      this.post$ = this.postsService.getPost(request).pipe(
-        map( postSuccess =>  {
-          if ( this.commentId ) {
-            postSuccess.post.startCommentId = this.commentId;
-          }
-          return postSuccess.post;
-        })
-      );
-
-    });
   }
 
   getPostLink(post: Post) {
