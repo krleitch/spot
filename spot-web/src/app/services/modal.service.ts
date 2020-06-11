@@ -29,6 +29,10 @@ export class ModalService {
 
   }
 
+  isOpen(id: string): boolean {
+    return this.modals.filter(x => x.id === id)[0].isOpen;
+  }
+
   close(id: string) {
     const modal: any = this.modals.filter(x => x.id === id)[0];
     modal.close();

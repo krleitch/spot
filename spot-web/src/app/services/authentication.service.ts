@@ -9,6 +9,7 @@ import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginR
          PasswordResetRequest, PasswordResetSuccess, ValidateTokenRequest, ValidateTokenSuccess,
          NewPasswordRequest, NewPasswordSuccess } from '@models/authentication';
 import { AlertService } from '@services/alert.service';
+import { ModalService } from '@services/modal.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -18,17 +19,16 @@ export class AuthenticationService {
     constructor(
         private http: HttpClient,
         private router: Router,
-        private alertService: AlertService) {
+        private alertService: AlertService,
+        private modalService: ModalService) {
     }
 
     // Facebook
-
     loginFacebookAccount(request: FacebookLoginRequest): Observable<FacebookLoginResponse> {
         return this.http.post<FacebookLoginResponse>(`${this.baseUrl}/auth/login/facebook`, request);
     }
 
     // Normal auth
-
     registerAccount(registerRequest: RegisterRequest): Observable<RegisterResponse> {
         return this.http.post<RegisterResponse>(`${this.baseUrl}/auth/register`, registerRequest);
     }
@@ -86,7 +86,12 @@ export class AuthenticationService {
     loginAccountSuccess(response: LoginResponse) {
         localStorage.setItem('id_token', response.jwt.token);
         localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
-        this.router.navigateByUrl('/home');
+        if ( this.modalService.isOpen('spot-auth-modal') ) {
+          this.modalService.close('spot-auth-modal');
+          // TODO: refresh the page so u get the updated content form being logged in
+        } else {
+          this.router.navigateByUrl('/home');
+        }
     }
 
     loginFacebookAccountSuccess(response: FacebookLoginResponse) {

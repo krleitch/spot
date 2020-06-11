@@ -399,6 +399,52 @@ export const STRINGS = {
           CONFIRM_NONE: 'Password confirmation is required',
           INVALID_MATCH: 'Passwords must match'
 
+        },
+
+        AUTH_MODAL: {
+
+          // Modal Strings
+          TITLE: 'Login / Register',
+          LOGIN: 'Login',
+          REGISTER: 'Register',
+
+          // Other options
+          FACEBOOK_LOGIN: 'Sign In With Facebook',
+          GOOGLE_LOGIN: 'Sign In With Google',
+
+          // Both Login and Register
+          PASSWORD_PLACEHOLDER: 'Password',
+          PASSWORD_ERROR: 'Password is required',
+
+          // Login form
+          FORGOT_PASSWORD: 'Forgot Password',
+
+          EMAIL_OR_USERNAME_PLACEHOLDER: 'Email or Username',
+
+          LOGIN_BUTTON: 'Login',
+
+          // Login errors
+          EMAIL_OR_USER_ERROR: 'Email/Username is required',
+
+          // Register Form
+          REGISTER_BUTTON: 'Register',
+
+          EMAIL_PLACEHOLDER: 'Email',
+          USERNAME_PLACEHOLDER: 'Username',
+          PHONE_PLACEHOLDER: 'Phone Number',
+
+          // ERROR MESSAGES
+          EMAIL_ERROR: 'Email is required',
+          USERNAME_ERROR: 'Username is required',
+          PHONE_ERROR: 'Phone is required',
+
+          EMAIL_INVALID: 'Email is invalid',
+          PHONE_INVALID: 'Phone number is invalid',
+
+          EMAIL_USED: 'Email is already in use',
+          USERNAME_USED: 'Username is already in use',
+          PHONE_USED: 'Phone is already in use'
+
         }
 
     }

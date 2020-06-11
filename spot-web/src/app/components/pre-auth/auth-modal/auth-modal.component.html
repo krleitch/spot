@@ -1,0 +1,88 @@
+<div class="spot-auth-modal">
+
+  <div class="header">
+    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="close" (click)="close()"> <span class="material-icons"> clear </span> </span>
+  </div>
+
+  <div class="content">
+
+    <div class="tab-container">
+      <div class="tab" (click)="selectTab('login')" [ngClass]="{'selected': selectedTab == 'login'}"> {{ STRINGS.LOGIN }} </div>
+      <div class="tab" (click)="selectTab('register')" [ngClass]="{'selected': selectedTab == 'register'}"> {{ STRINGS.REGISTER }} </div>
+    </div>
+
+    <div *ngIf="selectedTab == 'login'" class="login">
+
+      <form [formGroup]="loginForm">
+        <fieldset>
+          <div class="form-field">
+              <input name="emailOrUsername" formControlName="emailOrUsername" [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER" required>
+          </div>
+          <div class="form-field">
+              <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+          </div>
+        </fieldset>
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="button" (click)="login()"> {{ STRINGS.LOGIN_BUTTON }} </button>
+        </div>
+        <div class="forgot-password" (click)="forgotPassword()">
+          <span> {{ STRINGS.FORGOT_PASSWORD }} </span>
+        </div>
+        <div class="login-options">
+          <div type="button" class="facebook" (click)="facebookLogin()">
+            <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+            {{ STRINGS.FACEBOOK_LOGIN }}
+          </div>
+          <div type="button" class="google" (click)="googleLogin()">
+            <img src="../../../assets/images/google_login.png" class="google-logo">
+            {{ STRINGS.GOOGLE_LOGIN }}
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+    <div *ngIf="selectedTab == 'register'" class="register">
+
+      <form [formGroup]="registerForm">
+        <fieldset>
+          <div class="form-field">
+              <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+          </div>
+          <div class="form-field">
+              <input name="username" formControlName="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
+          </div>
+          <div class="form-field">
+              <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+          </div>
+          <div class="form-field">
+              <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
+          </div>
+        </fieldset>
+        <div class="error-message">
+          {{ registerErrorMessage }}
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="button" (click)="register()"> {{ STRINGS.REGISTER_BUTTON }} </button>
+        </div>
+        <div class="login-options">
+          <div type="button" class="facebook" (click)="facebookLogin()">
+            <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+            {{ STRINGS.FACEBOOK_LOGIN }}
+          </div>
+          <div type="button" class="google" (click)="googleLogin()">
+            <img src="../../../assets/images/google_login.png" class="google-logo">
+            {{ STRINGS.GOOGLE_LOGIN }}
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

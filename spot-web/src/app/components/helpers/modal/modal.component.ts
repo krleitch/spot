@@ -15,6 +15,8 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() height: number;
   private element: any;
 
+  isOpen: boolean;
+
   data = new Subject<any>();
   result: Subject<any>;
 
@@ -51,6 +53,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.element.style.display = 'block';
     document.body.classList.add('spot-modal-open');
 
+    this.isOpen = true;
     this.result = new Subject<any>();
 
   }
@@ -59,6 +62,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.element.style.display = 'none';
     document.body.classList.remove('spot-modal-open');
 
+    this.isOpen = false;
     this.result.complete();
 
   }

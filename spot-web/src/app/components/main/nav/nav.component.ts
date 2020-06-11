@@ -9,6 +9,7 @@ import { SocialStoreSelectors, SocialStoreNotificationsActions } from '@store/so
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { Account } from '@models/accounts';
 import { GetNotificationsUnreadRequest } from '@models/notifications';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-main-nav',
@@ -30,7 +31,8 @@ export class NavComponent implements OnInit {
   accountShowDropdown = false;
   showNotifications = false;
 
-  constructor(private router: Router, private store$: Store<RootStoreState.State>) {
+  constructor(private router: Router, private store$: Store<RootStoreState.State>,
+              private modalService: ModalService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -110,8 +112,8 @@ export class NavComponent implements OnInit {
     }
   }
 
-  navigateLogin() {
-    this.router.navigateByUrl('/login');
+  openAuthModal() {
+    this.modalService.open('spot-auth-modal');
   }
 
   toggleNotifications() {
