@@ -17,6 +17,8 @@ import { PostDetailComponent } from './components/main/post-detail/post-detail.c
 import { FriendsComponent } from './components/main/social/friends/friends.component';
 import { ActivityComponent } from './components/main/activity/activity.component';
 
+import { AuthGuardService as AuthGuard } from '@src/app/helpers/auth-guard.service';
+
 export const routes: Routes = [
   {
     path: '',
@@ -25,6 +27,7 @@ export const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'login',
@@ -36,15 +39,18 @@ export const routes: Routes = [
   },
   {
     path: 'account',
-    component: AccountComponent
+    component: AccountComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'friends',
-    component: FriendsComponent
+    component: FriendsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'activity',
-    component: ActivityComponent
+    component: ActivityComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'posts/:postId',

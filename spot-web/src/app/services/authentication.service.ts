@@ -108,4 +108,15 @@ export class AuthenticationService {
         this.alertService.error(message);
     }
 
+    isAuthenticated(): boolean {
+      const token = localStorage.getItem('id_token');
+      const expiresIn = localStorage.getItem('id_expires_in');
+
+      // TODO
+      // Check expirary, store token better
+
+      return token ? true : false;
+
+    }
+
 }
