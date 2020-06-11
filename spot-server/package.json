@@ -35,7 +35,8 @@
     "@exceptions": "../spot-commons/exceptions",
     "@db": "./src/app/db",
     "@routes": "./src/app/routes",
-    "@services": "./src/app/services"
+    "@services": "./src/app/services",
+    "@config": "./src/app/config"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

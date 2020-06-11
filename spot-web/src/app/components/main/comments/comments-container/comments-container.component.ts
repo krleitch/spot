@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 import { LoadCommentsRequest, AddCommentRequest } from '@models/comments';
 import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
@@ -33,6 +34,8 @@ export class CommentsContainerComponent implements OnInit {
   loadingCommentsBefore$: Observable<boolean>;
   loadingCommentsAfter$: Observable<boolean>;
   initialLoad = true;
+
+  isAuthenticated$: Observable<boolean>;
 
   comments = [];
   totalCommentsBefore = 0;
@@ -65,6 +68,10 @@ export class CommentsContainerComponent implements OnInit {
 
     this.loadingCommentsAfter$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsAfter)
+    );
+
+    this.isAuthenticated$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
     this.comments$.subscribe( comments => {

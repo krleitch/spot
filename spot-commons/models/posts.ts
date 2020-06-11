@@ -6,6 +6,7 @@ export interface Post {
     longitude: number;
     latitude: number;
     distance: number;
+    inRange: boolean;
     geolocation: string;
     content: string;
     image_src: string;

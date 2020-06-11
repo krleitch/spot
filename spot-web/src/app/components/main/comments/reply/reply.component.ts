@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest,
          DislikeReplyRequest, ReportCommentRequest } from '@models/comments';
@@ -21,6 +23,7 @@ export class ReplyComponent implements OnInit {
   @Input() detailed: boolean;
   @Input() reply: Comment;
   @Input() postLink: string;
+  @Input() inRange: boolean;
   @ViewChild('options') options;
 
   @ViewChild('tag') tag: ElementRef;
@@ -29,6 +32,8 @@ export class ReplyComponent implements OnInit {
   tagName = '';
 
   STRINGS = STRINGS.MAIN.REPLY;
+
+  isAuthenticated$: Observable<boolean>;
 
   // Show ... for content
   MAX_SHOW_REPLY_LENGTH = 100;
@@ -59,6 +64,10 @@ export class ReplyComponent implements OnInit {
 
   ngOnInit() {
     this.getTime(this.reply.creation_date);
+
+    this.isAuthenticated$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsAuthenticated)
+    );
   }
 
   offClickHandler(event: MouseEvent) {

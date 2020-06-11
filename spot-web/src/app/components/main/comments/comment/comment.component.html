@@ -49,7 +49,7 @@
           </ng-template>
         </span>
       </div>
-      <div [hidden]="!showAddReply" class="add">
+      <div [hidden]="!showAddReply" class="add" *ngIf="(comment.tag.tagged || inRange) && (isAuthenticated$ | async)">
         <div class="editor">
           <div class="tag-container" *ngFor="let tag of tags">
             <div class="tag">
@@ -99,13 +99,13 @@
       <div class="time">
         {{ timeMessage }}
       </div>
-      <div class="reply" (click)="setShowAddReply(true)">
+      <div class="reply" (click)="setShowAddReply(true)" *ngIf="(comment.tag.tagged || inRange) && (isAuthenticated$ | async)">
         <i class="material-icons"> reply </i>
       </div>
     </div>
   </div>
   <div *ngFor="let reply of replies">
-    <spot-reply [reply]="reply" [postLink]="postLink" [detailed]="detailed"></spot-reply>
+    <spot-reply [reply]="reply" [postLink]="postLink" [inRange]="inRange" [detailed]="detailed"></spot-reply>
   </div>
   <div *ngIf="numLoaded < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
 </div>

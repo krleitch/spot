@@ -6,6 +6,7 @@ const reports = require('../db/reports');
 const locations = require('../db/locations');
 const postsService = require('../services/posts');
 const locationsService = require('../services/locations');
+const constants = require('@config/constants');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -36,6 +37,7 @@ router.get('/', function (req: any, res: any) {
                     rows.map( (row: any) => {
                         let newRow = row
                         newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+                        newRow.inRange = newRow.distance <= constants.RANGE;
                         delete newRow.latitude;
                         delete newRow.longitude;
                         return newRow;
@@ -152,6 +154,7 @@ router.get('/activity', function (req: any, res: any) {
         rows.map( (row: any) => {
             let newRow = row
             newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+            newRow.inRange = newRow.distance <= constants.RANGE;
             delete newRow.latitude;
             delete newRow.longitude;
             return newRow;
@@ -176,6 +179,7 @@ router.get('/:postLink',  function (req: any, res: any) {
         rows.map( (row: any) => {
             let newRow = row
             newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+            newRow.inRange = newRow.distance <= constants.RANGE;
             delete newRow.latitude;
             delete newRow.longitude;
             return newRow;

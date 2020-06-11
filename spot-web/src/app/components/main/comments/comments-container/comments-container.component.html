@@ -9,11 +9,11 @@
     </div>
 
     <div *ngFor="let comment of comments">
-        <spot-comment [comment]="comment" [postLink]="post.link" [detailed]="detailed"></spot-comment>
+        <spot-comment [comment]="comment" [postLink]="post.link" [inRange]="post.inRange" [detailed]="detailed"></spot-comment>
     </div>
     <div *ngIf="totalCommentsBefore > 0" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
   </div>
-  <div class="add">
+  <div class="add" *ngIf="(isAuthenticated$ | async) && post.inRange">
     <div class="editor">
       <div class="tag-container" *ngFor="let tag of tags">
         <div class="tag">

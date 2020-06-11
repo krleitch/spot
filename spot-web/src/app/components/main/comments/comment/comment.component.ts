@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
          LikeCommentRequest, DislikeCommentRequest, ReportCommentRequest } from '@models/comments';
@@ -22,6 +23,7 @@ export class CommentComponent implements OnInit {
   @Input() detailed: boolean;
   @Input() comment: Comment;
   @Input() postLink: string;
+  @Input() inRange: boolean;
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
@@ -39,6 +41,8 @@ export class CommentComponent implements OnInit {
 
   // fix this type
   replies$: Observable<any>;
+
+  isAuthenticated$: Observable<boolean>;
 
   replies = [];
   totalReplies = 0;
@@ -69,6 +73,10 @@ export class CommentComponent implements OnInit {
 
     this.replies$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureReplies, { postId: this.comment.post_id, commentId: this.comment.id })
+    );
+
+    this.isAuthenticated$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
     this.replies$.subscribe( replies => {
