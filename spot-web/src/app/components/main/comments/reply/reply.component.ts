@@ -84,6 +84,7 @@ export class ReplyComponent implements OnInit {
   onTextInput(event) {
 
     // TODO: A space should add a tag
+    // Change to Textarea inputs I think
 
     this.reply2Text = event.target.textContent;
     this.currentLength = this.reply2Text.length;
