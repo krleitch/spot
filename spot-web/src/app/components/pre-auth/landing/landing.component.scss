@@ -214,12 +214,26 @@ input {
     .content {
       flex-flow: column;
     }
-  
+
     .showcase {
         margin-right: 5px;
         margin-left: 5px;
+
+      .showcase-content {
+
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          max-width: 100%;
+        }
+
+      }
+
     }
-  
+
     .signup {
         margin-top: 25px;
         margin-left: 0px;
@@ -229,6 +243,5 @@ input {
     .copyright {
         display: none;
     }
-  
-  }
-  
+
+}

@@ -1,31 +1,53 @@
 @import '../../../styles/colors';
+@import '../../../styles/sizes';
 
 // NAVIGATION
 
 .nav {
+
     height: 50px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     padding: 5px 10px;
-}
 
-.title {
-    font-size: 35px;
-    margin-right: 35px;
-    cursor: pointer;
-    &:hover {
-      color: $button-highlight;
-    }
-}
+    .title {
+      font-size: 35px;
+      margin-right: 75px;
+      cursor: pointer;
+      &:hover {
+        color: $button-highlight;
+      }
+  }
 
-.nav-button {
+  .nav-button {
     font-size: 16px;
-    margin-right: 35px;
+    margin-right: 75px;
     cursor: pointer;
     &:hover {
         color: $button-highlight;
     }
+  }
+
+}
+
+// Mobile stylings
+@media screen and (max-width: $mobile-width) {
+
+  .nav {
+
+    justify-content: space-between;
+
+    .title {
+      margin-right: 0px;
+    }
+
+    .nav-button {
+      margin-right: 0px;
+    }
+
+  }
+
 }
 
 // MOBILE LINKS
