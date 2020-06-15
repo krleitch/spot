@@ -1,0 +1,33 @@
+@import '../../../styles/colors';
+@import '../../../styles/sizes';
+
+.about {
+
+  display: flex;
+  flex-flow: column;
+  margin-left: 50px;
+  margin-top: 50px;
+
+  .heading {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+
+  .text {
+    color: $subtle-grey;
+    margin-bottom: 10px;
+  }
+
+}
+
+
+
+// Mobile Stylings
+@media screen and (max-width: $mobile-width) {
+
+  .about {
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+
+}

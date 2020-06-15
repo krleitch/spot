@@ -1,0 +1,31 @@
+@import '../../../styles/colors';
+@import '../../../styles/sizes';
+
+.contact {
+
+  display: flex;
+  flex-flow: column;
+  margin-left: 50px;
+  margin-top: 50px;
+
+  .heading {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+
+  .text {
+    color: $subtle-grey;
+    margin-bottom: 10px;
+  }
+
+}
+
+// Mobile Stylings
+@media screen and (max-width: $mobile-width) {
+
+  .contact {
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+
+}
