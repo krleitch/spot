@@ -47,8 +47,15 @@ export class CreateComponent implements OnInit {
   }
 
   onTextInput(event) {
+    console.log(event)
     this.postText = event.target.textContent;
-    this.currentLength = this.postText.length;
+
+    if ( this.postText ) {
+      this.currentLength = this.postText.length;
+    } else {
+      this.currentLength = 0;
+    }
+
   }
 
   submit() {

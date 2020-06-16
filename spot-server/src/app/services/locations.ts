@@ -106,6 +106,12 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 
 	// we don't want to give away street address
 	return new Promise((resolve, reject) => {
+
+		// TODO: REMOVE
+		// Also remove the ellipsis, make that frontend
+
+		return resolve('TEST');
+
 		request(url, ( error: any, response: any, body: any ) => {
 
 			if ( error ) {

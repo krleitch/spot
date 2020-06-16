@@ -64,6 +64,12 @@ router.post('/', function (req: any, res: any) {
     const { content, location, image } = req.body;
     const link = postsService.generateLink();
 
+    // Only allow Ascii characters
+    // Will allow some emojis eventually, utf7mb4 is on the content field already
+    const isValid = /^[\x00-\x7F]*$/.test(content);
+    
+    console.log(content, isValid)
+
     locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: any) => {
 
         locationsService.verifyLocation( accountId, location.latitude, location.longitude ).then( (valid: boolean) => {

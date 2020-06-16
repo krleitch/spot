@@ -12,6 +12,8 @@ DROP TABLE IF EXISTS locations;
 
 DROP TABLE IF EXISTS accounts;
 
+ALTER DATABASE db CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
 CREATE TABLE accounts (
     id VARCHAR(36) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -45,6 +47,8 @@ CREATE TABLE posts (
     PRIMARY KEY (id)
 );
 
+ALTER TABLE posts CHANGE content content VARCHAR(3000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 CREATE TABLE comments (
     id VARCHAR(36) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
@@ -61,6 +65,8 @@ CREATE TABLE comments (
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id)
 );
+
+ALTER TABLE comments CHANGE content content VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 ALTER TABLE comments ADD FOREIGN KEY (parent_id) REFERENCES comments (id) ON DELETE CASCADE;
 
