@@ -1,10 +1,12 @@
 import { createSelector, createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 import { Post } from '@models/posts';
+import { SpotError } from '@exceptions/error';
 
 import { State } from './state';
 
 export const selectPosts = (state: State): Post[] => state.posts;
 export const selectLoading = (state: State): boolean => state.loading;
+export const selectCreateError = (state: State): SpotError => state.createError;
 
 export const selectMyFeatureState: MemoizedSelector<
   object,
@@ -25,4 +27,9 @@ export const selectMyFeatureLoading: MemoizedSelector<
 > = createSelector(
   selectMyFeatureState,
   selectLoading
+);
+
+export const selectCreatePostsError: MemoizedSelector<object, SpotError> = createSelector(
+  selectMyFeatureState,
+  selectCreateError
 );

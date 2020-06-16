@@ -25,6 +25,9 @@
       "@exceptions/*": [
         "../spot-commons/exceptions/*"
       ],
+      "@constants/*": [
+        "../spot-commons/constants/*"
+      ],
       "@services/*": [
         "src/app/services/*"
       ],

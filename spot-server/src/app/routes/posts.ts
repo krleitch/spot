@@ -1,12 +1,22 @@
 const express = require('express');
 const router = express.Router();
 
+// db
 const posts = require('../db/posts');
 const reports = require('../db/reports');
 const locations = require('../db/locations');
+
+// services
 const postsService = require('../services/posts');
 const locationsService = require('../services/locations');
-const constants = require('@config/constants');
+
+// errors
+const PostsError = require('@exceptions/posts');
+const AuthenticationError = require('@exceptions/authentication');
+const ErrorHandler = require('@src/app/errorHandler');
+
+// constants
+const CONSTANTS = require('@constants/posts');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -37,7 +47,7 @@ router.get('/', function (req: any, res: any) {
                     rows.map( (row: any) => {
                         let newRow = row
                         newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-                        newRow.inRange = newRow.distance <= constants.RANGE;
+                        newRow.inRange = newRow.distance <= 10;
                         delete newRow.latitude;
                         delete newRow.longitude;
                         return newRow;
@@ -58,44 +68,42 @@ router.get('/', function (req: any, res: any) {
 });
 
 // Add a post
-router.post('/', function (req: any, res: any) {
+router.post('/', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
    
+    // You must have an account to make a post
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const accountId = req.user.id;
     const { content, location, image } = req.body;
-    const link = postsService.generateLink();
 
-    // Only allow Ascii characters
-    // Will allow some emojis eventually, utf7mb4 is on the content field already
-    const isValid = /^[\x00-\x7F]*$/.test(content);
-    
-    console.log(content, isValid)
+    // You must either have some text or an image
+    if ( content.length == 0 && !image ) {
+        return next(PostsError.NoPostContent(400));
+    }
 
-    locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: any) => {
+    const contentError = postsService.validContent(content);
+    if ( contentError ) {
+        return next(contentError);
+    }
 
-        locationsService.verifyLocation( accountId, location.latitude, location.longitude ).then( (valid: boolean) => {
+    const link = await postsService.generateLink();
 
-            if ( valid ) {
+    console.log(link);
 
-                locations.addLocation( accountId, location.latitude, location.longitude ).then( () => {
+    locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
 
-                    posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
-                        res.status(200).json({ post: rows[0] });
-                    }, (err: any) => {
-                        console.log(err);
-                        res.status(500).send('Error adding post');
-                    });
-
-                });
-                
-            } else {
-                res.status(500).send('Error adding post from your location');
-            }
-
+        posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
+            const response = { post: rows[0] }
+            res.status(200).json(response);
+        }, (err: any) => {
+            return next(PostsError.PostError(500));
         });
 
     });
 
-});
+}) );
 
 // Like a post
 router.put('/:postId/like', function(req: any, res: any) {
@@ -160,7 +168,7 @@ router.get('/activity', function (req: any, res: any) {
         rows.map( (row: any) => {
             let newRow = row
             newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-            newRow.inRange = newRow.distance <= constants.RANGE;
+            newRow.inRange = newRow.distance <= 10;
             delete newRow.latitude;
             delete newRow.longitude;
             return newRow;
@@ -185,7 +193,7 @@ router.get('/:postLink',  function (req: any, res: any) {
         rows.map( (row: any) => {
             let newRow = row
             newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-            newRow.inRange = newRow.distance <= constants.RANGE;
+            newRow.inRange = newRow.distance <= 10;
             delete newRow.latitude;
             delete newRow.longitude;
             return newRow;

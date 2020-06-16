@@ -6,9 +6,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { STRINGS } from '@assets/strings/en';
 import { AddPostRequest } from '@models/posts';
 import { RootStoreState } from '@store';
-import { PostsStoreActions } from '@store/posts-store';
+import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { Location } from '@models/accounts';
+import { SpotError } from '@exceptions/error';
+import { POSTS_CONSTANTS } from '@constants/posts';
 
 @Component({
   selector: 'spot-create',
@@ -18,23 +20,30 @@ import { Location } from '@models/accounts';
 export class CreateComponent implements OnInit {
 
   STRINGS = STRINGS.MAIN.CREATE;
+  POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   location$: Observable<Location>;
   myLocation: Location;
 
-  postText: string;
+  postText = '';
 
   // displaying used characters for create a post
-  MAX_POST_LENGTH = 2000;
   currentLength = 0;
 
   FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
 
+  createError$: Observable<SpotError>; // Error from server
+  createError = ''; // Error from client
+
   constructor(private store$: Store<RootStoreState.State>, public domSanitizer: DomSanitizer) { }
 
   ngOnInit() {
+
+    this.createError$ = this.store$.pipe(
+      select(PostsStoreSelectors.selectCreatePostsError)
+    );
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
@@ -47,22 +56,30 @@ export class CreateComponent implements OnInit {
   }
 
   onTextInput(event) {
-    console.log(event)
-    this.postText = event.target.textContent;
-
-    if ( this.postText ) {
-      this.currentLength = this.postText.length;
-    } else {
-      this.currentLength = 0;
-    }
-
+    this.postText = event.target.textContent || '';
+    this.currentLength = this.postText.length;
   }
 
   submit() {
 
     const content = this.postText;
 
-    if ( content.length <= this.MAX_POST_LENGTH && this.myLocation != null) {
+    if ( content.length === 0 && !this.imageFile ) {
+      this.createError = 'Your post must have text or an image';
+      return;
+    }
+
+    if ( content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
+      this.createError = 'Post must be greater than ' + POSTS_CONSTANTS.MIN_CONTENT_LENGTH + ' characters';
+      return;
+    }
+
+    if ( content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH ) {
+      this.createError = 'Post must be less than ' + POSTS_CONSTANTS.MAX_CONTENT_LENGTH + ' characters';
+      return;
+    }
+
+    if ( this.myLocation != null) {
       const post: AddPostRequest = {
         content,
         location: this.myLocation,
@@ -104,7 +121,7 @@ export class CreateComponent implements OnInit {
   // }
 
   invalidLength(): boolean {
-    return this.currentLength > this.MAX_POST_LENGTH;
+    return this.currentLength > POSTS_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
 }

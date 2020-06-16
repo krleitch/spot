@@ -7,9 +7,16 @@
 // EDITOR
 
 .editor {
+
     background: white;
     max-height: 500px;
     overflow: auto;
+
+  .createError {
+    padding: 0px 12px;
+    color: $error-red;
+  }
+
 }
 
 .content {

@@ -1,4 +1,14 @@
 import { SpotError } from './error';
+import { ERROR_MESSAGES } from './messages';
+
+const AUTHENTICATION_ERROR_MESSAGES = ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
+
+export class AuthenticationError extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.NO_AUTHENTICATION, statusCode);
+    this.name = "AuthenticationError";
+  }
+}
 
 // Validation Auth Errors for signup
 

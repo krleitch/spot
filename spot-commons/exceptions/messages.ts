@@ -16,6 +16,15 @@ export const ERROR_MESSAGES = {
 
             GENERIC: 'Error sending friend request'
 
+        },
+
+        POSTS: {
+
+            POST_ERROR: 'Post Error',
+            INVALID_POST_CONTENT: 'Invalid post content',
+            INVALID_POST_LENGTH: 'Invalid post length',
+            NO_CONTENT: 'No content'
+
         }
     
     },
@@ -23,6 +32,9 @@ export const ERROR_MESSAGES = {
     PRE_AUTH: {
 
         AUTHENTICATION: {
+
+            // Standard Authentication Error
+            NO_AUTHENTICATION: 'User not Authenticated',
 
             // Register Validation
 

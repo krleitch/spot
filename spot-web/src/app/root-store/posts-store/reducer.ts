@@ -30,6 +30,12 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state
       };
     }
+    case ActionTypes.ADD_FAILURE: {
+      return {
+        ...state,
+        createError: action.error
+      };
+    }
     case ActionTypes.LIKE_SUCCESS: {
       state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {

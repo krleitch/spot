@@ -84,7 +84,7 @@ export class PostsStoreEffects {
         .pipe(
           map( (response: AddPostSuccess) => new featureActions.AddSuccessAction( response )),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new featureActions.AddFailureAction( errorResponse.error ))
           )
         )
     )

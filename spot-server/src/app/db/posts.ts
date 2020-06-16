@@ -1,5 +1,5 @@
 export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink, getPostsActivity,
-            getPostByIdNoAccount }
+            getPostByIdNoAccount, linkExists }
 
 const uuid = require('uuid');
 
@@ -130,4 +130,17 @@ function getPostsActivity(accountId: string, date: string, limit: number) {
                 FROM posts WHERE account_id = ? AND deletion_date IS NULL AND creation_date < ? ORDER BY creation_date DESC LIMIT ?`;
     var values = [accountId,  new Date(date), limit];
     return db.query(sql, values);
+}
+
+// Check existance
+
+function linkExists(link: string) {
+    
+    var sql = 'SELECT link FROM posts WHERE link = ?';
+    var values = [link];
+
+    return db.query(sql, values).then( (link: any) => {
+        return link.length > 0;
+    });
+
 }
