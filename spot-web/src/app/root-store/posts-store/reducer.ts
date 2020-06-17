@@ -24,16 +24,24 @@ export function featureReducer(state = initialState, action: Actions): State {
         };
       }
     }
+    case ActionTypes.ADD_REQUEST: {
+      return {
+        ...state,
+        createSuccess: false
+      };
+    }
     case ActionTypes.ADD_SUCCESS: {
       state.posts.unshift(action.response.post);
       return {
-        ...state
+        ...state,
+        createSuccess: true
       };
     }
     case ActionTypes.ADD_FAILURE: {
       return {
         ...state,
-        createError: action.error
+        createError: action.error,
+        createSuccess: false
       };
     }
     case ActionTypes.LIKE_SUCCESS: {

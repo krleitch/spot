@@ -93,6 +93,16 @@ router.post('/', ErrorHandler.catchAsync( async (req: any, res: any, next: any) 
     locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
 
         posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
+
+            rows.map( (row: any) => {
+                let newRow = row
+                newRow.distance = locationsService.distanceBetween( location.latitude, location.longitude, row.latitude, row.longitude, 'M' );
+                newRow.inRange = newRow.distance <= 10;
+                delete newRow.latitude;
+                delete newRow.longitude;
+                return newRow;
+            });
+
             const response = { post: rows[0] }
             res.status(200).json(response);
         }, (err: any) => {

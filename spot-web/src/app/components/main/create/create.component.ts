@@ -11,6 +11,7 @@ import { AccountsStoreSelectors } from '@store/accounts-store';
 import { Location } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 import { POSTS_CONSTANTS } from '@constants/posts';
+import { PostsService } from '@src/app/services/posts.service';
 
 @Component({
   selector: 'spot-create',
@@ -34,12 +35,26 @@ export class CreateComponent implements OnInit {
   imageFile: File;
   imgSrc: string = null;
 
+  createSuccess$: Observable<boolean>;
   createError$: Observable<SpotError>; // Error from server
   createError = ''; // Error from client
 
   constructor(private store$: Store<RootStoreState.State>, public domSanitizer: DomSanitizer) { }
 
   ngOnInit() {
+
+    this.createSuccess$ = this.store$.pipe(
+      select(PostsStoreSelectors.selectCreatePostsSuccess)
+    );
+
+    this.createSuccess$.subscribe( (success: boolean) => {
+      console.log('CALLED', success);
+      if ( success ) {
+        this.removeFile();
+        this.postText = '';
+        this.currentLength = this.postText.length;
+      }
+    });
 
     this.createError$ = this.store$.pipe(
       select(PostsStoreSelectors.selectCreatePostsError)
@@ -58,6 +73,7 @@ export class CreateComponent implements OnInit {
   onTextInput(event) {
     this.postText = event.target.textContent || '';
     this.currentLength = this.postText.length;
+    this.createError = '';
   }
 
   submit() {
@@ -79,6 +95,15 @@ export class CreateComponent implements OnInit {
       return;
     }
 
+    // Only allow ascii characters currently, so check anything but ascii
+    // So user knows what they need to change
+    const regex = /^[^\x00-\x7F]*$/;
+    const match = content.match(regex);
+    if ( match && match[0].length > 0 ) {
+      this.createError = 'Invalid post content ' + match[0];
+      return;
+    }
+
     if ( this.myLocation != null) {
       const post: AddPostRequest = {
         content,
@@ -90,11 +115,8 @@ export class CreateComponent implements OnInit {
         new PostsStoreActions.AddRequestAction(post)
       );
 
-      // TODO FIX THIS
-      // this.postText = '';
-      // this.imageFile = null;
-
     }
+
   }
 
   onFileChanged(event) {
@@ -114,11 +136,6 @@ export class CreateComponent implements OnInit {
       return name;
     }
   }
-
-  // TODO for making focus better
-  // setFocus() {
-  //   document.getElementById('content').focus();
-  // }
 
   invalidLength(): boolean {
     return this.currentLength > POSTS_CONSTANTS.MAX_CONTENT_LENGTH;

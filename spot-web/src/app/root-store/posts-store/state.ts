@@ -5,12 +5,14 @@ export interface State {
   posts: Post[];
   loading: boolean;
   createError: SpotError;
+  createSuccess: boolean;
 }
 
 export const initialState: State = (
   {
     posts: [],
     loading: false,
-    createError: null
+    createError: null,
+    createSuccess: false
   }
 );
