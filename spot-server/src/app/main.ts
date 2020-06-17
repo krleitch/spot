@@ -25,7 +25,7 @@ const errorHandler = require('./errorHandler');
 const passport = require('@services/authentication/passport');
 const authentication = require('@services/authentication/authentication');
 const locationService = require('@services/locations');
-const authorization = require('@services/authorization/authorize');
+const authorization = require('@services/authorization/authorization');
 const roles = require('@services/authorization/roles');
 
 const port = 3000;
