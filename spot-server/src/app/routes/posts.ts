@@ -69,7 +69,7 @@ router.get('/', function (req: any, res: any) {
 
 // Add a post
 router.post('/', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
-   
+
     // You must have an account to make a post
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -89,8 +89,6 @@ router.post('/', ErrorHandler.catchAsync( async (req: any, res: any, next: any) 
     }
 
     const link = await postsService.generateLink();
-
-    console.log(link);
 
     locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
 

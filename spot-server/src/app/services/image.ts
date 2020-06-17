@@ -29,10 +29,12 @@ const upload = multer({
         s3,
         bucket: 'spot',
         metadata: function (req: any, file: any, cb: any) {
-            cb(null, {fieldName: 'TESTING_METADATA'});
+            cb(null, {originalname: file.originalname.substr(0,255)});
         },
         key: function (req: any, file: any, cb: any) {
-            cb(null, 'posts/' + Date.now().toString())
+            const route = req.route.path.split('upload/')[1] + '/';
+            const name = file.originalname.substr(0, 255) + '-' + Date.now().toString();
+            cb(null, route + name)
         }
     })
 });

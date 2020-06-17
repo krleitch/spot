@@ -46,7 +46,7 @@ export class PostsService {
       const formData = new FormData();
       formData.append('image', myRequest.image);
 
-      return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
+      return this.http.post<any>(`${this.baseUrl}/image/upload/posts`, formData).pipe(switchMap( response => {
         myRequest.image = response.imageSrc;
         return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, myRequest);
       }));
