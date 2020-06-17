@@ -3,13 +3,13 @@ const router = express.Router();
 
 const accounts = require('../db/accounts');
 const passwordReset = require('../db/passwordReset');
-const auth = require('../services/auth/auth')
+const auth = require('../services/authentication/authentication')
 const friendsService = require('@services/friends');
 const nodemailer = require('nodemailer');
 
 const shortid = require('shortid');
 
-const passport = require('../services/auth/passport');
+const passport = require('../services/authentication/passport');
 
 const AuthError = require('@exceptions/authentication');
 const ERROR_MESSAGES = require('@exceptions/messages');

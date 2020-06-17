@@ -4,7 +4,7 @@ const router = express.Router();
 
 const accounts = require('../db/accounts');
 
-const authService = require('@services/auth/auth');
+const authService = require('@services/authentication/authentication');
 const friendsService = require('@services/friends');
 
 router.use(function timeLog (req: any, res: any, next: any) {

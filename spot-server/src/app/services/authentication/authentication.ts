@@ -4,7 +4,7 @@ export { generateSalt, hashPassword, validatePassword, generateToken, getFaceboo
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
 const request = require('request');
-const passport = require('@services/auth/passport');
+const passport = require('@services/authentication/passport');
 
 const secret = require('../../../../secret.json');
 

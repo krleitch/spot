@@ -3,7 +3,7 @@ export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, cha
          disconnectFacebookAccount }
 
 const uuid = require('uuid');
-const roles = require('../authorization/roles');
+const roles = require('@services/authorization/roles');
 
 const db = require('./mySql');
 

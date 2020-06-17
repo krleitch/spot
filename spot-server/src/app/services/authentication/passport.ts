@@ -6,7 +6,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 
 const secret = require('../../../../secret.json');
-const auth = require('./auth');
+const auth = require('./authentication');
 const accounts = require('../../db/accounts');
 
 // Login Local

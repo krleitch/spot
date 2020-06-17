@@ -13,7 +13,7 @@ const comments = require('./routes/comments');
 const image = require('./routes/image');
 const notifications = require('./routes/notifications');
 const friends = require('./routes/friends');
-const auth = require('./routes/auth');
+const auth = require('./routes/authentication');
 const admin = require('./routes/admin');
 
 // Db
@@ -22,11 +22,11 @@ const mongo = require('./db/mongo');
 
 // Utils
 const errorHandler = require('./errorHandler');
-const passport = require('@services/auth/passport');
-const authentication = require('@services/auth/auth');
+const passport = require('@services/authentication/passport');
+const authentication = require('@services/authentication/authentication');
 const locationService = require('@services/locations');
-const authorization = require('./authorization/authorize');
-const roles = require('./authorization/roles');
+const authorization = require('@services/authorization/authorize');
+const roles = require('@services/authorization/roles');
 
 const port = 3000;
 
