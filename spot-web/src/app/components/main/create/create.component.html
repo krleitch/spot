@@ -1,23 +1,26 @@
 <meta charset="UTF-8">
 <div class="container">
+
   <div class="editor">
       <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" [textContent]="postText" (input)="onTextInput($event)"></div>
       <div class="image" *ngIf="imgSrc != null">
         <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>
-      <div *ngIf="createError$ | async as createError; else clientError" class="createError">
-        {{ createError.message }}
-      </div>
-      <ng-template #clientError>
-        <span *ngIf="createError" class="createError">
-          {{ createError }}
-        </span>
-      </ng-template>
   </div>
+
+  <div *ngIf="createError$ | async as createError; else clientError" class="createError">
+    {{ createError.message }}
+  </div>
+  <ng-template #clientError>
+    <span *ngIf="createError" class="createError">
+      {{ createError }}
+    </span>
+  </ng-template>
+
   <div class="option-bar">
     <div class="file-options" *ngIf="imgSrc != null">
       <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
-      <span class="file-name"> {{ getDisplayFilename(imageFile.name) }} </span>
+      <span class="file-name"> {{ imageFile.name }} </span>
       <span class="file-remove" (click)="removeFile()">
         <i class="material-icons"> delete </i>
       </span>

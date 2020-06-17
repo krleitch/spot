@@ -27,11 +27,9 @@ export class CreateComponent implements OnInit {
   myLocation: Location;
 
   postText = '';
-
   // displaying used characters for create a post
   currentLength = 0;
 
-  FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
 
@@ -104,6 +102,8 @@ export class CreateComponent implements OnInit {
       return;
     }
 
+    // Send the request
+
     if ( this.myLocation != null) {
       const post: AddPostRequest = {
         content,
@@ -127,14 +127,6 @@ export class CreateComponent implements OnInit {
   removeFile() {
     this.imageFile = null;
     this.imgSrc = null;
-  }
-
-  getDisplayFilename(name: string) {
-    if (name.length > this.FILENAME_MAX_SIZE) {
-      return name.substr(0, this.FILENAME_MAX_SIZE) + '...';
-    } else {
-      return name;
-    }
   }
 
   invalidLength(): boolean {
