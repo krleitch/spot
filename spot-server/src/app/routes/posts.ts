@@ -15,6 +15,9 @@ const PostsError = require('@exceptions/posts');
 const AuthenticationError = require('@exceptions/authentication');
 const ErrorHandler = require('@src/app/errorHandler');
 
+// ratelimiter
+const rateLimiter = require('@src/app/rateLimiter');
+
 // constants
 const CONSTANTS = require('@constants/posts');
 
@@ -68,7 +71,7 @@ router.get('/', function (req: any, res: any) {
 });
 
 // Add a post
-router.post('/', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
+router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
 
     // You must have an account to make a post
     if ( !req.authenticated ) {

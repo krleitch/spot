@@ -38,7 +38,13 @@ export class HomeComponent implements OnInit {
 
   locationEnabled = false;
 
+  mobile = false;
+
   ngOnInit() {
+
+    if (window.innerWidth < 500) {
+      this.mobile = true;
+    }
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)

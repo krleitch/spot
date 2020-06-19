@@ -69,6 +69,7 @@ export class CreateComponent implements OnInit {
   }
 
   onTextInput(event) {
+    console.log(event.keyCode);
     this.postText = event.target.textContent || '';
     this.currentLength = this.postText.length;
     this.createError = '';
@@ -122,11 +123,13 @@ export class CreateComponent implements OnInit {
   onFileChanged(event) {
     this.imageFile = event.target.files[0];
     this.imgSrc = window.URL.createObjectURL(this.imageFile);
+    this.createError = '';
   }
 
   removeFile() {
     this.imageFile = null;
     this.imgSrc = null;
+    this.createError = '';
   }
 
   invalidLength(): boolean {

@@ -6,6 +6,12 @@
 // English
 export const ERROR_MESSAGES = {
 
+    RATE_LIMIT: {
+
+        RATE_LIMIT: 'Too many requests'
+
+    },
+
     // Main Errors for main pages
     MAIN: {
 
