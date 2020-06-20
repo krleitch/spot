@@ -1,5 +1,5 @@
 <meta charset="UTF-8">
-<div class="container">
+<div class="create">
 
   <div class="editor">
       <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" [textContent]="postText" (input)="onTextInput($event)"></div>
@@ -30,4 +30,5 @@
     <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
     <span class="submit" (click)="submit()"> {{ STRINGS.SUBMIT }} </span>
   </div>
+
 </div>

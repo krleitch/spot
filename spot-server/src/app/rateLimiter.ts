@@ -5,7 +5,6 @@ const rateLimit = require("express-rate-limit");
 
 const RateLimitError = require('@exceptions/rateLimit');
 
-
 export { createPostLimiter }
 
 const createPostLimiter = rateLimit({
