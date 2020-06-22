@@ -2,7 +2,7 @@
 <div class="create">
 
   <div class="editor">
-      <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" [textContent]="postText" (input)="onTextInput($event)"></div>
+      <div contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" (input)="onTextInput($event.target.innerHTML)"></div>
       <div class="image" *ngIf="imgSrc != null">
         <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>

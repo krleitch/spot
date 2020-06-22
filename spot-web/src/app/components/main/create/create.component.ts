@@ -26,7 +26,7 @@ export class CreateComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
-  postText = '';
+  postInnerHtml = '';
   // displaying used characters for create a post
   currentLength = 0;
 
@@ -46,11 +46,10 @@ export class CreateComponent implements OnInit {
     );
 
     this.createSuccess$.subscribe( (success: boolean) => {
-      console.log('CALLED', success);
       if ( success ) {
         this.removeFile();
-        this.postText = '';
-        this.currentLength = this.postText.length;
+        this.postInnerHtml = '';
+        this.currentLength = this.postInnerHtml.length;
       }
     });
 
@@ -68,16 +67,16 @@ export class CreateComponent implements OnInit {
 
   }
 
-  onTextInput(event) {
-    console.log(event.keyCode);
-    this.postText = event.target.textContent || '';
-    this.currentLength = this.postText.length;
+  onTextInput(innerHtml) {
+    console.log(innerHtml)
+    this.postInnerHtml = innerHtml;
+    this.currentLength = this.postInnerHtml.length;
     this.createError = '';
   }
 
   submit() {
 
-    const content = this.postText;
+    const content = this.postInnerHtml;
 
     if ( content.length === 0 && !this.imageFile ) {
       this.createError = 'Your post must have text or an image';
