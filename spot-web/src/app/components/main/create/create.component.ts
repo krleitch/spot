@@ -68,7 +68,6 @@ export class CreateComponent implements OnInit {
   }
 
   onTextInput(innerHtml) {
-    console.log(innerHtml)
     this.postInnerHtml = innerHtml;
     this.currentLength = this.postInnerHtml.length;
     this.createError = '';
@@ -76,7 +75,36 @@ export class CreateComponent implements OnInit {
 
   submit() {
 
-    const content = this.postInnerHtml;
+    let content = this.postInnerHtml;
+
+    // Sanitize the html, add line breaks when you see <div> <br> </div>
+    // Remove all other tags
+    // Stop drag drop image
+
+    const parser = new DOMParser();
+    let parsedHtml = parser.parseFromString(content, 'text/html');
+
+
+
+    let body = parsedHtml.getElementsByTagName("body");
+    console.log(body[0].childNodes)
+    let bodyChildren = body[0].children;
+    // let liElements = [];
+
+    let text = body[0].childNodes[0].nodeValue;
+
+    for (let i = 0; i < bodyChildren.length; i++) {
+      if ( i === 0 ) {
+        text += '\n';
+      }
+      text +=  (bodyChildren[i].textContent);
+      if ( i !== bodyChildren.length - 1 ) {
+        console.log('added')
+        text += '\n';
+      }
+    }
+
+    content = text;
 
     if ( content.length === 0 && !this.imageFile ) {
       this.createError = 'Your post must have text or an image';
@@ -103,6 +131,8 @@ export class CreateComponent implements OnInit {
     }
 
     // Send the request
+
+    console.log('SENDING: ', content);
 
     if ( this.myLocation != null) {
       const post: AddPostRequest = {
