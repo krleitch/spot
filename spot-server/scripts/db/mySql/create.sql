@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS password_reset;
 DROP TABLE IF EXISTS locations;
+DROP TABLE IF EXISTS accounts_metadata;
 
 DROP TABLE IF EXISTS accounts;
 
@@ -24,8 +25,20 @@ CREATE TABLE accounts (
     salt VARCHAR(256),
     role VARCHAR(36),
     facebook_id VARCHAR(36) UNIQUE,
+    google_id VARCHAR(36) UNIQUE,
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE accounts_metadata (
+    id VARCHAR(36) NOT NULL,
+    account_id VARCHAR(36) NOT NULL,
+    distance_unit VARCHAR(36) NOT NULL,
+    search_type VARCHAR(36) NOT NULL,
+    search VARCHAR(36) NOT NULL,
+    score INT,
+    FOREIGN KEY (account_id) REFERENCES accounts (id),
     PRIMARY KEY (id)
 );
 

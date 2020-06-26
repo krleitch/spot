@@ -1,16 +1,31 @@
 export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, changePassword,
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
-         disconnectFacebookAccount }
+         disconnectFacebookAccount, addAccountMetadata, getAccountMetadata }
 
 const uuid = require('uuid');
 const roles = require('@services/authorization/roles');
 
 const db = require('./mySql');
 
-function addAccount(email: string, username: string, pass: string, phone: string, salt: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, creation_date, email, username, pass, phone, score, salt, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), new Date(), email, username, pass, phone, 0, salt, false, roles.user];
+function addAccountMetadata(accountId: string): Promise<any> {
+    var sql = 'INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), accountId, 'miles', 'hot', 'global', 0];
     return db.query(sql, values);
+}
+
+function getAccountMetadata(accountId: string): Promise<any> {
+    var sql = 'SELECT distance_unit, search_type, search_distance, score FROM accounts_metadata WHERE account_id = ?';
+    var values = [accountId];
+    return db.query(sql, values);
+}
+
+function addAccount(email: string, username: string, pass: string, phone: string, salt: string): Promise<any> {
+    const id = uuid.v4();
+    var sql = 'INSERT INTO accounts (id, creation_date, email, username, pass, phone, score, salt, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [id, new Date(), email, username, pass, phone, 0, salt, false, roles.user];
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(id);
+    });
 }
 
 function getFacebookAccount(facebookId: string): Promise<any> {

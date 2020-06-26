@@ -10,7 +10,7 @@
     </div>
     <div class="content-container">
       <div class="content" [ngClass]="{'content-expanded': expanded}">
-        {{ getContent() }}
+        {{getContent()}}
       </div>
       <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
         <img [src]="post.image_src" />
