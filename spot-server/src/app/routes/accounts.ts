@@ -139,7 +139,12 @@ router.put('/metadata', async function (req: any, res: any) {
         });   
     }
 
-    res.sendStatus(200);
+    // Get account metadata
+    accounts.getAccountMetadata(accountId).then( (rows: any) => {
+        res.status(200).json({ metadata: rows[0] });
+    }, (err: any) => {
+        res.status(500).send('Error getting account metadata');
+    });   
 
 });
 

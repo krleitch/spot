@@ -178,7 +178,9 @@ export class AccountsStoreEffects {
       this.accountsService
         .updateAccountMetadata(action.request)
         .pipe(
-            map(response => new featureActions.UpdateAccountMetadataRequestSuccess(response)),
+            map(response => {
+              return new featureActions.UpdateAccountMetadataRequestSuccess(response)
+            }),
             catchError(error =>
               observableOf(new featureActions.GenericFailureAction(error))
             )

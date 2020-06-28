@@ -7,7 +7,7 @@ import { STRINGS } from '@assets/strings/en';
 import { AccountsActions } from '@store/accounts-store';
 import { SocialStoreSelectors, SocialStoreNotificationsActions } from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
-import { Account, AccountMetadata, GetAccountMetadataRequest } from '@models/accounts';
+import { Account, AccountMetadata } from '@models/accounts';
 import { GetNotificationsUnreadRequest } from '@models/notifications';
 import { ModalService } from '@services/modal.service';
 

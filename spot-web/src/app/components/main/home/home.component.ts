@@ -6,7 +6,7 @@ import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
 import { Post, LoadPostRequest, LoadPostSuccess } from '@models/posts';
-import { SetLocationRequest, Location, UpdateAccountMetadataRequest, AccountMetadata, GetAccountMetadataRequest } from '@models/accounts';
+import { SetLocationRequest, Location, UpdateAccountMetadataRequest, AccountMetadata } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -105,12 +105,6 @@ export class HomeComponent implements OnInit {
 
     this.loading$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeatureLoading)
-    );
-
-    const accountsMetadataRequest: GetAccountMetadataRequest = {};
-
-    this.store$.dispatch(
-      new AccountsActions.GetAccountMetadataRequestAction(accountsMetadataRequest)
     );
 
   }

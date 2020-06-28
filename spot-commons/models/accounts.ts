@@ -59,7 +59,7 @@ export interface UpdateAccountMetadataRequest {
 }
 
 export interface UpdateAccountMetadataSuccess {
-    
+    metadata: AccountMetadata;
 }
 
 // facebook

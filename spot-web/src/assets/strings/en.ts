@@ -51,6 +51,10 @@ export const STRINGS = {
 
             SCORE_DESCRIPTION: 'Gain score by posting and and commenting on spots!',
 
+            UNIT: 'Preferred Unit',
+            MILES: 'Miles',
+            KILOMETERS: 'KILOMETERS',
+
             // Account options
             ACCOUNT_OPTIONS: 'Account Options',
             ENABLE_OPTIONS: 'Enable Options',

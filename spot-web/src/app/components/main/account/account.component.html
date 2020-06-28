@@ -32,8 +32,19 @@
       </div>
       <div class="subheading"> {{ STRINGS.PHONE }} </div>
       <div class="value"> {{ account.phone }} </div>
-      <div class="subheading"> {{ STRINGS.SCORE }} </div>
-      <div class="value"> <i class="material-icons hot"> whatshot </i> {{ account.score }} </div>
+      <div *ngIf="accountMetadata$ | async as accountMetadata">
+        <div class="subheading"> {{ STRINGS.SCORE }} </div>
+        <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
+        <div class="subheading"> {{ STRINGS.UNIT }} </div>
+        <div class="value">
+          <div *ngIf="accountMetadata.distance_unit == 'miles'">
+            <div class="distance-button"> {{ STRINGS.MILES }} </div>
+          </div>
+          <div *ngIf="accountMetadata.distance_unit == 'kilometers'">
+            <div class="distance-button"> {{ STRINGS.KILOMETERS }} </div>
+          </div>
+        </div>
+      </div>
       <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
       <br/>
       <div class="title">

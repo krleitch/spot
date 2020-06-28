@@ -5,7 +5,7 @@ import { select, Store } from '@ngrx/store';
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
-import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest } from '@models/accounts';
+import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata} from '@models/accounts';
 
 @Component({
   selector: 'spot-account',
@@ -19,6 +19,7 @@ export class AccountComponent implements OnInit {
   STRINGS = STRINGS.MAIN.ACCOUNT;
 
   account$: Observable<Account>;
+  accountMetadata$: Observable<AccountMetadata>;
   facebookConnected$: Observable<boolean>;
 
   accountOptionsEnabled: boolean;
@@ -28,6 +29,10 @@ export class AccountComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
+
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
+    );
 
     this.facebookConnected$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectFacebookConnected)

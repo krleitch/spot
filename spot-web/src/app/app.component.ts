@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '@store';
-import { SetLocationRequest, GetAccountRequest } from '@models/accounts';
+import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest } from '@models/accounts';
 
 @Component({
   selector: 'app-root',
@@ -71,6 +71,11 @@ export class AppComponent implements OnInit {
       const request: GetAccountRequest = {};
       this.store$.dispatch(
         new AccountsActions.AccountRequestAction(request)
+      );
+
+      const accountsMetadataRequest: GetAccountMetadataRequest = {};
+      this.store$.dispatch(
+        new AccountsActions.GetAccountMetadataRequestAction(accountsMetadataRequest)
       );
     } else if (accessToken) {
       // TODO fb login

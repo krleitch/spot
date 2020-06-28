@@ -75,6 +75,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         accountMetadata: action.response.metadata
       };
     }
+    case ActionTypes.UPDATE_METADATA_SUCCESS: {
+      return {
+        ...state,
+        accountMetadata: action.response.metadata
+      };
+    }
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,
