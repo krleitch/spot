@@ -5,7 +5,8 @@ import { select, Store } from '@ngrx/store';
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
-import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata} from '@models/accounts';
+import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
+         UpdateAccountMetadataRequest } from '@models/accounts';
 
 @Component({
   selector: 'spot-account',
@@ -124,6 +125,26 @@ export class AccountComponent implements OnInit {
       new AccountsFacebookActions.FacebookDisconnectRequestAction(request)
     );
 
+  }
+
+  setMiles() {
+    const request: UpdateAccountMetadataRequest = {
+      distance_unit: 'miles'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
+  }
+
+  setKilometers() {
+    const request: UpdateAccountMetadataRequest = {
+      distance_unit: 'kilometers'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
   }
 
 }

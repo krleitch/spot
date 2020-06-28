@@ -53,7 +53,7 @@ export const STRINGS = {
 
             UNIT: 'Preferred Unit',
             MILES: 'Miles',
-            KILOMETERS: 'KILOMETERS',
+            KILOMETERS: 'Kilometers',
 
             // Account options
             ACCOUNT_OPTIONS: 'Account Options',

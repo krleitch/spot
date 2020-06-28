@@ -148,6 +148,18 @@ input {
   }
 }
 
+.distance-button {
+  color: black;
+  background-color: $lighter-grey;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.distance-selected {
+  color: white;
+  background-color: $button-highlight;
+}
+
 .disabled {
   background-color: $subtle-grey;
   cursor: not-allowed;

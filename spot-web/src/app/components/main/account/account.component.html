@@ -37,12 +37,8 @@
         <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
         <div class="subheading"> {{ STRINGS.UNIT }} </div>
         <div class="value">
-          <div *ngIf="accountMetadata.distance_unit == 'miles'">
-            <div class="distance-button"> {{ STRINGS.MILES }} </div>
-          </div>
-          <div *ngIf="accountMetadata.distance_unit == 'kilometers'">
-            <div class="distance-button"> {{ STRINGS.KILOMETERS }} </div>
-          </div>
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'miles' }" (click)="setMiles()"> {{ STRINGS.MILES }} </div>
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'kilometers' }" (click)="setKilometers()"> {{ STRINGS.KILOMETERS }} </div>
         </div>
       </div>
       <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
