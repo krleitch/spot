@@ -58,12 +58,6 @@ export class NavComponent implements OnInit {
       new SocialStoreNotificationsActions.GetNotificationsUnreadAction(request)
     );
 
-    const accountsMetadataRequest: GetAccountMetadataRequest = {};
-
-    this.store$.dispatch(
-      new AccountsActions.GetAccountMetadataRequestAction(accountsMetadataRequest)
-    );
-
     this.unread$.subscribe( (numberUnread: number) => {
       if (numberUnread >= 10) {
         this.unreadNotifications = '+';

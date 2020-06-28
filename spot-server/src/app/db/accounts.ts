@@ -1,6 +1,7 @@
 export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, changePassword,
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
-         disconnectFacebookAccount, addAccountMetadata, getAccountMetadata }
+         disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
+         updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType  }
 
 const uuid = require('uuid');
 const roles = require('@services/authorization/roles');
@@ -16,6 +17,24 @@ function addAccountMetadata(accountId: string): Promise<any> {
 function getAccountMetadata(accountId: string): Promise<any> {
     var sql = 'SELECT distance_unit, search_type, search_distance, score FROM accounts_metadata WHERE account_id = ?';
     var values = [accountId];
+    return db.query(sql, values);
+}
+
+function updateAccountsMetadataDistanceUnit(accountId: string, distanceUnit: string): Promise<any> {
+    var sql = 'UPDATE accounts_metadata SET distance_unit = ? WHERE account_id = ?';
+    var values = [distanceUnit, accountId];
+    return db.query(sql, values);
+}
+
+function updateAccountsMetadataSearchDistance(accountId: string, searchDistance: string): Promise<any> {
+    var sql = 'UPDATE accounts_metadata SET search_distance = ? WHERE account_id = ?';
+    var values = [searchDistance, accountId];
+    return db.query(sql, values);
+}
+
+function updateAccountsMetadataSearchType(accountId: string, searchType: string): Promise<any> {
+    var sql = 'UPDATE accounts_metadata SET search_type = ? WHERE account_id = ?';
+    var values = [searchType, accountId];
     return db.query(sql, values);
 }
 

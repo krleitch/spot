@@ -6,7 +6,7 @@ import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
 import { Post, LoadPostRequest, LoadPostSuccess } from '@models/posts';
-import { SetLocationRequest, Location } from '@models/accounts';
+import { SetLocationRequest, Location, UpdateAccountMetadataRequest, AccountMetadata, GetAccountMetadataRequest } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -23,11 +23,13 @@ export class HomeComponent implements OnInit {
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
-  postlocation = 'local';
+  postlocation = '';
   location$: Observable<Location>;
   myLocation: Location;
 
-  postSort = 'hot';
+  accountMetadata$: Observable<AccountMetadata>;
+
+  postSort = '';
 
   loadedPosts = 0;
   POSTS_LIMIT = 10;
@@ -45,6 +47,21 @@ export class HomeComponent implements OnInit {
     if (window.innerWidth < 500) {
       this.mobile = true;
     }
+
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
+    );
+
+    this.accountMetadata$.subscribe( (metadata: AccountMetadata) => {
+
+      if ( metadata ) {
+
+        this.postlocation = metadata.search_distance;
+        this.postSort = metadata.search_type;
+
+      }
+
+    });
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
@@ -90,11 +107,17 @@ export class HomeComponent implements OnInit {
       select(PostsStoreSelectors.selectMyFeatureLoading)
     );
 
+    const accountsMetadataRequest: GetAccountMetadataRequest = {};
+
+    this.store$.dispatch(
+      new AccountsActions.GetAccountMetadataRequestAction(accountsMetadataRequest)
+    );
+
   }
 
   onScroll() {
 
-    if ( this.locationEnabled ) {
+    if ( this.locationEnabled && this.postlocation && this.postSort ) {
 
       const request: LoadPostRequest = {
         offset: this.loadedPosts,
@@ -147,11 +170,29 @@ export class HomeComponent implements OnInit {
 
   setGlobal() {
     this.postlocation = 'global';
+
+    const request: UpdateAccountMetadataRequest = {
+      search_distance: 'global'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
+
     this.refresh();
   }
 
   setLocal() {
     this.postlocation = 'local';
+
+    const request: UpdateAccountMetadataRequest = {
+      search_distance: 'local'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
+
     this.refresh();
   }
 
@@ -161,11 +202,29 @@ export class HomeComponent implements OnInit {
 
   setNew() {
     this.postSort = 'new';
+
+    const request: UpdateAccountMetadataRequest = {
+      search_type: 'new'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
+
     this.refresh();
   }
 
   setHot() {
     this.postSort = 'hot';
+
+    const request: UpdateAccountMetadataRequest = {
+      search_type: 'hot'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
+
     this.refresh();
   }
 

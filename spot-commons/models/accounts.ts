@@ -9,8 +9,10 @@ export interface Account {
 }
 
 export interface AccountMetadata {
+    distance_unit: string;
+    search_type: string;
+    search_distance: string;
     score: number;
-    
 }
 
 // the location object associated with the account for the login
@@ -51,7 +53,9 @@ export interface GetAccountMetadataSuccess {
 }
 
 export interface UpdateAccountMetadataRequest {
-    metadata: AccountMetadata;
+    distance_unit?: string;
+    search_type?: string;
+    search_distance?: string;
 }
 
 export interface UpdateAccountMetadataSuccess {

@@ -106,16 +106,41 @@ router.get('/metadata', function (req: any, res: any) {
   
 });
 
-router.post('/metadata', function (req: any, res: any) {
+router.put('/metadata', async function (req: any, res: any) {
 
     const accountId = req.user.id;
 
-    accounts.getAccountMetadata(accountId).then( (rows: any) => {
-        res.sendStatus(200);
-    }, (err: any) => {
-        res.status(500).send('Error disconnecting account with facebook');
-    });   
-  
+    const { distance_unit, search_type, search_distance } = req.body;
+
+    // We only ever change metadata 1 property at a time right now
+    // Will need to be changed later
+
+    if ( distance_unit ) {
+        await accounts.updateAccountsMetadataDistanceUnit(accountId, distance_unit).then( (rows: any) => {
+
+        }, (err: any) => {
+            res.status(500).send('Error updating distance unit');
+        });   
+    }
+    
+    if ( search_type ) {
+        await accounts.updateAccountsMetadataSearchType(accountId, search_type).then( (rows: any) => {
+
+        }, (err: any) => {
+            res.status(500).send('Error updating search type');
+        });   
+    }
+
+    if ( search_distance ) {
+        await accounts.updateAccountsMetadataSearchDistance(accountId, search_distance).then( (rows: any) => {
+        }, (err: any) => {
+            
+            res.status(500).send('Error updating search distance');
+        });   
+    }
+
+    res.sendStatus(200);
+
 });
 
 export = router;
