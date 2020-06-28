@@ -21,7 +21,6 @@ CREATE TABLE accounts (
     username VARCHAR(255) NOT NULL UNIQUE,
     pass VARCHAR(1024),
     phone VARCHAR(255) UNIQUE,
-    score INT,
     salt VARCHAR(256),
     role VARCHAR(36),
     facebook_id VARCHAR(36) UNIQUE,
@@ -36,8 +35,8 @@ CREATE TABLE accounts_metadata (
     account_id VARCHAR(36) NOT NULL,
     distance_unit VARCHAR(36) NOT NULL,
     search_type VARCHAR(36) NOT NULL,
-    search VARCHAR(36) NOT NULL,
-    score INT,
+    search_distance VARCHAR(36) NOT NULL,
+    score INT NOT NULL,
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     PRIMARY KEY (id)
 );

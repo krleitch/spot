@@ -8,6 +8,11 @@ export interface Account {
     facebook_id: string;
 }
 
+export interface AccountMetadata {
+    score: number;
+    
+}
+
 // the location object associated with the account for the login
 export interface Location {
     latitude: number;
@@ -34,6 +39,23 @@ export interface GetAccountRequest {
 
 export interface GetAccountSuccess {
     account: Account;
+}
+
+// Account metadata
+export interface GetAccountMetadataRequest {
+
+}
+
+export interface GetAccountMetadataSuccess {
+    metadata: AccountMetadata;
+}
+
+export interface UpdateAccountMetadataRequest {
+    metadata: AccountMetadata;
+}
+
+export interface UpdateAccountMetadataSuccess {
+    
 }
 
 // facebook

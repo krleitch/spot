@@ -169,4 +169,38 @@ export class AccountsStoreEffects {
     )
   );
 
+  @Effect()
+  updateAccountMetadataEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.UpdateAccountMetadataRequestAction>(
+      featureActions.ActionTypes.UPDATE_METADATA_REQUEST
+    ),
+    switchMap(action =>
+      this.accountsService
+        .updateAccountMetadata(action.request)
+        .pipe(
+            map(response => new featureActions.UpdateAccountMetadataRequestSuccess(response)),
+            catchError(error =>
+              observableOf(new featureActions.GenericFailureAction(error))
+            )
+          )
+    )
+  );
+
+  @Effect()
+  getAccountMetadataEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.GetAccountMetadataRequestAction>(
+      featureActions.ActionTypes.GET_METADATA_REQUEST
+    ),
+    switchMap(action =>
+      this.accountsService
+        .getAccountMetadata(action.request)
+        .pipe(
+            map(response => new featureActions.GetAccountMetadataRequestSuccess(response)),
+            catchError(error =>
+              observableOf(new featureActions.GenericFailureAction(error))
+            )
+          )
+    )
+  );
+
 }

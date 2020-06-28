@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AlertService } from '@services/alert.service';
 import { UpdateUsernameRequest, UpdateUsernameResponse, FacebookConnectRequest, FacebookConnectResponse,
-          FacebookDisconnectResponse, FacebookDisconnectRequest } from '@models/accounts';
+          FacebookDisconnectResponse, FacebookDisconnectRequest, GetAccountMetadataRequest, GetAccountMetadataSuccess,
+          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess } from '@models/accounts';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AccountsService {
 
   baseUrl = environment.baseUrl;
 
-  // Facebook
+  // Facebook requests
 
   connectFacebookAccount(request: FacebookConnectRequest): Observable<FacebookConnectResponse> {
     return this.http.post<FacebookConnectResponse>(`${this.baseUrl}/accounts/facebook`, request);
@@ -26,7 +27,7 @@ export class AccountsService {
     return this.http.post<FacebookDisconnectResponse>(`${this.baseUrl}/accounts/facebook/disconnect`, request);
   }
 
-  // Normal
+  // Normal requets
 
   deleteAccount(): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/accounts/delete`);
@@ -39,6 +40,16 @@ export class AccountsService {
   updateUsername(request: UpdateUsernameRequest): Observable<UpdateUsernameResponse> {
     return this.http.put<UpdateUsernameResponse>(`${this.baseUrl}/accounts/account`, request);
   }
+
+  getAccountMetadata(request: GetAccountMetadataRequest): Observable<GetAccountMetadataSuccess> {
+    return this.http.get<GetAccountMetadataSuccess>(`${this.baseUrl}/accounts/metadata`);
+  }
+
+  updateAccountMetadata(request: UpdateAccountMetadataRequest): Observable<UpdateAccountMetadataSuccess> {
+    return this.http.put<UpdateAccountMetadataSuccess>(`${this.baseUrl}/accounts/metadata`, request);
+  }
+
+  // service functions
 
   onDeleteAccountSuccess() {
     this.router.navigateByUrl('/');

@@ -39,16 +39,16 @@ router.post('/register', function (req: any, res: any, next: any) {
     const salt = auth.generateSalt();
     const hash = auth.hashPassword(password, salt);
 
-    accounts.addAccount(email, username, hash, phone, salt).then( (rows: any) => {
-        accounts.getAccountByEmail(email).then ( (rows: any) => {
-            const user = rows[0]
+    accounts.addAccount(email, username, hash, phone, salt).then( (account: any) => {
+        accounts.addAccountMetadata(account[0].id).then ( (rows: any) => {
+            const user = account[0]
             const token = auth.generateToken(user);
             res.status(200).json({
                 jwt: { token: token, expiresIn: '2h' },
                 account: user
             });  
         }, (err: any) => {
-            res.status(500).send('Cannot login to account');
+            res.status(500).send('Cannot register account');
         });
     }, (err: any) => {
         // Account already exists
@@ -98,21 +98,27 @@ router.post('/login/facebook', function (req: any, res: any) {
             if ( user.length == 0 ) {
                 // create the account
                 accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email).then( (user2: any) => {
-                    user2 = user2[0];
-                    const token = auth.generateToken(user2);
+                    accounts.addAccountMetadata(user2[0].id).then( (rows: any ) => {
 
-                    // add facebook friends
-                    friendsService.addFacebookFriends(accessToken).then( (res: any) => {
+                        user2 = user2[0];
+                        const token = auth.generateToken(user2);
 
-                        res.status(200).json({
-                            created: true,
-                            jwt: { token: token, expiresIn: '2h' },
-                            account: user2
-                        }, ( err: any) => {
-                            // couldnt add your friends
-                            res.status(500).send('Error signing in with facebook');
-                        });  
+                        // add facebook friends
+                        friendsService.addFacebookFriends(accessToken).then( (res: any) => {
 
+                            res.status(200).json({
+                                created: true,
+                                jwt: { token: token, expiresIn: '2h' },
+                                account: user2
+                            }, ( err: any) => {
+                                // couldnt add your friends
+                                res.status(500).send('Error signing in with facebook');
+                            });  
+
+                        });
+
+                    }, (err: any) => {
+                        return Promise.reject(err);
                     });
  
                 }, (err: any) => {

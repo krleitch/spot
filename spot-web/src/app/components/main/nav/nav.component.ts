@@ -7,7 +7,7 @@ import { STRINGS } from '@assets/strings/en';
 import { AccountsActions } from '@store/accounts-store';
 import { SocialStoreSelectors, SocialStoreNotificationsActions } from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
-import { Account } from '@models/accounts';
+import { Account, AccountMetadata, GetAccountMetadataRequest } from '@models/accounts';
 import { GetNotificationsUnreadRequest } from '@models/notifications';
 import { ModalService } from '@services/modal.service';
 
@@ -23,6 +23,7 @@ export class NavComponent implements OnInit {
   STRINGS = STRINGS.MAIN.NAV;
 
   account$: Observable<Account>;
+  accountMetadata$: Observable<AccountMetadata>;
   unread$: Observable<number>;
   unreadNotifications = '0';
 
@@ -42,6 +43,10 @@ export class NavComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountsUser)
     );
 
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
+    );
+
     this.unread$ = this.store$.pipe(
       select(SocialStoreSelectors.selectMyFeatureUnread)
     );
@@ -51,6 +56,12 @@ export class NavComponent implements OnInit {
 
     this.store$.dispatch(
       new SocialStoreNotificationsActions.GetNotificationsUnreadAction(request)
+    );
+
+    const accountsMetadataRequest: GetAccountMetadataRequest = {};
+
+    this.store$.dispatch(
+      new AccountsActions.GetAccountMetadataRequestAction(accountsMetadataRequest)
     );
 
     this.unread$.subscribe( (numberUnread: number) => {

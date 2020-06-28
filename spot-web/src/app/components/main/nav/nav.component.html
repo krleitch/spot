@@ -1,9 +1,9 @@
 <div class="nav">
   <span class="title" (click)="navigateHome()"> {{ STRINGS.TITLE }} </span>
   <div *ngIf="account$ | async as myaccount; else noAccount" class="features">
-    <div class="score">
+    <div *ngIf="accountMetadata$ | async as accountMetadata" class="score">
       <i class="material-icons hot"> whatshot </i>
-      <span> {{ myaccount.score }} </span>
+      <span> {{ accountMetadata.score }} </span>
     </div>
     <div class="notifications" #notifications>
       <i class="material-icons" (click)="toggleNotifications()"> notifications_none </i>

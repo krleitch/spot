@@ -8,7 +8,7 @@ const roles = require('@services/authorization/roles');
 const db = require('./mySql');
 
 function addAccountMetadata(accountId: string): Promise<any> {
-    var sql = 'INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score) VALUES (?, ?, ?, ?, ?, ?)';
+    var sql = `INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score) VALUES (?, ?, ?, ?, ?, ?)`;
     var values = [uuid.v4(), accountId, 'miles', 'hot', 'global', 0];
     return db.query(sql, values);
 }
@@ -21,8 +21,8 @@ function getAccountMetadata(accountId: string): Promise<any> {
 
 function addAccount(email: string, username: string, pass: string, phone: string, salt: string): Promise<any> {
     const id = uuid.v4();
-    var sql = 'INSERT INTO accounts (id, creation_date, email, username, pass, phone, score, salt, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [id, new Date(), email, username, pass, phone, 0, salt, false, roles.user];
+    var sql = 'INSERT INTO accounts (id, creation_date, email, username, pass, phone, salt, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [id, new Date(), email, username, pass, phone, salt, false, roles.user];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(id);
     });
@@ -38,8 +38,8 @@ function addFacebookAccount(id: string, email: string): Promise<any> {
     const index = email.indexOf('@');
     // TODO THIS IS A BAD USERNAME GENERATOR
     var username = email.substring(0, index);
-    var sql = 'INSERT INTO accounts (id, email, username, facebook_id, score, role) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), email, username, id, 0, roles.user];
+    var sql = 'INSERT INTO accounts (id, email, username, facebook_id, role) VALUES (?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), email, username, id, roles.user];
     return db.query(sql, values).then( (rows: any) => {
         return getFacebookAccount(id);
     });

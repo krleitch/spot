@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
-import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess } from '@models/accounts';
+import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess,
+         UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -22,6 +23,10 @@ export enum ActionTypes {
   ACCOUNT_FAILURE = '[Accounts] Account Failure',
   UPDATE_USERNAME_REQUEST = '[Accounts] Update Username Request',
   UPDATE_USERNAME_SUCCESS = '[Accounts] Update Username Success',
+  UPDATE_METADATA_REQUEST = '[Accounts] Update Metadata Request',
+  UPDATE_METADATA_SUCCESS = '[Accounts] Update Metadata Success',
+  GET_METADATA_REQUEST = '[Accounts] Get Metadata Request',
+  GET_METADATA_SUCCESS = '[Accounts] Get Metadata Success',
   SET_LOCATION = '[Accounts] Set Location',
   GENERIC_FAILURE = '[Accounts] Generic Failure'
 }
@@ -108,6 +113,26 @@ export class UpdateUsernameSuccessAction implements Action {
   constructor(public response: UpdateUsernameResponse) {}
 }
 
+export class UpdateAccountMetadataRequestAction implements Action {
+  readonly type = ActionTypes.UPDATE_METADATA_REQUEST;
+  constructor(public request: UpdateAccountMetadataRequest) {}
+}
+
+export class UpdateAccountMetadataRequestSuccess implements Action {
+  readonly type = ActionTypes.UPDATE_METADATA_SUCCESS;
+  constructor(public response: UpdateAccountMetadataSuccess) {}
+}
+
+export class GetAccountMetadataRequestAction implements Action {
+  readonly type = ActionTypes.GET_METADATA_REQUEST;
+  constructor(public request: GetAccountMetadataRequest) {}
+}
+
+export class GetAccountMetadataRequestSuccess implements Action {
+  readonly type = ActionTypes.GET_METADATA_SUCCESS;
+  constructor(public response: GetAccountMetadataSuccess) {}
+}
+
 export type Actions = LoginRequestAction | LoginSuccessAction |
                       LoginFailureAction | RegisterRequestAction |
                       RegisterSuccessAction | RegisterFailureAction |
@@ -116,4 +141,6 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       AccountRequestAction | AccountSuccessAction |
                       SetLocationAction | AccountFailureAction |
                       UpdateUsernameAction | UpdateUsernameSuccessAction |
-                      GenericFailureAction;
+                      GenericFailureAction | UpdateAccountMetadataRequestAction |
+                      UpdateAccountMetadataRequestSuccess | GetAccountMetadataRequestAction |
+                      GetAccountMetadataRequestSuccess;

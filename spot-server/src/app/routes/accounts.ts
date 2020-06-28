@@ -92,4 +92,30 @@ router.post('/facebook/disconnect', function (req: any, res: any) {
   
 });
 
+// Account Metadata
+router.get('/metadata', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    // Get account metadata
+    accounts.getAccountMetadata(accountId).then( (rows: any) => {
+        res.status(200).json({ metadata: rows[0] });
+    }, (err: any) => {
+        res.status(500).send('Error getting account metadata');
+    });   
+  
+});
+
+router.post('/metadata', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    accounts.getAccountMetadata(accountId).then( (rows: any) => {
+        res.sendStatus(200);
+    }, (err: any) => {
+        res.status(500).send('Error disconnecting account with facebook');
+    });   
+  
+});
+
 export = router;
