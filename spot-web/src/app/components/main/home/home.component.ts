@@ -31,6 +31,8 @@ export class HomeComponent implements OnInit {
 
   postSort = '';
 
+  distanceUnit = '';
+
   loadedPosts = 0;
   POSTS_LIMIT = 10;
 
@@ -58,6 +60,7 @@ export class HomeComponent implements OnInit {
 
         this.postlocation = metadata.search_distance;
         this.postSort = metadata.search_type;
+        this.distanceUnit = metadata.distance_unit;
 
       }
 

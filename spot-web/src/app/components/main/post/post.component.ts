@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
 import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, ReportPostRequest } from '@models/posts';
-import { Location } from '@models/accounts';
+import { Location, AccountMetadata } from '@models/accounts';
 import { PostsService } from '@services/posts.service';
 import { ModalService } from '@services/modal.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
@@ -29,6 +29,7 @@ export class PostComponent implements OnInit {
   STRINGS = STRINGS.MAIN.POST;
 
   location$: Observable<Location>;
+  accountMetadata$: Observable<AccountMetadata>;
   myLocation: Location;
 
   MAX_POST_LENGTH = 300;
@@ -43,6 +44,10 @@ export class PostComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
+    );
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
@@ -121,8 +126,12 @@ export class PostComponent implements OnInit {
     }
   }
 
-  getDistance(distance: number) {
-    return distance.toFixed(1) + ' miles';
+  getDistance(distance: number, unit: string) {
+    if ( unit === 'kilometers' ) {
+      return (distance * 1.60934).toFixed(1) + ' km';
+    } else {
+      return distance.toFixed(1) + ' m';
+    }
   }
 
   getContent(): string {

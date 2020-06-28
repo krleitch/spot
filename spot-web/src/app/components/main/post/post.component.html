@@ -25,8 +25,8 @@
               <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
           </ng-template>
         </div>
-        <div class="distance">
-          {{ getDistance(post.distance) }} - {{ post.geolocation }}
+        <div *ngIf="accountMetadata$ | async as accountMetadata" class="distance">
+          {{ getDistance(post.distance, accountMetadata.distance_unit ) }} - {{ post.geolocation }}
         </div>
       </div>
     </div>

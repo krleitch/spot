@@ -37,7 +37,7 @@
                 <div class="info-bar">
                   <span class="info-bar-item"> {{ STRINGS.POSTS_SCORE }} {{ activity.likes - activity.dislikes }} </span>
                   <span class="info-bar-item"> {{ STRINGS.POSTS_COMMENTS }} {{ activity.comments }}  </span>
-                  <span class="info-bar-item"> {{ STRINGS.POSTS_LOCATION }} {{ getDistance(activity.distance) }} - {{ activity.geolocation }} </span>
+                  <span *ngIf="accountMetadata$ | async as accountMetadata" class="info-bar-item"> {{ STRINGS.POSTS_LOCATION }} {{ getDistance(activity.distance, accountMetadata.distance_unit) }} - {{ activity.geolocation }} </span>
                 </div>
               </div>
             </div>

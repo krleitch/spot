@@ -11,7 +11,7 @@ import { PostsService } from '@services/posts.service';
 import { CommentService } from '@services/comments.service';
 import { ActivityPostRequest, ActivityPostSuccess, Post } from '@models/posts';
 import { ActivityCommentRequest, ActivityCommentSuccess, CommentActivity } from '@models/comments';
-import { Location } from '@models/accounts';
+import { Location, AccountMetadata } from '@models/accounts';
 
 @Component({
   selector: 'spot-activity',
@@ -24,6 +24,8 @@ export class ActivityComponent implements OnInit {
 
   location$: Observable<Location>;
   myLocation: Location;
+
+  accountMetadata$: Observable<AccountMetadata>;
 
   selectedTab = 'commentsreplies';
 
@@ -42,6 +44,10 @@ export class ActivityComponent implements OnInit {
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
+    );
+
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
     );
 
     this.location$.subscribe( (location: Location) => {
@@ -106,8 +112,12 @@ export class ActivityComponent implements OnInit {
     }
   }
 
-  getDistance( distance: number) {
-    return distance.toFixed(1) + ' miles';
+  getDistance(distance: number, unit: string) {
+    if ( unit === 'kilometers' ) {
+      return (distance * 1.60934).toFixed(1) + ' km';
+    } else {
+      return distance.toFixed(1) + ' m';
+    }
   }
 
   openPost( link: string ) {
