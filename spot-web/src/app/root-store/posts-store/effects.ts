@@ -110,24 +110,4 @@ export class PostsStoreEffects {
     )
   );
 
-  @Effect()
-  reportPostEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.ReportRequestAction>(
-      featureActions.ActionTypes.REPORT_REQUEST
-    ),
-    switchMap(action =>
-      this.postsService
-        .reportPost(action.request)
-        .pipe(
-          map( (response: ReportPostSuccess) => {
-            this.postsService.onReportSuccess();
-            return new featureActions.ReportSuccessAction(response);
-          }),
-          catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
-          )
-        )
-    )
-  );
-
 }

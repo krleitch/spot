@@ -120,16 +120,11 @@ img {
 .post-link {
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 3px 7px;
-  height: 30px;
-  width: 75px;
-  color: white;
-  background-color: $button-highlight;
-  margin-bottom: 10px;
+  color: $subtle-grey;
+  margin-bottom: 5px;
   &:hover {
-    background-color: darken($button-highlight, 10%);
+    color: $button-highlight;
   }
 }
 

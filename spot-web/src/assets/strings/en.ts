@@ -220,7 +220,7 @@ export const STRINGS = {
           POSTS_SCORE: 'Score: ',
           POSTS_COMMENTS: 'Comments: ',
           POSTS_LOCATION: 'Location: ',
-          POSTS_OPEN: 'Open',
+          POSTS_OPEN: 'Open Post',
           COMMENTS_OPEN: 'Open Comment Chain'
 
         },
@@ -230,7 +230,9 @@ export const STRINGS = {
           TITLE: 'Report',
 
           REPORT_PLACEHOLDER: 'Enter report message',
-          REPORT_BUTTON: 'Send Report'
+          REPORT_BUTTON: 'Send Report',
+
+          SUCCESS_MESSAGE: 'Report Sent'
 
         },
 

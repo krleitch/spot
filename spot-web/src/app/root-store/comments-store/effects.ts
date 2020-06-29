@@ -200,24 +200,4 @@ export class CommentsStoreEffects {
     )
   );
 
-  @Effect()
-  reportEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.ReportRequestAction>(
-      featureActions.ActionTypes.REPORT_REQUEST
-    ),
-    switchMap(action =>
-      this.commentService
-        .reportComment(action.request)
-        .pipe(
-          map( (response: ReportCommentSuccess) => {
-            this.commentService.onReportSuccess();
-            return new featureActions.ReportSuccessAction(response);
-          }),
-          catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
-          )
-        )
-    )
-  );
-
 }
