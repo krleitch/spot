@@ -4,7 +4,6 @@ import { Observable, Subject, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
-import { CommentsStoreActions } from '@store/comments-store';
 import { ReportPostRequest, ReportPostSuccess } from '@models/posts';
 import { ReportCommentRequest } from '@models/comments';
 import { SpotError } from '@exceptions/error';
@@ -13,6 +12,7 @@ import { ModalService } from '@services/modal.service';
 import { PostsService } from '@services/posts.service';
 import { AlertService } from '@services/alert.service';
 import { CommentService } from '@services/comments.service';
+import { REPORT_CONSTANTS } from '@constants/report';
 
 @Component({
   selector: 'spot-report',
@@ -29,8 +29,9 @@ export class ReportComponent implements OnInit, OnDestroy {
   data: { postId: string, commentId?: string } = { postId: null, commentId: null };
 
   STRINGS = STRINGS.MAIN.REPORT;
-  content: string;
+  REPORT_CONSTANTS = REPORT_CONSTANTS;
 
+  content = '';
   errorMessage = '';
 
   constructor(private store$: Store<RootStoreState.State>,
@@ -42,9 +43,12 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.data$ = this.modalService.getData(this.modalId);
+
+    // data type is
     // { commentId: reply.id, postId: reply.post_id }
     this.data$.subscribe( (val) => {
 
+      // commentId may not exist
       if ( val.commentId ) {
         this.data.commentId = val.commentId;
       }
@@ -61,6 +65,14 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   closeReport() {
     this.modalService.close(this.modalId);
+  }
+
+  onTextChange(event: any) {
+
+  }
+
+  invalidLength(): boolean {
+    return this.content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
   sendReport() {

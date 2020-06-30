@@ -23,48 +23,6 @@ body {
 spot-modal {
   /* modals are hidden by default */
   display: none;
-
-  .spot-modal {
-      /* modal container fixed across whole screen */
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-
-      /* z-index must be higher than .jw-modal-background */
-      z-index: 1000;
-
-      /* enables scrolling for tall modals */
-      overflow: auto;
-
-      .spot-modal-body {
-        background: #fff;
-
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
-
-      }
-  }
-
-  .spot-modal-background {
-      /* modal background fixed across whole screen */
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-
-      /* semi-transparent black  */
-      background-color: #000;
-      opacity: 20%;
-
-      /* z-index must be below .jw-modal and above everything else  */
-      z-index: 900;
-  }
 }
 
 body.spot-modal-open {

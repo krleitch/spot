@@ -128,7 +128,7 @@ CREATE TABLE reports (
     reporter_id VARCHAR(36) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
     comment_id VARCHAR(36),
-    content VARCHAR(200),
+    content VARCHAR(300),
     creation_date DATETIME,
     PRIMARY KEY (id),
     FOREIGN KEY (reporter_id) REFERENCES accounts (id),

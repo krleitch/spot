@@ -12,6 +12,7 @@ const locationsService = require('../services/locations');
 
 // errors
 const PostsError = require('@exceptions/posts');
+const ReportError = require('@exceptions/report');
 const AuthenticationError = require('@exceptions/authentication');
 const ErrorHandler = require('@src/app/errorHandler');
 
@@ -19,7 +20,8 @@ const ErrorHandler = require('@src/app/errorHandler');
 const rateLimiter = require('@src/app/rateLimiter');
 
 // constants
-const CONSTANTS = require('@constants/posts');
+const POST_CONSTANTS = require('@constants/posts');
+const REPORT_CONSTANTS = require('@constants/report');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -83,7 +85,7 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 
     // You must either have some text or an image
     if ( content.length == 0 && !image ) {
-        return next(PostsError.NoPostContent(400));
+        return next(new PostsError.NoPostContent(400));
     }
 
     const contentError = postsService.validContent(content);
@@ -109,12 +111,12 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
             const response = { post: rows[0] }
             res.status(200).json(response);
         }, (err: any) => {
-            return next(PostsError.PostError(500));
+            return next(new PostsError.PostError(500));
         });
 
     });
 
-}) );
+}));
 
 // Like a post
 router.put('/:postId/like', function(req: any, res: any) {
@@ -125,7 +127,7 @@ router.put('/:postId/like', function(req: any, res: any) {
     }, (err: any) => {
         res.status(500).send('Error liking post');
     })
-})
+});
 
 // Dislike a post
 router.put('/:postId/dislike', function(req: any, res: any) {
@@ -136,7 +138,7 @@ router.put('/:postId/dislike', function(req: any, res: any) {
     }, (err: any) => {
         res.status(500).send('Error disliking post');
     })
-})
+});
 
 // Delete a post
 router.delete('/:postId', function(req: any, res: any) {
@@ -147,22 +149,31 @@ router.delete('/:postId', function(req: any, res: any) {
     }, (err: any) => {
         res.status(500).send('Error deleting post');
     })
-})
+});
 
 // report a post
-router.put('/:postId/report', function(req: any, res: any) {
+router.put('/:postId/report', function(req: any, res: any, next: any) {
+
+    // You must have an account to report something
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const postId = req.params.postId;
     const accountId = req.user.id;
     const { content } = req.body;
 
+    if ( content.length < REPORT_CONSTANTS.MIN_CONTENT_LENGTH || content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH ) {
+        return next(new ReportError.InvalidReportLength(400, REPORT_CONSTANTS.MIN_CONTENT_LENGTH, REPORT_CONSTANTS.MAX_CONTENT_LENGTH));
+    }
+
     reports.addPostReport( postId, accountId, content ).then((rows: any) => {
-        res.status(200).send({})
+        res.sendStatus(200);
     }, (err: any) => {
-        res.status(500).send('Error reporting post');
+        return next(new ReportError.reportError(500))
     });
 
-})
+});
 
 // Get post activity
 router.get('/activity', function (req: any, res: any) {

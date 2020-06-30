@@ -34,23 +34,32 @@
     resize: none;
     margin: 0px;
     box-sizing: border-box;
+    padding: 8px;
     width: 100%;
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     outline: none;
+    margin-bottom: 5px;
+  }
+
+  .counter {
+    color: $subtle-grey;
+    margin-right: 7px;
+  }
+
+  .counter-error {
+    color: $error-red;
   }
 
   .button {
     cursor: pointer;
     float: right;
     padding: 7px 10px;
-    background-color: $button-black;
+    background-color: $button-highlight;
     color: white;
     &:hover {
-      background-color: lighten($button-black, 10%);
+      background-color: darken($button-highlight, 10%);
     }
   }
 
 }
-
-

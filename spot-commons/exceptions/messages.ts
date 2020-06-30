@@ -31,6 +31,13 @@ export const ERROR_MESSAGES = {
             INVALID_POST_LENGTH: 'Invalid post length',
             NO_CONTENT: 'No content'
 
+        },
+
+        REPORT: {
+
+            REPORT_ERROR: 'There was an error sending your report. Please try again.',
+            REPORT_LENGTH: 'Invalid report length'
+
         }
     
     },
