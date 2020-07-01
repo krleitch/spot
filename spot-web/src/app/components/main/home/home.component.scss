@@ -112,6 +112,19 @@ spot-create {
 
 // When location is disabled
 
+.loading-location {
+
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  margin-top: 20px;
+
+  .loading-location-text {
+    margin-bottom: 5px;
+  }
+
+}
+
 .nolocation {
   font-size: 20px;
   margin-top: 20px;

@@ -9,9 +9,7 @@
       </div>
     </div>
     <div class="content-container">
-      <div class="content" [ngClass]="{'content-expanded': expanded}">
-        {{getContent()}}
-      </div>
+      <div class="content" [ngClass]="{'content-expanded': expanded}">{{getContent()}}</div>
       <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
         <img [src]="post.image_src" />
       </div>
@@ -35,7 +33,7 @@
         <i class="material-icons icon-size" (click)="setOptions(true)"> more_horiz </i>
         <div class="dropdown align-bottom" >
           <div class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
-            <div class="button" (click)="openPost()">
+            <div *ngIf="!detailed" class="button" (click)="openPost()">
               <span class="material-icons icon"> chevron_right </span>
               {{ STRINGS.OPEN_POST }}
             </div>

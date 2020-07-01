@@ -21,7 +21,8 @@ const rateLimiter = require('@src/app/rateLimiter');
 
 // constants
 const POST_CONSTANTS = require('@constants/posts');
-const REPORT_CONSTANTS = require('@constants/report');
+const report_constants = require('@constants/report');
+const REPORT_CONSTANTS = report_constants.REPORT_CONSTANTS;
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -164,13 +165,13 @@ router.put('/:postId/report', function(req: any, res: any, next: any) {
     const { content } = req.body;
 
     if ( content.length < REPORT_CONSTANTS.MIN_CONTENT_LENGTH || content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH ) {
-        return next(new ReportError.InvalidReportLength(400, REPORT_CONSTANTS.MIN_CONTENT_LENGTH, REPORT_CONSTANTS.MAX_CONTENT_LENGTH));
+        return next(new ReportError.ReportLengthError(400, REPORT_CONSTANTS.MIN_CONTENT_LENGTH, REPORT_CONSTANTS.MAX_CONTENT_LENGTH));
     }
 
     reports.addPostReport( postId, accountId, content ).then((rows: any) => {
-        res.sendStatus(200);
+        res.status(200).send({});
     }, (err: any) => {
-        return next(new ReportError.reportError(500))
+        return next(new ReportError.ReportError(500))
     });
 
 });

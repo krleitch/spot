@@ -11,10 +11,10 @@ export class ReportError extends SpotError {
     }
 }
 
-export class InvalidReportLength extends SpotError {
+export class ReportLengthError extends SpotError {
     constructor(statusCode, minLength, maxLength) {
       super(REPORT_ERROR_MESSAGES.REPORT_LENGTH, statusCode);
-      this.name = "InvalidReportLength";
+      this.name = "ReportLengthError";
       this.body = { min: minLength, max: maxLength }
     }
 }

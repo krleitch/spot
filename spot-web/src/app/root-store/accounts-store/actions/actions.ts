@@ -2,7 +2,8 @@ import { Action } from '@ngrx/store';
 
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
 import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess,
-         UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess } from '@models/accounts';
+         UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess,
+         LoadLocationRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -27,6 +28,7 @@ export enum ActionTypes {
   UPDATE_METADATA_SUCCESS = '[Accounts] Update Metadata Success',
   GET_METADATA_REQUEST = '[Accounts] Get Metadata Request',
   GET_METADATA_SUCCESS = '[Accounts] Get Metadata Success',
+  LOAD_LOCATION = '[Accounts] Load Location',
   SET_LOCATION = '[Accounts] Set Location',
   GENERIC_FAILURE = '[Accounts] Generic Failure'
 }
@@ -98,6 +100,11 @@ export class AccountFailureAction implements Action {
     constructor(public error: string) {}
 }
 
+export class LoadLocationAction implements Action {
+  readonly type = ActionTypes.LOAD_LOCATION;
+  constructor(public request: LoadLocationRequest) {}
+}
+
 export class SetLocationAction implements Action {
   readonly type = ActionTypes.SET_LOCATION;
   constructor(public request: SetLocationRequest) {}
@@ -143,4 +150,4 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       UpdateUsernameAction | UpdateUsernameSuccessAction |
                       GenericFailureAction | UpdateAccountMetadataRequestAction |
                       UpdateAccountMetadataRequestSuccess | GetAccountMetadataRequestAction |
-                      GetAccountMetadataRequestSuccess;
+                      GetAccountMetadataRequestSuccess | LoadLocationAction;

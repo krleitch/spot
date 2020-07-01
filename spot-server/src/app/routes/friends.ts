@@ -59,8 +59,6 @@ router.post('/requests', function (req: any, res: any, next: any) {
     const accountId = req.user.id;
     const { username } = req.body;
 
-    // TODO: what if you send a request to someone who sent you a request
-
     accounts.getAccountByUsername(username).then((receiverId: any) => {
 
         if ( receiverId[0] === undefined ) {
@@ -71,12 +69,33 @@ router.post('/requests', function (req: any, res: any, next: any) {
             return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.SELF, 400));
         }
 
-        friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
-            res.status(200).json({ friendRequest: rows[0] });
+        friends.friendRequestFrom(receiverId[0].id).then((friendRequest: any) => {
+
+            // If a request already exists, then just accept it
+            if ( friendRequest.length > 0 ) {
+
+                friends.acceptFriendRequest(friendRequest[0].id, accountId).then((rows: any) => {
+                    res.status(200).json({ friendRequestId: friendRequest[0].id });
+                }, (err: any) => {
+                    return next(new FriendsError.FriendExistsError(500));
+                });
+
+            } else {
+
+                // TODO: What if friend already added
+
+                friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
+                    res.status(200).json({ friendRequest: rows[0] });
+                }, (err: any) => {
+                    return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500));
+                });
+
+            }
+
         }, (err: any) => {
-            return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500));
+            return next(new FriendsError.FriendExistsError(500));
         });
-        
+
     }, (err: any) => {
         return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500))
     });

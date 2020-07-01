@@ -22,6 +22,12 @@
       </div>
   </div>
   <ng-template #noLocation>
-    <span class="nolocation"> {{ STRINGS.ENABLE_LOCATION }} </span>
+    <div *ngIf="(loadingLocation$ | async) !== null; else enableLocation" class="loading-location">
+      <span class="loading-location-text"> Location is loading </span>
+      <spot-spinner size="medium"></spot-spinner>
+    </div>
+    <ng-template #enableLocation>
+      <span class="nolocation"> {{ STRINGS.ENABLE_LOCATION }} </span>
+    </ng-template>
   </ng-template>
 </div>

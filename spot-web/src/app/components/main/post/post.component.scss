@@ -46,7 +46,6 @@
     flex-flow: column;
     justify-content: space-between;
     padding-top: 5px;
-    white-space: pre-wrap;
 }
 
 .content {
@@ -55,6 +54,7 @@
     overflow: hidden;
     overflow-wrap: break-word;
     word-break: break-word;
+    white-space: pre-wrap;
 }
 
 .image {

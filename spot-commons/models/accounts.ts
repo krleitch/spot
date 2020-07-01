@@ -21,6 +21,10 @@ export interface Location {
     longitude: number;
 }
 
+export interface LoadLocationRequest {
+    
+}
+
 export interface SetLocationRequest {
     location: Location
 }

@@ -1,11 +1,14 @@
 import { createSelector, createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 
+import { State } from './state';
+
 import { Notification } from '@models/notifications';
 import { Friend, FriendRequest } from '@models/friends';
-import { State } from './state';
+import { SpotError } from '@exceptions/error';
 
 export const selectFriendRequests = (state: State): FriendRequest[] => state.friendRequests;
 export const selectFriends = (state: State): Friend[] => state.friends;
+export const selectFriendsErrorMessage = (state: State): SpotError => state.friendsError;
 export const selectNotifications = (state: State): Notification[] => state.notifications;
 export const selectUnread = (state: State): number => state.unread;
 
@@ -44,4 +47,12 @@ export const selectMyFeatureFriendRequests: MemoizedSelector<
 > = createSelector(
   selectMyFeatureState,
   selectFriendRequests
+);
+
+export const selectFriendsError: MemoizedSelector<
+  object,
+  SpotError
+> = createSelector(
+  selectMyFeatureState,
+  selectFriendsErrorMessage
 );

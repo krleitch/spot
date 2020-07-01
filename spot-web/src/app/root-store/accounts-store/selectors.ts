@@ -6,6 +6,7 @@ import { State } from './state';
 
 export const selectAccount = (state: State): Account => state.account;
 export const selectMetadata = (state: State): AccountMetadata => state.accountMetadata;
+export const selectLoadingLocation = (state: State): boolean => state.loadingLocation;
 export const selectLocation = (state: State): any => state.location;
 export const selectFacebook = (state: State): boolean => state.facebookConnected;
 export const selectAuthErr = (state: State): SpotError => state.authError;
@@ -30,6 +31,14 @@ export const selectAccountsLocation: MemoizedSelector<
 > = createSelector(
   selectAccountsState,
   selectLocation,
+);
+
+export const selectAccountsLoadingLocation: MemoizedSelector<
+  object,
+  boolean
+> = createSelector(
+  selectAccountsState,
+  selectLoadingLocation,
 );
 
 export const selectFacebookConnected: MemoizedSelector<

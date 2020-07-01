@@ -46,9 +46,16 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         account: null
       };
     }
+    case ActionTypes.LOAD_LOCATION: {
+      return {
+        ...state,
+        loadingLocation: true
+      };
+    }
     case ActionTypes.SET_LOCATION: {
       return {
         ...state,
+        loadingLocation: false,
         location: action.request.location
       };
     }

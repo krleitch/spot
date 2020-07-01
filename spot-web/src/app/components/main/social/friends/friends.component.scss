@@ -160,6 +160,11 @@ input {
     cursor: pointer;
 }
 
+.add-friends-error {
+  color: $error-red;
+  padding: 3px 0px;
+}
+
 // Friends list
 
 .friend-list-container {

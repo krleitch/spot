@@ -17,6 +17,7 @@ export enum FriendsActionTypes {
   GET_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Get Friend Requests Success',
   ADD_FRIEND_REQUESTS_REQUEST = '[Social Friends] Add Friend Requests Request',
   ADD_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Add Friend Requests Success',
+  ADD_FRIEND_REQUESTS_FAILURE = '[Social Friends] Add Friend Requests Failure',
   ACCEPT_FRIEND_REQUESTS_REQUEST = '[Social Friends] Accept Friend Requests Request',
   ACCEPT_FRIEND_REQUESTS_SUCCESS = '[Social Friends] Accept Friend Requests Success',
   DECLINE_FRIEND_REQUESTS_REQUEST = '[Social Friends] Decline Friend Requests Request',
@@ -71,6 +72,11 @@ export class AddFriendRequestsSuccessAction implements Action {
     constructor(public response: AddFriendRequestsSuccess) {}
 }
 
+export class AddFriendRequestsFailureAction implements Action {
+    readonly type = FriendsActionTypes.ADD_FRIEND_REQUESTS_FAILURE;
+    constructor(public error: SpotError) {}
+}
+
 export class DeleteFriendRequestsAction implements Action {
     readonly type = FriendsActionTypes.DELETE_FRIEND_REQUESTS_REQUEST;
     constructor(public request: DeleteFriendRequestsRequest) {}
@@ -105,5 +111,6 @@ export type FriendsActions = GenericFailureAction | GetFriendRequestsAction | Ge
                         AddFriendRequestsAction | AddFriendRequestsSuccessAction | DeleteFriendRequestsAction |
                         DeleteFriendRequestsSuccessAction | AcceptFriendRequestsAction | AcceptFriendRequestsSuccessAction |
                         DeclineFriendRequestsAction | DeclineFriendRequestsSuccessAction | GetFriendsAction |
-                        GetFriendsSuccessAction | DeleteFriendsAction | DeleteFriendsSuccessAction;
+                        GetFriendsSuccessAction | DeleteFriendsAction | DeleteFriendsSuccessAction |
+                        AddFriendRequestsFailureAction;
 

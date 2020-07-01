@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '@store';
-import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest } from '@models/accounts';
+import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest, LoadLocationRequest } from '@models/accounts';
 
 @Component({
   selector: 'app-root',
@@ -84,7 +84,14 @@ export class AppComponent implements OnInit {
 
   getAccountLocation() {
     if (navigator.geolocation) {
+
+      const request: LoadLocationRequest = {};
+      this.store$.dispatch(
+        new AccountsActions.LoadLocationAction(request)
+      );
+
       navigator.geolocation.getCurrentPosition((position) => {
+
         const request: SetLocationRequest = {
           location: { longitude: position.coords.longitude, latitude: position.coords.latitude }
         };
@@ -92,6 +99,7 @@ export class AppComponent implements OnInit {
           // TODO send login location
           new AccountsActions.SetLocationAction(request)
         );
+        
       }, this.locationError.bind(this));
     } else {
       // browser doesnt support location

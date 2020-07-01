@@ -1,4 +1,5 @@
-export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest, deleteFriendById }
+export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest, deleteFriendById,
+            friendRequestFrom }
 
 const uuid = require('uuid');
 
@@ -33,6 +34,14 @@ function getFriendRequests(accountId: string) {
 function getFriendsById(id: string) {
     var sql = `SELECT * FROM friends WHERE id = ?`;
     var values = [id];
+    return db.query(sql, values);
+}
+
+// Check if you have a friend request from account friendId
+function friendRequestFrom(friendId: string) {
+    var friendRequestId = uuid.v4();
+    var sql = `Select id FROM friends WHERE account_id = ? AND confirmed_date IS NULL`;
+    var values = [friendId];
     return db.query(sql, values);
 }
 

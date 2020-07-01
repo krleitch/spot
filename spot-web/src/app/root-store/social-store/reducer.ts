@@ -58,6 +58,12 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
         friends: action.response.friends
       };
     }
+    case FriendsActionTypes.ADD_FRIEND_REQUESTS_FAILURE: {
+      return {
+        ...state,
+        friendsError: action.error
+      };
+    }
     case FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_SUCCESS: {
       state.friendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friendRequestId) {

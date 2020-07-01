@@ -17,6 +17,8 @@ export const ERROR_MESSAGES = {
 
         FRIENDS: {
 
+            EXISTS: 'You are already friends with this person',
+
             SELF: 'Cannot add yourself',
             NO_USER: 'No user exists with that username',
 

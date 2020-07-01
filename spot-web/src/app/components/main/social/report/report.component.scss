@@ -42,24 +42,36 @@
     margin-bottom: 5px;
   }
 
-  .counter {
-    color: $subtle-grey;
-    margin-right: 7px;
-  }
-
-  .counter-error {
+  .error-message {
+    padding: 3px;
     color: $error-red;
   }
 
-  .button {
-    cursor: pointer;
-    float: right;
-    padding: 7px 10px;
-    background-color: $button-highlight;
-    color: white;
-    &:hover {
-      background-color: darken($button-highlight, 10%);
+  .counter-send-container {
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .counter {
+      color: $subtle-grey;
+      margin-right: 7px;
     }
+
+    .counter-error {
+      color: $error-red;
+    }
+
+    .send-report {
+      cursor: pointer;
+      padding: 7px 10px;
+      background-color: $button-highlight;
+      color: white;
+      &:hover {
+        background-color: darken($button-highlight, 5%);
+      }
+    }
+
   }
 
 }

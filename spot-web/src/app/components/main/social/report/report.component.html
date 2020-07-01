@@ -1,14 +1,20 @@
 <div class="report">
+
   <div class="report-header">
     <span class="title"> {{ STRINGS.TITLE }} </span>
     <span class="close" (click)="closeReport()"> <span class="material-icons"> clear </span> </span>
   </div>
+
   <div class="report-body">
-    <textarea [(ngModel)]="content" (ngModelChange)="onTextChange($event)" [placeholder]="STRINGS.REPORT_PLACEHOLDER" rows="10" ></textarea>
-    <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ REPORT_CONSTANTS.MAX_CONTENT_LENGTH - content.length }} </span>
-    <span *ngIf="errorMessage"> {{ errorMessage }} </span>
-    <div class="button" (click)="sendReport()">
-      {{ STRINGS.REPORT_BUTTON }}
+
+    <textarea [(ngModel)]="content" [placeholder]="STRINGS.REPORT_PLACEHOLDER" rows="10" ></textarea>
+    <span *ngIf="errorMessage" class="error-message"> {{ errorMessage }} </span>
+    <div class="counter-send-container">
+      <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ REPORT_CONSTANTS.MAX_CONTENT_LENGTH - content.length }} </span>
+      <div class="send-report" (click)="sendReport()">
+        {{ STRINGS.REPORT_BUTTON }}
+      </div>
     </div>
+
   </div>
 </div>

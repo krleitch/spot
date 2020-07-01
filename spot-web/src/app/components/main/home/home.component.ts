@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>) { }
 
   postlocation = '';
+  loadingLocation$: Observable<boolean>;
   location$: Observable<Location>;
   myLocation: Location;
 
@@ -68,6 +69,10 @@ export class HomeComponent implements OnInit {
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
+    );
+
+    this.loadingLocation$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsLoadingLocation)
     );
 
     this.location$.subscribe( (location: Location) => {

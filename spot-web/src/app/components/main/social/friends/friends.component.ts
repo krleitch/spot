@@ -10,6 +10,7 @@ import { FriendRequest, GetFriendRequestsRequest, AddFriendRequestsRequest,
           AcceptFriendRequestsRequest, DeclineFriendRequestsRequest, Friend,
           GetFriendsRequest, DeleteFriendsRequest } from '@models/friends';
 import { FacebookConnectRequest } from '@models/accounts';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-friends',
@@ -22,6 +23,7 @@ export class FriendsComponent implements OnInit {
 
   friendRequests$: Observable<FriendRequest[]>;
   friends$: Observable<Friend[]>;
+  friendsError$: Observable<SpotError>;
   facebookConnected$: Observable<boolean>;
   friendRequestUsername: string;
 
@@ -36,6 +38,10 @@ export class FriendsComponent implements OnInit {
 
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectMyFeatureFriends)
+    );
+
+    this.friendsError$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectFriendsError)
     );
 
     this.facebookConnected$ = this.store$.pipe(

@@ -1,4 +1,7 @@
 import { SpotError } from './error';
+import { ERROR_MESSAGES } from './messages';
+
+const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.FRIENDS;
 
 // If username doesnt exist or is yourself, or already added / requested
 export class UsernameError extends SpotError {
@@ -6,4 +9,27 @@ export class UsernameError extends SpotError {
       super(message, statusCode);
       this.name = "UsernameError";
     }
+}
+
+// you are already friends with this person
+// Note if you try to add someone who sent you a request, it will just add the person instead
+export class FriendExistsError extends SpotError {
+  constructor(statusCode) {
+    super(FRIENDS_ERROR_MESSAGES.EXISTS, statusCode);
+    this.name = "FriendExistsError";
+  }
+}
+
+export class AddSelfError extends SpotError {
+  constructor(statusCode) {
+    super(FRIENDS_ERROR_MESSAGES.SELF, statusCode);
+    this.name = "AddSelfError";
+  }
+}
+
+export class NoAccountError extends SpotError {
+  constructor(statusCode) {
+    super(FRIENDS_ERROR_MESSAGES.NO_USER, statusCode);
+    this.name = "NoAccountError";
+  }
 }

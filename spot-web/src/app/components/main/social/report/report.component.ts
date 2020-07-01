@@ -67,10 +67,6 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.modalService.close(this.modalId);
   }
 
-  onTextChange(event: any) {
-
-  }
-
   invalidLength(): boolean {
     return this.content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH;
   }

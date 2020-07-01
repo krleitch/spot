@@ -1,6 +1,7 @@
 <spot-main-nav></spot-main-nav>
 <div class="friends-container">
 <div class="friends-content">
+
     <div class="title-wrapper">
       <div class="friends-title">
         <span class="material-icons people"> people_alt </span>
@@ -11,6 +12,7 @@
         {{ STRINGS.FACEBOOK_CONNECT }}
       </div>
     </div>
+
     <div *ngIf="(friendRequests$ | async)?.length > 0">
       <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
       <div class="friend-content-section">
@@ -29,6 +31,7 @@
         </div>
       </div>
     </div>
+
     <div class="friends-subtitle"> {{ STRINGS.ADD }} </div>
     <div class="friend-content-section">
       <div class="friend-request-input-container">
@@ -36,6 +39,10 @@
         <span class="send-container" (click)="addFriendRequest()"> <i class="material-icons send"> send </i> </span>
       </div>
     </div>
+    <div *ngIf="friendsError$ | async as friendsError" class="add-friends-error">
+      {{ friendsError.message }}
+    </div>
+
     <div class="friends-subtitle"> {{ STRINGS.FRIENDS_LIST }} </div>
       <div class="friend-content-section">
         <div *ngIf="(friends$ | async)?.length > 0; else noFriends">
@@ -53,5 +60,6 @@
         </span>
       </ng-template>
     </div>
+
   </div>
 </div>

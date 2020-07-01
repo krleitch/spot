@@ -96,7 +96,7 @@ export class FriendsEffects {
             return new friendsActions.AddFriendRequestsSuccessAction( response );
           }),
           catchError(errorResponse =>
-            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new friendsActions.AddFriendRequestsFailureAction( errorResponse.error ))
           )
         )
     )
