@@ -41,7 +41,7 @@ app.use(bodyParser.json());
 app.use(Cors());
 
 // Check the users location data on each request
-app.use(locationService.checkLocation)
+// app.use(locationService.checkLocation)
 
 // Unprotected
 app.use('/', root);

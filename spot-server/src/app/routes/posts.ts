@@ -29,7 +29,12 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Get all posts
-router.get('/', function (req: any, res: any) {
+router.get('/', function (req: any, res: any, next: any) {
+
+    // You must have an account to get all posts
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const accountId = req.user.id;
     
@@ -41,36 +46,16 @@ router.get('/', function (req: any, res: any) {
     const limit = Number(req.query.limit);
     const date = req.query.date;
 
-    locationsService.verifyLocation( accountId, latitude, longitude ).then( (valid: boolean) => {
-
-        if ( valid ) {
-
-            locations.addLocation( accountId, latitude, longitude ).then( () => {
-
-                posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
-
-                    // add the distance
-                    rows.map( (row: any) => {
-                        let newRow = row
-                        newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-                        newRow.inRange = newRow.distance <= 10;
-                        delete newRow.latitude;
-                        delete newRow.longitude;
-                        return newRow;
-                    });
-
-                    res.status(200).json({ posts: rows });
-                }, (err: any) => {
-                    res.status(500).send('Error getting posts');
-                });
-
-            });
-
-        } else {
-            res.status(500).send('Error gettings posts from your location');
-        }
-
+    locations.addLocation( accountId, latitude, longitude ).then( () => {
+        posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
+            // add the distance
+            rows = locationsService.addDistanceToRows(rows, latitude, longitude);
+            res.status(200).json({ posts: rows });
+        }, (err: any) => {
+            res.status(500).send('Error getting posts');
+        });
     });
+
 });
 
 // Add a post
@@ -97,18 +82,8 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
     const link = await postsService.generateLink();
 
     locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
-
         posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
-
-            rows.map( (row: any) => {
-                let newRow = row
-                newRow.distance = locationsService.distanceBetween( location.latitude, location.longitude, row.latitude, row.longitude, 'M' );
-                newRow.inRange = newRow.distance <= 10;
-                delete newRow.latitude;
-                delete newRow.longitude;
-                return newRow;
-            });
-
+            rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude);
             const response = { post: rows[0] }
             res.status(200).json(response);
         }, (err: any) => {
@@ -120,7 +95,13 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 }));
 
 // Like a post
-router.put('/:postId/like', function(req: any, res: any) {
+router.put('/:postId/like', function(req: any, res: any, next: any) {
+
+    // You must have an account to like a post
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const postId = req.params.postId;
     const accountId = req.user.id;
     posts.likePost(postId, accountId).then((rows: any) => {
@@ -131,20 +112,35 @@ router.put('/:postId/like', function(req: any, res: any) {
 });
 
 // Dislike a post
-router.put('/:postId/dislike', function(req: any, res: any) {
+router.put('/:postId/dislike', function(req: any, res: any, next: any) {
+
+    // You must have an account to dislike a post
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const postId = req.params.postId;
     const accountId = req.user.id;
+
     posts.dislikePost(postId, accountId).then((rows: any) => {
         res.status(200).json({ postId: postId });
     }, (err: any) => {
         res.status(500).send('Error disliking post');
     })
+
 });
 
 // Delete a post
-router.delete('/:postId', function(req: any, res: any) {
+router.delete('/:postId', function(req: any, res: any, next: any) {
+
+    // You must have an account to delete a post
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const postId = req.params.postId;
     const accountId = req.user.id;
+
     posts.deletePost(postId, accountId).then((rows: any) => {
         res.status(200).json({ postId: postId });
     }, (err: any) => {
@@ -177,7 +173,12 @@ router.put('/:postId/report', function(req: any, res: any, next: any) {
 });
 
 // Get post activity
-router.get('/activity', function (req: any, res: any) {
+router.get('/activity', function (req: any, res: any, next: any) {
+
+    // You must have an account to see activity
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const accountId = req.user.id;
     
@@ -187,16 +188,7 @@ router.get('/activity', function (req: any, res: any) {
     const longitude = Number(req.query.longitude);
 
     posts.getPostsActivity(accountId, date, limit).then((rows: any) => {
-
-        rows.map( (row: any) => {
-            let newRow = row
-            newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-            newRow.inRange = newRow.distance <= 10;
-            delete newRow.latitude;
-            delete newRow.longitude;
-            return newRow;
-        });
-
+        rows = locationsService.addDistanceToRows(rows, latitude, longitude);
         res.status(200).json({ activity: rows });
     }, (err: any) => {
         res.status(500).send('Error getting activity');
@@ -206,22 +198,14 @@ router.get('/activity', function (req: any, res: any) {
 // Get a single post
 router.get('/:postLink',  function (req: any, res: any) {
 
+    // getting individual posts does not need an account
+
     const postLink = req.params.postLink;
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
 
     posts.getPostByLink(postLink, req.authenticated ? req.user.id: null).then((rows: any) => {
-
-        // add the distance
-        rows.map( (row: any) => {
-            let newRow = row
-            newRow.distance = locationsService.distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-            newRow.inRange = newRow.distance <= 10;
-            delete newRow.latitude;
-            delete newRow.longitude;
-            return newRow;
-        });
-
+        rows = locationsService.addDistanceToRows(rows, latitude, longitude);
         res.status(200).json({ post: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error getting post');

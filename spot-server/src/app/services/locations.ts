@@ -1,4 +1,4 @@
-export { checkLocation, verifyLocation, distanceBetween, getGeolocation }
+export { checkLocation, verifyLocation, distanceBetween, getGeolocation, addDistanceToRows }
 
 const request = require('request');
 
@@ -8,13 +8,41 @@ const locations = require('../db/locations');
 
 // Returns if  you are allowed to commnet/post on something
 // TODO
-const checkLocation = (req: any, res: any, next: any) => {
+const checkLocation = async (req: any, res: any, next: any) => {
 
+	if ( !req.authenticated ) {
+		next();
+	}
 
+	const accountId = req.user.id;
 
+	// For get requests
+    let latitude = Number(req.query.latitude);
+    let longitude = Number(req.query.longitude);
+
+	// for post requests
+	const { location } = req.body;
+
+	if ( location ) {
+		latitude = location.latitude;
+		longitude = location.longitude;
+	}
+
+	if ( latitude && longitude ) {
+
+		await verifyLocation( accountId, latitude, longitude ).then( (valid: boolean) => {
+
+			if ( !valid ) {
+
+			}
+
+		});
+
+	}
+
+	// We are good, go next
 	next();
 }
-
 
 // Returns True if the location given is accurate for the user with account_id
 function verifyLocation( account_id: string, myLatitude: number, myLongitude: number ): Promise<boolean> {
@@ -49,6 +77,17 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
     });
 
+}
+
+function addDistanceToRows(rows: any[], latitude: number, longitude: number): any[] {
+	return rows.map( (row: any) => {
+		let newRow = row
+		newRow.distance = distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+		newRow.inRange = newRow.distance <= 10;
+		delete newRow.latitude;
+		delete newRow.longitude;
+		return newRow;
+	});
 }
 
 function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number, unit: string): number {
