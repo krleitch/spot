@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS password_reset;
 DROP TABLE IF EXISTS locations;
 DROP TABLE IF EXISTS accounts_metadata;
+DROP TABLE IF EXISTS verify_account;
 
 DROP TABLE IF EXISTS accounts;
 
@@ -27,6 +28,7 @@ CREATE TABLE accounts (
     google_id VARCHAR(36) UNIQUE,
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,
+    verified_date DATETIME,
     PRIMARY KEY (id)
 );
 
@@ -153,6 +155,15 @@ CREATE TABLE password_reset (
     account_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
     token VARCHAR(36) NOT NULL UNIQUE,
+    PRIMARY KEY (id),
+    FOREIGN KEY (account_id) REFERENCES accounts (id)
+);
+
+CREATE TABLE verify_account (
+    id VARCHAR(36) NOT NULL,
+    account_id VARCHAR(36) NOT NULL,
+    creation_date DATETIME NOT NULL,
+    token VARCHAR(32) NOT NULL UNIQUE,
     PRIMARY KEY (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id)
 );

@@ -14,24 +14,23 @@ export class AuthenticationError extends SpotError {
 
 // Username
 export class UsernameLengthError extends SpotError {
-  constructor(message, statusCode, minLength, maxLength) {
-    super(message, statusCode);
+  constructor(statusCode, minLength, maxLength) {
+    super(AUTHENTICATION_ERROR_MESSAGES.USERNAME_LENGTH, statusCode);
     this.name = "UsernameLengthError";
     this.body = { min: minLength, max: maxLength };
   }
 }
 
 export class UsernameCharacterError extends SpotError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.USERNAME_CHARACTER, statusCode);
     this.name = "UsernameCharacterError";
   }
 }
 
-
 export class UsernameTakenError extends SpotError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.USERNAME_TAKEN, statusCode);
     this.name = "UsernameTakenError";
   }
 }

@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
 import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess,
          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess,
-         LoadLocationRequest } from '@models/accounts';
+         LoadLocationRequest, VerifyConfirmRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -24,12 +24,17 @@ export enum ActionTypes {
   ACCOUNT_FAILURE = '[Accounts] Account Failure',
   UPDATE_USERNAME_REQUEST = '[Accounts] Update Username Request',
   UPDATE_USERNAME_SUCCESS = '[Accounts] Update Username Success',
+  UPDATE_USERNAME_FAILURE = '[Accounts] Update Username Failure',
   UPDATE_METADATA_REQUEST = '[Accounts] Update Metadata Request',
   UPDATE_METADATA_SUCCESS = '[Accounts] Update Metadata Success',
   GET_METADATA_REQUEST = '[Accounts] Get Metadata Request',
   GET_METADATA_SUCCESS = '[Accounts] Get Metadata Success',
   LOAD_LOCATION = '[Accounts] Load Location',
   SET_LOCATION = '[Accounts] Set Location',
+  VERIFY_REQUEST = '[Accounts] Verify Request',
+  VERIFY_SUCCESS = '[Accounts] Verify Success',
+  VERIFY_CONFIRM_REQUEST = '[Accounts] Verify Confrim Request',
+  VERIFY_CONFIRM_SUCCESS = '[Accounts] Verify Confirm Success',
   GENERIC_FAILURE = '[Accounts] Generic Failure'
 }
 
@@ -120,6 +125,11 @@ export class UpdateUsernameSuccessAction implements Action {
   constructor(public response: UpdateUsernameResponse) {}
 }
 
+export class UpdateUsernameFailureAction implements Action {
+  readonly type = ActionTypes.UPDATE_USERNAME_FAILURE;
+  constructor(public error: SpotError) {}
+}
+
 export class UpdateAccountMetadataRequestAction implements Action {
   readonly type = ActionTypes.UPDATE_METADATA_REQUEST;
   constructor(public request: UpdateAccountMetadataRequest) {}
@@ -140,6 +150,26 @@ export class GetAccountMetadataRequestSuccess implements Action {
   constructor(public response: GetAccountMetadataSuccess) {}
 }
 
+export class VerifyRequestAction implements Action {
+  readonly type = ActionTypes.VERIFY_REQUEST;
+  constructor(public request: VerifyRequest) {}
+}
+
+export class VerifySuccessAction implements Action {
+  readonly type = ActionTypes.VERIFY_SUCCESS;
+  constructor(public response: VerifyResponse) {}
+}
+
+export class VerifyConfirmRequestAction implements Action {
+  readonly type = ActionTypes.VERIFY_CONFIRM_REQUEST;
+  constructor(public request: VerifyConfirmRequest) {}
+}
+
+export class VerifyConfirmSuccessAction implements Action {
+  readonly type = ActionTypes.VERIFY_CONFIRM_SUCCESS;
+  constructor(public response: VerifyConfirmResponse) {}
+}
+
 export type Actions = LoginRequestAction | LoginSuccessAction |
                       LoginFailureAction | RegisterRequestAction |
                       RegisterSuccessAction | RegisterFailureAction |
@@ -150,4 +180,7 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       UpdateUsernameAction | UpdateUsernameSuccessAction |
                       GenericFailureAction | UpdateAccountMetadataRequestAction |
                       UpdateAccountMetadataRequestSuccess | GetAccountMetadataRequestAction |
-                      GetAccountMetadataRequestSuccess | LoadLocationAction;
+                      GetAccountMetadataRequestSuccess | LoadLocationAction |
+                      UpdateUsernameFailureAction | VerifyRequestAction |
+                      VerifySuccessAction | VerifyConfirmRequestAction |
+                      VerifyConfirmSuccessAction;

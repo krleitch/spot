@@ -23,12 +23,12 @@ function validUsername(username: string): Error | null {
 
     // Check length
     if ( username.length < MIN_LENGTH || username.length > MAX_LENGTH ) {
-        return new AuthError.UsernameLengthError(AUTH_ERROR_MESSAGES.USERNAME_LENGTH, 400, MIN_LENGTH, MAX_LENGTH);
+        return new AuthError.UsernameLengthError(400, MIN_LENGTH, MAX_LENGTH);
     }
 
     // Check characters
     if ( username.match(PATTERN) == null ) {
-        return new AuthError.UsernameCharacterError(AUTH_ERROR_MESSAGES.USERNAME_CHARACTER, 400)
+        return new AuthError.UsernameCharacterError(400)
     }
 
     return null;

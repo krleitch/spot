@@ -6,6 +6,7 @@ export interface Account {
     phone: string;
     score: number;
     facebook_id: string;
+    verified_date: string;
 }
 
 export interface AccountMetadata {
@@ -27,6 +28,23 @@ export interface LoadLocationRequest {
 
 export interface SetLocationRequest {
     location: Location
+}
+
+// Verify account
+export interface VerifyRequest {
+
+}
+
+export interface VerifyResponse {
+
+}
+
+export interface VerifyConfirmRequest {
+    token: string;
+}
+
+export interface VerifyConfirmResponse {
+
 }
 
 // update username

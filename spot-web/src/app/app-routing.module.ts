@@ -16,6 +16,7 @@ import { AccountComponent } from './components/main/account/account.component';
 import { PostDetailComponent } from './components/main/post-detail/post-detail.component';
 import { FriendsComponent } from './components/main/social/friends/friends.component';
 import { ActivityComponent } from './components/main/activity/activity.component';
+import { VerifyComponent } from './components/main/verify/verify.component';
 
 import { AuthGuardService as AuthGuard } from '@src/app/helpers/auth-guard.service';
 
@@ -79,6 +80,10 @@ export const routes: Routes = [
   {
     path: 'new-password',
     component: NewPasswordComponent
+  },
+  {
+    path: 'verify/:token',
+    component: VerifyComponent
   }
 ];
 

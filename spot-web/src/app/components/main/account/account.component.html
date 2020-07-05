@@ -30,18 +30,22 @@
           <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT_USERNAME }} </span>
         </ng-template>
       </div>
+      <div *ngIf="usernameError$ | async as usernameError">
+        {{ usernameError.message }}
+      </div>
       <div class="subheading"> {{ STRINGS.PHONE }} </div>
       <div class="value"> {{ account.phone }} </div>
       <div *ngIf="accountMetadata$ | async as accountMetadata">
-        <div class="subheading"> {{ STRINGS.SCORE }} </div>
-        <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
         <div class="subheading"> {{ STRINGS.UNIT }} </div>
         <div class="value">
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'miles' }" (click)="setMiles()"> {{ STRINGS.MILES }} </div>
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'kilometers' }" (click)="setKilometers()"> {{ STRINGS.KILOMETERS }} </div>
         </div>
+        <div class="subheading"> {{ STRINGS.SCORE }} </div>
+        <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
+        <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
       </div>
-      <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
+      <div *ngIf="account.verified_date == null" class="button" (click)="verifyAccount()"> Verify Account </div>
       <br/>
       <div class="title">
         {{ STRINGS.ACCOUNT_OPTIONS }}

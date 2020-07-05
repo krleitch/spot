@@ -1,18 +1,23 @@
-const passport = require('passport');
 const express = require('express');
 const router = express.Router();
 
+const { pbkdf2Sync } = require('crypto');
+const nodemailer = require('nodemailer');
+
 const accounts = require('../db/accounts');
+const verifyAccount = require('../db/verifyAccount');
 
 const authService = require('@services/authentication/authentication');
 const friendsService = require('@services/friends');
+
+const AuthError = require('@exceptions/authentication');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     // console.log('[ACCOUNTS] ', Date.now());
     next();
 });
 
-router.delete('/delete', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
+router.delete('/', function (req: any, res: any) {
     const accountId = req.user.id;
     accounts.deleteAccount(accountId).then( (rows: any) => {
         res.status(200);   
@@ -21,7 +26,7 @@ router.delete('/delete', passport.authenticate('jwt', {session: false}), functio
     });
 })
 
-router.get('/account', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
+router.get('/', function (req: any, res: any) {
     const accountId = req.user.id;
     accounts.getAccountById(accountId).then((rows: any) => {
         res.status(200).json({ account: rows[0] });
@@ -30,17 +35,24 @@ router.get('/account', passport.authenticate('jwt', {session: false}), function 
     })
 })
 
-router.put('/account', passport.authenticate('jwt', {session: false}), function (req: any, res: any) {
+router.put('/username', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
 
+    const usernameError = authService.validUsername(username);
+    if ( usernameError) {
+        return next(usernameError);
+    }
+
     accounts.updateUsername(username, accountId).then((rows: any) => {
-        res.status(200).json({ account: rows[0] });
+        const result = { account: rows[0] };
+        res.status(200).json(result);
     }, (err: any) => {
-        res.status(500).send("Error updating username");
-    })
-})
+        return next(new AuthError.UsernameTakenError(400));
+    });
+
+});
 
 // Facebook Connect
 router.post('/facebook', function (req: any, res: any) {
@@ -146,6 +158,86 @@ router.put('/metadata', async function (req: any, res: any) {
         res.status(500).send('Error getting account metadata');
     });   
 
+});
+
+// Verify Account
+router.post('/verify', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    const value = new Date().toString() + accountId.toString();
+    const iterations = 10000;
+    const hashLength = 16;
+    const salt = 'salt'
+    const digest = 'sha512';
+    const token = pbkdf2Sync(value, salt, iterations, hashLength, digest).toString('hex');
+
+    nodemailer.createTestAccount().then( ( testAccount: any) => {
+
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+            host: "smtp.ethereal.email",
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+                user: testAccount.user, // generated ethereal user
+                pass: testAccount.pass // generated ethereal password
+            }
+        });
+
+        // send mail with defined transport object
+        transporter.sendMail({
+            from: '"SPOT" <spot@example.com>', // sender address
+            to: "test1@example.com, test2@example.com", // list of receivers
+            subject: "SPOT", // Subject line
+            text: "Verify account?", // plain text body
+            html: "<b>Link: </b>" + 'https://localhost:4200/verify/' + token // html body
+        }).then( ( info: any ) => {
+            console.log("Account Verify URL: %s", nodemailer.getTestMessageUrl(info));
+        });
+
+    });
+
+    // Add record to verify account
+    verifyAccount.addVerifyAccount(accountId, token).then( (rows: any) => {
+        res.status(200).json({});
+    }, (err: any) => {
+        console.log(err, token)
+        res.status(500).send('Error sending verify');
+    });   
+  
+});
+
+// Verify Account
+router.post('/verify/confirm', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    const { token } = req.body;
+
+    // Add record to verify account
+    verifyAccount.getByToken(accountId, token).then( (rows: any) => {
+
+        // TODO: check valid expirary date
+
+        if ( rows.length > 0 ) {
+
+            accounts.verifyAccount( rows[0].account_id ).then( (r: any) => {
+                res.status(200).send({ account: r[0] });
+            }, (err: any) => {
+                console.log(err)
+            });
+
+        } else {
+            // FIX
+            // weird case
+            res.status(500).send('Error confirming verify');
+        }
+
+    }, (err: any) => {
+        res.status(500).send('Error confirming verify');
+    });   
+  
 });
 
 export = router;

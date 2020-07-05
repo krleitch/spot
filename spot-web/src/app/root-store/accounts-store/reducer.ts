@@ -76,6 +76,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         account: action.response.account
       };
     }
+    case ActionTypes.UPDATE_USERNAME_FAILURE: {
+      return {
+        ...state,
+        usernameError: action.error
+      };
+    }
     case ActionTypes.GET_METADATA_SUCCESS: {
       return {
         ...state,

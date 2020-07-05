@@ -43,6 +43,7 @@ import { TagComponent } from './components/main/social/tag/tag.component';
 import { SpinnerComponent } from './components/helpers/spinner/spinner.component';
 import { ConfirmComponent } from './components/helpers/confirm/confirm.component';
 import { AuthModalComponent } from './components/pre-auth/auth-modal/auth-modal.component';
+import { VerifyComponent } from './components/main/verify/verify.component';
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import { AuthModalComponent } from './components/pre-auth/auth-modal/auth-modal.
     TagComponent,
     SpinnerComponent,
     ConfirmComponent,
-    AuthModalComponent
+    AuthModalComponent,
+    VerifyComponent
   ],
   imports: [
     BrowserModule,

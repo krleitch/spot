@@ -1,7 +1,7 @@
 export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, changePassword,
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
          disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
-         updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType  }
+         updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount  }
 
 const uuid = require('uuid');
 const roles = require('@services/authorization/roles');
@@ -112,6 +112,14 @@ function updateUsername(username: string, accountId: string) {
 function changePassword( account_id: string, password: string, salt: string) {
     var sql = 'UPDATE accounts SET pass = ?, salt = ? WHERE id = ? AND deletion_date IS NULL';
     var values = [password, salt, account_id];
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(account_id);
+    });;  
+}
+
+function verifyAccount( account_id: string) {
+    var sql = 'UPDATE accounts SET verified_date = ? WHERE id = ? AND deletion_date IS NULL';
+    var values = [new Date(), account_id];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(account_id);
     });;  

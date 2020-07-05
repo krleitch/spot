@@ -8,6 +8,7 @@ import * as featureActions from '../actions/actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { RegisterResponse, LoginResponse } from '@models/authentication';
+import { VerifyResponse, VerifyConfirmResponse } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 @Injectable()
@@ -162,8 +163,8 @@ export class AccountsStoreEffects {
         .updateUsername(action.request)
         .pipe(
             map(response => new featureActions.UpdateUsernameSuccessAction(response)),
-            catchError(error =>
-              observableOf(new featureActions.GenericFailureAction(error))
+            catchError(errorResponse =>
+              observableOf(new featureActions.UpdateUsernameFailureAction(errorResponse.error))
             )
           )
     )
@@ -200,6 +201,40 @@ export class AccountsStoreEffects {
             map(response => new featureActions.GetAccountMetadataRequestSuccess(response)),
             catchError(error =>
               observableOf(new featureActions.GenericFailureAction(error))
+            )
+          )
+    )
+  );
+
+  @Effect()
+  verifyAccountEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.VerifyRequestAction>(
+      featureActions.ActionTypes.VERIFY_REQUEST
+    ),
+    switchMap(action =>
+      this.accountsService
+        .verifyAccount(action.request)
+        .pipe(
+            map( (response: VerifyResponse) => new featureActions.VerifySuccessAction(response)),
+            catchError(errorResponse =>
+              observableOf(new featureActions.GenericFailureAction(errorResponse.error))
+            )
+          )
+    )
+  );
+
+  @Effect()
+  verifyConfirmAccountEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.VerifyConfirmRequestAction>(
+      featureActions.ActionTypes.VERIFY_CONFIRM_REQUEST
+    ),
+    switchMap(action =>
+      this.accountsService
+        .verifyConfirmAccount(action.request)
+        .pipe(
+            map( (response: VerifyConfirmResponse) => new featureActions.VerifyConfirmSuccessAction(response)),
+            catchError(errorResponse =>
+              observableOf(new featureActions.GenericFailureAction(errorResponse.error))
             )
           )
     )

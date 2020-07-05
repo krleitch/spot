@@ -6,7 +6,8 @@ import { STRINGS } from '@assets/strings/en';
 import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
-         UpdateAccountMetadataRequest } from '@models/accounts';
+         UpdateAccountMetadataRequest, VerifyRequest } from '@models/accounts';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-account',
@@ -22,6 +23,7 @@ export class AccountComponent implements OnInit {
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
   facebookConnected$: Observable<boolean>;
+  usernameError$: Observable<SpotError>;
 
   accountOptionsEnabled: boolean;
   editUsernameEnabled = false;
@@ -30,6 +32,10 @@ export class AccountComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
+
+    this.usernameError$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectUsernameError)
+    );
 
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
@@ -80,6 +86,13 @@ export class AccountComponent implements OnInit {
         new AccountsActions.DeleteRequestAction()
       );
     }
+  }
+
+  verifyAccount() {
+    const request: VerifyRequest = {};
+    this.store$.dispatch(
+      new AccountsActions.VerifyRequestAction(request)
+    );
   }
 
   facebookConnect() {

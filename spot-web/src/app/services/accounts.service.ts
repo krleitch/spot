@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { AlertService } from '@services/alert.service';
 import { UpdateUsernameRequest, UpdateUsernameResponse, FacebookConnectRequest, FacebookConnectResponse,
           FacebookDisconnectResponse, FacebookDisconnectRequest, GetAccountMetadataRequest, GetAccountMetadataSuccess,
-          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess } from '@models/accounts';
+          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, VerifyConfirmRequest, VerifyConfirmResponse,
+          VerifyRequest, VerifyResponse } from '@models/accounts';
 
 @Injectable({
   providedIn: 'root'
@@ -30,15 +31,15 @@ export class AccountsService {
   // Normal requets
 
   deleteAccount(): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/accounts/delete`);
+    return this.http.delete<any>(`${this.baseUrl}/accounts`);
   }
 
   getAccount(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/accounts/account`);
+    return this.http.get<any>(`${this.baseUrl}/accounts`);
   }
 
   updateUsername(request: UpdateUsernameRequest): Observable<UpdateUsernameResponse> {
-    return this.http.put<UpdateUsernameResponse>(`${this.baseUrl}/accounts/account`, request);
+    return this.http.put<UpdateUsernameResponse>(`${this.baseUrl}/accounts/username`, request);
   }
 
   getAccountMetadata(request: GetAccountMetadataRequest): Observable<GetAccountMetadataSuccess> {
@@ -47,6 +48,14 @@ export class AccountsService {
 
   updateAccountMetadata(request: UpdateAccountMetadataRequest): Observable<UpdateAccountMetadataSuccess> {
     return this.http.put<UpdateAccountMetadataSuccess>(`${this.baseUrl}/accounts/metadata`, request);
+  }
+
+  verifyAccount(request: VerifyRequest): Observable<VerifyResponse> {
+    return this.http.post<VerifyResponse>(`${this.baseUrl}/accounts/verify`, request);
+  }
+
+  verifyConfirmAccount(request: VerifyConfirmRequest): Observable<VerifyConfirmResponse> {
+    return this.http.post<VerifyConfirmResponse>(`${this.baseUrl}/accounts/verify/confirm`, request);
   }
 
   // service functions
