@@ -43,12 +43,15 @@ passport.use(new LocalStrategy(localOptions,
     }
 ));
 
+// NOT USING
 // For sessions
 passport.serializeUser(function (user: any, done: any) {
+    console.log('CALLED S')
     done(null, user.id);
 });
 
 passport.deserializeUser(function (id: any, done: any) {
+    console.log('CALLED D')
     accounts.getAccountById(id).then( (user: any) => {
         return done(null, user[0])
     }, (err: any) => {
@@ -64,6 +67,15 @@ const jwtOptions = {
 
 passport.use(new JwtStrategy(jwtOptions,
     function (payload: any, done: any) {
-        done(null, payload.id);
+        // NEW
+        // TODO: Can we just refresh the token, so that way we dont need to do db lookup
+        // concerning verified / facebook / google updates
+        accounts.getAccountById(payload.id.id).then( (user: any) => {
+            return done(null, user[0])
+        }, (err: any) => {
+            return done(err);
+        });
+        // OLD
+        // done(null, payload.id);
     }
 ));

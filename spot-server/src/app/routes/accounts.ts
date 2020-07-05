@@ -222,7 +222,8 @@ router.post('/verify/confirm', function (req: any, res: any) {
 
         if ( rows.length > 0 ) {
 
-            accounts.verifyAccount( rows[0].account_id ).then( (r: any) => {
+            const verifiedDate = new Date();
+            accounts.verifyAccount( rows[0].account_id, verifiedDate ).then( (r: any) => {
                 res.status(200).send({ account: r[0] });
             }, (err: any) => {
                 console.log(err)

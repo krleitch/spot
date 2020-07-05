@@ -117,9 +117,9 @@ function changePassword( account_id: string, password: string, salt: string) {
     });;  
 }
 
-function verifyAccount( account_id: string) {
+function verifyAccount( account_id: string, date: Date) {
     var sql = 'UPDATE accounts SET verified_date = ? WHERE id = ? AND deletion_date IS NULL';
-    var values = [new Date(), account_id];
+    var values = [date, account_id];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(account_id);
     });;  

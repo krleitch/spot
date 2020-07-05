@@ -53,7 +53,7 @@ function validPassword(password: string): Error | null {
 // Optional Authentication Middleware
 // has req.authenticated if authenticated
 const optionalAuth = function(req: any, res: any, next: any) {
-    passport.authenticate('jwt', {session: true} , function(err: any, user: any, info: any) {
+    passport.authenticate('jwt', {session: false} , function(err: any, user: any, info: any) {
       req.authenticated = !! user;
       req.verified = !! user.verified_date;
       req.user = user || null;
@@ -63,7 +63,7 @@ const optionalAuth = function(req: any, res: any, next: any) {
 
 // Will throw a authentication error if not authenticated
 const requiredAuth = function(req: any, res: any, next: any) {
-    passport.authenticate('jwt', {session: true} , function(err: any, user: any, info: any) {
+    passport.authenticate('jwt', {session: false} , function(err: any, user: any, info: any) {
       req.authenticated = !! user;
       req.verified = !! user.verified_date;
       req.user = user || null;
