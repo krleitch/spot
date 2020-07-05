@@ -51,14 +51,14 @@ app.use('/auth', auth);
 app.use('/posts', authentication.optionalAuth , posts);
 app.use('/comments', authentication.optionalAuth, comments);
 
-// Auth
-app.use('/accounts', passport.authenticate('jwt', {session: true}), accounts);
-app.use('/image', passport.authenticate('jwt', {session: true}), image);
-app.use('/notifications', passport.authenticate('jwt', {session: true}), notifications);
-app.use('/friends', passport.authenticate('jwt', {session: true}), friends);
+// Required Auth
+app.use('/accounts', authentication.requiredAuth, accounts);
+app.use('/image', authentication.requiredAuth, image);
+app.use('/notifications', authentication.requiredAuth, notifications);
+app.use('/friends', authentication.requiredAuth, friends);
 
-// Auth + roles
-app.use('/admin', passport.authenticate('jwt', {session: true}), authorization.checkRoleMiddleware([roles.owner, roles.admin]), admin);
+// Required Auth + roles
+app.use('/admin', authentication.requiredAuth, authorization.checkRoleMiddleware([roles.owner, roles.admin]), admin);
 
 // Error middleware
 app.use(errorHandler.errorMiddleware);
