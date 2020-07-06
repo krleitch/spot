@@ -18,8 +18,36 @@
           </div>
         </ng-template>
       </div>
-      <div class="subheading"> {{ STRINGS.EMAIL }} </div>
+      <div class="subheading">
+          <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
+          <div *ngIf="account.verified_date == null; else verified">
+            <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
+              <span class="verify-text"> {{ STRINGS.VERIFY }} </span>
+              <span class="material-icons verify-icon"> email </span>
+            </div>
+            <ng-template #sent>
+              <div class="verify-container">
+                <span class="verify-text"> {{ STRINGS.VERIFY_SENT }}. </span>
+                <div class="verify-click" (click)="verifyAccount()">
+                  <span class="verify-text"> {{ STRINGS.VERIFY_RESEND }} </span>
+                  <span class="material-icons verify-icon"> redo </span>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #verified>
+            <div class="verify-container">
+              <span class="verify-text"> {{ STRINGS.VERIFY_CHECK }} </span>
+              <span class="material-icons verify-icon-highlight"> check_circle </span>
+            </div>
+          </ng-template>
+      </div>
       <div class="value"> {{ account.email }} </div>
+      <div *ngIf="account.verified_date == null">
+        <div class="description">
+          {{ STRINGS.EMAIL_VERIFY_DESCRIPTION }}
+        </div>
+      </div>
       <div class="subheading"> {{ STRINGS.USERNAME }} </div>
       <div class="value username">
         <input #editUsername [disabled]="!editUsernameEnabled" [(ngModel)]="username" type="text" spellcheck="false">
@@ -45,7 +73,6 @@
         <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
         <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
       </div>
-      <div *ngIf="account.verified_date == null" class="button" (click)="verifyAccount()"> Verify Account </div>
       <br/>
       <div class="title">
         {{ STRINGS.ACCOUNT_OPTIONS }}

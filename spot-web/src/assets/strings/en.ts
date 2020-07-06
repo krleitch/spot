@@ -42,6 +42,12 @@ export const STRINGS = {
             MY_ACCOUNT: 'My Account',
 
             EMAIL: 'Email',
+            VERIFY: 'Send verification email',
+            VERIFY_SENT: 'Email sent',
+            VERIFY_RESEND: 'Resend',
+            VERIFY_CHECK: 'Verified',
+            EMAIL_VERIFY_DESCRIPTION: 'You will need to verify your email to start posting spots.',
+
             USERNAME: 'Username',
             PHONE: 'Phone number',
             SCORE: 'Spot Score',

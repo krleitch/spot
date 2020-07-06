@@ -29,6 +29,8 @@ export class AccountComponent implements OnInit {
   editUsernameEnabled = false;
   username: string;
 
+  verificationSent = false;
+
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
@@ -93,6 +95,7 @@ export class AccountComponent implements OnInit {
     this.store$.dispatch(
       new AccountsActions.VerifyRequestAction(request)
     );
+    this.verificationSent = true;
   }
 
   facebookConnect() {
