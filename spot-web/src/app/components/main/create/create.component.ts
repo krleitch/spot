@@ -72,9 +72,11 @@ export class CreateComponent implements OnInit {
 
   }
 
-  onTextInput(innerHtml) {
-    this.postInnerHtml = innerHtml;
-    this.currentLength = this.postInnerHtml.length;
+  onTextInput(event) {
+    console.log(event)
+    this.postInnerHtml = event.target.innerHTML;
+    // Need to count newlines as a character, -1 because the first line is free
+    this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
     this.createError = '';
   }
 
