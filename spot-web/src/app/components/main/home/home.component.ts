@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
 import { Post, LoadPostRequest, LoadPostSuccess } from '@models/posts';
-import { SetLocationRequest, Location, UpdateAccountMetadataRequest, AccountMetadata } from '@models/accounts';
+import { SetLocationRequest, Location, UpdateAccountMetadataRequest, AccountMetadata, Account, VerifyRequest } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -14,7 +15,9 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   posts$: Observable<Post[]>;
   loading$: Observable<boolean>;
@@ -28,6 +31,7 @@ export class HomeComponent implements OnInit {
   location$: Observable<Location>;
   myLocation: Location;
 
+  account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
 
   postSort = '';
@@ -43,6 +47,8 @@ export class HomeComponent implements OnInit {
 
   locationEnabled = false;
 
+  verificationSent = false;
+
   mobile = false;
 
   ngOnInit() {
@@ -55,7 +61,11 @@ export class HomeComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
 
-    this.accountMetadata$.subscribe( (metadata: AccountMetadata) => {
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsUser)
+    );
+
+    this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (metadata: AccountMetadata) => {
 
       if ( metadata ) {
 
@@ -75,7 +85,7 @@ export class HomeComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountsLoadingLocation)
     );
 
-    this.location$.subscribe( (location: Location) => {
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
       this.myLocation = location;
 
       // don't load unless we have a location
@@ -115,6 +125,10 @@ export class HomeComponent implements OnInit {
       select(PostsStoreSelectors.selectMyFeatureLoading)
     );
 
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   onScroll() {
@@ -232,6 +246,14 @@ export class HomeComponent implements OnInit {
 
   isSelectedPostSort(postSort) {
     return this.postSort === postSort;
+  }
+
+  verifyAccount() {
+    const request: VerifyRequest = {};
+    this.store$.dispatch(
+      new AccountsActions.VerifyRequestAction(request)
+    );
+    this.verificationSent = true;
   }
 
 }

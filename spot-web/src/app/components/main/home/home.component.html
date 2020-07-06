@@ -9,7 +9,31 @@
 </div>
 <div class="container">
   <div *ngIf="locationEnabled; else noLocation" class="content">
-      <spot-create></spot-create>
+      <div class="max-width" *ngIf="account$ | async as account">
+        <div class="max-width" *ngIf="account.verified_date !== null; else verify">
+          <spot-create></spot-create>
+        </div>
+
+        <ng-template #verify>
+          <div class="verify">
+            {{ STRINGS.VERIFY }}
+            <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
+              <span class="verify-text"> {{ STRINGS.VERIFY_SEND }} </span>
+              <span class="material-icons verify-icon"> email </span>
+            </div>
+            <ng-template #sent>
+              <div class="verify-container">
+                <span class="verify-text"> {{ STRINGS.VERIFY_SENT }}. </span>
+                <div class="verify-click" (click)="verifyAccount()">
+                  <span class="verify-text"> {{ STRINGS.VERIFY_RESEND }} </span>
+                  <span class="material-icons verify-icon"> redo </span>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+
+      </div>
       <div class="posts">
         <spot-infinite-scroll (scrolled)="onScroll()">
           <div *ngFor="let post of posts$ | async">

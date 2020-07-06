@@ -9,6 +9,11 @@
     padding-top: 60px;
     background-color: $background-grey;
     box-sizing: border-box;
+
+    .max-width {
+      width: 100%;
+    }
+
 }
 
 .content {
@@ -36,6 +41,44 @@ spot-main-nav {
   width: 100%;
   height: 60px;
   z-index: 99;
+}
+
+.verify {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  // color: $subtle-grey;
+  font-size: 16px;
+}
+
+.verify-container {
+  font-size: 16px;
+  color: $subtle-grey;
+  display: flex;
+  align-items: center;
+}
+
+.verify-text {
+  margin-right: 3px;
+}
+
+.verify-icon {
+  font-size: 16px;
+}
+
+.verify-icon-highlight {
+  font-size: 16px;
+  color: $button-highlight;
+}
+
+.verify-click {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    color: $button-highlight;
+  }
 }
 
 .locationToggle {

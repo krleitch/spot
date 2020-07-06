@@ -29,7 +29,12 @@ export const STRINGS = {
 
             // Posts Toggle
             NEW: 'New',
-            HOT: 'Hot'
+            HOT: 'Hot',
+
+            VERIFY: 'You must verify your email before you can start posting spots',
+            VERIFY_SEND: 'Send email verification',
+            VERIFY_SENT: 'Sent',
+            VERIFY_RESEND: 'Resend'
 
         },
 

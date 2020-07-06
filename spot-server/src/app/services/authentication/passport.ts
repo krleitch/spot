@@ -46,7 +46,6 @@ passport.use(new LocalStrategy(localOptions,
 // NOT USING
 // For sessions
 passport.serializeUser(function (user: any, done: any) {
-    console.log('CALLED S')
     done(null, user.id);
 });
 
