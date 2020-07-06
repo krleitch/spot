@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -19,6 +19,8 @@ import { PostsService } from '@src/app/services/posts.service';
   styleUrls: ['./create.component.scss']
 })
 export class CreateComponent implements OnInit {
+
+  @ViewChild('create') create: ElementRef;
 
   STRINGS = STRINGS.MAIN.CREATE;
   POSTS_CONSTANTS = POSTS_CONSTANTS;
@@ -48,6 +50,9 @@ export class CreateComponent implements OnInit {
     this.createSuccess$.subscribe( (success: boolean) => {
       if ( success ) {
         this.removeFile();
+        this.create.nativeElement.innerText = '';
+        this.create.nativeElement.innerHtml = '';
+        Array.from(this.create.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
         this.postInnerHtml = '';
         this.currentLength = this.postInnerHtml.length;
       }
@@ -77,6 +82,8 @@ export class CreateComponent implements OnInit {
 
     let content = this.postInnerHtml;
 
+    console.log(content.toString());
+
     // Sanitize the html, add line breaks when you see <div> <br> </div>
     // Remove all other tags
     // Stop drag drop image
@@ -99,7 +106,6 @@ export class CreateComponent implements OnInit {
       }
       text +=  (bodyChildren[i].textContent);
       if ( i !== bodyChildren.length - 1 ) {
-        console.log('added')
         text += '\n';
       }
     }
