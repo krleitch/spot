@@ -39,8 +39,9 @@
           <div *ngFor="let post of posts$ | async">
               <spot-post [post]="post" [detailed]="false"></spot-post>
           </div>
-          <div class="loading" *ngIf="loading$ | async">
-            {{ STRINGS.LOADING_POSTS }}
+          <div class="loading">
+            <span class="text"> {{ STRINGS.LOADING_POSTS }} </span>
+            <spot-spinner size="medium"></spot-spinner>
           </div>
         </spot-infinite-scroll>
       </div>

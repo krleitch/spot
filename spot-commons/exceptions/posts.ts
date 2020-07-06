@@ -32,3 +32,10 @@ export class NoPostContent extends SpotError {
       this.name = "NoPostContent";
     }
 }
+
+export class AccountNotVerified extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.VERIFY, statusCode);
+    this.name = "AccountNotVerified";
+  }
+}

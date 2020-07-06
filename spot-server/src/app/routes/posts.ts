@@ -66,6 +66,11 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    // You must be verified to make a post
+    if ( !req.verified ) {
+        return next(new PostsError.AccountNotVerified(400));
+    }
+
     const accountId = req.user.id;
     const { content, location, image } = req.body;
 

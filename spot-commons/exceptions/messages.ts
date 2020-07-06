@@ -31,7 +31,8 @@ export const ERROR_MESSAGES = {
             POST_ERROR: 'Post Error',
             INVALID_POST_CONTENT: 'Invalid post content',
             INVALID_POST_LENGTH: 'Invalid post length',
-            NO_CONTENT: 'No content'
+            NO_CONTENT: 'No content',
+            VERIFY: 'Account must be verified to create a spot'
 
         },
 

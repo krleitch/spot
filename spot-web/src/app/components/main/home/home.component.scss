@@ -148,9 +148,17 @@ spot-create {
 // loading
 
 .loading {
+
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-flow: column;
   margin-bottom: 10px;
+
+  .text {
+    margin-bottom: 5px;
+  }
+
 }
 
 // When location is disabled
