@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   postlocation = '';
   loadingLocation$: Observable<boolean>;
   location$: Observable<Location>;
-  myLocation: Location;
+  myLocation: Location = null;
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;

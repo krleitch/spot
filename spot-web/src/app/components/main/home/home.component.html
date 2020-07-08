@@ -11,7 +11,15 @@
   <div *ngIf="myLocation || postlocation == 'global'; else noLocation" class="content">
       <div class="max-width" *ngIf="account$ | async as account">
         <div class="max-width" *ngIf="account.verified_date !== null; else verify">
-          <spot-create></spot-create>
+          <div *ngIf="myLocation; else createLocation">
+            <spot-create></spot-create>
+          </div>
+          <ng-template #createLocation>
+            <div class="no-location-container-create">
+              <span class="material-icons icon"> location_off </span>
+              <span class="text"> {{ STRINGS.LOCATION_CREATE }} </span>
+            </div>
+          </ng-template>
         </div>
 
         <ng-template #verify>

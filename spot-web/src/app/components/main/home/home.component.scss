@@ -195,3 +195,22 @@ spot-create {
   }
 
 }
+
+.no-location-container-create {
+
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  .text {
+    margin-top: 5px;
+    font-size: 16px;
+  }
+
+  .icon {
+    margin: 5px 0px;
+    font-size: 42px;
+    color: $button-highlight;
+  }
+
+}

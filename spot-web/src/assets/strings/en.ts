@@ -29,6 +29,7 @@ export const STRINGS = {
             ENABLE_LOCATION : 'Please enable location in your browser to continue',
             LOCATION_SAFE: 'Your location will never be given away',
             LOADING_LOCATION: 'Loading location...',
+            LOCATION_CREATE: 'Enable browser location to create a spot',
 
             // Posts Toggle
             NEW: 'New',
