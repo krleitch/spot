@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, takeUntil, catchError } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
@@ -9,21 +9,28 @@ import { PostsService } from '@services/posts.service';
 import { LoadSinglePostRequest, Post } from '@models/posts';
 import { Location } from '@models/accounts';
 import { AccountsStoreSelectors } from '@store/accounts-store';
+import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-post-detail',
   templateUrl: './post-detail.component.html',
   styleUrls: ['./post-detail.component.scss']
 })
-export class PostDetailComponent implements OnInit {
+export class PostDetailComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   constructor(private route: ActivatedRoute, private postsService: PostsService, private store$: Store<RootStoreState.State>) { }
+
+  STRINGS = STRINGS.MAIN.POST_DETAILED;
 
   post$: Observable<Post>;
 
   location$: Observable<Location>;
   myLocation: Location;
   locationEnabled = false;
+
+  error = false;
 
   commentId: string;
 
@@ -33,7 +40,7 @@ export class PostDetailComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountsLocation)
     );
 
-    this.location$.subscribe( (location: Location) => {
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
       this.myLocation = location;
 
       // don't load unless we have a location
@@ -50,10 +57,15 @@ export class PostDetailComponent implements OnInit {
 
           this.post$ = this.postsService.getPost(request).pipe(
             map( postSuccess =>  {
+              this.error = false;
               if ( this.commentId ) {
                 postSuccess.post.startCommentId = this.commentId;
               }
               return postSuccess.post;
+            }),
+            catchError( (errorResponse: any) => {
+              this.error = true;
+              return throwError(errorResponse.error);
             })
           );
 
@@ -63,6 +75,10 @@ export class PostDetailComponent implements OnInit {
 
     });
 
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   getPostLink(post: Post) {

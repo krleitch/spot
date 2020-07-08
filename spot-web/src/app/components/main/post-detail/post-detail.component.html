@@ -1,6 +1,6 @@
 
 <spot-main-nav></spot-main-nav>
-<div class="container">
+<div class="post-detailed">
   <div class="content" *ngIf="post$ | async as post">
     <meta property="og:url"           content="{{ getPostLink(post) }}" />
     <meta property="og:type"          content="website" />
@@ -9,4 +9,8 @@
     <meta property="og:image"         content="{{ post.image_src }}" />
     <spot-post [post]="post" [detailed]="true"></spot-post>
   </div>
+  <div class="error" *ngIf="error">
+    <span class="material-icons icon"> error_outline </span>
+    <span class="text"> {{ STRINGS.NO_POST }} </span>
+   </div>
 </div>

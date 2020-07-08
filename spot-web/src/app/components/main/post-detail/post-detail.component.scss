@@ -8,7 +8,8 @@ spot-main-nav {
   height: 60px;
 }
 
-.container {
+.post-detailed {
+
   display: flex;
   justify-content: center;
   min-height: 100%;
@@ -16,15 +17,35 @@ spot-main-nav {
   padding-top: 60px;
   background-color: $background-grey;
   box-sizing: border-box;
-}
 
-.content {
-  display: flex;
-  align-items: center;
-  flex-flow: column;
-  height: 100%;
-  width: 70%;
-  padding-top: 20px;
+  .content {
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    height: 100%;
+    width: 70%;
+    padding-top: 20px;
+  }
+
+  .error {
+
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    padding-top: 40px;
+
+    .text {
+      padding-top: 5px;
+      font-size: 20px;
+    }
+
+    .icon {
+      color: $button-highlight;
+      font-size: 52px;
+    }
+
+  }
+
 }
 
 spot-post {

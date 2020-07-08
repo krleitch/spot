@@ -103,6 +103,12 @@ export const STRINGS = {
 
         },
 
+        POST_DETAILED: {
+
+          NO_POST: 'No post found with this link'
+
+        },
+
         COMMENTS_CONTAINER: {
 
           LOAD_MORE_COMMENTS: 'Load more comments',
