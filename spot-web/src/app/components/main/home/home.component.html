@@ -15,7 +15,7 @@
         </div>
 
         <ng-template #verify>
-          <div class="verify">
+          <div class="verify">`
             {{ STRINGS.VERIFY }}
             <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
               <span class="verify-text"> {{ STRINGS.VERIFY_SEND }} </span>
@@ -48,11 +48,16 @@
   </div>
   <ng-template #noLocation>
     <div *ngIf="(loadingLocation$ | async) !== false; else enableLocation" class="loading-location">
-      <span class="loading-location-text"> Location is loading </span>
+      <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
       <spot-spinner size="medium"></spot-spinner>
     </div>
     <ng-template #enableLocation>
-      <span class="nolocation"> {{ STRINGS.ENABLE_LOCATION }} </span>
+      <div class="no-location-container">
+        <span class="text"> {{ STRINGS.LOCATION_REQUIRED }} </span>
+        <span class="text"> {{ STRINGS.ENABLE_LOCATION }} </span>
+        <span class="material-icons icon"> location_off </span>
+        <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
+      </div>
     </ng-template>
   </ng-template>
 </div>

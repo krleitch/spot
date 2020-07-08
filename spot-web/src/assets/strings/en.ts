@@ -25,7 +25,10 @@ export const STRINGS = {
             // loading posts
             LOADING_POSTS: 'Fetching posts...',
 
-            ENABLE_LOCATION : 'Please enable location to see posts',
+            LOCATION_REQUIRED: 'Location is required to view local spots and add comments',
+            ENABLE_LOCATION : 'Please enable location in your browser to continue',
+            LOCATION_SAFE: 'Your location will never be given away',
+            LOADING_LOCATION: 'Loading location...',
 
             // Posts Toggle
             NEW: 'New',

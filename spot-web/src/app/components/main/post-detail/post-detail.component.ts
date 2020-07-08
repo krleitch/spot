@@ -43,35 +43,30 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
       this.myLocation = location;
 
-      // don't load unless we have a location
-      if ( this.myLocation ) {
+      this.route.paramMap.subscribe( p => {
 
-        this.route.paramMap.subscribe( p => {
+        this.commentId = p.get('commentId');
 
-          this.commentId = p.get('commentId');
+        const request: LoadSinglePostRequest = {
+          postLink: p.get('postId'),
+          location: this.myLocation
+        };
 
-          const request: LoadSinglePostRequest = {
-            postLink: p.get('postId'),
-            location: this.myLocation
-          };
+        this.post$ = this.postsService.getPost(request).pipe(
+          map( postSuccess =>  {
+            this.error = false;
+            if ( this.commentId ) {
+              postSuccess.post.startCommentId = this.commentId;
+            }
+            return postSuccess.post;
+          }),
+          catchError( (errorResponse: any) => {
+            this.error = true;
+            return throwError(errorResponse.error);
+          })
+        );
 
-          this.post$ = this.postsService.getPost(request).pipe(
-            map( postSuccess =>  {
-              this.error = false;
-              if ( this.commentId ) {
-                postSuccess.post.startCommentId = this.commentId;
-              }
-              return postSuccess.post;
-            }),
-            catchError( (errorResponse: any) => {
-              this.error = true;
-              return throwError(errorResponse.error);
-            })
-          );
-
-        });
-
-      }
+      });
 
     });
 

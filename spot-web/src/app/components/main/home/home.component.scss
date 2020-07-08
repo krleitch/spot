@@ -176,7 +176,22 @@ spot-create {
 
 }
 
-.nolocation {
-  font-size: 20px;
+.no-location-container {
+
+  display: flex;
+  flex-flow: column;
+  align-items: center;
   margin-top: 20px;
+
+  .text {
+    margin-top: 5px;
+    font-size: 18px;
+  }
+
+  .icon {
+    margin: 5px 0px;
+    font-size: 52px;
+    color: $button-highlight;
+  }
+
 }
