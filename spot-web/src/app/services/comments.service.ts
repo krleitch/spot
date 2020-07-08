@@ -39,21 +39,14 @@ export class CommentService {
 
   addComment(request: AddCommentRequest): Observable<AddCommentSuccess> {
 
-    const myRequest = { ...request };
+    const formData = new FormData();
+    formData.append('json', JSON.stringify(request));
 
-    if ( myRequest.image ) {
-      const formData = new FormData();
-      formData.append('image', myRequest.image);
-
-      return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
-        myRequest.image = response.imageSrc;
-        return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${myRequest.postId}/add`, myRequest);
-      }));
-
-    } else {
-      myRequest.image = null;
-      return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${myRequest.postId}/add`, myRequest);
+    if ( request.image ) {
+      formData.append('image', request.image);
     }
+
+    return this.http.post<AddCommentSuccess>(`${this.baseUrl}/comments/${request.postId}`, formData);
 
   }
 
@@ -70,21 +63,14 @@ export class CommentService {
 
   addReply(request: AddReplyRequest): Observable<AddReplySuccess> {
 
-    const myRequest = { ...request };
+    const formData = new FormData();
+    formData.append('json', JSON.stringify(request));
 
-    if ( myRequest.image ) {
-      const formData = new FormData();
-      formData.append('image', myRequest.image);
-
-      return this.http.post<any>(`${this.baseUrl}/image/upload`, formData).pipe(switchMap( response => {
-        myRequest.image = response.imageSrc;
-        return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${myRequest.postId}/${myRequest.commentId}/add`, myRequest);
-      }));
-
-    } else {
-      myRequest.image = null;
-      return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${myRequest.postId}/${myRequest.commentId}/add`, myRequest);
+    if ( request.image ) {
+      formData.append('image', request.image);
     }
+
+    return this.http.post<AddReplySuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`, formData);
 
   }
 

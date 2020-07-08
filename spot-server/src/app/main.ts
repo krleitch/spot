@@ -10,7 +10,6 @@ const posts = require('./routes/posts');
 const root = require('./routes/root');
 const accounts = require('./routes/accounts');
 const comments = require('./routes/comments');
-const image = require('./routes/image');
 const notifications = require('./routes/notifications');
 const friends = require('./routes/friends');
 const auth = require('./routes/authentication');
@@ -53,7 +52,6 @@ app.use('/comments', authentication.optionalAuth, comments);
 
 // Required Auth
 app.use('/accounts', authentication.requiredAuth, accounts);
-app.use('/image', authentication.requiredAuth, image);
 app.use('/notifications', authentication.requiredAuth, notifications);
 app.use('/friends', authentication.requiredAuth, friends);
 
