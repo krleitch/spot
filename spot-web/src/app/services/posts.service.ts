@@ -40,21 +40,14 @@ export class PostsService {
 
   addPost(request: AddPostRequest): Observable<AddPostSuccess> {
 
-    const myRequest = { ...request } ;
+    const formData = new FormData();
+    formData.append('json', JSON.stringify(request));
 
-    if ( myRequest.image ) {
-      const formData = new FormData();
-      formData.append('image', myRequest.image);
-
-      return this.http.post<any>(`${this.baseUrl}/image/upload/posts`, formData).pipe(switchMap( response => {
-        myRequest.image = response.imageSrc;
-        return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, myRequest);
-      }));
-
-    } else {
-      myRequest.image = null;
-      return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, myRequest);
+    if ( request.image ) {
+      formData.append('image', request.image);
     }
+    return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, formData);
+
   }
 
   deletePost(request: DeletePostRequest): Observable<DeletePostSuccess> {

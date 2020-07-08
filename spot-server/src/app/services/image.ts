@@ -32,9 +32,7 @@ const upload = multer({
             cb(null, {originalname: file.originalname.substr(0,255)});
         },
         key: function (req: any, file: any, cb: any) {
-            const route = req.route.path.split('upload/')[1] + '/';
-            const name = file.originalname.substr(0, 255) + '-' + Date.now().toString();
-            cb(null, route + name)
+            cb(null, req.filename)
         }
     })
 });

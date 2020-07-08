@@ -12,7 +12,15 @@ router.use(function timeLog (req: any, res: any, next: any) {
 // Upload a post photo
 router.post('/upload/posts', function (req: any, res: any) {
 
+    // check if req.body or form data
+
+    console.log('FIRE')
+    req.filename = "BIG TEST"
+
     singleUpload(req, res, function(err: any) {
+
+        console.log('ME')
+        console.log(JSON.parse(req.body.json))
 
         if (err) {
             console.log(err);
@@ -22,6 +30,8 @@ router.post('/upload/posts', function (req: any, res: any) {
         return res.json({'imageSrc': req.file.location});
 
     });
+
+
 
 });
 

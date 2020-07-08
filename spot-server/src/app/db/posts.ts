@@ -75,8 +75,7 @@ function getPostByIdNoAccount(postId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function addPost(content: string, location: any, imageSrc: string, link: string, accountId: string, geolocation: string): Promise<any> {
-    var postId = uuid.v4();
+function addPost(postId: string, content: string, location: any, imageSrc: string, link: string, accountId: string, geolocation: string): Promise<any> {
     var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, likes, dislikes, comments, geolocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, link, imageSrc, 0, 0, 0, geolocation];
     return db.query(sql, values).then( (rows: any) => {

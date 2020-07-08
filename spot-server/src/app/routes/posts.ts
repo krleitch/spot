@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const uuid = require('uuid');
 
 // db
 const posts = require('../db/posts');
@@ -9,6 +10,8 @@ const locations = require('../db/locations');
 // services
 const postsService = require('../services/posts');
 const locationsService = require('../services/locations');
+const upload = require('../services/image');
+const singleUpload = upload.single('image');
 
 // errors
 const PostsError = require('@exceptions/posts');
@@ -23,6 +26,7 @@ const rateLimiter = require('@src/app/rateLimiter');
 const POST_CONSTANTS = require('@constants/posts');
 const report_constants = require('@constants/report');
 const REPORT_CONSTANTS = report_constants.REPORT_CONSTANTS;
+
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -72,27 +76,42 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
     }
 
     const accountId = req.user.id;
-    const { content, location, image } = req.body;
+    const postId = uuid.v4();
 
-    // You must either have some text or an image
-    if ( content.length == 0 && !image ) {
-        return next(new PostsError.NoPostContent(400));
-    }
+    // set the filename for aws s3 bucket
+    req.filename = 'posts/' + Date.now().toString();
 
-    const contentError = postsService.validContent(content);
-    if ( contentError ) {
-        return next(contentError);
-    }
+    singleUpload(req, res, async function(err: any) {
 
-    const link = await postsService.generateLink();
+        if (err) {
+            console.log(err);
+            return res.status(422).send('Error uploading image');
+        }
 
-    locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
-        posts.addPost(content, location, image, link, accountId, geolocation).then((rows: any) => {
-            rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude);
-            const response = { post: rows[0] }
-            res.status(200).json(response);
-        }, (err: any) => {
-            return next(new PostsError.PostError(500));
+        const { content, location } = JSON.parse(req.body.json)
+        const image = req.file ? req.file.location: null
+
+        // You must either have some text or an image
+        if ( content.length == 0 && !image ) {
+            return next(new PostsError.NoPostContent(400));
+        }
+
+        const contentError = postsService.validContent(content);
+        if ( contentError ) {
+            return next(contentError);
+        }
+
+        const link = await postsService.generateLink();
+
+        locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
+            posts.addPost(postId, content, location, image, link, accountId, geolocation).then((rows: any) => {
+                rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude);
+                const response = { post: rows[0] }
+                res.status(200).json(response);
+            }, (err: any) => {
+                return next(new PostsError.PostError(500));
+            });
+
         });
 
     });
