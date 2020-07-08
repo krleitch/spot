@@ -24,7 +24,8 @@
           </ng-template>
         </div>
         <div *ngIf="accountMetadata$ | async as accountMetadata" class="distance">
-          {{ getDistance(post.distance, accountMetadata.distance_unit ) }} - {{ post.geolocation }}
+          <span *ngIf="post.distance"> {{ getDistance(post.distance, accountMetadata.distance_unit ) }} - </span>
+          {{ post.geolocation }}
         </div>
       </div>
     </div>

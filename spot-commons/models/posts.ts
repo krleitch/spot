@@ -5,7 +5,7 @@ export interface Post {
     creation_date: string;
     longitude: number;
     latitude: number;
-    distance: number;
+    distance?: number;
     inRange: boolean;
     geolocation: string;
     content: string;

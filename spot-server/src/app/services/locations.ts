@@ -33,8 +33,11 @@ const checkLocation = async (req: any, res: any, next: any) => {
 		await verifyLocation( accountId, latitude, longitude ).then( (valid: boolean) => {
 
 			if ( !valid ) {
-
+				// return invalid location error
+				// return (next()
 			}
+
+			// update location
 
 		});
 
@@ -82,8 +85,12 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 function addDistanceToRows(rows: any[], latitude: number, longitude: number): any[] {
 	return rows.map( (row: any) => {
 		let newRow = row
-		newRow.distance = distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-		newRow.inRange = newRow.distance <= 10;
+		if ( latitude && longitude ) {
+			newRow.distance = distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
+			newRow.inRange = newRow.distance <= 10;
+		} else {
+			newRow.inRange = false;
+		}
 		delete newRow.latitude;
 		delete newRow.longitude;
 		return newRow;

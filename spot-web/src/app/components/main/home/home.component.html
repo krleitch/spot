@@ -8,7 +8,7 @@
   <div class="new" [ngClass]="{'selectedSort': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
 </div>
 <div class="container">
-  <div *ngIf="locationEnabled; else noLocation" class="content">
+  <div *ngIf="myLocation || postlocation == 'global'; else noLocation" class="content">
       <div class="max-width" *ngIf="account$ | async as account">
         <div class="max-width" *ngIf="account.verified_date !== null; else verify">
           <spot-create></spot-create>
@@ -47,7 +47,7 @@
       </div>
   </div>
   <ng-template #noLocation>
-    <div *ngIf="(loadingLocation$ | async) !== null; else enableLocation" class="loading-location">
+    <div *ngIf="(loadingLocation$ | async) !== false; else enableLocation" class="loading-location">
       <span class="loading-location-text"> Location is loading </span>
       <spot-spinner size="medium"></spot-spinner>
     </div>

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
@@ -18,7 +18,9 @@ import { Location, AccountMetadata } from '@models/accounts';
   templateUrl: './activity.component.html',
   styleUrls: ['./activity.component.scss']
 })
-export class ActivityComponent implements OnInit {
+export class ActivityComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   STRINGS = STRINGS.MAIN.ACTIVITY;
 
@@ -50,40 +52,41 @@ export class ActivityComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
 
-    this.location$.subscribe( (location: Location) => {
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
 
       this.myLocation = location;
-      if ( this.myLocation ) {
 
-        const activityPostRequest: ActivityPostRequest = {
-          date: new Date().toString(),
-          limit: this.postLimit,
-          location: this.myLocation
-        };
+      const activityPostRequest: ActivityPostRequest = {
+        date: new Date().toString(),
+        limit: this.postLimit,
+        location: this.myLocation
+      };
 
-        this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
-          map( (activitySuccess: ActivityPostSuccess ) => {
-            this.postLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
-            return activitySuccess.activity;
-          })
-        );
+      this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
+        map( (activitySuccess: ActivityPostSuccess ) => {
+          this.postLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
+          return activitySuccess.activity;
+        })
+      );
 
-        const activityCommentRequest: ActivityCommentRequest = {
-          date: new Date().toString(),
-          limit: this.postLimit
-        };
+      const activityCommentRequest: ActivityCommentRequest = {
+        date: new Date().toString(),
+        limit: this.postLimit
+      };
 
-        this.commentActivity$ = this.commentService.getActivity( activityCommentRequest ).pipe(
-          map( (activitySuccess: ActivityCommentSuccess ) => {
-            this.commentLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
-            return activitySuccess.activity;
-          })
-        );
-
-      }
+      this.commentActivity$ = this.commentService.getActivity( activityCommentRequest ).pipe(
+        map( (activitySuccess: ActivityCommentSuccess ) => {
+          this.commentLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
+          return activitySuccess.activity;
+        })
+      );
 
     });
 
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   setTab(tab: string) {

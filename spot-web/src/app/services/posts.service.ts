@@ -21,8 +21,10 @@ export class PostsService {
 
   getPosts(request: LoadPostRequest): Observable<LoadPostSuccess> {
     let params = new HttpParams();
-    params = params.append('latitude', request.location.latitude.toString());
-    params = params.append('longitude', request.location.longitude.toString());
+    if ( request.location ) {
+      params = params.append('latitude', request.location.latitude.toString());
+      params = params.append('longitude', request.location.longitude.toString());
+    }
     params = params.append('location', request.filter.location);
     params = params.append('sort', request.filter.sort);
     params = params.append('offset', request.offset.toString());
@@ -33,8 +35,10 @@ export class PostsService {
 
   getPost(request: LoadSinglePostRequest): Observable<LoadSinglePostSuccess> {
     let params = new HttpParams();
-    params = params.append('latitude', request.location.latitude.toString());
-    params = params.append('longitude', request.location.longitude.toString());
+    if ( request.location ) {
+      params = params.append('latitude', request.location.latitude.toString());
+      params = params.append('longitude', request.location.longitude.toString());
+    }
     return this.http.get<LoadSinglePostSuccess>(`${this.baseUrl}/posts/${request.postLink}`, { params });
   }
 
@@ -66,8 +70,10 @@ export class PostsService {
     let params = new HttpParams();
     params = params.append('date', request.date);
     params = params.append('limit', request.limit.toString());
-    params = params.append('latitude', request.location.latitude.toString());
-    params = params.append('longitude', request.location.longitude.toString());
+    if ( request.location ) {
+      params = params.append('latitude', request.location.latitude.toString());
+      params = params.append('longitude', request.location.longitude.toString());
+    }
     return this.http.get<ActivityPostSuccess>(`${this.baseUrl}/posts/activity`, { params });
   }
 

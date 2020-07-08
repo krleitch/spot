@@ -59,6 +59,13 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         location: action.request.location
       };
     }
+    case ActionTypes.LOCATION_FAILURE: {
+      return {
+        ...state,
+        loadingLocation: false,
+        location: null
+      };
+    }
     case ActionTypes.ACCOUNT_SUCCESS: {
 
       if ( action.response.account.facebook_id ) {

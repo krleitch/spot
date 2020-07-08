@@ -42,22 +42,22 @@ router.get('/', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     
+    // latitude and longitude are optional if location is global
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
+
     const location = req.query.location;
     const sort = req.query.sort;
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
     const date = req.query.date;
 
-    locations.addLocation( accountId, latitude, longitude ).then( () => {
-        posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
-            // add the distance
-            rows = locationsService.addDistanceToRows(rows, latitude, longitude);
-            res.status(200).json({ posts: rows });
-        }, (err: any) => {
-            res.status(500).send('Error getting posts');
-        });
+    posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
+        // add the distance
+        rows = locationsService.addDistanceToRows(rows, latitude, longitude);
+        res.status(200).json({ posts: rows });
+    }, (err: any) => {
+        res.status(500).send('Error getting posts');
     });
 
 });
@@ -225,6 +225,8 @@ router.get('/:postLink',  function (req: any, res: any) {
     // getting individual posts does not need an account
 
     const postLink = req.params.postLink;
+
+    // optional
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
 

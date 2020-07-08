@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
 import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess,
          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess,
-         LoadLocationRequest, VerifyConfirmRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse } from '@models/accounts';
+         LoadLocationRequest, VerifyConfirmRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse, LocationFailure } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -31,6 +31,7 @@ export enum ActionTypes {
   GET_METADATA_SUCCESS = '[Accounts] Get Metadata Success',
   LOAD_LOCATION = '[Accounts] Load Location',
   SET_LOCATION = '[Accounts] Set Location',
+  LOCATION_FAILURE = '[Accounts] Location Failure',
   VERIFY_REQUEST = '[Accounts] Verify Request',
   VERIFY_SUCCESS = '[Accounts] Verify Success',
   VERIFY_CONFIRM_REQUEST = '[Accounts] Verify Confrim Request',
@@ -115,6 +116,11 @@ export class SetLocationAction implements Action {
   constructor(public request: SetLocationRequest) {}
 }
 
+export class LocationFailureAction implements Action {
+  readonly type = ActionTypes.LOCATION_FAILURE;
+  constructor(public request: LocationFailure) {}
+}
+
 export class UpdateUsernameAction implements Action {
   readonly type = ActionTypes.UPDATE_USERNAME_REQUEST;
   constructor(public request: UpdateUsernameRequest) {}
@@ -183,4 +189,4 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       GetAccountMetadataRequestSuccess | LoadLocationAction |
                       UpdateUsernameFailureAction | VerifyRequestAction |
                       VerifySuccessAction | VerifyConfirmRequestAction |
-                      VerifyConfirmSuccessAction;
+                      VerifyConfirmSuccessAction | LocationFailureAction;

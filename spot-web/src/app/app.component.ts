@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '@store';
-import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest, LoadLocationRequest } from '@models/accounts';
+import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +11,7 @@ import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest, LoadL
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+
   title = 'spot';
 
   constructor(private store$: Store<RootStoreState.State>) { }
@@ -99,17 +100,35 @@ export class AppComponent implements OnInit {
           // TODO send login location
           new AccountsActions.SetLocationAction(request)
         );
-        
+
       }, this.locationError.bind(this));
     } else {
       // browser doesnt support location
+      // TODO: seperate error issue for this
+
+      const request: LocationFailure = {
+        error: 'browser support'
+      };
+      this.store$.dispatch(
+        new AccountsActions.LocationFailureAction(request)
+      );
+
     }
   }
 
   locationError(error) {
+
     // error.code of error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT
     // hide the content
     // TODO: timeout errors for location can be an issue
+
+    const request: LocationFailure = {
+      error: error.code
+    };
+    this.store$.dispatch(
+      new AccountsActions.LocationFailureAction(request)
+    );
+
   }
 
 }

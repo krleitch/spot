@@ -30,6 +30,10 @@ export interface SetLocationRequest {
     location: Location
 }
 
+export interface LocationFailure {
+    error: string;
+}
+
 // Verify account
 export interface VerifyRequest {
 
