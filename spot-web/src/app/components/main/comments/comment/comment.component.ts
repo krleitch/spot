@@ -29,7 +29,7 @@ export class CommentComponent implements OnInit {
   STRINGS = STRINGS.MAIN.COMMENTS;
 
   // Show ... for content
-  MAX_SHOW_COMMENT_LENGTH = 100;
+  MAX_SHOW_COMMENT_LENGTH = 75;
   expanded = false;
 
   @ViewChild('tag') tag: ElementRef;

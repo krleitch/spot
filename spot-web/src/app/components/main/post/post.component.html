@@ -9,25 +9,31 @@
       </div>
     </div>
     <div class="content-container">
-      <div class="content" [ngClass]="{'content-expanded': expanded}">{{getContent()}}</div>
-      <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
-        <img [src]="post.image_src" />
-      </div>
-      <div class="options">
-        <span class="comment-number"> {{ post.comments }} {{ STRINGS.COMMENTS }} </span>
-        <div *ngIf="expandable()">
-          <div *ngIf="!expanded; else notExpanded">
-              <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
-          </div>
+
+      <div class="content" [ngClass]="{'content-expanded': expanded}">
+        {{getContent()}}
+        <span *ngIf="expandable()">
+          <span *ngIf="!expanded; else notExpanded">
+            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+          </span>
           <ng-template #notExpanded>
               <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
           </ng-template>
-        </div>
+        </span>
+      </div>
+
+      <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
+        <img [src]="post.image_src" />
+      </div>
+
+      <div class="options">
+        <span class="comment-number"> {{ post.comments }} {{ STRINGS.COMMENTS }} </span>
         <div *ngIf="accountMetadata$ | async as accountMetadata" class="distance">
           <span *ngIf="post.distance"> {{ getDistance(post.distance, accountMetadata.distance_unit ) }} - </span>
           {{ post.geolocation }}
         </div>
       </div>
+
     </div>
     <div class="right-bar">
       <div #options>

@@ -37,9 +37,6 @@
 
         {{ getContent() }}
 
-        <div class="image" (click)="openModal('spot-image-modal', comment.image_src)" *ngIf="comment.image_src != null">
-          <img [src]="comment.image_src" />
-        </div>
         <span *ngIf="expandable()">
           <span *ngIf="!expanded; else notExpanded">
             <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
@@ -48,6 +45,11 @@
               <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
           </ng-template>
         </span>
+
+        <div class="image" (click)="openModal('spot-image-modal', comment.image_src)" *ngIf="comment.image_src != null">
+          <img [src]="comment.image_src" />
+        </div>
+
       </div>
       <div [hidden]="!showAddReply" class="add" *ngIf="(comment.tag.tagged || inRange) && (isAuthenticated$ | async)">
         <div class="editor">

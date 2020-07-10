@@ -57,6 +57,11 @@
     white-space: pre-wrap;
 }
 
+// Click see more
+.content-expanded {
+  height: auto;
+}
+
 .image {
   display: flex;
   justify-content: center;
@@ -70,10 +75,7 @@ img {
   max-height: 500px;
 }
 
-// Click see more
-.content-expanded {
-    height: auto;
-}
+
 
 .options {
     display: flex;
