@@ -48,19 +48,47 @@
     padding-top: 5px;
 }
 
-.content {
-    font-size: 14px;
-    line-height: 1.2em;
-    overflow: hidden;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    white-space: pre-wrap;
+.expand-container {
+
+    .text {
+      font-size: 14px;
+      line-height: 1.2em;
+      overflow: hidden;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .truncate-overflow {
+      --lh: 1.4rem;
+      --max-lines: 3;
+      position: relative;
+      max-height: calc(1.2em * 3);
+      overflow: hidden;
+      padding-right: 1rem; /* space for ellipsis */
+    }
+    .truncate-overflow::before {
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      width: 1rem;
+      content: "...";
+      bottom: 0;
+      right: 0;
+    }
+    .truncate-overflow::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      width: 1rem;
+      height: 1rem;
+      background: white;
+    }
+
 }
 
-// Click see more
-.content-expanded {
-  height: auto;
-}
+
+
 
 .image {
   display: flex;

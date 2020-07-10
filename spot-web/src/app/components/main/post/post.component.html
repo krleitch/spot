@@ -10,8 +10,10 @@
     </div>
     <div class="content-container">
 
-      <div class="content" [ngClass]="{'content-expanded': expanded}">
-        {{getContent()}}
+      <div class="expand-container">
+        <div class="text" [ngClass]="{'truncate-overflow': !expanded}">
+          {{getContent()}}
+        </div>
         <span *ngIf="expandable()">
           <span *ngIf="!expanded; else notExpanded">
             <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
