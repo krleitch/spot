@@ -51,22 +51,19 @@
 .expand-container {
 
     .text {
-      font-size: 14px;
       line-height: 1.2em;
-      overflow: hidden;
       overflow-wrap: break-word;
       word-break: break-word;
       white-space: pre-wrap;
     }
 
     .truncate-overflow {
-      --lh: 1.4rem;
-      --max-lines: 3;
       position: relative;
-      max-height: calc(1.2em * 3);
+      max-height: 3.6em;
       overflow: hidden;
-      padding-right: 1rem; /* space for ellipsis */
+      padding-right: 1em; /* space for ellipsis */
     }
+
     .truncate-overflow::before {
       display: flex;
       justify-content: center;
@@ -76,19 +73,18 @@
       bottom: 0;
       right: 0;
     }
+
     .truncate-overflow::after {
       content: "";
       position: absolute;
       right: 0;
-      width: 1rem;
-      height: 1rem;
+      margin-top: 0.2em;
+      width: 1em;
+      height: 1em;
       background: white;
     }
 
 }
-
-
-
 
 .image {
   display: flex;
