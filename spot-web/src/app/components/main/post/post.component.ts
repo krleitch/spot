@@ -171,7 +171,7 @@ export class PostComponent implements OnInit {
   expandable(): boolean {
     // return this.post.content.length > this.MAX_POST_LENGTH;
     console.log(this.content.nativeElement.scrollHeight, this.content.nativeElement.clientHeight)
-    return this.content.nativeElement.scrollHeight > this.content.nativeElement.clientHeight;
+    return this.content.nativeElement.scrollHeight > this.content.nativeElement.clientHeight || this.expanded;
   }
 
   setExpanded(value: boolean) {

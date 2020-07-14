@@ -15,11 +15,11 @@
           {{getContent()}}
         </div>
         <span *ngIf="expandable()">
-          <span *ngIf="!expanded; else notExpanded">
-            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+          <span *ngIf="expanded; else notExpanded">
+            <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
           </span>
           <ng-template #notExpanded>
-              <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
           </ng-template>
         </span>
       </div>
