@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -25,6 +25,7 @@ export class PostComponent implements OnInit {
   @Input() post: Post;
   @ViewChild('options') options;
   @ViewChild('share') share;
+  @ViewChild('content') content: ElementRef;
 
   STRINGS = STRINGS.MAIN.POST;
 
@@ -168,7 +169,9 @@ export class PostComponent implements OnInit {
 
   // For show more on post content
   expandable(): boolean {
-    return this.post.content.length > this.MAX_POST_LENGTH;
+    // return this.post.content.length > this.MAX_POST_LENGTH;
+    console.log(this.content.nativeElement.scrollHeight, this.content.nativeElement.clientHeight)
+    return this.content.nativeElement.scrollHeight > this.content.nativeElement.clientHeight;
   }
 
   setExpanded(value: boolean) {

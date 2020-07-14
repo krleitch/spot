@@ -11,7 +11,7 @@
     <div class="content-container">
 
       <div class="expand-container">
-        <div class="text" [ngClass]="{'truncate-overflow': !expanded}">
+        <div #content class="text" [ngClass]="{'truncate-overflow': !expanded}">
           {{getContent()}}
         </div>
         <span *ngIf="expandable()">
