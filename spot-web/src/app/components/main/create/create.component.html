@@ -8,14 +8,9 @@
       </div>
   </div>
 
-  <div *ngIf="createError$ | async as createError; else clientError" class="createError">
-    {{ createError.message }}
-  </div>
-  <ng-template #clientError>
-    <span *ngIf="createError" class="createError">
-      {{ createError }}
-    </span>
-  </ng-template>
+  <span *ngIf="createError" class="createError">
+    {{ createError }}
+  </span>
 
   <div class="option-bar">
     <div class="file-options" *ngIf="imgSrc != null">

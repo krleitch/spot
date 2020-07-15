@@ -26,6 +26,14 @@ export class InvalidPostLength extends SpotError {
     }
 }
 
+export class InvalidPostLineLength extends SpotError {
+  constructor(statusCode, maxLength) {
+    super(POSTS_ERROR_MESSAGES.INVALID_POST_LINE_LENGTH, statusCode);
+    this.name = "InvalidPostLineLength";
+    this.body = { max: maxLength }
+  }
+}
+
 export class NoPostContent extends SpotError {
     constructor(statusCode) {
       super(POSTS_ERROR_MESSAGES.NO_CONTENT, statusCode);
@@ -37,5 +45,12 @@ export class AccountNotVerified extends SpotError {
   constructor(statusCode) {
     super(POSTS_ERROR_MESSAGES.VERIFY, statusCode);
     this.name = "AccountNotVerified";
+  }
+}
+
+export class PostImage extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.IMAGE, statusCode);
+    this.name = "PostImage";
   }
 }

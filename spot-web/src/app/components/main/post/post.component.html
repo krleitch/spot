@@ -13,15 +13,16 @@
       <div class="expand-container">
         <div #content class="text" [ngClass]="{'truncate-overflow': !expanded}">
           {{getContent()}}
-        </div>
-        <span *ngIf="expandable()">
-          <span *ngIf="expanded; else notExpanded">
-            <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+          <span *ngIf="expandable()">
+            <span *ngIf="expanded; else notExpanded">
+              <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+            </span>
+            <ng-template #notExpanded>
+              <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+            </ng-template>
           </span>
-          <ng-template #notExpanded>
-            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
-          </ng-template>
-        </span>
+        </div>
+
       </div>
 
       <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">

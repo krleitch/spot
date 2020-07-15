@@ -23,7 +23,8 @@ const ErrorHandler = require('@src/app/errorHandler');
 const rateLimiter = require('@src/app/rateLimiter');
 
 // constants
-const POST_CONSTANTS = require('@constants/posts');
+const posts_constants = require('@constants/posts');
+const POSTS_CONSTANTS = posts_constants.POSTS_CONSTANTS;
 const report_constants = require('@constants/report');
 const REPORT_CONSTANTS = report_constants.REPORT_CONSTANTS;
 
@@ -83,8 +84,9 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 
     singleUpload(req, res, async function(err: any) {
 
+        // error uploading image
         if (err) {
-            return res.status(422).send('Error uploading image');
+            return next(new PostsError.PostImage(422));
         }
 
         let { content, location } = JSON.parse(req.body.json)
@@ -92,6 +94,11 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 
         // remove leading and trailing whitespaces
         content = content.trim();
+
+        // check if line length matches
+        if ( content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_LENGTH ) {
+            return next(new PostsError.InvalidPostLineLength(400, POSTS_CONSTANTS.MAX_LINE_LENGTH))
+        }
 
         // You must either have some text or an image
         if ( content.length == 0 && !image ) {
@@ -113,7 +120,6 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
             }, (err: any) => {
                 return next(new PostsError.PostError(500));
             });
-
         });
 
     });
