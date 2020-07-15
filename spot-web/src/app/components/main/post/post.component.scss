@@ -57,32 +57,32 @@
       white-space: pre-wrap;
     }
 
-    .truncate-overflow {
-      position: relative;
-      max-height: 3.6em;
-      overflow: hidden;
-      padding-right: 1em; /* space for ellipsis */
-    }
+    // .truncate-overflow {
+    //   position: relative;
+    //   max-height: 3.6em;
+    //   overflow: hidden;
+    //   padding-right: 1em; /* space for ellipsis */
+    // }
 
-    .truncate-overflow::before {
-      display: flex;
-      justify-content: center;
-      position: absolute;
-      width: 1rem;
-      content: "...";
-      bottom: 0;
-      right: 0;
-    }
+    // .truncate-overflow::before {
+    //   display: flex;
+    //   justify-content: center;
+    //   position: absolute;
+    //   width: 1rem;
+    //   content: "...";
+    //   bottom: 0;
+    //   right: 0;
+    // }
 
-    .truncate-overflow::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      margin-top: 0.2em;
-      width: 1em;
-      height: 1em;
-      background: white;
-    }
+    // .truncate-overflow::after {
+    //   content: "";
+    //   position: absolute;
+    //   right: 0;
+    //   margin-top: 0.2em;
+    //   width: 1em;
+    //   height: 1em;
+    //   background: white;
+    // }
 
 }
 

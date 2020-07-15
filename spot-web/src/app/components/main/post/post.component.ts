@@ -8,7 +8,6 @@ import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
 import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, ReportPostRequest } from '@models/posts';
 import { Location, AccountMetadata } from '@models/accounts';
-import { PostsService } from '@services/posts.service';
 import { ModalService } from '@services/modal.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 
@@ -23,8 +22,7 @@ export class PostComponent implements OnInit {
 
   @Input() detailed: boolean;
   @Input() post: Post;
-  @ViewChild('options') options;
-  @ViewChild('share') share;
+  @ViewChild('options') options: ElementRef;
   @ViewChild('content') content: ElementRef;
 
   STRINGS = STRINGS.MAIN.POST;
@@ -34,12 +32,13 @@ export class PostComponent implements OnInit {
   myLocation: Location;
 
   MAX_POST_LENGTH = 300;
+  MAX_LINE_LENGTH = 3;
   expanded = false;
 
   optionsEnabled = false;
-  showShare = false;
 
-  constructor(private store$: Store<RootStoreState.State>, private router: Router, private postsService: PostsService,
+  constructor(private store$: Store<RootStoreState.State>,
+              private router: Router,
               private modalService: ModalService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
@@ -63,10 +62,6 @@ export class PostComponent implements OnInit {
   offClickHandler(event: MouseEvent) {
     if (!this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
-    }
-
-    if (!this.share.nativeElement.contains(event.target)) {
-      this.showShare = false;
     }
   }
 
@@ -135,7 +130,54 @@ export class PostComponent implements OnInit {
     }
   }
 
+  // For show more on post content
+  expandable(): boolean {
+    // return this.post.content.length > this.MAX_POST_LENGTH;
+
+    if ( this.post.content.split(/\r\n|\r|\n/).length > this.MAX_LINE_LENGTH ) {
+      return true;
+    }
+
+    if ( this.post.content.length > this.MAX_POST_LENGTH ) {
+      return true;
+    }
+
+    return false;
+
+  }
+
   getContent(): string {
+
+    if ( !this.expanded ) {
+
+      let textArrays = this.post.content.split(/\r\n|\r|\n/);
+      let truncatedContent = '';
+
+      for (let i = 0; i < textArrays.length; i++ ) {
+
+        if ( i < this.MAX_LINE_LENGTH ) {
+
+          if ( truncatedContent.length + textArrays[i].length > this.MAX_POST_LENGTH ) {
+            truncatedContent = textArrays[i].substring(0, this.MAX_POST_LENGTH - truncatedContent.length);
+            textArrays = textArrays.slice(this.MAX_LINE_LENGTH - 1);
+            break;
+          } else {
+            truncatedContent += textArrays[i];
+            if ( i !== textArrays.length - 1 ) {
+              truncatedContent += '\n';
+            }
+          }
+
+        }
+
+      }
+      return truncatedContent + '...';
+    } else {
+      return this.post.content;
+    }
+
+    console.log(this.post.content,  this.post.content.split(/\r\n|\r|\n/).length)
+
     // https://css-tricks.com/line-clampin/
     return this.post.content;
     if (this.expandable() && !this.expanded) {
@@ -167,24 +209,8 @@ export class PostComponent implements OnInit {
     }
   }
 
-  // For show more on post content
-  expandable(): boolean {
-    // return this.post.content.length > this.MAX_POST_LENGTH;
-    console.log(this.content.nativeElement.scrollHeight, this.content.nativeElement.clientHeight)
-    return this.content.nativeElement.scrollHeight > this.content.nativeElement.clientHeight || this.expanded;
-  }
-
   setExpanded(value: boolean) {
     this.expanded = value;
-  }
-
-  // Share events
-  toggleShare() {
-    this.showShare = !this.showShare;
-  }
-
-  onClose(event: any) {
-    this.showShare = false;
   }
 
   openModal(id: string, data?: any) {

@@ -100,7 +100,7 @@ export class CreateComponent implements OnInit {
     let bodyChildren = body[0].children;
     // let liElements = [];
 
-    let text = body[0].childNodes[0].nodeValue;
+    let text = body[0].childNodes[0].nodeValue || '';
 
     for (let i = 0; i < bodyChildren.length; i++) {
       if ( i === 0 ) {

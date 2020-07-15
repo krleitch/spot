@@ -84,12 +84,14 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
     singleUpload(req, res, async function(err: any) {
 
         if (err) {
-            console.log(err);
             return res.status(422).send('Error uploading image');
         }
 
-        const { content, location } = JSON.parse(req.body.json)
+        let { content, location } = JSON.parse(req.body.json)
         const image = req.file ? req.file.location: null
+
+        // remove leading and trailing whitespaces
+        content = content.trim();
 
         // You must either have some text or an image
         if ( content.length == 0 && !image ) {
