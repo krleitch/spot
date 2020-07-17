@@ -1,16 +1,18 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { take } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
-import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, ReportPostRequest } from '@models/posts';
+import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post } from '@models/posts';
 import { Location, AccountMetadata } from '@models/accounts';
 import { ModalService } from '@services/modal.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 
+import { POSTS_CONSTANTS } from '@constants/posts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -18,22 +20,23 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss']
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
   @Input() post: Post;
   @ViewChild('options') options: ElementRef;
-  @ViewChild('content') content: ElementRef;
 
   STRINGS = STRINGS.MAIN.POST;
+  POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   location$: Observable<Location>;
   accountMetadata$: Observable<AccountMetadata>;
-  myLocation: Location;
+  location: Location;
 
-  MAX_POST_LENGTH = 300;
-  MAX_LINE_LENGTH = 3;
   expanded = false;
+  isExpandable = false;
 
   optionsEnabled = false;
 
@@ -53,10 +56,19 @@ export class PostComponent implements OnInit {
       select(AccountsStoreSelectors.selectAccountsLocation)
     );
 
-    this.location$.subscribe( (location: Location) => {
-      this.myLocation = location;
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
+      this.location = location;
     });
 
+    if ( this.post.content.split(/\r\n|\r|\n/).length > this.POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
+         || this.post.content.length > this.POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+      this.isExpandable = true;
+    }
+
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   offClickHandler(event: MouseEvent) {
@@ -65,8 +77,12 @@ export class PostComponent implements OnInit {
     }
   }
 
-  setOptions(value) {
+  setOptions(value): void {
     this.optionsEnabled = value;
+  }
+
+  openPost(): void {
+    this.router.navigateByUrl('posts/' + this.post.link);
   }
 
   deletePost() {
@@ -90,10 +106,6 @@ export class PostComponent implements OnInit {
 
     });
 
-  }
-
-  openPost() {
-    this.router.navigateByUrl('posts/' + this.post.link);
   }
 
   getTime() {
@@ -130,61 +142,32 @@ export class PostComponent implements OnInit {
     }
   }
 
-  // For show more on post content
-  expandable(): boolean {
-    // return this.post.content.length > this.MAX_POST_LENGTH;
-
-    if ( this.post.content.split(/\r\n|\r|\n/).length > this.MAX_LINE_LENGTH ) {
-      return true;
-    }
-
-    if ( this.post.content.length > this.MAX_POST_LENGTH ) {
-      return true;
-    }
-
-    return false;
-
-  }
-
   getContent(): string {
 
-    if ( !this.expanded ) {
+    if ( this.expanded || !this.isExpandable ) {
+      return this.post.content;
+    }
 
-      let textArrays = this.post.content.split(/\r\n|\r|\n/);
-      let truncatedContent = '';
+    const textArrays = this.post.content.split(/\r\n|\r|\n/);
+    let truncatedContent = '';
 
-      for (let i = 0; i < textArrays.length; i++ ) {
+    for (let i = 0; i < textArrays.length && i < this.POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
 
-        if ( i < this.MAX_LINE_LENGTH ) {
-
-          if ( truncatedContent.length + textArrays[i].length > this.MAX_POST_LENGTH ) {
-            truncatedContent = textArrays[i].substring(0, this.MAX_POST_LENGTH - truncatedContent.length);
-            textArrays = textArrays.slice(this.MAX_LINE_LENGTH - 1);
-            break;
-          } else {
-            truncatedContent += textArrays[i];
-            if ( i !== textArrays.length - 1 ) {
-              truncatedContent += '\n';
-            }
-          }
-
+      if ( truncatedContent.length + textArrays[i].length > this.POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+        truncatedContent = textArrays[i].substring(0, this.POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
+        break;
+      } else {
+        truncatedContent += textArrays[i];
+        // Dont add newline for last line or last line before line length reached
+        if ( i !== textArrays.length - 1 && i !== this.POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
+          truncatedContent += '\n';
         }
-
       }
-      return truncatedContent + '...';
-    } else {
-      return this.post.content;
+
     }
 
-    console.log(this.post.content,  this.post.content.split(/\r\n|\r|\n/).length)
+    return truncatedContent + ' ...';
 
-    // https://css-tricks.com/line-clampin/
-    return this.post.content;
-    if (this.expandable() && !this.expanded) {
-      return this.post.content.substring(0, this.MAX_POST_LENGTH) + ' ...';
-    } else {
-      return this.post.content;
-    }
   }
 
   like() {
@@ -209,21 +192,19 @@ export class PostComponent implements OnInit {
     }
   }
 
-  setExpanded(value: boolean) {
+  setExpanded(value: boolean): void {
     this.expanded = value;
   }
 
-  openModal(id: string, data?: any) {
-
+  openModal(id: string, data?: any): void {
     if ( data ) {
       this.modalService.open(id, data);
     } else {
       this.modalService.open(id);
     }
-
   }
 
-  closeModal(id: string) {
+  closeModal(id: string): void {
     this.modalService.close(id);
   }
 

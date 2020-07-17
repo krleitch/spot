@@ -1,5 +1,6 @@
 <div class="container">
   <div class="post">
+
     <div class="left-bar">
       <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': post.rated == 1}"> keyboard_arrow_up </i>
       <div class="points"> {{ post.likes - post.dislikes }} </div>
@@ -8,12 +9,13 @@
           {{ getTime() }}
       </div>
     </div>
+
     <div class="content-container">
 
       <div class="expand-container">
-        <div #content class="text" [ngClass]="{'truncate-overflow': !expanded}">
+        <div class="text" [ngClass]="{'truncate-overflow': !expanded}">
           {{getContent()}}
-          <span *ngIf="expandable()">
+          <span *ngIf="isExpandable">
             <span *ngIf="expanded; else notExpanded">
               <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
             </span>
@@ -22,7 +24,6 @@
             </ng-template>
           </span>
         </div>
-
       </div>
 
       <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
@@ -38,7 +39,9 @@
       </div>
 
     </div>
+
     <div class="right-bar">
+
       <div #options>
         <i class="material-icons icon-size" (click)="setOptions(true)"> more_horiz </i>
         <div class="dropdown align-bottom" >
@@ -58,10 +61,14 @@
           </div>
         </div>
       </div>
+
       <div>
         <i class="material-icons share" (click)="openModal('spot-share-modal', post.link)"> share </i>
       </div>
+
     </div>
   </div>
+
   <spot-comments-container [post]="post" [detailed]="detailed"></spot-comments-container>
+
 </div>
