@@ -295,15 +295,18 @@ img {
 }
 
 // include a placeholder
-[contentEditable=true]:empty:not(:focus):before{
-  content:attr(ph);
+[contenteditable=true]:empty:not(:focus):before{
+  content: attr(ph);
   color: $subtle-grey;
   font-style: italic;
   cursor: text;
 }
 
-[contenteditable]:focus {
-  outline: 0px solid transparent;
+[contentditable=true]:empty:focus:before{
+  content: attr(ph);
+  color: lighten($subtle-grey, 20%);
+  font-style: italic;
+  cursor: text;
 }
 
 .comment-options {

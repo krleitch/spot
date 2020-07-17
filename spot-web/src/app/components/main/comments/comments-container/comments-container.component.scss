@@ -6,7 +6,7 @@
   display: flex;
   flex-flow: column;
   background-color: white;
-  padding: 0px 12px 0px 12px;
+  padding: 0px 12px 12px 12px;
 }
 
 .highlight {
@@ -23,12 +23,20 @@
 .load-more {
   display: flex;
   justify-content: center;
+  position: relative;
   color: $subtle-grey;
   margin-right: 5px;
   cursor: pointer;
   &:hover {
     @extend .highlight;
   }
+
+  .load-comments-after {
+    position: absolute;
+    top: 0px;
+    right: -20px;
+  }
+
 }
 
 // Add a comment

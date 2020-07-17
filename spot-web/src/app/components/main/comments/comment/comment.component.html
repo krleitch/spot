@@ -1,5 +1,6 @@
 <div class="container">
   <div class="comment">
+
     <div class="left-bar">
       <div class="left-bar-alignment">
         <div class="column">
@@ -13,6 +14,7 @@
         </div>
       </div>
     </div>
+
     <div class="content-wrapper">
       <div class="content">
 
@@ -51,6 +53,7 @@
         </div>
 
       </div>
+
       <div [hidden]="!showAddReply" class="add" *ngIf="(comment.tag.tagged || inRange) && (isAuthenticated$ | async)">
         <div class="editor">
           <div class="tag-container" *ngFor="let tag of tags">
@@ -82,6 +85,7 @@
       </div>
       <span #tag ><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="postLink" (tag)="addTag($event)"></spot-tag></span>
     </div>
+
     <div class="right-bar">
       <div #options>
         <i class="material-icons icon-size" (click)="setOptions(true)"> more_horiz </i>
@@ -105,9 +109,11 @@
         <i class="material-icons"> reply </i>
       </div>
     </div>
+
   </div>
   <div *ngFor="let reply of replies">
     <spot-reply [reply]="reply" [postLink]="postLink" [inRange]="inRange" [detailed]="detailed"></spot-reply>
   </div>
   <div *ngIf="numLoaded < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
+
 </div>

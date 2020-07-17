@@ -21,9 +21,10 @@ import { Tag } from '@models/notifications';
 export class CommentComponent implements OnInit {
 
   @Input() detailed: boolean;
+  @Input() inRange: boolean;
   @Input() comment: Comment;
   @Input() postLink: string;
-  @Input() inRange: boolean;
+
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.COMMENTS;

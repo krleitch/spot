@@ -119,7 +119,7 @@ export const STRINGS = {
           LOAD_RECENT_COMMENTS: 'Load recent commments',
 
           // Form
-          ADD_COMMENT_PLACEHOLDER: 'Add a comment',
+          ADD_COMMENT_PLACEHOLDER: 'Add a comment ...',
 
           // File options
           FILE_TITLE: 'File:'
@@ -133,7 +133,7 @@ export const STRINGS = {
           REPORT: 'Report',
 
           // Reply
-          ADD_REPLY_PLACEHOLDER: 'Add a reply',
+          ADD_REPLY_PLACEHOLDER: 'Add a reply ...',
           LOAD_MORE_REPLIES: 'Load more replies',
 
           // See more
@@ -152,7 +152,7 @@ export const STRINGS = {
           REPORT: 'Report',
 
           // Reply
-          ADD_REPLY_PLACEHOLDER: 'Add a reply',
+          ADD_REPLY_PLACEHOLDER: 'Add a reply ...',
 
           // See more
           SEE_MORE: 'See more',
