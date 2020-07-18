@@ -30,12 +30,12 @@ export function featureReducer(state = initialState, action: Actions): State {
       if ( action.request.type === 'after' ) {
         return {
           ...state,
-          loadingCommentsAfter: true
+          loadingCommentsAfter: { loading: true, id: action.request.postId }
         };
       } else {
         return {
           ...state,
-          loadingCommentsBefore: true
+          loadingCommentsBefore: { loading: true, id: action.request.postId }
         };
       }
     }
@@ -51,13 +51,13 @@ export function featureReducer(state = initialState, action: Actions): State {
           comments: action.response.comments.concat(state.comments[action.response.postId].comments),
           totalCommentsBefore: action.response.totalCommentsBefore
         };
-        state.loadingCommentsAfter = false;
+        state.loadingCommentsAfter = { loading: false, id: null };
       } else {
         state.comments[action.response.postId] = {
           comments: state.comments[action.response.postId].comments.concat(action.response.comments),
           totalCommentsBefore: action.response.totalCommentsBefore
         };
-        state.loadingCommentsBefore = false;
+        state.loadingCommentsBefore = { loading: false, id: null };
       }
       return {
         ...state

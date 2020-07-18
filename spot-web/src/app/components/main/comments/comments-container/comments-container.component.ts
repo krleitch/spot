@@ -31,8 +31,8 @@ export class CommentsContainerComponent implements OnInit {
 
   // fix this type
   comments$: Observable<any>;
-  loadingCommentsBefore$: Observable<boolean>;
-  loadingCommentsAfter$: Observable<boolean>;
+  loadingCommentsBefore$: Observable<{ loading: boolean, id: string }>;
+  loadingCommentsAfter$: Observable<{ loading: boolean, id: string }>;
   initialLoad = true;
 
   isAuthenticated$: Observable<boolean>;
@@ -165,7 +165,7 @@ export class CommentsContainerComponent implements OnInit {
     const limit = 1;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
-      date: this.comments[0].creation_date,
+      date: this.comments.length > 0 ? this.comments[0].creation_date : null,
       type: 'after',
       limit,
       initialLoad: this.initialLoad

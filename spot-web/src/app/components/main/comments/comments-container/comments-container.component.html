@@ -4,15 +4,21 @@
     <div class="load-more-container">
       <div class="load-more" (click)="loadRecentComments()">
         {{ STRINGS.LOAD_RECENT_COMMENTS }}
-        <div *ngIf="loadingCommentsAfter$ | async" class="load-comments-after">
-          <spot-spinner size="small"></spot-spinner>
+        <div *ngIf="loadingCommentsAfter$ | async as loadingCommentsAfter" class="load-comments-after">
+          <spot-spinner *ngIf="loadingCommentsAfter.id == post.id" size="small"></spot-spinner>
         </div>
       </div>
     </div>
 
-    <div *ngFor="let comment of comments">
-        <spot-comment [comment]="comment" [postLink]="post.link" [inRange]="post.inRange" [detailed]="detailed"></spot-comment>
+    <div *ngIf="comments.length > 0; else noComments">
+      <div *ngFor="let comment of comments">
+          <spot-comment [comment]="comment" [postLink]="post.link" [inRange]="post.inRange" [detailed]="detailed"></spot-comment>
+      </div>
     </div>
+    <ng-template #noComments>
+      <span> No comments </span>
+    </ng-template>
+
     <div *ngIf="totalCommentsBefore > 0" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
   </div>
   <div class="add" *ngIf="(isAuthenticated$ | async) && post.inRange">

@@ -4,14 +4,14 @@ export interface State {
     replies: any;
     commentsLeft: number;
     repliesLeft: number;
-    loadingCommentsBefore: boolean;
-    loadingCommentsAfter: boolean;
+    loadingCommentsBefore: { loading: boolean, id: string }; // the post id
+    loadingCommentsAfter: { loading: boolean, id: string }; // the post id
 }
 
 export const initialState: State = (
   {
-    loadingCommentsBefore: false,
-    loadingCommentsAfter: false,
+    loadingCommentsBefore: { loading: false, id: null },
+    loadingCommentsAfter: { loading: false, id: null },
     comments: {},
     replies: {},
     commentsLeft: 0,

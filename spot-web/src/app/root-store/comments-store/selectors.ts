@@ -2,8 +2,8 @@ import { createSelector, createFeatureSelector, MemoizedSelector, MemoizedSelect
 
 import { State } from './state';
 
-export const selectLoadingCommentsBefore = (state: State): boolean => state.loadingCommentsBefore;
-export const selectLoadingCommentsAfter = (state: State): boolean => state.loadingCommentsAfter;
+export const selectLoadingCommentsBefore = (state: State): { loading: boolean, id: string } => state.loadingCommentsBefore;
+export const selectLoadingCommentsAfter = (state: State): { loading: boolean, id: string } => state.loadingCommentsAfter;
 
 export const selectComments = (state: State, postId: string): any => {
   if (state.comments[postId] === undefined) {
@@ -47,7 +47,7 @@ export const selectMyFeatureReplies: MemoizedSelectorWithProps<
 
 export const selectMyFeatureLoadingCommentsBefore: MemoizedSelector<
   object,
-  boolean
+  { loading: boolean, id: string }
 > = createSelector(
   selectMyFeatureState,
   selectLoadingCommentsBefore
@@ -55,7 +55,7 @@ export const selectMyFeatureLoadingCommentsBefore: MemoizedSelector<
 
 export const selectMyFeatureLoadingCommentsAfter: MemoizedSelector<
   object,
-  boolean
+  { loading: boolean, id: string }
 > = createSelector(
   selectMyFeatureState,
   selectLoadingCommentsAfter
