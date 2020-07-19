@@ -34,7 +34,8 @@ export const ERROR_MESSAGES = {
             INVALID_POST_LINE_LENGTH: 'Invalid post line length',
             NO_CONTENT: 'No content',
             VERIFY: 'Account must be verified to create a spot',
-            IMAGE: 'Error with image'
+            IMAGE: 'Error with image',
+            INVALID_POST_PROFANITY: 'Spot cannot contain profanity'
 
         },
 

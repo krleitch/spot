@@ -9,7 +9,7 @@ export { createPostLimiter }
 
 const createPostLimiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minutes
-    max: 5, // max 5 posts
+    max: 50, // max 5 posts
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, 1))
     }

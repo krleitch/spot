@@ -2,6 +2,9 @@ export { calcDistance, generateLink, validContent }
 
 const shortid = require('shortid');
 
+// services
+const badwords = require('@services/badwords');
+
 // db
 const posts = require('@db/posts');
 
@@ -37,6 +40,10 @@ function validContent(content: string): Error | null {
 	if ( ! /^[\x00-\x7F]*$/.test(content) ) {
 		return new PostsError.InvalidPostContent(400);
 	};
+
+	if ( badwords.checkProfanity(content) ) {
+		return new PostsError.InvalidPostProfanity(400);
+	}
 
 	return null;
 

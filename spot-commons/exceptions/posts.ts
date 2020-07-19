@@ -26,6 +26,13 @@ export class InvalidPostLength extends SpotError {
     }
 }
 
+export class InvalidPostProfanity extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.INVALID_POST_PROFANITY, statusCode);
+    this.name = "InvalidPostProfanity";
+  }
+}
+
 export class InvalidPostLineLength extends SpotError {
   constructor(statusCode, maxLength) {
     super(POSTS_ERROR_MESSAGES.INVALID_POST_LINE_LENGTH, statusCode);
