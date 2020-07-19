@@ -302,7 +302,7 @@ img {
   cursor: text;
 }
 
-[contentditable=true]:empty:focus:before{
+[contenteditable=true]:empty:focus:before{
   content: attr(ph);
   color: lighten($subtle-grey, 20%);
   font-style: italic;
