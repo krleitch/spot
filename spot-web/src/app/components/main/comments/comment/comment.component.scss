@@ -67,7 +67,7 @@
 }
 
 .content {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .image {
@@ -100,21 +100,24 @@ img {
 
 // left bar
 .left-bar {
-  margin-left: 20px;
-  margin-right: 8px;
-}
 
-.left-bar-alignment {
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-}
+  margin-right: 5px;
 
-.column {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  margin-right: 3px;
+  .left-bar-alignment {
+
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+
+    .column {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      margin-right: 5px;
+    }
+
+  }
+
 }
 
 .vote {
@@ -126,7 +129,7 @@ img {
 }
 
 .profile {
-  position: relative;
+  // position: relative;
   width: 48px;
   height: 48px;
   background-color: black;
@@ -140,11 +143,12 @@ img {
 
 .profile-owned {
 
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-  position: absolute;
-  box-shadow: 0 0 0 2px white, 0 0 0 5px $button-highlight;
+  // border-radius: 50%;
+  // height: 48px;
+  // width: 48px;
+  // position: absolute;
+  // box-shadow: 0 0 0 2px white, 0 0 0 5px $button-highlight;
+  border: 3px solid $button-highlight;
 
 }
 

@@ -8,12 +8,13 @@
           <div class="points"> {{ comment.likes - comment.dislikes }} </div>
           <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': comment.rated == 0}"> keyboard_arrow_down </i>
         </div>
-        <div [class]="getProfilePictureClass(comment.profilePicture)">
-          <span class="profile-owned" *ngIf="comment.owned"></span>
+
+        <div [class]="getProfilePictureClass(comment.profilePicture)" [ngClass]="{'profile-owned': comment.owned}">
           <img [src]="'../../../../../assets/images/profile/' + getProfilePictureSymbol(comment.profilePicture) + '.png'"/>
         </div>
+
       </div>
-    </div>
+    </div>`
 
     <div class="content-wrapper">
       <div class="content">
