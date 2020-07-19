@@ -3,7 +3,10 @@
 
     <div class="load-more-container">
       <div class="load-more" (click)="loadRecentComments()">
-        {{ STRINGS.LOAD_RECENT_COMMENTS }}
+        <span *ngIf="comments.length > 0; else refresh"> {{ STRINGS.LOAD_RECENT_COMMENTS }} </span>
+        <ng-template #refresh>
+          <span> {{ STRINGS.REFRESH_COMMENTS }} </span>
+        </ng-template>
         <div *ngIf="loadingCommentsAfter$ | async as loadingCommentsAfter" class="load-comments-after">
           <spot-spinner *ngIf="loadingCommentsAfter.id == post.id" size="small"></spot-spinner>
         </div>
@@ -16,7 +19,10 @@
       </div>
     </div>
     <ng-template #noComments>
-      <div class="no-comments"> {{ STRINGS.NO_COMMENTS }} </div>
+      <div class="no-comments">
+        <span class="material-icons icon"> chat </span>
+        {{ STRINGS.NO_COMMENTS }}
+      </div>
     </ng-template>
 
     <div *ngIf="totalCommentsBefore > 0" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>

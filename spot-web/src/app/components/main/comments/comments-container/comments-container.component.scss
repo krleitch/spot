@@ -9,9 +9,18 @@
   padding: 0px 12px 0px 12px;
 
   .no-comments {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: $subtle-grey;
     padding: 5px 0px;
-    text-align: center;
+
+    .icon {
+      font-size: 18px;
+      margin-right: 5px;
+    }
+
   }
 
 }
@@ -24,7 +33,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3px 0px;
+  padding: 5px 0px;
 }
 
 .load-more {
@@ -51,7 +60,6 @@
 .add {
   display: flex;
   padding: 0px 12px;
-  margin-left: 35px;
   margin-bottom: 5px;
   justify-content: center;
   align-items: center;
@@ -95,7 +103,6 @@
   width: 100%;
   box-sizing: border-box;
   border: 1px solid $subtle-grey;
-  margin: 5px 0px;
 }
 
 .comment-content {

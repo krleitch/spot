@@ -5,11 +5,24 @@
   flex-flow: column;
   background-color: white;
   margin-bottom: 20px;
+
+  .bar-container {
+
+    display: flex;
+    justify-content: center;
+
+    .bar {
+      width: 90%;
+      border-bottom: 1px solid $lighter-grey;
+    }
+
+  }
+
 }
 
 .post {
     display: flex;
-    padding: 12px 12px 0px 12px;
+    padding: 12px 12px 6px 12px;
 }
 
 .left-bar {
@@ -74,7 +87,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-right: 3px;
+    padding-top: 5px;
 }
 
 .comment-number {
@@ -103,6 +116,7 @@ img {
   flex-flow: column;
   justify-content: space-between;
   align-items: center;
+  margin-left: 5px;
 }
 
 .share {
