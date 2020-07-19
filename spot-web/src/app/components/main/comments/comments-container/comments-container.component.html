@@ -16,7 +16,7 @@
       </div>
     </div>
     <ng-template #noComments>
-      <span> No comments </span>
+      <div class="no-comments"> {{ STRINGS.NO_COMMENTS }} </div>
     </ng-template>
 
     <div *ngIf="totalCommentsBefore > 0" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>

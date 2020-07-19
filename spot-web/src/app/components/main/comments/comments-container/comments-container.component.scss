@@ -6,7 +6,14 @@
   display: flex;
   flex-flow: column;
   background-color: white;
-  padding: 0px 12px 12px 12px;
+  padding: 0px 12px 0px 12px;
+
+  .no-comments {
+    color: $subtle-grey;
+    padding: 5px 0px;
+    text-align: center;
+  }
+
 }
 
 .highlight {

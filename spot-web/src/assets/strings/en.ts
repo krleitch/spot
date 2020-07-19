@@ -122,7 +122,9 @@ export const STRINGS = {
           ADD_COMMENT_PLACEHOLDER: 'Add a comment ...',
 
           // File options
-          FILE_TITLE: 'File:'
+          FILE_TITLE: 'File:',
+
+          NO_COMMENTS: 'There are no comments on this spot'
 
         },
 
