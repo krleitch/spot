@@ -12,8 +12,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
         state.comments[action.response.postId].comments.unshift(action.response.comment);
         return {
-            ...state
+            ...state,
+            addCommentSuccess: { success: true, id: action.response.postId }
         };
+    }
+    case ActionTypes.ADD_FAILURE: {
+      return {
+          ...state,
+          addCommentError: { error: action.error, id: action.id }
+      };
     }
     case ActionTypes.DELETE_SUCCESS: {
       state.comments[action.response.postId].comments.forEach( (comment, i) => {
@@ -100,7 +107,14 @@ export function featureReducer(state = initialState, action: Actions): State {
       }
       state.replies[action.response.postId][action.response.commentId].replies.push(action.response.reply);
       return {
-          ...state
+          ...state,
+          addReplySuccess: { success: true, id: action.response.postId }
+      };
+    }
+    case ActionTypes.ADD_REPLY_FAILURE: {
+      return {
+          ...state,
+          addReplyError: { error: action.error, id: action.id }
       };
     }
     case ActionTypes.DELETE_REPLY_SUCCESS: {

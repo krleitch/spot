@@ -5,12 +5,15 @@ import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddComment
           LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
           LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess } from '@models/comments';
+import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
   ADD_REQUEST = '[Comments] Add Request',
   ADD_SUCCESS = '[Comments] Add Success',
+  ADD_FAILURE = '[Comments] Add Failure',
   ADD_REPLY_REQUEST = '[Comments] Add Reply Request',
   ADD_REPLY_SUCCESS = '[Comments] Add Reply Success',
+  ADD_REPLY_FAILURE = '[Comments] Add Reply Failure',
   GET_REQUEST = '[Comments] Get Request',
   GET_SUCCESS = '[Comments] Get Success',
   GET_REPLY_REQUEST = '[Comments] Get Reply Request',
@@ -45,6 +48,11 @@ export class AddSuccessAction implements Action {
     constructor(public response: AddCommentSuccess) {}
 }
 
+export class AddFailureAction implements Action {
+  readonly type = ActionTypes.ADD_FAILURE;
+  constructor(public error: SpotError, public id: string) {}
+}
+
 export class GetRequestAction implements Action {
     readonly type = ActionTypes.GET_REQUEST;
     constructor(public request: LoadCommentsRequest) {}
@@ -73,6 +81,11 @@ export class AddReplyRequestAction implements Action {
 export class AddReplySuccessAction implements Action {
   readonly type = ActionTypes.ADD_REPLY_SUCCESS;
   constructor(public response: AddReplySuccess) {}
+}
+
+export class AddReplyFailureAction implements Action {
+  readonly type = ActionTypes.ADD_REPLY_FAILURE;
+  constructor(public error: SpotError, public id: string) {}
 }
 
 export class GetReplyRequestAction implements Action {
@@ -145,4 +158,5 @@ export type Actions = AddRequestAction | AddSuccessAction |
                       DislikeRequestAction | DislikeSuccessAction |
                       LikeReplyRequestAction | LikeReplySuccessAction |
                       DislikeReplyRequestAction | DislikeReplySuccessAction |
-                      GenericFailureAction;
+                      GenericFailureAction | AddReplyFailureAction |
+                      AddFailureAction;

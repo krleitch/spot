@@ -27,25 +27,28 @@
 
     <div *ngIf="totalCommentsBefore > 0" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
   </div>
+
   <div class="add" *ngIf="(isAuthenticated$ | async) && post.inRange">
     <div class="editor">
-      <div class="tag-container" *ngFor="let tag of tags">
-        <div class="tag">
-          {{ tag.receiver }}
-          <i class="material-icons tag-close" (click)="removeTag(tag.id)"> close </i>
-        </div>
+
+      <div *ngFor="let tag of tags" class="tag">
+        {{ tag.receiver }}
+        <i class="material-icons tag-close" (click)="removeTag(tag.id)"> close </i>
       </div>
+
       <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" [textContent]="commentText" (input)="onTextInput($event)"></div>
       <div class="image" *ngIf="imgSrc != null">
         <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>
+
       <div class="file-options" *ngIf="imgSrc != null">
         <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
-        <span class="file-name"> {{ getDisplayFilename(imageFile.name) }} </span>
+        <span class="file-name"> {{ imageFile.name }} </span>
         <span class="file-remove" (click)="removeFile()">
           <i class="material-icons"> delete </i>
         </span>
       </div>
+
       <div class="comment-options">
         <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_COMMENT_LENGTH - currentLength }} </span>
         <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
@@ -54,7 +57,9 @@
           <i class="material-icons"> send </i>
         </span>
       </div>
+
     </div>
   </div>
   <span #tag ><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
+
 </div>

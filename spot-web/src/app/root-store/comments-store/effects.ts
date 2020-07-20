@@ -35,7 +35,7 @@ export class CommentsStoreEffects {
         .pipe(
             map( (response: AddCommentSuccess) => new featureActions.AddSuccessAction(response)),
             catchError(errorResponse =>
-              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+              observableOf(new featureActions.AddFailureAction( errorResponse.error, action.request.postId ))
             )
           )
     )
@@ -89,7 +89,7 @@ export class CommentsStoreEffects {
         .pipe(
             map( (response: AddReplySuccess) => new featureActions.AddReplySuccessAction(response)),
             catchError(errorResponse =>
-              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+              observableOf(new featureActions.AddReplyFailureAction( errorResponse.error, action.request.commentId ))
             )
           )
     )

@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { STRINGS } from '@assets/strings/en';
@@ -10,13 +11,16 @@ import { AccountsStoreSelectors } from '@store/accounts-store';
 import { LoadCommentsRequest, AddCommentRequest } from '@models/comments';
 import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-comments-container',
   templateUrl: './comments-container.component.html',
   styleUrls: ['./comments-container.component.scss']
 })
-export class CommentsContainerComponent implements OnInit {
+export class CommentsContainerComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
   @Input() post: Post;
@@ -33,6 +37,8 @@ export class CommentsContainerComponent implements OnInit {
   comments$: Observable<any>;
   loadingCommentsBefore$: Observable<{ loading: boolean, id: string }>;
   loadingCommentsAfter$: Observable<{ loading: boolean, id: string }>;
+  addCommentError$: Observable<{ error: SpotError, id: string }>;
+  addCommentSuccess$: Observable<{ success: boolean, id: string }>;
   initialLoad = true;
 
   isAuthenticated$: Observable<boolean>;
@@ -41,7 +47,6 @@ export class CommentsContainerComponent implements OnInit {
   totalCommentsBefore = 0;
   numLoaded = 0;
 
-  FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
 
@@ -62,6 +67,13 @@ export class CommentsContainerComponent implements OnInit {
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
     );
 
+    this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( comments => {
+      this.comments = comments.comments;
+      if ( comments.totalCommentsBefore !== - 1 ) {
+        this.totalCommentsBefore = comments.totalCommentsBefore;
+      }
+    });
+
     this.loadingCommentsBefore$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsBefore)
     );
@@ -74,10 +86,23 @@ export class CommentsContainerComponent implements OnInit {
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
-    this.comments$.subscribe( comments => {
-      this.comments = comments.comments;
-      if ( comments.totalCommentsBefore !== - 1 ) {
-        this.totalCommentsBefore = comments.totalCommentsBefore;
+    this.addCommentSuccess$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectAddCommentSuccess)
+    );
+
+    this.addCommentSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
+      if ( success.id === this.post.id && success.success ) {
+
+      }
+    });
+
+    this.addCommentError$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectAddCommentError)
+    );
+
+    this.addCommentError$.pipe(takeUntil(this.onDestroy)).subscribe( error => {
+      if ( error.id ) {
+        console.log(error.error);
       }
     });
 
@@ -119,6 +144,10 @@ export class CommentsContainerComponent implements OnInit {
     );
     this.numLoaded += initialLimit;
 
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   offClickHandler(event: MouseEvent) {
@@ -229,14 +258,6 @@ export class CommentsContainerComponent implements OnInit {
     this.imgSrc = null;
   }
 
-  getDisplayFilename(name: string) {
-    if (name.length > this.FILENAME_MAX_SIZE) {
-      return name.substr(0, this.FILENAME_MAX_SIZE) + '...';
-    } else {
-      return name;
-    }
-  }
-
   addTag(tag: Tag) {
 
     tag.id = this.tags.length;
@@ -250,10 +271,8 @@ export class CommentsContainerComponent implements OnInit {
 
   removeTag(id: number) {
 
-    this.tags.forEach( (tag: Tag, index: number) => {
-      if ( tag.id === id ) {
-        this.tags.splice(index, 1);
-      }
+    this.tags = this.tags.filter( (tag: Tag) => {
+      return tag.id !== id;
     });
 
   }
