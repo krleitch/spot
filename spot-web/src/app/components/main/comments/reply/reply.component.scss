@@ -12,7 +12,8 @@
 }
 
 .content {
-  margin-top: 15px;
+  margin-top: 10px;
+  margin-bottom: 3px;
 }
 
 .content-tag-container{
@@ -93,7 +94,7 @@
 
 // left bar
 .left-bar {
-  margin-left: 45px;
+  margin-left: 30px;
   margin-right: 8px;
 }
 
@@ -132,13 +133,7 @@
 }
 
 .profile-owned {
-
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-  position: absolute;
-  box-shadow:  0 0 0 2px white, 0 0 0 5px $button-highlight;
-
+  border: 3px solid $button-highlight;
 }
 
 // right-bar
@@ -152,7 +147,6 @@
 
 .reply-icon {
   cursor: pointer;
-  color: $subtle-grey;
   visibility: hidden;
   &:hover {
     @extend .highlight;
@@ -269,22 +263,48 @@
 }
 
 .editor {
+
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid $subtle-grey;
-  margin: 5px 0px;
+  background-color: $lighter-grey;
+  border-radius: 3px;
+  max-height: 300px;
+
+  .reply2-content {
+    flex-grow: 1;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 6px 6px;
+    border: 0;
+    outline: 0;
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  }
+
+  // include a placeholder
+  [contenteditable=true]:empty:not(:focus):before{
+    content: attr(ph);
+    color: $subtle-grey;
+    font-style: italic;
+    cursor: text;
+  }
+
+  [contenteditable=true]:empty:focus:before{
+    content: attr(ph);
+    color: lighten($subtle-grey, 20%);
+    font-style: italic;
+    cursor: text;
+  }
+
 }
 
-.reply2-content {
-  flex-grow: 1;
-  padding: 6px 6px;
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-}
+
 
 .image {
   display: flex;
@@ -300,17 +320,7 @@ img {
   max-height: 500px;
 }
 
-// include a placeholder
-[contentEditable=true]:empty:not(:focus):before{
-  content:attr(ph);
-  color: $subtle-grey;
-  font-style: italic;
-  cursor: text;
-}
 
-[contenteditable]:focus {
-  outline: 0px solid transparent;
-}
 
 .comment-options {
   margin-left: auto;

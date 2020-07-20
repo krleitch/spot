@@ -23,7 +23,7 @@
         </div>
 
         <ng-template #verify>
-          <div class="verify">`
+          <div class="verify">
             {{ STRINGS.VERIFY }}
             <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
               <span class="verify-text"> {{ STRINGS.VERIFY_SEND }} </span>

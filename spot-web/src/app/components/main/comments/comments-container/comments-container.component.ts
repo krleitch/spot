@@ -76,7 +76,7 @@ export class CommentsContainerComponent implements OnInit {
 
     this.comments$.subscribe( comments => {
       this.comments = comments.comments;
-      if ( comments.totalCommentsBefore != - 1 ) {
+      if ( comments.totalCommentsBefore !== - 1 ) {
         this.totalCommentsBefore = comments.totalCommentsBefore;
       }
     });
