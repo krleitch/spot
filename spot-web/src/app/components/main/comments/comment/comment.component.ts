@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { RootStoreState } from '@store';
@@ -237,13 +238,27 @@ export class CommentComponent implements OnInit {
   }
 
   deleteComment() {
-    const request: DeleteCommentRequest = {
-      postId: this.comment.post_id,
-      commentId: this.comment.id
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.DeleteRequestAction(request)
-    );
+
+    this.modalService.open('spot-confirm-modal');
+
+    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+    result$.subscribe( (result: { status: string }) => {
+
+      if ( result.status === 'confirm' ) {
+
+        const request: DeleteCommentRequest = {
+          postId: this.comment.post_id,
+          commentId: this.comment.id
+        };
+        this.store$.dispatch(
+          new CommentsStoreActions.DeleteRequestAction(request)
+        );
+
+      }
+
+    });
+
   }
 
   setShowAddReply(val: boolean) {

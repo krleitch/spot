@@ -26,7 +26,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   @Input() post: Post;
 
   @ViewChild('comment') comment: ElementRef;
-  commentText: string;
+  commentInnerHtml = '';
+  currentLength = 0;
 
   @ViewChild('tag') tag: ElementRef;
   tags: Tag[] = [];
@@ -39,6 +40,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   loadingCommentsAfter$: Observable<{ loading: boolean, id: string }>;
   addCommentError$: Observable<{ error: SpotError, id: string }>;
   addCommentSuccess$: Observable<{ success: boolean, id: string }>;
+  addCommentError: string;
+
   initialLoad = true;
 
   isAuthenticated$: Observable<boolean>;
@@ -54,7 +57,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   // displaying used characters for add comment
   MAX_COMMENT_LENGTH = 300;
-  currentLength = 0;
 
   constructor(private store$: Store<RootStoreState.State>,
               public domSanitizer: DomSanitizer) {
@@ -158,34 +160,34 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   onTextInput(event) {
 
-    // TODO: A space should add a tag
+    this.commentInnerHtml = event.target.innerHTML;
+    // Need to count newlines as a character, -1 because the first line is free
+    this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
+    this.addCommentError = null;
 
-    this.commentText = event.target.textContent;
-    this.currentLength = this.commentText.length;
+    // const words = this.commentText.split(' ');
+    // const lastWord = words[words.length - 1];
 
-    const words = this.commentText.split(' ');
-    const lastWord = words[words.length - 1];
+    // if ( lastWord.length >= 1 ) {
 
-    if ( lastWord.length >= 1 ) {
+    //   if ( lastWord[0] === '@' ) {
 
-      if ( lastWord[0] === '@' ) {
+    //     this.showTag = true;
+    //     this.tagName = lastWord.substr(1);
 
-        this.showTag = true;
-        this.tagName = lastWord.substr(1);
+    //   } else {
 
-      } else {
+    //     this.showTag = false;
+    //     this.tagName = '';
 
-        this.showTag = false;
-        this.tagName = '';
+    //   }
 
-      }
+    // } else {
 
-    } else {
+    //   this.showTag = false;
+    //   this.tagName = '';
 
-      this.showTag = false;
-      this.tagName = '';
-
-    }
+    // }
 
   }
 
@@ -223,7 +225,34 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   addComment() {
 
-    const content = this.commentText;
+    let content = this.commentInnerHtml;
+
+    // parse the innerhtml to return a string with newlines instead of innerhtml
+    const parser = new DOMParser();
+    const parsedHtml = parser.parseFromString(content, 'text/html');
+
+    const body = parsedHtml.getElementsByTagName('body');
+    const bodyChildren = body[0].children;
+
+    let text;
+    if ( body[0].childNodes.length > 0 ) {
+      text = body[0].childNodes[0].nodeValue || '';
+
+      for (let i = 0; i < bodyChildren.length; i++) {
+        if ( i === 0 ) {
+          text += '\n';
+        }
+        text +=  (bodyChildren[i].textContent);
+        if ( i !== bodyChildren.length - 1 ) {
+          text += '\n';
+        }
+      }
+
+    } else {
+      text = body[0].textContent;
+    }
+
+    content = text.trim();
 
     if (content.length <= this.MAX_COMMENT_LENGTH) {
 
@@ -237,10 +266,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.store$.dispatch(
         new CommentsStoreActions.AddRequestAction(request)
       );
-
-      this.commentText = '';
-      this.imageFile = null;
-
     }
   }
 
@@ -263,9 +288,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     tag.id = this.tags.length;
     this.tags.push(tag);
 
-    const words = this.commentText.split(' ');
-    words.pop();
-    this.commentText = words.join(' ');
+    // const words = this.commentText.split(' ');
+    // words.pop();
+    // this.commentText = words.join(' ');
 
   }
 
