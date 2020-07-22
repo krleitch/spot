@@ -44,6 +44,7 @@ import { SpinnerComponent } from './components/helpers/spinner/spinner.component
 import { ConfirmComponent } from './components/helpers/confirm/confirm.component';
 import { AuthModalComponent } from './components/pre-auth/auth-modal/auth-modal.component';
 import { VerifyComponent } from './components/main/verify/verify.component';
+import { WelcomeComponent } from './components/main/welcome/welcome.component';
 
 
 @NgModule({
@@ -85,7 +86,8 @@ import { VerifyComponent } from './components/main/verify/verify.component';
     SpinnerComponent,
     ConfirmComponent,
     AuthModalComponent,
-    VerifyComponent
+    VerifyComponent,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,

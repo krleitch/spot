@@ -33,7 +33,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   tags: Tag[] = [];
   showTag = false;
   tagName = '';
-  tagInputMode = false;
+  tagElement;
+  tagCaretPosition;
 
   // fix this type
   comments$: Observable<any>;
@@ -158,85 +159,27 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     if (!this.tag.nativeElement.contains(event.target)) {
       this.showTag = false;
       this.tagName = '';
-      this.tagInputMode = false;
     }
   }
 
   caretPositionHandler(event: MouseEvent) {
-    if (this.comment.nativeElement.contains(event.target)) {
-      // this.getWord();
-      console.log(this.getWordOnCaret());
+    if (this.comment && this.comment.nativeElement.contains(event.target)) {
+      this.getAndCheckWordOnCaret();
     }
   }
 
   onTextInput(event) {
-
-    // console.log(event)
-
     this.commentInnerHtml = event.target.innerHTML;
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
     this.addCommentError = null;
-
-    console.log(this.getWordOnCaret());
-
-    // We are now adding a tag
-
-    if ( this.tagInputMode ) {
-
-      if ( event.data === ' ') {
-
-        const tag: Tag = {
-          id: -1, // Tag not placed yet
-          receiver: this.tagName,
-          postLink: this.post.link
-        };
-
-        this.addTag(tag);
-        this.tagInputMode = false;
-
-      } else if ( event.inputType === 'deleteContentBackward') {
-        this.tagName = this.tagName.slice(0, -1);
-      } else {
-        this.tagName += event.data;
-      }
-
-    } else if ( event.data === '@' ) {
-      this.showTag = true;
-      this.tagInputMode = true;
-      this.tagName = '';
-    }
-
-    // const words = this.commentText.split(' ');
-    // const lastWord = words[words.length - 1];
-
-    // if ( lastWord.length >= 1 ) {
-
-    //   if ( lastWord[0] === '@' ) {
-
-    //     this.showTag = true;
-    //     this.tagName = lastWord.substr(1);
-
-    //   } else {
-
-    //     this.showTag = false;
-    //     this.tagName = '';
-
-    //   }
-
-    // } else {
-
-    //   this.showTag = false;
-    //   this.tagName = '';
-
-    // }
-
+    this.getAndCheckWordOnCaret();
   }
 
-  getWordOnCaret() {
+  getAndCheckWordOnCaret() {
     const range = window.getSelection().getRangeAt(0);
     if (range.collapsed) {
-      return this.getCurrentWord(range.startContainer, range.startOffset);
+      return this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
     }
     return '';
   }
@@ -259,29 +202,36 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     return content.substring(startPosition + 1, endPosition);
   }
 
-  // https://stackoverflow.com/questions/11247737/how-can-i-get-the-word-that-the-caret-is-upon-inside-a-contenteditable-div
-   getWord() {
-    // var sel, word = "";
-    // if (window.getSelection && (sel = window.getSelection()).modify) {
-    //     var selectedRange = sel.getRangeAt(0);
-    //     sel.collapseToStart();
-    //     sel.modify("move", "backward", "word");
-    //     sel.modify("extend", "forward", "word");
+  private checkWord(word: string, element, position) {
 
-    //     word = sel.toString();
+    if ( word.length > 0 && word[0] === '@' ) {
+      this.tagName = word.slice(1);
+      this.showTag = true;
+      this.tagElement = element;
+      this.tagCaretPosition = position;
+    } else {
+      this.tagName = '';
+      this.showTag = false;
+    }
 
-    //     // Restore selection
-    //     sel.removeAllRanges();
-    //     sel.addRange(selectedRange);
-    // } else if ( (sel = document.selection) && sel.type != "Control") {
-    //     console.log(';MEEE')
-    //     var range = sel.createRange();
-    //     range.collapse(true);
-    //     range.expand("word");
-    //     word = range.text;
-    // }
-    // console.log(word);
-}
+  }
+
+  private removeWord(element, position) {
+
+    const content = element.textContent;
+
+    // Check if clicked at the end of word
+    position = content[position] === ' ' ? position - 1 : position;
+
+    let startPosition = content.lastIndexOf(' ', position);
+    let endPosition = content.indexOf(' ', position);
+
+    // Special cases
+    startPosition = startPosition === content.length ? 0 : startPosition;
+    endPosition = endPosition === -1 ? content.length : endPosition;
+
+    element.textContent = content.substring(0, startPosition) + content.substring(endPosition + 1);
+  }
 
   loadRecentComments() {
     // Load 1 more comments
@@ -380,9 +330,11 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     tag.id = this.tags.length;
     this.tags.push(tag);
 
-    // const words = this.commentText.split(' ');
-    // words.pop();
-    // this.commentText = words.join(' ');
+    this.removeWord(this.tagElement, this.tagCaretPosition);
+
+    // refocus
+    this.comment.nativeElement.focus();
+    this.comment.nativeElement.selectionStart = this.comment.nativeElement.selectionEnd = 3000 ;
 
   }
 

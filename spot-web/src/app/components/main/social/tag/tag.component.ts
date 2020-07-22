@@ -24,8 +24,8 @@ export class TagComponent implements OnInit, OnChanges {
   STRINGS = STRINGS.MAIN.TAG;
 
   friends$: Observable<Friend[]>;
-  friendsList: Friend[];
-  filteredFriendsList: Friend[];
+  friendsList: Friend[] = [];
+  filteredFriendsList: Friend[] = [];
 
   link: string;
 
