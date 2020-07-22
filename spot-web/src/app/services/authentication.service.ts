@@ -83,6 +83,19 @@ export class AuthenticationService {
         this.router.navigateByUrl('/login');
     }
 
+    registerAccountSuccess(response: LoginResponse) {
+      localStorage.setItem('id_token', response.jwt.token);
+      localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
+      if ( this.modalService.isOpen('spot-auth-modal') ) {
+        this.modalService.close('spot-auth-modal');
+        this.modalService.open('spot-welcome-modal');
+        // TODO: refresh the page so u get the updated content form being logged in
+      } else {
+        this.modalService.open('spot-welcome-modal');
+        this.router.navigateByUrl('/home');
+      }
+  }
+
     loginAccountSuccess(response: LoginResponse) {
         localStorage.setItem('id_token', response.jwt.token);
         localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));

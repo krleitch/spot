@@ -53,7 +53,7 @@ export class AccountsStoreEffects {
       featureActions.ActionTypes.REGISTER_SUCCESS
     ),
     tap( (action: featureActions.RegisterSuccessAction) => {
-      this.authenticationService.loginAccountSuccess(action.response);
+      this.authenticationService.registerAccountSuccess(action.response);
     })
   );
 

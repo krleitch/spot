@@ -1,0 +1,41 @@
+@import '../../../styles/colors';
+@import '../../../styles/sizes';
+
+.report {
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: $lighter-grey;
+    width: 100%;
+    border-bottom: 1px solid $subtle-grey;
+    box-sizing: border-box;
+
+    .close {
+      display: flex;
+      cursor: pointer;
+      float: right;
+      &:hover {
+        color: $error-red;
+      }
+    }
+
+  }
+
+  .body {
+
+    padding: 8px;
+
+    .heading {
+      font-size: 24px;
+    }
+
+    .text {
+
+    }
+
+  }
+
+}

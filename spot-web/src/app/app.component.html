@@ -6,6 +6,8 @@
 
     <!-- Global Modals-->
 
+    <!-- This should really be fixed, so we only have one modal dynamically switching content... -->
+
     <spot-modal [id]="'spot-confirm-modal'" [width]="400" [height]="'auto'">
       <spot-confirm [modalId]="'spot-confirm-modal'" ></spot-confirm>
     </spot-modal>
@@ -20,6 +22,9 @@
     </spot-modal>
     <spot-modal [id]="'spot-auth-modal'" [width]="'400'" [height]="'auto'">
       <spot-auth-modal [modalId]="'spot-auth-modal'"></spot-auth-modal>
+    </spot-modal>
+    <spot-modal [id]="'spot-welcome-modal'" [width]="'400'" [height]="'auto'">
+      <spot-welcome [modalId]="'spot-welcome-modal'"></spot-welcome>
     </spot-modal>
 
 </div>

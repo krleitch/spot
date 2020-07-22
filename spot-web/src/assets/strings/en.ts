@@ -266,6 +266,15 @@ export const STRINGS = {
 
           NO_FRIENDS: 'No match'
 
+        },
+
+        WELCOME: {
+
+          TITLE: 'Welcome to spot',
+
+          HEADING: 'Heading 1',
+          TEXT: 'text'
+
         }
 
     },
