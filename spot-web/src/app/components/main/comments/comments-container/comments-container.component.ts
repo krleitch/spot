@@ -33,6 +33,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   tags: Tag[] = [];
   showTag = false;
   tagName = '';
+  tagInputMode = false;
 
   // fix this type
   comments$: Observable<any>;
@@ -61,6 +62,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<RootStoreState.State>,
               public domSanitizer: DomSanitizer) {
     document.addEventListener('click', this.offClickHandler.bind(this));
+    document.addEventListener('click', this.caretPositionHandler.bind(this));
   }
 
   ngOnInit() {
@@ -155,15 +157,55 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   offClickHandler(event: MouseEvent) {
     if (!this.tag.nativeElement.contains(event.target)) {
       this.showTag = false;
+      this.tagName = '';
+      this.tagInputMode = false;
+    }
+  }
+
+  caretPositionHandler(event: MouseEvent) {
+    if (this.comment.nativeElement.contains(event.target)) {
+      // this.getWord();
+      console.log(this.getWordOnCaret());
     }
   }
 
   onTextInput(event) {
 
+    // console.log(event)
+
     this.commentInnerHtml = event.target.innerHTML;
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
     this.addCommentError = null;
+
+    console.log(this.getWordOnCaret());
+
+    // We are now adding a tag
+
+    if ( this.tagInputMode ) {
+
+      if ( event.data === ' ') {
+
+        const tag: Tag = {
+          id: -1, // Tag not placed yet
+          receiver: this.tagName,
+          postLink: this.post.link
+        };
+
+        this.addTag(tag);
+        this.tagInputMode = false;
+
+      } else if ( event.inputType === 'deleteContentBackward') {
+        this.tagName = this.tagName.slice(0, -1);
+      } else {
+        this.tagName += event.data;
+      }
+
+    } else if ( event.data === '@' ) {
+      this.showTag = true;
+      this.tagInputMode = true;
+      this.tagName = '';
+    }
 
     // const words = this.commentText.split(' ');
     // const lastWord = words[words.length - 1];
@@ -190,6 +232,56 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // }
 
   }
+
+  getWordOnCaret() {
+    const range = window.getSelection().getRangeAt(0);
+    if (range.collapsed) {
+      return this.getCurrentWord(range.startContainer, range.startOffset);
+    }
+    return '';
+  }
+
+  private getCurrentWord(element, position) {
+    // Get content of div
+    const content = element.textContent;
+
+    // Check if clicked at the end of word
+    position = content[position] === ' ' ? position - 1 : position;
+
+    // Get the start and end index
+    let startPosition = content.lastIndexOf(' ', position);
+    let endPosition = content.indexOf(' ', position);
+
+    // Special cases
+    startPosition = startPosition === content.length ? 0 : startPosition;
+    endPosition = endPosition === -1 ? content.length : endPosition;
+
+    return content.substring(startPosition + 1, endPosition);
+  }
+
+  // https://stackoverflow.com/questions/11247737/how-can-i-get-the-word-that-the-caret-is-upon-inside-a-contenteditable-div
+   getWord() {
+    // var sel, word = "";
+    // if (window.getSelection && (sel = window.getSelection()).modify) {
+    //     var selectedRange = sel.getRangeAt(0);
+    //     sel.collapseToStart();
+    //     sel.modify("move", "backward", "word");
+    //     sel.modify("extend", "forward", "word");
+
+    //     word = sel.toString();
+
+    //     // Restore selection
+    //     sel.removeAllRanges();
+    //     sel.addRange(selectedRange);
+    // } else if ( (sel = document.selection) && sel.type != "Control") {
+    //     console.log(';MEEE')
+    //     var range = sel.createRange();
+    //     range.collapse(true);
+    //     range.expand("word");
+    //     word = range.text;
+    // }
+    // console.log(word);
+}
 
   loadRecentComments() {
     // Load 1 more comments

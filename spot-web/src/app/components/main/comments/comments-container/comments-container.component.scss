@@ -108,6 +108,7 @@
   max-height: 300px;
 
   .comment-content {
+    min-height: 30px;
     flex-grow: 1;
     max-width: 100%;
     box-sizing: border-box;
@@ -154,11 +155,12 @@ img {
   max-height: 500px;
 }
 
-
-
 .comment-options {
 
+  min-height: 30px;
+  box-sizing: border-box;
   margin-left: auto;
+  margin-top: auto;
   display: flex;
   align-items: center;
   padding: 0px 6px;

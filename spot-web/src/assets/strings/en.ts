@@ -262,9 +262,8 @@ export const STRINGS = {
 
         TAG: {
 
-          TAG: 'Tag',
+          TAG: 'Tag a friend',
 
-          FRIENDS: 'Friends',
           NO_FRIENDS: 'No match'
 
         }

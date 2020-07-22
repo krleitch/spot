@@ -2,13 +2,14 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest,
-         DislikeReplyRequest, ReportCommentRequest } from '@models/comments';
+         DislikeReplyRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { Tag } from '@models/notifications';
@@ -183,14 +184,28 @@ export class ReplyComponent implements OnInit {
   }
 
   deleteReply() {
-    const request: DeleteReplyRequest = {
-      postId: this.reply.post_id,
-      parentId: this.reply.parent_id,
-      commentId: this.reply.id
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.DeleteReplyRequestAction(request)
-    );
+
+    this.modalService.open('spot-confirm-modal');
+
+    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+    result$.subscribe( (result: { status: string }) => {
+
+      if ( result.status === 'confirm' ) {
+
+        const request: DeleteReplyRequest = {
+          postId: this.reply.post_id,
+          parentId: this.reply.parent_id,
+          commentId: this.reply.id
+        };
+        this.store$.dispatch(
+          new CommentsStoreActions.DeleteReplyRequestAction(request)
+        );
+
+      }
+
+    });
+
   }
 
   setShowAddReply(val: boolean) {

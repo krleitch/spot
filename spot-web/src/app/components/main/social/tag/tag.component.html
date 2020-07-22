@@ -1,16 +1,12 @@
 <div class="tag">
   <div class="content">
 
-    <div class="heading">
+    <div class="header">
       {{ STRINGS.TAG }}
     </div>
 
     <div class="name" *ngIf="name" (click)="sendTag(name)">
       {{ name }}
-    </div>
-
-    <div class="heading">
-      {{ STRINGS.FRIENDS }}
     </div>
 
     <div class="friend-container" *ngIf="friendsList.length > 0; else noFriends">
