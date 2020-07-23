@@ -122,6 +122,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
 
+    // TODO: can probably not make this request, fetch friends at app startup instead?
+    // TAG component should always make this call anyways
     const friendRequest: GetFriendsRequest = {};
 
     this.store$.dispatch(

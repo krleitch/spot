@@ -122,6 +122,8 @@ export const STRINGS = {
           // Form
           ADD_COMMENT_PLACEHOLDER: 'Add a comment ...',
 
+          TAGS_TITLE: 'Tags:',
+
           // File options
           FILE_TITLE: 'File:',
 

@@ -29,12 +29,16 @@
   </div>
 
   <div class="add" *ngIf="(isAuthenticated$ | async) && post.inRange">
-    <div class="editor">
 
+    <div class="tag-container" *ngIf="tags.length > 0">
+      <span class="tag-title"> {{ STRINGS.TAGS_TITLE }} </span>
       <div *ngFor="let tag of tags" class="tag">
         {{ tag.receiver }}
         <i class="material-icons tag-close" (click)="removeTag(tag.id)"> close </i>
       </div>
+    </div>
+
+    <div class="editor">
 
       <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
       <div class="image" *ngIf="imgSrc != null">
