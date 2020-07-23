@@ -36,7 +36,7 @@
         <i class="material-icons tag-close" (click)="removeTag(tag.id)"> close </i>
       </div>
 
-      <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" [textContent]="commentText" (input)="onTextInput($event)"></div>
+      <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
       <div class="image" *ngIf="imgSrc != null">
         <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>

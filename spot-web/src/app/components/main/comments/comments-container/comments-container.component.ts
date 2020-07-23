@@ -169,11 +169,15 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   onTextInput(event) {
+
     this.commentInnerHtml = event.target.innerHTML;
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
     this.addCommentError = null;
+
+    // Check for tag
     this.getAndCheckWordOnCaret();
+
   }
 
   getAndCheckWordOnCaret() {
@@ -212,6 +216,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     } else {
       this.tagName = '';
       this.showTag = false;
+      this.tagElement = null;
+      this.tagCaretPosition = null;
     }
 
   }
@@ -230,7 +236,26 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     startPosition = startPosition === content.length ? 0 : startPosition;
     endPosition = endPosition === -1 ? content.length : endPosition;
 
-    element.textContent = content.substring(0, startPosition) + content.substring(endPosition + 1);
+    // if we pressed space to add the tag, remove the extra space
+    element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
+  }
+
+  onEnter() {
+
+    // Add tag on enter
+    if ( this.showTag ) {
+
+      const tag: Tag = {
+        id: -1, // Tag not placed yet
+        receiver: this.tagName,
+        postLink: this.post.link
+      };
+
+      this.addTag(tag);
+      return false;
+
+    }
+
   }
 
   loadRecentComments() {
@@ -333,9 +358,29 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.removeWord(this.tagElement, this.tagCaretPosition);
 
     // refocus
-    this.comment.nativeElement.focus();
-    this.comment.nativeElement.selectionStart = this.comment.nativeElement.selectionEnd = 3000 ;
+    this.placeCaretAtEnd(this.comment.nativeElement);
 
+  }
+
+  private placeCaretAtEnd(el) {
+    el.focus();
+    if (typeof window.getSelection !== 'undefined'
+            && typeof document.createRange !== 'undefined') {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        // needed for browser compatibility
+        // @ts-ignore
+    } else if (typeof document.body.createTextRange !== 'undefined') {
+        // @ts-ignore
+        const textRange = document.body.createTextRange();
+        textRange.moveToElementText(el);
+        textRange.collapse(false);
+        textRange.select();
+    }
   }
 
   removeTag(id: number) {
