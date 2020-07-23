@@ -2,11 +2,14 @@
 
 // Comments container
 
+.container {
+  padding: 0px 12px 12px 12px;
+}
+
 .comments-container {
   display: flex;
   flex-flow: column;
   background-color: white;
-  padding: 0px 12px 0px 12px;
 
   .no-comments {
 
@@ -59,7 +62,6 @@
 
 .add {
   display: flex;
-  padding: 0px 12px;
   margin-bottom: 5px;
   justify-content: center;
   align-items: center;
