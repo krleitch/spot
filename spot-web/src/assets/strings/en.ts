@@ -264,7 +264,7 @@ export const STRINGS = {
 
           TAG: 'Tag a friend',
 
-          NO_FRIENDS: 'No match'
+          NO_FRIENDS: 'No friends found'
 
         },
 

@@ -12,6 +12,9 @@ import { LoadCommentsRequest, AddCommentRequest } from '@models/comments';
 import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 import { SpotError } from '@exceptions/error';
+import { Friend, GetFriendsRequest } from '@models/friends';
+import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
+import { AlertService } from '@services/alert.service';
 
 @Component({
   selector: 'spot-comments-container',
@@ -31,7 +34,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   @ViewChild('tag') tag: ElementRef;
   tags: Tag[] = [];
-  showTag = true;
+  showTag = false;
   tagName = '';
   tagElement;
   tagCaretPosition;
@@ -43,6 +46,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   addCommentError$: Observable<{ error: SpotError, id: string }>;
   addCommentSuccess$: Observable<{ success: boolean, id: string }>;
   addCommentError: string;
+
+  friends$: Observable<Friend[]>;
+  friendsList: Friend[] = [];
 
   initialLoad = true;
 
@@ -61,6 +67,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   MAX_COMMENT_LENGTH = 300;
 
   constructor(private store$: Store<RootStoreState.State>,
+              private alertService: AlertService,
               public domSanitizer: DomSanitizer) {
     document.addEventListener('click', this.offClickHandler.bind(this));
     document.addEventListener('click', this.caretPositionHandler.bind(this));
@@ -109,6 +116,20 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       if ( error.id ) {
         console.log(error.error);
       }
+    });
+
+    this.friends$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectMyFeatureFriends)
+    );
+
+    const friendRequest: GetFriendsRequest = {};
+
+    this.store$.dispatch(
+      new SocialStoreFriendsActions.GetFriendsAction(friendRequest)
+    );
+
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
+      this.friendsList = friends;
     });
 
     // if detailed load more comments
@@ -352,12 +373,20 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   addTag(tag: Tag) {
 
+    // check if they are your friend
+    if ( this.friendsList.find( (friend: Friend) =>  friend.username === tag.receiver ) === undefined ) {
+      this.alertService.error('Only friends can be tagged');
+      return;
+    }
+
+    // temp id, giving position in array
     tag.id = this.tags.length;
     this.tags.push(tag);
 
+    // remove the word
     this.removeWord(this.tagElement, this.tagCaretPosition);
 
-    // refocus
+    // refocus at end of content editable
     this.placeCaretAtEnd(this.comment.nativeElement);
 
     // hide tag menu

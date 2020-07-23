@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div class="friend-container" *ngIf="friendsList.length > 0; else noFriends">
+    <div class="friend-container" *ngIf="filteredFriendsList.length > 0; else noFriends">
       <div class="name" (click)="sendTag(friend.username)" *ngFor="let friend of filteredFriendsList">
         {{ friend.username }}
       </div>

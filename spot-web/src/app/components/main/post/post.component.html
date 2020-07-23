@@ -12,8 +12,8 @@
 
     <div class="content-container">
 
-      <div class="text">
-        {{getContent()}}
+      <!-- places beside to avoid extra space since style is whitespace: pre-wrap -->
+      <div class="text">{{getContent()}}
         <span *ngIf="isExpandable">
           <span *ngIf="expanded; else notExpanded">
             <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
