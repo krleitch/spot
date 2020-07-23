@@ -15,6 +15,7 @@ import { SpotError } from '@exceptions/error';
 import { Friend, GetFriendsRequest } from '@models/friends';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
 import { AlertService } from '@services/alert.service';
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
   selector: 'spot-comments-container',
@@ -62,9 +63,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   imgSrc: string = null;
 
   STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
-
-  // displaying used characters for add comment
-  MAX_COMMENT_LENGTH = 300;
+  COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
   constructor(private store$: Store<RootStoreState.State>,
               private alertService: AlertService,
@@ -104,7 +103,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     this.addCommentSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
       if ( success.id === this.post.id && success.success ) {
-
+        this.removeFile();
+        this.comment.nativeElement.innerText = '';
+        this.comment.nativeElement.innerHtml = '';
+        Array.from(this.comment.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
+        this.commentInnerHtml = '';
+        this.currentLength = this.commentInnerHtml.length;
       }
     });
 
@@ -113,8 +117,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     );
 
     this.addCommentError$.pipe(takeUntil(this.onDestroy)).subscribe( error => {
-      if ( error.id ) {
-        console.log(error.error);
+      if ( error.error && this.post.id === error.id ) {
+        this.addCommentError = error.error.message;
       }
     });
 
@@ -344,23 +348,52 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     content = text.trim();
 
-    if (content.length <= this.MAX_COMMENT_LENGTH) {
-
-      const request: AddCommentRequest = {
-        postId: this.post.id,
-        content,
-        image: this.imageFile,
-        tagsList: this.tags
-      };
-
-      this.store$.dispatch(
-        new CommentsStoreActions.AddRequestAction(request)
-      );
+    if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
+      this.addCommentError = 'Your comment must be less than ' + COMMENTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
+      return;
     }
+
+    if ( content.length === 0 && !this.imageFile ) {
+      this.addCommentError = 'Your comment must have text or an image';
+      return;
+    }
+
+    if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
+      this.addCommentError = 'Comment must be greater than ' + COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH + ' characters';
+      return;
+    }
+
+    if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
+      this.addCommentError = 'Comment must be less than ' + COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH + ' characters';
+      return;
+    }
+
+    // Only allow ascii characters currently, so check anything but ascii
+    // So user knows what they need to change
+    const regex = /^[^\x00-\x7F]*$/;
+    const match = content.match(regex);
+    if ( match && match[0].length > 0 ) {
+      this.addCommentError = 'Invalid spot content ' + match[0];
+      return;
+    }
+
+
+    // Make the reqest
+    const request: AddCommentRequest = {
+      postId: this.post.id,
+      content,
+      image: this.imageFile,
+      tagsList: this.tags
+    };
+
+    this.store$.dispatch(
+      new CommentsStoreActions.AddRequestAction(request)
+    );
+
   }
 
   invalidLength(): boolean {
-    return this.currentLength > this.MAX_COMMENT_LENGTH;
+    return this.currentLength > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
   onFileChanged(event) {

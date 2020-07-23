@@ -39,6 +39,12 @@ export const ERROR_MESSAGES = {
 
         },
 
+        COMMENTS: {
+
+            COMMENT_ERROR: 'Comment Error',
+
+        },
+
         REPORT: {
 
             REPORT_ERROR: 'There was an error sending your report. Please try again.',

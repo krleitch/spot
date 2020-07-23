@@ -108,7 +108,13 @@
   box-sizing: border-box;
   background-color: $lighter-grey;
   border-radius: 3px;
-  max-height: 300px;
+
+  .editor-content {
+    display: flex;
+    flex: 1;
+    max-height: 300px;
+    overflow: auto;
+  }
 
   .comment-content {
     min-height: 30px;
@@ -153,9 +159,9 @@ spot-tag {
 }
 
 .image {
-  display: flex;
+  // display: flex;
   width: 100%;
-  justify-content: center;
+  // justify-content: center;
   padding: 6px 12px;
   box-sizing: border-box;
   cursor: pointer;
@@ -200,7 +206,6 @@ img {
 // Tags
 .tag-container {
 
-
   margin-bottom: auto;
   display: flex;
   flex-flow: row wrap;
@@ -234,6 +239,13 @@ img {
 
   }
 
+}
 
+.add-comment-error {
+  display: flex;
+  box-sizing: border-box;
+  padding: 0px 6px;
+  color: $error-red;
+  background-color: white;
 }
 

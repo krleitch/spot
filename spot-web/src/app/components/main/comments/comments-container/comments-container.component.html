@@ -40,9 +40,11 @@
 
     <div class="editor">
 
-      <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
-      <div class="image" *ngIf="imgSrc != null">
-        <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
+      <div class="editor-content">
+        <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
+        <div class="image" *ngIf="imgSrc != null">
+          <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
+        </div>
       </div>
 
       <div class="file-options" *ngIf="imgSrc != null">
@@ -54,7 +56,7 @@
       </div>
 
       <div class="comment-options">
-        <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_COMMENT_LENGTH - currentLength }} </span>
+        <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }} </span>
         <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
         <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
         <span class="send" (click)="addComment()">
@@ -64,6 +66,9 @@
 
     </div>
   </div>
+  <span *ngIf="addCommentError" class="add-comment-error">
+    {{ addCommentError }}
+  </span>
   <span class="tag-relative" #tag><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
 
 </div>
