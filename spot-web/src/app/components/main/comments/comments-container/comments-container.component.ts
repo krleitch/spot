@@ -31,7 +31,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   @ViewChild('tag') tag: ElementRef;
   tags: Tag[] = [];
-  showTag = false;
+  showTag = true;
   tagName = '';
   tagElement;
   tagCaretPosition;
@@ -208,7 +208,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   private checkWord(word: string, element, position) {
 
-    if ( word.length > 0 && word[0] === '@' ) {
+    if ( word.length > 1 && word[0] === '@' ) {
       this.tagName = word.slice(1);
       this.showTag = true;
       this.tagElement = element;
@@ -359,6 +359,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     // refocus
     this.placeCaretAtEnd(this.comment.nativeElement);
+
+    // hide tag menu
+    this.tagName = '';
+    this.showTag = false;
+    this.tagElement = null;
+    this.tagCaretPosition = null;
 
   }
 

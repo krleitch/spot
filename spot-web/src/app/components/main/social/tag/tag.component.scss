@@ -2,41 +2,63 @@
 
 .tag {
 
-  position: relative;
+  background-color: white;
+  width: 200px;
+  margin-left: 12px;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+
+  .header {
+
+    font-size: 20px;
+    padding: 5px 10px;
+    border-bottom: 1px solid $lighter-grey;
+
+  }
 
   .content {
 
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: white;
-    width: 200px;
-    margin-left: 12px;
-    box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+    padding: 5px 10px;
 
-    .header {
+    .search {
 
-      font-size: 20px;
-      padding: 5px 10px;
-      border-bottom: 1px solid $lighter-grey;
+      display: flex;
+      align-items: center;
+
+      .icon {
+        margin-right: 3px;
+      }
+
+      .search-text {
+
+        display: flex;
+        flex-flow: column;
+        width: 100%;
+
+        .bar {
+          height: 1px;
+          width: 100%;
+          background-color: $lighter-grey;
+        }
+
+      }
 
     }
 
     .friend-container {
-      padding: 5px 10px;
-    }
 
-    .name {
+      .name {
 
-      cursor: pointer;
-      box-sizing: border-box;
-      width: 100%;
-      padding: 3px 5px;
-      background-color: $lighter-grey;
+        cursor: pointer;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 3px 5px;
+        background-color: $lighter-grey;
 
-      &:hover {
-        color: white;
-        background-color: $button-highlight;
+        &:hover {
+          color: white;
+          background-color: $button-highlight;
+        }
+
       }
 
     }

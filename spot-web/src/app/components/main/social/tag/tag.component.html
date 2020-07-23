@@ -1,12 +1,17 @@
 <div class="tag">
+
+  <div class="header">
+    {{ STRINGS.TAG }}
+  </div>
+
   <div class="content">
 
-    <div class="header">
-      {{ STRINGS.TAG }}
-    </div>
-
-    <div class="name" *ngIf="name" (click)="sendTag(name)">
-      {{ name }}
+    <div class="search" *ngIf="name">
+      <span class="material-icons icon"> search </span>
+      <div class="search-text">
+        {{ name }}
+        <span class="bar"></span>
+      </div>
     </div>
 
     <div class="friend-container" *ngIf="friendsList.length > 0; else noFriends">
@@ -19,4 +24,5 @@
     </ng-template>
 
   </div>
+
 </div>
