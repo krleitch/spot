@@ -16,10 +16,12 @@
 .content-tag-container{
 
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
 
   .tag-name-container {
     display: flex;
+    flex-flow: row wrap;
   }
 
   .tag {
@@ -29,7 +31,7 @@
     align-items: center;
 
     padding: 3px 6px;
-    margin-right: 3px;
+    margin: 1px 3px 1px 0px;
     background-color: $lighter-grey;
 
     .person {
@@ -37,14 +39,15 @@
       font-size: 20px;
     }
 
-  }
+    .highlight {
+      color: $button-highlight;
+    }
 
-  .bold {
-    color: $button-highlight;
   }
 
 }
 
+// Tags in reply box
 .tag-container {
 
   display: flex;
@@ -71,8 +74,17 @@
 }
 
 .content {
+
   margin-top: 10px;
   margin-bottom: 3px;
+
+  .text {
+    line-height: 1.2em;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
 }
 
 .image {

@@ -9,10 +9,11 @@ import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-st
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
-         LikeCommentRequest, DislikeCommentRequest, ReportCommentRequest } from '@models/comments';
+         LikeCommentRequest, DislikeCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { Tag } from '@models/notifications';
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
   selector: 'spot-comment',
@@ -29,10 +30,11 @@ export class CommentComponent implements OnInit {
   @ViewChild('options') options;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
+  COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
-  // Show ... for content
-  MAX_SHOW_COMMENT_LENGTH = 75;
+  // For large comments
   expanded = false;
+  isExpandable = false;
 
   @ViewChild('tag') tag: ElementRef;
   tags: Tag[] = [];
@@ -107,6 +109,12 @@ export class CommentComponent implements OnInit {
     // off set and num loaded should be based off array length, not set here, FIX TODO
     this.numLoaded += initialLimit;
     this.getTime(this.comment.creation_date);
+
+    if ( this.comment.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
+         || this.comment.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+      this.isExpandable = true;
+    }
+
   }
 
   offClickHandler(event: MouseEvent) {
@@ -175,16 +183,31 @@ export class CommentComponent implements OnInit {
   }
 
   getContent(): string {
-    // https://css-tricks.com/line-clampin/
-    if (this.expandable() && !this.expanded) {
-      return this.comment.content.substring(0, this.MAX_SHOW_COMMENT_LENGTH) + ' ...';
-    } else {
+
+    if ( this.expanded || !this.isExpandable ) {
       return this.comment.content;
     }
-  }
 
-  expandable(): boolean {
-    return this.comment.content.length > this.MAX_SHOW_COMMENT_LENGTH;
+    const textArrays = this.comment.content.split(/\r\n|\r|\n/);
+    let truncatedContent = '';
+
+    for (let i = 0; i < textArrays.length && i < COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
+
+      if ( truncatedContent.length + textArrays[i].length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+        truncatedContent = textArrays[i].substring(0, COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
+        break;
+      } else {
+        truncatedContent += textArrays[i];
+        // Dont add newline for last line or last line before line length reached
+        if ( i !== textArrays.length - 1 && i !== COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
+          truncatedContent += '\n';
+        }
+      }
+
+    }
+
+    return truncatedContent + ' ...';
+
   }
 
   setExpanded(value: boolean) {

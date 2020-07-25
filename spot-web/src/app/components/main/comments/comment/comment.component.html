@@ -22,13 +22,13 @@
         <span class="content-tag-container" *ngIf="comment.tag.numTagged > 0">
           <span class="tag-name-container" *ngIf="comment.tag.owned; else notOwned">
             <span class="tag" *ngFor="let name of comment.tag.names">
-              <span class="bold"> {{ name }} </span>
+              <span class="highlight"> {{ name }} </span>
             </span>
           </span>
           <ng-template #notOwned>
             <span class="tag" *ngIf="comment.tag.tagged; else notTagged">
-              <span class="bold"> {{ comment.tag.tagger }} </span> Tagged You
-              <span *ngIf="comment.tag.numTagged - 1 > 0"> and {{ comment.tag.numTagged - 1 }} <span class="material-icons person"> person </span> </span>
+              <span class="highlight"> {{ comment.tag.tagger }} </span> Tagged You
+              <span *ngIf="comment.tag.numTagged - 1 > 0"> and <span class="material-icons person"> person </span> {{ comment.tag.numTagged - 1 }} </span>
             </span>
             <ng-template #notTagged>
               <span class="tag">
@@ -38,16 +38,17 @@
           </ng-template>
         </span>
 
-        {{ getContent() }}
-
-        <span *ngIf="expandable()">
-          <span *ngIf="!expanded; else notExpanded">
-            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
-          </span>
-          <ng-template #notExpanded>
+        <!-- places beside to avoid extra space since style is whitespace: pre-wrap -->
+        <div class="text">{{getContent()}}
+          <span *ngIf="isExpandable">
+            <span *ngIf="expanded; else notExpanded">
               <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
-          </ng-template>
-        </span>
+            </span>
+            <ng-template #notExpanded>
+              <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+            </ng-template>
+          </span>
+        </div>
 
         <div class="image" (click)="openModal('spot-image-modal', comment.image_src)" *ngIf="comment.image_src != null">
           <img [src]="comment.image_src" />

@@ -60,8 +60,8 @@ export class PostComponent implements OnInit, OnDestroy {
       this.location = location;
     });
 
-    if ( this.post.content.split(/\r\n|\r|\n/).length > this.POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
-         || this.post.content.length > this.POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+    if ( this.post.content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
+         || this.post.content.length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
       this.isExpandable = true;
     }
 
