@@ -22,12 +22,12 @@
         <span class="content-tag-container" *ngIf="comment.tag.numTagged > 0">
           <span class="tag-name-container" *ngIf="comment.tag.owned; else notOwned">
             <span class="tag" *ngFor="let name of comment.tag.names">
-              {{ name }}
+              <span class="bold"> {{ name }} </span>
             </span>
           </span>
           <ng-template #notOwned>
             <span class="tag" *ngIf="comment.tag.tagged; else notTagged">
-              {{ comment.tag.tagger }} Tagged You
+              <span class="bold"> {{ comment.tag.tagger }} </span> Tagged You
               <span *ngIf="comment.tag.numTagged - 1 > 0"> and {{ comment.tag.numTagged - 1 }} <span class="material-icons person"> person </span> </span>
             </span>
             <ng-template #notTagged>

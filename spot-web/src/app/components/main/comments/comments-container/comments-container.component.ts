@@ -30,7 +30,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   @Input() post: Post;
 
   @ViewChild('comment') comment: ElementRef;
-  commentInnerHtml = '';
   currentLength = 0;
 
   @ViewChild('tag') tag: ElementRef;
@@ -107,8 +106,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         this.comment.nativeElement.innerText = '';
         this.comment.nativeElement.innerHtml = '';
         Array.from(this.comment.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-        this.commentInnerHtml = '';
-        this.currentLength = this.commentInnerHtml.length;
+        this.comment.nativeElement.innerHTML = '';
+        this.currentLength = this.comment.nativeElement.innerHTML.length;
       }
     });
 
@@ -141,33 +140,20 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // if detailed load more comments
     let initialLimit;
     if ( this.detailed ) {
-      initialLimit = 10;
+      initialLimit = COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT;
     } else {
-      initialLimit = 1;
+      initialLimit = COMMENTS_CONSTANTS.INITIAL_LIMIT;
     }
 
-    let request: LoadCommentsRequest;
-
-    if ( this.post.startCommentId ) {
-      // Get the latests limit # of comments
-      request = {
-        postId: this.post.id,
-        date: new Date().toString(),
-        type: 'before',
-        limit: initialLimit,
-        commentId: this.post.startCommentId,
-        initialLoad: this.initialLoad
-      };
-    } else {
-      // Get the latests limit # of comments
-      request = {
-        postId: this.post.id,
-        date: new Date().toString(),
-        type: 'before',
-        limit: initialLimit,
-        initialLoad: this.initialLoad
-      };
-    }
+    // Get the latests limit # of comments
+    const request: LoadCommentsRequest = {
+      postId: this.post.id,
+      date: new Date().toString(),
+      type: 'before',
+      limit: initialLimit,
+      commentId: this.post.startCommentId || null,
+      initialLoad: this.initialLoad
+    };
 
     this.initialLoad = false;
 
@@ -197,7 +183,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   onTextInput(event) {
 
-    this.commentInnerHtml = event.target.innerHTML;
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
     this.addCommentError = null;
@@ -265,6 +250,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     // if we pressed space to add the tag, remove the extra space
     element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
+
   }
 
   onEnter() {
@@ -286,8 +272,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   loadRecentComments() {
-    // Load 1 more comments
-    const limit = 1;
+    const limit = COMMENTS_CONSTANTS.INITIAL_LIMIT;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       date: this.comments.length > 0 ? this.comments[0].creation_date : null,
@@ -302,11 +287,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   loadMoreComments() {
-    // Load 1 more comments
-    const limit = 1;
+    const limit = COMMENTS_CONSTANTS.INITIAL_LIMIT;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
-      date: this.comments.slice(-1).pop().creation_date,
+      date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
       type: 'before',
       limit,
       initialLoad: this.initialLoad
@@ -319,7 +303,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   addComment() {
 
-    let content = this.commentInnerHtml;
+    let content = this.comment.nativeElement.innerHTML;
 
     // parse the innerhtml to return a string with newlines instead of innerhtml
     const parser = new DOMParser();
@@ -397,8 +381,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   onFileChanged(event) {
-    this.imageFile = event.target.files[0];
-    this.imgSrc = window.URL.createObjectURL(this.imageFile);
+    if ( event.target.files.length > 0 ) {
+      this.imageFile = event.target.files[0];
+      this.imgSrc = window.URL.createObjectURL(this.imageFile);
+    }
   }
 
   removeFile() {

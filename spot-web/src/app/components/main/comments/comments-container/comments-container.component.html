@@ -1,7 +1,7 @@
 <div class="container">
   <div class="comments-container">
 
-    <div class="load-more-container">
+    <div class="load-recent-container">
       <div class="load-more" (click)="loadRecentComments()">
         <span *ngIf="comments.length > 0; else refresh"> {{ STRINGS.LOAD_RECENT_COMMENTS }} </span>
         <ng-template #refresh>
@@ -25,7 +25,13 @@
       </div>
     </ng-template>
 
-    <div *ngIf="totalCommentsBefore > 0" class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
+    <div class="load-more-container" *ngIf="totalCommentsBefore > 0">
+      <div class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
+      <div *ngIf="loadingCommentsBefore$ | async as loadingCommentsBefore" class="load-comments-before">
+        <spot-spinner *ngIf="loadingCommentsBefore.id == post.id" size="small"></spot-spinner>
+      </div>
+    </div>
+
   </div>
 
   <div class="add" *ngIf="(isAuthenticated$ | async) && post.inRange">
@@ -40,11 +46,9 @@
 
     <div class="editor">
 
-      <div class="editor-content">
-        <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
-        <div class="image" *ngIf="imgSrc != null">
-          <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
-        </div>
+      <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
+      <div class="image" *ngIf="imgSrc != null">
+        <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>
 
       <div class="file-options" *ngIf="imgSrc != null">

@@ -9,5 +9,9 @@ export const COMMENTS_CONSTANTS = {
     MAX_TRUNCATE_LENGTH: 150,
     MAX_LINE_TRUNCATE_LENGTH: 3,
  
+    // How many comments to initially get for a post
+    INITIAL_LIMIT: 1,
+    DETAILED_INITIAL_LIMIT: 10
+
  };
  
