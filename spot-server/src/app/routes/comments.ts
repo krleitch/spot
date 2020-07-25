@@ -2,17 +2,29 @@ const express = require('express');
 const router = express.Router();
 const uuid = require('uuid');
 
+// db
 const posts = require('../db/posts');
 const reports = require('../db/reports');
 const comments = require('../db/comments');
 const accounts = require('../db/accounts');
 const tags = require('../db/tags');
 const notifications = require('../db/notifications');
-const commentsService = require('../services/comments');
-const locationsService = require('../services/locations');
 
+// services
+const commentsService = require('../services/comments');
+
+// errors
+const CommentsError = require('@exceptions/comments');
+const AuthenticationError = require('@exceptions/authentication');
+const ErrorHandler = require('@src/app/errorHandler');
+
+// image
 const upload = require('../services/image');
 const singleUpload = upload.single('image');
+
+// constants
+const comments_constants = require('@constants/comments');
+const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -99,53 +111,82 @@ router.get('/:postId', async function (req: any, res: any) {
 });
 
 // Create a comment
-router.post('/:postId', function (req: any, res: any) {
+router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
+
+    // You must have an account to make a comment
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const accountId = req.user.id;
+    const commentId = uuid.v4();
     req.filename = 'comments/' + Date.now().toString();
 
     singleUpload(req, res, async function(err: any) {
 
         if (err) {
-            console.log(err);
-            return res.status(422).send('Error uploading image');
+            return next(new CommentsError.CommentImage(422));
         }
 
-        const { content, tagsList } = JSON.parse(req.body.json)
+        let { content, tagsList } = JSON.parse(req.body.json)
         const image = req.file ? req.file.location: null
 
-        const postId = req.params.postId;
-        const link = commentsService.generateLink();
+        // remove leading and trailing whitespaces
+        content = content.trim();
 
-        comments.addComment(postId, accountId, content, image, link).then( async (rows: any) => {
+        // check if line length matches
+        if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
+            return next(new CommentsError.InvalidCommentLineLength(400, COMMENTS_CONSTANTS.MAX_LINE_LENGTH))
+        }
+
+        // You must either have some text or an image
+        if ( content.length == 0 && !image ) {
+            return next(new CommentsError.NoCommentContent(400));
+        }
+
+        const contentError = commentsService.validContent(content);
+        if ( contentError ) {
+            return next(contentError);
+        }
+
+        const postId = req.params.postId;
+
+        const link = await commentsService.generateLink();
+
+        comments.addComment(commentId, postId, accountId, content, image, link).then( async (comment: any) => {
 
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
     
                 await accounts.getAccountByUsername(tagsList[index].receiver).then( async (account: any) => {
-                    await tags.addTag( account[0].id, rows[0].id );
-                    await notifications.addCommentNotification( rows[0].account_id, account[0].id, rows[0].post_id, rows[0].id );
+                    await tags.addTag( account[0].id, comment[0].id );
+                    await notifications.addCommentNotification( comment[0].account_id, account[0].id, comment[0].post_id, comment[0].id );
+                }, (err: any) => {
+                    return next(new CommentsError.CommentError(500));
                 });
     
             }
     
-            await commentsService.getTags( rows, accountId ).then( (taggedComments: any) => {
-                rows = taggedComments;
+            await commentsService.getTags( comment, accountId ).then( (taggedComments: any) => {
+                comment = taggedComments;
+            }, (err: any) => {
+                return next(new CommentsError.CommentError(500));
             });
     
             posts.getPostCreator(postId).then( (postCreator: any) => {
-                commentsService.addProfilePicture(rows, postCreator[0].account_id);
-                res.status(200).json({ postId: postId, comment: rows[0] } );
+                commentsService.addProfilePicture(comment, postCreator[0].account_id);
+                res.status(200).json({ postId: postId, comment: comment[0] } );
             }, (err: any) => {
-                return Promise.reject(err);
+                return next(new CommentsError.CommentError(500));
             });
+
         }, (err: any) => {
-            res.status(500).send('Error adding comment');
+            return next(new CommentsError.CommentError(500));
         });
 
     });
 
-});
+}));
 
 // Delete a single comment
 router.delete('/:postId/:commentId', function (req: any, res: any) {

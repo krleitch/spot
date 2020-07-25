@@ -56,7 +56,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   comments = [];
   totalCommentsBefore = 0;
-  numLoaded = 0;
 
   imageFile: File;
   imgSrc: string = null;
@@ -160,7 +159,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
-    this.numLoaded += initialLimit;
 
   }
 
@@ -272,7 +270,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   loadRecentComments() {
-    const limit = COMMENTS_CONSTANTS.INITIAL_LIMIT;
+    const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       date: this.comments.length > 0 ? this.comments[0].creation_date : null,
@@ -283,11 +281,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
-    this.numLoaded += limit;
   }
 
   loadMoreComments() {
-    const limit = COMMENTS_CONSTANTS.INITIAL_LIMIT;
+    const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
@@ -298,7 +295,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new CommentsStoreActions.GetRequestAction(request)
     );
-    this.numLoaded += limit;
   }
 
   addComment() {
@@ -360,7 +356,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.addCommentError = 'Invalid spot content ' + match[0];
       return;
     }
-
 
     // Make the reqest
     const request: AddCommentRequest = {

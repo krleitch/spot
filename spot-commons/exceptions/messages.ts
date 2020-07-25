@@ -33,7 +33,6 @@ export const ERROR_MESSAGES = {
             INVALID_POST_LENGTH: 'Invalid post length',
             INVALID_POST_LINE_LENGTH: 'Invalid post line length',
             NO_CONTENT: 'No content',
-            VERIFY: 'Account must be verified to create a spot',
             IMAGE: 'Error with image',
             INVALID_POST_PROFANITY: 'Spot cannot contain profanity'
 
@@ -42,6 +41,12 @@ export const ERROR_MESSAGES = {
         COMMENTS: {
 
             COMMENT_ERROR: 'Comment Error',
+            INVALID_COMMENT_CONTENT: 'Invalid comment content',
+            INVALID_COMMENT_LENGTH: 'Invalid comment length',
+            IMAGE: 'Error with image',
+            INVALID_COMMENT_LINE_LENGTH: 'Invalid post line length',
+            NO_CONTENT: 'No content',
+            INVALID_COMMENT_PROFANITY: 'Comment cannot contain profanity'
 
         },
 
@@ -60,6 +65,7 @@ export const ERROR_MESSAGES = {
 
             // Standard Authentication Error
             NO_AUTHENTICATION: 'User not Authenticated',
+            VERIFY: 'User email not verified',
 
             // Register Validation
 

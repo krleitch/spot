@@ -1,9 +1,20 @@
-export { addProfilePicture, getTags, generateLink }
+export { addProfilePicture, getTags, generateLink, validContent }
 
 const shortid = require('shortid');
 
+// services
+const badwords = require('@services/badwords');
+
+// db
 const accounts = require('../db/accounts');
 const tags = require('../db/tags');
+
+// error
+const CommentsError = require('@exceptions/comments');
+
+// constants
+const comments_constants = require('@constants/comments');
+const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
 
 function stringToIntHash(str: string, upperbound: number, lowerbound: number) {
     let result = 0;
@@ -12,6 +23,26 @@ function stringToIntHash(str: string, upperbound: number, lowerbound: number) {
     }
 
     return (result % (upperbound - lowerbound)) + lowerbound;
+}
+
+function validContent(content: string): Error | null {
+
+	if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH || content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH ) {
+		return new CommentsError.InvalidPostLength(400);
+	}
+
+	// Only ASCII characters allowed currently
+	// content field is setup as utf8mb4 so emoji can be added later
+	if ( ! /^[\x00-\x7F]*$/.test(content) ) {
+		return new CommentsError.InvalidPostContent(400);
+	};
+
+	if ( badwords.checkProfanity(content) ) {
+		return new CommentsError.InvalidPostProfanity(400);
+	}
+
+	return null;
+
 }
 
 function addProfilePicture( comments: any, postCreator: string) {
@@ -34,7 +65,13 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
         await tags.getTagsByCommentId(comments[index].id).then( async (tagList: any) => {
 
             // The required properties
-            let tagObject = {
+            let tagObject: {
+                owned: boolean;
+                numTagged: number;
+                tagged: boolean;
+                tagger?: string;
+                names?: string[];
+            } = {
                 owned: false,
                 numTagged: tagList.length,
                 tagged: false
@@ -75,6 +112,17 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
 }
 
-function generateLink(): string {
-	return shortid.generate();
+async function generateLink(): Promise<string> {
+
+	// Need to make sure the link isnt already taken
+
+	let link;
+	let exists;
+	do {
+		link = shortid.generate();
+		exists = await posts.linkExists(link)
+	} while (exists)
+
+	return link
+
 }

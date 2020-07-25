@@ -47,6 +47,7 @@
           </ng-template>
         </span>
       </div>
+
       <div [hidden]="!showAddReply" class="add" *ngIf="(reply.tag.tagged || inRange) && (isAuthenticated$ | async)">
         <div class="editor">
           <div contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply2-content" [textContent]="reply2Text" (input)="onTextInput($event)"></div>
@@ -71,6 +72,7 @@
         </div>
       </div>
       <span #tag ><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="postLink" (tag)="addTag($event)"></spot-tag></span>
+
     </div>
     <div class="right-bar">
       <div #options>

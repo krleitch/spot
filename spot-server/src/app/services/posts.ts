@@ -12,7 +12,8 @@ const posts = require('@db/posts');
 const PostsError = require('@exceptions/posts');
 
 // constants
-const CONSTANTS = require('@constants/posts');
+const posts_constants = require('@constants/posts');
+const POSTS_CONSTANTS = posts_constants.POSTS_CONSTANTS;
 
 async function generateLink(): Promise<string> {
 
@@ -31,7 +32,7 @@ async function generateLink(): Promise<string> {
 
 function validContent(content: string): Error | null {
 
-	if ( content.length < CONSTANTS.MIN_CONTENT_LENGTH || content.length > CONSTANTS.MAX_CONTENT_LENGTH ) {
+	if ( content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH || content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH ) {
 		return new PostsError.InvalidPostLength(400);
 	}
 

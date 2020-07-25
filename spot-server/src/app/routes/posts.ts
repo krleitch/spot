@@ -28,7 +28,6 @@ const POSTS_CONSTANTS = posts_constants.POSTS_CONSTANTS;
 const report_constants = require('@constants/report');
 const REPORT_CONSTANTS = report_constants.REPORT_CONSTANTS;
 
-
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
@@ -73,7 +72,7 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 
     // You must be verified to make a post
     if ( !req.verified ) {
-        return next(new PostsError.AccountNotVerified(400));
+        return next(new AuthenticationError.VerifyError(400));
     }
 
     const accountId = req.user.id;

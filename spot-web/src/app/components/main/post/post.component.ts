@@ -151,15 +151,15 @@ export class PostComponent implements OnInit, OnDestroy {
     const textArrays = this.post.content.split(/\r\n|\r|\n/);
     let truncatedContent = '';
 
-    for (let i = 0; i < textArrays.length && i < this.POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
+    for (let i = 0; i < textArrays.length && i < POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
 
-      if ( truncatedContent.length + textArrays[i].length > this.POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
-        truncatedContent = textArrays[i].substring(0, this.POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
+      if ( truncatedContent.length + textArrays[i].length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+        truncatedContent = textArrays[i].substring(0, POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
         break;
       } else {
         truncatedContent += textArrays[i];
         // Dont add newline for last line or last line before line length reached
-        if ( i !== textArrays.length - 1 && i !== this.POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
+        if ( i !== textArrays.length - 1 && i !== POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
           truncatedContent += '\n';
         }
       }

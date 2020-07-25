@@ -65,7 +65,7 @@
             </div>
           </div>
           <div contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply-content" [textContent]="replyText" (input)="onTextInput($event)"></div>
-          <div class="image" *ngIf="imgSrc != null">
+          <div *ngIf="imgSrc != null" class="image" >
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
           <div class="file-options" *ngIf="imgSrc != null">

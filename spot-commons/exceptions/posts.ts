@@ -48,13 +48,6 @@ export class NoPostContent extends SpotError {
     }
 }
 
-export class AccountNotVerified extends SpotError {
-  constructor(statusCode) {
-    super(POSTS_ERROR_MESSAGES.VERIFY, statusCode);
-    this.name = "AccountNotVerified";
-  }
-}
-
 export class PostImage extends SpotError {
   constructor(statusCode) {
     super(POSTS_ERROR_MESSAGES.IMAGE, statusCode);

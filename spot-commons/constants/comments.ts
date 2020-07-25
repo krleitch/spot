@@ -11,7 +11,10 @@ export const COMMENTS_CONSTANTS = {
  
     // How many comments to initially get for a post
     INITIAL_LIMIT: 1,
-    DETAILED_INITIAL_LIMIT: 10
+    DETAILED_INITIAL_LIMIT: 10,
+
+    RECENT_LIMIT: 5,
+    MORE_LIMIT: 5
 
  };
  

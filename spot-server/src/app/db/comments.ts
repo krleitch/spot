@@ -78,8 +78,7 @@ function getCommentByPostIdNoAccount(postId: string, date: string, limit: number
     return db.query(sql, values);
 }
 
-function addComment(postId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
-    const commentId = uuid.v4();
+function addComment(commentId: string, postId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
     // Note the parent_id is NULL
     var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     var values = [commentId, postId, accountId, new Date(), content, link, image, 0, 0];
