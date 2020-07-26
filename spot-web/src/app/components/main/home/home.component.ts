@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,7 +24,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   STRINGS = STRINGS.MAIN.HOME;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>) {
+    document.addEventListener('click', this.offClickHandler.bind(this));
+  }
 
   postlocation = '';
   loadingLocation$: Observable<boolean>;
@@ -48,6 +50,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   verificationSent = false;
 
   mobile = false;
+  @ViewChild('mobileDropdownLocation') mobileDropdownLocation: ElementRef;
+  dropdownLocationEnabled = false;
+  @ViewChild('mobileDropdownSort') mobileDropdownSort: ElementRef;
+  dropdownSortEnabled = false;
 
   ngOnInit() {
 
@@ -99,6 +105,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.onDestroy.next();
+  }
+
+  offClickHandler(event: MouseEvent) {
+    if (!this.mobileDropdownLocation.nativeElement.contains(event.target)) {
+      this.dropdownLocation(false);
+    }
+    if (!this.mobileDropdownSort.nativeElement.contains(event.target)) {
+      this.dropdownSort(false);
+    }
+  }
+
+  dropdownLocation(value: boolean) {
+    this.dropdownLocationEnabled = value;
+  }
+
+  dropdownSort(value: boolean) {
+    this.dropdownSortEnabled = value;
   }
 
   onScroll() {
@@ -171,6 +194,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       new AccountsActions.UpdateAccountMetadataRequestAction(request)
     );
 
+    this.dropdownLocationEnabled = false;
+
     this.refresh();
   }
 
@@ -184,6 +209,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new AccountsActions.UpdateAccountMetadataRequestAction(request)
     );
+
+    this.dropdownLocationEnabled = false;
 
     this.refresh();
   }
@@ -203,6 +230,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       new AccountsActions.UpdateAccountMetadataRequestAction(request)
     );
 
+    this.dropdownSortEnabled = false;
+
     this.refresh();
   }
 
@@ -216,6 +245,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new AccountsActions.UpdateAccountMetadataRequestAction(request)
     );
+
+    this.dropdownSortEnabled = false;
 
     this.refresh();
   }

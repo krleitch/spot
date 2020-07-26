@@ -215,3 +215,91 @@ spot-create {
   }
 
 }
+
+
+// mobile dropdowns
+
+.mobile-dropdown-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  width: 60px;
+  top: 28px;
+  left: -60px;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+  z-index: 1;
+}
+
+.dropdown-content .button {
+
+  background-color: #efefef;
+  color: black;
+  padding: 12px 8px;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid $lighter-grey;
+  cursor: pointer;
+
+  &:hover {
+    background: $lighter-grey;
+    color: $button-highlight;
+  }
+
+  .icon {
+    margin-right: 6px;
+  }
+
+}
+
+.show {
+  display:block;
+}
+
+.postFilterToggleMobile {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  width: 80px;
+  top: 20px;
+  left: 129px;
+  z-index: 100;
+  font-size: 18px;
+}
+
+.selectedLocationMobile {
+  color: $button-highlight;
+}
+
+.selectedSortMobile {
+  color: $button-highlight;
+}
+
+.mobile {
+  display: none;
+}
+
+@media screen and (max-width: $mobile-width) {
+  .mobile {
+    display: flex;
+  }
+
+  .desktop {
+    display: none;
+  }
+}

@@ -1,12 +1,41 @@
 <spot-main-nav (titleEvent)="refresh()"></spot-main-nav>
-<div class="locationToggle">
+
+<div class="locationToggle desktop">
   <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
   <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
 </div>
-<div class="postFilterToggle">
+<div #mobileDropdownLocation class="locationToggle mobile">
+  <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
+    <i *ngIf="isSelectedLocation('local')" class="material-icons"> home </i>
+    <i *ngIf="isSelectedLocation('global')" class="material-icons"> language </i>
+    <span class="material-icons"> expand_more </span>
+  </div>
+  <div class="dropdown">
+    <div class="dropdown-content" [ngClass]="{'show': dropdownLocationEnabled }">
+      <div class="button" [ngClass]="{'selectedLocationMobile': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
+      <div class="button" [ngClass]="{'selectedLocationMobile': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
+    </div>
+  </div>
+</div>
+
+<div class="postFilterToggle desktop">
   <div class="hot" [ngClass]="{'selectedSort': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
   <div class="new" [ngClass]="{'selectedSort': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
 </div>
+<div #mobileDropdownSort class="postFilterToggleMobile mobile">
+  <div class="mobile-dropdown-container" (click)="dropdownSort(true)">
+    <div *ngIf="isSelectedPostSort('hot')"> {{ STRINGS.HOT }} </div>
+    <div *ngIf="isSelectedPostSort('new')"> {{ STRINGS.NEW }} </div>
+    <span class="material-icons"> expand_more </span>
+  </div>
+  <div class="dropdown">
+    <div class="dropdown-content" [ngClass]="{'show': dropdownSortEnabled }">
+      <div class="button" [ngClass]="{'selectedSortMobile': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
+      <div class="button" [ngClass]="{'selectedSortMobile': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <div *ngIf="myLocation || postlocation == 'global'; else noLocation" class="content">
       <div class="max-width" *ngIf="account$ | async as account">
