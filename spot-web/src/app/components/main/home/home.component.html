@@ -11,9 +11,9 @@
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
-    <div class="dropdown-content" [ngClass]="{'show': dropdownLocationEnabled }">
-      <div class="button" [ngClass]="{'selectedLocationMobile': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
-      <div class="button" [ngClass]="{'selectedLocationMobile': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
+    <div class="dropdown-content-location" [ngClass]="{'show': dropdownLocationEnabled }">
+      <div class="button" [ngClass]="{'selected-highlight': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
+      <div class="button" [ngClass]="{'selected-highlight': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
     </div>
   </div>
 </div>
@@ -29,9 +29,9 @@
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
-    <div class="dropdown-content" [ngClass]="{'show': dropdownSortEnabled }">
-      <div class="button" [ngClass]="{'selectedSortMobile': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
-      <div class="button" [ngClass]="{'selectedSortMobile': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
+    <div class="dropdown-content-sort" [ngClass]="{'show': dropdownSortEnabled }">
+      <div class="button" [ngClass]="{'selected-highlight': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
+      <div class="button" [ngClass]="{'selected-highlight': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
     </div>
   </div>
 </div>
