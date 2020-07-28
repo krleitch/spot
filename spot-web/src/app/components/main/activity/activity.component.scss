@@ -24,15 +24,18 @@ spot-main-nav {
   display: flex;
   flex-flow: column;
   width: 50%;
-  margin-top: 25px;
 }
 
 // Tabs
 
 .tab-container {
+  position: fixed;
+  background-color: $background-grey;
   display: flex;
+  width: 100%;
   font-size: 24px;
-  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 25px;
 }
 
 .tab {
@@ -55,7 +58,11 @@ spot-main-nav {
 .date {
   color: $subtle-grey;
   font-size: 16px;
-  margin-bottom: 5px;
+}
+
+.horiz-bar {
+  width: 100%;
+  border-bottom: 1px solid $lighter-grey;
 }
 
 .bar-wrapper {
@@ -86,19 +93,49 @@ img {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.content-container {
+  margin-top: 75px;
 }
 
 // posts
 
 .activity-post {
   margin-bottom: 15px;
+
+  .activity-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+
+    .post-link {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      color: $subtle-grey;
+      margin-left: 10px;
+      &:hover {
+        color: $button-highlight;
+      }
+
+      .icon {
+        font-size: 16px;
+      }
+
+    }
+
+  }
+
 }
 
 .post-content {
   display: flex;
-  padding: 5px 0px;
+  padding: 10px 0px 5px 0px;
   width: 100%;
+  margin-left: 20px;
 }
 
 .post-info {
@@ -109,23 +146,11 @@ img {
 }
 
 .info-bar {
-  margin-top: 5px;
   color: $subtle-grey;
 }
 
 .info-bar-item {
   margin-right: 10px;
-}
-
-.post-link {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: $subtle-grey;
-  margin-bottom: 5px;
-  &:hover {
-    color: $button-highlight;
-  }
 }
 
 

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, take, finalize } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
@@ -25,7 +25,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
   STRINGS = STRINGS.MAIN.ACTIVITY;
 
   location$: Observable<Location>;
-  myLocation: Location;
+  location: Location;
 
   accountMetadata$: Observable<AccountMetadata>;
 
@@ -34,11 +34,13 @@ export class ActivityComponent implements OnInit, OnDestroy {
   constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
                private commentService: CommentService, private router: Router ) { }
 
-  postActivity$: Observable<Post[]>;
-  commentActivity$: Observable<CommentActivity[]>;
 
+
+  postActivity: Post[] = [];
+  postActivityLoading = false;
   postLimit = 10;
-  postLastDate = null;
+
+  commentActivity$: Observable<CommentActivity[]>;
   commentLimit = 10;
   commentLastDate = null;
 
@@ -54,20 +56,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
 
-      this.myLocation = location;
-
-      const activityPostRequest: ActivityPostRequest = {
-        date: new Date().toString(),
-        limit: this.postLimit,
-        location: this.myLocation
-      };
-
-      this.postActivity$ = this.postsService.getActivity( activityPostRequest ).pipe(
-        map( (activitySuccess: ActivityPostSuccess ) => {
-          this.postLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
-          return activitySuccess.activity;
-        })
-      );
+      this.location = location;
 
       const activityCommentRequest: ActivityCommentRequest = {
         date: new Date().toString(),
@@ -131,13 +120,36 @@ export class ActivityComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(/posts/ + postLink + '/comments/' + commentlink);
   }
 
-  onScroll() {
+  onScrollComments() {
 
     // TODO
 
     if ( this.selectedTab === 'posts' ) {
 
     } else {
+
+    }
+
+  }
+
+  onScrollPost() {
+
+    // take one and postloading var
+
+    if ( this.location && !this.postActivityLoading ) {
+
+      const activityPostRequest: ActivityPostRequest = {
+        date: this.postActivity.length > 0 ? this.postActivity.slice(-1).pop().creation_date : new Date().toString(),
+        limit: this.postLimit,
+        location: this.location
+      };
+
+      this.postActivityLoading = true;
+
+      this.postsService.getActivity( activityPostRequest ).pipe(take(1), finalize(() => this.postActivityLoading = false))
+        .subscribe( (activitySuccess: ActivityPostSuccess ) => {
+          this.postActivity = this.postActivity.concat(activitySuccess.activity);
+      });
 
     }
 
