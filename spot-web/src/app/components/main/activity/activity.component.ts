@@ -29,7 +29,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   accountMetadata$: Observable<AccountMetadata>;
 
-  selectedTab = 'posts';
+  selectedTab = 'commentsreplies';
 
   constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
                private commentService: CommentService, private router: Router ) { }
@@ -40,9 +40,9 @@ export class ActivityComponent implements OnInit, OnDestroy {
   postActivityLoading = false;
   postLimit = 10;
 
-  commentActivity$: Observable<CommentActivity[]>;
+  commentActivity: CommentActivity[] = [];
   commentLimit = 10;
-  commentLastDate = null;
+  commentActivityLoading = false;
 
   ngOnInit() {
 
@@ -57,18 +57,6 @@ export class ActivityComponent implements OnInit, OnDestroy {
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
 
       this.location = location;
-
-      const activityCommentRequest: ActivityCommentRequest = {
-        date: new Date().toString(),
-        limit: this.postLimit
-      };
-
-      this.commentActivity$ = this.commentService.getActivity( activityCommentRequest ).pipe(
-        map( (activitySuccess: ActivityCommentSuccess ) => {
-          this.commentLastDate = activitySuccess.activity.slice(-1)[0].creation_date;
-          return activitySuccess.activity;
-        })
-      );
 
     });
 
@@ -122,11 +110,19 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   onScrollComments() {
 
-    // TODO
+    if ( this.location && !this.commentActivityLoading ) {
 
-    if ( this.selectedTab === 'posts' ) {
+      const activityCommentRequest: ActivityCommentRequest = {
+        date: this.commentActivity.length > 0 ? this.commentActivity.slice(-1).pop().creation_date : new Date().toString(),
+        limit: this.postLimit
+      };
 
-    } else {
+      this.commentActivityLoading = true;
+
+      this.commentService.getActivity( activityCommentRequest ).pipe(take(1), finalize(() => this.commentActivityLoading = false))
+        .subscribe( (activitySuccess: ActivityCommentSuccess ) => {
+          this.commentActivity = this.commentActivity.concat(activitySuccess.activity);
+      });
 
     }
 

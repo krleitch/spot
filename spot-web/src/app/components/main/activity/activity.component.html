@@ -65,84 +65,53 @@
         </div>
       </div>
 
-      <div class="activity-comments-replies-container" *ngIf="selectedTab == 'commentsreplies'">
+      <div class="activity-comments-container" *ngIf="selectedTab == 'commentsreplies'">
         <spot-infinite-scroll (scrolled)="onScrollComments()">
-          <div class="activity-comment-reply-container" *ngFor="let activity of commentActivity$ | async">
+          <div *ngIf="commentActivity.length > 0; else noCommentActivity">
+            <div class="activity-comment" *ngFor="let activity of commentActivity">
 
-            <div class="date">
-              <span *ngIf="activity.parent_id == null; else replyDate"> {{ STRINGS.DATE_COMMENT_PROMPT }} </span>
-              <ng-template #replyDate> {{ STRINGS.DATE_REPLY_PROMPT }} </ng-template>
-              {{ formatDate(activity.creation_date) }}
-              {{ STRINGS.DATE_PROMPT_END }}
-            </div>
-
-            <div class="bar-wrapper">
-              <div class="bar"></div>
-              <div class="post-content-comment">
-
-                <div class="post-content">
-                  <div class="image" *ngIf="activity.post_image_src">
-                    <img [src]="activity.post_image_src">
-                  </div>
-                  <div class="post-info">
-                    <div class="post-link" (click)="openPost(activity.post_link)">
-                      <span class="material-icons icon"> chevron_right </span>
-                      {{ STRINGS.POSTS_OPEN }}
-                    </div>
-                    <div class="content-preview"> {{ activity.post_content }} </div>
-                  </div>
+              <div class="activity-header">
+                <div class="date">
+                  <span *ngIf="activity.parent_id == null; else replyDate"> {{ STRINGS.DATE_COMMENT_PROMPT }} </span>
+                  <ng-template #replyDate> {{ STRINGS.DATE_REPLY_PROMPT }} </ng-template>
+                  {{ formatDate(activity.creation_date) }}
+                  {{ STRINGS.DATE_PROMPT_END }}
                 </div>
-
-                <!-- The comment -->
-
-                <div class="comment-link" (click)="openComment(activity.post_link, activity.link)">
+                <div class="post-link" (click)="openPost(activity.post_link)">
                   <span class="material-icons icon"> chevron_right </span>
-                  {{ STRINGS.COMMENTS_OPEN }}
+                  {{ STRINGS.POSTS_OPEN }}
                 </div>
-
-                <div *ngIf="activity.parent_id == null; else reply">
-                  <div class="comment-content">
-                    <div class="image" *ngIf="activity.image_src">
-                      <img [src]="activity.image_src">
-                    </div>
-                    <div class="comment-info">
-                      <div class="content-preview"> {{ activity.content }} </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Reply -->
-                <ng-template #reply>
-
-                  <div class="parent-comment">
-                    <div class="comment-content">
-                      <div class="image" *ngIf="activity.parent_image_src">
-                        <img [src]="activity.parent_image_src">
-                      </div>
-                      <div class="comment-info">
-                        <div class="content-preview"> {{ activity.parent_content }} </div>
-                      </div>
-                    </div>
-
-                    <!-- The reply -->
-                    <div class="comment-content-reply">
-                      <div class="image" *ngIf="activity.image_src">
-                        <img [src]="activity.image_src">
-                      </div>
-                      <div class="content-preview"> {{ activity.content }} </div>
-                    </div>
-
-                  </div>
-
-                </ng-template>
-
               </div>
+
+              <div class="horiz-bar"></div>
+
+              <div class="comment-link" (click)="openComment(activity.post_link, activity.link)">
+                <span class="material-icons icon"> chevron_right </span>
+                {{ STRINGS.COMMENTS_OPEN }}
+              </div>
+              <div class="comment-content">
+                <div class="image" *ngIf="activity.image_src">
+                  <img [src]="activity.image_src">
+                </div>
+                <div class="comment-info">
+                  <div class="content-preview"> {{ activity.content }} </div>
+                </div>
+              </div>
+
             </div>
-
           </div>
+          <ng-template #noCommentActivity>
+            <div class="no-comment-activity">
+              <span class="text"> {{ STRINGS.NO_COMMENT_ACTIVITY }} </span>
+              <span class="material-icons icon"> insights </span>
+            </div>
+          </ng-template>
         </spot-infinite-scroll>
+        <div *ngIf="commentActivityLoading" class="loading">
+          <span class="text"> {{ STRINGS.LOADING_COMMENT_ACTIVITY }} </span>
+          <spot-spinner size="medium"></spot-spinner>
+        </div>
       </div>
-
 
     </div>
   </div>

@@ -235,22 +235,25 @@ export const STRINGS = {
           TITLE: 'Activity',
 
           // Tabs
-          POSTS: 'Posts',
+          POSTS: 'Spots',
           COMMENTS_REPLIES: 'Comments & Replies',
 
-          DATE_POST_PROMPT: 'You posted',
-          DATE_COMMENT_PROMPT: 'You commented',
-          DATE_REPLY_PROMPT: 'You replied',
+          DATE_POST_PROMPT: 'Spotted',
+          DATE_COMMENT_PROMPT: 'Commented',
+          DATE_REPLY_PROMPT: 'Replied',
           DATE_PROMPT_END: 'ago.',
 
           POSTS_SCORE: 'Score: ',
           POSTS_COMMENTS: 'Comments: ',
           POSTS_LOCATION: 'Location: ',
-          POSTS_OPEN: 'Open Post',
+          POSTS_OPEN: 'Open Spot',
           COMMENTS_OPEN: 'Open Comment Chain',
 
-          LOADING_POST_ACTIVITY: 'Loading Posts Activity ...',
-          NO_POST_ACTIVITY: 'You have no posts in the last 3 days'
+          LOADING_POST_ACTIVITY: 'Loading Spot activity ...',
+          NO_POST_ACTIVITY: 'You have no spots in the last 3 days',
+
+          LOADING_COMMENT_ACTIVITY: 'Loading comment & replies activity ...',
+          NO_COMMENT_ACTIVITY: 'You have no comments or replies in the last 3 days'
 
         },
 
