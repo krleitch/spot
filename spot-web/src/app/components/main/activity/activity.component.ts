@@ -134,8 +134,6 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   onScrollPost() {
 
-    // take one and postloading var
-
     if ( this.location && !this.postActivityLoading ) {
 
       const activityPostRequest: ActivityPostRequest = {

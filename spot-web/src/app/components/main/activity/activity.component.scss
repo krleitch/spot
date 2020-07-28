@@ -26,13 +26,25 @@ spot-main-nav {
   width: 50%;
 }
 
+.loading {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  .text {
+    margin-bottom: 5px;
+  }
+}
+
 // Tabs
 
 .tab-container {
   position: fixed;
   background-color: $background-grey;
   display: flex;
-  width: 100%;
+  justify-content: center;
+  width: 50%;
   font-size: 24px;
   padding-bottom: 10px;
   padding-top: 25px;
@@ -79,8 +91,8 @@ spot-main-nav {
 .image {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-right: 10px;
-  max-width: 120px;
 }
 
 img {
@@ -102,57 +114,85 @@ img {
 
 // posts
 
-.activity-post {
-  margin-bottom: 15px;
+.activity-posts-container {
 
-  .activity-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
+  .activity-post {
+    margin-bottom: 15px;
 
-    .post-link {
-      cursor: pointer;
+    .activity-header {
       display: flex;
-      align-items: center;
-      font-size: 16px;
-      color: $subtle-grey;
-      margin-left: 10px;
-      &:hover {
-        color: $button-highlight;
+      justify-content: space-between;
+      margin-bottom: 5px;
+
+      .post-link {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: $subtle-grey;
+        margin-left: 10px;
+        &:hover {
+          color: $button-highlight;
+        }
+
+        .icon {
+          font-size: 16px;
+        }
+
       }
 
-      .icon {
-        font-size: 16px;
+    }
+
+    .post-content {
+
+      display: flex;
+      margin: 10px 10px;
+      padding: 10px 10px;
+      width: calc(100% - 20px);
+      box-sizing: border-box;
+      background-color: white;
+
+      .post-info {
+
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        overflow: hidden;
+
+        .info-bar {
+          color: $subtle-grey;
+        }
+
+        .info-bar-item {
+          margin-right: 10px;
+        }
+
       }
 
     }
 
   }
 
-}
+  .no-post-activity {
 
-.post-content {
-  display: flex;
-  padding: 10px 0px 5px 0px;
-  width: 100%;
-  margin-left: 20px;
-}
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
 
-.post-info {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  width: calc(100% - 120px);
-}
+    .text {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
 
-.info-bar {
-  color: $subtle-grey;
-}
+    .icon {
+      font-size: 36px;
+      color: $button-highlight;
+    }
 
-.info-bar-item {
-  margin-right: 10px;
-}
+  }
 
+}
 
 // comments and replies
 
@@ -204,8 +244,13 @@ img {
 
 // For Mobile
 @media screen and (max-width: $mobile-width) {
+
   .activity-content {
     width: 90%;
+  }
+
+  .tab-container {
+    width: 95%;
   }
 
   .info-bar {

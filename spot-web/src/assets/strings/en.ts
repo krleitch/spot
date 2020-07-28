@@ -236,7 +236,7 @@ export const STRINGS = {
 
           // Tabs
           POSTS: 'Posts',
-          COMMENTS_REPLIES: 'Comments and Replies',
+          COMMENTS_REPLIES: 'Comments & Replies',
 
           DATE_POST_PROMPT: 'You posted',
           DATE_COMMENT_PROMPT: 'You commented',
@@ -247,7 +247,10 @@ export const STRINGS = {
           POSTS_COMMENTS: 'Comments: ',
           POSTS_LOCATION: 'Location: ',
           POSTS_OPEN: 'Open Post',
-          COMMENTS_OPEN: 'Open Comment Chain'
+          COMMENTS_OPEN: 'Open Comment Chain',
+
+          LOADING_POST_ACTIVITY: 'Loading Posts Activity ...',
+          NO_POST_ACTIVITY: 'You have no posts in the last 3 days'
 
         },
 
