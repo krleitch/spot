@@ -1,7 +1,7 @@
 export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
           likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink,
-          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount }
+          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists }
 
 const uuid = require('uuid');
 const db = require('./mySql');
@@ -188,5 +188,16 @@ function getCommentByLink(link: string, accountId?: string) {
             return getCommentByIdNoAccount(rows[0].id);
         });
     }
+
+}
+
+function linkExists(link: string) {
+    
+    var sql = 'SELECT link FROM comments WHERE link = ?';
+    var values = [link];
+
+    return db.query(sql, values).then( (link: any) => {
+        return link.length > 0;
+    });
 
 }

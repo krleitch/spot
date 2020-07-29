@@ -183,6 +183,7 @@ CREATE TABLE tags (
     account_id VARCHAR(36) NOT NULL,
     comment_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
+    offset INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     FOREIGN KEY (comment_id) REFERENCES comments (id)

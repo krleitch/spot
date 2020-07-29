@@ -6,6 +6,7 @@ const shortid = require('shortid');
 const badwords = require('@services/badwords');
 
 // db
+const comments = require('../db/comments');
 const accounts = require('../db/accounts');
 const tags = require('../db/tags');
 
@@ -120,7 +121,7 @@ async function generateLink(): Promise<string> {
 	let exists;
 	do {
 		link = shortid.generate();
-		exists = await posts.linkExists(link)
+		exists = await comments.linkExists(link)
 	} while (exists)
 
 	return link

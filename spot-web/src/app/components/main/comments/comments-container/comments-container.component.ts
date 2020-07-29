@@ -235,7 +235,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  private removeWord(element, position) {
+  private removeWord(element, position, receiver) {
 
     const content = element.textContent;
 
@@ -250,7 +250,27 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     endPosition = endPosition === -1 ? content.length : endPosition;
 
     // if we pressed space to add the tag, remove the extra space
-    element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
+    // element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
+
+    element.textContent = '';
+
+    // TEST
+
+    const parent = element.parentNode;
+
+    const div = document.createElement('div');
+    const before = document.createTextNode(content.substring(0, startPosition + 1));
+    const tag = document.createElement('span');
+    tag.className = 'tag-inline';
+    tag.contentEditable = 'false';
+    const name = document.createTextNode(receiver);
+    tag.appendChild(name);
+    const after = document.createTextNode(content.substring(endPosition));
+    div.appendChild(before);
+    div.appendChild(tag);
+    div.appendChild(after);
+
+    parent.appendChild(div);
 
   }
 
@@ -403,7 +423,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.tags.push(tag);
 
     // remove the word
-    this.removeWord(this.tagElement, this.tagCaretPosition);
+    this.removeWord(this.tagElement, this.tagCaretPosition, tag.receiver);
 
     // refocus at end of content editable
     this.placeCaretAtEnd(this.comment.nativeElement);
