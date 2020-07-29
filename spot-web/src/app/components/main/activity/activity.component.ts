@@ -29,12 +29,10 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   accountMetadata$: Observable<AccountMetadata>;
 
-  selectedTab = 'commentsreplies';
+  selectedTab = 'posts';
 
   constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
                private commentService: CommentService, private router: Router ) { }
-
-
 
   postActivity: Post[] = [];
   postActivityLoading = false;

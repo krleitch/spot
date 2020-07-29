@@ -36,7 +36,10 @@ export class TagComponent implements OnInit, OnChanges {
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
 
-    const friendRequest: GetFriendsRequest = {};
+    const friendRequest: GetFriendsRequest = {
+      date: new Date().toString(),
+      limit: null
+    };
 
     this.store$.dispatch(
       new SocialStoreFriendsActions.GetFriendsAction(friendRequest)

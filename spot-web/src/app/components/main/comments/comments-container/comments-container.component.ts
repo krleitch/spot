@@ -126,7 +126,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     // TODO: can probably not make this request, fetch friends at app startup instead?
     // TAG component should always make this call anyways
-    const friendRequest: GetFriendsRequest = {};
+    const friendRequest: GetFriendsRequest = {
+      date: new Date().toString(),
+      limit: null
+    };
 
     this.store$.dispatch(
       new SocialStoreFriendsActions.GetFriendsAction(friendRequest)

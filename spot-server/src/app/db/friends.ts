@@ -6,13 +6,22 @@ const uuid = require('uuid');
 const db = require('./mySql');
 
 // use a union because friends are a 1 row mutual relationship
-function getFriends(accountId: string) {
-    var sql = `SELECT friends.id, friends.creation_date, accounts.username FROM friends
+function getFriends(accountId: string, date: string, limit: string) {
+    const selectSql = `SELECT id, creation_date, username, confirmed_date FROM
+                (SELECT friends.id, friends.creation_date, friends.confirmed_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.friend_id = accounts.id WHERE account_id = ? AND friends.confirmed_date IS NOT NULL
                 UNION
-                SELECT friends.id, friends.creation_date, accounts.username FROM friends
-                LEFT JOIN accounts ON friends.account_id = accounts.id WHERE friend_id = ? AND friends.confirmed_date IS NOT NULL`;
-    var values = [accountId, accountId];
+                SELECT friends.id, friends.creation_date, friends.confirmed_date, accounts.username FROM friends
+                LEFT JOIN accounts ON friends.account_id = accounts.id WHERE friend_id = ? AND friends.confirmed_date IS NOT NULL) results
+                WHERE confirmed_date < ? ORDER BY confirmed_date DESC`;
+    var values = [accountId, accountId, date];
+    var limitSql = '';       
+    if ( limit ) {
+        limitSql = ` LIMIT ?`
+        values =  [accountId, accountId, date, limit]
+    }
+    const sql = selectSql + limitSql;
+
     return db.query(sql, values);
 }
 

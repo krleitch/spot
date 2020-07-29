@@ -52,7 +52,10 @@ export class ShareComponent implements OnInit {
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
 
-    const friendRequest: GetFriendsRequest = {};
+    const friendRequest: GetFriendsRequest = {
+      date: new Date().toString(),
+      limit: 10
+    };
 
     this.store$.dispatch(
       new SocialStoreFriendsActions.GetFriendsAction(friendRequest)

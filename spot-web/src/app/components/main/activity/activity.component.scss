@@ -199,6 +199,13 @@ img {
     box-sizing: border-box;
     background-color: white;
 
+    .content-preview-comment {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
+    }
+
     .comment-info {
       display: flex;
       flex-flow: column;
@@ -230,15 +237,12 @@ img {
 }
 
 .comment-link {
-
-  margin-top: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   font-size: 16px;
   color: $subtle-grey;
   margin-left: 10px;
-
   &:hover {
     color: $button-highlight;
   }

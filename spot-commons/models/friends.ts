@@ -7,7 +7,8 @@ export interface Friend {
 
 // get
 export interface GetFriendsRequest {
-
+    limit: number;
+    date: string;
 }
 
 export interface GetFriendsSuccess {

@@ -17,8 +17,10 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.get('/', function (req: any, res: any) {
 
     const accountId = req.user.id;
+    const date = req.query.date;
+    const limit = Number(req.query.limit);
 
-    friends.getFriends(accountId).then((rows: any) => {
+    friends.getFriends(accountId, date, limit).then((rows: any) => {
         res.status(200).json({ friends: rows });
     }, (err: any) => {
         res.status(500).send('Error getting friends');

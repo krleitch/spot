@@ -247,13 +247,13 @@ export const STRINGS = {
           POSTS_COMMENTS: 'Comments: ',
           POSTS_LOCATION: 'Location: ',
           POSTS_OPEN: 'Open Spot',
-          COMMENTS_OPEN: 'Open Comment Chain',
+          COMMENTS_OPEN: 'Open Comments',
 
           LOADING_POST_ACTIVITY: 'Loading Spot activity ...',
-          NO_POST_ACTIVITY: 'You have no spots in the last 3 days',
+          NO_POST_ACTIVITY: 'You have no spots in recent activity',
 
           LOADING_COMMENT_ACTIVITY: 'Loading comment & replies activity ...',
-          NO_COMMENT_ACTIVITY: 'You have no comments or replies in the last 3 days'
+          NO_COMMENT_ACTIVITY: 'You have no comments or replies in recent activity'
 
         },
 

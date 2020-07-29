@@ -77,24 +77,20 @@
                   {{ formatDate(activity.creation_date) }}
                   {{ STRINGS.DATE_PROMPT_END }}
                 </div>
-                <div class="post-link" (click)="openPost(activity.post_link)">
+                <div class="comment-link" (click)="openComment(activity.post_link, activity.link)">
+                  {{ STRINGS.COMMENTS_OPEN }}
                   <span class="material-icons icon"> chevron_right </span>
-                  {{ STRINGS.POSTS_OPEN }}
                 </div>
               </div>
 
               <div class="horiz-bar"></div>
 
-              <div class="comment-link" (click)="openComment(activity.post_link, activity.link)">
-                <span class="material-icons icon"> chevron_right </span>
-                {{ STRINGS.COMMENTS_OPEN }}
-              </div>
               <div class="comment-content">
                 <div class="image" *ngIf="activity.image_src">
                   <img [src]="activity.image_src">
                 </div>
                 <div class="comment-info">
-                  <div class="content-preview"> {{ activity.content }} </div>
+                  <div class="content-preview-comment"> {{ activity.content }} </div>
                 </div>
               </div>
 

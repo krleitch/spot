@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
@@ -22,7 +22,10 @@ export class FriendsService {
   baseUrl = environment.baseUrl;
 
   getFriends(request: GetFriendsRequest): Observable<GetFriendsSuccess> {
-    return this.http.get<GetFriendsSuccess>(`${this.baseUrl}/friends`);
+    let params = new HttpParams();
+    params = params.append('date', request.date);
+    params = params.append('limit', request.limit ? request.limit.toString() : null);
+    return this.http.get<GetFriendsSuccess>(`${this.baseUrl}/friends`, { params });
   }
 
   deleteFriends(request: DeleteFriendsRequest): Observable<DeleteFriendsSuccess> {
