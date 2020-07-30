@@ -158,8 +158,8 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
     
-                await accounts.getAccountByUsername(tagsList[index].receiver).then( async (account: any) => {
-                    await tags.addTag( account[0].id, comment[0].id );
+                await accounts.getAccountByUsername(tagsList[index].username).then( async (account: any) => {
+                    await tags.addTag( account[0].id, comment[0].id, tagsList[index].offset );
                     await notifications.addCommentNotification( comment[0].account_id, account[0].id, comment[0].post_id, comment[0].id );
                 }, (err: any) => {
                     return next(new CommentsError.CommentError(500));
@@ -167,12 +167,14 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
     
             }
     
+            // Add tags to our comment
             await commentsService.getTags( comment, accountId ).then( (taggedComments: any) => {
                 comment = taggedComments;
             }, (err: any) => {
                 return next(new CommentsError.CommentError(500));
             });
     
+            // Add profile picture and send
             posts.getPostCreator(postId).then( (postCreator: any) => {
                 commentsService.addProfilePicture(comment, postCreator[0].account_id);
                 res.status(200).json({ postId: postId, comment: comment[0] } );

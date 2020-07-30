@@ -17,7 +17,7 @@ export class TagComponent implements OnInit, OnChanges {
 
   @Input() postLink;
   @Input() name;
-  @Output() tag = new EventEmitter<Tag>();
+  @Output() tag = new EventEmitter<string>();
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
@@ -72,14 +72,14 @@ export class TagComponent implements OnInit, OnChanges {
   }
 
   sendTag(username: string) {
+    this.tag.emit(username);
+  }
 
-    const tag: Tag = {
-      id: -1, // Tag not placed yet
-      receiver: username,
-      postLink: this.postLink
-    };
+  onEnter() {
 
-    this.tag.emit(tag);
+    if ( this.filteredFriendsList.length > 0 ) {
+      this.tag.emit(this.filteredFriendsList[0].username);
+    }
 
   }
 

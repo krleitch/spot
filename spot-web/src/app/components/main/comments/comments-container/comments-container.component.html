@@ -36,14 +36,6 @@
 
   <div class="add" *ngIf="(isAuthenticated$ | async) && post.inRange">
 
-    <div class="tag-container" *ngIf="tags.length > 0">
-      <span class="tag-title"> {{ STRINGS.TAGS_TITLE }} </span>
-      <div *ngFor="let tag of tags" class="tag">
-        {{ tag.receiver }}
-        <i class="material-icons tag-close" (click)="removeTag(tag.id)"> close </i>
-      </div>
-    </div>
-
     <div class="editor">
 
       <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
@@ -73,6 +65,6 @@
   <span *ngIf="addCommentError" class="add-comment-error">
     {{ addCommentError }}
   </span>
-  <span class="tag-relative" #tag><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
+  <span class="tag-relative" #tag><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
 
 </div>

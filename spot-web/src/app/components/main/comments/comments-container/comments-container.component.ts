@@ -16,6 +16,7 @@ import { Friend, GetFriendsRequest } from '@models/friends';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
 import { AlertService } from '@services/alert.service';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { TagComponent } from '../../social/tag/tag.component';
 
 @Component({
   selector: 'spot-comments-container',
@@ -33,7 +34,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   currentLength = 0;
 
   @ViewChild('tag') tag: ElementRef;
-  tags: Tag[] = [];
+  @ViewChild('tagelem') tagelem: TagComponent;
   showTag = false;
   tagName = '';
   tagElement;
@@ -235,7 +236,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  private removeWord(element, position, receiver) {
+  private removeWord(element, position, username) {
 
     const content = element.textContent;
 
@@ -258,19 +259,19 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     const parent = element.parentNode;
 
-    const div = document.createElement('div');
+    const div = document.createElement('span');
     const before = document.createTextNode(content.substring(0, startPosition + 1));
     const tag = document.createElement('span');
     tag.className = 'tag-inline';
     tag.contentEditable = 'false';
-    const name = document.createTextNode(receiver);
+    const name = document.createTextNode(username);
     tag.appendChild(name);
     const after = document.createTextNode(content.substring(endPosition));
     div.appendChild(before);
     div.appendChild(tag);
     div.appendChild(after);
 
-    parent.appendChild(div);
+    parent.replaceChild(div, element); // .appendChild(div);
 
   }
 
@@ -279,13 +280,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // Add tag on enter
     if ( this.showTag ) {
 
-      const tag: Tag = {
-        id: -1, // Tag not placed yet
-        receiver: this.tagName,
-        postLink: this.post.link
-      };
+      this.tagelem.onEnter();
 
-      this.addTag(tag);
       return false;
 
     }
@@ -331,22 +327,42 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     const body = parsedHtml.getElementsByTagName('body');
     const bodyChildren = body[0].children;
 
-    let text;
-    if ( body[0].childNodes.length > 0 ) {
-      text = body[0].childNodes[0].nodeValue || '';
+    const tags: Tag[] = [];
+    let text = '';
+    let offset = 0;
 
-      for (let i = 0; i < bodyChildren.length; i++) {
-        if ( i === 0 ) {
-          text += '\n';
-        }
-        text +=  (bodyChildren[i].textContent);
-        if ( i !== bodyChildren.length - 1 ) {
-          text += '\n';
-        }
+    let stack = [];
+    stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
+
+    while ( stack.length > 0 ) {
+
+      const elem = stack.pop();
+
+      // A tag
+      if ( elem.className === 'tag-inline' ) {
+        const tag: Tag = {
+          username: elem.textContent,
+          postLink: this.post.link,
+          offset
+        };
+        tags.push(tag);
+        continue;
       }
 
-    } else {
-      text = body[0].textContent;
+      if ( elem.childNodes ) {
+        stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
+      }
+
+      if ( elem.tagName === 'DIV' ) {
+        // A new Div
+        text += '\n';
+        offset += 1;
+      } else if ( elem.nodeType === 3 ) {
+        // Text Node
+        text += elem.textContent;
+        offset += elem.textContent.length;
+      }
+
     }
 
     content = text.trim();
@@ -385,7 +401,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       postId: this.post.id,
       content,
       image: this.imageFile,
-      tagsList: this.tags
+      tagsList: tags
     };
 
     this.store$.dispatch(
@@ -410,20 +426,16 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.imgSrc = null;
   }
 
-  addTag(tag: Tag) {
+  addTag(username: string) {
 
     // check if they are your friend
-    if ( this.friendsList.find( (friend: Friend) =>  friend.username === tag.receiver ) === undefined ) {
+    if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
       this.alertService.error('Only friends can be tagged');
       return;
     }
 
-    // temp id, giving position in array
-    tag.id = this.tags.length;
-    this.tags.push(tag);
-
     // remove the word
-    this.removeWord(this.tagElement, this.tagCaretPosition, tag.receiver);
+    this.removeWord(this.tagElement, this.tagCaretPosition, username);
 
     // refocus at end of content editable
     this.placeCaretAtEnd(this.comment.nativeElement);
@@ -455,14 +467,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         textRange.collapse(false);
         textRange.select();
     }
-  }
-
-  removeTag(id: number) {
-
-    this.tags = this.tags.filter( (tag: Tag) => {
-      return tag.id !== id;
-    });
-
   }
 
 }

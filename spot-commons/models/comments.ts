@@ -20,7 +20,7 @@ export interface CommentTag {
     numTagged: number;
     tagged: boolean;
     tagger?: string;
-    names?: string[];
+    tags: any[];
 }
 
 // Load all comments

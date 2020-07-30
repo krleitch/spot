@@ -117,22 +117,22 @@ export class ReplyComponent implements OnInit {
 
   addTag(tag: Tag) {
 
-    tag.id = this.tags.length;
-    this.tags.push(tag);
+    // tag.id = this.tags.length;
+    // this.tags.push(tag);
 
-    const words = this.reply2Text.split(' ');
-    words.pop();
-    this.reply2Text = words.join(' ');
+    // const words = this.reply2Text.split(' ');
+    // words.pop();
+    // this.reply2Text = words.join(' ');
 
   }
 
   removeTag(id: number) {
 
-    this.tags.forEach( (tag: Tag, index: number) => {
-      if ( tag.id === id ) {
-        this.tags.splice(index, 1);
-      }
-    });
+    // this.tags.forEach( (tag: Tag, index: number) => {
+    //   if ( tag.id === id ) {
+    //     this.tags.splice(index, 1);
+    //   }
+    // });
 
   }
 

@@ -28,6 +28,7 @@ export class CommentComponent implements OnInit {
   @Input() postLink: string;
 
   @ViewChild('options') options;
+  @ViewChild('text') text;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
@@ -115,6 +116,51 @@ export class CommentComponent implements OnInit {
       this.isExpandable = true;
     }
 
+    this.setContentHTML();
+
+  }
+
+  setContentHTML() {
+
+    // we need to add tags in asc order of their offset
+    // this.comment.tag.tags.sort( (a: any, b: any) => {
+    //   return a.offset < b.offset ? 1 : 0;
+    // });
+
+    let content = this.getContent();
+    const div = document.createElement('div');
+
+    if ( this.comment.tag.tags.length > 0 ) {
+
+      this.comment.tag.tags.forEach( (tag: any) => {
+
+        // TODO: offset gets ruined eh
+        console.log(this.comment.content);
+
+        const span = document.createElement('span');
+        const before = document.createTextNode(content.substring(0, tag.offset));
+        const t = document.createElement('span');
+        t.className = 'tag-inline';
+        const name = document.createTextNode(tag.username ? tag.username : '???');
+        t.appendChild(name);
+        const after = document.createTextNode(content.substring(tag.offset));
+        span.appendChild(before);
+        span.appendChild(t);
+        span.appendChild(after);
+
+        div.appendChild(span);
+
+      });
+
+    } else {
+
+      const cc = document.createTextNode(content);
+      div.appendChild(cc);
+
+    }
+
+    this.text.nativeElement.innerHTML = div.innerHTML;
+
   }
 
   offClickHandler(event: MouseEvent) {
@@ -163,22 +209,22 @@ export class CommentComponent implements OnInit {
 
   addTag(tag: Tag) {
 
-    tag.id = this.tags.length;
-    this.tags.push(tag);
+    // tag.id = this.tags.length;
+    // this.tags.push(tag);
 
-    const words = this.replyText.split(' ');
-    words.pop();
-    this.replyText = words.join(' ');
+    // const words = this.replyText.split(' ');
+    // words.pop();
+    // this.replyText = words.join(' ');
 
   }
 
   removeTag(id: number) {
 
-    this.tags.forEach( (tag: Tag, index: number) => {
-      if ( tag.id === id ) {
-        this.tags.splice(index, 1);
-      }
-    });
+    // this.tags.forEach( (tag: Tag, index: number) => {
+    //   if ( tag.id === id ) {
+    //     this.tags.splice(index, 1);
+    //   }
+    // });
 
   }
 
@@ -212,6 +258,7 @@ export class CommentComponent implements OnInit {
 
   setExpanded(value: boolean) {
     this.expanded = value;
+    this.setContentHTML();
   }
 
   loadMoreReplies() {

@@ -219,43 +219,7 @@ img {
   }
 }
 
-// Tags
-.tag-container {
-
-  margin-bottom: auto;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  width: 100%;
-
-  .tag-title {
-    height: 18px;
-    margin: 6px 3px;
-  }
-
-  .tag {
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 18px;
-    margin: 6px 3px;
-    background-color: $lighter-grey;
-
-    .tag-close {
-
-      cursor: pointer;
-      font-size: 14px;
-
-      &:hover {
-        color: $error-red;
-      }
-
-    }
-
-  }
-
-}
+// error
 
 .add-comment-error {
   display: flex;

@@ -19,7 +19,7 @@
     <div class="content-wrapper">
       <div class="content">
 
-        <span class="content-tag-container" *ngIf="comment.tag.numTagged > 0">
+        <!-- <span class="content-tag-container" *ngIf="comment.tag.numTagged > 0">
           <span class="tag-name-container" *ngIf="comment.tag.owned; else notOwned">
             <span class="tag" *ngFor="let name of comment.tag.names">
               <span class="highlight"> {{ name }} </span>
@@ -36,10 +36,11 @@
               </span>
             </ng-template>
           </ng-template>
-        </span>
+        </span> -->
 
         <!-- places beside to avoid extra space since style is whitespace: pre-wrap -->
-        <div class="text">{{getContent()}}
+        <div class="text">
+          <span #text class="text-content"></span>
           <span *ngIf="isExpandable">
             <span *ngIf="expanded; else notExpanded">
               <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
@@ -58,12 +59,14 @@
 
       <div [hidden]="!showAddReply" class="add" *ngIf="(comment.tag.tagged || inRange) && (isAuthenticated$ | async)">
         <div class="editor">
-          <div class="tag-container" *ngFor="let tag of tags">
+
+          <!-- <div class="tag-container" *ngFor="let tag of tags">
             <div class="tag">
               {{ tag.receiver }}
               <i class="material-icons tag-close" (click)="removeTag(tag.id)"> close </i>
             </div>
-          </div>
+          </div> -->
+
           <div contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply-content" [textContent]="replyText" (input)="onTextInput($event)"></div>
           <div *ngIf="imgSrc != null" class="image" >
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />

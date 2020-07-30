@@ -70,29 +70,23 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
                 owned: boolean;
                 numTagged: number;
                 tagged: boolean;
-                tagger?: string;
-                names?: string[];
+                tagger?: string; // only filled if tagged == true
+                tags: any[];
             } = {
                 owned: false,
                 numTagged: tagList.length,
-                tagged: false
+                tagged: false,
+                tags: []
             };
 
             if ( accountId == comments[index].account_id ) {
                 // You are the tagger
 
                 tagObject.owned = true;
-                let names: any[] = [];
 
-                for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
-                    await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
-                        names.push(account[0].username);
-                    });
-                }
-
-                tagObject.names = names;
-
-            } else if ( tagList.map( (t: any) => t.account_id ).includes( accountId )) {
+            }
+            
+            if ( tagList.map( (t: any) => t.account_id ).includes( accountId )) {
                 // you got tagged
 
                 tagObject.tagged = true;
@@ -101,9 +95,17 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
                     tagObject.tagger = account[0].username;
                 });
 
-            } else {
-                // you have no relation
             }
+
+            // add the tags, only include username if you won tag, or its you
+            let tags: any[] = [];
+            for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
+                await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
+                    tags.push({username: (tagObject.owned || account[0].username == tagList[tagIndex].username) ? account[0].username : '', offset: tagList[tagIndex].offset});
+                });
+            }
+            tagObject.tags = tags;
+
             comments[index].tag = tagObject;
         });
 
