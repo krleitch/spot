@@ -127,28 +127,40 @@ export class CommentComponent implements OnInit {
     //   return a.offset < b.offset ? 1 : 0;
     // });
 
-    let content = this.getContent();
+    const content = this.getContent();
     const div = document.createElement('div');
+    let lastOffset = 0;
 
+    // Tags list must be sorted in ASC order of offset,
+    // Server should ensure this
     if ( this.comment.tag.tags.length > 0 ) {
 
       this.comment.tag.tags.forEach( (tag: any) => {
 
-        // TODO: offset gets ruined eh
-        console.log(this.comment.content);
+        // plus one if its at very end
+        if ( tag.offset <= content.length + 1 ) {
 
-        const span = document.createElement('span');
-        const before = document.createTextNode(content.substring(0, tag.offset));
-        const t = document.createElement('span');
-        t.className = 'tag-inline';
-        const name = document.createTextNode(tag.username ? tag.username : '???');
-        t.appendChild(name);
-        const after = document.createTextNode(content.substring(tag.offset));
-        span.appendChild(before);
-        span.appendChild(t);
-        span.appendChild(after);
+          const span = document.createElement('span');
+          const before = document.createTextNode(content.substring(0, tag.offset));
+          const t = document.createElement('span');
+          t.className = 'tag-inline';
+          const name = document.createTextNode(tag.username ? tag.username : '???');
+          t.appendChild(name);
+          const after = document.createTextNode(content.substring(tag.offset));
+          span.appendChild(before);
+          span.appendChild(t);
+          span.appendChild(after);
+          lastOffset = tag.offset;
 
-        div.appendChild(span);
+          div.appendChild(span);
+
+        } else {
+
+          // need to still have rest of text with no tag
+          const after = document.createTextNode(content.substring(lastOffset));
+          div.appendChild(after);
+
+        }
 
       });
 
