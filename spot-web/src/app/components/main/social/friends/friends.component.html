@@ -1,6 +1,6 @@
 <spot-main-nav></spot-main-nav>
 <div class="friends-container">
-<div class="friends-content">
+  <div class="friends-content">
 
     <div class="title-wrapper">
       <div class="friends-title">
@@ -43,9 +43,17 @@
       {{ friendsError.message }}
     </div>
 
-    <div class="friends-subtitle"> {{ STRINGS.FRIENDS_LIST }} </div>
-      <div class="friend-content-section">
-        <div *ngIf="(friends$ | async)?.length > 0; else noFriends">
+
+    <div class="friends-search">
+      <div class="subtitle"> {{ STRINGS.FRIENDS_LIST }} </div>
+      <div class="search">
+        <span class="material-icons icon"> search </span>
+        <input [(ngModel)]="friendSearch" [placeholder]="STRINGS.FRIEND_SEARCH_PLACEHOLDER" (input)="onUsernameSearch($event)"  type="text" >
+      </div>
+    </div>
+
+    <div class="friend-content-section">
+      <div *ngIf="(friends$ | async)?.length > 0; else noFriends">
         <div class="friend-list-container" *ngFor="let friend of friends$ | async">
           {{ friend.username }}
           <div class="friend-remove" (click)="deleteFriendRequest(friend.id)">

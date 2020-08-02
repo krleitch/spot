@@ -17,9 +17,9 @@
 
         <span class="content-tag-container" *ngIf="reply.tag.numTagged > 0">
           <span class="tag-name-container" *ngIf="reply.tag.owned; else notOwned">
-            <span class="tag" *ngFor="let name of reply.tag.names">
+            <!-- <span class="tag" *ngFor="let name of reply.tag.names">
               {{ name }}
-            </span>
+            </span> -->
           </span>
           <ng-template #notOwned>
             <span class="tag" *ngIf="reply.tag.tagged; else notTagged">

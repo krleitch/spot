@@ -353,7 +353,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
       }
 
-      if ( elem.tagName === 'DIV' ) {
+      // Don't add spaces to start
+      if ( elem.tagName === 'DIV' && text.length > 0 ) {
         // A new Div
         text += '\n';
         offset += 1;
@@ -365,7 +366,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     }
 
+    // just needed to remove spaces at end
     content = text.trim();
+
+    console.log(content);
 
     if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
       this.addCommentError = 'Your comment must be less than ' + COMMENTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
@@ -403,6 +407,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       image: this.imageFile,
       tagsList: tags
     };
+
+    return;
 
     this.store$.dispatch(
       new CommentsStoreActions.AddRequestAction(request)

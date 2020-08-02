@@ -116,6 +116,9 @@ export class CommentComponent implements OnInit {
       this.isExpandable = true;
     }
 
+    console.log(this.comment.content);
+    console.log(this.isExpandable);
+
     this.setContentHTML();
 
   }
@@ -138,19 +141,19 @@ export class CommentComponent implements OnInit {
       this.comment.tag.tags.forEach( (tag: any) => {
 
         // plus one if its at very end
-        if ( tag.offset <= content.length + 1 ) {
+        if ( tag.offset <= content.length + 1 || this.expanded  ) {
 
           const span = document.createElement('span');
-          const before = document.createTextNode(content.substring(0, tag.offset));
+          const before = document.createTextNode(content.substring(lastOffset, Math.min(tag.offset, content.length + 1)));
           const t = document.createElement('span');
           t.className = 'tag-inline';
           const name = document.createTextNode(tag.username ? tag.username : '???');
           t.appendChild(name);
-          const after = document.createTextNode(content.substring(tag.offset));
+          // const after = document.createTextNode(content.substring(tag.offset));
           span.appendChild(before);
           span.appendChild(t);
-          span.appendChild(after);
-          lastOffset = tag.offset;
+          // span.appendChild(after);
+          lastOffset = Math.min(tag.offset, content.length + 1);
 
           div.appendChild(span);
 
@@ -169,6 +172,11 @@ export class CommentComponent implements OnInit {
       const cc = document.createTextNode(content);
       div.appendChild(cc);
 
+    }
+
+    if ( this.isExpandable && ! this.expanded ) {
+      const cc = document.createTextNode(' ...');
+      div.appendChild(cc);
     }
 
     this.text.nativeElement.innerHTML = div.innerHTML;

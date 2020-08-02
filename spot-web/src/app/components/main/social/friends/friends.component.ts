@@ -26,6 +26,7 @@ export class FriendsComponent implements OnInit {
   friendsError$: Observable<SpotError>;
   facebookConnected$: Observable<boolean>;
   friendRequestUsername: string;
+  friendSearch: string;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
@@ -57,7 +58,7 @@ export class FriendsComponent implements OnInit {
 
     const friendRequest: GetFriendsRequest = {
       date: new Date().toString(),
-      limit: 10
+      limit: null
     };
 
     this.store$.dispatch(

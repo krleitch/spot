@@ -19,6 +19,13 @@
     <div class="content-wrapper">
       <div class="content">
 
+        <span class="tag-name-container">
+          <span class="tag" *ngIf="comment.tag.tagged">
+            <span class="highlight"> {{ comment.tag.tagger }} </span> Tagged You
+            <!-- <span *ngIf="comment.tag.numTagged - 1 > 0"> and <span class="material-icons person"> person </span> {{ comment.tag.numTagged - 1 }} </span> -->
+          </span>
+        </span>
+
         <!-- <span class="content-tag-container" *ngIf="comment.tag.numTagged > 0">
           <span class="tag-name-container" *ngIf="comment.tag.owned; else notOwned">
             <span class="tag" *ngFor="let name of comment.tag.names">

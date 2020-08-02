@@ -216,10 +216,12 @@ export const STRINGS = {
           TITLE: 'Friends',
 
           REQUESTS: 'Requests',
-          FRIEND_REQUEST_PLACEHOLDER: 'Enter Username',
+          FRIEND_REQUEST_PLACEHOLDER: 'Enter username',
           FRIEND_REQUEST_PROMPT: 'sent you a friend request!',
           ADD: 'Add Friends',
+
           FRIENDS_LIST: 'Friends List',
+          FRIEND_SEARCH_PLACEHOLDER: 'Enter username',
           REMOVE: 'Remove',
 
           NO_FRIENDS: 'Add Friends to share spots quickly',
