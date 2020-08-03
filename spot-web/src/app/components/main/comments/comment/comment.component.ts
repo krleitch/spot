@@ -141,7 +141,7 @@ export class CommentComponent implements OnInit {
       this.comment.tag.tags.forEach( (tag: any) => {
 
         // plus one if its at very end
-        if ( tag.offset <= content.length + 1 || this.expanded  ) {
+        if ( tag.offset <= content.length + 1 ) {
 
           const span = document.createElement('span');
           const before = document.createTextNode(content.substring(lastOffset, Math.min(tag.offset, content.length + 1)));

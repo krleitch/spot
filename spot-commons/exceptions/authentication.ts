@@ -10,6 +10,13 @@ export class AuthenticationError extends SpotError {
   }
 }
 
+export class VerifyError extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.VERIFY, statusCode);
+    this.name = "AccountNotVerified";
+  }
+}
+
 // Validation Auth Errors for signup
 
 // Username

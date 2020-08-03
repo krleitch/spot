@@ -45,6 +45,7 @@ import { ConfirmComponent } from './components/helpers/confirm/confirm.component
 import { AuthModalComponent } from './components/pre-auth/auth-modal/auth-modal.component';
 import { VerifyComponent } from './components/main/verify/verify.component';
 import { WelcomeComponent } from './components/main/welcome/welcome.component';
+import { FilterPipe } from './pipes/filter.pipe';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { WelcomeComponent } from './components/main/welcome/welcome.component';
     ConfirmComponent,
     AuthModalComponent,
     VerifyComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
