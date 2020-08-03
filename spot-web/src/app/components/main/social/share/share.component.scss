@@ -4,11 +4,8 @@
 
 .share {
   position: fixed;
-  width: 400px;
+  width: 100%;
   height: auto;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   flex-flow: column;
   background-color: white;
