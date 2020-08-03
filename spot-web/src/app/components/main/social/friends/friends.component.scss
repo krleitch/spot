@@ -200,25 +200,32 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: $lighter-grey;
+    // background-color: $lighter-grey;
+    box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
     padding: 5px;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.friend-name {
+  color: black;
+  margin-left: 7px;
 }
 
 .friend-remove {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60px;
+    width: 70px;
     height: 25px;
+    padding: 3px;
     color: white;
     cursor: pointer;
-    background-color: $error-red;
+    background-color: $error-red-light;
 }
 
 .friend-remove:hover {
-    background-color: darken($error-red, 10%);
+    background-color: darken($error-red-light, 5%);
 }
 
 .no-friends {
@@ -228,7 +235,7 @@ input {
   align-items: center;
   padding: 10px;
 
-  .person {
+  .icon {
     margin-right: 8px;
   }
 

@@ -53,20 +53,38 @@
     </div>
 
     <div class="friend-content-section">
-      <div *ngIf="friends$ | async | filter: { filter: friendSearch, field: 'username' } as friends; else noFriends">
-        <div class="friend-list-container" *ngFor="let friend of friends">
-          {{ friend.username }}
-          <div class="friend-remove" (click)="deleteFriendRequest(friend.id)">
-            {{ STRINGS.REMOVE }}
+      <div *ngIf="friends$ | async | filter: { filter: friendSearch, field: 'username' } as friends">
+
+        <div *ngIf="friends.length > 0; else noFriends">
+          <div class="friend-list-container" *ngFor="let friend of friends">
+            <span class="friend-name"> {{ friend.username }} </span>
+            <div class="friend-remove" (click)="deleteFriend(friend.id)">
+              {{ STRINGS.REMOVE }}
+            </div>
           </div>
         </div>
+
+        <ng-template #noFriends>
+
+          <div *ngIf="friendSearch; else addFriends">
+            <span class="no-friends">
+              <span class="material-icons icon"> search_off </span>
+              {{ STRINGS.NO_FRIENDS_FOUND }}
+            </span>
+          </div>
+
+          <ng-template #addFriends>
+            <span class="no-friends">
+              <span class="material-icons icon"> person_add </span>
+              {{ STRINGS.NO_FRIENDS }}
+            </span>
+          </ng-template>
+
+        </ng-template>
+
+
       </div>
-      <ng-template #noFriends>
-        <span class="no-friends">
-          <span class="material-icons person"> person_add </span>
-          {{ STRINGS.NO_FRIENDS }}
-        </span>
-      </ng-template>
+
     </div>
 
   </div>

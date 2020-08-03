@@ -3,6 +3,7 @@ export interface Friend {
     id: string;
     username: string;
     creation_date: string;
+    confirmed_date: string;
 }
 
 // get

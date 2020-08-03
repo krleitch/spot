@@ -221,14 +221,14 @@ export const STRINGS = {
           ADD: 'Add Friends',
 
           FRIENDS_LIST: 'Friends List',
-          FRIEND_SEARCH_PLACEHOLDER: 'Enter username',
+          FRIEND_SEARCH_PLACEHOLDER: 'Search username',
           REMOVE: 'Remove',
 
-          NO_FRIENDS: 'Add Friends to share spots quickly',
+          NO_FRIENDS: 'Add friends to share spots quickly',
+          NO_FRIENDS_FOUND: 'No friends found with this name',
 
           // Social
           FACEBOOK_CONNECT: 'Connect With Facebook',
-
 
         },
 

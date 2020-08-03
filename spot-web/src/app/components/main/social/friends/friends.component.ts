@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
@@ -11,6 +12,7 @@ import { FriendRequest, GetFriendRequestsRequest, AddFriendRequestsRequest,
           GetFriendsRequest, DeleteFriendsRequest } from '@models/friends';
 import { FacebookConnectRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-friends',
@@ -28,7 +30,8 @@ export class FriendsComponent implements OnInit {
   friendRequestUsername: string;
   friendSearch: string;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>,
+              private modalService: ModalService) { }
 
   ngOnInit() {
 
@@ -106,16 +109,28 @@ export class FriendsComponent implements OnInit {
 
   }
 
-  deleteFriendRequest(id: string) {
+  deleteFriend(id: string) {
 
-    const request: DeleteFriendsRequest = {
-      friendId: id
-    };
+    this.modalService.open('spot-confirm-modal');
 
-    // delete
-    this.store$.dispatch(
-      new SocialStoreFriendsActions.DeleteFriendsAction(request)
-    );
+    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+    result$.subscribe( (result: { status: string }) => {
+
+      if ( result.status === 'confirm' ) {
+
+        const request: DeleteFriendsRequest = {
+          friendId: id
+        };
+
+        // delete
+        this.store$.dispatch(
+          new SocialStoreFriendsActions.DeleteFriendsAction(request)
+        );
+
+      }
+
+    });
 
   }
 
