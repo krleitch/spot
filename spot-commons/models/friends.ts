@@ -66,7 +66,7 @@ export interface AcceptFriendRequestsRequest {
 }
 
 export interface AcceptFriendRequestsSuccess {
-    friendRequestId: string;
+    friend: Friend;
 }
 
 export interface DeclineFriendRequestsRequest {

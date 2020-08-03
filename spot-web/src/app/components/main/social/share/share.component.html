@@ -1,9 +1,10 @@
-<div class="background" (click)="closeShare()"></div>
 <div class="share">
+
   <div class="header">
     <span class="title"> {{ STRINGS.TITLE }} </span>
     <span class="close" (click)="closeShare()"> <span class="material-icons"> clear </span> </span>
   </div>
+
   <div class="links">
     <div class="social-media">
       <div class="fb-share-button"
@@ -25,23 +26,38 @@
     </div>
     <span class="copy" (click)="copyLink()"> {{ STRINGS.COPY_LINK }} </span>
   </div>
+
   <div class="input-container">
-    <input #usernameinput (input)="onUsernameInput($event)" [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
+    <input #usernameinput [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
     <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
   </div>
+
   <div class="friends-title"> {{ STRINGS.FRIENDS }} </div>
-  <div class="share-friend-section" *ngIf="friendsList.length > 0; else noFriends">
-    <div class="share-friend-container" *ngFor="let friend of filteredFriendsList">
-      {{ friend.username }}
-      <div [hidden]="friend.sent" class="share-friend-send" (click)="sendNotificationToFriend(friend.username); friend.sent = true;">
-        {{ STRINGS.SEND }}
-      </div>
-      <div [hidden]="!friend.sent" class="share-friend-sent">
-        {{ STRINGS.SENT }}
+  <div class="share-friend-section" *ngIf="friends$ | async | filter: { filter: username, field: 'username' } as friends">
+
+    <div *ngIf="friends.length > 0; else noFriends">
+      <div *ngFor="let friend of friends" class="share-friend-container">
+        {{ friend.username }}
+        <div [hidden]="friend.sent" class="share-friend-send" (click)="sendNotificationToFriend(friend.username); friend.sent = true;">
+          {{ STRINGS.SEND }}
+        </div>
+        <div [hidden]="!friend.sent" class="share-friend-sent">
+          {{ STRINGS.SENT }}
+        </div>
       </div>
     </div>
+
+    <ng-template #noFriends>
+
+      <div *ngIf="username; else addFriends">
+        <div class="no-friends"> {{ STRINGS.NO_FRIENDS_FOUND }} </div>
+      </div>
+      <ng-template #addFriends>
+        <div class="no-friends"> {{ STRINGS.NO_FRIENDS }} </div>
+      </ng-template>
+
+    </ng-template>
+
   </div>
-  <ng-template #noFriends>
-    <div class="no-friends"> {{ STRINGS.NO_FRIENDS }} </div>
-  </ng-template>
+
 </div>

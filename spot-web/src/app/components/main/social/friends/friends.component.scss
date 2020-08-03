@@ -23,7 +23,8 @@ spot-main-nav {
 .friends-content {
     display: flex;
     flex-flow: column;
-    width: 50%;
+    width: 70%;
+    max-width: 650px;
     margin-top: 25px;
 }
 
@@ -69,6 +70,12 @@ spot-main-nav {
       margin-right: 5px;
     }
 
+    .facebook-text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
   }
 
 }
@@ -81,37 +88,50 @@ spot-main-nav {
 .friend-content-section {
     width: 100%;
     padding: 5px 5px;
+    box-sizing: border-box;
     background-color: white;
     margin-bottom: 10px;
 }
 
 // Requests
 
+.friend-button {
+
+  background: none;
+	color: inherit;
+	border: none;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 70px;
+  height: 30px;
+  padding: 3px;
+  box-sizing: border-box;
+  color: white;
+
+}
+
 .friend-request-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: $lighter-grey;
+    box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
     padding: 5px;
-    margin-bottom: 5px;
+    margin-top: 7px;
+    margin-bottom: 7px;
 }
 
 .friend-name {
   color: $info-blue;
+  margin-left: 7px;
 }
 
 .friend-request-options {
     display: flex;
-}
-
-.friend-request-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 25px;
-    height: 25px;
-    color: white;
-    cursor: pointer;
 }
 
 .accept {
@@ -124,11 +144,11 @@ spot-main-nav {
 }
 
 .decline {
-    background-color: $error-red;
+    background-color: $error-red-light;
 }
 
 .decline:hover {
-    background-color: darken($error-red, 10%);
+    background-color: darken($error-red-light, 5%);
 }
 
 // Send Friend Requests
@@ -162,7 +182,8 @@ input {
 
 .add-friends-error {
   color: $error-red;
-  padding: 3px 0px;
+  margin-bottom: 10px;
+  margin-left: 25px;
 }
 
 // Friends list
@@ -200,32 +221,20 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    // background-color: $lighter-grey;
     box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
     padding: 5px;
     margin-top: 7px;
     margin-bottom: 7px;
 }
 
-.friend-name {
-  color: black;
-  margin-left: 7px;
-}
+.remove {
 
-.friend-remove {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 70px;
-    height: 25px;
-    padding: 3px;
-    color: white;
-    cursor: pointer;
     background-color: $error-red-light;
-}
 
-.friend-remove:hover {
-    background-color: darken($error-red-light, 5%);
+    &:hover {
+      background-color: darken($error-red-light, 5%);
+    }
+
 }
 
 .no-friends {
@@ -246,5 +255,15 @@ input {
   .friends-content  {
     width: 95%;
     min-width: 0;
+  }
+
+  .friends-search {
+    flex-flow: column;
+    align-items: flex-start;
+  }
+
+  .title-wrapper {
+    flex-flow: column;
+    align-items: flex-start;
   }
 }

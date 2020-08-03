@@ -28,8 +28,6 @@ export class ShareComponent implements OnInit {
   data: { postLink: string } = { postLink: null };
 
   friends$: Observable<Friend[]>;
-  friendsList: Friend[];
-  filteredFriendsList: Friend[];
 
   username: string;
 
@@ -60,11 +58,6 @@ export class ShareComponent implements OnInit {
     this.store$.dispatch(
       new SocialStoreFriendsActions.GetFriendsAction(friendRequest)
     );
-
-    this.friends$.subscribe ( friends => {
-      this.friendsList = friends;
-      this.filteredFriendsList = friends;
-    });
 
     // Since these buttons are hidden by default we need to call to parse them
     // todo pass in element so not parse entire page
@@ -104,12 +97,6 @@ export class ShareComponent implements OnInit {
       new SocialStoreNotificationsActions.AddNotificationAction(request)
     );
 
-  }
-
-  onUsernameInput(event: any) {
-    this.filteredFriendsList = this.friendsList.filter( friend => {
-      return friend.username.toUpperCase().indexOf(this.username.toUpperCase()) !== -1;
-    });
   }
 
   copyLink() {

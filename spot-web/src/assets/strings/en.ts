@@ -177,6 +177,7 @@ export const STRINGS = {
           SENT: 'Sent',
 
           FRIENDS: 'Friends',
+          NO_FRIENDS_FOUND: 'No friends found with this name',
           NO_FRIENDS: 'Add Friends to share spots quickly'
 
         },
@@ -217,7 +218,8 @@ export const STRINGS = {
 
           REQUESTS: 'Requests',
           FRIEND_REQUEST_PLACEHOLDER: 'Enter username',
-          FRIEND_REQUEST_PROMPT: 'sent you a friend request!',
+          FRIEND_REQUEST_ACCEPT: 'Accept',
+          FRIEND_REQUEST_DECLINE: 'Decline',
           ADD: 'Add Friends',
 
           FRIENDS_LIST: 'Friends List',

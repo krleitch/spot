@@ -9,23 +9,25 @@
       </div>
       <div *ngIf="!(facebookConnected$ | async)" type="button" class="facebook" (click)="facebookConnect()">
         <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
-        {{ STRINGS.FACEBOOK_CONNECT }}
+        <span class="facebook-text"> {{ STRINGS.FACEBOOK_CONNECT }} </span>
       </div>
     </div>
 
-    <div *ngIf="(friendRequests$ | async)?.length > 0">
-      <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
-      <div class="friend-content-section">
-        <div class="friend-request-container" *ngFor="let friendRequest of friendRequests$ | async">
-          <div>
-            <span class="friend-name"> {{ friendRequest.username }} </span> {{ STRINGS.FRIEND_REQUEST_PROMPT }}
-          </div>
-          <div class="friend-request-options">
-            <div class="accept friend-request-button" (click)="acceptFriendRequest(friendRequest.id)">
-              <span class="material-icons"> done </span>
+    <div *ngIf="friendRequests$ | async as friendRequests">
+      <div *ngIf="friendRequests.length > 0">
+        <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
+        <div class="friend-content-section">
+          <div class="friend-request-container" *ngFor="let friendRequest of friendRequests">
+            <div>
+              <span class="friend-name"> {{ friendRequest.username }} </span>
             </div>
-            <div class="decline friend-request-button" (click)="declineFriendRequest(friendRequest.id)">
-              <span class="material-icons"> clear </span>
+            <div class="friend-request-options">
+              <button class="accept friend-button" (click)="acceptFriendRequest(friendRequest.id)">
+                {{ STRINGS.FRIEND_REQUEST_ACCEPT }}
+              </button>
+              <button class="decline friend-button" (click)="declineFriendRequest(friendRequest.id)">
+                {{ STRINGS.FRIEND_REQUEST_DECLINE }}
+              </button>
             </div>
           </div>
         </div>
@@ -43,7 +45,6 @@
       {{ friendsError.message }}
     </div>
 
-
     <div class="friends-search">
       <div class="subtitle"> {{ STRINGS.FRIENDS_LIST }} </div>
       <div class="search">
@@ -58,9 +59,9 @@
         <div *ngIf="friends.length > 0; else noFriends">
           <div class="friend-list-container" *ngFor="let friend of friends">
             <span class="friend-name"> {{ friend.username }} </span>
-            <div class="friend-remove" (click)="deleteFriend(friend.id)">
+            <button class="remove friend-button" (click)="deleteFriend(friend.id)">
               {{ STRINGS.REMOVE }}
-            </div>
+            </button>
           </div>
         </div>
 

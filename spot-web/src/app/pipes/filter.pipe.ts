@@ -14,6 +14,8 @@ export class FilterPipe implements PipeTransform {
 
   transform(list: any[], filterProperties: FilterProperties): any {
 
+    console.log(list)
+
     if ( filterProperties.filter ) {
       return list.filter(item => {
         return item[filterProperties.field].toUpperCase().indexOf(filterProperties.filter.toUpperCase()) !== -1;

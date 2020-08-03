@@ -124,7 +124,7 @@ router.post('/requests/accept', function (req: any, res: any) {
     const { friendRequestId } = req.body
 
     friends.acceptFriendRequest(friendRequestId, accountId).then((rows: any) => {
-        res.status(200).json({ friendRequestId: friendRequestId });
+        res.status(200).json({ friend: rows[0] });
     }, (err: any) => {
         res.status(500).send('Error accepting friend request');
     });
