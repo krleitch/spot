@@ -9,7 +9,7 @@ export class ModalService {
 
   private modals: any[] = [];
 
-  constructor() { }
+  constructor() {}
 
   add(modal: any) {
     this.modals.push(modal);

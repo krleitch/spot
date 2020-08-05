@@ -105,6 +105,7 @@ export class AuthenticationService {
         } else {
           this.router.navigateByUrl('/home');
         }
+        this.modalService.open('spot-welcome-modal');
     }
 
     loginFacebookAccountSuccess(response: FacebookLoginResponse) {

@@ -116,9 +116,6 @@ export class CommentComponent implements OnInit {
       this.isExpandable = true;
     }
 
-    console.log(this.comment.content);
-    console.log(this.isExpandable);
-
     this.setContentHTML();
 
   }

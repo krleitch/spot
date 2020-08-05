@@ -1,9 +1,16 @@
 @import '../../../styles/colors';
 @import '../../../styles/sizes';
 
-.report {
+.welcome {
+
+  width: 100%;
+  height: auto;
+  background-color: white;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+  z-index: 100;
 
   .header {
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -30,9 +37,37 @@
 
     .heading {
       font-size: 24px;
+      color: $button-highlight;
+      margin-bottom: 3px;
     }
 
     .text {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .button-container {
+
+      display: flex;
+      justify-content: flex-end;
+
+      .continue {
+
+        background: none;
+        border: none;
+        font: inherit;
+        cursor: pointer;
+        outline: inherit;
+
+        color: white;
+        padding: 10px 15px;
+        background-color: $button-highlight;
+
+        &:hover {
+          background-color: darken($button-highlight, 5%);
+        }
+
+      }
 
     }
 

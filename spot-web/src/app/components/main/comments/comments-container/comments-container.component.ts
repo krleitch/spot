@@ -369,7 +369,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // just needed to remove spaces at end
     content = text.trim();
 
-    console.log(content);
+    tags.forEach( (tag: any) => {
+      tag.offset = Math.min(tag.offset, content.length + 1);
+    });
 
     if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
       this.addCommentError = 'Your comment must be less than ' + COMMENTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
@@ -407,8 +409,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       image: this.imageFile,
       tagsList: tags
     };
-
-    return;
 
     this.store$.dispatch(
       new CommentsStoreActions.AddRequestAction(request)
