@@ -45,7 +45,7 @@ export const STRINGS = {
         ACCOUNT: {
 
             // No account
-            NO_ACCOUNT: 'You are currently not logged in to an account',
+            NO_ACCOUNT: 'No account. Please login to continue',
 
             // My account
             MY_ACCOUNT: 'My Account',
@@ -67,8 +67,8 @@ export const STRINGS = {
             SCORE_DESCRIPTION: 'Gain score by posting and and commenting on spots!',
 
             UNIT: 'Preferred Unit',
-            MILES: 'Miles',
-            KILOMETERS: 'Kilometers',
+            IMPERIAL: 'Imperial',
+            METRIC: 'Metric',
 
             // Account options
             ACCOUNT_OPTIONS: 'Account Options',
@@ -77,7 +77,8 @@ export const STRINGS = {
 
             // Social
             FACEBOOK_CONNECT: 'Connect With Facebook',
-            FACEBOOK_CONNECT_SUCCESS: 'Disconnect'
+            FACEBOOK_CONNECT_SUCCESS: 'Disconnect',
+            FACEBOOK_CONNECT_DESCRIPTION: 'Connect with facebook to share spots with all your facebook friends'
 
         },
 

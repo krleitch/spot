@@ -10,7 +10,7 @@ const db = require('./mySql');
 
 function addAccountMetadata(accountId: string): Promise<any> {
     var sql = `INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score) VALUES (?, ?, ?, ?, ?, ?)`;
-    var values = [uuid.v4(), accountId, 'miles', 'hot', 'global', 0];
+    var values = [uuid.v4(), accountId, 'imperial', 'hot', 'global', 0];
     return db.query(sql, values);
 }
 

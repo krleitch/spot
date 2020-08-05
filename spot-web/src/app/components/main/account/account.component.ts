@@ -143,9 +143,9 @@ export class AccountComponent implements OnInit {
 
   }
 
-  setMiles() {
+  setImperial() {
     const request: UpdateAccountMetadataRequest = {
-      distance_unit: 'miles'
+      distance_unit: 'imperial'
     };
 
     this.store$.dispatch(
@@ -153,9 +153,9 @@ export class AccountComponent implements OnInit {
     );
   }
 
-  setKilometers() {
+  setMetric() {
     const request: UpdateAccountMetadataRequest = {
-      distance_unit: 'kilometers'
+      distance_unit: 'metric'
     };
 
     this.store$.dispatch(

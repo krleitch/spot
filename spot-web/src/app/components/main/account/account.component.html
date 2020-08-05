@@ -1,46 +1,36 @@
 <spot-main-nav></spot-main-nav>
 <div class="account">
-  <div class="account-info">
+  <div class="account-content">
+
     <div *ngIf="account$ | async as account; else noAccount">
-      <div class="title-wrapper">
-        <div class="title">
-          {{ STRINGS.MY_ACCOUNT }}
-        </div>
-        <div *ngIf="!(facebookConnected$ | async); else connected" type="button" class="facebook" (click)="facebookConnect()">
-          <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
-          {{ STRINGS.FACEBOOK_CONNECT }}
-        </div>
-        <ng-template #connected>
-          <div class="facebook-connected">
-            <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
-            <span class="material-icons check"> check_circle </span>
-            <span class="text" (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </span>
-          </div>
-        </ng-template>
+
+      <div class="title">
+        {{ STRINGS.MY_ACCOUNT }}
       </div>
+
       <div class="subheading">
-          <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
-          <div *ngIf="account.verified_date == null; else verified">
-            <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
-              <span class="verify-text"> {{ STRINGS.VERIFY }} </span>
-              <span class="material-icons verify-icon"> email </span>
-            </div>
-            <ng-template #sent>
-              <div class="verify-container">
-                <span class="verify-text"> {{ STRINGS.VERIFY_SENT }}. </span>
-                <div class="verify-click" (click)="verifyAccount()">
-                  <span class="verify-text"> {{ STRINGS.VERIFY_RESEND }} </span>
-                  <span class="material-icons verify-icon"> redo </span>
-                </div>
-              </div>
-            </ng-template>
+        <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
+        <div *ngIf="account.verified_date == null; else verified">
+          <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
+            <span class="verify-text"> {{ STRINGS.VERIFY }} </span>
+            <span class="material-icons verify-icon"> email </span>
           </div>
-          <ng-template #verified>
+          <ng-template #sent>
             <div class="verify-container">
-              <span class="verify-text"> {{ STRINGS.VERIFY_CHECK }} </span>
-              <span class="material-icons verify-icon-highlight"> check_circle </span>
+              <span class="verify-text"> {{ STRINGS.VERIFY_SENT }}. </span>
+              <div class="verify-click" (click)="verifyAccount()">
+                <span class="verify-text"> {{ STRINGS.VERIFY_RESEND }} </span>
+                <span class="material-icons verify-icon"> redo </span>
+              </div>
             </div>
           </ng-template>
+        </div>
+        <ng-template #verified>
+          <div class="verify-container">
+            <span class="verify-text"> {{ STRINGS.VERIFY_CHECK }} </span>
+            <span class="material-icons verify-icon-highlight"> check_circle </span>
+          </div>
+        </ng-template>
       </div>
       <div class="value"> {{ account.email }} </div>
       <div *ngIf="account.verified_date == null">
@@ -48,6 +38,7 @@
           {{ STRINGS.EMAIL_VERIFY_DESCRIPTION }}
         </div>
       </div>
+
       <div class="subheading"> {{ STRINGS.USERNAME }} </div>
       <div class="value username">
         <input #editUsername [disabled]="!editUsernameEnabled" [(ngModel)]="username" type="text" spellcheck="false">
@@ -61,18 +52,37 @@
       <div *ngIf="usernameError$ | async as usernameError">
         {{ usernameError.message }}
       </div>
+
       <div class="subheading"> {{ STRINGS.PHONE }} </div>
       <div class="value"> {{ account.phone }} </div>
+
       <div *ngIf="accountMetadata$ | async as accountMetadata">
         <div class="subheading"> {{ STRINGS.UNIT }} </div>
         <div class="value">
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'miles' }" (click)="setMiles()"> {{ STRINGS.MILES }} </div>
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'kilometers' }" (click)="setKilometers()"> {{ STRINGS.KILOMETERS }} </div>
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'imperial' }" (click)="setImperial()"> {{ STRINGS.IMPERIAL }} </div>
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setMetric()"> {{ STRINGS.METRIC }} </div>
         </div>
         <div class="subheading"> {{ STRINGS.SCORE }} </div>
         <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
         <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
       </div>
+
+      <div *ngIf="!(facebookConnected$ | async); else connected">
+        <button class="facebook" (click)="facebookConnect()">
+          <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+          {{ STRINGS.FACEBOOK_CONNECT }}
+        </button>
+        <div class="description"> {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }} </div>
+      </div>
+      <ng-template #connected>
+        <div class="facebook-connected">
+          <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+          <span class="material-icons check"> check_circle </span>
+          <span class="text" (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </span>
+        </div>
+      </ng-template>
+
+
       <br/>
       <div class="title">
         {{ STRINGS.ACCOUNT_OPTIONS }}
@@ -84,8 +94,13 @@
       </div>
       <div class="button" [ngClass]="{'disabled': !accountOptionsEnabled}" (click)="deleteUser()"> {{ STRINGS.DELETE }} </div>
     </div>
+
     <ng-template #noAccount>
-        <span class="no-account"> {{ STRINGS.NO_ACCOUNT }} </span>
+      <div class="no-account">
+        <span class="material-icons icon"> person </span>
+        <span class="text"> {{ STRINGS.NO_ACCOUNT }} </span>
+      </div>
     </ng-template>
+
   </div>
 </div>

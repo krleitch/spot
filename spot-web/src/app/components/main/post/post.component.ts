@@ -135,7 +135,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   getDistance(distance: number, unit: string) {
-    if ( unit === 'kilometers' ) {
+    if ( unit === 'metric' ) {
       return (distance * 1.60934).toFixed(1) + ' km';
     } else {
       return distance.toFixed(1) + ' m';
