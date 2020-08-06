@@ -24,6 +24,10 @@ spot-main-nav {
     max-width: 650px;
   }
 
+  .mobile-column {
+    display: flex;
+  }
+
   .no-account {
 
     display: flex;
@@ -44,7 +48,6 @@ spot-main-nav {
   }
 
 }
-
 
 .title {
   display: flex;
@@ -100,6 +103,7 @@ spot-main-nav {
   font-size: 14px;
   padding: 8px 16px;
   box-sizing: border-box;
+  margin-bottom: 5px;
 
   &:hover {
     background-color: lighten($facebook-blue, 3%);
@@ -178,6 +182,7 @@ input {
   color: black;
   padding: 0px 0px;
   font-size: 14px;
+  background-color: white;
 }
 
 .description {
@@ -190,23 +195,32 @@ input {
   margin-right: 5px;
 }
 
-.button {
+
+
+.delete {
+
+  background: none;
+	color: inherit;
+	border: none;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+
   background-color: $button-black;
-  width: 100px;
   border: none;
   color: $button-font-white;
   padding: 12px 12px;
   text-decoration: none;
-  margin: 4px 2px;
-  outline: none;
+  margin-bottom: 15px;
   font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+
   &:hover {
       background-color: lighten($button-black, 10%);
   }
+
 }
 
 .distance-button {
@@ -313,8 +327,15 @@ input {
 
 // For Mobile
 @media screen and (max-width: $mobile-width) {
+
   .account-info  {
     width: 95%;
     min-width: 0;
+  }
+
+  .mobile-column {
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 }

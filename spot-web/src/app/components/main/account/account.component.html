@@ -8,7 +8,7 @@
         {{ STRINGS.MY_ACCOUNT }}
       </div>
 
-      <div class="subheading">
+      <div class="subheading mobile-column">
         <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
         <div *ngIf="account.verified_date == null; else verified">
           <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
@@ -84,7 +84,7 @@
 
 
       <br/>
-      <div class="title">
+      <div class="title mobile-column">
         {{ STRINGS.ACCOUNT_OPTIONS }}
         <label class="checkbox-container">
           <span class="enable-text"> {{ STRINGS.ENABLE_OPTIONS }} </span>
@@ -92,7 +92,8 @@
           <span class="checkmark"> <span class="checkmark-inner"> </span> </span>
         </label>
       </div>
-      <div class="button" [ngClass]="{'disabled': !accountOptionsEnabled}" (click)="deleteUser()"> {{ STRINGS.DELETE }} </div>
+      <button class="delete" [ngClass]="{'disabled': !accountOptionsEnabled}" (click)="deleteUser()"> {{ STRINGS.DELETE }} </button>
+
     </div>
 
     <ng-template #noAccount>
