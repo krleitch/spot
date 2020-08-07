@@ -26,16 +26,20 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private store$: Store<RootStoreState.State>) {
+
     this.form = this.fb.group({
       emailOrUsername: ['', Validators.required],
       password: ['', Validators.required],
     });
+
   }
 
   ngOnInit() {
+
   }
 
   signIn() {
+
     const val = this.form.value;
 
     if (!val.emailOrUsername) {

@@ -57,14 +57,14 @@
       <div class="value"> {{ account.phone }} </div>
 
       <div *ngIf="accountMetadata$ | async as accountMetadata">
+        <div class="subheading"> {{ STRINGS.SCORE }} </div>
+        <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
+        <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
         <div class="subheading"> {{ STRINGS.UNIT }} </div>
         <div class="value">
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'imperial' }" (click)="setImperial()"> {{ STRINGS.IMPERIAL }} </div>
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setMetric()"> {{ STRINGS.METRIC }} </div>
         </div>
-        <div class="subheading"> {{ STRINGS.SCORE }} </div>
-        <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
-        <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
       </div>
 
       <div *ngIf="!(facebookConnected$ | async); else connected">
