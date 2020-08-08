@@ -23,6 +23,7 @@ router.get('/', function (req: any, res: any) {
     friends.getFriends(accountId, date, limit).then((rows: any) => {
         res.status(200).json({ friends: rows });
     }, (err: any) => {
+        console.log(err);
         res.status(500).send('Error getting friends');
     });
 

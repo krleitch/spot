@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
     this.twitterLibrary();
     this.fbLibrary();
     this.getAccountIfExists();
+    // TODO: move this to get only if account exists
     this.getAccountLocation();
   }
 

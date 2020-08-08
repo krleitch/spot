@@ -14,11 +14,11 @@ function getFriends(accountId: string, date: string, limit: string) {
                 SELECT friends.id, friends.creation_date, friends.confirmed_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.account_id = accounts.id WHERE friend_id = ? AND friends.confirmed_date IS NOT NULL) results
                 WHERE confirmed_date < ? ORDER BY confirmed_date DESC`;
-    var values = [accountId, accountId, date];
+    var values = [accountId, accountId, new Date(date)];
     var limitSql = '';       
     if ( limit ) {
         limitSql = ` LIMIT ?`
-        values =  [accountId, accountId, date, limit]
+        values =  [accountId, accountId, new Date(date), limit]
     }
     const sql = selectSql + limitSql;
 
