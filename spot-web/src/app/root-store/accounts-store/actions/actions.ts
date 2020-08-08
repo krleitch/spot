@@ -29,6 +29,7 @@ export enum ActionTypes {
   UPDATE_METADATA_SUCCESS = '[Accounts] Update Metadata Success',
   GET_METADATA_REQUEST = '[Accounts] Get Metadata Request',
   GET_METADATA_SUCCESS = '[Accounts] Get Metadata Success',
+  GET_METADATA_FAILURE = '[Accounts] Get Metadata Failure',
   LOAD_LOCATION = '[Accounts] Load Location',
   SET_LOCATION = '[Accounts] Set Location',
   LOCATION_FAILURE = '[Accounts] Location Failure',
@@ -156,6 +157,11 @@ export class GetAccountMetadataRequestSuccess implements Action {
   constructor(public response: GetAccountMetadataSuccess) {}
 }
 
+export class GetAccountMetadataFailureAction implements Action {
+  readonly type = ActionTypes.GET_METADATA_FAILURE;
+  constructor(public error: SpotError) {}
+}
+
 export class VerifyRequestAction implements Action {
   readonly type = ActionTypes.VERIFY_REQUEST;
   constructor(public request: VerifyRequest) {}
@@ -186,7 +192,7 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       UpdateUsernameAction | UpdateUsernameSuccessAction |
                       GenericFailureAction | UpdateAccountMetadataRequestAction |
                       UpdateAccountMetadataRequestSuccess | GetAccountMetadataRequestAction |
-                      GetAccountMetadataRequestSuccess | LoadLocationAction |
-                      UpdateUsernameFailureAction | VerifyRequestAction |
-                      VerifySuccessAction | VerifyConfirmRequestAction |
+                      GetAccountMetadataRequestSuccess | GetAccountMetadataFailureAction |
+                      LoadLocationAction | UpdateUsernameFailureAction |
+                      VerifyRequestAction | VerifySuccessAction | VerifyConfirmRequestAction |
                       VerifyConfirmSuccessAction | LocationFailureAction;

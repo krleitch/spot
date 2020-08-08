@@ -10,6 +10,7 @@ import { AccountsService } from '@services/accounts.service';
 import { RegisterResponse, LoginResponse } from '@models/authentication';
 import { VerifyResponse, VerifyConfirmResponse } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
+import { GetAccountMetadataSuccess } from '@models/accounts';
 
 @Injectable()
 export class AccountsStoreEffects {
@@ -194,13 +195,13 @@ export class AccountsStoreEffects {
     ofType<featureActions.GetAccountMetadataRequestAction>(
       featureActions.ActionTypes.GET_METADATA_REQUEST
     ),
-    switchMap(action =>
+    switchMap( (action: featureActions.GetAccountMetadataRequestAction) =>
       this.accountsService
         .getAccountMetadata(action.request)
         .pipe(
-            map(response => new featureActions.GetAccountMetadataRequestSuccess(response)),
-            catchError(error =>
-              observableOf(new featureActions.GenericFailureAction(error))
+            map( (response: GetAccountMetadataSuccess)  => new featureActions.GetAccountMetadataRequestSuccess(response)),
+            catchError( (errorResponse: { error: SpotError }) =>
+              observableOf(new featureActions.GetAccountMetadataFailureAction(errorResponse.error))
             )
           )
     )

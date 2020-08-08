@@ -75,6 +75,7 @@ export class LandingComponent implements OnInit {
   }
 
   signUp() {
+    
     const val = this.form.value;
     let valid = true;
 

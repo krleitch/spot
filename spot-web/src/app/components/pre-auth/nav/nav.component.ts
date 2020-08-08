@@ -28,4 +28,16 @@ export class NavComponent implements OnInit {
     this.router.navigateByUrl('/contact');
   }
 
+  login() {
+    this.router.navigateByUrl('/login');
+  }
+
+  register() {
+    this.router.navigateByUrl('/register');
+  }
+
+  routeIsLogin(): boolean {
+    return this.router.url === '/login';
+  }
+
 }

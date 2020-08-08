@@ -11,6 +11,7 @@ import { SpotError } from '@exceptions/error';
 export enum FriendsActionTypes {
   GET_FRIENDS_REQUEST = '[Social Friends] Get Friends Request',
   GET_FRIENDS_SUCCESS = '[Social Friends] Get Friends Success',
+  GET_FRIENDS_FAILURE = '[Social Friends] Get Friends Failure',
   DELETE_FRIENDS_REQUEST = '[Social Friends] Delete Friends Request',
   DELETE_FRIENDS_SUCCESS = '[Social Friends] Delete Friends Success',
   GET_FRIEND_REQUESTS_REQUEST = '[Social Friends] Get Friend Requests Request',
@@ -40,6 +41,11 @@ export class GetFriendsAction implements Action {
 export class GetFriendsSuccessAction implements Action {
     readonly type = FriendsActionTypes.GET_FRIENDS_SUCCESS;
     constructor(public response: GetFriendsSuccess) {}
+}
+
+export class GetFriendsFailureAction implements Action {
+    readonly type = FriendsActionTypes.GET_FRIENDS_FAILURE;
+    constructor(public error: SpotError) {}
 }
 
 export class DeleteFriendsAction implements Action {

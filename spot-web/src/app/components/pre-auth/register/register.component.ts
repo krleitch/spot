@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
@@ -45,9 +46,14 @@ export class RegisterComponent implements OnInit {
       select(AccountsStoreSelectors.selectAuthError)
     );
 
+    this.authError$.pipe(map( (error: SpotError) => {
+      this.errorMessage = error.message;
+    }));
+
   }
 
   signUp() {
+
     const val = this.form.value;
     let valid = true;
 
@@ -100,6 +106,7 @@ export class RegisterComponent implements OnInit {
     this.store$.dispatch(
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
+    
   }
 
   login() {

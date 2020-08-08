@@ -1,8 +1,9 @@
 @import '../../../styles/colors';
+@import '../../../styles/sizes';
 
-// SIGNUP
+// Register
 
-.signup {
+.register {
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -10,7 +11,7 @@
     padding-top: 100px;
 }
 
-.signup-text {
+.register-text {
     font-size: 26px;
     margin-bottom: 10px;
 }
@@ -38,20 +39,21 @@ form {
     background-color: $facebook-blue;
     color: white;
     font-size: 14px;
-    padding: 8px 8px;
+    padding: 12px 8px;
     margin-bottom: 10px;
     box-sizing: border-box;
     cursor: pointer;
-    width: 250px;
+    width: 300px;
+
     &:hover {
-      background-color: lighten($facebook-blue, 3%);
+      background-color: lighten($facebook-blue, 5%);
     }
 }
 
 .facebook-logo {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
 }
 
 .google {
@@ -61,20 +63,20 @@ form {
     background-color: $google-white;
     color: black;
     font-size: 14px;
-    padding: 8px 8px;
+    padding: 12px 8px;
     border-radius: 5px;
     border: thin solid #888;
     box-shadow: 1px 1px 1px grey;
     box-sizing: border-box;
-    width: 250px;
+    width: 300px;
     margin-bottom: 10px;
     cursor: pointer;
 }
 
 .google-logo {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
 }
 
 fieldset {
@@ -84,12 +86,24 @@ fieldset {
     align-items: center;
     border: none;
     width: 100%;
+    padding: 0;
+    margin: 0 0 10px 0;
     box-sizing: border-box;
 }
 
 .error-message {
     text-align: center;
     color: $error-red;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 300px;
+    padding: 8px 12px;
+    margin: 6px 0px;
+    box-sizing: border-box;
+    border: 1px solid $subtle-grey;
+    outline: none;
 }
 
 input.ng-dirty.ng-invalid {
@@ -105,46 +119,42 @@ input.ng-dirty.ng-invalid {
     box-sizing: border-box;
 }
 
-.form-buttons {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-}
-
 .sign-up-alternate {
     margin-bottom: 10px;
 }
 
-.button {
-    background-color: $button-black;
-    width: 100px;
-    border: none;
-    color: $button-font-white;
-    padding: 12px 12px;
-    text-decoration: none;
-    margin: 4px 2px;
-    outline: none;
-    font-size: 14px;
+.form-buttons {
+
     display: flex;
+    flex-flow: column;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
-    &:hover {
-        background-color: lighten($button-black, 10%);
-    }
-}
 
-input {
-    width: 250px;
-    padding: 6px 10px;
-    margin: 6px 0;
+    width: 100%;
     box-sizing: border-box;
-    border: 1px solid $subtle-grey;
-    outline: none;
+    margin-bottom: 10px;
+
+    button {
+
+      border: none;
+      text-decoration: none;
+      outline: none;
+      cursor: pointer;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $button-black;
+      color: $button-font-white;
+      padding: 12px 24px;
+      font-size: 14px;
+
+      &:hover {
+          background-color: lighten($button-black, 10%);
+      }
+
+  }
+
 }
 
 // EXISTING ACCOUNT
@@ -171,4 +181,13 @@ input {
     right: 5px;
     bottom: 5px;
     font-size: 14px;
+}
+
+// Mobile Stylings
+@media screen and (max-width: $mobile-width) {
+
+    .register {
+        padding-top: 10px;
+    }
+    
 }

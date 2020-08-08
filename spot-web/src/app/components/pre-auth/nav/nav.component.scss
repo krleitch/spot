@@ -5,28 +5,53 @@
 
 .nav {
 
-    height: 50px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 5px 10px;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
 
-    .title {
-      font-size: 35px;
-      margin-right: 75px;
-      cursor: pointer;
-      &:hover {
-        color: $button-highlight;
-      }
+  .title {
+
+    font-size: 35px;
+    margin-right: 35px;
+    cursor: pointer;
+    &:hover {
+      color: $button-highlight;
+    }
+
   }
 
-  .nav-button {
-    font-size: 16px;
-    margin-right: 75px;
+  button {
+
+    background: none;
+    border: none;
+    text-decoration: none;
+    outline: none;
     cursor: pointer;
+
+    margin-right: 35px;
+    font-size: 16px;
+
     &:hover {
         color: $button-highlight;
     }
+  }
+
+  .left {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+
+  .right {
+
+    .login {
+      margin-right: 5px;
+    }
+
   }
 
 }
@@ -39,10 +64,10 @@
     justify-content: space-between;
 
     .title {
-      margin-right: 0px;
+      margin-right: 5px;
     }
 
-    .nav-button {
+    button {
       margin-right: 0px;
     }
 
