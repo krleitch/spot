@@ -1,5 +1,5 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
-            validPassword, optionalAuth, requiredAuth }
+            validPassword, optionalAuth, requiredAuth, localAuth }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -69,6 +69,20 @@ const requiredAuth = function(req: any, res: any, next: any) {
       req.user = user || null;
       if ( ! req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+      } else {
+          next();
+      }
+    })(req, res, next);
+};
+
+const localAuth = function(req: any, res: any, next: any) {
+    passport.authenticate('local', {session: false} , function(err: any, user: any, info: any) {
+      req.authenticated = !! user;
+      req.verified = !! user.verified_date;
+      req.user = user || null;
+      // No user found
+      if ( user == false ) {
+        return next(new AuthenticationError.UsernameOrPasswordError(401));
       } else {
           next();
       }

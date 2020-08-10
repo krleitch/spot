@@ -7,14 +7,15 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.REGISTER_SUCCESS: {
       return {
         ...state,
-        account: action.response.account
+        account: action.response.account,
+        authenticationError: null,
       };
     }
     case ActionTypes.REGISTER_FAILURE: {
       return {
         ...state,
         account: null,
-        authError: action.error,
+        authenticationError: action.error,
       };
     }
     case ActionTypes.LOGIN_SUCCESS: {
@@ -22,16 +23,17 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       if ( action.response.account.facebook_id ) {
           state.facebookConnected = true;
       }
-
       return {
         ...state,
-        account: action.response.account
+        account: action.response.account,
+        authenticationError: null
       };
     }
     case ActionTypes.LOGIN_FAILURE: {
       return {
         ...state,
-        account: null
+        account: null,
+        authenticationError: action.error
       };
     }
     case ActionTypes.LOGOUT_REQUEST: {

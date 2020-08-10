@@ -7,13 +7,13 @@ const mysql = require('mysql');
 //     database: "db",
 //     charset : 'utf8mb4'
 // });
-
+// root / rootroot
 // KEEP CONNECTION OPEN
 
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'rootroot',
+    password: 'admin',
     database: 'db',
     charset : 'utf8mb4'
   });

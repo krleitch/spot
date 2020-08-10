@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
 
     this.authError$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAuthError)
+      select(AccountsStoreSelectors.selectAuthenticationError)
     );
 
     this.authError$.pipe(map( (error: SpotError) => {
@@ -106,7 +106,7 @@ export class RegisterComponent implements OnInit {
     this.store$.dispatch(
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
-    
+
   }
 
   login() {

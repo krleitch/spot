@@ -9,14 +9,13 @@ const nodemailer = require('nodemailer');
 
 const shortid = require('shortid');
 
-const passport = require('../services/authentication/passport');
+const authentication = require('@services/authentication/authentication');
 
 const AuthError = require('@exceptions/authentication');
 const ERROR_MESSAGES = require('@exceptions/messages');
 const AUTH_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
 
 router.use(function timeLog (req: any, res: any, next: any) {
-    // console.log('[AUTH] ', Date.now());
     next();
 });
 
@@ -58,7 +57,7 @@ router.post('/register', function (req: any, res: any, next: any) {
 });
 
 // Get a user token
-router.post('/login', passport.authenticate('local', {session: true}), function (req: any, res: any) {
+router.post('/login', authentication.localAuth, function (req: any, res: any) {
     const user = req.user;
     const token = auth.generateToken(user);
     res.status(200).json({
@@ -66,29 +65,6 @@ router.post('/login', passport.authenticate('local', {session: true}), function 
         account: user
     });                            
 });
-
-// Facebook Register
-// router.post('/register/facebook', function (req: any, res: any) {
-//     const { accessToken } = req.body;
-//     auth.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
-//         accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email).then( (rows: any) => {
-//             accounts.getFacebookAccount(facebookDetails.body.id).then(( user: any) => {
-//                 user = user[0];
-//                 const token = auth.generateToken(user);
-//                 res.status(200).json({
-//                     jwt: { token: token, expiresIn: '2h' },
-//                     user: user
-//                 });   
-//             }, (err: any) => {
-//                 res.sendStatus(500);
-//             })   
-//         }, (err: any) => {
-//            res.sendStatus(500);
-//         });
-//     }, (err: any) => {
-//         res.sendStatus(500);
-//     });
-// });
 
 // Facebook login
 router.post('/login/facebook', function (req: any, res: any) {
