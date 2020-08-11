@@ -21,9 +21,15 @@ router.use(function timeLog (req: any, res: any, next: any) {
 
 // Register - Given password should already be hashed once
 router.post('/register', function (req: any, res: any, next: any) {
+
     const { email, username, password, phone } = req.body;
 
     // Validation
+
+    const emailError = auth.validEmail(email);
+    if ( emailError) {
+        return next(emailError);
+    }
 
     const usernameError = auth.validUsername(username);
     if ( usernameError) {
@@ -33,6 +39,11 @@ router.post('/register', function (req: any, res: any, next: any) {
     const passwordError = auth.validPassword(password);
     if ( passwordError) {
         return next(passwordError);
+    }
+
+    const phoneError = auth.validPhone(phone);
+    if ( phoneError) {
+        return next(phoneError);
     }
 
     const salt = auth.generateSalt();
@@ -47,12 +58,28 @@ router.post('/register', function (req: any, res: any, next: any) {
                 account: user
             });  
         }, (err: any) => {
-            res.status(500).send('Cannot register account');
+            return next(new AuthError.AuthenticationServerError(500));
         });
     }, (err: any) => {
-        // Account already exists
-        console.log(err);
-        return next(new AuthError.UsernameTakenError(AUTH_ERROR_MESSAGES.USERNAME_TAKEN, 400));
+
+        // A duplicate exists
+        if ( err.code === 'ER_DUP_ENTRY' ) {
+
+            // get the column name for the duplicate from the message
+            const column = err.sqlMessage.match(/'.*?'/g).slice(-1)[0].replace(/[']+/g, '');
+
+            if ( column == 'email' ) {
+                return next(new AuthError.EmailTakenError(400));
+            } else if ( column == 'username' ) {
+                return next(new AuthError.UsernameTakenError(400));
+            } else if ( column == 'phone' ) {
+                return next(new AuthError.PhoneTakenError(400));
+            }
+
+        }
+
+        return next(new AuthError.AuthenticationServerError(500));
+        
     });
 });
 

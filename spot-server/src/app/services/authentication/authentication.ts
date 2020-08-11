@@ -1,5 +1,5 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
-            validPassword, optionalAuth, requiredAuth, localAuth }
+            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -9,22 +9,21 @@ const passport = require('@services/authentication/passport');
 const secret = require('../../../../secret.json');
 
 const AuthenticationError = require('@exceptions/authentication');
-const ERROR_MESSAGES = require('@exceptions/messages');
-const AUTH_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
+const AUTH_CONSTANTS = require('@constants/authentication');
+const AUTHENTICATION_CONSTANTS = AUTH_CONSTANTS.AUTHENTICATION_CONSTANTS
 
 // Register Validation
 
 function validUsername(username: string): Error | null {
 
-    const MIN_LENGTH = 4;
-    const MAX_LENGTH = 32;
+    // Check length
+    if ( username.length < AUTHENTICATION_CONSTANTS.MIN_USERNAME_LENGTH ||
+         username.length > AUTHENTICATION_CONSTANTS.MAX_USERNAME_LENGTH ) {
+        return new AuthenticationError.UsernameLengthError(400, AUTHENTICATION_CONSTANTS.MIN_USERNAME_LENGTH, AUTHENTICATION_CONSTANTS.MAX_USERNAME_LENGTH);
+    }
+
     // start with alphanumeric_ word with . - ' singular no repetition and not at end
     const PATTERN = /^\w(?:\w*(?:['.-]\w+)?)*$/;
-
-    // Check length
-    if ( username.length < MIN_LENGTH || username.length > MAX_LENGTH ) {
-        return new AuthenticationError.UsernameLengthError(400, MIN_LENGTH, MAX_LENGTH);
-    }
 
     // Check characters
     if ( username.match(PATTERN) == null ) {
@@ -37,13 +36,34 @@ function validUsername(username: string): Error | null {
 
 function validPassword(password: string): Error | null {
 
-    const MIN_LENGTH = 8;
-    const MAX_LENGTH = 255;
-
     // Check length
-    if ( password.length < MIN_LENGTH || password.length > MAX_LENGTH ) {
-        // HASH PASS?
-        return new AuthenticationError.PasswordLengthError(AUTH_ERROR_MESSAGES.PASSWORD_LENGTH, 400, MIN_LENGTH, MAX_LENGTH);
+    if ( password.length < AUTHENTICATION_CONSTANTS.MIN_PASSWORD_LENGTH ||
+         password.length > AUTHENTICATION_CONSTANTS.MAX_PASSWORD_LENGTH) {
+        return new AuthenticationError.PasswordLengthError(400, AUTHENTICATION_CONSTANTS.MIN_PASSWORD_LENGTH, AUTHENTICATION_CONSTANTS.MAX_PASSWORD_LENGTH);
+    }
+
+    return null;
+
+}
+
+function validEmail(email: string): Error | null {
+
+    const regex = /^\S+@\S+\.\S+$/;
+
+    if ( email.match(regex) == null ) {
+        return new AuthenticationError.PasswordInvalidError(400);
+    }
+
+    return null;
+
+}
+
+function validPhone(phone: string): Error | null {
+
+    const regex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+
+    if ( phone.match(regex) == null ) {
+        return new AuthenticationError.PhoneInvalidError(400);
     }
 
     return null;
@@ -75,6 +95,8 @@ const requiredAuth = function(req: any, res: any, next: any) {
     })(req, res, next);
 };
 
+// Uses a Username/Email and password combination
+// Will throw if doesnt exist
 const localAuth = function(req: any, res: any, next: any) {
     passport.authenticate('local', {session: false} , function(err: any, user: any, info: any) {
       req.authenticated = !! user;

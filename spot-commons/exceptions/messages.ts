@@ -63,6 +63,9 @@ export const ERROR_MESSAGES = {
 
         AUTHENTICATION: {
 
+            // Generic
+            SERVER_ERROR: 'Something has gone wrong. Please try again',
+
             // Standard Authentication Error
             NO_AUTHENTICATION: 'User not Authenticated',
             VERIFY: 'User email not verified',
@@ -71,8 +74,22 @@ export const ERROR_MESSAGES = {
 
             // Username
             USERNAME_TAKEN: 'Username is not available',
-            USERNAME_CHARACTER: 'Username of invalid form',
+            USERNAME_CHARACTER: 'Username must be alpha-numeric with non-repeated .-\'',
             USERNAME_LENGTH: 'Username length invalid',
+
+            // Password
+            PASSWORD_LENGTH: 'Password length invalid',
+
+            // Email
+            EMAIL_TAKEN: 'Email is not available',
+            EMAIL_INVALID: 'Email is invalid',
+
+            // Phone
+            PHONE_TAKEN: 'Phone is not available',
+            PHONE_INVALID: 'Phone is invalid',
+
+            // Invalid Account
+            USERNAME_OR_PASSWORD: 'Email / Username or Password is invalid'
 
         }
 

@@ -86,16 +86,6 @@ export class AccountsStoreEffects {
   );
 
   @Effect({dispatch: false})
-  loginAccountFailureEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LoginFailureAction>(
-      featureActions.ActionTypes.LOGIN_FAILURE
-    ),
-    tap((action: featureActions.LoginFailureAction) => {
-      this.authenticationService.failureMessage(action.error);
-    })
-  );
-
-  @Effect({dispatch: false})
   logoutAccountEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.LogoutRequestAction>(
       featureActions.ActionTypes.LOGOUT_REQUEST

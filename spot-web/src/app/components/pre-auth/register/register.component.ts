@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
@@ -17,7 +17,9 @@ import { SpotError } from '@exceptions/error';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   STRINGS = STRINGS.PRE_AUTH.REGISTER;
 
@@ -46,16 +48,21 @@ export class RegisterComponent implements OnInit {
       select(AccountsStoreSelectors.selectAuthenticationError)
     );
 
-    this.authError$.pipe(map( (error: SpotError) => {
-      this.errorMessage = error.message;
-    }));
+    this.authError$.pipe(takeUntil(this.onDestroy)).subscribe( (authError: SpotError) => {
+      if ( authError ) {
+        this.errorMessage = authError.message;
+      }
+    });
 
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   signUp() {
 
     const val = this.form.value;
-    let valid = true;
 
     if (!val.email) {
       this.errorMessage = this.STRINGS.EMAIL_ERROR;
@@ -63,8 +70,8 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    valid = this.authenticationService.validateEmail(val.email);
-    if (!valid) {
+    const validEmail = this.authenticationService.validateEmail(val.email);
+    if (!validEmail) {
       this.errorMessage = this.STRINGS.EMAIL_INVALID;
       this.form.controls.email.markAsDirty();
       return;
@@ -76,8 +83,22 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    const validUsername = this.authenticationService.validateUsername(val.username);
+    if (validUsername !== null) {
+      this.errorMessage = validUsername;
+      this.form.controls.username.markAsDirty();
+      return;
+    }
+
     if (!val.password) {
       this.errorMessage = this.STRINGS.PASSWORD_ERROR;
+      this.form.controls.password.markAsDirty();
+      return;
+    }
+
+    const validPassword = this.authenticationService.validatePassword(val.password);
+    if (validPassword !== null) {
+      this.errorMessage = validPassword;
       this.form.controls.password.markAsDirty();
       return;
     }
@@ -88,8 +109,8 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    valid = this.authenticationService.validatePhone(val.phone);
-    if (!valid) {
+    const validPhone = this.authenticationService.validatePhone(val.phone);
+    if (!validPhone) {
       this.errorMessage = this.STRINGS.PHONE_INVALID;
       this.form.controls.email.markAsDirty();
       return;
@@ -100,7 +121,7 @@ export class RegisterComponent implements OnInit {
     const registerRequest: RegisterRequest = {
       email: val.email,
       username: val.username,
-      password: this.authenticationService.md5Hash(val.password),
+      password: val.password,
       phone: val.phone
     };
     this.store$.dispatch(

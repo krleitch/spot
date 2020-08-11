@@ -44,8 +44,8 @@ export class UsernameTakenError extends SpotError {
 
 // Password
 export class PasswordLengthError extends SpotError {
-  constructor(message, statusCode, minLength, maxLength) {
-    super(message, statusCode);
+  constructor(statusCode, minLength, maxLength) {
+    super(AUTHENTICATION_ERROR_MESSAGES.PASSWORD_LENGTH, statusCode);
     this.name = "PasswordLengthError";
     this.body = { min: minLength, max: maxLength };
   }
@@ -53,30 +53,30 @@ export class PasswordLengthError extends SpotError {
 
 // Email
 export class EmailTakenError extends SpotError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.EMAIL_TAKEN, statusCode);
     this.name = "EmailTakenError";
   }
 }
 
 export class EmailInvalidError extends SpotError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.EMAIL_INVALID, statusCode);
     this.name = "EmailInvalidError";
   }
 }
 
 // Phone
 export class PhoneTakenError extends SpotError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.PHONE_TAKEN, statusCode);
     this.name = "PhoneTakenError";
   }
 }
 
 export class PhoneInvalidError extends SpotError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.PHONE_INVALID, statusCode);
     this.name = "PhoneInvalidError";
   }
 }
@@ -85,8 +85,8 @@ export class PhoneInvalidError extends SpotError {
 
 // If account doesnt exist or password is wrong
 export class UsernameOrPasswordError extends SpotError {
-  constructor(message, statusCode) {
-    super(message, statusCode);
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.USERNAME_OR_PASSWORD, statusCode);
     this.name = "UsernameOrPasswordError";
   }
 }

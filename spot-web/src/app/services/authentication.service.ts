@@ -10,6 +10,8 @@ import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginR
          NewPasswordRequest, NewPasswordSuccess } from '@models/authentication';
 import { AlertService } from '@services/alert.service';
 import { ModalService } from '@services/modal.service';
+import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
+import { STRINGS } from '@assets/strings/en';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -49,18 +51,50 @@ export class AuthenticationService {
       return this.http.post<NewPasswordSuccess>(`${this.baseUrl}/auth/new-password`, request);
     }
 
-    validateUsername(username: string): boolean {
-        return true;
-    }
-
     validateEmail(email: string): boolean {
         const regex = /^\S+@\S+\.\S+$/;
         return email.match(regex) != null;
     }
 
     validatePhone(phone: string): boolean {
-        const regex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
-        return phone.match(regex) != null;
+      const regex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+      return phone.match(regex) != null;
+    }
+
+    validateUsername(username: string): string {
+
+      // Check length
+      if ( username.length < AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH ||
+           username.length > AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH ) {
+            return STRINGS.PRE_AUTH.REGISTER.USERNAME_INVALID_LENGTH
+            .replace('%MIN%', AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH.toString())
+            .replace('%MAX%', AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH.toString());
+      }
+
+      // start with alphanumeric_ word with . - ' singular no repetition and not at end
+      const PATTERN = /^\w(?:\w*(?:['.-]\w+)?)*$/;
+
+      // Check characters
+      if ( username.match(PATTERN) == null ) {
+        return STRINGS.PRE_AUTH.REGISTER.USERNAME_INVALID_CHARACTERS;
+      }
+
+      return null;
+
+    }
+
+    validatePassword(password: string): string {
+
+      // Check length
+      if ( password.length < AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH ||
+           password.length > AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH ) {
+          return STRINGS.PRE_AUTH.REGISTER.PASSWORD_INVALID_LENGTH
+            .replace('%MIN%', AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH.toString())
+            .replace('%MAX%', AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH.toString());
+      }
+
+      return null;
+
     }
 
     md5Hash(data: string): string {

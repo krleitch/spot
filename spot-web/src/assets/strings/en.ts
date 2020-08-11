@@ -374,16 +374,17 @@ export const STRINGS = {
 
             // ERROR MESSAGES
             EMAIL_ERROR: 'Email is required',
-            USERNAME_ERROR: 'Username is required',
-            PASSWORD_ERROR: 'Password is required',
-            PHONE_ERROR: 'Phone is required',
-
             EMAIL_INVALID: 'Email is invalid',
-            PHONE_INVALID: 'Phone number is invalid',
 
-            EMAIL_USED: 'Email is already in use',
-            USERNAME_USED: 'Username is already in use',
-            PHONE_USED: 'Phone is already in use'
+            USERNAME_ERROR: 'Username is required',
+            USERNAME_INVALID_LENGTH: 'Username must be between %MIN% and %MAX% characters',
+            USERNAME_INVALID_CHARACTERS: 'Username must be alphanumeric with non-repeated .-\' accepted',
+
+            PASSWORD_ERROR: 'Password is required',
+            PASSWORD_INVALID_LENGTH: 'Password must be between %MIN% and %MAX% characters',
+
+            PHONE_ERROR: 'Phone is required',
+            PHONE_INVALID: 'Phone number is invalid',
 
         },
 
@@ -410,8 +411,9 @@ export const STRINGS = {
             COPYRIGHT: '2020 Spot',
 
             // ERRORS
-            EMAIL_OR_USER_ERROR: 'Email/Username is required',
+            EMAIL_OR_USER_ERROR: 'Email / Username is required',
             PASSWORD_ERROR: 'Password is required',
+
         },
 
         USERNAME: {

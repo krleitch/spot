@@ -94,7 +94,7 @@ fieldset {
 .error-message {
     text-align: center;
     color: $error-red;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 input {
@@ -189,5 +189,5 @@ input.ng-dirty.ng-invalid {
     .register {
         padding-top: 10px;
     }
-    
+
 }

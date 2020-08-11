@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
@@ -17,7 +17,9 @@ import { SpotError } from '@exceptions/error';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   STRINGS = STRINGS.PRE_AUTH.LOGIN;
 
@@ -44,10 +46,16 @@ export class LoginComponent implements OnInit {
       select(AccountsStoreSelectors.selectAuthenticationError)
     );
 
-    this.authError$.pipe(map( (error: SpotError) => {
-      this.errorMessage = error.message;
-    }));
+    this.authError$.pipe(takeUntil(this.onDestroy)).subscribe( (authError: SpotError) => {
+      if ( authError ) {
+        this.errorMessage = authError.message;
+      }
+    });
 
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   signIn() {
@@ -70,11 +78,12 @@ export class LoginComponent implements OnInit {
 
     const loginRequest: LoginRequest = {
       emailOrUsername: val.emailOrUsername,
-      password: this.authenticationService.md5Hash(val.password),
+      password: val.password,
     };
     this.store$.dispatch(
       new AccountsActions.LoginRequestAction(loginRequest)
     );
+
   }
 
   register() {
