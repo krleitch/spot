@@ -48,7 +48,14 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.authError$.pipe(takeUntil(this.onDestroy)).subscribe( (authError: SpotError) => {
       if ( authError ) {
-        this.errorMessage = authError.message;
+
+        if ( authError.name === 'RateLimitError') {
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authError.body.limit)
+                                                     .replace('%TIMEOUT%', authError.body.timeout);
+        } else {
+          this.errorMessage = authError.message;
+        }
+
       }
     });
 

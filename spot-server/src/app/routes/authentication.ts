@@ -12,8 +12,9 @@ const shortid = require('shortid');
 const authentication = require('@services/authentication/authentication');
 
 const AuthError = require('@exceptions/authentication');
-const ERROR_MESSAGES = require('@exceptions/messages');
-const AUTH_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
+
+// ratelimiter
+const rateLimiter = require('@src/app/rateLimiter');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -84,7 +85,7 @@ router.post('/register', function (req: any, res: any, next: any) {
 });
 
 // Get a user token
-router.post('/login', authentication.localAuth, function (req: any, res: any) {
+router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, function (req: any, res: any) {
     const user = req.user;
     const token = auth.generateToken(user);
     res.status(200).json({

@@ -378,7 +378,7 @@ export const STRINGS = {
 
             USERNAME_ERROR: 'Username is required',
             USERNAME_INVALID_LENGTH: 'Username must be between %MIN% and %MAX% characters',
-            USERNAME_INVALID_CHARACTERS: 'Username must be alphanumeric with non-repeated .-\' accepted',
+            USERNAME_INVALID_CHARACTERS: 'Username must be alpha-numeric with non-repeated .-\'',
 
             PASSWORD_ERROR: 'Password is required',
             PASSWORD_INVALID_LENGTH: 'Password must be between %MIN% and %MAX% characters',
@@ -413,6 +413,7 @@ export const STRINGS = {
             // ERRORS
             EMAIL_OR_USER_ERROR: 'Email / Username is required',
             PASSWORD_ERROR: 'Password is required',
+            RATE_LIMIT: 'Too many requests. Please try again in %TIMEOUT% minutes'
 
         },
 
