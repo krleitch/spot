@@ -92,7 +92,7 @@ export class NewPasswordComponent implements OnInit {
 
     const request: NewPasswordRequest = {
       token: this.token,
-      password: this.authenticationService.md5Hash(val.password)
+      password: val.password
     };
 
     this.authenticationService.newPassword(request).subscribe((response: NewPasswordSuccess) => {

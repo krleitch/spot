@@ -37,6 +37,7 @@ export enum ActionTypes {
   VERIFY_SUCCESS = '[Accounts] Verify Success',
   VERIFY_CONFIRM_REQUEST = '[Accounts] Verify Confrim Request',
   VERIFY_CONFIRM_SUCCESS = '[Accounts] Verify Confirm Success',
+  VERIFY_CONFIRM_FAILURE = '[Accounts] Verify Confirm Failure',
   GENERIC_FAILURE = '[Accounts] Generic Failure'
 }
 
@@ -182,6 +183,11 @@ export class VerifyConfirmSuccessAction implements Action {
   constructor(public response: VerifyConfirmResponse) {}
 }
 
+export class VerifyConfirmFailureAction implements Action {
+  readonly type = ActionTypes.VERIFY_CONFIRM_FAILURE;
+  constructor(public error: SpotError) {}
+}
+
 export type Actions = LoginRequestAction | LoginSuccessAction |
                       LoginFailureAction | RegisterRequestAction |
                       RegisterSuccessAction | RegisterFailureAction |
@@ -195,4 +201,4 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       GetAccountMetadataRequestSuccess | GetAccountMetadataFailureAction |
                       LoadLocationAction | UpdateUsernameFailureAction |
                       VerifyRequestAction | VerifySuccessAction | VerifyConfirmRequestAction |
-                      VerifyConfirmSuccessAction | LocationFailureAction;
+                      VerifyConfirmSuccessAction | LocationFailureAction | VerifyConfirmFailureAction;

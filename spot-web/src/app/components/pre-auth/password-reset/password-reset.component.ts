@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
 import { PasswordResetRequest, PasswordResetSuccess } from '@models/authentication';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-password-reset',
@@ -37,7 +38,6 @@ export class PasswordResetComponent implements OnInit {
     }
 
     const validEmail = this.authenticationService.validateEmail(val.email);
-
     if ( !validEmail ) {
       this.errorMessage = this.STRINGS.EMAIL_FORMAT;
       this.form.controls.email.markAsDirty();
@@ -55,6 +55,8 @@ export class PasswordResetComponent implements OnInit {
 
     this.authenticationService.passwordReset(request).subscribe((response: PasswordResetSuccess) => {
       this.successMessage = this.STRINGS.REQUEST_SUCCESS;
+    }, (errorResponse: { error: SpotError }) => {
+      this.errorMessage = errorResponse.error.message;
     });
 
   }

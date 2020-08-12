@@ -4,16 +4,21 @@ const router = express.Router();
 const { pbkdf2Sync } = require('crypto');
 const nodemailer = require('nodemailer');
 
-const accounts = require('../db/accounts');
-const verifyAccount = require('../db/verifyAccount');
+// db
+const accounts = require('@db/accounts');
+const verifyAccount = require('@db/verifyAccount');
 
+// services
 const authService = require('@services/authentication/authentication');
 const friendsService = require('@services/friends');
 
+// exceptions
 const AuthError = require('@exceptions/authentication');
 
+// ratelimiter
+const rateLimiter = require('@src/app/rateLimiter');
+
 router.use(function timeLog (req: any, res: any, next: any) {
-    // console.log('[ACCOUNTS] ', Date.now());
     next();
 });
 

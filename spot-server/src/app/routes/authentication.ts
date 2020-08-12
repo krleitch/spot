@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
 
-const accounts = require('../db/accounts');
-const passwordReset = require('../db/passwordReset');
-const auth = require('../services/authentication/authentication')
-const friendsService = require('@services/friends');
 const nodemailer = require('nodemailer');
-
 const shortid = require('shortid');
 
-const authentication = require('@services/authentication/authentication');
-
+// exceptions
 const AuthError = require('@exceptions/authentication');
+
+// db
+const accounts = require('@db/accounts');
+const passwordReset = require('@db/passwordReset');
+
+// services
+const authentication = require('@services/authentication/authentication');
+const friendsService = require('@services/friends');
 
 // ratelimiter
 const rateLimiter = require('@src/app/rateLimiter');
@@ -27,33 +29,33 @@ router.post('/register', function (req: any, res: any, next: any) {
 
     // Validation
 
-    const emailError = auth.validEmail(email);
+    const emailError = authentication.validEmail(email);
     if ( emailError) {
         return next(emailError);
     }
 
-    const usernameError = auth.validUsername(username);
+    const usernameError = authentication.validUsername(username);
     if ( usernameError) {
         return next(usernameError);
     }
 
-    const passwordError = auth.validPassword(password);
+    const passwordError = authentication.validPassword(password);
     if ( passwordError) {
         return next(passwordError);
     }
 
-    const phoneError = auth.validPhone(phone);
+    const phoneError = authentication.validPhone(phone);
     if ( phoneError) {
         return next(phoneError);
     }
 
-    const salt = auth.generateSalt();
-    const hash = auth.hashPassword(password, salt);
+    const salt = authentication.generateSalt();
+    const hash = authentication.hashPassword(password, salt);
 
     accounts.addAccount(email, username, hash, phone, salt).then( (account: any) => {
         accounts.addAccountMetadata(account[0].id).then ( (rows: any) => {
             const user = account[0]
-            const token = auth.generateToken(user);
+            const token = authentication.generateToken(user);
             res.status(200).json({
                 jwt: { token: token, expiresIn: '2h' },
                 account: user
@@ -87,7 +89,7 @@ router.post('/register', function (req: any, res: any, next: any) {
 // Get a user token
 router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, function (req: any, res: any) {
     const user = req.user;
-    const token = auth.generateToken(user);
+    const token = authentication.generateToken(user);
     res.status(200).json({
         jwt: { token: token, expiresIn: '2h' },
         account: user
@@ -97,7 +99,7 @@ router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, functi
 // Facebook login
 router.post('/login/facebook', function (req: any, res: any) {
     const { accessToken } = req.body;
-    auth.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
+    authentication.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
         accounts.getFacebookAccount(facebookDetails.body.id).then(( user: any) => {
             if ( user.length == 0 ) {
                 // create the account
@@ -105,7 +107,7 @@ router.post('/login/facebook', function (req: any, res: any) {
                     accounts.addAccountMetadata(user2[0].id).then( (rows: any ) => {
 
                         user2 = user2[0];
-                        const token = auth.generateToken(user2);
+                        const token = authentication.generateToken(user2);
 
                         // add facebook friends
                         friendsService.addFacebookFriends(accessToken).then( (res: any) => {
@@ -131,7 +133,7 @@ router.post('/login/facebook', function (req: any, res: any) {
             } else {
                 // account already exists
                 user = user[0];
-                const token = auth.generateToken(user);
+                const token = authentication.generateToken(user);
                 res.status(200).json({
                     created: false,
                     jwt: { token: token, expiresIn: '2h' },
@@ -147,7 +149,7 @@ router.post('/login/facebook', function (req: any, res: any) {
 });
 
 // password reset
-router.post('/password-reset', function (req: any, res: any) {
+router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: any, res: any) {
 
     const { email } = req.body;
 
@@ -196,45 +198,60 @@ router.post('/password-reset', function (req: any, res: any) {
                       
 });
 
-// password reset
-router.post('/new-password/validate', function (req: any, res: any) {
+// checks if a token for password reset exists and is valid
+router.post('/new-password/validate', rateLimiter.tokenLimiter, function (req: any, res: any, next: any) {
 
     const { token } = req.body;
 
     passwordReset.getByToken(token).then( (rows: any) => {
         if ( rows.length > 0 ) {
-            res.status(200).send({});
+
+            if ( authentication.isValidToken(rows[0]) ) {
+                res.status(200).send({  token: token, valid: true });
+            } else {
+                // Token expired
+                res.status(500).send({  token: null, valid: false });
+            }
+
         } else {
-            // FIX
-            res.status(500).send({});
+            // No token exists
+            res.status(500).send({ token: null, valid: false });
         }
+    }, (err: any) => {
+        return next(new AuthError.TokenError(500));
     });
                       
 });
 
 // password reset
-router.post('/new-password', function (req: any, res: any) {
+router.post('/new-password', rateLimiter.newPasswordLimiter, function (req: any, res: any, next: any) {
 
     const { password, token } = req.body;
 
     passwordReset.getByToken(token).then( (rows: any) => {
 
-        const validDate = new Date( new Date(rows[0].creation_date).valueOf() + 5 * 60000 )
+        if ( rows.length > 0 && authentication.isValidToken(rows[0]) ) {
 
-        if ( rows.length > 0 && ( new Date().valueOf() < validDate.valueOf() ) ) {
+            const passwordError = authentication.validPassword(password);
+            if ( passwordError) {
+                return next(passwordError);
+            }
 
-            const salt = auth.generateSalt();
-            const hash = auth.hashPassword(password, salt);
+            const salt = authentication.generateSalt();
+            const hash = authentication.hashPassword(password, salt);
 
             accounts.changePassword( rows[0].account_id, hash, salt ).then( (r: any) => {
-                res.status(200).send({});
+                res.status(200).send({ reset: true });
+            }, (err: any) => {
+                res.status(500).send({ reset: false });
             });
 
         } else {
-            // error
-            console.log('test')
-            res.status(500).send({});
+            // Either no token , or expired
+            res.status(500).send({ reset: false });
         }
+    }, (err: any) => {
+        return next(new AuthError.PasswordResetError(500));
     });
                       
 });

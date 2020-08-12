@@ -1,5 +1,5 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
-            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone }
+            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -132,6 +132,19 @@ function validatePassword(user: any, password: string): boolean {
 
 function generateToken(user: any): any {
     return jwt.sign({ id: user }, secret.secret);
+}
+
+// Password Reset
+
+function isValidToken(token: any): boolean {
+
+    // the constant should be a number in minutes
+    const expire = AUTHENTICATION_CONSTANTS.TOKEN_EXPIRE_TIME * 60 * 1000
+
+    const now = new Date();
+
+    return (now.getTime() - new Date(token.creation_date).getTime()) <= expire;
+
 }
 
 // Facebook

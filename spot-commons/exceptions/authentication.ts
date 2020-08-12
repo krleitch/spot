@@ -3,6 +3,15 @@ import { ERROR_MESSAGES } from './messages';
 
 const AUTHENTICATION_ERROR_MESSAGES = ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
 
+// Most General Error Classes
+
+export class AuthenticationServerError extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.SERVER_ERROR, statusCode);
+    this.name = "AuthenticationServerError";
+  }
+}
+
 export class AuthenticationError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.NO_AUTHENTICATION, statusCode);
@@ -19,7 +28,6 @@ export class VerifyError extends SpotError {
 
 // Validation Auth Errors for signup
 
-// Username
 export class UsernameLengthError extends SpotError {
   constructor(statusCode, minLength, maxLength) {
     super(AUTHENTICATION_ERROR_MESSAGES.USERNAME_LENGTH, statusCode);
@@ -42,7 +50,6 @@ export class UsernameTakenError extends SpotError {
   }
 }
 
-// Password
 export class PasswordLengthError extends SpotError {
   constructor(statusCode, minLength, maxLength) {
     super(AUTHENTICATION_ERROR_MESSAGES.PASSWORD_LENGTH, statusCode);
@@ -51,7 +58,6 @@ export class PasswordLengthError extends SpotError {
   }
 }
 
-// Email
 export class EmailTakenError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.EMAIL_TAKEN, statusCode);
@@ -66,7 +72,6 @@ export class EmailInvalidError extends SpotError {
   }
 }
 
-// Phone
 export class PhoneTakenError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.PHONE_TAKEN, statusCode);
@@ -88,5 +93,20 @@ export class UsernameOrPasswordError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.USERNAME_OR_PASSWORD, statusCode);
     this.name = "UsernameOrPasswordError";
+  }
+}
+
+// Password Reset Errors
+export class TokenError extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.TOKEN, statusCode);
+    this.name = "TokenError";
+  }
+}
+
+export class PasswordResetError extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.PASSWORD_RESET, statusCode);
+    this.name = "PasswordResetError";
   }
 }

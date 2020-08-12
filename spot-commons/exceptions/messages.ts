@@ -89,7 +89,11 @@ export const ERROR_MESSAGES = {
             PHONE_INVALID: 'Phone is invalid',
 
             // Invalid Account
-            USERNAME_OR_PASSWORD: 'Email / Username or Password is invalid'
+            USERNAME_OR_PASSWORD: 'Email / Username or Password is invalid',
+
+            // Password Reset
+            TOKEN: 'This token as expired or is invalid',
+            PASSWORD_RESET: 'Error resetting password',
 
         }
 

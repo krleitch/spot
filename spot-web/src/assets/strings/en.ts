@@ -430,6 +430,9 @@ export const STRINGS = {
 
         PASSWORD_RESET: {
 
+          TITLE: 'Reset Your Passsword',
+          DESCRIPTION: 'You will be emailed a code and a link. Follow the link and enter the code where you will be prompted to change your password',
+
           EMAIL_PLACEHOLDER: 'Enter email',
           REQUEST_RESET: 'Request Reset',
 
@@ -441,7 +444,10 @@ export const STRINGS = {
 
         NEW_PASSWORD: {
 
-          TOKEN_PLACEHOLDER: 'Enter validation token',
+          TITLE: 'Change Your Password',
+          DESCRIPTION: 'Please enter the token that was emailed to you',
+
+          TOKEN_PLACEHOLDER: 'Enter token',
           VALIDATE: 'Validate',
           TOKEN_NONE: 'Token is required',
           INVALID_TOKEN: 'The token has expired or is invalid',

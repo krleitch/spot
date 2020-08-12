@@ -24,6 +24,7 @@ export class VerifyComponent implements OnInit {
       const request: VerifyConfirmRequest = {
         token
       };
+
       this.store$.dispatch(
         new AccountsActions.VerifyConfirmRequestAction(request)
       );

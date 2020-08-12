@@ -225,7 +225,7 @@ export class AccountsStoreEffects {
         .pipe(
             map( (response: VerifyConfirmResponse) => new featureActions.VerifyConfirmSuccessAction(response)),
             catchError(errorResponse =>
-              observableOf(new featureActions.GenericFailureAction(errorResponse.error))
+              observableOf(new featureActions.VerifyConfirmFailureAction(errorResponse.error))
             )
           )
     )

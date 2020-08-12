@@ -85,8 +85,8 @@ export class LandingComponent implements OnInit, OnDestroy {
           })
       } else {
         // already logged in
-        // this.router.navigateByUrl('/home');
-        window['FB'].logout();
+        this.router.navigateByUrl('/home');
+        // window['FB'].logout();
       }
     });
 

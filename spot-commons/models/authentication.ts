@@ -49,7 +49,8 @@ export interface ValidateTokenRequest {
 }
 
 export interface ValidateTokenSuccess {
-
+    token: string;
+    valid: boolean;
 }
 
 export interface NewPasswordRequest {
@@ -58,5 +59,5 @@ export interface NewPasswordRequest {
 }
 
 export interface NewPasswordSuccess {
-
+    reset: boolean;
 }
