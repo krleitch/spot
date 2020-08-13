@@ -1,0 +1,1 @@
+UPDATE accounts set verified_date = now();
