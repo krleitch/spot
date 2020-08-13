@@ -47,29 +47,16 @@
 
 }
 
-// Tags in reply box
-.tag-container {
+// tags
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.tagger {
+  margin-bottom: 3px;
+}
 
-  .tag {
-    padding: 3px;
-    margin: 1px 2px;
-    background-color: $lighter-grey;
-  }
+:host ::ng-deep .tag-inline-comment {
 
-  .tag-close {
-
-    cursor: pointer;
-    font-size: 14px;
-
-    &:hover {
-      color: $error-red;
-    }
-
-  }
+  padding: 2px 2px;
+  background-color: $item-highlight;
 
 }
 
@@ -262,6 +249,7 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 5px;
 }
 
 [hidden] {

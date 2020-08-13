@@ -19,33 +19,10 @@
     <div class="content-wrapper">
       <div class="content">
 
-        <span class="tag-name-container">
-          <span class="tag" *ngIf="comment.tag.tagged">
+        <div class="tagger" *ngIf="comment.tag.tagged">
             <span class="highlight"> {{ comment.tag.tagger }} </span> Tagged You
-            <!-- <span *ngIf="comment.tag.numTagged - 1 > 0"> and <span class="material-icons person"> person </span> {{ comment.tag.numTagged - 1 }} </span> -->
-          </span>
-        </span>
+        </div>
 
-        <!-- <span class="content-tag-container" *ngIf="comment.tag.numTagged > 0">
-          <span class="tag-name-container" *ngIf="comment.tag.owned; else notOwned">
-            <span class="tag" *ngFor="let name of comment.tag.names">
-              <span class="highlight"> {{ name }} </span>
-            </span>
-          </span>
-          <ng-template #notOwned>
-            <span class="tag" *ngIf="comment.tag.tagged; else notTagged">
-              <span class="highlight"> {{ comment.tag.tagger }} </span> Tagged You
-              <span *ngIf="comment.tag.numTagged - 1 > 0"> and <span class="material-icons person"> person </span> {{ comment.tag.numTagged - 1 }} </span>
-            </span>
-            <ng-template #notTagged>
-              <span class="tag">
-                <span class="material-icons person"> person </span> {{ comment.tag.numTagged }}
-              </span>
-            </ng-template>
-          </ng-template>
-        </span> -->
-
-        <!-- places beside to avoid extra space since style is whitespace: pre-wrap -->
         <div class="text">
           <span #text class="text-content"></span>
           <span *ngIf="isExpandable">

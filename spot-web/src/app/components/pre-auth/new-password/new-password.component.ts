@@ -122,7 +122,7 @@ export class NewPasswordComponent implements OnInit {
       if ( errorResponse.error.name === 'RateLimitError' ) {
         this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', errorResponse.error.body.timeout);
       } else {
-        this.errorMessage = this.STRINGS.INVALID_TOKEN;
+        this.errorMessage = errorResponse.error.message;
       }
       this.errorMessage = this.STRINGS.INVALID_TOKEN;
       this.passwordLoading = false;

@@ -3,7 +3,6 @@
 export const AUTHENTICATION_CONSTANTS = {
 
     // Account Creation
-
     USERNAME_MIN_LENGTH: 3,
     USERNAME_MAX_LENGTH: 32,
 
@@ -11,7 +10,6 @@ export const AUTHENTICATION_CONSTANTS = {
     PASSWORD_MAX_LENGTH: 255,
 
     // Password Reset
-
     TOKEN_EXPIRE_TIME: 10, // minutes
 
 };

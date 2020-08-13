@@ -131,6 +131,8 @@ export class CommentComponent implements OnInit {
     const div = document.createElement('div');
     let lastOffset = 0;
 
+    console.log(content, this.comment.tag.tags)
+
     // Tags list must be sorted in ASC order of offset,
     // Server should ensure this
     if ( this.comment.tag.tags.length > 0 ) {
@@ -143,7 +145,7 @@ export class CommentComponent implements OnInit {
           const span = document.createElement('span');
           const before = document.createTextNode(content.substring(lastOffset, Math.min(tag.offset, content.length + 1)));
           const t = document.createElement('span');
-          t.className = 'tag-inline';
+          t.className = 'tag-inline-comment';
           const name = document.createTextNode(tag.username ? tag.username : '???');
           t.appendChild(name);
           // const after = document.createTextNode(content.substring(tag.offset));
@@ -169,6 +171,12 @@ export class CommentComponent implements OnInit {
       const cc = document.createTextNode(content);
       div.appendChild(cc);
 
+    }
+
+    // if there is still content left
+    if ( lastOffset < content.length ) {
+      const after = document.createTextNode(content.substring(lastOffset));
+      div.appendChild(after);
     }
 
     if ( this.isExpandable && ! this.expanded ) {
