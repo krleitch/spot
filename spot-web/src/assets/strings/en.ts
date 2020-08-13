@@ -438,7 +438,9 @@ export const STRINGS = {
 
           EMAIL_NONE: 'Email is required',
           EMAIL_FORMAT: 'Invalid email format',
-          REQUEST_SUCCESS: 'An email for recovery has been sent if an account exists under this email'
+          REQUEST_SUCCESS: 'An email for recovery has been sent if an account exists under this email',
+
+          RATE_LIMIT: 'Too many requests. Please try again in %TIMEOUT% minutes'
 
         },
 
@@ -457,7 +459,12 @@ export const STRINGS = {
           RESET_PASSWORD: 'Reset Password',
           PASSWORD_NONE: 'Password is required',
           CONFIRM_NONE: 'Password confirmation is required',
-          INVALID_MATCH: 'Passwords must match'
+          INVALID_MATCH: 'Passwords must match',
+
+          NEW_PASSWORD_SUCCESS: 'Your password has been reset. Please login to continue',
+          CONTINUE_TO_SPOT: 'Login',
+
+          RATE_LIMIT: 'Too many requests. Please try again in %TIMEOUT% minutes'
 
         },
 

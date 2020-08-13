@@ -11,6 +11,7 @@ const verifyAccount = require('@db/verifyAccount');
 // services
 const authService = require('@services/authentication/authentication');
 const friendsService = require('@services/friends');
+const mail = require('@services/mail');
 
 // exceptions
 const AuthError = require('@exceptions/authentication');
@@ -177,39 +178,35 @@ router.post('/verify', function (req: any, res: any) {
     const digest = 'sha512';
     const token = pbkdf2Sync(value, salt, iterations, hashLength, digest).toString('hex');
 
-    nodemailer.createTestAccount().then( ( testAccount: any) => {
+    // send email with nodemailer
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: "smtp.ethereal.email",
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: testAccount.user, // generated ethereal user
-                pass: testAccount.pass // generated ethereal password
-            }
-        });
-
-        // send mail with defined transport object
-        transporter.sendMail({
-            from: '"SPOT" <spot@example.com>', // sender address
-            to: "test1@example.com, test2@example.com", // list of receivers
-            subject: "SPOT", // Subject line
-            text: "Verify account?", // plain text body
-            html: "<b>Link: </b>" + 'https://localhost:4200/verify/' + token // html body
-        }).then( ( info: any ) => {
-            console.log("Account Verify URL: %s", nodemailer.getTestMessageUrl(info));
-        });
+    mail.transporter.sendMail({
+        from: 'krleitch.ca@gmail.com', // TODO: CHANGE
+        to: 'krleitch.ca@gmail.com', // TODO: CHANGE
+        subject: 'Message',
+        text: "Verify account?", // plain text body
+        html: "<b>Link: </b>" + 'https://localhost:4200/verify/' + token, // html body
+        ses: { // optional extra arguments for SendRawEmail
+            Tags: [{
+                Name: 'tagname',
+                Value: 'tagvalue'
+            }]
+        }
+    }, (err: any, info: any) => {
+        
+        if ( err ) {
+            res.status(500).send({});
+        } else {
+            // Add record to verify account
+            verifyAccount.addVerifyAccount(accountId, token).then( (rows: any) => {
+                res.status(200).json({});
+            }, (err: any) => {
+                console.log(err, token)
+                res.status(500).send('Error sending verify');
+            });   
+        }
 
     });
-
-    // Add record to verify account
-    verifyAccount.addVerifyAccount(accountId, token).then( (rows: any) => {
-        res.status(200).json({});
-    }, (err: any) => {
-        console.log(err, token)
-        res.status(500).send('Error sending verify');
-    });   
   
 });
 

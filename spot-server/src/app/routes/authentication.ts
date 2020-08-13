@@ -14,6 +14,7 @@ const passwordReset = require('@db/passwordReset');
 // services
 const authentication = require('@services/authentication/authentication');
 const friendsService = require('@services/friends');
+const mail = require('@services/mail');
 
 // ratelimiter
 const rateLimiter = require('@src/app/rateLimiter');
@@ -160,40 +161,40 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
 
             // send email with nodemailer
 
-            nodemailer.createTestAccount().then( ( testAccount: any) => {
-
-                // create reusable transporter object using the default SMTP transport
-                let transporter = nodemailer.createTransport({
-                    host: "smtp.ethereal.email",
-                    port: 587,
-                    secure: false, // true for 465, false for other ports
-                    auth: {
-                        user: testAccount.user, // generated ethereal user
-                        pass: testAccount.pass // generated ethereal password
-                    }
-                });
-
-                // send mail with defined transport object
-                transporter.sendMail({
-                    from: '"SPOT" <spot@example.com>', // sender address
-                    to: "test1@example.com, test2@example.com", // list of receivers
-                    subject: "SPOT", // Subject line
-                    text: "Password Reset?", // plain text body
-                    html: "<b>Token: </b>" + token // html body
-                }).then( ( info: any ) => {
-                    console.log("Password Reset URL: %s", nodemailer.getTestMessageUrl(info));
-                });
+            mail.transporter.sendMail({
+                from: 'krleitch.ca@gmail.com', // TODO: CHANGE
+                to: 'krleitch.ca@gmail.com', // TODO: CHANGE
+                subject: 'Message',
+                text: "Password Reset?", // plain text body
+                html: "<b>Token: </b>" + token, // html body
+                ses: { // optional extra arguments for SendRawEmail
+                    Tags: [{
+                        Name: 'tagname',
+                        Value: 'tagvalue'
+                    }]
+                }
+            }, (err: any, info: any) => {
+                
+                if ( err ) {
+                    res.status(500).send({});
+                } else {
+                    // add to table
+                    passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
+                        res.status(200).send({});
+                    }, (err: any) => {
+                        res.status(500).send({});
+                    });
+                }
 
             });
 
-            // add to table
-
-            passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
-                res.status(200).send({});
-            });
-
+        } else {
+            // No account
+            res.status(200).send({});
         }
 
+    }, (err: any) => {
+        res.status(500).send({});
     });
                       
 });
@@ -210,12 +211,12 @@ router.post('/new-password/validate', rateLimiter.tokenLimiter, function (req: a
                 res.status(200).send({  token: token, valid: true });
             } else {
                 // Token expired
-                res.status(500).send({  token: null, valid: false });
+                return next(new AuthError.TokenError(400));
             }
 
         } else {
             // No token exists
-            res.status(500).send({ token: null, valid: false });
+            return next(new AuthError.TokenError(400));
         }
     }, (err: any) => {
         return next(new AuthError.TokenError(500));
@@ -243,12 +244,12 @@ router.post('/new-password', rateLimiter.newPasswordLimiter, function (req: any,
             accounts.changePassword( rows[0].account_id, hash, salt ).then( (r: any) => {
                 res.status(200).send({ reset: true });
             }, (err: any) => {
-                res.status(500).send({ reset: false });
+                return next(new AuthError.PasswordResetError(500));
             });
 
         } else {
             // Either no token , or expired
-            res.status(500).send({ reset: false });
+            return next(new AuthError.PasswordResetError(500));
         }
     }, (err: any) => {
         return next(new AuthError.PasswordResetError(500));

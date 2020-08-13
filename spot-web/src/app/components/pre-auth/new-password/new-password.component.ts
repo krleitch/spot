@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
 import { ValidateTokenRequest, ValidateTokenSuccess, NewPasswordRequest, NewPasswordSuccess } from '@models/authentication';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-new-password',
@@ -20,6 +21,9 @@ export class NewPasswordComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   token = '';
+
+  tokenLoading = false;
+  passwordLoading = false;
 
   constructor(private fb: FormBuilder, private authenticationService: AuthenticationService, private router: Router) {
     this.formToken = this.fb.group({
@@ -46,17 +50,30 @@ export class NewPasswordComponent implements OnInit {
     }
 
     this.errorMessage = '';
+    this.successMessage = '';
 
     // Send request
+
+    this.tokenLoading = true;
 
     const request: ValidateTokenRequest = {
       token: val.token
     };
 
     this.authenticationService.validateToken(request).subscribe((response: ValidateTokenSuccess) => {
-      this.token = val.token;
-    }, ( error: any ) => {
-      this.errorMessage = this.STRINGS.INVALID_TOKEN;
+      if ( response.valid ) {
+        this.token = response.token;
+      } else {
+        this.errorMessage = this.STRINGS.INVALID_TOKEN;
+      }
+      this.tokenLoading = false;
+    }, ( errorResponse: any ) => {
+      if ( errorResponse.error.name === 'RateLimitError' ) {
+        this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', errorResponse.error.body.timeout);
+      } else {
+        this.errorMessage = this.STRINGS.INVALID_TOKEN;
+      }
+      this.tokenLoading = false;
     });
 
   }
@@ -87,8 +104,11 @@ export class NewPasswordComponent implements OnInit {
     }
 
     this.errorMessage = '';
+    this.successMessage = '';
 
     // Send request
+
+    this.passwordLoading = true;
 
     const request: NewPasswordRequest = {
       token: this.token,
@@ -96,12 +116,22 @@ export class NewPasswordComponent implements OnInit {
     };
 
     this.authenticationService.newPassword(request).subscribe((response: NewPasswordSuccess) => {
-      this.router.navigateByUrl('/login');
-      // Route to /login
-    }, ( error: any ) => {
+      this.passwordLoading = false;
+      this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
+    }, ( errorResponse: { error: SpotError } ) => {
+      if ( errorResponse.error.name === 'RateLimitError' ) {
+        this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', errorResponse.error.body.timeout);
+      } else {
+        this.errorMessage = this.STRINGS.INVALID_TOKEN;
+      }
       this.errorMessage = this.STRINGS.INVALID_TOKEN;
+      this.passwordLoading = false;
     });
 
+  }
+
+  login(): void {
+    this.router.navigateByUrl('/login');
   }
 
 }

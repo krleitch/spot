@@ -19,6 +19,8 @@ export class PasswordResetComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  emailLoading = false;
+
   constructor(private fb: FormBuilder, private authenticationService: AuthenticationService) {
     this.form = this.fb.group({
       email: ['', Validators.required]
@@ -46,8 +48,11 @@ export class PasswordResetComponent implements OnInit {
     }
 
     this.errorMessage = '';
+    this.successMessage = '';
 
     // Send request
+
+    this.emailLoading = true;
 
     const request: PasswordResetRequest = {
       email: val.email
@@ -55,8 +60,14 @@ export class PasswordResetComponent implements OnInit {
 
     this.authenticationService.passwordReset(request).subscribe((response: PasswordResetSuccess) => {
       this.successMessage = this.STRINGS.REQUEST_SUCCESS;
+      this.emailLoading = false;
     }, (errorResponse: { error: SpotError }) => {
-      this.errorMessage = errorResponse.error.message;
+      if ( errorResponse.error.name === 'RateLimitError' ) {
+        this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', errorResponse.error.body.timeout);
+      } else {
+        this.errorMessage = errorResponse.error.message;
+      }
+      this.emailLoading = false;
     });
 
   }
