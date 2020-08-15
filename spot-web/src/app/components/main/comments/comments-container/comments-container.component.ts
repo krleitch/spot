@@ -325,12 +325,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     const parsedHtml = parser.parseFromString(content, 'text/html');
 
     const body = parsedHtml.getElementsByTagName('body');
-    const bodyChildren = body[0].children;
 
     const tags: Tag[] = [];
     let text = '';
     let offset = 0;
 
+    // Do a dfs on the html tree
     let stack = [];
     stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
 
@@ -346,9 +346,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
           offset
         };
         tags.push(tag);
+        // A tag has no children, continue
         continue;
       }
 
+      // Push the children
+      // In reverse because we want to parse the from left to right
       if ( elem.childNodes ) {
         stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
       }
@@ -366,20 +369,20 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     }
 
-    // just needed to remove spaces at end
+    // There should already be no spaces at start, this should just remove
+    // spaces at the end
+    // tag offsets will be adjusted on the server to never be more than content length
     content = text.trim();
 
-    tags.forEach( (tag: any) => {
-      tag.offset = Math.min(tag.offset, content.length + 1);
-    });
+    // Error checking
 
     if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
       this.addCommentError = 'Your comment must be less than ' + COMMENTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
       return;
     }
 
-    if ( content.length === 0 && !this.imageFile ) {
-      this.addCommentError = 'Your comment must have text or an image';
+    if ( content.length === 0 && !this.imageFile && tags.length === 0 ) {
+      this.addCommentError = 'Your comment must have a tag, text or an image';
       return;
     }
 

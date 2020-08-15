@@ -122,45 +122,46 @@ export class CommentComponent implements OnInit {
 
   setContentHTML() {
 
-    // we need to add tags in asc order of their offset
-    // this.comment.tag.tags.sort( (a: any, b: any) => {
-    //   return a.offset < b.offset ? 1 : 0;
-    // });
-
+    // Get the content strings
     const content = this.getContent();
     const div = document.createElement('div');
     let lastOffset = 0;
 
-    console.log(content, this.comment.tag.tags)
-
-    // Tags list must be sorted in ASC order of offset,
-    // Server should ensure this
+    // Important
+    // Tags must be given in asc order of their offset
+    // Server should do this for you
     if ( this.comment.tag.tags.length > 0 ) {
 
-      this.comment.tag.tags.forEach( (tag: any) => {
+      this.comment.tag.tags.forEach( (tag: Tag) => {
 
-        // plus one if its at very end
-        if ( tag.offset <= content.length + 1 ) {
+        // check if tag should even be shown
+        if ( tag.offset <= content.length) {
 
+          // create the span that will hold the tag
           const span = document.createElement('span');
-          const before = document.createTextNode(content.substring(lastOffset, Math.min(tag.offset, content.length + 1)));
-          const t = document.createElement('span');
-          t.className = 'tag-inline-comment';
-          const name = document.createTextNode(tag.username ? tag.username : '???');
-          t.appendChild(name);
-          // const after = document.createTextNode(content.substring(tag.offset));
-          span.appendChild(before);
-          span.appendChild(t);
-          // span.appendChild(after);
-          lastOffset = Math.min(tag.offset, content.length + 1);
+          // fill with text leading up to the tag
+          const textBefore = document.createTextNode(content.substring(lastOffset, Math.min(tag.offset, content.length)));
+          // create the tag and give the username
+          const inlineTag = document.createElement('span');
+          inlineTag.className = 'tag-inline-comment';
+          const username = document.createTextNode(tag.username ? tag.username : '???');
+          inlineTag.appendChild(username);
+
+          // Add them to the span
+          span.appendChild(textBefore);
+          span.appendChild(inlineTag);
+
+          // update the lastOffset
+          lastOffset = Math.min(tag.offset, content.length);
 
           div.appendChild(span);
 
         } else {
 
-          // need to still have rest of text with no tag
-          const after = document.createTextNode(content.substring(lastOffset));
-          div.appendChild(after);
+          // fill in the rest of the content from the last tag
+          const textContent = document.createTextNode(content.substring(lastOffset));
+          div.appendChild(textContent);
+          lastOffset = content.length;
 
         }
 
@@ -168,8 +169,10 @@ export class CommentComponent implements OnInit {
 
     } else {
 
-      const cc = document.createTextNode(content);
-      div.appendChild(cc);
+      // No tags, just add the text content
+      const textContent = document.createTextNode(content);
+      div.appendChild(textContent);
+      lastOffset = content.length;
 
     }
 
@@ -179,12 +182,42 @@ export class CommentComponent implements OnInit {
       div.appendChild(after);
     }
 
+    // Add ellipsis if its expandable and isnt expanded
     if ( this.isExpandable && ! this.expanded ) {
-      const cc = document.createTextNode(' ...');
-      div.appendChild(cc);
+      const ellipsis = document.createTextNode(' ...');
+      div.appendChild(ellipsis);
     }
 
+    // set the innerHTML
     this.text.nativeElement.innerHTML = div.innerHTML;
+
+  }
+
+  getContent(): string {
+
+    if ( this.expanded || !this.isExpandable ) {
+      return this.comment.content;
+    }
+
+    const textArrays = this.comment.content.split(/\r\n|\r|\n/);
+    let truncatedContent = '';
+
+    for (let i = 0; i < textArrays.length && i < COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
+
+      if ( truncatedContent.length + textArrays[i].length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+        truncatedContent = textArrays[i].substring(0, COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
+        break;
+      } else {
+        truncatedContent += textArrays[i];
+        // Dont add newline for last line or last line before line length reached
+        if ( i !== textArrays.length - 1 && i !== COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
+          truncatedContent += '\n';
+        }
+      }
+
+    }
+
+    return truncatedContent;
 
   }
 
@@ -250,34 +283,6 @@ export class CommentComponent implements OnInit {
     //     this.tags.splice(index, 1);
     //   }
     // });
-
-  }
-
-  getContent(): string {
-
-    if ( this.expanded || !this.isExpandable ) {
-      return this.comment.content;
-    }
-
-    const textArrays = this.comment.content.split(/\r\n|\r|\n/);
-    let truncatedContent = '';
-
-    for (let i = 0; i < textArrays.length && i < COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
-
-      if ( truncatedContent.length + textArrays[i].length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
-        truncatedContent = textArrays[i].substring(0, COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
-        break;
-      } else {
-        truncatedContent += textArrays[i];
-        // Dont add newline for last line or last line before line length reached
-        if ( i !== textArrays.length - 1 && i !== COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
-          truncatedContent += '\n';
-        }
-      }
-
-    }
-
-    return truncatedContent + ' ...';
 
   }
 

@@ -140,7 +140,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
         }
 
         // You must either have some text or an image
-        if ( content.length == 0 && !image ) {
+        if ( content.length == 0 && !image && tagsList.length === 0 ) {
             return next(new CommentsError.NoCommentContent(400));
         }
 
@@ -159,7 +159,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             for ( let index = 0; index < tagsList.length; index++ ) {
     
                 await accounts.getAccountByUsername(tagsList[index].username).then( async (account: any) => {
-                    await tags.addTag( account[0].id, comment[0].id, tagsList[index].offset );
+                    await tags.addTag( account[0].id, comment[0].id, Math.min(tagsList[index].offset, content.length) );
                     await notifications.addCommentNotification( comment[0].account_id, account[0].id, comment[0].post_id, comment[0].id );
                 }, (err: any) => {
                     return next(new CommentsError.CommentError(500));
