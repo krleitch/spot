@@ -17,6 +17,7 @@ import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-s
 import { AlertService } from '@services/alert.service';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 import { TagComponent } from '../../social/tag/tag.component';
+import { CommentsHelper } from '@helpers/comments';
 
 @Component({
   selector: 'spot-comments-container',
@@ -66,12 +67,15 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   constructor(private store$: Store<RootStoreState.State>,
               private alertService: AlertService,
-              public domSanitizer: DomSanitizer) {
+              public domSanitizer: DomSanitizer,
+              public commentsHelper: CommentsHelper) {
     document.addEventListener('click', this.offClickHandler.bind(this));
     document.addEventListener('click', this.caretPositionHandler.bind(this));
   }
 
   ngOnInit() {
+
+    this.commentsHelper.test();
 
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
@@ -254,8 +258,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
 
     element.textContent = '';
-
-    // TEST
 
     const parent = element.parentNode;
 

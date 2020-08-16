@@ -31,6 +31,9 @@
       "@services/*": [
         "src/app/services/*"
       ],
+      "@helpers/*": [
+        "src/app/helpers/*"
+      ],
       "@store/*": [
         "src/app/root-store/*"
       ],
