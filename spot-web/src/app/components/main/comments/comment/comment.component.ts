@@ -58,12 +58,11 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   // fix this type
   replies$: Observable<any>;
-
-  isAuthenticated$: Observable<boolean>;
-
   replies = [];
   totalReplies = 0;
   numLoaded = 0;
+
+  isAuthenticated$: Observable<boolean>;
 
   // files
   FILENAME_MAX_SIZE = 25;
@@ -113,12 +112,7 @@ export class CommentComponent implements OnInit, OnDestroy {
     });
 
     // if detailed load more replies
-    let initialLimit;
-    if ( this.detailed ) {
-      initialLimit = 10;
-    } else {
-      initialLimit = 5;
-    }
+    const initialLimit = this.detailed ? 10 : 5;
 
     const request: LoadRepliesRequest = {
       postId: this.comment.post_id,
@@ -147,17 +141,28 @@ export class CommentComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
-  onEnter() {
-
-    // Add tag on enter
-    if ( this.showTag ) {
-
-      this.tagelem.onEnter();
-
-      return false;
-
+  offClickHandler(event: MouseEvent) {
+    if (!this.options.nativeElement.contains(event.target)) {
+      this.setOptions(false);
     }
 
+    if (!this.tag.nativeElement.contains(event.target)) {
+      this.showTag = false;
+    }
+
+    // Check caret position
+    if (this.comment && this.reply.nativeElement.contains(event.target)) {
+      this.getAndCheckWordOnCaret();
+    }
+
+  }
+
+  onEnter() {
+    // Add tag on enter
+    if ( this.showTag ) {
+      this.tagelem.onEnter();
+      return false;
+    }
   }
 
   setContentHTML() {
@@ -279,21 +284,10 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   }
 
-  offClickHandler(event: MouseEvent) {
-    if (!this.options.nativeElement.contains(event.target)) {
-      this.setOptions(false);
-    }
-
-    if (!this.tag.nativeElement.contains(event.target)) {
-      this.showTag = false;
-    }
-
-  }
-
   onTextInput(event) {
 
       // Need to count newlines as a character, -1 because the first line is free
-      this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
+      this.currentLength = Math.min(event.target.textContent.length + event.target.childNodes.length - 1, 0);
       this.addReplyError = null;
 
       // Check for tag
@@ -400,26 +394,21 @@ export class CommentComponent implements OnInit, OnDestroy {
     startPosition = startPosition === content.length ? 0 : startPosition;
     endPosition = endPosition === -1 ? content.length : endPosition;
 
-    // if we pressed space to add the tag, remove the extra space
-    // element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
-
-    element.textContent = '';
-
     const parent = element.parentNode;
 
-    const div = document.createElement('span');
-    const before = document.createTextNode(content.substring(0, startPosition + 1));
+    const span = document.createElement('span');
+    const beforeText = document.createTextNode(content.substring(0, startPosition + 1));
     const tag = document.createElement('span');
     tag.className = 'tag-inline';
     tag.contentEditable = 'false';
-    const name = document.createTextNode(username);
-    tag.appendChild(name);
-    const after = document.createTextNode(content.substring(endPosition));
-    div.appendChild(before);
-    div.appendChild(tag);
-    div.appendChild(after);
+    const usernameText = document.createTextNode(username);
+    tag.appendChild(usernameText);
+    const afterText = document.createTextNode(content.substring(endPosition));
+    span.appendChild(beforeText);
+    span.appendChild(tag);
+    span.appendChild(afterText);
 
-    parent.replaceChild(div, element); // .appendChild(div);
+    parent.replaceChild(span, element);
 
   }
 
@@ -496,10 +485,6 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     });
 
-  }
-
-  setShowAddReply(val: boolean) {
-    this.showAddReply = val;
   }
 
   addReply() {
@@ -606,6 +591,10 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   }
 
+  setShowAddReply(val: boolean) {
+    this.showAddReply = val;
+  }
+
   like() {
     if (this.comment.rated !== 1) {
       const request: LikeCommentRequest = {
@@ -661,13 +650,11 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   openModal(id: string, data?: any) {
-
     if ( data ) {
       this.modalService.open(id, data);
     } else {
       this.modalService.open(id);
     }
-
   }
 
   closeModal(id: string) {

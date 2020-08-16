@@ -14,8 +14,4 @@ export class CommentsHelper {
 
   constructor() {}
 
-  test() {
-    console.log('works');
-  }
-
 }

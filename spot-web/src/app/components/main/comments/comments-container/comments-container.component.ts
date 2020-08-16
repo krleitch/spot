@@ -43,6 +43,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   // fix this type
   comments$: Observable<any>;
+  comments = [];
+  totalCommentsBefore = 0;
   loadingCommentsBefore$: Observable<{ loading: boolean, id: string }>;
   loadingCommentsAfter$: Observable<{ loading: boolean, id: string }>;
   addCommentError$: Observable<{ error: SpotError, id: string }>;
@@ -56,9 +58,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   isAuthenticated$: Observable<boolean>;
 
-  comments = [];
-  totalCommentsBefore = 0;
-
   imageFile: File;
   imgSrc: string = null;
 
@@ -70,24 +69,23 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
               public domSanitizer: DomSanitizer,
               public commentsHelper: CommentsHelper) {
     document.addEventListener('click', this.offClickHandler.bind(this));
-    document.addEventListener('click', this.caretPositionHandler.bind(this));
   }
 
   ngOnInit() {
 
-    this.commentsHelper.test();
-
+    // Get Comments
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
     );
 
     this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( comments => {
       this.comments = comments.comments;
-      if ( comments.totalCommentsBefore !== - 1 ) {
+      if ( comments.totalCommentsBefore !== -1 ) {
         this.totalCommentsBefore = comments.totalCommentsBefore;
       }
     });
 
+    // Loading indicators
     this.loadingCommentsBefore$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsBefore)
     );
@@ -96,10 +94,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsAfter)
     );
 
+    // Check Authentication
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
+    // Success Event
     this.addCommentSuccess$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectAddCommentSuccess)
     );
@@ -115,6 +115,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Errors
     this.addCommentError$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectAddCommentError)
     );
@@ -125,34 +126,19 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       }
     });
 
+    // friends
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
 
-    // TODO: can probably not make this request, fetch friends at app startup instead?
-    // TAG component should always make this call anyways
-    const friendRequest: GetFriendsRequest = {
-      date: new Date().toString(),
-      limit: null
-    };
-
-    this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendsAction(friendRequest)
-    );
-
-    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( friends => {
       this.friendsList = friends;
     });
 
     // if detailed load more comments
-    let initialLimit;
-    if ( this.detailed ) {
-      initialLimit = COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT;
-    } else {
-      initialLimit = COMMENTS_CONSTANTS.INITIAL_LIMIT;
-    }
+    const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
 
-    // Get the latests limit # of comments
+    // Get the latest limit # of comments
     const request: LoadCommentsRequest = {
       postId: this.post.id,
       date: new Date().toString(),
@@ -179,9 +165,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.showTag = false;
       this.tagName = '';
     }
-  }
 
-  caretPositionHandler(event: MouseEvent) {
     if (this.comment && this.comment.nativeElement.contains(event.target)) {
       this.getAndCheckWordOnCaret();
     }
@@ -190,7 +174,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   onTextInput(event) {
 
     // Need to count newlines as a character, -1 because the first line is free
-    this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
+    this.currentLength = Math.max(event.target.textContent.length + event.target.childNodes.length - 1, 0);
     this.addCommentError = null;
 
     // Check for tag
@@ -254,68 +238,73 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     startPosition = startPosition === content.length ? 0 : startPosition;
     endPosition = endPosition === -1 ? content.length : endPosition;
 
-    // if we pressed space to add the tag, remove the extra space
-    // element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
-
-    element.textContent = '';
-
     const parent = element.parentNode;
 
-    const div = document.createElement('span');
-    const before = document.createTextNode(content.substring(0, startPosition + 1));
+    const span = document.createElement('span');
+    const beforeText = document.createTextNode(content.substring(0, startPosition + 1));
     const tag = document.createElement('span');
     tag.className = 'tag-inline';
     tag.contentEditable = 'false';
-    const name = document.createTextNode(username);
-    tag.appendChild(name);
-    const after = document.createTextNode(content.substring(endPosition));
-    div.appendChild(before);
-    div.appendChild(tag);
-    div.appendChild(after);
+    const usernameText = document.createTextNode(username);
+    tag.appendChild(usernameText);
+    const afterText = document.createTextNode(content.substring(endPosition));
+    span.appendChild(beforeText);
+    span.appendChild(tag);
+    span.appendChild(afterText);
 
-    parent.replaceChild(div, element); // .appendChild(div);
+    parent.replaceChild(span, element);
 
   }
 
   onEnter() {
-
     // Add tag on enter
     if ( this.showTag ) {
-
       this.tagelem.onEnter();
-
       return false;
+    }
+  }
 
+  addTag(username: string) {
+
+    // Check if they are your friend
+    if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
+      this.alertService.error('Only friends can be tagged');
+      return;
     }
 
+    // remove the word
+    this.removeWord(this.tagElement, this.tagCaretPosition, username);
+
+    // refocus at end of content editable
+    this.placeCaretAtEnd(this.comment.nativeElement);
+
+    // hide tag menu
+    this.tagName = '';
+    this.showTag = false;
+    this.tagElement = null;
+    this.tagCaretPosition = null;
+
   }
 
-  loadRecentComments() {
-    const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
-    const request: LoadCommentsRequest = {
-      postId: this.post.id,
-      date: this.comments.length > 0 ? this.comments[0].creation_date : null,
-      type: 'after',
-      limit,
-      initialLoad: this.initialLoad
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.GetRequestAction(request)
-    );
-  }
-
-  loadMoreComments() {
-    const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
-    const request: LoadCommentsRequest = {
-      postId: this.post.id,
-      date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
-      type: 'before',
-      limit,
-      initialLoad: this.initialLoad
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.GetRequestAction(request)
-    );
+  private placeCaretAtEnd(element) {
+    element.focus();
+    if (typeof window.getSelection !== 'undefined'
+            && typeof document.createRange !== 'undefined') {
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        // needed for browser compatibility
+        // @ts-ignore
+    } else if (typeof document.body.createTextRange !== 'undefined') {
+        // @ts-ignore
+        const textRange = document.body.createTextRange();
+        textRange.moveToElementText(element);
+        textRange.collapse(false);
+        textRange.select();
+    }
   }
 
   addComment() {
@@ -421,6 +410,34 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
+  loadRecentComments() {
+    const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
+    const request: LoadCommentsRequest = {
+      postId: this.post.id,
+      date: this.comments.length > 0 ? this.comments[0].creation_date : null,
+      type: 'after',
+      limit,
+      initialLoad: this.initialLoad
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.GetRequestAction(request)
+    );
+  }
+
+  loadMoreComments() {
+    const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
+    const request: LoadCommentsRequest = {
+      postId: this.post.id,
+      date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
+      type: 'before',
+      limit,
+      initialLoad: this.initialLoad
+    };
+    this.store$.dispatch(
+      new CommentsStoreActions.GetRequestAction(request)
+    );
+  }
+
   invalidLength(): boolean {
     return this.currentLength > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH;
   }
@@ -435,49 +452,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   removeFile() {
     this.imageFile = null;
     this.imgSrc = null;
-  }
-
-  addTag(username: string) {
-
-    // check if they are your friend
-    if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
-      this.alertService.error('Only friends can be tagged');
-      return;
-    }
-
-    // remove the word
-    this.removeWord(this.tagElement, this.tagCaretPosition, username);
-
-    // refocus at end of content editable
-    this.placeCaretAtEnd(this.comment.nativeElement);
-
-    // hide tag menu
-    this.tagName = '';
-    this.showTag = false;
-    this.tagElement = null;
-    this.tagCaretPosition = null;
-
-  }
-
-  private placeCaretAtEnd(el) {
-    el.focus();
-    if (typeof window.getSelection !== 'undefined'
-            && typeof document.createRange !== 'undefined') {
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-        // needed for browser compatibility
-        // @ts-ignore
-    } else if (typeof document.body.createTextRange !== 'undefined') {
-        // @ts-ignore
-        const textRange = document.body.createTextRange();
-        textRange.moveToElementText(el);
-        textRange.collapse(false);
-        textRange.select();
-    }
   }
 
 }

@@ -103,24 +103,32 @@ export class ReplyComponent implements OnInit, OnDestroy {
     }
 
     this.setContentHTML();
-
   }
 
   ngOnDestroy() {
     this.onDestroy.next();
   }
 
-  onEnter() {
-
-    // Add tag on enter
-    if ( this.showTag ) {
-
-      this.tagelem.onEnter();
-
-      return false;
-
+  offClickHandler(event: MouseEvent) {
+    if (!this.options.nativeElement.contains(event.target)) {
+      this.setOptions(false);
     }
 
+    if (!this.tag.nativeElement.contains(event.target)) {
+      this.showTag = false;
+    }
+
+    if (this.reply2 && this.reply2.nativeElement.contains(event.target)) {
+      this.getAndCheckWordOnCaret();
+    }
+  }
+
+  onEnter() {
+    // Add tag on enter
+    if ( this.showTag ) {
+      this.tagelem.onEnter();
+      return false;
+    }
   }
 
   setContentHTML() {
@@ -242,21 +250,10 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
   }
 
-  offClickHandler(event: MouseEvent) {
-    if (!this.options.nativeElement.contains(event.target)) {
-      this.setOptions(false);
-    }
-
-    if (!this.tag.nativeElement.contains(event.target)) {
-      this.showTag = false;
-    }
-
-  }
-
   onTextInput(event) {
 
     // Need to count newlines as a character, -1 because the first line is free
-    this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
+    this.currentLength = Math.min(event.target.textContent.length + event.target.childNodes.length - 1, 0);
     this.addReply2Error = null;
 
     // Check for tag
@@ -308,7 +305,6 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
   addTag(username: string) {
 
-
       // check if they are your friend
       if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
         this.alertService.error('Only friends can be tagged');
@@ -329,12 +325,12 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
   }
 
-  private placeCaretAtEnd(el) {
-    el.focus();
+  private placeCaretAtEnd(element) {
+    element.focus();
     if (typeof window.getSelection !== 'undefined'
             && typeof document.createRange !== 'undefined') {
         const range = document.createRange();
-        range.selectNodeContents(el);
+        range.selectNodeContents(element);
         range.collapse(false);
         const sel = window.getSelection();
         sel.removeAllRanges();
@@ -344,7 +340,7 @@ export class ReplyComponent implements OnInit, OnDestroy {
     } else if (typeof document.body.createTextRange !== 'undefined') {
         // @ts-ignore
         const textRange = document.body.createTextRange();
-        textRange.moveToElementText(el);
+        textRange.moveToElementText(element);
         textRange.collapse(false);
         textRange.select();
     }
@@ -364,26 +360,21 @@ export class ReplyComponent implements OnInit, OnDestroy {
     startPosition = startPosition === content.length ? 0 : startPosition;
     endPosition = endPosition === -1 ? content.length : endPosition;
 
-    // if we pressed space to add the tag, remove the extra space
-    // element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
-
-    element.textContent = '';
-
     const parent = element.parentNode;
 
-    const div = document.createElement('span');
-    const before = document.createTextNode(content.substring(0, startPosition + 1));
+    const span = document.createElement('span');
+    const beforeText = document.createTextNode(content.substring(0, startPosition + 1));
     const tag = document.createElement('span');
     tag.className = 'tag-inline';
     tag.contentEditable = 'false';
-    const name = document.createTextNode(username);
-    tag.appendChild(name);
-    const after = document.createTextNode(content.substring(endPosition));
-    div.appendChild(before);
-    div.appendChild(tag);
-    div.appendChild(after);
+    const usernameText = document.createTextNode(username);
+    tag.appendChild(usernameText);
+    const afterText = document.createTextNode(content.substring(endPosition));
+    span.appendChild(beforeText);
+    span.appendChild(tag);
+    span.appendChild(afterText);
 
-    parent.replaceChild(div, element); // .appendChild(div);
+    parent.replaceChild(span, element);
 
   }
 
