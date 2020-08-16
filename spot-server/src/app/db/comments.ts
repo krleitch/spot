@@ -100,8 +100,7 @@ function deleteCommentByPostId(postId: string, accountId: string): Promise<any> 
 }
 
 // Add a reply
-function addReply(postId: string, commentId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
-    const replyId = uuid.v4();
+function addReply(replyId: string, postId: string, commentId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
     var sql = 'INSERT INTO comments (id, post_id, parent_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     var values = [replyId, postId, commentId, accountId, new Date(), content, link, image, 0, 0];
     return db.query(sql, values).then( (rows: any) => {
@@ -126,7 +125,7 @@ function getRepliesByCommentId(postId: string, commentId: string, offset: number
 
     var joinSql =     ` FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
                         WHERE comments.post_id = ? AND comments.parent_id = ? AND comments.deletion_date IS NULL
-                        GROUP BY comments.id ORDER BY comments.creation_date DESC LIMIT ? OFFSET ?`;
+                        GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ? OFFSET ?`;
     var sql = selectSql + accountSql + joinSql;
     var values = accountValues.concat([postId, commentId, limit, offset]);
     return db.query(sql, values);

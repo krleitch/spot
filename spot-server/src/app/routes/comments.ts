@@ -234,9 +234,10 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
 });
 
 // Create a reply
-router.post('/:postId/:commentId', function (req: any, res: any) {
+router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req: any, res: any) {
 
     const accountId = req.user.id;
+    const replyId = uuid.v4();
     req.filename = 'replies/' + Date.now().toString();
 
     singleUpload(req, res, async function(err: any) {
@@ -251,36 +252,39 @@ router.post('/:postId/:commentId', function (req: any, res: any) {
 
         const postId = req.params.postId;
         const commentId = req.params.commentId;
-        const link = commentsService.generateLink();
+        const link = await commentsService.generateLink();
 
-        comments.addReply(postId, commentId, accountId, content, image, link).then( async (rows: any) => {
+        comments.addReply(replyId, postId, commentId, accountId, content, image, link).then( async (reply: any) => {
+
+            // TODO: add catches for these
 
             // Add tags
             for ( let index = 0; index < tagsList.length; index++ ) {
-                await accounts.getAccountByUsername(tagsList[index].receiver).then( async (account: any) => {
-                    await tags.addTag( account[0].id, rows[0].id );
-                    await notifications.addReplyNotification( rows[0].account_id, account[0].id, rows[0].post_id, rows[0].parent_id, rows[0].id );
+                await accounts.getAccountByUsername(tagsList[index].username).then( async (account: any) => {
+                    await tags.addTag( account[0].id, reply[0].id, Math.min(tagsList[index].offset, content.length) );
+                    await notifications.addReplyNotification( reply[0].account_id, account[0].id, reply[0].post_id, reply[0].parent_id, reply[0].id );
                 });
             }
-    
-            await commentsService.getTags( rows, accountId ).then( (taggedComments: any) => {
-                rows = taggedComments;
+
+            await commentsService.getTags( reply, accountId ).then( (taggedComments: any) => {
+                reply = taggedComments;
             });
     
             posts.getPostCreator(postId).then( (postCreator: any) => {
-                commentsService.addProfilePicture(rows, postCreator[0].account_id);
-                res.status(200).json({ postId: postId, commentId: commentId, reply: rows[0] } );
+                commentsService.addProfilePicture(reply, postCreator[0].account_id);
+                res.status(200).json({ postId: postId, commentId: commentId, reply: reply[0] } );
             }, (err: any) => {
                 return Promise.reject(err);
             });
     
         }, (err: any) => {
+            console.log(err)
             res.status(500).send('Error adding reply');
         });
 
     });
 
-});
+}));
 
 // Delete a single comment
 router.delete('/:postId/:parentId/:commentId', function (req: any, res: any) {

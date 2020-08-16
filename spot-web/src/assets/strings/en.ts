@@ -147,7 +147,12 @@ export const STRINGS = {
           SEE_LESS: 'See less',
 
           // File options
-          FILE_TITLE: 'File:'
+          FILE_TITLE: 'File:',
+
+          // Tags
+          TAGGER: 'tagged you'
+
+          // Error
 
         },
 
@@ -165,7 +170,12 @@ export const STRINGS = {
           SEE_LESS: 'See less',
 
           // File options
-          FILE_TITLE: 'File:'
+          FILE_TITLE: 'File:',
+
+          // Tags
+          TAGGER: 'tagged you'
+
+          // Error
 
         },
 

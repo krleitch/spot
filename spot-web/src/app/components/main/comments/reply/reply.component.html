@@ -13,44 +13,34 @@
       </div>
     </div>
     <div class="content-wrapper">
+
       <div class="content">
 
-        <span class="content-tag-container" *ngIf="reply.tag.numTagged > 0">
-          <span class="tag-name-container" *ngIf="reply.tag.owned; else notOwned">
-            <!-- <span class="tag" *ngFor="let name of reply.tag.names">
-              {{ name }}
-            </span> -->
-          </span>
-          <ng-template #notOwned>
-            <span class="tag" *ngIf="reply.tag.tagged; else notTagged">
-              {{ reply.tag.tagger }} Tagged You
-              <span *ngIf="reply.tag.numTagged - 1 > 0"> and {{ reply.tag.numTagged - 1 }} <span class="material-icons person"> person </span> </span>
-            </span>
-            <ng-template #notTagged>
-              <span class="tag">
-                <span class="material-icons person"> person </span> {{ reply.tag.numTagged }}
-              </span>
-            </ng-template>
-          </ng-template>
-        </span>
+        <div class="tagger" *ngIf="reply.tag.tagged">
+          <span class="highlight"> {{ reply.tag.tagger }} </span> {{ STRINGS.TAGGER }}
+        </div>
 
-        {{ getContent() }}
+        <div class="text">
+          <span #text class="text-content"></span>
+          <span *ngIf="isExpandable">
+            <span *ngIf="expanded; else notExpanded">
+              <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+            </span>
+            <ng-template #notExpanded>
+              <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+            </ng-template>
+          </span>
+        </div>
+
         <div class="image" (click)="openModal('spot-image-modal', reply.image_src)" *ngIf="reply.image_src != null">
           <img [src]="reply.image_src" />
         </div>
-        <span *ngIf="expandable()">
-          <span *ngIf="!expanded; else notExpanded">
-            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
-          </span>
-          <ng-template #notExpanded>
-              <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
-          </ng-template>
-        </span>
+
       </div>
 
       <div [hidden]="!showAddReply" class="add" *ngIf="(reply.tag.tagged || inRange) && (isAuthenticated$ | async)">
         <div class="editor">
-          <div contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply2-content" [textContent]="reply2Text" (input)="onTextInput($event)"></div>
+          <div #reply2 contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply2-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
           <div class="image" *ngIf="imgSrc != null">
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
@@ -71,7 +61,7 @@
           </div>
         </div>
       </div>
-      <span #tag ><spot-tag *ngIf="showTag" [name]="tagName" [postLink]="postLink" (tag)="addTag($event)"></spot-tag></span>
+      <span #tag ><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="postLink" (tag)="addTag($event)"></spot-tag></span>
 
     </div>
     <div class="right-bar">

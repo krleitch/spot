@@ -11,60 +11,35 @@
   flex: 1;
 }
 
+.tagger {
+  // margin-bottom: 3px;
+}
+
+:host ::ng-deep .tag-inline-comment {
+
+  line-height: 1.2em;
+  font-weight: 700;
+
+}
+
+:host ::ng-deep .tag-inline-comment-icon {
+
+  line-height: 1.2em;
+  font-size: 1.2em;
+  vertical-align: bottom;
+
+}
+
 .content {
+
   margin-top: 10px;
   margin-bottom: 3px;
-}
 
-.content-tag-container{
-
-  display: flex;
-  align-items: center;
-
-  .tag-name-container {
-    display: flex;
-  }
-
-  .tag {
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 3px;
-    margin-right: 3px;
-    background-color: $lighter-grey;
-
-    .person {
-      color: $subtle-grey;
-      font-size: 20px;
-    }
-
-  }
-
-}
-
-.tag-container {
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .tag {
-    padding: 3px;
-    margin: 1px 2px;
-    background-color: $lighter-grey;
-  }
-
-  .tag-close {
-
-    cursor: pointer;
-    font-size: 14px;
-
-    &:hover {
-      color: $error-red;
-    }
-
+  .text-content {
+    line-height: 1.2em;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
 
 }

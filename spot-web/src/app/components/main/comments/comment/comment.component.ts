@@ -1,26 +1,32 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
+import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
          LikeCommentRequest, DislikeCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
+import { AlertService } from '@services/alert.service';
 import { Tag } from '@models/notifications';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { TagComponent } from '../../social/tag/tag.component';
+import { Friend } from '@models/friends';
 
 @Component({
   selector: 'spot-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
   @Input() inRange: boolean;
@@ -29,6 +35,7 @@ export class CommentComponent implements OnInit {
 
   @ViewChild('options') options;
   @ViewChild('text') text;
+  @ViewChild('reply') reply;
 
   STRINGS = STRINGS.MAIN.COMMENTS;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
@@ -37,10 +44,15 @@ export class CommentComponent implements OnInit {
   expanded = false;
   isExpandable = false;
 
+  friends$: Observable<Friend[]>;
+  friendsList: Friend[] = [];
+
   @ViewChild('tag') tag: ElementRef;
-  tags: Tag[] = [];
+  @ViewChild('tagelem') tagelem: TagComponent;
   showTag = false;
   tagName = '';
+  tagElement;
+  tagCaretPosition;
 
   replyText: string;
 
@@ -53,24 +65,27 @@ export class CommentComponent implements OnInit {
   totalReplies = 0;
   numLoaded = 0;
 
+  // files
   FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
 
-  // distplaying used characters for add comment
+  // displaying used characters for add comment
   MAX_COMMENT_LENGTH = 300;
   currentLength = 0;
 
   timeMessage: string;
   showAddReply = false;
   optionsEnabled = false;
+  addReplyError = '';
 
   currentOffset = 0;
 
   constructor(private store$: Store<RootStoreState.State>,
               private commentService: CommentService,
               public domSanitizer: DomSanitizer,
-              private modalService: ModalService) {
+              private modalService: ModalService,
+              private alertService: AlertService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -87,6 +102,14 @@ export class CommentComponent implements OnInit {
     this.replies$.subscribe( replies => {
       this.replies = replies.replies;
       this.totalReplies = replies.totalReplies;
+    });
+
+    this.friends$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectMyFeatureFriends)
+    );
+
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
+      this.friendsList = friends;
     });
 
     // if detailed load more replies
@@ -120,6 +143,23 @@ export class CommentComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
+  onEnter() {
+
+    // Add tag on enter
+    if ( this.showTag ) {
+
+      this.tagelem.onEnter();
+
+      return false;
+
+    }
+
+  }
+
   setContentHTML() {
 
     // Get the content strings
@@ -135,7 +175,7 @@ export class CommentComponent implements OnInit {
       this.comment.tag.tags.forEach( (tag: Tag) => {
 
         // check if tag should even be shown
-        if ( tag.offset <= content.length) {
+        if ( tag.offset <= content.length || this.expanded ) {
 
           // create the span that will hold the tag
           const span = document.createElement('span');
@@ -144,8 +184,25 @@ export class CommentComponent implements OnInit {
           // create the tag and give the username
           const inlineTag = document.createElement('span');
           inlineTag.className = 'tag-inline-comment';
-          const username = document.createTextNode(tag.username ? tag.username : '???');
-          inlineTag.appendChild(username);
+
+          // <span class="material-icons"> person </span>
+          if ( tag.username ) {
+            const username = document.createTextNode(tag.username ? tag.username : '???');
+            inlineTag.appendChild(username);
+          } else {
+            // we don't know the person
+
+            const inlineTagIcon = document.createElement('span');
+
+            inlineTagIcon.textContent = 'person';
+            inlineTagIcon.className = 'material-icons tag-inline-comment-icon';
+
+            const username = document.createTextNode('???');
+
+            inlineTag.appendChild(inlineTagIcon);
+            inlineTag.appendChild(username);
+
+          }
 
           // Add them to the span
           span.appendChild(textBefore);
@@ -193,6 +250,7 @@ export class CommentComponent implements OnInit {
 
   }
 
+  // Returns the content that will be shown and truncates if need be
   getContent(): string {
 
     if ( this.expanded || !this.isExpandable ) {
@@ -234,55 +292,134 @@ export class CommentComponent implements OnInit {
 
   onTextInput(event) {
 
-    // TODO: A space should add a tag
+      // Need to count newlines as a character, -1 because the first line is free
+      this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
+      this.addReplyError = null;
 
-    this.replyText = event.target.textContent;
-    this.currentLength = this.replyText.length;
+      // Check for tag
+      this.getAndCheckWordOnCaret();
 
-    const words = this.replyText.split(' ');
-    const lastWord = words[words.length - 1];
+  }
 
-    if ( lastWord.length >= 1 ) {
+  getAndCheckWordOnCaret() {
+    const range = window.getSelection().getRangeAt(0);
+    if (range.collapsed) {
+      return this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+    }
+    return '';
+  }
 
-      if ( lastWord[0] === '@' ) {
+  private getCurrentWord(element, position) {
+    // Get content of div
+    const content = element.textContent;
 
-        this.showTag = true;
-        this.tagName = lastWord.substr(1);
+    // Check if clicked at the end of word
+    position = content[position] === ' ' ? position - 1 : position;
 
-      } else {
+    // Get the start and end index
+    let startPosition = content.lastIndexOf(' ', position);
+    let endPosition = content.indexOf(' ', position);
 
-        this.showTag = false;
-        this.tagName = '';
+    // Special cases
+    startPosition = startPosition === content.length ? 0 : startPosition;
+    endPosition = endPosition === -1 ? content.length : endPosition;
 
-      }
+    return content.substring(startPosition + 1, endPosition);
+  }
 
+  private checkWord(word: string, element, position) {
+
+    if ( word.length > 1 && word[0] === '@' ) {
+      this.tagName = word.slice(1);
+      this.showTag = true;
+      this.tagElement = element;
+      this.tagCaretPosition = position;
     } else {
-
-      this.showTag = false;
       this.tagName = '';
-
+      this.showTag = false;
+      this.tagElement = null;
+      this.tagCaretPosition = null;
     }
 
   }
 
-  addTag(tag: Tag) {
+  addTag(username: string) {
 
-    // tag.id = this.tags.length;
-    // this.tags.push(tag);
+      // check if they are your friend
+      if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
+        this.alertService.error('Only friends can be tagged');
+        return;
+      }
 
-    // const words = this.replyText.split(' ');
-    // words.pop();
-    // this.replyText = words.join(' ');
+      // remove the word
+      this.removeWord(this.tagElement, this.tagCaretPosition, username);
+
+      // refocus at end of content editable
+      this.placeCaretAtEnd(this.reply.nativeElement);
+
+      // hide tag menu
+      this.tagName = '';
+      this.showTag = false;
+      this.tagElement = null;
+      this.tagCaretPosition = null;
 
   }
 
-  removeTag(id: number) {
+  private placeCaretAtEnd(el) {
+    el.focus();
+    if (typeof window.getSelection !== 'undefined'
+            && typeof document.createRange !== 'undefined') {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        // needed for browser compatibility
+        // @ts-ignore
+    } else if (typeof document.body.createTextRange !== 'undefined') {
+        // @ts-ignore
+        const textRange = document.body.createTextRange();
+        textRange.moveToElementText(el);
+        textRange.collapse(false);
+        textRange.select();
+    }
+  }
 
-    // this.tags.forEach( (tag: Tag, index: number) => {
-    //   if ( tag.id === id ) {
-    //     this.tags.splice(index, 1);
-    //   }
-    // });
+  private removeWord(element, position, username) {
+
+    const content = element.textContent;
+
+    // Check if clicked at the end of word
+    position = content[position] === ' ' ? position - 1 : position;
+
+    let startPosition = content.lastIndexOf(' ', position);
+    let endPosition = content.indexOf(' ', position);
+
+    // Special cases
+    startPosition = startPosition === content.length ? 0 : startPosition;
+    endPosition = endPosition === -1 ? content.length : endPosition;
+
+    // if we pressed space to add the tag, remove the extra space
+    // element.textContent = content.substring(0, startPosition + 1) + content.substring(endPosition);
+
+    element.textContent = '';
+
+    const parent = element.parentNode;
+
+    const div = document.createElement('span');
+    const before = document.createTextNode(content.substring(0, startPosition + 1));
+    const tag = document.createElement('span');
+    tag.className = 'tag-inline';
+    tag.contentEditable = 'false';
+    const name = document.createTextNode(username);
+    tag.appendChild(name);
+    const after = document.createTextNode(content.substring(endPosition));
+    div.appendChild(before);
+    div.appendChild(tag);
+    div.appendChild(after);
+
+    parent.replaceChild(div, element); // .appendChild(div);
 
   }
 
@@ -367,26 +504,106 @@ export class CommentComponent implements OnInit {
 
   addReply() {
 
-    const content = this.replyText;
+    let content = this.reply.nativeElement.innerHTML;
 
-    if (content.length <= this.MAX_COMMENT_LENGTH) {
-      const request: AddReplyRequest = {
-        postId: this.comment.post_id,
-        commentId: this.comment.id,
-        content,
-        image: this.imageFile,
-        tagsList: this.tags
-      };
+    // parse the innerhtml to return a string with newlines instead of innerhtml
+    const parser = new DOMParser();
+    const parsedHtml = parser.parseFromString(content, 'text/html');
 
-      this.store$.dispatch(
-        new CommentsStoreActions.AddReplyRequestAction(request)
-      );
+    const body = parsedHtml.getElementsByTagName('body');
 
-      this.replyText = '';
-      this.imageFile = null;
-      this.setShowAddReply(false);
+    const tags: Tag[] = [];
+    let text = '';
+    let offset = 0;
+
+    // Do a dfs on the html tree
+    let stack = [];
+    stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
+
+    while ( stack.length > 0 ) {
+
+      const elem = stack.pop();
+
+      // A tag
+      if ( elem.className === 'tag-inline' ) {
+        const tag: Tag = {
+          username: elem.textContent,
+          postLink: this.postLink,
+          offset
+        };
+        tags.push(tag);
+        // A tag has no children, continue
+        continue;
+      }
+
+      // Push the children
+      // In reverse because we want to parse the from left to right
+      if ( elem.childNodes ) {
+        stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
+      }
+
+      // Don't add spaces to start
+      if ( elem.tagName === 'DIV' && text.length > 0 ) {
+        // A new Div
+        text += '\n';
+        offset += 1;
+      } else if ( elem.nodeType === 3 ) {
+        // Text Node
+        text += elem.textContent;
+        offset += elem.textContent.length;
+      }
 
     }
+
+    // There should already be no spaces at start, this should just remove
+    // spaces at the end
+    // tag offsets will be adjusted on the server to never be more than content length
+    content = text.trim();
+
+    // Error checking
+
+    if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
+      this.addReplyError = 'Your reply must be less than ' + COMMENTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
+      return;
+    }
+
+    if ( content.length === 0 && !this.imageFile && tags.length === 0 ) {
+      this.addReplyError = 'Your reply must have a tag, text or an image';
+      return;
+    }
+
+    if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
+      this.addReplyError = 'Reply must be greater than ' + COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH + ' characters';
+      return;
+    }
+
+    if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
+      this.addReplyError = 'Reply must be less than ' + COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH + ' characters';
+      return;
+    }
+
+    // Only allow ascii characters currently, so check anything but ascii
+    // So user knows what they need to change
+    const regex = /^[^\x00-\x7F]*$/;
+    const match = content.match(regex);
+    if ( match && match[0].length > 0 ) {
+      this.addReplyError = 'Invalid spot content ' + match[0];
+      return;
+    }
+
+    // Make the reqest
+    const request: AddReplyRequest = {
+      postId: this.comment.post_id,
+      commentId: this.comment.id,
+      content,
+      image: this.imageFile,
+      tagsList: tags
+    };
+
+    this.store$.dispatch(
+      new CommentsStoreActions.AddReplyRequestAction(request)
+    );
+
   }
 
   like() {
