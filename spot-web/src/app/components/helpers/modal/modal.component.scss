@@ -10,6 +10,8 @@
 
   /* z-index must be higher than .jw-modal-background */
   z-index: 1000;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-transform: translateZ(0) scale(1.0, 1.0);
 
   /* enables scrolling for tall modals */
   overflow: auto;
