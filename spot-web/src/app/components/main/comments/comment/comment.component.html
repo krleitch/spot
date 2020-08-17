@@ -10,7 +10,7 @@
         </div>
 
         <div [class]="getProfilePictureClass(comment.profilePicture)" [ngClass]="{'profile-owned': comment.owned}">
-          <img [src]="'../../../../../assets/images/profile/' + getProfilePictureSymbol(comment.profilePicture) + '.png'"/>
+          <img [src]="comment.profilePictureSrc"/>
         </div>
 
       </div>

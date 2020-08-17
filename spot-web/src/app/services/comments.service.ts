@@ -19,8 +19,6 @@ export class CommentService {
 
   private baseUrl = environment.baseUrl;
 
-  // profilePictures = [ 'α', 'β', 'γ', 'δ', 'Δ', 'Σ', 'ε', 'ζ', 'η', 'θ', 'Λ', 'λ',
-  //                     'μ', 'Ξ', 'π', 'Π', 'ρ', 'Σ', 'μ', 'β', 'Φ', 'φ	', 'Γ', 'Ψ', 'Ω', 'ω'];
   PICTURES_LENGTH = 59;
   COLORS_LENGTH = 14;
 
@@ -116,13 +114,6 @@ export class CommentService {
       return 'profile pop';
     }
     return 'profile p' + (index % this.COLORS_LENGTH);
-  }
-
-  getProfilePictureSymbol(index) {
-    if ( index === -1 ) {
-      return 'op';
-    }
-    return index % this.PICTURES_LENGTH;
   }
 
   onReportSuccess() {

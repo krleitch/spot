@@ -46,7 +46,7 @@ router.get('/activity', function (req: any, res: any) {
 });
 
 // Get all comments for a post
-router.get('/:postId', async function (req: any, res: any) {
+router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: any) {
     
     const postId = req.params.postId;
 
@@ -61,8 +61,6 @@ router.get('/:postId', async function (req: any, res: any) {
     // Type means get before the date or after the date LIMIT #
 
     // TYPE CAHNGES THE SQL SORT ASC / DESC
-
-    // 
 
     let commentsArray: any[] = []
 
@@ -98,17 +96,21 @@ router.get('/:postId', async function (req: any, res: any) {
           }
         }
 
-        posts.getPostCreator(postId).then( (postCreator: any) => {
-            commentsService.addProfilePicture(commentsArray, postCreator[0].account_id);
-            res.status(200).json({ postId: postId, comments: commentsArray, totalCommentsBefore: numCommentsBefore, type: type });
+        await posts.getPostCreator(postId).then( async (postCreator: any) => {
+            await commentsService.addProfilePicture(commentsArray, postCreator[0].account_id).then( (a: any) => {
+                commentsArray = a;
+            });
         }, (err: any) => {
             res.status(500).send('Error getting comments');
         });
+
+        res.status(200).json({ postId: postId, comments: commentsArray, totalCommentsBefore: numCommentsBefore, type: type });
         
     }, (err: any) => {
         res.status(500).send('Error getting comments');
     });
-});
+
+}));
 
 // Create a comment
 router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
@@ -175,8 +177,8 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             });
     
             // Add profile picture and send
-            posts.getPostCreator(postId).then( (postCreator: any) => {
-                commentsService.addProfilePicture(comment, postCreator[0].account_id);
+            posts.getPostCreator(postId).then( async (postCreator: any) => {
+                await commentsService.addProfilePicture(comment, postCreator[0].account_id);
                 res.status(200).json({ postId: postId, comment: comment[0] } );
             }, (err: any) => {
                 return next(new CommentsError.CommentError(500));
@@ -219,8 +221,8 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
         })
 
         comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
-            posts.getPostCreator(postId).then( (postCreator: any) => {
-                commentsService.addProfilePicture(rows, postCreator[0].account_id);
+            posts.getPostCreator(postId).then( async (postCreator: any) => {
+                await commentsService.addProfilePicture(rows, postCreator[0].account_id);
                 res.status(200).json({ postId: postId, commentId: commentId, replies: rows, totalReplies: num[0].total });
             }, (err: any) => {
                 return Promise.reject(err);
@@ -270,8 +272,8 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
                 reply = taggedComments;
             });
     
-            posts.getPostCreator(postId).then( (postCreator: any) => {
-                commentsService.addProfilePicture(reply, postCreator[0].account_id);
+            posts.getPostCreator(postId).then( async (postCreator: any) => {
+                await commentsService.addProfilePicture(reply, postCreator[0].account_id);
                 res.status(200).json({ postId: postId, commentId: commentId, reply: reply[0] } );
             }, (err: any) => {
                 return Promise.reject(err);

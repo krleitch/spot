@@ -135,6 +135,8 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     this.setContentHTML();
 
+    console.log(this.comment.profilePictureSrc)
+
   }
 
   ngOnDestroy() {
@@ -621,10 +623,6 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   getProfilePictureClass(index) {
     return this.commentService.getProfilePictureClass(index);
-  }
-
-  getProfilePictureSymbol(index) {
-    return this.commentService.getProfilePictureSymbol(index);
   }
 
   invalidLength(): boolean {

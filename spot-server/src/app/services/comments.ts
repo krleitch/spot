@@ -4,6 +4,7 @@ const shortid = require('shortid');
 
 // services
 const badwords = require('@services/badwords');
+const aws = require('@services/aws');
 
 // db
 const comments = require('../db/comments');
@@ -16,15 +17,6 @@ const CommentsError = require('@exceptions/comments');
 // constants
 const comments_constants = require('@constants/comments');
 const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
-
-function stringToIntHash(str: string, upperbound: number, lowerbound: number) {
-    let result = 0;
-    for (let i = 0; i < str.length; i++) {
-      result = result + str.charCodeAt(i);
-    }
-
-    return (result % (upperbound - lowerbound)) + lowerbound;
-}
 
 function validContent(content: string): Error | null {
 
@@ -46,16 +38,51 @@ function validContent(content: string): Error | null {
 
 }
 
-function addProfilePicture( comments: any, postCreator: string) {
+function stringToIntHash(str: string, upperbound: number, lowerbound: number) {
+    let result = 0;
+    for (let i = 0; i < str.length; i++) {
+      result = result + str.charCodeAt(i);
+    }
+    return (result % (upperbound - lowerbound)) + lowerbound;
+}
 
-    comments.forEach( (comment: any) => {
-        let profilePicture = stringToIntHash( comment.account_id + comment.post_id , 363, 0);
+async function addProfilePicture( comments: any, postCreator: string) {
+
+    for (let i = 0; i < comments.length; i++ ) {
+
+        let comment = comments[i];
+
+        let profilePictureIndex = stringToIntHash( comment.account_id + comment.post_id , 71, 1);
         if ( comment.account_id == postCreator ) {
-            profilePicture = -1;
+            profilePictureIndex = -1;
         }
-        comment.profilePicture = profilePicture;
+
+        comment.profilePictureSrc = await getProfilePictureFromBucket(profilePictureIndex);
+
+        comment.profilePicture = profilePictureIndex;
         delete comment.account_id;
-    })
+
+    }
+
+    return comments;
+
+}
+
+async function getProfilePictureFromBucket( index: number ) {
+
+    var params = { 
+        Bucket: 'spot',
+        Delimiter: '/',
+        Prefix: 'profile/icons/',
+    }
+
+    const s3Response = await aws.s3.listObjectsV2(params).promise();
+
+    if ( index === -1 ) {
+        return aws.getUrlFromBucket('profile/op.png');
+    } else {
+        return aws.getUrlFromBucket(s3Response.Contents[index].Key);
+    }
 
 }
 
@@ -108,6 +135,9 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
 
             comments[index].tag = tagObject;
+
+        }, (err: any) => {
+
         });
 
     }

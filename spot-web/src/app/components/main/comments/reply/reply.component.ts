@@ -576,10 +576,6 @@ export class ReplyComponent implements OnInit, OnDestroy {
     return this.commentService.getProfilePictureClass(index);
   }
 
-  getProfilePictureSymbol(index) {
-    return this.commentService.getProfilePictureSymbol(index);
-  }
-
   invalidLength(): boolean {
     return this.currentLength > this.MAX_REPLY_LENGTH;
   }

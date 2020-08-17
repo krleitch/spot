@@ -10,7 +10,8 @@ export interface Comment {
     likes: number;
     dislikes: number;
     rated: number;
-    profilePicture: number;
+    profilePicture: number; // The enumeration of the image (colour)
+    profilePictureSrc: number; // The image
     owned: boolean;
     tag: CommentTag;
 }
