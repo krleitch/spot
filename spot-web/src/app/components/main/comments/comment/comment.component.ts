@@ -135,8 +135,6 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     this.setContentHTML();
 
-    console.log(this.comment.profilePictureSrc)
-
   }
 
   ngOnDestroy() {
