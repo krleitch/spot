@@ -38,29 +38,48 @@ function validContent(content: string): Error | null {
 
 }
 
-function stringToIntHash(str: string, upperbound: number, lowerbound: number) {
+// Combine the 2 strings by xor them
+function combineStrings(a: string, b: string): string {
+
+    const aBuffer = Buffer.from(a);
+    const bBuffer = Buffer.from(b);
+    const result = Buffer.alloc(aBuffer.length);
+
+    for ( let i = 0; i < aBuffer.length; i++ ) {
+        result[i] = aBuffer[i] ^ bBuffer[i];
+    }
+
+    return result.toString();
+
+}
+
+// Turn the string to an int [lowerbound, upperbound]
+function stringToInt(str: string, lowerbound: number, upperbound: number, ) {
+
     let result = 0;
     for (let i = 0; i < str.length; i++) {
       result = result + str.charCodeAt(i);
     }
+
     return (result % (upperbound - lowerbound)) + lowerbound;
+
 }
 
 async function addProfilePicture( comments: any, postCreator: string) {
 
     for (let i = 0; i < comments.length; i++ ) {
 
-        let comment = comments[i];
-
-        let profilePictureIndex = stringToIntHash( comment.account_id + comment.post_id , 71, 1);
-        if ( comment.account_id == postCreator ) {
+        let profilePictureIndex;
+        if ( comments[i].account_id == postCreator ) {
             profilePictureIndex = -1;
+        } else {
+            profilePictureIndex = stringToInt( combineStrings(comments[i].account_id, comments[i].post_id), 1, COMMENTS_CONSTANTS.PROFILE_PICTURES_COUNT);
         }
 
-        comment.profilePictureSrc = await getProfilePictureFromBucket(profilePictureIndex);
-
-        comment.profilePicture = profilePictureIndex;
-        delete comment.account_id;
+        // Get the image and save the Index
+        comments[i].profilePictureSrc = await getProfilePictureFromBucket(profilePictureIndex);
+        comments[i].profilePicture = profilePictureIndex;
+        delete comments[i].account_id;
 
     }
 
@@ -81,6 +100,7 @@ async function getProfilePictureFromBucket( index: number ) {
     if ( index === -1 ) {
         return aws.getUrlFromBucket('profile/op.png');
     } else {
+        // the first index is a dud /profile/icons/
         return aws.getUrlFromBucket(s3Response.Contents[index].Key);
     }
 

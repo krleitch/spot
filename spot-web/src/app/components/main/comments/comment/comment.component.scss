@@ -1,5 +1,5 @@
 @import '../../../../styles/colors';
-
+@import '../../../../styles/profiles';
 
 // Comment
 .comment {
@@ -138,30 +138,6 @@ img {
     &:hover {
       @extend .highlight;
     }
-}
-
-.profile {
-  // position: relative;
-  width: 48px;
-  height: 48px;
-  background-color: black;
-  border-radius: 50%;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.profile-owned {
-
-  // border-radius: 50%;
-  // height: 48px;
-  // width: 48px;
-  // position: absolute;
-  // box-shadow: 0 0 0 2px white, 0 0 0 5px $button-highlight;
-  border: 3px solid $button-highlight;
-
 }
 
 // right-bar
@@ -370,65 +346,4 @@ img {
   &:hover {
     @extend .highlight;
   }
-}
-
-// Profile picture color styles
-.pop {
-  background-color: $profileop;
-}
-
-.p0 {
-  background-color: $profile0;
-}
-
-.p1 {
-  background-color: $profile1;
-}
-
-.p2 {
-  background-color: $profile2;
-}
-
-.p3 {
-  background-color: $profile3;
-}
-
-.p4 {
-  background-color: $profile4;
-}
-
-.p5 {
-  background-color: $profile5;
-}
-
-.p6 {
-  background-color: $profile6;
-}
-
-.p7 {
-  background-color: $profile7;
-}
-
-.p8 {
-  background-color: $profile8;
-}
-
-.p9 {
-  background-color: $profile9;
-}
-
-.p10 {
-  background-color: $profile10;
-}
-
-.p11 {
-  background-color: $profile11;
-}
-
-.p12 {
-  background-color: $profile12;
-}
-
-.p13 {
-  background-color: $profile13;
 }

@@ -11,6 +11,7 @@ import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddComment
           LikeReplySuccess, DislikeReplySuccess, ReportCommentRequest, ReportCommentSuccess,
           ActivityCommentRequest, ActivityCommentSuccess } from '@models/comments';
 import { AlertService } from '@services/alert.service';
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,6 @@ import { AlertService } from '@services/alert.service';
 export class CommentService {
 
   private baseUrl = environment.baseUrl;
-
-  PICTURES_LENGTH = 59;
-  COLORS_LENGTH = 14;
 
   constructor(private http: HttpClient, private alertService: AlertService) { }
 
@@ -113,7 +111,7 @@ export class CommentService {
     if ( index === -1 ) {
       return 'profile pop';
     }
-    return 'profile p' + (index % this.COLORS_LENGTH);
+    return 'profile p' + (index % (COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT + 1));
   }
 
   onReportSuccess() {
