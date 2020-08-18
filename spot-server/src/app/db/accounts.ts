@@ -1,7 +1,7 @@
 export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, changePassword,
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
          disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
-         updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount  }
+         updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount, usernameExists  }
 
 const uuid = require('uuid');
 const roles = require('@services/authorization/roles');
@@ -48,15 +48,12 @@ function addAccount(email: string, username: string, pass: string, phone: string
 }
 
 function getFacebookAccount(facebookId: string): Promise<any> {
-    var sql = 'SELECT * FROM accounts WHERE facebook_id = ? AND deletion_date IS NULL';
+    var sql = 'SELECT * FROM accounts WHERE facebook_id = ? AND deletion_date IS NULL LIMIT 1';
     var values = [facebookId];
     return db.query(sql, values);
 }
 
-function addFacebookAccount(id: string, email: string): Promise<any> {
-    const index = email.indexOf('@');
-    // TODO THIS IS A BAD USERNAME GENERATOR
-    var username = email.substring(0, index);
+function addFacebookAccount(id: string, email: string, username: string): Promise<any> {
     var sql = 'INSERT INTO accounts (id, email, username, facebook_id, role) VALUES (?, ?, ?, ?, ?)';
     var values = [uuid.v4(), email, username, id, roles.user];
     return db.query(sql, values).then( (rows: any) => {
@@ -84,7 +81,7 @@ function getAccountByEmail(email: string): Promise<any> {
 }
 
 function getAccountByUsername(username: string): Promise<any> {
-    var sql = 'SELECT * FROM accounts WHERE username = ? AND deletion_date IS NULL';
+    var sql = 'SELECT * FROM accounts WHERE username = ? AND deletion_date IS NULL LIMIT 1';
     var values = [username];
     return db.query(sql, values);
 }
@@ -107,6 +104,17 @@ function updateUsername(username: string, accountId: string) {
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(accountId);
     });;  
+}
+
+function usernameExists(username: string) {
+    
+    var sql = 'SELECT username FROM accounts WHERE username = ? LIMIT 1';
+    var values = [username];
+
+    return db.query(sql, values).then( (user: any) => {
+        return user.length > 0;
+    });
+
 }
 
 function changePassword( account_id: string, password: string, salt: string) {

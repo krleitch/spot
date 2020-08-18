@@ -41,6 +41,7 @@ router.get('/', function (req: any, res: any) {
     })
 })
 
+// Update username
 router.put('/username', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
@@ -55,7 +56,20 @@ router.put('/username', function (req: any, res: any, next: any) {
         const result = { account: rows[0] };
         res.status(200).json(result);
     }, (err: any) => {
-        return next(new AuthError.UsernameTakenError(400));
+
+        if ( err.code === 'ER_DUP_ENTRY' ) {
+
+            // get the column name for the duplicate from the message
+            const column = err.sqlMessage.match(/'.*?'/g).slice(-1)[0].replace(/[']+/g, '');
+
+            if ( column == 'username' ) {
+                return next(new AuthError.UsernameTakenError(400));
+            }
+
+        }
+
+        return next(new AuthError.UpdateUsernameError(500));
+
     });
 
 });

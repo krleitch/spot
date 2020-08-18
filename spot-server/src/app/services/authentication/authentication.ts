@@ -1,18 +1,23 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
-            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken }
+            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken, createFacebookUsername }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
 const request = require('request');
-const passport = require('@services/authentication/passport');
 
 const secret = require('../../../../secret.json');
+
+// services
+const passport = require('@services/authentication/passport');
+
+// db
+const accounts = require('@db/accounts');
 
 const AuthenticationError = require('@exceptions/authentication');
 const AUTH_CONSTANTS = require('@constants/authentication');
 const AUTHENTICATION_CONSTANTS = AUTH_CONSTANTS.AUTHENTICATION_CONSTANTS
 
-// Register Validation
+// Registration Validation
 
 function validUsername(username: string): Error | null {
 
@@ -148,8 +153,35 @@ function isValidToken(token: any): boolean {
 }
 
 // Facebook
+async function createFacebookUsername(email: string): Promise<string> {
 
-function getFacebookDetails(accessToken: String): Promise<any> {
+    // Try using the email first
+    const index = email.indexOf('@');
+    let username = email.substring(0, index);
+
+    if ( !username ) {
+        username = 'user' + (10000 + (Math.random() * (99999 - 10000))).toString();
+    }
+
+    // Need to make sure the username isn't taken
+    let exists = await accounts.usernameExists(username);
+    
+    do {
+
+        if ( exists ) {
+            // add a random number from 0-9
+            username += Math.floor(Math.random() * 10).toString();
+            // check again
+            exists = await accounts.usernameExists(username);
+        }
+        
+    } while (exists)
+
+	return username;
+
+}
+
+function getFacebookDetails(accessToken: string): Promise<any> {
     
     const url = "https://graph.facebook.com/me?fields=id,email&access_token=" + accessToken;
 
@@ -163,7 +195,7 @@ function getFacebookDetails(accessToken: String): Promise<any> {
     })
 }
 
-function getFacebookId(accessToken: String): Promise<any> {
+function getFacebookId(accessToken: string): Promise<any> {
     
     const url = "https://graph.facebook.com/me?fields=id&access_token=" + accessToken;
 

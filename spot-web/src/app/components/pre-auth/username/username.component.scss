@@ -1,55 +1,95 @@
 @import '../../../styles/colors';
+@import '../../../styles/sizes';
 
-.nav {
-  height: 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 10px;
-}
+.username {
 
-.title {
-  font-size: 35px;
-  cursor: pointer;
-}
+  .nav {
 
-.input-container {
-  margin-top: 200px;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
-}
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
 
-.heading {
-  margin-bottom: 10px;
-}
+    .title {
+      font-size: 35px;
+      cursor: pointer;
+    }
 
-input {
-  width: 250px;
-  padding: 6px 10px;
-  margin: 6px 0;
-  box-sizing: border-box;
-  border: 1px solid $subtle-grey;
-  margin-bottom: 10px;
-  outline: none;
-}
-
-.button {
-  background-color: $button-black;
-  width: 150px;
-  border: none;
-  color: $button-font-white;
-  padding: 12px 12px;
-  text-decoration: none;
-  margin: 4px 2px 10px 2px;
-  outline: none;
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  &:hover {
-      background-color: lighten($button-black, 10%);
   }
+
+  .heading {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .container {
+    margin-top: 100px;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .icon {
+    font-size: 48px;
+    color: $button-highlight;
+  }
+
+  input {
+    width: 300px;
+    padding: 6px 10px;
+    margin: 6px 0;
+    box-sizing: border-box;
+    border: 1px solid $subtle-grey;
+    margin-bottom: 10px;
+    outline: none;
+  }
+
+  button {
+
+    outline: none;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $button-black;
+    color: $button-font-white;
+    padding: 12px 12px;
+    text-decoration: none;
+    font-size: 14px;
+
+    &:hover {
+        background-color: lighten($button-black, 10%);
+    }
+
+  }
+
+  .description {
+    margin-top: 10px;
+    color: $subtle-grey;
+    text-align: center;
+  }
+
+  .error {
+    color: $error-red;
+    margin-bottom: 10px;
+  }
+
+}
+
+// For Mobile
+@media screen and (max-width: $mobile-width) {
+
+  .username {
+
+    .container {
+      margin-top: 25px;
+    }
+
+  }
+
 }

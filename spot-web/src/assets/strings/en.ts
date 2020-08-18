@@ -430,11 +430,13 @@ export const STRINGS = {
         USERNAME: {
 
           TITLE: 'Spot',
-          HEADING: 'Enter a username for your account',
+          HEADING: 'Create a username for your account',
           DESCRIPTION: '*Your username will not be visible to anyone. All posts are anonymous',
 
           USERNAME_PLACEHOLDER: 'Enter username',
-          CONTINUE: 'Continue to Spot'
+          CONTINUE: 'Continue to Spot',
+
+          USERNAME_ERROR: 'Username is required'
 
         },
 

@@ -6,6 +6,7 @@ export interface State {
     accountMetadata: AccountMetadata;
     authenticationError: SpotError; // Error for signup / login
     usernameError: SpotError; // Error when chaning or updating username
+    usernameSuccess: boolean; // Successfully changed username
     location: Location;
     loadingLocation: boolean;
     facebookConnected: boolean;
@@ -17,6 +18,7 @@ export const initialState: State = (
     accountMetadata: null,
     authenticationError: null,
     usernameError: null,
+    usernameSuccess: false,
     facebookConnected: false,
     loadingLocation: false,
     location: null,

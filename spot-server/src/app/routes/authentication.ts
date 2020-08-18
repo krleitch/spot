@@ -101,10 +101,13 @@ router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, functi
 router.post('/login/facebook', function (req: any, res: any) {
     const { accessToken } = req.body;
     authentication.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
-        accounts.getFacebookAccount(facebookDetails.body.id).then(( user: any) => {
+        accounts.getFacebookAccount(facebookDetails.body.id).then( async( user: any) => {
             if ( user.length == 0 ) {
+
+                const username = await authentication.createFacebookUsername(facebookDetails.body.email);
+
                 // create the account
-                accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email).then( (user2: any) => {
+                accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email, username).then( (user2: any) => {
                     accounts.addAccountMetadata(user2[0].id).then( (rows: any ) => {
 
                         user2 = user2[0];

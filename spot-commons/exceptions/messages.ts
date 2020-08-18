@@ -95,6 +95,9 @@ export const ERROR_MESSAGES = {
             TOKEN: 'This token as expired or is invalid',
             PASSWORD_RESET: 'Error resetting password',
 
+            // Update Username
+            UPDATE_USERNAME: 'There was an error updating your username',
+
         }
 
     }
