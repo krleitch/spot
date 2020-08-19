@@ -6,6 +6,7 @@ import { select, Store } from '@ngrx/store';
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
+import { AuthenticationService } from '@services/authentication.service';
 import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
          UpdateAccountMetadataRequest, VerifyRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
@@ -39,7 +40,8 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   verificationSent = false;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>,
+              private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
 
@@ -73,7 +75,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       if ( success ) {
         this.editUsernameEnabled = false;
         this.usernameErrorMessage = null;
-        this.usernameSuccessMessage = 'Success';
+        this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
       }
     });
 
@@ -99,16 +101,24 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   submitEditUsername() {
 
-    if (this.username) {
-      const request: UpdateUsernameRequest = {
-        username: this.username
-      };
-
-      this.store$.dispatch(
-        new AccountsActions.UpdateUsernameAction(request)
-      );
-
+    if (!this.username) {
+      this.usernameErrorMessage = this.STRINGS.USERNAME_ERROR;
+      return;
     }
+
+    const validUsername = this.authenticationService.validateUsername(this.username);
+    if (validUsername !== null) {
+      this.usernameErrorMessage = validUsername;
+      return;
+    }
+
+    const request: UpdateUsernameRequest = {
+      username: this.username
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateUsernameAction(request)
+    );
 
   }
 

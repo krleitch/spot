@@ -58,6 +58,8 @@ export const STRINGS = {
             EMAIL_VERIFY_DESCRIPTION: 'You will need to verify your email to start posting spots.',
 
             USERNAME: 'Username',
+            USERNAME_ERROR: 'Username is required',
+            USERNAME_SUCCESS: 'Username was succesfully changed',
             PHONE: 'Phone number',
             SCORE: 'Spot Score',
 
