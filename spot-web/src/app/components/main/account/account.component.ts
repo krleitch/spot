@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
 import { STRINGS } from '@assets/strings/en';
@@ -14,7 +15,9 @@ import { SpotError } from '@exceptions/error';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   @ViewChild('editUsername') editusernameinput: ElementRef;
 
@@ -22,22 +25,23 @@ export class AccountComponent implements OnInit {
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
+
   facebookConnected$: Observable<boolean>;
+
+  username: string;
+  editUsernameEnabled = false;
   usernameError$: Observable<SpotError>;
+  usernameErrorMessage: string;
+  usernameSuccess$: Observable<boolean>;
+  usernameSuccessMessage: string;
 
   accountOptionsEnabled: boolean;
-  editUsernameEnabled = false;
-  username: string;
 
   verificationSent = false;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
   ngOnInit() {
-
-    this.usernameError$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectUsernameError)
-    );
 
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
@@ -57,6 +61,33 @@ export class AccountComponent implements OnInit {
       }
     });
 
+    this.usernameError$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectUsernameError)
+    );
+
+    this.usernameSuccess$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectUsernameSuccess)
+    );
+
+    this.usernameSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success: boolean) => {
+      if ( success ) {
+        this.editUsernameEnabled = false;
+        this.usernameErrorMessage = null;
+        this.usernameSuccessMessage = 'Success';
+      }
+    });
+
+    this.usernameError$.pipe(takeUntil(this.onDestroy)).subscribe( (error: SpotError) => {
+      if ( error ) {
+        this.usernameSuccessMessage = null;
+        this.usernameErrorMessage = error.message;
+      }
+    });
+
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   enableEditUsername() {
@@ -77,7 +108,6 @@ export class AccountComponent implements OnInit {
         new AccountsActions.UpdateUsernameAction(request)
       );
 
-      this.editUsernameEnabled = false;
     }
 
   }

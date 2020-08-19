@@ -28,7 +28,7 @@ import { ShareComponent } from './components/main/social/share/share.component';
 import { NotificationsComponent } from './components/main/social/notifications/notifications.component';
 import { NotificationItemComponent } from './components/main/social/notification-item/notification-item.component';
 import { ImageComponent } from './components/helpers/image/image.component';
-import { UsernameComponent } from './components/pre-auth/username/username.component';
+import { UsernameComponent } from './components/main/username/username.component';
 import { AboutComponent } from './components/pre-auth/about/about.component';
 import { ContactComponent } from './components/pre-auth/contact/contact.component';
 import { FriendsComponent } from './components/main/social/friends/friends.component';

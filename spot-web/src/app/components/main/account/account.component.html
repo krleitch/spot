@@ -49,8 +49,11 @@
           <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT_USERNAME }} </span>
         </ng-template>
       </div>
-      <div *ngIf="usernameError$ | async as usernameError">
-        {{ usernameError.message }}
+      <div *ngIf="usernameErrorMessage" class="username-error">
+        {{ usernameErrorMessage }}
+      </div>
+      <div *ngIf="usernameSuccessMessage" class="username-success">
+        {{ usernameSuccessMessage }}
       </div>
 
       <div class="subheading"> {{ STRINGS.PHONE }} </div>
