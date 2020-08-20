@@ -6,6 +6,14 @@ import { initialState, State } from './state';
 export function featureReducer(state = initialState, action: Actions | FacebookActions | GoogleActions): State {
   switch (action.type) {
     case ActionTypes.REGISTER_SUCCESS: {
+
+      if ( action.response.account.facebook_id ) {
+        state.facebookConnected = true;
+      }
+      if ( action.response.account.google_id ) {
+        state.googleConnected = true;
+      }
+
       return {
         ...state,
         account: action.response.account,
@@ -24,6 +32,10 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       if ( action.response.account.facebook_id ) {
           state.facebookConnected = true;
       }
+      if ( action.response.account.google_id ) {
+        state.googleConnected = true;
+      }
+
       return {
         ...state,
         account: action.response.account,
@@ -73,6 +85,9 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
 
       if ( action.response.account.facebook_id ) {
         state.facebookConnected = true;
+      }
+      if ( action.response.account.google_id ) {
+        state.googleConnected = true;
       }
 
       return {
@@ -136,6 +151,18 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: action.response.account,
         googleConnected: true
+      };
+    }
+    case GoogleActionTypes.GOOGLE_CONNECT_SUCCESS: {
+      return {
+        ...state,
+        googleConnected: true
+      };
+    }
+    case GoogleActionTypes.GOOGLE_DISCONNECT_SUCCESS: {
+      return {
+        ...state,
+        googleConnected: false
       };
     }
     default: {

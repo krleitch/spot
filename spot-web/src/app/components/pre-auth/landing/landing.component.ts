@@ -72,7 +72,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         'theme': 'light',
         'onsuccess': param => this.onSignIn(param)
     });
-}
+  }
 
   facebookLogin() {
 
@@ -127,6 +127,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store$.dispatch(
       new AccountsGoogleActions.GoogleLoginRequestAction(request)
     );
+
+    gapi.auth2.getAuthInstance().disconnect().then( () => {
+
+    });
 
   }
 

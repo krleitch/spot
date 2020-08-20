@@ -7,7 +7,8 @@ import { AlertService } from '@services/alert.service';
 import { UpdateUsernameRequest, UpdateUsernameResponse, FacebookConnectRequest, FacebookConnectResponse,
           FacebookDisconnectResponse, FacebookDisconnectRequest, GetAccountMetadataRequest, GetAccountMetadataSuccess,
           UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, VerifyConfirmRequest, VerifyConfirmResponse,
-          VerifyRequest, VerifyResponse } from '@models/accounts';
+          VerifyRequest, VerifyResponse, GoogleConnectRequest, GoogleDisconnectRequest, GoogleConnectResponse,
+          GoogleDisconnectResponse } from '@models/accounts';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,16 @@ export class AccountsService {
 
   disconnectFacebookAccount(request: FacebookDisconnectRequest): Observable<FacebookDisconnectResponse> {
     return this.http.post<FacebookDisconnectResponse>(`${this.baseUrl}/accounts/facebook/disconnect`, request);
+  }
+
+  // Google requests
+
+  connectGoogleAccount(request: GoogleConnectRequest): Observable<GoogleConnectResponse> {
+    return this.http.post<GoogleConnectResponse>(`${this.baseUrl}/accounts/google`, request);
+  }
+
+  disconnectGoogleAccount(request: GoogleDisconnectRequest): Observable<GoogleDisconnectResponse> {
+    return this.http.post<GoogleDisconnectResponse>(`${this.baseUrl}/accounts/google/disconnect`, request);
   }
 
   // Normal requets

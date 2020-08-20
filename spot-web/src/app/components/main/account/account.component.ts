@@ -28,6 +28,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   accountMetadata$: Observable<AccountMetadata>;
 
   facebookConnected$: Observable<boolean>;
+  googleConnected$: Observable<boolean>;
 
   username: string;
   editUsernameEnabled = false;
@@ -51,6 +52,10 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.facebookConnected$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectFacebookConnected)
+    );
+
+    this.googleConnected$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectGoogleConnected)
     );
 
     this.account$ = this.store$.pipe(

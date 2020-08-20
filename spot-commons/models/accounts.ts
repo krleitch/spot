@@ -6,6 +6,7 @@ export interface Account {
     phone: string;
     score: number;
     facebook_id: string;
+    google_id: string;
     verified_date: string;
 }
 
@@ -103,5 +104,23 @@ export interface FacebookDisconnectRequest {
 }
 
 export interface FacebookDisconnectResponse {
+
+}
+
+// google
+
+export interface GoogleConnectRequest {
+    accessToken: string;
+}
+
+export interface GoogleConnectResponse {
+    created: boolean;
+}
+
+export interface GoogleDisconnectRequest {
+
+}
+
+export interface GoogleDisconnectResponse {
 
 }

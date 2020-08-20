@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -16,7 +16,7 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss']
 })
-export class ShareComponent implements OnInit {
+export class ShareComponent implements OnInit, AfterViewInit {
 
   @Input() modalId;
 
@@ -65,6 +65,11 @@ export class ShareComponent implements OnInit {
     // window['FB'].XFBML.parse();
     // window['twttr'].widgets.load();
 
+  }
+
+  ngAfterViewInit() {
+    // window['FB'].XFBML.parse();
+    // window['twttr'].widgets.load();
   }
 
   closeShare() {

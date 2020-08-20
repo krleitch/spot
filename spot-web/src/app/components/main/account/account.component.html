@@ -85,6 +85,12 @@
         </div>
       </ng-template>
 
+      <div *ngIf="!(googleConnected$ | async); else googleconnected">
+        Not connected to Google
+      </div>
+      <ng-template #googleconnected>
+        Connected to Google
+      </ng-template>
 
       <br/>
       <div class="title mobile-column">
