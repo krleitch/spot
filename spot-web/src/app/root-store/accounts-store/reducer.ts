@@ -1,8 +1,9 @@
 import { Actions, ActionTypes } from './actions/actions';
 import { FacebookActions, FacebookActionTypes } from './actions/facebook.actions';
+import { GoogleActions, GoogleActionTypes } from './actions/google.actions';
 import { initialState, State } from './state';
 
-export function featureReducer(state = initialState, action: Actions | FacebookActions): State {
+export function featureReducer(state = initialState, action: Actions | FacebookActions | GoogleActions): State {
   switch (action.type) {
     case ActionTypes.REGISTER_SUCCESS: {
       return {
@@ -128,6 +129,13 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       return {
         ...state,
         facebookConnected: false
+      };
+    }
+    case GoogleActionTypes.GOOGLE_LOGIN_SUCCESS: {
+      return {
+        ...state,
+        account: action.response.account,
+        googleConnected: true
       };
     }
     default: {

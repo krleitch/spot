@@ -34,6 +34,18 @@ export interface FacebookLoginResponse {
     account: Account;
 }
 
+// Google
+
+export interface GoogleLoginRequest {
+    accessToken: string;
+}
+
+export interface GoogleLoginResponse {
+    created: boolean;
+    jwt: { token: string, expiresIn: string };
+    account: Account;
+}
+
 // password reset
 
 export interface PasswordResetRequest {

@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
+// Move this
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client('805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com');
+
 const nodemailer = require('nodemailer');
 const shortid = require('shortid');
 
@@ -151,6 +155,74 @@ router.post('/login/facebook', function (req: any, res: any) {
         res.status(500).send('Error signing in with facebook');
     });
 });
+
+// Google
+router.post('/login/google', async function (req: any, res: any) {
+    
+    const { accessToken } = req.body;
+    
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: accessToken,
+            audience: '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com',
+            // Specify the CLIENT_ID of the app that accesses the backend
+            // Or, if multiple clients access the backend:
+            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        });
+
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        const email = payload['email'];
+
+        // make or retrieve account
+
+        accounts.getGoogleAccount(userid).then( async( user: any) => {
+            if ( user.length == 0 ) {
+
+                const username = await authentication.createFacebookUsername(email);
+
+                // create the account
+                accounts.addGoogleAccount(userid, email, username).then( (user2: any) => {
+                    accounts.addAccountMetadata(user2[0].id).then( (rows: any ) => {
+
+                        user2 = user2[0];
+                        const token = authentication.generateToken(user2);
+
+                        res.status(200).json({
+                            created: true,
+                            jwt: { token: token, expiresIn: '2h' },
+                            account: user2
+                        });
+
+                    }, (err: any) => {
+                        res.status(500).send('Error signing in with google');
+                    });
+                }, (err: any) => {
+                    res.status(500).send('Error signing in with google');
+                });
+ 
+            } else {
+                // account already exists
+                user = user[0];
+                const token = authentication.generateToken(user);
+                res.status(200).json({
+                    created: false,
+                    jwt: { token: token, expiresIn: '2h' },
+                    account: user
+                });   
+            }
+        }, (err: any) => {
+            res.status(500).send('Error signing in with google');
+        });
+
+        // If request specified a G Suite domain:
+        // const domain = payload['hd'];
+    } catch (err) {
+        res.status(500).send('Error signing in with google');
+    }
+
+});
+
 
 // password reset
 router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: any, res: any) {

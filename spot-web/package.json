@@ -21,6 +21,8 @@
     "@angular/router": "^7.2.13",
     "@ngrx/effects": "^7.4.0",
     "@ngrx/store": "^7.4.0",
+    "@types/gapi": "0.0.39",
+    "@types/gapi.auth2": "0.0.52",
     "material-icons": "^0.3.1",
     "node-sass": "^4.14.0",
     "rxjs": "~6.5.4",

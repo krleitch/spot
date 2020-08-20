@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginResponse, LoginResponse,
          PasswordResetRequest, PasswordResetSuccess, ValidateTokenRequest, ValidateTokenSuccess,
-         NewPasswordRequest, NewPasswordSuccess } from '@models/authentication';
+         NewPasswordRequest, NewPasswordSuccess, GoogleLoginRequest, GoogleLoginResponse } from '@models/authentication';
 import { AlertService } from '@services/alert.service';
 import { ModalService } from '@services/modal.service';
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
@@ -17,6 +17,7 @@ import { STRINGS } from '@assets/strings/en';
 export class AuthenticationService {
 
     baseUrl = environment.baseUrl;
+    googleProviderId = environment.googleProviderId;
 
     constructor(
         private http: HttpClient,
@@ -28,6 +29,11 @@ export class AuthenticationService {
     // Facebook
     loginFacebookAccount(request: FacebookLoginRequest): Observable<FacebookLoginResponse> {
         return this.http.post<FacebookLoginResponse>(`${this.baseUrl}/auth/login/facebook`, request);
+    }
+
+    // Google
+    loginGoogleAccount(request: GoogleLoginRequest): Observable<GoogleLoginResponse> {
+      return this.http.post<GoogleLoginResponse>(`${this.baseUrl}/auth/login/google`, request);
     }
 
     // Normal auth
@@ -59,6 +65,10 @@ export class AuthenticationService {
     validatePhone(phone: string): boolean {
       const regex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
       return phone.match(regex) != null;
+    }
+
+    signInWithGoogle() {
+
     }
 
     validateUsername(username: string): string {
@@ -149,6 +159,16 @@ export class AuthenticationService {
         } else {
           this.router.navigateByUrl('/home');
         }
+    }
+
+    loginGoogleAccountSuccess(response: GoogleLoginResponse) {
+      localStorage.setItem('id_token', response.jwt.token);
+      localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
+      if (response.created) {
+        this.router.navigateByUrl('/username');
+      } else {
+        this.router.navigateByUrl('/home');
+      }
     }
 
     failureMessage(message: string) {

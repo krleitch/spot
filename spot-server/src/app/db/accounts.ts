@@ -1,7 +1,8 @@
 export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, changePassword,
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
          disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
-         updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount, usernameExists  }
+         updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount, usernameExists,
+         getGoogleAccount, addGoogleAccount }
 
 const uuid = require('uuid');
 const roles = require('@services/authorization/roles');
@@ -47,6 +48,7 @@ function addAccount(email: string, username: string, pass: string, phone: string
     });
 }
 
+// Facebook
 function getFacebookAccount(facebookId: string): Promise<any> {
     var sql = 'SELECT * FROM accounts WHERE facebook_id = ? AND deletion_date IS NULL LIMIT 1';
     var values = [facebookId];
@@ -54,8 +56,8 @@ function getFacebookAccount(facebookId: string): Promise<any> {
 }
 
 function addFacebookAccount(id: string, email: string, username: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, email, username, facebook_id, role) VALUES (?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), email, username, id, roles.user];
+    var sql = 'INSERT INTO accounts (id, creation_date, email, username, facebook_id, role) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), new Date(), email, username, id, roles.user];
     return db.query(sql, values).then( (rows: any) => {
         return getFacebookAccount(id);
     });
@@ -71,6 +73,21 @@ function disconnectFacebookAccount(accountId: string): Promise<any> {
     var sql = 'UPDATE accounts SET facebook_id = NULL WHERE id = ?';
     var values = [accountId];
     return db.query(sql, values);
+}
+
+// Google
+function getGoogleAccount(googleId: string): Promise<any> {
+    var sql = 'SELECT * FROM accounts WHERE google_id = ? AND deletion_date IS NULL LIMIT 1';
+    var values = [googleId];
+    return db.query(sql, values);
+}
+
+function addGoogleAccount(id: string, email: string, username: string): Promise<any> {
+    var sql = 'INSERT INTO accounts (id, creation_date, email, username, google_id, role) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), new Date(), email, username, id, roles.user];
+    return db.query(sql, values).then( (rows: any) => {
+        return getGoogleAccount(id);
+    });
 }
 
 // TODO, wanna change from *

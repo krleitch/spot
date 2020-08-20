@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -9,16 +9,18 @@ import { AuthenticationService } from '@services/authentication.service';
 import { RegisterRequest } from '@models/authentication';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsFacebookActions, AccountsStoreSelectors } from '@store/accounts-store';
-import { FacebookLoginRequest } from '@models/authentication';
+import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions, AccountsStoreSelectors } from '@store/accounts-store';
+import { FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
+
+declare const gapi: any;
 
 @Component({
   selector: 'spot-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit, OnDestroy {
+export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -60,6 +62,18 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
+  ngAfterViewInit() {
+    // @ts-ignore
+    gapi.signin2.render('my-signin2', {
+        'scope': 'profile email',
+        'width': 240,
+        'height': 50,
+        'longtitle': true,
+        'theme': 'light',
+        'onsuccess': param => this.onSignIn(param)
+    });
+}
+
   facebookLogin() {
 
     window['FB'].getLoginStatus((statusResponse) => {
@@ -93,7 +107,36 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   googleLogin() {
-    console.log('googleLogin');
+    this.authenticationService.signInWithGoogle();
+  }
+
+  onSignIn(googleUser) {
+
+    const profile = googleUser.getBasicProfile();
+    // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    // console.log('Name: ' + profile.getName());
+    // console.log('Image URL: ' + profile.getImageUrl());
+    // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+    const id_token = googleUser.getAuthResponse().id_token;
+
+    const request: GoogleLoginRequest = {
+      accessToken: id_token
+    };
+
+    this.store$.dispatch(
+      new AccountsGoogleActions.GoogleLoginRequestAction(request)
+    );
+
+  }
+
+  // google
+  signOut() {
+    // @ts-ignore
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+      console.log('User signed out.');
+    });
   }
 
   signUp() {
