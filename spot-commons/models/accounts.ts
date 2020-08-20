@@ -52,13 +52,29 @@ export interface VerifyConfirmResponse {
 
 }
 
-// update username
+// update account info
 export interface UpdateUsernameRequest {
     username: string;
 }
 
 export interface UpdateUsernameResponse {
     account: Account;
+}
+
+export interface UpdateEmailRequest {
+    email: string;
+}
+
+export interface UpdateEmailResponse {
+    email: string;
+}
+
+export interface UpdatePhoneRequest {
+    phone: string;
+}
+
+export interface UpdatePhoneResponse {
+    phone: string;
 }
 
 // get account

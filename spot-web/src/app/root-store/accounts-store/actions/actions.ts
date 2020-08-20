@@ -3,7 +3,8 @@ import { Action } from '@ngrx/store';
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
 import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess,
          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess,
-         LoadLocationRequest, VerifyConfirmRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse, LocationFailure } from '@models/accounts';
+         LoadLocationRequest, VerifyConfirmRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse, LocationFailure,
+         UpdateEmailRequest, UpdatePhoneRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -38,6 +39,8 @@ export enum ActionTypes {
   VERIFY_CONFIRM_REQUEST = '[Accounts] Verify Confrim Request',
   VERIFY_CONFIRM_SUCCESS = '[Accounts] Verify Confirm Success',
   VERIFY_CONFIRM_FAILURE = '[Accounts] Verify Confirm Failure',
+  UPDATE_EMAIL_REQUEST = '[Accounts] Update Email Request',
+  UPDATE_PHONE_REQUEST = '[Accounts] Update Phone Request',
   GENERIC_FAILURE = '[Accounts] Generic Failure'
 }
 
@@ -188,6 +191,16 @@ export class VerifyConfirmFailureAction implements Action {
   constructor(public error: SpotError) {}
 }
 
+export class UpdateEmailAction implements Action {
+  readonly type = ActionTypes.UPDATE_EMAIL_REQUEST;
+  constructor(public request: UpdateEmailRequest) {}
+}
+
+export class UpdatePhoneAction implements Action {
+  readonly type = ActionTypes.UPDATE_PHONE_REQUEST;
+  constructor(public request: UpdatePhoneRequest) {}
+}
+
 export type Actions = LoginRequestAction | LoginSuccessAction |
                       LoginFailureAction | RegisterRequestAction |
                       RegisterSuccessAction | RegisterFailureAction |
@@ -201,4 +214,5 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       GetAccountMetadataRequestSuccess | GetAccountMetadataFailureAction |
                       LoadLocationAction | UpdateUsernameFailureAction |
                       VerifyRequestAction | VerifySuccessAction | VerifyConfirmRequestAction |
-                      VerifyConfirmSuccessAction | LocationFailureAction | VerifyConfirmFailureAction;
+                      VerifyConfirmSuccessAction | LocationFailureAction | VerifyConfirmFailureAction |
+                      UpdateEmailAction | UpdatePhoneAction;

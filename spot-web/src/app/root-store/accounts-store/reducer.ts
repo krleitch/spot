@@ -115,6 +115,18 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         usernameSuccess: false
       };
     }
+    case ActionTypes.UPDATE_EMAIL_REQUEST: {
+      return {
+        ...state,
+        account: { ...state.account, email: action.request.email }
+      };
+    }
+    case ActionTypes.UPDATE_PHONE_REQUEST: {
+      return {
+        ...state,
+        account: { ...state.account, email: action.request.phone }
+      };
+    }
     case ActionTypes.GET_METADATA_SUCCESS: {
       return {
         ...state,

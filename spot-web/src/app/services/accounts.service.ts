@@ -8,7 +8,7 @@ import { UpdateUsernameRequest, UpdateUsernameResponse, FacebookConnectRequest, 
           FacebookDisconnectResponse, FacebookDisconnectRequest, GetAccountMetadataRequest, GetAccountMetadataSuccess,
           UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, VerifyConfirmRequest, VerifyConfirmResponse,
           VerifyRequest, VerifyResponse, GoogleConnectRequest, GoogleDisconnectRequest, GoogleConnectResponse,
-          GoogleDisconnectResponse } from '@models/accounts';
+          GoogleDisconnectResponse, UpdateEmailRequest, UpdateEmailResponse, UpdatePhoneRequest, UpdatePhoneResponse } from '@models/accounts';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +51,14 @@ export class AccountsService {
 
   updateUsername(request: UpdateUsernameRequest): Observable<UpdateUsernameResponse> {
     return this.http.put<UpdateUsernameResponse>(`${this.baseUrl}/accounts/username`, request);
+  }
+
+  updateEmail(request: UpdateEmailRequest): Observable<UpdateEmailResponse> {
+    return this.http.put<UpdateEmailResponse>(`${this.baseUrl}/accounts/email`, request);
+  }
+
+  updatePhone(request: UpdatePhoneRequest): Observable<UpdatePhoneResponse> {
+    return this.http.put<UpdatePhoneResponse>(`${this.baseUrl}/accounts/phone`, request);
   }
 
   getAccountMetadata(request: GetAccountMetadataRequest): Observable<GetAccountMetadataSuccess> {

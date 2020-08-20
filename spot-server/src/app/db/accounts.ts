@@ -2,7 +2,7 @@ export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, cha
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
          disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
          updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount, usernameExists,
-         getGoogleAccount, addGoogleAccount }
+         getGoogleAccount, addGoogleAccount, updateEmail, updatePhone }
 
 const uuid = require('uuid');
 const roles = require('@services/authorization/roles');
@@ -132,6 +132,22 @@ function usernameExists(username: string) {
         return user.length > 0;
     });
 
+}
+
+function updateEmail(email: string, accountId: string) {
+    var sql = 'UPDATE accounts SET email = ? WHERE id = ? AND deletion_date IS NULL';
+    var values = [email, accountId];
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(accountId);
+    });;  
+}
+
+function updatePhone(phone: string, accountId: string) {
+    var sql = 'UPDATE accounts SET phone = ? WHERE id = ? AND deletion_date IS NULL';
+    var values = [phone, accountId];
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(accountId);
+    });;  
 }
 
 function changePassword( account_id: string, password: string, salt: string) {

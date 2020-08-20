@@ -41,7 +41,8 @@ router.get('/', function (req: any, res: any) {
     })
 })
 
-// Update username
+// Update account infos
+
 router.put('/username', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
@@ -69,6 +70,71 @@ router.put('/username', function (req: any, res: any, next: any) {
         }
 
         return next(new AuthError.UpdateUsernameError(500));
+
+    });
+
+});
+
+router.put('/email', function (req: any, res: any, next: any) {
+
+    const accountId = req.user.id;
+    const { email } = req.body;
+
+    // const usernameError = authService.validUsername(username);
+    // if ( usernameError) {
+    //     return next(usernameError);
+    // }
+
+    accounts.updateEmail(email, accountId).then((rows: any) => {
+        const result = { account: rows[0] };
+        res.status(200).json(result);
+    }, (err: any) => {
+
+        if ( err.code === 'ER_DUP_ENTRY' ) {
+
+            // get the column name for the duplicate from the message
+            const column = err.sqlMessage.match(/'.*?'/g).slice(-1)[0].replace(/[']+/g, '');
+
+            if ( column == 'email' ) {
+                return next(new AuthError.EmailTakenError(400));
+            }
+
+        }
+
+        // return next(new AuthError.UpdateUsernameError(500));
+
+    });
+
+});
+
+// Update username
+router.put('/phone', function (req: any, res: any, next: any) {
+
+    const accountId = req.user.id;
+    const { phone } = req.body;
+
+    // const usernameError = authService.validUsername(username);
+    // if ( usernameError) {
+    //     return next(usernameError);
+    // }
+
+    accounts.updatePhone(phone, accountId).then((rows: any) => {
+        const result = { account: rows[0] };
+        res.status(200).json(result);
+    }, (err: any) => {
+
+        if ( err.code === 'ER_DUP_ENTRY' ) {
+
+            // get the column name for the duplicate from the message
+            const column = err.sqlMessage.match(/'.*?'/g).slice(-1)[0].replace(/[']+/g, '');
+
+            if ( column == 'phone' ) {
+                return next(new AuthError.PhoneTakenError(400));
+            }
+
+        }
+
+        // return next(new AuthError.UpdateUsernameError(500));
 
     });
 
