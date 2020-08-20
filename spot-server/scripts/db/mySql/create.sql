@@ -18,10 +18,10 @@ ALTER DATABASE db CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE accounts (
     id VARCHAR(36) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
     pass VARCHAR(1024),
-    phone VARCHAR(255) UNIQUE,
+    phone VARCHAR(255),
     salt VARCHAR(256),
     role VARCHAR(36),
     facebook_id VARCHAR(36) UNIQUE,
@@ -29,6 +29,9 @@ CREATE TABLE accounts (
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,
     verified_date DATETIME,
+    UNIQUE (email, deletion_date),
+    UNIQUE (username, deletion_date),
+    UNIQUE (phone, deletion_date),
     PRIMARY KEY (id)
 );
 

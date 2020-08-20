@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
 import { STRINGS } from '@assets/strings/en';
@@ -10,6 +10,7 @@ import { AuthenticationService } from '@services/authentication.service';
 import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
          UpdateAccountMetadataRequest, VerifyRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-account',
@@ -42,6 +43,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   verificationSent = false;
 
   constructor(private store$: Store<RootStoreState.State>,
+              private modalService: ModalService,
               private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
@@ -129,9 +131,23 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   deleteUser() {
     if ( this.accountOptionsEnabled ) {
-      this.store$.dispatch(
-        new AccountsActions.DeleteRequestAction()
-      );
+
+      this.modalService.open('spot-confirm-modal');
+
+      const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+      result$.subscribe( (result: { status: string }) => {
+
+        if ( result.status === 'confirm' ) {
+
+          this.store$.dispatch(
+            new AccountsActions.DeleteRequestAction()
+          );
+
+        }
+
+      });
+
     }
   }
 
