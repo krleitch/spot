@@ -8,7 +8,7 @@ import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store'
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { AuthenticationService } from '@services/authentication.service';
 import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
-         UpdateAccountMetadataRequest, VerifyRequest } from '@models/accounts';
+         UpdateAccountMetadataRequest, VerifyRequest, UpdateEmailRequest, UpdatePhoneRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 import { ModalService } from '@services/modal.service';
 
@@ -21,15 +21,21 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
 
-  @ViewChild('editUsername') editusernameinput: ElementRef;
+  @ViewChild('editUsername') editUsernameInput: ElementRef;
+  @ViewChild('editEmail') editEmailInput: ElementRef;
+  @ViewChild('editPhone') editPhoneInput: ElementRef;
 
   STRINGS = STRINGS.MAIN.ACCOUNT;
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
 
-  facebookConnected$: Observable<boolean>;
-  googleConnected$: Observable<boolean>;
+  verificationSent = false;
+
+  email: string;
+  editEmailEnabled = false;
+  emailErrorMessage: string;
+  emailSuccessMessage: string;
 
   username: string;
   editUsernameEnabled = false;
@@ -38,9 +44,15 @@ export class AccountComponent implements OnInit, OnDestroy {
   usernameSuccess$: Observable<boolean>;
   usernameSuccessMessage: string;
 
-  accountOptionsEnabled: boolean;
+  phone: string;
+  editPhoneEnabled = false;
+  phoneErrorMessage: string;
+  phoneSuccessMessage: string;
 
-  verificationSent = false;
+  facebookConnected$: Observable<boolean>;
+  googleConnected$: Observable<boolean>;
+
+  accountOptionsEnabled: boolean;
 
   constructor(private store$: Store<RootStoreState.State>,
               private modalService: ModalService,
@@ -64,9 +76,11 @@ export class AccountComponent implements OnInit, OnDestroy {
       select(AccountsStoreSelectors.selectAccountsUser)
     );
 
-    this.account$.subscribe( ( account: Account ) => {
+    this.account$.pipe(takeUntil(this.onDestroy)).subscribe( ( account: Account ) => {
       if (account) {
         this.username = account.username;
+        this.email = account.email;
+        this.phone = account.phone;
       }
     });
 
@@ -102,8 +116,61 @@ export class AccountComponent implements OnInit, OnDestroy {
   enableEditUsername() {
     this.editUsernameEnabled = true;
     setTimeout(() => {
-      this.editusernameinput.nativeElement.focus();
+      this.editUsernameInput.nativeElement.focus();
     }, 0);
+  }
+
+  enableEditEmail() {
+
+    this.modalService.open('spot-confirm-modal', { message: this.STRINGS.EMAIL_CONFIRM });
+
+    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+    result$.subscribe( (result: { status: string }) => {
+
+      if ( result.status === 'confirm' ) {
+
+        this.editEmailEnabled = true;
+        setTimeout(() => {
+          this.editEmailInput.nativeElement.focus();
+        }, 0);
+
+      }
+
+    });
+
+  }
+
+  enableEditPhone() {
+
+    if ( this.phone ) {
+
+      this.modalService.open('spot-confirm-modal', { message: this.STRINGS.PHONE_CONFIRM });
+
+      const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+      result$.subscribe( (result: { status: string }) => {
+
+        if ( result.status === 'confirm' ) {
+
+          this.editPhoneEnabled = true;
+          setTimeout(() => {
+            this.editPhoneInput.nativeElement.focus();
+          }, 0);
+
+        }
+
+      });
+
+    } else {
+
+      this.editPhoneEnabled = true;
+      setTimeout(() => {
+        this.editPhoneInput.nativeElement.focus();
+      }, 0);
+
+    }
+
   }
 
   submitEditUsername() {
@@ -125,6 +192,52 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.store$.dispatch(
       new AccountsActions.UpdateUsernameAction(request)
+    );
+
+  }
+
+  submitEditEmail() {
+
+    if (!this.email) {
+      this.emailErrorMessage = this.STRINGS.EMAIL_ERROR;
+      return;
+    }
+
+    const validEmail = this.authenticationService.validateEmail(this.email);
+    if (!validEmail) {
+      this.emailErrorMessage = this.STRINGS.EMAIL_INVALID;
+      return;
+    }
+
+    const request: UpdateEmailRequest = {
+      email: this.username
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateEmailAction(request)
+    );
+
+  }
+
+  submitEditPhone() {
+
+    if (!this.phone) {
+      this.phoneErrorMessage = this.STRINGS.PHONE_ERROR;
+      return;
+    }
+
+    const validEmail = this.authenticationService.validatePhone(this.phone);
+    if (!validEmail) {
+      this.phoneErrorMessage = this.STRINGS.PHONE_INVALID;
+      return;
+    }
+
+    const request: UpdatePhoneRequest = {
+      phone: this.phone
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdatePhoneAction(request)
     );
 
   }

@@ -170,7 +170,7 @@ spot-main-nav {
   }
 }
 
-.username {
+.editable {
   justify-content: space-between;
 }
 
@@ -184,6 +184,10 @@ spot-main-nav {
   color: $success-green;
 }
 
+.no-phone {
+  color: $subtle-grey;
+}
+
 input {
   border: none;
   outline: none;
@@ -191,6 +195,7 @@ input {
   padding: 0px 0px;
   font-size: 14px;
   background-color: white;
+  flex: 1;
 }
 
 .description {

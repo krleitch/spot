@@ -25,6 +25,8 @@ export class ModalService {
 
     if ( data ) {
       modal.data.next(data);
+    } else {
+      modal.data.next(null);
     }
 
   }

@@ -32,7 +32,16 @@
           </div>
         </ng-template>
       </div>
-      <div class="value"> {{ account.email }} </div>
+
+      <div class="value editable">
+        <input #editEmail [disabled]="!editEmailEnabled" [(ngModel)]="email" type="text" spellcheck="false">
+        <div *ngIf="editEmailEnabled; else elseEmailBlock">
+          <span class="link" (click)="submitEditEmail()"> {{ STRINGS.SUBMIT }} </span>
+        </div>
+        <ng-template #elseEmailBlock>
+          <span class="link" (click)="enableEditEmail()"> {{ STRINGS.CHANGE }} </span>
+        </ng-template>
+      </div>
       <div *ngIf="account.verified_date == null">
         <div class="description">
           {{ STRINGS.EMAIL_VERIFY_DESCRIPTION }}
@@ -40,13 +49,13 @@
       </div>
 
       <div class="subheading"> {{ STRINGS.USERNAME }} </div>
-      <div class="value username">
+      <div class="value editable">
         <input #editUsername [disabled]="!editUsernameEnabled" [(ngModel)]="username" type="text" spellcheck="false">
         <div *ngIf="editUsernameEnabled; else elseBlock">
-          <span class="link" (click)="submitEditUsername()"> {{ STRINGS.EDIT_USERNAME_SUBMIT }} </span>
+          <span class="link" (click)="submitEditUsername()"> {{ STRINGS.SUBMIT }} </span>
         </div>
         <ng-template #elseBlock>
-          <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT_USERNAME }} </span>
+          <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT }} </span>
         </ng-template>
       </div>
       <div *ngIf="usernameErrorMessage" class="username-error">
@@ -57,7 +66,21 @@
       </div>
 
       <div class="subheading"> {{ STRINGS.PHONE }} </div>
-      <div class="value"> {{ account.phone }} </div>
+      <div class="value editable">
+        <span *ngIf="!phone && !editPhoneEnabled" class="no-phone"> {{ STRINGS.NO_PHONE }} </span>
+        <input #editPhone [disabled]="!editPhoneEnabled" [(ngModel)]="phone" type="text" spellcheck="false">
+        <div *ngIf="editPhoneEnabled; else elsePhoneBlock">
+          <span class="link" (click)="submitEditPhone()"> {{ STRINGS.SUBMIT }} </span>
+        </div>
+        <ng-template #elsePhoneBlock>
+          <div *ngIf="phone; else add">
+            <span class="link" (click)="enableEditPhone()"> {{ STRINGS.CHANGE }} </span>
+          </div>
+          <ng-template #add>
+            <span class="link" (click)="enableEditPhone()"> {{ STRINGS.ADD }} </span>
+          </ng-template>
+        </ng-template>
+      </div>
 
       <div *ngIf="accountMetadata$ | async as accountMetadata">
         <div class="subheading"> {{ STRINGS.SCORE }} </div>
@@ -68,6 +91,10 @@
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'imperial' }" (click)="setImperial()"> {{ STRINGS.IMPERIAL }} </div>
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setMetric()"> {{ STRINGS.METRIC }} </div>
         </div>
+      </div>
+
+      <div class="title">
+        {{ STRINGS.SOCIAL }}
       </div>
 
       <div *ngIf="!(facebookConnected$ | async); else connected">

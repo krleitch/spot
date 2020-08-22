@@ -4,9 +4,16 @@
     {{ STRINGS.TITLE }}
   </div>
 
-  <div class="message">
-    {{ STRINGS.MESSAGE }}
+  <div *ngIf="data; else default">
+    <div class="message">
+      {{ data.message }}
+    </div>
   </div>
+  <ng-template #default>
+    <div class="message">
+      {{ STRINGS.MESSAGE }}
+    </div>
+  </ng-template>
 
   <div class="buttons-container">
     <div class="button confirm" (click)="confirm()"> {{ STRINGS.CONFIRM }} </div>

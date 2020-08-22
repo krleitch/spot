@@ -16,7 +16,7 @@ export class ConfirmComponent implements OnInit {
   @Input() modalId: string;
 
   data$: Observable<any>;
-  data: any;
+  data: { message: string } = null;
 
   constructor(private modalService: ModalService) { }
 

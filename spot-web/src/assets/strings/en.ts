@@ -56,15 +56,26 @@ export const STRINGS = {
             VERIFY_RESEND: 'Resend',
             VERIFY_CHECK: 'Verified',
             EMAIL_VERIFY_DESCRIPTION: 'You will need to verify your email to start posting spots.',
+            EMAIL_ERROR: 'Email is required',
+            EMAIL_INVALID: 'Invalid email',
+            EMAIL_CONFIRM: 'If you change your email you will need to verify your email again. Are you sure you would like to continue?',
 
             USERNAME: 'Username',
             USERNAME_ERROR: 'Username is required',
             USERNAME_SUCCESS: 'Username was succesfully changed',
+
+            NO_PHONE: 'None',
             PHONE: 'Phone number',
+            PHONE_ERROR: 'Phone is required',
+            PHONE_INVALID: 'Invalid phone number',
+            PHONE_CONFIRM: 'Are you sure you would like to change your phone number?',
+
             SCORE: 'Spot Score',
 
-            EDIT_USERNAME: 'Edit',
-            EDIT_USERNAME_SUBMIT: 'Submit',
+            CHANGE: 'Change',
+            ADD: 'Add',
+            EDIT: 'Edit',
+            SUBMIT: 'Submit',
 
             SCORE_DESCRIPTION: 'Gain score by posting and and commenting on spots!',
 
@@ -78,6 +89,7 @@ export const STRINGS = {
             DELETE: 'Delete Account',
 
             // Social
+            SOCIAL: 'Social',
             FACEBOOK_CONNECT: 'Connect With Facebook',
             FACEBOOK_CONNECT_SUCCESS: 'Disconnect',
             FACEBOOK_CONNECT_DESCRIPTION: 'Connect with facebook to share spots with all your facebook friends'

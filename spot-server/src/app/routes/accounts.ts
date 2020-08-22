@@ -85,6 +85,8 @@ router.put('/email', function (req: any, res: any, next: any) {
     //     return next(usernameError);
     // }
 
+    // TODO: need to unverify
+
     accounts.updateEmail(email, accountId).then((rows: any) => {
         const result = { account: rows[0] };
         res.status(200).json(result);
