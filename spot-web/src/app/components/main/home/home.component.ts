@@ -28,7 +28,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  postlocation = '';
   loadingLocation$: Observable<boolean>;
   location$: Observable<Location>;
   myLocation: Location = null;
@@ -36,8 +35,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
 
+  postlocation = '';
   postSort = '';
-
   distanceUnit = '';
 
   loadedPosts = 0;
@@ -56,10 +55,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   dropdownSortEnabled = false;
 
   ngOnInit() {
-
-    if (window.innerWidth < 500) {
-      this.mobile = true;
-    }
 
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)

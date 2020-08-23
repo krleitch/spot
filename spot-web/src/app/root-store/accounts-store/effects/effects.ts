@@ -40,7 +40,9 @@ export class AccountsStoreEffects {
       this.authenticationService
         .registerAccount(registerRequest.request)
         .pipe(
-          map((response: RegisterResponse) => new featureActions.RegisterSuccessAction(response)),
+          map( (response) =>
+            new featureActions.RegisterSuccessAction(response)
+          ),
           catchError((errorResponse: any) =>
             observableOf(new featureActions.RegisterFailureAction(errorResponse.error))
           )
@@ -48,14 +50,17 @@ export class AccountsStoreEffects {
     )
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   registerAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.RegisterSuccessAction>(
       featureActions.ActionTypes.REGISTER_SUCCESS
     ),
     tap( (action: featureActions.RegisterSuccessAction) => {
       this.authenticationService.registerAccountSuccess(action.response);
-    })
+    }),
+    map ( (action: featureActions.RegisterSuccessAction) =>
+      new featureActions.GetAccountMetadataRequestAction({})
+    )
   );
 
   @Effect()
@@ -67,22 +72,27 @@ export class AccountsStoreEffects {
       this.authenticationService
         .loginAccount(authenticateRequest.request)
         .pipe(
-            map(response => new featureActions.LoginSuccessAction(response)),
-            catchError(errorResponse =>
-              observableOf(new featureActions.LoginFailureAction(errorResponse.error))
-            )
+          map( (response) =>
+            new featureActions.LoginSuccessAction(response)
+          ),
+          catchError(errorResponse =>
+            observableOf(new featureActions.LoginFailureAction(errorResponse.error))
           )
+        )
     )
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   loginAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.LoginSuccessAction>(
       featureActions.ActionTypes.LOGIN_SUCCESS
     ),
     tap((action: featureActions.LoginSuccessAction) => {
       this.authenticationService.loginAccountSuccess(action.response);
-    })
+    }),
+    map ( (action: featureActions.LoginSuccessAction) =>
+      new featureActions.GetAccountMetadataRequestAction({})
+    )
   );
 
   @Effect({dispatch: false})
@@ -133,14 +143,29 @@ export class AccountsStoreEffects {
       this.accountsService
         .getAccount()
         .pipe(
-            map(response => {
+            tap(response => {
               this.accountsService.getAccountRedirect();
-              return new featureActions.AccountSuccessAction(response)
             }),
+            map( (response) =>
+              new featureActions.AccountSuccessAction(response)
+            ),
             catchError(error =>
               observableOf(new featureActions.AccountFailureAction(error))
             )
           )
+    )
+  );
+
+  @Effect()
+  getAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.AccountSuccessAction>(
+      featureActions.ActionTypes.ACCOUNT_SUCCESS
+    ),
+    tap((action: featureActions.AccountSuccessAction) => {
+      // none
+    }),
+    map ( (action: featureActions.AccountSuccessAction) =>
+      new featureActions.GetAccountMetadataRequestAction({})
     )
   );
 
@@ -172,7 +197,9 @@ export class AccountsStoreEffects {
       this.accountsService
         .getAccountMetadata(action.request)
         .pipe(
-            map( (response: GetAccountMetadataSuccess)  => new featureActions.GetAccountMetadataRequestSuccess(response)),
+            map( (response: GetAccountMetadataSuccess)  => {
+              return new featureActions.GetAccountMetadataRequestSuccess(response);
+            }),
             catchError( (errorResponse: { error: SpotError }) =>
               observableOf(new featureActions.GetAccountMetadataFailureAction(errorResponse.error))
             )

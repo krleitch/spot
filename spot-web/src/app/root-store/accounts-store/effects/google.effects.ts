@@ -5,6 +5,7 @@ import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as googleActions from '../actions/google.actions';
+import * as featureActions from '../actions/actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { GoogleLoginResponse } from '@models/authentication';
@@ -25,22 +26,27 @@ export class GoogleStoreEffects {
       this.authenticationService
         .loginGoogleAccount(action.request)
         .pipe(
-            map( (response: GoogleLoginResponse) => new googleActions.GoogleLoginSuccessAction(response)),
-            catchError(error =>
-              observableOf(new googleActions.GoogleLoginFailureAction(error))
-            )
+          map( (response: GoogleLoginResponse) =>
+            new googleActions.GoogleLoginSuccessAction(response)
+          ),
+          catchError(error =>
+            observableOf(new googleActions.GoogleLoginFailureAction(error))
+          )
         )
     )
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   loginGoogleAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleLoginSuccessAction>(
       googleActions.GoogleActionTypes.GOOGLE_LOGIN_SUCCESS
     ),
     tap( (action: googleActions.GoogleLoginSuccessAction) => {
       this.authenticationService.loginGoogleAccountSuccess(action.response);
-    })
+    }),
+    map ( (action: googleActions.GoogleLoginSuccessAction) =>
+      new featureActions.GetAccountMetadataRequestAction({})
+    )
   );
 
   @Effect()
@@ -71,7 +77,7 @@ export class GoogleStoreEffects {
   );
 
   @Effect()
-  disconnectFacebookAccountEffect$: Observable<Action> = this.actions$.pipe(
+  disconnectGoogleAccountEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleDisconnectRequestAction>(
       googleActions.GoogleActionTypes.GOOGLE_DISCONNECT_REQUEST
     ),
@@ -88,7 +94,7 @@ export class GoogleStoreEffects {
   );
 
   @Effect({dispatch: false})
-  disconnectFacebookAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+  disconnectGoogleAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleDisconnectSuccessAction>(
       googleActions.GoogleActionTypes.GOOGLE_DISCONNECT_SUCCESS
     ),

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -23,7 +23,8 @@ export class AuthenticationService {
         private http: HttpClient,
         private router: Router,
         private alertService: AlertService,
-        private modalService: ModalService) {
+        private modalService: ModalService,
+        private zone: NgZone) {
     }
 
     // Facebook
@@ -67,10 +68,6 @@ export class AuthenticationService {
       return phone.match(regex) != null;
     }
 
-    signInWithGoogle() {
-
-    }
-
     validateUsername(username: string): string {
 
       // Check length
@@ -111,64 +108,85 @@ export class AuthenticationService {
         return Md5.hashStr(data).toString();
     }
 
-    logoutAccountSuccess() {
-        localStorage.removeItem('id_token');
-        localStorage.removeItem('id_expires_in');
-
-        window['FB'].getLoginStatus((response) => {
-            if (response.status === 'connected') {
-                window['FB'].logout(() => {
-                    localStorage.removeItem('fb_access_token');
-                    localStorage.removeItem('fb_expires_in');
-                });
-            }
-        });
-
-        this.router.navigateByUrl('/login');
-    }
-
     registerAccountSuccess(response: LoginResponse) {
-      localStorage.setItem('id_token', response.jwt.token);
-      localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
+      this.addIdToken(response.jwt);
       if ( this.modalService.isOpen('spot-auth-modal') ) {
         this.modalService.close('spot-auth-modal');
-        this.modalService.open('spot-welcome-modal');
         // TODO: refresh the page so u get the updated content form being logged in
       } else {
-        this.modalService.open('spot-welcome-modal');
-        this.router.navigateByUrl('/home');
+        this.zone.run(() => {
+          this.router.navigateByUrl('/home');
+        });
       }
-  }
+      this.modalService.open('spot-welcome-modal');
+    }
 
     loginAccountSuccess(response: LoginResponse) {
-        localStorage.setItem('id_token', response.jwt.token);
-        localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
-        if ( this.modalService.isOpen('spot-auth-modal') ) {
-          this.modalService.close('spot-auth-modal');
-          // TODO: refresh the page so u get the updated content form being logged in
-        } else {
+      this.addIdToken(response.jwt);
+      if ( this.modalService.isOpen('spot-auth-modal') ) {
+        this.modalService.close('spot-auth-modal');
+        // TODO: refresh the page so u get the updated content form being logged in
+      } else {
+        this.zone.run(() => {
           this.router.navigateByUrl('/home');
-        }
+        });
+      }
     }
 
     loginFacebookAccountSuccess(response: FacebookLoginResponse) {
-        localStorage.setItem('id_token', response.jwt.token);
-        localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
-        if (response.created) {
+      this.addIdToken(response.jwt);
+      if (response.created) {
+        this.zone.run(() => {
           this.router.navigateByUrl('/username');
-        } else {
+        });
+      } else {
+        this.zone.run(() => {
           this.router.navigateByUrl('/home');
-        }
+        });
+      }
     }
 
     loginGoogleAccountSuccess(response: GoogleLoginResponse) {
-      localStorage.setItem('id_token', response.jwt.token);
-      localStorage.setItem('id_expires_in', JSON.stringify(response.jwt.expiresIn));
+      this.addIdToken(response.jwt);
       if (response.created) {
-        this.router.navigateByUrl('/username');
+        this.zone.run(() => {
+          this.router.navigateByUrl('/username');
+        });
       } else {
-        this.router.navigateByUrl('/home');
+        this.zone.run(() => {
+          this.router.navigateByUrl('/home');
+        });
       }
+    }
+
+    logoutAccountSuccess() {
+      this.removeIdToken();
+      window['FB'].getLoginStatus((response) => {
+          if (response.status === 'connected') {
+              window['FB'].logout(() => {
+                  localStorage.removeItem('fb_access_token');
+                  localStorage.removeItem('fb_expires_in');
+              });
+          }
+      });
+      this.zone.run(() => {
+        this.router.navigateByUrl('/login');
+      });
+    }
+
+    private addIdToken(jwt: { token: string, expiresIn: number }) {
+      // expiresIn is # of hours
+
+      const expiresDate = new Date();
+      expiresDate.setHours(expiresDate.getHours() + jwt.expiresIn);
+
+      localStorage.setItem('id_token', jwt.token);
+      localStorage.setItem('id_expires_at', expiresDate.toString());
+    }
+
+    private removeIdToken() {
+      localStorage.removeItem('id_token');
+      localStorage.removeItem('id_expires_at');
     }
 
     failureMessage(message: string) {
@@ -176,13 +194,19 @@ export class AuthenticationService {
     }
 
     isAuthenticated(): boolean {
+
       const token = localStorage.getItem('id_token');
-      const expiresIn = localStorage.getItem('id_expires_in');
+      const expiresAt = localStorage.getItem('id_expires_at');
 
-      // TODO
-      // Check expirary, store token better
+      if ( !token || !expiresAt ) {
+        return false;
+      }
 
-      return token ? true : false;
+      if ( new Date().getTime() > new Date(expiresAt).getTime()) {
+        return false;
+      }
+
+      return true;
 
     }
 

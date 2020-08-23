@@ -8,7 +8,7 @@ export interface RegisterRequest {
 };
 
 export interface RegisterResponse {
-    jwt: { token: string, expiresIn: string };
+    jwt: { token: string, expiresIn: number };
     account: Account;
 };
 
@@ -18,7 +18,7 @@ export interface LoginRequest {
 };
 
 export interface LoginResponse {
-    jwt: { token: string, expiresIn: string };
+    jwt: { token: string, expiresIn: number };
     account: Account;
 };
 
@@ -30,7 +30,7 @@ export interface FacebookLoginRequest {
 
 export interface FacebookLoginResponse {
     created: boolean;
-    jwt: { token: string, expiresIn: string };
+    jwt: { token: string, expiresIn: number };
     account: Account;
 }
 
@@ -42,7 +42,7 @@ export interface GoogleLoginRequest {
 
 export interface GoogleLoginResponse {
     created: boolean;
-    jwt: { token: string, expiresIn: string };
+    jwt: { token: string, expiresIn: number };
     account: Account;
 }
 

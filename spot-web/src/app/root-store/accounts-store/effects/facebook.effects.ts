@@ -5,6 +5,7 @@ import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as facebookActions from '../actions/facebook.actions';
+import * as featureActions from '../actions/actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { FacebookLoginResponse } from '@models/authentication';
@@ -25,22 +26,27 @@ export class FacebookStoreEffects {
       this.authenticationService
         .loginFacebookAccount(loginRequest.request)
         .pipe(
-            map( (response: FacebookLoginResponse) => new facebookActions.FacebookLoginSuccessAction(response)),
-            catchError(error =>
-              observableOf(new facebookActions.FacebookLoginFailureAction(error))
-            )
+          map( (response: FacebookLoginResponse) =>
+            new facebookActions.FacebookLoginSuccessAction(response)
+          ),
+          catchError(error =>
+            observableOf(new facebookActions.FacebookLoginFailureAction(error))
+          )
         )
     )
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   loginFacebookAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookLoginSuccessAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS
     ),
     tap( (action: facebookActions.FacebookLoginSuccessAction) => {
       this.authenticationService.loginFacebookAccountSuccess(action.response);
-    })
+    }),
+    map ( (action: facebookActions.FacebookLoginSuccessAction) =>
+      new featureActions.GetAccountMetadataRequestAction({})
+    )
   );
 
   @Effect()

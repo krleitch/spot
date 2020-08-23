@@ -1,8 +1,8 @@
-import { AccountRequestAction } from '@src/app/root-store/accounts-store/actions/actions';
 import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
-import { AccountsActions, AccountsStoreSelectors, RootStoreState } from '@store';
+import { AccountsActions, RootStoreState } from '@store';
+import { AuthenticationService } from '@services/authentication.service';
 import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
 
 @Component({
@@ -14,7 +14,8 @@ export class AppComponent implements OnInit {
 
   title = 'spot';
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>,
+              private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this.twitterLibrary();
@@ -67,21 +68,17 @@ export class AppComponent implements OnInit {
   }
 
   getAccountIfExists() {
-    const accessToken = localStorage.getItem("fb_access_token");
-    const idToken = localStorage.getItem("id_token");
-    if (idToken) {
+
+    // checks id_token exists and has not expired
+    if ( this.authenticationService.isAuthenticated() ) {
+
       const request: GetAccountRequest = {};
       this.store$.dispatch(
         new AccountsActions.AccountRequestAction(request)
       );
 
-      const accountsMetadataRequest: GetAccountMetadataRequest = {};
-      this.store$.dispatch(
-        new AccountsActions.GetAccountMetadataRequestAction(accountsMetadataRequest)
-      );
-    } else if (accessToken) {
-      // TODO fb login
     }
+
   }
 
   getAccountLocation() {
