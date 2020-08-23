@@ -145,23 +145,6 @@ export class AccountsStoreEffects {
   );
 
   @Effect()
-  updateUsernameEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.UpdateUsernameAction>(
-      featureActions.ActionTypes.UPDATE_USERNAME_REQUEST
-    ),
-    switchMap(action =>
-      this.accountsService
-        .updateUsername(action.request)
-        .pipe(
-            map(response => new featureActions.UpdateUsernameSuccessAction(response)),
-            catchError(errorResponse =>
-              observableOf(new featureActions.UpdateUsernameFailureAction(errorResponse.error))
-            )
-          )
-    )
-  );
-
-  @Effect()
   updateAccountMetadataEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.UpdateAccountMetadataRequestAction>(
       featureActions.ActionTypes.UPDATE_METADATA_REQUEST

@@ -7,8 +7,10 @@ import { STRINGS } from '@assets/strings/en';
 import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { AuthenticationService } from '@services/authentication.service';
+import { AccountsService } from '@services/accounts.service';
 import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
-         UpdateAccountMetadataRequest, VerifyRequest, UpdateEmailRequest, UpdatePhoneRequest } from '@models/accounts';
+         UpdateAccountMetadataRequest, VerifyRequest, UpdateEmailRequest, UpdatePhoneRequest, UpdateEmailResponse,
+         UpdatePhoneResponse, UpdateUsernameResponse } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 import { ModalService } from '@services/modal.service';
 
@@ -39,9 +41,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   username: string;
   editUsernameEnabled = false;
-  usernameError$: Observable<SpotError>;
   usernameErrorMessage: string;
-  usernameSuccess$: Observable<boolean>;
   usernameSuccessMessage: string;
 
   phone: string;
@@ -56,6 +56,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   constructor(private store$: Store<RootStoreState.State>,
               private modalService: ModalService,
+              private accountsService: AccountsService,
               private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
@@ -81,29 +82,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.username = account.username;
         this.email = account.email;
         this.phone = account.phone;
-      }
-    });
-
-    this.usernameError$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectUsernameError)
-    );
-
-    this.usernameSuccess$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectUsernameSuccess)
-    );
-
-    this.usernameSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success: boolean) => {
-      if ( success ) {
-        this.editUsernameEnabled = false;
-        this.usernameErrorMessage = null;
-        this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
-      }
-    });
-
-    this.usernameError$.pipe(takeUntil(this.onDestroy)).subscribe( (error: SpotError) => {
-      if ( error ) {
-        this.usernameSuccessMessage = null;
-        this.usernameErrorMessage = error.message;
       }
     });
 
@@ -190,9 +168,19 @@ export class AccountComponent implements OnInit, OnDestroy {
       username: this.username
     };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdateUsernameAction(request)
-    );
+    this.accountsService.updateUsername(request).pipe(take(1)).subscribe( (response: UpdateUsernameResponse ) => {
+
+      this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
+
+      this.store$.dispatch(
+        new AccountsActions.UpdateUsernameAction(request)
+      );
+
+    }, (err: { error: SpotError }) => {
+
+      this.emailErrorMessage = err.error.message;
+
+    });
 
   }
 
@@ -213,9 +201,19 @@ export class AccountComponent implements OnInit, OnDestroy {
       email: this.username
     };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdateEmailAction(request)
-    );
+    this.accountsService.updateEmail(request).pipe(take(1)).subscribe( (response: UpdateEmailResponse ) => {
+
+      this.emailSuccessMessage = this.STRINGS.EMAIL_SUCCESS;
+
+      this.store$.dispatch(
+        new AccountsActions.UpdateEmailAction(request)
+      );
+
+    }, (err: { error: SpotError }) => {
+
+      this.emailErrorMessage = err.error.message;
+
+    });
 
   }
 
@@ -236,9 +234,19 @@ export class AccountComponent implements OnInit, OnDestroy {
       phone: this.phone
     };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdatePhoneAction(request)
-    );
+    this.accountsService.updatePhone(request).pipe(take(1)).subscribe( (response: UpdatePhoneResponse ) => {
+
+      this.phoneSuccessMessage = this.STRINGS.PHONE_SUCCESS;
+
+      this.store$.dispatch(
+        new AccountsActions.UpdatePhoneAction(request)
+      );
+
+    }, (err: { error: SpotError }) => {
+
+      this.phoneErrorMessage = err.error.message;
+
+    });
 
   }
 

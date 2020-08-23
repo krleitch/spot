@@ -59,6 +59,7 @@ export const STRINGS = {
             EMAIL_ERROR: 'Email is required',
             EMAIL_INVALID: 'Invalid email',
             EMAIL_CONFIRM: 'If you change your email you will need to verify your email again. Are you sure you would like to continue?',
+            EMAIL_SUCCESS: 'Email was succesfully changed',
 
             USERNAME: 'Username',
             USERNAME_ERROR: 'Username is required',
@@ -69,6 +70,7 @@ export const STRINGS = {
             PHONE_ERROR: 'Phone is required',
             PHONE_INVALID: 'Invalid phone number',
             PHONE_CONFIRM: 'Are you sure you would like to change your phone number?',
+            PHONE_SUCCESS: 'Phone was succesfully changed',
 
             SCORE: 'Spot Score',
 

@@ -12,8 +12,6 @@ export const selectFacebook = (state: State): boolean => state.facebookConnected
 export const selectGoogle = (state: State): boolean => state.googleConnected;
 export const selectAuthErr = (state: State): SpotError => state.authenticationError;
 export const selectIsAuth = (state: State): boolean => state.account ? true : false;
-export const selectUsernameErr = (state: State): SpotError => state.usernameError;
-export const selectUsernameSuc = (state: State): boolean => state.usernameSuccess;
 
 export const selectAccountsState: MemoizedSelector<
   object,
@@ -82,20 +80,4 @@ export const selectAccountMetadata: MemoizedSelector<
 > = createSelector(
   selectAccountsState,
   selectMetadata,
-);
-
-export const selectUsernameError: MemoizedSelector<
-  object,
-  SpotError
-> = createSelector(
-  selectAccountsState,
-  selectUsernameErr,
-);
-
-export const selectUsernameSuccess: MemoizedSelector<
-  object,
-  boolean
-> = createSelector(
-  selectAccountsState,
-  selectUsernameSuc,
 );

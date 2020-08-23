@@ -54,7 +54,7 @@ router.put('/username', function (req: any, res: any, next: any) {
     }
 
     accounts.updateUsername(username, accountId).then((rows: any) => {
-        const result = { account: rows[0] };
+        const result = { username: rows[0].username };
         res.status(200).json(result);
     }, (err: any) => {
 
@@ -80,15 +80,13 @@ router.put('/email', function (req: any, res: any, next: any) {
     const accountId = req.user.id;
     const { email } = req.body;
 
-    // const usernameError = authService.validUsername(username);
-    // if ( usernameError) {
-    //     return next(usernameError);
-    // }
-
-    // TODO: need to unverify
+    const emailError = authService.validEmail(email);
+    if ( emailError) {
+        return next(emailError);
+    }
 
     accounts.updateEmail(email, accountId).then((rows: any) => {
-        const result = { account: rows[0] };
+        const result = { email: rows[0].email };
         res.status(200).json(result);
     }, (err: any) => {
 
@@ -115,13 +113,13 @@ router.put('/phone', function (req: any, res: any, next: any) {
     const accountId = req.user.id;
     const { phone } = req.body;
 
-    // const usernameError = authService.validUsername(username);
-    // if ( usernameError) {
-    //     return next(usernameError);
-    // }
+    const phoneError = authService.validPhone(phone);
+    if ( phoneError) {
+        return next(phoneError);
+    }
 
     accounts.updatePhone(phone, accountId).then((rows: any) => {
-        const result = { account: rows[0] };
+        const result = { phone: rows[0].phone };
         res.status(200).json(result);
     }, (err: any) => {
 

@@ -98,21 +98,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.UPDATE_USERNAME_REQUEST: {
       return {
         ...state,
-        usernameSuccess: false
-      };
-    }
-    case ActionTypes.UPDATE_USERNAME_SUCCESS: {
-      return {
-        ...state,
-        account: action.response.account,
-        usernameSuccess: true
-      };
-    }
-    case ActionTypes.UPDATE_USERNAME_FAILURE: {
-      return {
-        ...state,
-        usernameError: action.error,
-        usernameSuccess: false
+        account: { ...state.account, username: action.request.username }
       };
     }
     case ActionTypes.UPDATE_EMAIL_REQUEST: {
@@ -124,7 +110,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.UPDATE_PHONE_REQUEST: {
       return {
         ...state,
-        account: { ...state.account, email: action.request.phone }
+        account: { ...state.account, phone: action.request.phone }
       };
     }
     case ActionTypes.GET_METADATA_SUCCESS: {

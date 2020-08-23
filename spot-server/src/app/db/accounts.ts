@@ -135,7 +135,7 @@ function usernameExists(username: string) {
 }
 
 function updateEmail(email: string, accountId: string) {
-    var sql = 'UPDATE accounts SET email = ? WHERE id = ? AND deletion_date IS NULL';
+    var sql = 'UPDATE accounts SET email = ?, verified_date = NULL WHERE id = ? AND deletion_date IS NULL';
     var values = [email, accountId];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(accountId);

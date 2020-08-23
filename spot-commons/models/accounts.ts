@@ -58,7 +58,7 @@ export interface UpdateUsernameRequest {
 }
 
 export interface UpdateUsernameResponse {
-    account: Account;
+    username: string;
 }
 
 export interface UpdateEmailRequest {

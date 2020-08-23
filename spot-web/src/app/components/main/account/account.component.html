@@ -42,6 +42,12 @@
           <span class="link" (click)="enableEditEmail()"> {{ STRINGS.CHANGE }} </span>
         </ng-template>
       </div>
+      <div *ngIf="emailErrorMessage" class="error">
+        {{ emailErrorMessage }}
+      </div>
+      <div *ngIf="emailSuccessMessage" class="success">
+        {{ emailSuccessMessage }}
+      </div>
       <div *ngIf="account.verified_date == null">
         <div class="description">
           {{ STRINGS.EMAIL_VERIFY_DESCRIPTION }}
@@ -58,10 +64,10 @@
           <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT }} </span>
         </ng-template>
       </div>
-      <div *ngIf="usernameErrorMessage" class="username-error">
+      <div *ngIf="usernameErrorMessage" class="error">
         {{ usernameErrorMessage }}
       </div>
-      <div *ngIf="usernameSuccessMessage" class="username-success">
+      <div *ngIf="usernameSuccessMessage" class="success">
         {{ usernameSuccessMessage }}
       </div>
 
@@ -80,6 +86,12 @@
             <span class="link" (click)="enableEditPhone()"> {{ STRINGS.ADD }} </span>
           </ng-template>
         </ng-template>
+      </div>
+      <div *ngIf="phoneErrorMessage" class="error">
+        {{ phoneErrorMessage }}
+      </div>
+      <div *ngIf="phoneSuccessMessage" class="success">
+        {{ phoneSuccessMessage }}
       </div>
 
       <div *ngIf="accountMetadata$ | async as accountMetadata">

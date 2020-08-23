@@ -131,16 +131,6 @@ export class UpdateUsernameAction implements Action {
   constructor(public request: UpdateUsernameRequest) {}
 }
 
-export class UpdateUsernameSuccessAction implements Action {
-  readonly type = ActionTypes.UPDATE_USERNAME_SUCCESS;
-  constructor(public response: UpdateUsernameResponse) {}
-}
-
-export class UpdateUsernameFailureAction implements Action {
-  readonly type = ActionTypes.UPDATE_USERNAME_FAILURE;
-  constructor(public error: SpotError) {}
-}
-
 export class UpdateAccountMetadataRequestAction implements Action {
   readonly type = ActionTypes.UPDATE_METADATA_REQUEST;
   constructor(public request: UpdateAccountMetadataRequest) {}
@@ -208,11 +198,10 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       DeleteSuccessAction | DeleteFailureAction |
                       AccountRequestAction | AccountSuccessAction |
                       SetLocationAction | AccountFailureAction |
-                      UpdateUsernameAction | UpdateUsernameSuccessAction |
+                      UpdateUsernameAction |  UpdatePhoneAction|
                       GenericFailureAction | UpdateAccountMetadataRequestAction |
                       UpdateAccountMetadataRequestSuccess | GetAccountMetadataRequestAction |
                       GetAccountMetadataRequestSuccess | GetAccountMetadataFailureAction |
-                      LoadLocationAction | UpdateUsernameFailureAction |
+                      LoadLocationAction | UpdateEmailAction |
                       VerifyRequestAction | VerifySuccessAction | VerifyConfirmRequestAction |
-                      VerifyConfirmSuccessAction | LocationFailureAction | VerifyConfirmFailureAction |
-                      UpdateEmailAction | UpdatePhoneAction;
+                      VerifyConfirmSuccessAction | LocationFailureAction | VerifyConfirmFailureAction;
