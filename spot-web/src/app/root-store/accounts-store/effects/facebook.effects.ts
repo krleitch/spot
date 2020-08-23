@@ -6,6 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as facebookActions from '../actions/facebook.actions';
 import * as featureActions from '../actions/actions';
+import * as friendsActions from '../../social-store/actions/friends.actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { FacebookLoginResponse } from '@models/authentication';
@@ -44,9 +45,10 @@ export class FacebookStoreEffects {
     tap( (action: facebookActions.FacebookLoginSuccessAction) => {
       this.authenticationService.loginFacebookAccountSuccess(action.response);
     }),
-    map ( (action: facebookActions.FacebookLoginSuccessAction) =>
+    switchMap ( (action: facebookActions.FacebookLoginSuccessAction) => [
+      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
       new featureActions.GetAccountMetadataRequestAction({})
-    )
+    ])
   );
 
   @Effect()

@@ -5,6 +5,7 @@ import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as featureActions from '../actions/actions';
+import * as friendsActions from '../../social-store/actions/friends.actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { RegisterResponse, LoginResponse } from '@models/authentication';
@@ -58,9 +59,10 @@ export class AccountsStoreEffects {
     tap( (action: featureActions.RegisterSuccessAction) => {
       this.authenticationService.registerAccountSuccess(action.response);
     }),
-    map ( (action: featureActions.RegisterSuccessAction) =>
+    switchMap ( (action: featureActions.RegisterSuccessAction) => [
+      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
       new featureActions.GetAccountMetadataRequestAction({})
-    )
+    ])
   );
 
   @Effect()
@@ -90,9 +92,10 @@ export class AccountsStoreEffects {
     tap((action: featureActions.LoginSuccessAction) => {
       this.authenticationService.loginAccountSuccess(action.response);
     }),
-    map ( (action: featureActions.LoginSuccessAction) =>
+    switchMap ( (action: featureActions.LoginSuccessAction) => [
+      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
       new featureActions.GetAccountMetadataRequestAction({})
-    )
+    ])
   );
 
   @Effect({dispatch: false})
@@ -164,9 +167,10 @@ export class AccountsStoreEffects {
     tap((action: featureActions.AccountSuccessAction) => {
       // none
     }),
-    map ( (action: featureActions.AccountSuccessAction) =>
+    switchMap ( (action: featureActions.AccountSuccessAction) => [
+      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
       new featureActions.GetAccountMetadataRequestAction({})
-    )
+    ])
   );
 
   @Effect()

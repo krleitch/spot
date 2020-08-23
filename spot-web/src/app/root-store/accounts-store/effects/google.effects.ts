@@ -6,6 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as googleActions from '../actions/google.actions';
 import * as featureActions from '../actions/actions';
+import * as friendsActions from '../../social-store/actions/friends.actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { GoogleLoginResponse } from '@models/authentication';
@@ -44,9 +45,10 @@ export class GoogleStoreEffects {
     tap( (action: googleActions.GoogleLoginSuccessAction) => {
       this.authenticationService.loginGoogleAccountSuccess(action.response);
     }),
-    map ( (action: googleActions.GoogleLoginSuccessAction) =>
+    switchMap ( (action: googleActions.GoogleLoginSuccessAction) => [
+      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
       new featureActions.GetAccountMetadataRequestAction({})
-    )
+    ])
   );
 
   @Effect()

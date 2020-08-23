@@ -50,15 +50,6 @@ export class ShareComponent implements OnInit, AfterViewInit {
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
 
-    const friendRequest: GetFriendsRequest = {
-      date: new Date().toString(),
-      limit: 10
-    };
-
-    this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendsAction(friendRequest)
-    );
-
     // Since these buttons are hidden by default we need to call to parse them
     // todo pass in element so not parse entire page
     // TODO
