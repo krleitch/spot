@@ -147,6 +147,7 @@ router.post('/facebook', function (req: any, res: any) {
     const accountId = req.user.id;
 
     authService.getFacebookId(accessToken).then( ( facebookId: any) => {
+
         accounts.getFacebookAccount(facebookId.body.id).then(( user: any) => {
             if ( user.length == 0 ) {
                 // create the account

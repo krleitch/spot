@@ -77,38 +77,11 @@ form {
     box-sizing: border-box;
     cursor: pointer;
     width: 300px;
-
-    &:hover {
-      background-color: lighten($facebook-blue, 5%);
-    }
 }
 
 .facebook-logo {
-    width: 28px;
-    height: 28px;
-    margin-right: 8px;
-}
-
-.google {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $google-white;
-    color: black;
-    font-size: 14px;
-    padding: 12px 8px;
-    border-radius: 5px;
-    border: thin solid #888;
-    box-shadow: 1px 1px 1px grey;
-    box-sizing: border-box;
-    width: 300px;
-    margin-bottom: 10px;
-    cursor: pointer;
-}
-
-.google-logo {
-    width: 22px;
-    height: 22px;
+    width: 30px;
+    height: 30px;
     margin-right: 8px;
 }
 

@@ -111,14 +111,14 @@
 
       <div *ngIf="!(facebookConnected$ | async); else connected">
         <button class="facebook" (click)="facebookConnect()">
-          <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+          <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
           {{ STRINGS.FACEBOOK_CONNECT }}
         </button>
         <div class="description"> {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }} </div>
       </div>
       <ng-template #connected>
         <div class="facebook-connected">
-          <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+          <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
           <span class="material-icons check"> check_circle </span>
           <span class="text" (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </span>
         </div>

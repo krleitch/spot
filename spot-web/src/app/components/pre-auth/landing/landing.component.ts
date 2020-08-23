@@ -66,8 +66,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     // @ts-ignore
     gapi.signin2.render('my-signin2', {
         'scope': 'profile email',
-        'width': 240,
-        'height': 50,
+        'width': 300,
+        'height': 55,
         'longtitle': true,
         'theme': 'light',
         'onsuccess': param => this.onSignIn(param)
@@ -98,9 +98,18 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
             }
           })
       } else {
+
+        console.log(statusResponse)
+
         // already logged in
-        this.router.navigateByUrl('/home');
-        // window['FB'].logout();
+        const request: FacebookLoginRequest = {
+          accessToken: statusResponse.authResponse.accessToken
+        };
+
+        this.store$.dispatch(
+          new AccountsFacebookActions.FacebookLoginRequestAction(request)
+        );
+
       }
     });
 

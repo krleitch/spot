@@ -23,17 +23,12 @@
 
         <div class="login-options">
           <div type="button" class="facebook" (click)="facebookLogin()">
-            <img src="../../../assets/images/facebook_login.png" class="facebook-logo">
+            <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
             {{ STRINGS.FACEBOOK_LOGIN }}
           </div>
-          <div type="button" class="google" (click)="googleLogin()">
-            <img src="../../../assets/images/google_login.png" class="google-logo">
-            {{ STRINGS.GOOGLE_LOGIN }}
-          </div>
+          <!-- GOOGLE -->
+          <div id="my-signin2"></div>
         </div>
-
-        <!-- GOOGLE -->
-        <div id="my-signin2"></div>
 
         <div>
           <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>

@@ -341,8 +341,7 @@ export const STRINGS = {
 
             // SIGNUP FROM
             COMMUNITY: 'Join your community',
-            FACEBOOK_LOGIN: 'Sign In With Facebook',
-            GOOGLE_LOGIN: 'Sign In With Google',
+            FACEBOOK_LOGIN: 'Continue with Facebook',
 
             SIGN_UP_ALTERNATE: 'Or',
 
@@ -379,7 +378,7 @@ export const STRINGS = {
 
             // SIGNUP FORM
             COMMUNITY: 'Join your community',
-            FACEBOOK_LOGIN: 'Sign In With Facebook',
+            FACEBOOK_LOGIN: 'Continue with Facebook',
             GOOGLE_LOGIN: 'Sign In With Google',
 
             SIGN_UP_ALTERNATE: 'Or',
@@ -418,7 +417,7 @@ export const STRINGS = {
 
             // SIGNUP FROM
             COMMUNITY: 'Join your community',
-            FACEBOOK_LOGIN: 'Sign In With Facebook',
+            FACEBOOK_LOGIN: 'Continue with Facebook',
             GOOGLE_LOGIN: 'Sign In With Google',
 
             FORGOT_PASSWORD: 'Forgot Password',
@@ -504,7 +503,7 @@ export const STRINGS = {
           REGISTER: 'Register',
 
           // Other options
-          FACEBOOK_LOGIN: 'Sign In With Facebook',
+          FACEBOOK_LOGIN: 'Continue with Facebook',
           GOOGLE_LOGIN: 'Sign In With Google',
 
           // Both Login and Register
