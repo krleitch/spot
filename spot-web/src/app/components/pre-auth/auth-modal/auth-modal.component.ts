@@ -1,22 +1,24 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
-import { LoginRequest, RegisterRequest } from '@models/authentication';
+import { LoginRequest, RegisterRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
 
 import { STRINGS } from '@assets/strings/en';
+
+declare const gapi: any;
 
 @Component({
   selector: 'spot-auth-modal',
   templateUrl: './auth-modal.component.html',
   styleUrls: ['./auth-modal.component.scss']
 })
-export class AuthModalComponent implements OnInit {
+export class AuthModalComponent implements OnInit, AfterViewInit {
 
   @Input() modalId: string;
 
@@ -34,7 +36,8 @@ export class AuthModalComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>,
               private modalService: ModalService,
               private authenticationService: AuthenticationService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private router: Router) {
     this.loginForm = this.fb.group({
       emailOrUsername: ['', Validators.required],
       password: ['', Validators.required],
@@ -48,6 +51,18 @@ export class AuthModalComponent implements OnInit {
   }
 
   ngOnInit() {
+
+  }
+
+  ngAfterViewInit() {
+    gapi.signin2.render('my-signin2', {
+        scope: 'profile email',
+        width: 240,
+        height: 55,
+        longtitle: true,
+        theme: 'light',
+        onsuccess: param => this.googleLogin(param)
+    });
   }
 
   close() {
@@ -142,16 +157,66 @@ export class AuthModalComponent implements OnInit {
     );
   }
 
-  forgotPassword() {
-
-  }
-
   facebookLogin() {
 
+    window['FB'].getLoginStatus((statusResponse) => {
+      if (statusResponse.status !== 'connected') {
+          window['FB'].login((loginResponse) => {
+            if (loginResponse.status === 'connected') {
+
+                const request: FacebookLoginRequest = {
+                  accessToken: loginResponse.authResponse.accessToken
+                };
+
+                this.store$.dispatch(
+                  new AccountsFacebookActions.FacebookLoginRequestAction(request)
+                );
+
+            }
+          });
+      } else {
+        // already logged in
+        const request: FacebookLoginRequest = {
+          accessToken: statusResponse.authResponse.accessToken
+        };
+
+        this.store$.dispatch(
+          new AccountsFacebookActions.FacebookLoginRequestAction(request)
+        );
+      }
+    });
+
   }
 
-  googleLogin() {
+  googleLogin(googleUser) {
 
+    // profile.getId(), getName(), getImageUrl(), getEmail()
+    // const profile = googleUser.getBasicProfile();
+
+    const id_token = googleUser.getAuthResponse().id_token;
+
+    const request: GoogleLoginRequest = {
+      accessToken: id_token
+    };
+
+    this.store$.dispatch(
+      new AccountsGoogleActions.GoogleLoginRequestAction(request)
+    );
+
+    // sign out of the instance, so we don't auto login
+    this.googleSignOut();
+
+  }
+
+  googleSignOut() {
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+
+    });
+  }
+
+  forgotPassword() {
+    this.router.navigateByUrl('/password-reset');
   }
 
 }

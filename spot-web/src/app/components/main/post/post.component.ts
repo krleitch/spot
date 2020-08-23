@@ -72,7 +72,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   offClickHandler(event: MouseEvent) {
-    if (!this.options.nativeElement.contains(event.target)) {
+    if (this.options && !this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
   }

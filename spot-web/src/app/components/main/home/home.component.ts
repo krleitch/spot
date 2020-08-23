@@ -103,10 +103,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   offClickHandler(event: MouseEvent) {
-    if (!this.mobileDropdownLocation.nativeElement.contains(event.target)) {
+    if (this.mobileDropdownLocation && !this.mobileDropdownLocation.nativeElement.contains(event.target)) {
       this.dropdownLocation(false);
     }
-    if (!this.mobileDropdownSort.nativeElement.contains(event.target)) {
+    if (this.mobileDropdownSort && !this.mobileDropdownSort.nativeElement.contains(event.target)) {
       this.dropdownSort(false);
     }
   }

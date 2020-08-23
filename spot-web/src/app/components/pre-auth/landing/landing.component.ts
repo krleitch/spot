@@ -91,9 +91,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
             }
           });
       } else {
-
-        console.log('SENDING')
-
         // already logged in
         const request: FacebookLoginRequest = {
           accessToken: statusResponse.authResponse.accessToken

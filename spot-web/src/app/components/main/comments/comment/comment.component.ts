@@ -142,16 +142,16 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   offClickHandler(event: MouseEvent) {
-    if (!this.options.nativeElement.contains(event.target)) {
+    if (this.options && !this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
 
-    if (!this.tag.nativeElement.contains(event.target)) {
+    if (this.tag && !this.tag.nativeElement.contains(event.target)) {
       this.showTag = false;
     }
 
     // Check caret position
-    if (this.comment && this.reply.nativeElement.contains(event.target)) {
+    if (this.reply && this.reply.nativeElement.contains(event.target)) {
       this.getAndCheckWordOnCaret();
     }
 

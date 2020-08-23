@@ -161,7 +161,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   offClickHandler(event: MouseEvent) {
-    if (!this.tag.nativeElement.contains(event.target)) {
+    if (this.tag && !this.tag.nativeElement.contains(event.target)) {
       this.showTag = false;
       this.tagName = '';
     }

@@ -16,6 +16,7 @@
     justify-content: center;
     align-items: center;
     margin-right: 75px;
+    margin-left: 30px;
 }
 
 .showcase-text {
@@ -31,7 +32,7 @@ img {
 }
 
 .showcase-image {
-    height: 400px;
+    max-height: 600px;
 }
 
 // SIGNUP
@@ -42,6 +43,7 @@ img {
     justify-content: center;
     align-items: center;
     margin-left: 75px;
+    margin-right: 30px;
 }
 
 .signup-text {
@@ -199,8 +201,8 @@ input.ng-dirty.ng-invalid {
     font-size: 14px;
 }
 
-// Special stylings
-@media screen and (max-width: 1250px) {
+// Special stylings, Landing only
+@media screen and (max-width: 1450px) {
 
     .showcase {
         margin-right: 15px;
@@ -252,7 +254,8 @@ input.ng-dirty.ng-invalid {
 
     .signup {
         margin-top: 25px;
-        margin-left: 0px;
+        margin-left: 5px;
+        margin-right: 5px;
         margin-bottom: 25px;
     }
 

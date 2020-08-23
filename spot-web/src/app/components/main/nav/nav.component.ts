@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions } from '@store/accounts-store';
@@ -16,7 +17,9 @@ import { ModalService } from '@services/modal.service';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   @Output() titleEvent = new EventEmitter<boolean>();
 
@@ -24,6 +27,7 @@ export class NavComponent implements OnInit {
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
+  isAuthenticated$: Observable<boolean>;
   unread$: Observable<number>;
   unreadNotifications = '0';
 
@@ -32,7 +36,8 @@ export class NavComponent implements OnInit {
   accountShowDropdown = false;
   showNotifications = false;
 
-  constructor(private router: Router, private store$: Store<RootStoreState.State>,
+  constructor(private router: Router,
+              private store$: Store<RootStoreState.State>,
               private modalService: ModalService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
@@ -51,14 +56,21 @@ export class NavComponent implements OnInit {
       select(SocialStoreSelectors.selectMyFeatureUnread)
     );
 
-
-    const request: GetNotificationsUnreadRequest = {};
-
-    this.store$.dispatch(
-      new SocialStoreNotificationsActions.GetNotificationsUnreadAction(request)
+    this.isAuthenticated$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
-    this.unread$.subscribe( (numberUnread: number) => {
+    this.isAuthenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (isAuthenticated: boolean) => {
+      if (isAuthenticated) {
+        const request: GetNotificationsUnreadRequest = {};
+
+        this.store$.dispatch(
+          new SocialStoreNotificationsActions.GetNotificationsUnreadAction(request)
+        );
+      }
+    });
+
+    this.unread$.pipe(takeUntil(this.onDestroy)).subscribe( (numberUnread: number) => {
       if (numberUnread >= 10) {
         this.unreadNotifications = '+';
       } else {
@@ -68,13 +80,17 @@ export class NavComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
   offClickHandler(event: MouseEvent) {
     // Hide the dropdown if you click outside
-    if (!this.accountView.nativeElement.contains(event.target)) {
+    if (this.accountView && !this.accountView.nativeElement.contains(event.target)) {
       this.accountSetDropdown(false);
     }
 
-    if (!this.notificationsView.nativeElement.contains(event.target)) {
+    if (this.notificationsView && !this.notificationsView.nativeElement.contains(event.target)) {
       this.showNotifications = false;
     }
   }

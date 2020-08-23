@@ -86,6 +86,7 @@ form {
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .facebook {
@@ -95,43 +96,17 @@ form {
   background-color: $facebook-blue;
   color: white;
   font-size: 14px;
-  padding: 8px 8px;
+  padding: 12px 8px;
   margin-bottom: 10px;
   box-sizing: border-box;
   cursor: pointer;
-  width: 250px;
-  &:hover {
-    background-color: lighten($facebook-blue, 3%);
-  }
+  width: 240px;
 }
 
 .facebook-logo {
-  width: 18px;
-  height: 18px;
-  margin-right: 5px;
-}
-
-.google {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $google-white;
-  color: black;
-  font-size: 14px;
-  padding: 8px 8px;
-  border-radius: 5px;
-  border: thin solid #888;
-  box-shadow: 1px 1px 1px grey;
-  box-sizing: border-box;
-  width: 250px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.google-logo {
-  width: 18px;
-  height: 18px;
-  margin-right: 5px;
+  width: 30px;
+  height: 30px;
+  margin-right: 18px;
 }
 
 fieldset {

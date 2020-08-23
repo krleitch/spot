@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -6,18 +6,20 @@ import { takeUntil } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { AuthenticationService } from '@services/authentication.service';
-import { LoginRequest } from '@models/authentication';
+import { LoginRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+import { AccountsActions, AccountsStoreSelectors, AccountsGoogleActions, AccountsFacebookActions } from '@store/accounts-store';
 import { SpotError } from '@exceptions/error';
+
+declare const gapi: any;
 
 @Component({
   selector: 'spot-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -65,6 +67,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
+  ngAfterViewInit() {
+    gapi.signin2.render('my-signin2', {
+        scope: 'profile email',
+        width: 240,
+        height: 55,
+        longtitle: true,
+        theme: 'light',
+        onsuccess: param => this.googleLogin(param)
+    });
+  }
+
   signIn() {
 
     const val = this.form.value;
@@ -93,16 +106,66 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   }
 
-  register() {
-    this.router.navigateByUrl('/register');
-  }
-
-  googleLogin() {
-
-  }
-
   facebookLogin() {
 
+    window['FB'].getLoginStatus((statusResponse) => {
+      if (statusResponse.status !== 'connected') {
+          window['FB'].login((loginResponse) => {
+            if (loginResponse.status === 'connected') {
+
+                const request: FacebookLoginRequest = {
+                  accessToken: loginResponse.authResponse.accessToken
+                };
+
+                this.store$.dispatch(
+                  new AccountsFacebookActions.FacebookLoginRequestAction(request)
+                );
+
+            }
+          });
+      } else {
+        // already logged in
+        const request: FacebookLoginRequest = {
+          accessToken: statusResponse.authResponse.accessToken
+        };
+
+        this.store$.dispatch(
+          new AccountsFacebookActions.FacebookLoginRequestAction(request)
+        );
+      }
+    });
+
+  }
+
+  googleLogin(googleUser) {
+
+    // profile.getId(), getName(), getImageUrl(), getEmail()
+    // const profile = googleUser.getBasicProfile();
+
+    const id_token = googleUser.getAuthResponse().id_token;
+
+    const request: GoogleLoginRequest = {
+      accessToken: id_token
+    };
+
+    this.store$.dispatch(
+      new AccountsGoogleActions.GoogleLoginRequestAction(request)
+    );
+
+    // sign out of the instance, so we don't auto login
+    this.googleSignOut();
+
+  }
+
+  googleSignOut() {
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+
+    });
+  }
+
+  register() {
+    this.router.navigateByUrl('/register');
   }
 
   forgotPassword() {
