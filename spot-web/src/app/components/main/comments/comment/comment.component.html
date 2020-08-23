@@ -88,7 +88,7 @@
       <div class="time">
         {{ timeMessage }}
       </div>
-      <div class="reply" (click)="setShowAddReply(true)" *ngIf="(comment.tag.tagged || inRange) && (isAuthenticated$ | async)">
+      <div class="reply" (click)="setShowAddReply(true)" [hidden]="(!comment.tag.tagged || !inRange) && !(isAuthenticated$ | async)">
         <i class="material-icons"> reply </i>
       </div>
     </div>

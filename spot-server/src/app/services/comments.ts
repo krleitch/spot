@@ -89,20 +89,41 @@ async function addProfilePicture( comments: any, postCreator: string) {
 
 async function getProfilePictureFromBucket( index: number ) {
 
-    var params = { 
-        Bucket: 'spot',
-        Delimiter: '/',
-        Prefix: 'profile/icons/',
-    }
-
-    const s3Response = await aws.s3.listObjectsV2(params).promise();
+    // TODO: REMOVE
+    // SAVE on requests to the bucket
+    // Uncomment when not poor :(
 
     if ( index === -1 ) {
         return aws.getUrlFromBucket('profile/op.png');
-    } else {
-        // the first index is a dud /profile/icons/
-        return aws.getUrlFromBucket(s3Response.Contents[index].Key);
     }
+
+    const urls = [
+        'profile/icons/icons8-avocado-48.png',
+        'profile/icons/icons8-banana-split-48.png',
+        'profile/icons/icons8-bao-bun-48.png',
+        'profile/icons/icons8-beet-48.png',
+        'profile/icons/icons8-cheese-48.png',
+        'profile/icons/icons8-cute-pumpkin-48.png',
+        'profile/icons/icons8-kawaii-french-fries-48.png',
+        'profile/icons/icons8-kawaii-sushi-48.png'
+    ];
+
+    return aws.getUrlFromBucket(urls[index % urls.length])
+
+    // var params = { 
+    //     Bucket: 'spot',
+    //     Delimiter: '/',
+    //     Prefix: 'profile/icons/',
+    // }
+
+    // const s3Response = await aws.s3.listObjectsV2(params).promise();
+
+    // if ( index === -1 ) {
+    //     return aws.getUrlFromBucket('profile/op.png');
+    // } else {
+    //     // the first index is a dud /profile/icons/
+    //     return aws.getUrlFromBucket(s3Response.Contents[index].Key);
+    // }
 
 }
 

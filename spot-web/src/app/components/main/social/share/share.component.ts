@@ -4,10 +4,11 @@ import { Observable } from 'rxjs';
 
 import { RootStoreState } from '@store';
 import { SocialStoreNotificationsActions } from '@store/social-store';
-import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
+import { SocialStoreSelectors } from '@store/social-store';
 import { AddNotificationRequest } from '@models/notifications';
-import { Friend, GetFriendsRequest } from '@models/friends';
+import { Friend } from '@models/friends';
 import { ModalService } from '@services/modal.service';
+import { AuthenticationService } from '@services/authentication.service';
 
 import { STRINGS } from '@assets/strings/en';
 
@@ -27,17 +28,22 @@ export class ShareComponent implements OnInit, AfterViewInit {
   data$: Observable<any>;
   data: { postLink: string } = { postLink: null };
 
+  isAuthenticated: boolean;
   friends$: Observable<Friend[]>;
 
   username: string;
 
   link: string;
 
-  constructor(private store$: Store<RootStoreState.State>, private modalService: ModalService) { }
+  constructor(private store$: Store<RootStoreState.State>,
+              private authenticationService: AuthenticationService,
+              private modalService: ModalService) { }
 
   ngOnInit() {
 
     // setup observables
+
+    this.isAuthenticated = this.authenticationService.isAuthenticated();
 
     this.data$ = this.modalService.getData(this.modalId);
 

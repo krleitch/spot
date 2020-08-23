@@ -32,14 +32,6 @@
         <div class="forgot-password" (click)="forgotPassword()">
           <span> {{ STRINGS.FORGOT_PASSWORD }} </span>
         </div>
-        <div class="login-options">
-          <div type="button" class="facebook" (click)="facebookLogin()">
-            <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
-            {{ STRINGS.FACEBOOK_LOGIN }}
-          </div>
-          <!-- GOOGLE -->
-          <div id="my-signin2"></div>
-        </div>
       </form>
 
     </div>
@@ -67,16 +59,17 @@
         <div class="form-buttons">
           <button type="button" class="button" (click)="register()"> {{ STRINGS.REGISTER_BUTTON }} </button>
         </div>
-        <div class="login-options">
-          <div type="button" class="facebook" (click)="facebookLogin()">
-            <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
-            {{ STRINGS.FACEBOOK_LOGIN }}
-          </div>
-          <!-- GOOGLE -->
-          <div id="my-signin2"></div>
-        </div>
       </form>
 
+    </div>
+
+    <div class="login-options">
+      <div type="button" class="facebook" (click)="facebookLogin()">
+        <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+        {{ STRINGS.FACEBOOK_LOGIN }}
+      </div>
+      <!-- GOOGLE -->
+      <div id="my-signin2"></div>
     </div>
 
   </div>

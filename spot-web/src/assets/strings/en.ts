@@ -205,7 +205,8 @@ export const STRINGS = {
 
           FRIENDS: 'Friends',
           NO_FRIENDS_FOUND: 'No friends found with this name',
-          NO_FRIENDS: 'Add Friends to share spots quickly'
+          NO_FRIENDS: 'Add Friends to share spots quickly',
+          LOGIN: 'Login to share with friends'
 
         },
 
