@@ -2,7 +2,7 @@ export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, cha
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
          disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
          updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount, usernameExists,
-         getGoogleAccount, addGoogleAccount, updateEmail, updatePhone }
+         getGoogleAccount, addGoogleAccount, updateEmail, updatePhone, connectGoogleAccount, disconnectGoogleAccount }
 
 const uuid = require('uuid');
 const roles = require('@services/authorization/roles');
@@ -88,6 +88,18 @@ function addGoogleAccount(id: string, email: string, username: string): Promise<
     return db.query(sql, values).then( (rows: any) => {
         return getGoogleAccount(id);
     });
+}
+
+function connectGoogleAccount(googleId: string, accountId: string): Promise<any> {
+    var sql = 'UPDATE accounts SET google_id = ? WHERE id = ?';
+    var values = [googleId, accountId];
+    return db.query(sql, values);
+}
+
+function disconnectGoogleAccount(accountId: string): Promise<any> {
+    var sql = 'UPDATE accounts SET google_id = NULL WHERE id = ?';
+    var values = [accountId];
+    return db.query(sql, values);
 }
 
 // TODO, wanna change from *

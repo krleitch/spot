@@ -4,6 +4,10 @@ const router = express.Router();
 const { pbkdf2Sync } = require('crypto');
 const nodemailer = require('nodemailer');
 
+// TODO: move this
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client('805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com');
+
 // db
 const accounts = require('@db/accounts');
 const verifyAccount = require('@db/verifyAccount');
@@ -168,6 +172,7 @@ router.post('/facebook', function (req: any, res: any) {
                 });            
             } else {
                 // account already exists
+                res.status(500).send('Error connecting account with facebook');
             }
         }, (err: any) => {
             res.status(500).send('Error signing in with facebook');
@@ -187,6 +192,64 @@ router.post('/facebook/disconnect', function (req: any, res: any) {
         res.sendStatus(200);
     }, (err: any) => {
         res.status(500).send('Error disconnecting account with facebook');
+    });   
+  
+});
+
+// Google Connect
+router.post('/google', async function (req: any, res: any) {
+
+    const { accessToken } = req.body;
+    const accountId = req.user.id;
+
+    try {
+
+        const ticket = await client.verifyIdToken({
+            idToken: accessToken,
+            audience: '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com',
+            // Specify the CLIENT_ID of the app that accesses the backend
+            // Or, if multiple clients access the backend:
+            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        });
+
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+
+        accounts.getGoogleAccount(userid).then(( user: any) => {
+            if ( user.length == 0 ) {
+                // create the account
+                accounts.connectGoogleAccount(userid, accountId).then( (rows: any) => {
+
+                    res.status(200).json({
+                        created: false
+                    });  
+
+                }, (err: any) => {
+                    res.status(500).send('Error connecting account with google');
+                });            
+            } else {
+                // account already exists
+                res.status(500).send('Error connecting account with google');
+            }
+        }, (err: any) => {
+            res.status(500).send('Error signing in with google');
+        }); 
+
+    } catch (err) {
+
+    }
+});
+
+router.post('/google/disconnect', function (req: any, res: any) {
+
+    const accountId = req.user.id;
+
+    // remove the google id from the account
+
+    accounts.disconnectGoogleAccount(accountId).then( (rows: any) => {
+        res.sendStatus(200);
+    }, (err: any) => {
+        res.status(500).send('Error disconnecting account with google');
     });   
   
 });

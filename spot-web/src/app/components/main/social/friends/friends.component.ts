@@ -141,27 +141,25 @@ export class FriendsComponent implements OnInit {
           window['FB'].login((loginResponse) => {
             if (loginResponse.status === 'connected') {
 
-                // localStorage.removeItem('fb_access_token');
-                // localStorage.removeItem('fb_expires_in');
+              const request: FacebookConnectRequest = {
+                accessToken: loginResponse.authResponse.accessToken
+              };
 
-                const request: FacebookConnectRequest = {
-                  accessToken: loginResponse.authResponse.accessToken
-                };
+              this.store$.dispatch(
+                new AccountsFacebookActions.FacebookConnectRequestAction(request)
+              );
 
-                this.store$.dispatch(
-                  new AccountsFacebookActions.FacebookConnectRequestAction(request)
-                );
-
-            } else {
-              // could not login
-              // TODO some error msg
             }
-          })
+          });
       } else {
         // already logged in
-        // this.router.navigateByUrl('/home');
-        // TODO THIS // ALSO LANDING
-        window['FB'].logout();
+        const request: FacebookConnectRequest = {
+          accessToken: statusResponse.authResponse.accessToken
+        };
+
+        this.store$.dispatch(
+          new AccountsFacebookActions.FacebookConnectRequestAction(request)
+        );
       }
     });
 
