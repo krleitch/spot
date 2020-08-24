@@ -55,7 +55,6 @@ export class AppComponent implements OnInit {
         version    : 'v4.0'
       });
       window['FB'].AppEvents.logPageView();
-
     };
 
     (function(d, s, id){

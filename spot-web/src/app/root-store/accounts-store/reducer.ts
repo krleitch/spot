@@ -125,6 +125,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         accountMetadata: action.response.metadata
       };
     }
+    case ActionTypes.VERIFY_CONFIRM_REQUEST: {
+      return {
+        ...state,
+        account: { ...state.account, verified_date: action.request.verified_date }
+      };
+    }
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,

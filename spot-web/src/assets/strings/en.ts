@@ -315,6 +315,16 @@ export const STRINGS = {
           HEADING: 'Heading 1',
           TEXT: 'text'
 
+        },
+
+        VERIFY: {
+
+          SUCCESS: 'Your email was successfully verified',
+          CONTINUE: 'Continue to Spot',
+          FAILURE: 'There was an error verifying your email. Your verification code was either invalid or expired',
+          SEND: 'Send another verification email',
+          SENT: 'Verification email sent'
+
         }
 
     },

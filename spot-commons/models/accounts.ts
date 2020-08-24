@@ -49,7 +49,7 @@ export interface VerifyConfirmRequest {
 }
 
 export interface VerifyConfirmResponse {
-
+    verified_date: string;
 }
 
 // update account info

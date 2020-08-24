@@ -228,21 +228,4 @@ export class AccountsStoreEffects {
     )
   );
 
-  @Effect()
-  verifyConfirmAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.VerifyConfirmRequestAction>(
-      featureActions.ActionTypes.VERIFY_CONFIRM_REQUEST
-    ),
-    switchMap(action =>
-      this.accountsService
-        .verifyConfirmAccount(action.request)
-        .pipe(
-            map( (response: VerifyConfirmResponse) => new featureActions.VerifyConfirmSuccessAction(response)),
-            catchError(errorResponse =>
-              observableOf(new featureActions.VerifyConfirmFailureAction(errorResponse.error))
-            )
-          )
-    )
-  );
-
 }

@@ -1,4 +1,25 @@
 <spot-main-nav></spot-main-nav>
 <div class="verify">
 
+  <div class="section" *ngIf="successMessage">
+
+    <span class="material-icons icon"> done </span>
+    <span class="text"> {{ successMessage }} </span>
+    <span class="text button" (click)="continue()"> {{ STRINGS.CONTINUE }} </span>
+
+  </div>
+
+  <div class="section" *ngIf="errorMessage">
+
+    <span class="material-icons icon"> error </span>
+    <span class="text"> {{ errorMessage }} </span>
+    <div *ngIf="!verificationSent; else sent">
+      <span class="text button" (click)="sendVerification()"> {{ STRINGS.SEND }} </span>
+    </div>
+    <ng-template #sent>
+      <span class="text sent"> {{ STRINGS.SENT }} </span>
+    </ng-template>
+
+  </div>
+
 </div>

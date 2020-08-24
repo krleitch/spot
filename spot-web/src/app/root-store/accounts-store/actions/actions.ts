@@ -37,8 +37,6 @@ export enum ActionTypes {
   VERIFY_REQUEST = '[Accounts] Verify Request',
   VERIFY_SUCCESS = '[Accounts] Verify Success',
   VERIFY_CONFIRM_REQUEST = '[Accounts] Verify Confrim Request',
-  VERIFY_CONFIRM_SUCCESS = '[Accounts] Verify Confirm Success',
-  VERIFY_CONFIRM_FAILURE = '[Accounts] Verify Confirm Failure',
   UPDATE_EMAIL_REQUEST = '[Accounts] Update Email Request',
   UPDATE_PHONE_REQUEST = '[Accounts] Update Phone Request',
   GENERIC_FAILURE = '[Accounts] Generic Failure'
@@ -168,17 +166,8 @@ export class VerifySuccessAction implements Action {
 
 export class VerifyConfirmRequestAction implements Action {
   readonly type = ActionTypes.VERIFY_CONFIRM_REQUEST;
-  constructor(public request: VerifyConfirmRequest) {}
-}
-
-export class VerifyConfirmSuccessAction implements Action {
-  readonly type = ActionTypes.VERIFY_CONFIRM_SUCCESS;
-  constructor(public response: VerifyConfirmResponse) {}
-}
-
-export class VerifyConfirmFailureAction implements Action {
-  readonly type = ActionTypes.VERIFY_CONFIRM_FAILURE;
-  constructor(public error: SpotError) {}
+  // Its the response from the request, we just send to store
+  constructor(public request: VerifyConfirmResponse) {}
 }
 
 export class UpdateEmailAction implements Action {
@@ -204,4 +193,4 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       GetAccountMetadataRequestSuccess | GetAccountMetadataFailureAction |
                       LoadLocationAction | UpdateEmailAction |
                       VerifyRequestAction | VerifySuccessAction | VerifyConfirmRequestAction |
-                      VerifyConfirmSuccessAction | LocationFailureAction | VerifyConfirmFailureAction;
+                      LocationFailureAction;

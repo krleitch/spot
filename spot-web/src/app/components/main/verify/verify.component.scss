@@ -10,6 +10,7 @@ spot-main-nav {
 }
 
 .verify {
+
   display: flex;
   justify-content: center;
   min-height: 100%;
@@ -17,4 +18,36 @@ spot-main-nav {
   padding-top: 100px;
   background-color: $background-grey;
   box-sizing: border-box;
+
+  .section {
+
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+
+    .text {
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .button {
+      color: $subtle-grey;
+      cursor: pointer;
+      &:hover {
+        color: $button-highlight;
+      }
+    }
+
+    .sent {
+      color: $subtle-grey;
+    }
+
+    .icon {
+      font-size: 42px;
+      color: $button-highlight;
+      margin-bottom: 10px;
+    }
+
+  }
+
 }

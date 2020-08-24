@@ -56,17 +56,16 @@ export class ShareComponent implements OnInit, AfterViewInit {
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
 
-    // Since these buttons are hidden by default we need to call to parse them
-    // todo pass in element so not parse entire page
-    // TODO
-    // window['FB'].XFBML.parse();
-    // window['twttr'].widgets.load();
-
   }
 
   ngAfterViewInit() {
-    // window['FB'].XFBML.parse();
-    // window['twttr'].widgets.load();
+
+    // Subscribe to an event that runs when the respective libraries have loaded, then call this
+
+    // window['FB'].XFBML.parse(document.getElementById('social'));
+
+    // window['twttr'].widgets.load(document.getElementById('social'));
+
   }
 
   closeShare() {

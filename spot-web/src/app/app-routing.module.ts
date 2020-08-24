@@ -54,6 +54,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'verify/:token',
+    component: VerifyComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'username',
     component: UsernameComponent,
     canActivate: [AuthGuard]
@@ -81,10 +86,6 @@ export const routes: Routes = [
   {
     path: 'new-password',
     component: NewPasswordComponent
-  },
-  {
-    path: 'verify/:token',
-    component: VerifyComponent
   }
 ];
 
