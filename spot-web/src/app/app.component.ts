@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
 
 
   fbLibrary() {
-    (window as any).fbAsyncInit = function() {
+    (window as any).fbAsyncInit = () => {
       window['FB'].init({
         appId      : '767513270350482',
         cookie     : true,
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
         version    : 'v4.0'
       });
       window['FB'].AppEvents.logPageView();
+      this.authenticationService.sendSocialServiceReady('FB');
     };
 
     (function(d, s, id){

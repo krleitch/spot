@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { SocialStoreNotificationsActions } from '@store/social-store';
@@ -17,7 +18,9 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss']
 })
-export class ShareComponent implements OnInit, AfterViewInit {
+export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  private readonly onDestroy = new Subject<void>();
 
   @Input() modalId;
 
@@ -58,13 +61,23 @@ export class ShareComponent implements OnInit, AfterViewInit {
 
   }
 
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
   ngAfterViewInit() {
 
-    // Subscribe to an event that runs when the respective libraries have loaded, then call this
+    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe( (service: string) => {
 
-    // window['FB'].XFBML.parse(document.getElementById('social'));
+      if ( service === 'FB' ) {
+        window['FB'].XFBML.parse(document.getElementById('social'));
+      }
 
-    // window['twttr'].widgets.load(document.getElementById('social'));
+      if ( service === 'twttr' ) {
+        window['twttr'].widgets.load(document.getElementById('social'));
+      }
+
+    });
 
   }
 

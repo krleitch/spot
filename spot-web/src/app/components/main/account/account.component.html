@@ -111,7 +111,7 @@
 
       <div *ngIf="!(facebookConnected$ | async); else connected">
         <button class="facebook" (click)="facebookConnect()">
-          <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
+          <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
           {{ STRINGS.FACEBOOK_CONNECT }}
         </button>
         <div class="description"> {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }} </div>
@@ -125,7 +125,8 @@
       </ng-template>
 
       <div *ngIf="!(googleConnected$ | async); else googleconnected">
-        Not connected to Google
+        <!-- GOOGLE -->
+        <div id="my-signin2"></div>
       </div>
       <ng-template #googleconnected>
         Connected to Google

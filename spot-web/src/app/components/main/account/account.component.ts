@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
@@ -14,12 +14,14 @@ import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconn
 import { SpotError } from '@exceptions/error';
 import { ModalService } from '@services/modal.service';
 
+declare const gapi: any;
+
 @Component({
   selector: 'spot-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponent implements OnInit, OnDestroy {
+export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -89,6 +91,22 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.onDestroy.next();
+  }
+
+  ngAfterViewInit() {
+    console.log('ran')
+    gapi.signin2.render('my-signin2', {
+        scope: 'profile email',
+        width: 240,
+        height: 55,
+        longtitle: true,
+        theme: 'light',
+        onsuccess: param => this.googleLogin(param)
+    });
+  }
+
+  googleLogin(para) {
+
   }
 
   enableEditUsername() {

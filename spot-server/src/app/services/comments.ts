@@ -1,4 +1,4 @@
-export { addProfilePicture, getTags, generateLink, validContent }
+export { addProfilePicture, getTags, addTagsToContent, generateLink, validContent }
 
 const shortid = require('shortid');
 
@@ -184,6 +184,73 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
     }
 
     return comments;
+
+}
+
+async function addTagsToContent( commentId: string, accountId: string, commentAccountId: string, commentContent: string ): Promise<string> {
+
+    let ret = '';
+
+    await tags.getTagsByCommentId(commentId).then( async (tagList: any) => {
+
+        // The required properties
+        let tagObject: {
+            owned: boolean;
+            numTagged: number;
+            tagged: boolean;
+            tagger?: string; // only filled if tagged == true
+            tags: any[];
+        } = {
+            owned: false,
+            numTagged: tagList.length,
+            tagged: false,
+            tags: []
+        };
+
+        if ( accountId == commentAccountId ) {
+            // You are the tagger
+
+            tagObject.owned = true;
+
+        }
+        
+        if ( tagList.map( (t: any) => t.account_id ).includes( accountId )) {
+            // you got tagged
+
+            tagObject.tagged = true;
+
+            await accounts.getAccountById(commentAccountId).then( (account: any) => {
+                tagObject.tagger = account[0].username;
+            });
+
+        }
+
+        // add the tags, only include username if you won tag, or its you
+        let tags: any[] = [];
+        for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
+            await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
+                tags.push({username: (tagObject.owned || accountId == tagList[tagIndex].account_id) ? account[0].username : '', offset: tagList[tagIndex].offset});
+            });
+        }
+        tagObject.tags = tags;
+
+        // replace the content
+
+        let myindex = 0;
+    
+        tagObject.tags.forEach( (tag: any) => {
+            ret += commentContent.substring(myindex, tag.offset);
+            ret += tag.username;
+            myindex += tag.offset
+        });
+
+        ret += commentContent.substring(myindex, commentContent.length);
+
+    }, (err: any) => {
+
+    });
+
+    return ret;
 
 }
 

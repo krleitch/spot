@@ -191,6 +191,7 @@ export interface CommentActivity {
     parent_content: string;
     parent_image_src: string;
     parent_link: string;
+    tag: CommentTag;
 }
 
 export interface ActivityCommentSuccess {

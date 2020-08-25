@@ -165,7 +165,7 @@ function dislikeComment(commentId: string, accountId: string): Promise<any> {
 }
 
 function getCommentsActivity(accountId: string, date: string, limit: number) {
-    var sql = `SELECT c1.id, c1.creation_date, c1.likes, c1.dislikes, c1.parent_id, c1.content, c1.image_src, c1.link,
+    var sql = `SELECT c1.id, c1.creation_date, c1.likes, c1.dislikes, c1.parent_id, c1.content, c1.image_src, c1.link, c1.account_id,
                  p.content as post_content, p.image_src as post_image_src, p.link as post_link,
                  c2.content as parent_content, c2.image_src as parent_image_src, c2.link as parent_link
                  FROM comments c1 LEFT JOIN posts p ON p.id = c1.post_id LEFT JOIN comments c2 ON c1.parent_id = c2.id

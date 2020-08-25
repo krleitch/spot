@@ -31,14 +31,31 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Get comment activity
-router.get('/activity', function (req: any, res: any) {
+router.get('/activity', async function (req: any, res: any, next: any) {
+
+    // You must have an account to make a comment
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const accountId = req.user.id;
     
     const date = req.query.date;
     const limit = Number(req.query.limit);
 
-    comments.getCommentsActivity(accountId, date, limit).then((activities: any) => {
+    comments.getCommentsActivity(accountId, date, limit).then(async (activities: any) => {
+
+        for (let i = 0; i < activities.length; i++) {
+
+            try {
+                //commentId: string, accountId: string, commentAccountId: string, commentContent: string
+                activities[i].content = await commentsService.addTagsToContent( activities[i].id, accountId, activities[i].account_id, activities[i].content);
+            } catch (err) {
+                res.status(500).send('Error getting activity');
+            }
+
+        }
+
         res.status(200).json({ activity: activities });
     }, (err: any) => {
         res.status(500).send('Error getting activity');

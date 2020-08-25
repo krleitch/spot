@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Md5 } from 'ts-md5/dist/md5';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginResponse, LoginResponse,
@@ -18,6 +18,8 @@ export class AuthenticationService {
 
     baseUrl = environment.baseUrl;
     googleProviderId = environment.googleProviderId;
+
+    socialServiceReady = new Subject<string>();
 
     constructor(
         private http: HttpClient,
@@ -208,6 +210,10 @@ export class AuthenticationService {
 
       return true;
 
+    }
+
+    sendSocialServiceReady(service: string) {
+      this.socialServiceReady.next(service);
     }
 
 }

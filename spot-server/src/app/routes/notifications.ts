@@ -5,18 +5,32 @@ const notifications = require('../db/notifications');
 const accounts = require('../db/accounts');
 const posts = require('../db/posts');
 
+const commentsService = require('../services/comments');
+
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
 // get notifications
-router.get('/', function (req: any, res: any) {
+router.get('/', async function (req: any, res: any) {
 
     const id = req.user.id;
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
 
-    notifications.getNotificationByReceiverId(id, offset, limit).then((rows: any) => {
+    notifications.getNotificationByReceiverId(id, offset, limit).then(async (rows: any) => {
+
+        for (let i = 0; i < rows.length; i++) {
+
+            try {
+                //commentId: string, accountId: string, commentAccountId: string, commentContent: string
+                rows[i].comment_content = await commentsService.addTagsToContent( rows[i].comment_id, id, rows[i].account_id, rows[i].comment_content);
+            } catch (err) {
+                res.status(500).send('Error getting notifications');
+            }
+
+        }
+
         res.status(200).json({ notifications: rows });
     }, (err: any) => {
         res.status(500).send('Error getting notifications');
