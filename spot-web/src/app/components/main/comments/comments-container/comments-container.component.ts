@@ -348,7 +348,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       }
 
       // Don't add spaces to start
-      if ( elem.tagName === 'DIV' && text.length > 0 ) {
+      if ( elem.tagName === 'DIV' ) {
         // A new Div
         text += '\n';
         offset += 1;
@@ -360,10 +360,11 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     }
 
-    // There should already be no spaces at start, this should just remove
+    // TODO: cleanup whitespace here if decide to do it
+    // There should already be no spaces at start, this should just remove - check text length 0 before append \n
     // spaces at the end
     // tag offsets will be adjusted on the server to never be more than content length
-    content = text.trim();
+    content = text;
 
     // Error checking
 

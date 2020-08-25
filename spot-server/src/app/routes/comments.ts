@@ -1,3 +1,5 @@
+import { addTag } from "../db/tags";
+
 const express = require('express');
 const router = express.Router();
 const uuid = require('uuid');
@@ -150,8 +152,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
         let { content, tagsList } = JSON.parse(req.body.json)
         const image = req.file ? req.file.location: null
 
-        // remove leading and trailing whitespaces
-        content = content.trim();
+        // TODO: If we were to cleanup whitespace. here
 
         // check if line length matches
         if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
