@@ -108,7 +108,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       state.replies[action.response.postId][action.response.commentId].replies.push(action.response.reply);
       return {
           ...state,
-          addReplySuccess: { success: true, id: action.response.postId }
+          addReplySuccess: { success: true, id: action.response.reply.id }
       };
     }
     case ActionTypes.ADD_REPLY_FAILURE: {

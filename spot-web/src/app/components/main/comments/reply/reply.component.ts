@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
-import { CommentsStoreActions } from '@store/comments-store';
+import { CommentsStoreActions, CommentsStoreSelectors } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
@@ -58,6 +58,7 @@ export class ReplyComponent implements OnInit, OnDestroy {
   isExpandable = false;
 
   reply2Text: string;
+  addReply2Success$: Observable<{ success: boolean, id: string }>;
   addReply2Error: string;
 
   FILENAME_MAX_SIZE = 20;
@@ -95,6 +96,24 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
       this.friendsList = friends;
+    });
+
+    // Success Event
+    this.addReply2Success$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectAddReplySuccess)
+    );
+
+    this.addReply2Success$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
+      if ( success.id === this.reply.id && success.success ) {
+        console.log('ran me', this.reply2)
+        this.removeFile();
+        this.reply2.nativeElement.innerText = '';
+        this.reply2.nativeElement.innerHtml = '';
+        Array.from(this.reply2.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
+        this.reply2.nativeElement.innerHTML = '';
+        this.currentLength = this.reply2.nativeElement.innerHTML.length;
+        this.showAddReply = false;
+      }
     });
 
     if ( this.reply.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH

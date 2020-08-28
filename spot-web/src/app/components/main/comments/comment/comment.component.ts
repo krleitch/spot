@@ -76,6 +76,8 @@ export class CommentComponent implements OnInit, OnDestroy {
   timeMessage: string;
   showAddReply = false;
   optionsEnabled = false;
+
+  addReplySuccess$: Observable<{ success: boolean, id: string }>;
   addReplyError = '';
 
   currentOffset = 0;
@@ -109,6 +111,23 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
       this.friendsList = friends;
+    });
+
+    // Success Event
+    this.addReplySuccess$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectAddReplySuccess)
+    );
+
+    this.addReplySuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success) => {
+      if ( success.id === this.comment.parent_id && success.success ) {
+        this.removeFile();
+        this.reply.nativeElement.innerText = '';
+        this.reply.nativeElement.innerHtml = '';
+        Array.from(this.reply.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
+        this.reply.nativeElement.innerHTML = '';
+        this.currentLength = this.reply.nativeElement.innerHTML.length;
+        this.showAddReply = false;
+      }
     });
 
     // if detailed load more replies
