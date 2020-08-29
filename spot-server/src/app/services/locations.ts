@@ -94,12 +94,12 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
 }
 
-function addDistanceToRows(rows: any[], latitude: number, longitude: number, hidden: boolean): any[] {
+function addDistanceToRows(rows: any[], latitude: number, longitude: number, hideDistance: boolean): any[] {
 	return rows.map( (row: any) => {
 		let newRow = row
 		if ( latitude && longitude ) {
 			const distance = distanceBetween( latitude, longitude, row.latitude, row.longitude, 'M' );
-			newRow.distance = hidden ? Math.max(LOCATIONS_CONSTANTS.MIN_DISTANCE, distance) : distance;
+			newRow.distance = hideDistance ? Math.max(LOCATIONS_CONSTANTS.MIN_DISTANCE, distance) : distance;
 			newRow.inRange = newRow.distance <= 10;
 		} else {
 			newRow.inRange = false;

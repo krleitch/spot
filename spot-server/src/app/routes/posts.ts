@@ -54,7 +54,7 @@ router.get('/', function (req: any, res: any, next: any) {
 
     posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
         // add the distance
-        rows = locationsService.addDistanceToRows(rows, latitude, longitude);
+        rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
         res.status(200).json({ posts: rows });
     }, (err: any) => {
         res.status(500).send('Error getting posts');
@@ -113,7 +113,7 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 
         locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
             posts.addPost(postId, content, location, image, link, accountId, geolocation).then((rows: any) => {
-                rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude);
+                rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude, true);
                 const response = { post: rows[0] }
                 res.status(200).json(response);
             }, (err: any) => {
@@ -219,7 +219,7 @@ router.get('/activity', function (req: any, res: any, next: any) {
     const longitude = Number(req.query.longitude);
 
     posts.getPostsActivity(accountId, date, limit).then((rows: any) => {
-        rows = locationsService.addDistanceToRows(rows, latitude, longitude);
+        rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
         const response = { actviity: rows };
         res.status(200).json(response);
     }, (err: any) => {
@@ -239,7 +239,7 @@ router.get('/:postLink', function (req: any, res: any, next: any) {
     const longitude = Number(req.query.longitude);
 
     posts.getPostByLink(postLink, req.authenticated ? req.user.id: null).then((rows: any) => {
-        rows = locationsService.addDistanceToRows(rows, latitude, longitude);
+        rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
         const response = { post: rows[0] };
         res.status(200).json(response);
     }, (err: any) => {
