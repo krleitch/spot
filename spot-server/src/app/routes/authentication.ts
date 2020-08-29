@@ -1,11 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// Move this
-const {OAuth2Client} = require('google-auth-library');
-const client = new OAuth2Client('805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com');
-
-const nodemailer = require('nodemailer');
 const shortid = require('shortid');
 
 // exceptions
@@ -162,13 +157,8 @@ router.post('/login/google', async function (req: any, res: any) {
     const { accessToken } = req.body;
     
     try {
-        const ticket = await client.verifyIdToken({
-            idToken: accessToken,
-            audience: '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com',
-            // Specify the CLIENT_ID of the app that accesses the backend
-            // Or, if multiple clients access the backend:
-            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-        });
+
+        const ticket = authentication.verifyGoogleIdToken(accessToken);
 
         const payload = ticket.getPayload();
         const userid = payload['sub'];

@@ -2,11 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const { pbkdf2Sync } = require('crypto');
-const nodemailer = require('nodemailer');
-
-// TODO: move this
-const {OAuth2Client} = require('google-auth-library');
-const client = new OAuth2Client('805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com');
 
 // db
 const accounts = require('@db/accounts');
@@ -19,9 +14,6 @@ const mail = require('@services/mail');
 
 // exceptions
 const AuthError = require('@exceptions/authentication');
-
-// ratelimiter
-const rateLimiter = require('@src/app/rateLimiter');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -204,13 +196,7 @@ router.post('/google', async function (req: any, res: any) {
 
     try {
 
-        const ticket = await client.verifyIdToken({
-            idToken: accessToken,
-            audience: '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com',
-            // Specify the CLIENT_ID of the app that accesses the backend
-            // Or, if multiple clients access the backend:
-            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-        });
+        const ticket = authentication.verifyGoogleIdToken(accessToken);
 
         const payload = ticket.getPayload();
         const userid = payload['sub'];

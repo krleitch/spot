@@ -1,11 +1,16 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
-            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken, createFacebookUsername }
+            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken, createFacebookUsername,
+            verifyGoogleIdToken }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
 const request = require('request');
 
 const secret = require('../../../../secret.json');
+
+// Google auth
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client('805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com');
 
 // services
 const passport = require('@services/authentication/passport');
@@ -207,4 +212,17 @@ function getFacebookId(accessToken: string): Promise<any> {
             resolve({response: response, body: JSON.parse(body)});
           });
     })
+}
+
+// Google
+
+async function verifyGoogleIdToken(accessToken: string): Promise<any> {
+    const ticket = await client.verifyIdToken({
+        idToken: accessToken,
+        audience: '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com',
+        // Specify the CLIENT_ID of the app that accesses the backend
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    });
+    return ticket
 }
