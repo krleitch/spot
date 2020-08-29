@@ -22,7 +22,7 @@ export class AuthenticationError extends SpotError {
 export class VerifyError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.VERIFY, statusCode);
-    this.name = "AccountNotVerified";
+    this.name = "VerifyError";
   }
 }
 
@@ -116,5 +116,21 @@ export class UpdateUsernameError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.UPDATE_USERNAME, statusCode);
     this.name = "UpdateUsernameError";
+  }
+}
+
+// Facebook
+export class FacebookSignUpError extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.FACEBOOK_SIGNUP, statusCode);
+    this.name = "FacebookSignUpError";
+  }
+}
+
+// Google
+export class GoogleSignUpError extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.GOOGLE_SIGNUP, statusCode);
+    this.name = "GoogleSignUpError";
   }
 }

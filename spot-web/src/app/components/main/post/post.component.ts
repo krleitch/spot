@@ -13,6 +13,7 @@ import { ModalService } from '@services/modal.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 
 import { POSTS_CONSTANTS } from '@constants/posts';
+import { LOCATIONS_CONSTANTS } from '@constants/locations';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -134,12 +135,22 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDistance(distance: number, unit: string) {
-    if ( unit === 'metric' ) {
-      return (distance * 1.60934).toFixed(1) + ' km';
-    } else {
-      return distance.toFixed(1) + ' m';
+  getDistance(distance: number, unit: string): string {
+
+    let distanceString = '';
+
+    if ( distance <= LOCATIONS_CONSTANTS.MIN_DISTANCE ) {
+      distanceString += '< ';
     }
+
+    if ( unit === 'metric' ) {
+      distanceString += (distance * 1.60934).toFixed(1) + ' km';
+    } else {
+      distanceString += distance.toFixed(1) + ' m';
+    }
+
+    return distanceString;
+
   }
 
   getContent(): string {

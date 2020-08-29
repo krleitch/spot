@@ -163,20 +163,27 @@ export class AuthenticationService {
 
     logoutAccountSuccess() {
       this.removeIdToken();
-      window['FB'].getLoginStatus((response) => {
+
+      // Logout of facebook
+      if ( window['FB'] ) {
+        window['FB'].getLoginStatus((response) => {
           if (response.status === 'connected') {
               window['FB'].logout(() => {
                   localStorage.removeItem('fb_access_token');
                   localStorage.removeItem('fb_expires_in');
               });
           }
-      });
+        });
+      }
+
       this.zone.run(() => {
         this.router.navigateByUrl('/login');
       });
+
     }
 
     private addIdToken(jwt: { token: string, expiresIn: number }) {
+
       // expiresIn is # of hours
 
       const expiresDate = new Date();
@@ -184,6 +191,7 @@ export class AuthenticationService {
 
       localStorage.setItem('id_token', jwt.token);
       localStorage.setItem('id_expires_at', expiresDate.toString());
+
     }
 
     private removeIdToken() {

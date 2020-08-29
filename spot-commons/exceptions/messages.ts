@@ -110,6 +110,12 @@ export const ERROR_MESSAGES = {
             // Update Username
             UPDATE_USERNAME: 'There was an error updating your username',
 
+            // Facebook
+            FACEBOOK_SIGNUP: 'There was an error signing up with facebook',
+
+            // Google
+            GOOGLE_SIGNUP: 'There was an error signing up with google'
+
         }
 
     }

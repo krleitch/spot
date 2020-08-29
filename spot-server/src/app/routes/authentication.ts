@@ -97,7 +97,7 @@ router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, functi
 });
 
 // Facebook login
-router.post('/login/facebook', function (req: any, res: any) {
+router.post('/login/facebook', function (req: any, res: any, next: any) {
     const { accessToken } = req.body;
     authentication.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
         accounts.getFacebookAccount(facebookDetails.body.id).then( async( user: any) => {
@@ -121,17 +121,17 @@ router.post('/login/facebook', function (req: any, res: any) {
                                 account: user2
                             }, ( err: any) => {
                                 // couldnt add your friends
-                                res.status(500).send('Error signing in with facebook');
+                                return next(new AuthError.FacebookSignUpError(500));
                             });  
 
                         });
 
                     }, (err: any) => {
-                        return Promise.reject(err);
+                        return next(new AuthError.FacebookSignUpError(500));
                     });
  
                 }, (err: any) => {
-                    return Promise.reject(err);
+                    return next(new AuthError.FacebookSignUpError(500));
                 });            
             } else {
                 // account already exists
@@ -144,21 +144,21 @@ router.post('/login/facebook', function (req: any, res: any) {
                 });   
             }
         }, (err: any) => {
-            return Promise.reject(err);
+            return next(new AuthError.FacebookSignUpError(500));
         })   
     }, (err: any) => {
-        res.status(500).send('Error signing in with facebook');
+        return next(new AuthError.FacebookSignUpError(500));
     });
 });
 
 // Google
-router.post('/login/google', async function (req: any, res: any) {
+router.post('/login/google', async function (req: any, res: any, next: any) {
     
     const { accessToken } = req.body;
     
     try {
 
-        const ticket = authentication.verifyGoogleIdToken(accessToken);
+        const ticket = await authentication.verifyGoogleIdToken(accessToken);
 
         const payload = ticket.getPayload();
         const userid = payload['sub'];
@@ -185,10 +185,10 @@ router.post('/login/google', async function (req: any, res: any) {
                         });
 
                     }, (err: any) => {
-                        res.status(500).send('Error signing in with google');
+                        return next(new AuthError.GoogleSignUpError(500));
                     });
                 }, (err: any) => {
-                    res.status(500).send('Error signing in with google');
+                    return next(new AuthError.GoogleSignUpError(500));
                 });
  
             } else {
@@ -202,13 +202,10 @@ router.post('/login/google', async function (req: any, res: any) {
                 });   
             }
         }, (err: any) => {
-            res.status(500).send('Error signing in with google');
+            return next(new AuthError.GoogleSignUpError(500));
         });
-
-        // If request specified a G Suite domain:
-        // const domain = payload['hd'];
     } catch (err) {
-        res.status(500).send('Error signing in with google');
+        return next(new AuthError.GoogleSignUpError(500));
     }
 
 });
