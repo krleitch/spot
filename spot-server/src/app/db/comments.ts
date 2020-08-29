@@ -9,7 +9,7 @@ const db = require('./mySql');
 // Used for getting a comment or reply
 function getCommentById(commentId: string, accountId: string): Promise<any> {
     var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes,
+                        comments.likes, comments.dislikes, comments.comment_parent_id,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
             WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
             ELSE NULL END) AS rated,
@@ -78,10 +78,10 @@ function getCommentByPostIdNoAccount(postId: string, date: string, limit: number
     return db.query(sql, values);
 }
 
-function addComment(commentId: string, postId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
+function addComment(commentId: string, postId: string, accountId: string, content: string, image: string, link: string, commentParentId: string): Promise<any> {
     // Note the parent_id is NULL
-    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [commentId, postId, accountId, new Date(), content, link, image, 0, 0];
+    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, comment_parent_id, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [commentId, postId, accountId, new Date(), commentParentId, content, link, image, 0, 0];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(commentId, accountId);  
     });
@@ -100,9 +100,9 @@ function deleteCommentByPostId(postId: string, accountId: string): Promise<any> 
 }
 
 // Add a reply
-function addReply(replyId: string, postId: string, commentId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
-    var sql = 'INSERT INTO comments (id, post_id, parent_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [replyId, postId, commentId, accountId, new Date(), content, link, image, 0, 0];
+function addReply(replyId: string, postId: string, commentId: string, commentParentId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
+    var sql = 'INSERT INTO comments (id, post_id, parent_id, comment_parent_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [replyId, postId, commentId, commentParentId, accountId, new Date(), content, link, image, 0, 0];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(replyId, accountId);  
     });    

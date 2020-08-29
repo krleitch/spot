@@ -149,7 +149,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             return next(new CommentsError.CommentImage(422));
         }
 
-        let { content, tagsList } = JSON.parse(req.body.json)
+        let { content, tagsList, commentParentId } = JSON.parse(req.body.json)
         const image = req.file ? req.file.location: null
 
         // TODO: If we were to cleanup whitespace. here
@@ -173,7 +173,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
 
         const link = await commentsService.generateLink();
 
-        comments.addComment(commentId, postId, accountId, content, image, link).then( async (comment: any) => {
+        comments.addComment(commentId, postId, accountId, content, image, link, commentParentId).then( async (comment: any) => {
 
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
@@ -263,18 +263,17 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
     singleUpload(req, res, async function(err: any) {
 
         if (err) {
-            console.log(err);
-            return res.status(422).send('Error uploading image');
+            return res.status(422).send('Error uploading comment image');
         }
 
-        const { content, tagsList } = JSON.parse(req.body.json)
+        const { content, tagsList, commentParentId } = JSON.parse(req.body.json)
         const image = req.file ? req.file.location: null
 
         const postId = req.params.postId;
         const commentId = req.params.commentId;
         const link = await commentsService.generateLink();
 
-        comments.addReply(replyId, postId, commentId, accountId, content, image, link).then( async (reply: any) => {
+        comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, link).then( async (reply: any) => {
 
             // TODO: add catches for these
 

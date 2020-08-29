@@ -70,6 +70,7 @@ CREATE TABLE comments (
     id VARCHAR(36) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
     parent_id VARCHAR(36),
+    comment_parent_id VARCHAR(36),
     account_id VARCHAR(36) NOT NULL,
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,

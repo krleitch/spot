@@ -82,6 +82,26 @@ export class AppComponent implements OnInit {
   }
 
   getAccountLocation() {
+
+    // return a fake location if needed
+
+    const request1: LoadLocationRequest = {};
+    this.store$.dispatch(
+      new AccountsActions.LoadLocationAction(request1)
+    );
+
+    const request2: SetLocationRequest = {
+      location: { longitude: -69.3333, latitude: 51.4444 }
+    };
+    this.store$.dispatch(
+      // TODO send login location
+      new AccountsActions.SetLocationAction(request2)
+    );
+
+    return;
+
+    // END
+
     if (navigator.geolocation) {
 
       const request: LoadLocationRequest = {};

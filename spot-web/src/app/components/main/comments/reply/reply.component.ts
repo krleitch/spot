@@ -105,7 +105,6 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
     this.addReply2Success$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
       if ( success.id === this.reply.id && success.success ) {
-        console.log('ran me', this.reply2)
         this.removeFile();
         this.reply2.nativeElement.innerText = '';
         this.reply2.nativeElement.innerHtml = '';
@@ -555,6 +554,7 @@ export class ReplyComponent implements OnInit, OnDestroy {
     const request: AddReplyRequest = {
       postId: this.reply.post_id,
       commentId: this.reply.parent_id,
+      commentParentId: this.reply.id,
       content,
       image: this.imageFile,
       tagsList: tags

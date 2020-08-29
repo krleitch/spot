@@ -4,6 +4,7 @@ export interface Comment {
     id: string;
     post_id: string;
     parent_id: string;
+    comment_parent_id: string;
     creation_date: string;
     content: string;
     image_src: string;
@@ -87,6 +88,7 @@ export interface LoadRepliesSuccess {
 export interface AddReplyRequest {
     postId: string;
     commentId: string;
+    commentParentId: string; // the comment the user added the reply on. it would stil have same parent
     content: string;
     image: File;
     tagsList: Tag[];

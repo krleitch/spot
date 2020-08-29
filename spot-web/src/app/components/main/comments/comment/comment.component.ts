@@ -119,7 +119,7 @@ export class CommentComponent implements OnInit, OnDestroy {
     );
 
     this.addReplySuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success) => {
-      if ( success.id === this.comment.parent_id && success.success ) {
+      if ( success.id === this.comment.id && success.success ) {
         this.removeFile();
         this.reply.nativeElement.innerText = '';
         this.reply.nativeElement.innerHtml = '';
@@ -600,6 +600,7 @@ export class CommentComponent implements OnInit, OnDestroy {
     const request: AddReplyRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
+      commentParentId: this.comment.id,
       content,
       image: this.imageFile,
       tagsList: tags
