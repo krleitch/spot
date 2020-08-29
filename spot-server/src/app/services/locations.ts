@@ -2,15 +2,21 @@ export { checkLocation, verifyLocation, distanceBetween, getGeolocation, addDist
 
 const request = require('request');
 
+// config
 const googleconfig = require('../../../googlekey.json');
 
+// db
 const locations = require('../db/locations');
 
 // error
 const LocationsError = require('@exceptions/locations');
 
-// Returns if  you are allowed to commnet/post on something
-// TODO
+// constants
+const locations_constants = require('@constants/locations');
+const LOCATIONS_CONSTANTS = locations_constants.LOCATIONS_CONSTANTS;
+
+// Returns if location object is relevant to your previous location if any
+// Detect Fraud
 const checkLocation = async (req: any, res: any, next: any) => {
 
 	// if you aren't logged in then verifying your location doesn't matter
@@ -60,12 +66,6 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
     return locations.getLatestLocation(account_id).then( (location: any) => {
 
-        // 80 mph is allowed rate of change of location
-        const MAX_DISTANCE_CHANGE = 80;
-
-        // Max time is 1 day
-        const MAX_TIME_CHANGE = 24;
-
 		// No previous info, so add it and return true
 		if ( location.length < 1 ) {
 
@@ -78,13 +78,13 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 		const { latitude, longitude, creation_date } = location[0];
 
         // The max time delay has passed
-        if ( new Date().valueOf() >= new Date( new Date(creation_date).valueOf() + MAX_TIME_CHANGE * 3600000).valueOf() ) {
+        if ( new Date().valueOf() >= new Date( new Date(creation_date).valueOf() + LOCATIONS_CONSTANTS.MAX_TIME_CHANGE * 3600000).valueOf() ) {
             return true;
         } else {
 
             const numHours = ( new Date().valueOf() - new Date(creation_date).valueOf() ) / 3600000;
 
-            const maxDistance = MAX_DISTANCE_CHANGE * numHours;
+            const maxDistance = LOCATIONS_CONSTANTS.MAX_DISTANCE_CHANGE * numHours;
 
             return distanceBetween( myLatitude, myLongitude, latitude, longitude, 'M' ) <= maxDistance;
 
