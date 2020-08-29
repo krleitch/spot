@@ -5,7 +5,7 @@ import { State } from './state';
 
 export const LoadingCommentsBefore = (state: State): { loading: boolean, id: string } => state.loadingCommentsBefore;
 export const LoadingCommentsAfter = (state: State): { loading: boolean, id: string } => state.loadingCommentsAfter;
-export const LoadingCommentsAfterSuccess = (state: State): { success: boolean, id: string } => state.loadingCommentsAfterSuccess;
+export const LoadingCommentsAfterSuccess = (state: State): { success: boolean, id: string, length: number } => state.loadingCommentsAfterSuccess;
 export const AddCommentError = (state: State): { error: SpotError, id: string } => state.addCommentError;
 export const AddCommentSuccess = (state: State): { success: boolean, id: string } => state.addCommentSuccess;
 export const AddReplyError = (state: State): { error: SpotError, id: string } => state.addReplyError;
@@ -61,7 +61,7 @@ export const selectMyFeatureLoadingCommentsBefore: MemoizedSelector<
   LoadingCommentsBefore
 );
 
-export const selectMyFeatureLoadingCommentsAfterSuccess: MemoizedSelector<object, { success: boolean, id: string }> = createSelector(
+export const selectMyFeatureLoadingCommentsAfterSuccess: MemoizedSelector<object, { success: boolean, id: string, length: number }> = createSelector(
   selectMyFeatureState,
   LoadingCommentsAfterSuccess
 );

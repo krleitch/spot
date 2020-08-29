@@ -59,7 +59,7 @@ export function featureReducer(state = initialState, action: Actions): State {
           totalCommentsBefore: action.response.totalCommentsBefore
         };
         state.loadingCommentsAfter = { loading: false, id: null };
-        state.loadingCommentsAfterSuccess = { success: true, id: action.response.postId };
+        state.loadingCommentsAfterSuccess = { success: true, id: action.response.postId, length: action.response.comments.length };
       } else {
         state.comments[action.response.postId] = {
           comments: state.comments[action.response.postId].comments.concat(action.response.comments),

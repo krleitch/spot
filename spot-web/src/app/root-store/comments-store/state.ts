@@ -9,7 +9,7 @@ export interface State {
     repliesLeft: number;
     loadingCommentsBefore: { loading: boolean, id: string };
     loadingCommentsAfter: { loading: boolean, id: string };
-    loadingCommentsAfterSuccess: { success: boolean, id: string };
+    loadingCommentsAfterSuccess: { success: boolean, id: string, length: number };
     addCommentError: { error: SpotError, id: string };
     addCommentSuccess: { success: boolean, id: string };
     addReplyError: { error: SpotError, id: string };
@@ -22,7 +22,7 @@ export const initialState: State = (
   {
     loadingCommentsBefore: { loading: false, id: null },
     loadingCommentsAfter: { loading: false, id: null },
-    loadingCommentsAfterSuccess: { success: false, id: null },
+    loadingCommentsAfterSuccess: { success: false, id: null, length: null },
     addCommentError: { error: null, id: null },
     addCommentSuccess: { success: null, id: null },
     addReplyError: { error: null, id: null },

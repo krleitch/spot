@@ -47,7 +47,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   totalCommentsBefore = 0;
   loadingCommentsBefore$: Observable<{ loading: boolean, id: string }>;
   loadingCommentsAfter$: Observable<{ loading: boolean, id: string }>;
-  loadingCommentsAfterSuccess$: Observable<{ success: boolean, id: string }>;
+  loadingCommentsAfterSuccess$: Observable<{ success: boolean, id: string, length: number }>;
   addCommentError$: Observable<{ error: SpotError, id: string }>;
   addCommentSuccess$: Observable<{ success: boolean, id: string }>;
   addCommentError: string;
@@ -56,7 +56,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   friendsList: Friend[] = [];
 
   initialLoad = true;
-  loadedAfter = false; // Have you tried to check for recent comments already
+  loadedAfter = 0; // Have you tried to check for recent comments already, and if so how many did you get
 
   isAuthenticated$: Observable<boolean>;
 
@@ -104,7 +104,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     this.loadingCommentsAfterSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
       if ( success.id === this.post.id && success.success ) {
-        this.loadedAfter = true;
+        this.loadedAfter = success.length;
       }
     });
 

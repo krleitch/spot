@@ -101,7 +101,6 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
             commentsArray = taggedComments;
         });
 
-
         let numCommentsBefore = -1;
         if ( type == 'before' ) {
           let lastDate;

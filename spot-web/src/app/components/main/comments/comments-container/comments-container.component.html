@@ -2,7 +2,7 @@
   <div class="comments-container">
 
     <div class="load-recent-container">
-      <div *ngIf="loadedAfter; else initialloadafter">
+      <div *ngIf="loadedAfter > 0; else initialloadafter">
         <div class="load-more" (click)="loadRecentComments()">
           <span *ngIf="comments.length > 0; else refresh"> {{ STRINGS.LOAD_RECENT_COMMENTS_AGAIN }} </span>
           <ng-template #refresh>
