@@ -39,16 +39,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(Cors());
 
-// Check the users location data on each request
-// app.use(locationService.checkLocation)
-
 // Unprotected
 app.use('/', root);
 app.use('/auth', auth);
 
 // Optional auth, user may or may not be filled check req.authenticated
-app.use('/posts', authentication.optionalAuth , posts);
-app.use('/comments', authentication.optionalAuth, comments);
+// Only check location on posts and comments, only requests that send location details are verified
+app.use('/posts', authentication.optionalAuth, locationService.checkLocation, posts);
+app.use('/comments', authentication.optionalAuth, locationService.checkLocation, comments);
 
 // Required Auth
 app.use('/accounts', authentication.requiredAuth, accounts);

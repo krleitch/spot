@@ -6,10 +6,14 @@ const googleconfig = require('../../../googlekey.json');
 
 const locations = require('../db/locations');
 
+// error
+const LocationsError = require('@exceptions/locations');
+
 // Returns if  you are allowed to commnet/post on something
 // TODO
 const checkLocation = async (req: any, res: any, next: any) => {
 
+	// if you aren't logged in then verifying your location doesn't matter
 	if ( !req.authenticated ) {
 		next();
 	}
@@ -28,23 +32,27 @@ const checkLocation = async (req: any, res: any, next: any) => {
 		longitude = location.longitude;
 	}
 
+	// If there is a locatiomn attached to the request, compare to last location
 	if ( latitude && longitude ) {
 
 		await verifyLocation( accountId, latitude, longitude ).then( (valid: boolean) => {
 
 			if ( !valid ) {
-				// return invalid location error
-				// return (next()
+				return next(new LocationsError.LocationError(500));
 			}
 
-			// update location
+			// We have a new valid location, update it
+			locations.updateLocation(accountId, latitude, longitude).then( (rows: any) => {
+				next();
+			})
 
 		});
 
+	} else {
+		// No location info, so just go next
+		next();
 	}
 
-	// We are good, go next
-	next();
 }
 
 // Returns True if the location given is accurate for the user with account_id
@@ -52,15 +60,19 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
     return locations.getLatestLocation(account_id).then( (location: any) => {
 
-        // 40 mph is allowed rate of change of location
+        // 80 mph is allowed rate of change of location
         const MAX_DISTANCE_CHANGE = 80;
 
         // Max time is 1 day
         const MAX_TIME_CHANGE = 24;
 
-		// No previous info
+		// No previous info, so add it and return true
 		if ( location.length < 1 ) {
-			return true;
+
+			locations.addLocation(account_id, myLatitude, myLongitude).then( (rows: any) => {
+				return true;
+			})
+
 		}
 
 		const { latitude, longitude, creation_date } = location[0];

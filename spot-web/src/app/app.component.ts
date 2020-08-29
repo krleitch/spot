@@ -91,6 +91,7 @@ export class AppComponent implements OnInit {
     );
 
     const request2: SetLocationRequest = {
+      // location: { longitude: -69.3333, latitude: 10.4444 }
       location: { longitude: -69.3333, latitude: 51.4444 }
     };
     this.store$.dispatch(

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { SpotError } from '@exceptions/error';
 
 import { DeletePostRequest, DeletePostSuccess, AddPostRequest, AddPostSuccess, LoadPostSuccess, LikePostSuccess,
           LikePostRequest, DislikePostRequest, DislikePostSuccess, LoadPostRequest,
@@ -81,8 +81,8 @@ export class PostsService {
     return this.http.put<DislikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/dislike`, request);
   }
 
-  failureMessage(message: string) {
-    this.alertService.error(message);
+  failureMessage(error: SpotError) {
+    this.alertService.error(error.message);
   }
 
   onReportSuccess() {

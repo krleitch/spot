@@ -103,9 +103,9 @@ export class PostsStoreEffects {
             response.offset = action.request.offset;
             return new featureActions.LoadSuccessAction( response );
           }),
-          catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
-          )
+          catchError(errorResponse => {
+            return observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          })
         )
     )
   );

@@ -55,6 +55,12 @@ export const ERROR_MESSAGES = {
             REPORT_ERROR: 'There was an error sending your report. Please try again.',
             REPORT_LENGTH: 'Invalid report length'
 
+        },
+
+        LOCATION: {
+
+            LOCATION_ERROR: 'You are using an invalid location'
+
         }
     
     },
