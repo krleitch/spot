@@ -220,29 +220,32 @@ router.get('/activity', function (req: any, res: any, next: any) {
 
     posts.getPostsActivity(accountId, date, limit).then((rows: any) => {
         rows = locationsService.addDistanceToRows(rows, latitude, longitude);
-        res.status(200).json({ activity: rows });
+        const response = { actviity: rows };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error getting activity');
-    })
+        return next(new PostsError.PostActivity(500));
+    });
+
 });
 
 // Get a single post
-router.get('/:postLink',  function (req: any, res: any) {
+router.get('/:postLink', function (req: any, res: any, next: any) {
 
     // getting individual posts does not need an account
-
     const postLink = req.params.postLink;
 
-    // optional
+    // Optional - needed to supply distances
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
 
     posts.getPostByLink(postLink, req.authenticated ? req.user.id: null).then((rows: any) => {
         rows = locationsService.addDistanceToRows(rows, latitude, longitude);
-        res.status(200).json({ post: rows[0] });
+        const response = { post: rows[0] };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error getting post');
-    })
+        return next(new PostsError.GetSinglePost(500));
+    });
+
 });
 
 export = router;

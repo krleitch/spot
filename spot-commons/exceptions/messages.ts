@@ -34,7 +34,9 @@ export const ERROR_MESSAGES = {
             INVALID_POST_LINE_LENGTH: 'Invalid post line length',
             NO_CONTENT: 'No content',
             IMAGE: 'Error with image',
-            INVALID_POST_PROFANITY: 'Spot cannot contain profanity'
+            INVALID_POST_PROFANITY: 'Spot cannot contain profanity',
+            POST_ACTIVITY: 'Error getting post activity',
+            GET_SINGLE_POST: 'Error getting the requested post'
 
         },
 

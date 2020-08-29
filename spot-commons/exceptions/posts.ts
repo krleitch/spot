@@ -54,3 +54,17 @@ export class PostImage extends SpotError {
     this.name = "PostImage";
   }
 }
+
+export class PostActivity extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.POST_ACTIVITY, statusCode);
+    this.name = "PostActivity";
+  }
+}
+
+export class GetSinglePost extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.GET_SINGLE_POST, statusCode);
+    this.name = "GetSinglePost";
+  }
+}
