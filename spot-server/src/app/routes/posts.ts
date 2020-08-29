@@ -55,9 +55,10 @@ router.get('/', function (req: any, res: any, next: any) {
     posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
         // add the distance
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
-        res.status(200).json({ posts: rows });
+        const response = { posts: rows };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error getting posts');
+        return next(new PostsError.GetPosts(500));
     });
 
 });
@@ -135,11 +136,14 @@ router.put('/:postId/like', function(req: any, res: any, next: any) {
 
     const postId = req.params.postId;
     const accountId = req.user.id;
+
     posts.likePost(postId, accountId).then((rows: any) => {
-        res.status(200).json({ postId: postId });
+        const response = { postId: postId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error liking post');
-    })
+        return next(new PostsError.LikePost(500));
+    });
+
 });
 
 // Dislike a post
@@ -154,10 +158,11 @@ router.put('/:postId/dislike', function(req: any, res: any, next: any) {
     const accountId = req.user.id;
 
     posts.dislikePost(postId, accountId).then((rows: any) => {
-        res.status(200).json({ postId: postId });
+        const response = { postId: postId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error disliking post');
-    })
+        return next(new PostsError.DislikePost(500));
+    });
 
 });
 
@@ -173,10 +178,12 @@ router.delete('/:postId', function(req: any, res: any, next: any) {
     const accountId = req.user.id;
 
     posts.deletePost(postId, accountId).then((rows: any) => {
-        res.status(200).json({ postId: postId });
+        const response = { postId: postId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error deleting post');
-    })
+        return next(new PostsError.DeletePost(500));
+    });
+
 });
 
 // report a post

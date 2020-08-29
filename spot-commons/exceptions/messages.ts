@@ -36,7 +36,11 @@ export const ERROR_MESSAGES = {
             IMAGE: 'Error with image',
             INVALID_POST_PROFANITY: 'Spot cannot contain profanity',
             POST_ACTIVITY: 'Error getting post activity',
-            GET_SINGLE_POST: 'Error getting the requested post'
+            GET_SINGLE_POST: 'Error getting the requested post',
+            DELETE_POST: 'Error deleting post',
+            DISLIKE_POST: 'Error disliking post',
+            LIKE_POST: 'Error liking post',
+            GET_POSTS: 'Error getting posts'
 
         },
 

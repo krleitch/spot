@@ -62,9 +62,37 @@ export class PostActivity extends SpotError {
   }
 }
 
+export class GetPosts extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.GET_POSTS, statusCode);
+    this.name = "GetPosts";
+  }
+}
+
 export class GetSinglePost extends SpotError {
   constructor(statusCode) {
     super(POSTS_ERROR_MESSAGES.GET_SINGLE_POST, statusCode);
     this.name = "GetSinglePost";
+  }
+}
+
+export class DeletePost extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.DELETE_POST, statusCode);
+    this.name = "DeletePost";
+  }
+}
+
+export class DislikePost extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.DISLIKE_POST, statusCode);
+    this.name = "DislikePost";
+  }
+}
+
+export class LikePost extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.LIKE_POST, statusCode);
+    this.name = "LikePost";
   }
 }
