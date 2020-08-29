@@ -135,6 +135,8 @@ export const STRINGS = {
           LOAD_MORE_COMMENTS: 'Load more comments',
           LOAD_RECENT_COMMENTS: 'Load recent commments',
           REFRESH_COMMENTS: 'Refresh commments',
+          LOAD_RECENT_COMMENTS_AGAIN: 'Load recent commments',
+          REFRESH_COMMENTS_AGAIN: 'No More Comments, Refresh again',
 
           // Form
           ADD_COMMENT_PLACEHOLDER: 'Add a comment ...',

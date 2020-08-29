@@ -47,6 +47,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   totalCommentsBefore = 0;
   loadingCommentsBefore$: Observable<{ loading: boolean, id: string }>;
   loadingCommentsAfter$: Observable<{ loading: boolean, id: string }>;
+  loadingCommentsAfterSuccess$: Observable<{ success: boolean, id: string }>;
   addCommentError$: Observable<{ error: SpotError, id: string }>;
   addCommentSuccess$: Observable<{ success: boolean, id: string }>;
   addCommentError: string;
@@ -55,6 +56,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   friendsList: Friend[] = [];
 
   initialLoad = true;
+  loadedAfter = false; // Have you tried to check for recent comments already
 
   isAuthenticated$: Observable<boolean>;
 
@@ -85,14 +87,26 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Loading indicators
+    // Load More
     this.loadingCommentsBefore$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsBefore)
     );
 
+    // Recent
     this.loadingCommentsAfter$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsAfter)
     );
+
+    // Recent Success Event
+    this.loadingCommentsAfterSuccess$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsAfterSuccess)
+    );
+
+    this.loadingCommentsAfterSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
+      if ( success.id === this.post.id && success.success ) {
+        this.loadedAfter = true;
+      }
+    });
 
     // Check Authentication
     this.isAuthenticated$ = this.store$.pipe(
