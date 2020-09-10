@@ -117,17 +117,17 @@ spot-main-nav {
   display: flex;
   justify-content: center;
   cursor: pointer;
-  padding: 8px 12px;
-  width: 100%;
+  padding: 8px 8px;
+  min-width: 50px;
   background-color: $lighter-grey;
 }
 
 .hot {
   display: flex;
   justify-content: center;
-  width: 100%;
+  min-width: 50px;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 8px 8px;
   background-color: $lighter-grey;
 }
 
