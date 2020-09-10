@@ -4,6 +4,14 @@ import { ERROR_MESSAGES } from './messages';
 const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.FRIENDS;
 
 // If username doesnt exist or is yourself, or already added / requested
+export class GetFriends extends SpotError {
+  constructor(statusCode) {
+    super(FRIENDS_ERROR_MESSAGES.GET_FRIENDS, statusCode);
+    this.name = "GetFriends";
+  }
+}
+
+// If username doesnt exist or is yourself, or already added / requested
 export class UsernameError extends SpotError {
     constructor(message, statusCode) {
       super(message, statusCode);
@@ -20,6 +28,7 @@ export class FriendExistsError extends SpotError {
   }
 }
 
+// You cannot add yourself
 export class AddSelfError extends SpotError {
   constructor(statusCode) {
     super(FRIENDS_ERROR_MESSAGES.SELF, statusCode);
@@ -27,6 +36,7 @@ export class AddSelfError extends SpotError {
   }
 }
 
+// No account with that username
 export class NoAccountError extends SpotError {
   constructor(statusCode) {
     super(FRIENDS_ERROR_MESSAGES.NO_USER, statusCode);

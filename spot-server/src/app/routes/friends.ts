@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+// db
 const friends = require('../db/friends');
 const accounts = require('../db/accounts');
 
-//errors
+// errors
 const FriendsError = require('@exceptions/friends');
 const ERROR_MESSAGES = require('@exceptions/messages');
 const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
@@ -13,45 +14,47 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// get friends
-router.get('/', function (req: any, res: any) {
+// get friends of logged in user
+router.get('/', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const date = req.query.date;
     const limit = Number(req.query.limit);
 
     friends.getFriends(accountId, date, limit).then((rows: any) => {
-        res.status(200).json({ friends: rows });
+        const response = { friends: rows };
+        res.status(200).json(response);
     }, (err: any) => {
-        console.log(err);
-        res.status(500).send('Error getting friends');
+        return next(new FriendsError.GetFriends(500));
     });
 
 });
 
-// delete friend
-router.delete('/:friendId', function (req: any, res: any) {
+// delete a friend with the given friendId
+router.delete('/:friendId', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const friendId = req.params.friendId;
 
     friends.deleteFriendById(friendId, accountId).then((rows: any) => {
-        res.status(200).json({ friendId: friendId });
+        const response = { friendId: friendId };
+        res.status(200).json(response);
     }, (err: any) => {
-        console.log(err);
-        res.status(500).send('Error deleting friend');
+        return next(new FriendsError.DeleteFriend(500));
     });
+
 });
 
-// get friend requests
-router.get('/requests', function (req: any, res: any) {
+// get friend requests for the user
+router.get('/requests', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     friends.getFriendRequests(accountId).then((rows: any) => {
-        res.status(200).json({ friendRequests: rows });
+        const response = { friendRequests: rows };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error getting friend requests');
+        return next(new FriendsError.GetFriendRequests(500));
     });
 
 });
@@ -119,29 +122,39 @@ router.post('/requests', function (req: any, res: any, next: any) {
 // });
 
 // accept a friend request
-router.post('/requests/accept', function (req: any, res: any) {
+router.post('/requests/accept', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { friendRequestId } = req.body
 
     friends.acceptFriendRequest(friendRequestId, accountId).then((rows: any) => {
-        res.status(200).json({ friend: rows[0] });
+
+        if ( rows.length < 1 ) {
+            return next(new FriendsError.AcceptFriendRequest(500));
+        } else {
+            const response = { friend: rows[0] };
+            res.status(200).json(response);
+        }
+
     }, (err: any) => {
-        res.status(500).send('Error accepting friend request');
+        return next(new FriendsError.AcceptFriendRequest(500));
     });
+
 });
 
 // decline a friend request
-router.post('/requests/decline', function (req: any, res: any) {
+router.post('/requests/decline', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { friendRequestId } = req.body
 
     friends.declineFriendRequest(friendRequestId, accountId).then((rows: any) => {
-        res.status(200).json({ friendRequestId: friendRequestId });
+        const response = { friendRequestId: friendRequestId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error declining friend request');
+        return next(new FriendsError.DeclineFriendRequest(500));
     });
+
 });
 
 export = router;
