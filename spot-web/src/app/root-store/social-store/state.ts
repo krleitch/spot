@@ -7,6 +7,8 @@ export interface State {
   friends: Friend[];
   friendsError: SpotError;
   notifications: Notification[];
+  getNotificationsLoading: boolean;
+  getNotificationsSuccess: boolean;
   unread: number;
 }
 
@@ -16,6 +18,8 @@ export const initialState: State = (
     friends: [],
     friendsError: null,
     notifications: [],
+    getNotificationsLoading: false,
+    getNotificationsSuccess: false,
     unread: 0
   }
 );

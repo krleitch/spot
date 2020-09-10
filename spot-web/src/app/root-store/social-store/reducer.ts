@@ -4,13 +4,29 @@ import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions | FriendsActions): State {
   switch (action.type) {
+    case ActionTypes.GET_NOTIFICATIONS_REQUEST: {
+      return {
+        getNotificationsSuccess: false,
+        getNotificationsLoading: true,
+        ...state
+      };
+    }
     case ActionTypes.GET_NOTIFICATIONS_SUCCESS: {
-      if (action.response.offset === 0) {
+      if (!action.response.date) {
         state.notifications = action.response.notifications;
       } else {
         state.notifications = state.notifications.concat(action.response.notifications);
       }
       return {
+        getNotificationsSuccess: true,
+        getNotificationsLoading: false,
+        ...state
+      };
+    }
+    case ActionTypes.GET_NOTIFICATIONS_FAILURE: {
+      return {
+        getNotificationsSuccess: false,
+        getNotificationsLoading: false,
         ...state
       };
     }

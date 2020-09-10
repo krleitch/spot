@@ -1,42 +1,49 @@
 const express = require('express');
 const router = express.Router();
 
-const notifications = require('../db/notifications');
-const accounts = require('../db/accounts');
-const posts = require('../db/posts');
+// db
+const notifications = require('@db/notifications');
+const accounts = require('@db/accounts');
+const posts = require('@db/posts');
 
-const commentsService = require('../services/comments');
+// services
+const commentsService = require('@services/comments');
+
+// errors
+const NotificationsError = require('@exceptions/notifications');
+const ErrorHandler = require('@src/app/errorHandler');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// get notifications
-router.get('/', async function (req: any, res: any) {
+// get notifications for the user
+router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
 
-    const id = req.user.id;
-    const offset = Number(req.query.offset);
+    const accountId = req.user.id;
+    const date = req.query.date;
     const limit = Number(req.query.limit);
 
-    notifications.getNotificationByReceiverId(id, offset, limit).then(async (rows: any) => {
+    notifications.getNotificationByReceiverId(accountId, date, limit).then(ErrorHandler.catchAsync( async (rows: any) => {
 
+        // Add the tags to each comment
         for (let i = 0; i < rows.length; i++) {
-
             try {
-                //commentId: string, accountId: string, commentAccountId: string, commentContent: string
-                rows[i].comment_content = await commentsService.addTagsToContent( rows[i].comment_id, id, rows[i].account_id, rows[i].comment_content);
+                // rows[i].comment_content = await commentsService.addTagsToContent( rows[i].comment_id, accountId, rows[i].account_id, rows[i].comment_content);
             } catch (err) {
-                res.status(500).send('Error getting notifications');
+                console.log(err)
+                return next(new NotificationsError.GetNotifications(500));
             }
-
         }
+        const response = { notifications: rows, date: date };
+        res.status(200).json(response);
 
-        res.status(200).json({ notifications: rows });
     }, (err: any) => {
-        res.status(500).send('Error getting notifications');
-    })
+        console.log(err);
+        return next(new NotificationsError.GetNotifications(500));
+    }));
 
-});
+}));
 
 // get # of unread notifications
 router.get('/unread', function (req: any, res: any) {

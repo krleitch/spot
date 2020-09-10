@@ -10,6 +10,8 @@ export const selectFriendRequests = (state: State): FriendRequest[] => state.fri
 export const selectFriends = (state: State): Friend[] => state.friends;
 export const selectFriendsErrorMessage = (state: State): SpotError => state.friendsError;
 export const selectNotifications = (state: State): Notification[] => state.notifications;
+export const getNotificationsLoading = (state: State): boolean => state.getNotificationsLoading;
+export const getNotificationsSuccess = (state: State): boolean => state.getNotificationsSuccess;
 export const selectUnread = (state: State): number => state.unread;
 
 export const selectMyFeatureState: MemoizedSelector<
@@ -23,6 +25,22 @@ export const selectMyFeatureNotifications: MemoizedSelector<
 > = createSelector(
   selectMyFeatureState,
   selectNotifications
+);
+
+export const selectGetNotificationsLoading: MemoizedSelector<
+  object,
+  boolean
+> = createSelector(
+  selectMyFeatureState,
+  getNotificationsLoading
+);
+
+export const selectGetNotificationsSuccess: MemoizedSelector<
+  object,
+  boolean
+> = createSelector(
+  selectMyFeatureState,
+  getNotificationsSuccess
 );
 
 export const selectMyFeatureUnread: MemoizedSelector<

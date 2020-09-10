@@ -72,6 +72,12 @@ export const ERROR_MESSAGES = {
 
             LOCATION_ERROR: 'You are using an invalid location'
 
+        },
+
+        NOTIFICATIONS: {
+
+            GET_NOTIFICATIONS: 'Error getting notifications'
+
         }
     
     },

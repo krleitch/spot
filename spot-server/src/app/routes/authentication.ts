@@ -113,7 +113,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
                         const token = authentication.generateToken(user2);
 
                         // add facebook friends
-                        friendsService.addFacebookFriends(accessToken).then( (res: any) => {
+                        friendsService.addFacebookFriends(accessToken, user2[0].id).then( (res: any) => {
 
                             res.status(200).json({
                                 created: true,

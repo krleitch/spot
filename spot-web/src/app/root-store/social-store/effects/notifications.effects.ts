@@ -34,11 +34,11 @@ export class SocialStoreEffects {
         .getNotifications(action.request)
         .pipe(
           map((response: GetNotificationsSuccess) => {
-            response.offset = action.request.offset;
+            response.date = action.request.date;
             return new featureActions.GetNotificationsSuccessAction( response );
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new featureActions.GetNotificationsFailureAction( errorResponse.error ))
           )
         )
     )

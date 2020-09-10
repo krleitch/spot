@@ -20,7 +20,7 @@ export class NotificationsService {
 
   getNotifications(request: GetNotificationsRequest): Observable<GetNotificationsSuccess> {
     let params = new HttpParams();
-    params = params.append('offset', request.offset.toString());
+    params = params.append('date', request.date.toString());
     params = params.append('limit', request.limit.toString());
     return this.http.get<GetNotificationsSuccess>(`${this.baseUrl}/notifications`, { params });
   }

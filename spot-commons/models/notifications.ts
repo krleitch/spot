@@ -18,13 +18,13 @@ export interface Notification {
 
 // Get notifications
 export interface GetNotificationsRequest {
-    offset: number;
+    date: string;
     limit: number;
 }
 
 export interface GetNotificationsSuccess {
+    date: string;
     notifications: Notification[];
-    offset: number;
 }
 
 // Add a notification

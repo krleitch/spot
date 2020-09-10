@@ -5,10 +5,12 @@ import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationReques
           SetNotificationSeenSuccess, DeleteAllNotificationsRequest, DeleteAllNotificationsSuccess,
           SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess, GetNotificationsUnreadRequest,
           GetNotificationsUnreadSuccess } from '@models/notifications';
+import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
   GET_NOTIFICATIONS_REQUEST = '[Social] Get Notifications Request',
   GET_NOTIFICATIONS_SUCCESS = '[Social] Get Notifications Success',
+  GET_NOTIFICATIONS_FAILURE = '[Social] Get Notifications Failure',
   GET_NOTIFICATIONS_UNREAD_REQUEST = '[Social] Get Notifications Unread Request',
   GET_NOTIFICATIONS_UNREAD_SUCCESS = '[Social] Get Notifications Unread Success',
   ADD_NOTIFICATION_REQUEST = '[Social] Add Notification Request',
@@ -37,6 +39,11 @@ export class GetNotificationsAction implements Action {
 export class GetNotificationsSuccessAction implements Action {
   readonly type = ActionTypes.GET_NOTIFICATIONS_SUCCESS;
   constructor(public response: GetNotificationsSuccess) {}
+}
+
+export class GetNotificationsFailureAction implements Action {
+  readonly type = ActionTypes.GET_NOTIFICATIONS_FAILURE;
+  constructor(public error: SpotError) {}
 }
 
 export class AddNotificationAction implements Action {
@@ -99,11 +106,9 @@ export class GetNotificationsUnreadSuccessAction implements Action {
   constructor(public response: GetNotificationsUnreadSuccess) {}
 }
 
-
-
 export type Actions = GenericFailureAction | GetNotificationsAction | GetNotificationsSuccessAction |
                       AddNotificationAction | AddNotificationSuccessAction | DeleteNotificationAction |
                       SetNotificationSeenAction | SetNotificationSeenSuccessAction | DeleteNotificationSuccessAction |
                       DeleteAllNotificationsAction | DeleteAllNotificationsSuccessAction | SetAllNotificationsSeenAction |
-                      SetAllNotificationsSeenSuccessAction | GetNotificationsUnreadAction | GetNotificationsUnreadSuccessAction;
-
+                      SetAllNotificationsSeenSuccessAction | GetNotificationsUnreadAction | GetNotificationsUnreadSuccessAction |
+                      GetNotificationsFailureAction;

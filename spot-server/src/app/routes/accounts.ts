@@ -149,7 +149,7 @@ router.post('/facebook', function (req: any, res: any) {
                 // create the account
                 accounts.connectFacebookAccount(facebookId.body.id, accountId).then( (rows: any) => {
 
-                    friendsService.addFacebookFriends(accessToken).then( (res: any) => {
+                    friendsService.addFacebookFriends(accessToken, accountId).then( (res: any) => {
 
                         res.status(200).json({
                             created: true
