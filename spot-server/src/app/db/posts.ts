@@ -10,6 +10,7 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
     // 10 miles if location === local
     const distance = 10;
 
+    var values: any[] = [];
     var selectSql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
                         posts.likes, posts.dislikes, posts.comments, posts.geolocation,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
@@ -18,6 +19,7 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.deletion_date IS NULL `;
 
+    values = values.concat([accountId, accountId, accountId]);
     var locationSql;
     if ( location === 'local' ) {
         locationSql =`AND (
@@ -29,8 +31,15 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
                             * sin( radians( posts.latitude ) )
                             )
                           ) < ? `;
+        values = values.concat([latitude, longitude, latitude, distance]);
     } else {
         locationSql = '';
+    }
+
+    var dateSql = '';
+    if ( sort === 'new' ) {
+        dateSql = 'AND posts.creation_date < ? '
+        values = values.concat([new Date(date)]);
     }
 
     var groupSql = 'GROUP BY posts.id';
@@ -41,16 +50,11 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
     } else {
         sortSql = ' ORDER BY IF( likes - dislikes >= 0, IF( likes - dislikes > 0, 1, 0 ), -1 ) * ( LOG( 10, GREATEST( ABS( likes - dislikes ), 1 ) ) + ( ( UNIX_TIMESTAMP(posts.creation_date) - 1134028003 ) / 45000 ) ) DESC';
     }
+
     var limitOffsetSql = ' LIMIT ? OFFSET ?';
+    values = values.concat([limit, offset]);
 
-    var sql = selectSql + locationSql + groupSql + sortSql + limitOffsetSql;
-
-    var values;
-    if ( location === 'local' ) {
-        values = [accountId, accountId, accountId, latitude, longitude, latitude, distance, limit, offset];
-    } else {
-        values = [accountId, accountId, accountId, limit, offset];
-    }
+    var sql = selectSql + locationSql + dateSql + groupSql + sortSql + limitOffsetSql;
 
     return db.query(sql, values);
 }

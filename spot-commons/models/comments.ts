@@ -72,8 +72,9 @@ export interface DeleteCommentSuccess {
 export interface LoadRepliesRequest {
     postId: string;
     commentId: string;
-    offset: number;
+    date: string;
     limit: number;
+    initialLoad: boolean;
 }
 
 export interface LoadRepliesSuccess {
@@ -81,7 +82,8 @@ export interface LoadRepliesSuccess {
     commentId: string;
     replies: Comment[];
     totalReplies: number;
-    offset: number;
+    date: string;
+    initialLoad: boolean;
 }
 
 // Add a reply

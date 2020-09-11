@@ -20,11 +20,13 @@ export interface Notification {
 export interface GetNotificationsRequest {
     date: string;
     limit: number;
+    initialLoad: boolean;
 }
 
 export interface GetNotificationsSuccess {
     date: string;
     notifications: Notification[];
+    initialLoad: boolean;
 }
 
 // Add a notification

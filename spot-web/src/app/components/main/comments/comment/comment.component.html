@@ -98,6 +98,6 @@
   <div *ngFor="let reply of replies">
     <spot-reply [reply]="reply" [postLink]="postLink" [inRange]="inRange" [detailed]="detailed"></spot-reply>
   </div>
-  <div *ngIf="numLoaded < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
+  <div *ngIf="replies.length < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
 
 </div>

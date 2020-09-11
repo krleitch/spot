@@ -228,10 +228,10 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
     
     const postId = req.params.postId;
     const commentId = req.params.commentId;
-    const offset = Number(req.query.offset);
+    const date = req.query.date || null;
     const limit = Number(req.query.limit);
 
-    comments.getRepliesByCommentId(postId, commentId, offset, limit, req.authenticated ? req.user.id : null).then( async (rows: any) => {
+    comments.getRepliesByCommentId(postId, commentId, date, limit, req.authenticated ? req.user.id : null).then( async (rows: any) => {
 
         await commentsService.getTags( rows, req.authenticated ? req.user.id : null ).then( (taggedComments: any) => {
             rows = taggedComments;
@@ -248,6 +248,7 @@ router.get('/:postId/:commentId', function (req: any, res: any) {
             return Promise.reject(err);
         });
     }, (err: any) => {
+        console.log(err)
         res.status(500).send('Error getting replies');
     });
 });

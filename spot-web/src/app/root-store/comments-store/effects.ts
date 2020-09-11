@@ -105,7 +105,8 @@ export class CommentsStoreEffects {
         .getReplies(action.request)
         .pipe(
             map( (response: LoadRepliesSuccess) => {
-              response.offset = action.request.offset;
+              response.date = action.request.date;
+              response.initialLoad = action.request.initialLoad;
               return new featureActions.GetReplySuccessAction(response);
             }),
             catchError( errorResponse =>

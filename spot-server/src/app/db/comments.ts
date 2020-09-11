@@ -109,25 +109,33 @@ function addReply(replyId: string, postId: string, commentId: string, commentPar
 }
 
 // Used for getting just the comments of a post
-function getRepliesByCommentId(postId: string, commentId: string, offset: number, limit: number, accountId?: string): Promise<any> {
+function getRepliesByCommentId(postId: string, commentId: string, date: string, limit: number, accountId?: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
                         comments.likes, comments.dislikes`
 
     var accountSql = '';
-    var accountValues: any[] = [];
+    var values: any[] = [];
     if ( accountId ) {
         accountSql = `, (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
                         WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
                         ELSE NULL END) AS rated,
                         (CASE WHEN comments.account_id = ? THEN 1 ELSE 0 END) AS owned`;
-                        accountValues = [accountId, accountId, accountId];
+                        values = values.concat([accountId, accountId, accountId]);
     }
 
-    var joinSql =     ` FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
-                        WHERE comments.post_id = ? AND comments.parent_id = ? AND comments.deletion_date IS NULL
-                        GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ? OFFSET ?`;
-    var sql = selectSql + accountSql + joinSql;
-    var values = accountValues.concat([postId, commentId, limit, offset]);
+    var joinSql = ` FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
+                    WHERE comments.post_id = ? AND comments.parent_id = ? AND comments.deletion_date IS NULL `
+    values = values.concat([postId, commentId])
+
+    var dateSql = ``;
+    if ( date ) {
+        var dateSql = `AND comments.creation_date > ? `
+        values = values.concat([new Date(date)])
+    }
+
+    var orderSql = `GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ?`;
+    var sql = selectSql + accountSql + joinSql + dateSql + orderSql;
+    var values = values.concat([limit]);
     return db.query(sql, values);
 }
 

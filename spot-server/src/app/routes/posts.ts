@@ -50,7 +50,7 @@ router.get('/', function (req: any, res: any, next: any) {
     const sort = req.query.sort;
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
-    const date = req.query.date;
+    const date = req.query.date || null;
 
     posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
         // add the distance
@@ -58,6 +58,7 @@ router.get('/', function (req: any, res: any, next: any) {
         const response = { posts: rows };
         res.status(200).json(response);
     }, (err: any) => {
+        console.log(err)
         return next(new PostsError.GetPosts(500));
     });
 

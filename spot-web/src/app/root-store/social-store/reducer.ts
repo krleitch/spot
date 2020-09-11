@@ -6,9 +6,9 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
   switch (action.type) {
     case ActionTypes.GET_NOTIFICATIONS_REQUEST: {
       return {
+        ...state,
         getNotificationsSuccess: false,
         getNotificationsLoading: true,
-        ...state
       };
     }
     case ActionTypes.GET_NOTIFICATIONS_SUCCESS: {
@@ -18,16 +18,16 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
         state.notifications = state.notifications.concat(action.response.notifications);
       }
       return {
+        ...state,
         getNotificationsSuccess: true,
-        getNotificationsLoading: false,
-        ...state
+        getNotificationsLoading: false
       };
     }
     case ActionTypes.GET_NOTIFICATIONS_FAILURE: {
       return {
+        ...state,
         getNotificationsSuccess: false,
-        getNotificationsLoading: false,
-        ...state
+        getNotificationsLoading: false
       };
     }
     case ActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS: {

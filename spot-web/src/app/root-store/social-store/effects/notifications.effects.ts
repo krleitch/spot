@@ -35,6 +35,7 @@ export class SocialStoreEffects {
         .pipe(
           map((response: GetNotificationsSuccess) => {
             response.date = action.request.date;
+            response.initialLoad = action.request.initialLoad;
             return new featureActions.GetNotificationsSuccessAction( response );
           }),
           catchError(errorResponse =>

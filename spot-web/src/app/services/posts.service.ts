@@ -68,7 +68,9 @@ export class PostsService {
 
   getActivity(request: ActivityPostRequest): Observable<ActivityPostSuccess> {
     let params = new HttpParams();
-    params = params.append('date', request.date);
+    if ( request.date ) {
+      params = params.append('date', request.date);
+    }
     params = params.append('limit', request.limit.toString());
     if ( request.location ) {
       params = params.append('latitude', request.location.latitude.toString());

@@ -52,7 +52,9 @@ export class CommentService {
 
   getReplies(request: LoadRepliesRequest): Observable<LoadRepliesSuccess> {
     let params = new HttpParams();
-    params = params.append('offset', request.offset.toString());
+    if ( request.date ) {
+      params = params.append('date', request.date);
+    }
     params = params.append('limit', request.limit.toString());
     return this.http.get<LoadRepliesSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`, { params });
   }

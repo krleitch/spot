@@ -60,7 +60,6 @@ export class CommentComponent implements OnInit, OnDestroy {
   replies$: Observable<any>;
   replies = [];
   totalReplies = 0;
-  numLoaded = 0;
 
   isAuthenticated$: Observable<boolean>;
 
@@ -79,8 +78,6 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   addReplySuccess$: Observable<{ success: boolean, id: string }>;
   addReplyError = '';
-
-  currentOffset = 0;
 
   constructor(private store$: Store<RootStoreState.State>,
               private commentService: CommentService,
@@ -131,20 +128,19 @@ export class CommentComponent implements OnInit, OnDestroy {
     });
 
     // if detailed load more replies
-    const initialLimit = this.detailed ? 10 : 5;
+    const initialLimit = this.detailed ? 10 : 1;
 
     const request: LoadRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
-      offset: this.currentOffset,
+      date: null,
+      initialLoad: true,
       limit: initialLimit
     };
     this.store$.dispatch(
       new CommentsStoreActions.GetReplyRequestAction(request)
     );
-    this.currentOffset += initialLimit;
-    // off set and num loaded should be based off array length, not set here, FIX TODO
-    this.numLoaded += initialLimit;
+
     this.getTime(this.comment.creation_date);
 
     if ( this.comment.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
@@ -437,19 +433,17 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   loadMoreReplies() {
-    // Load 1 more replys
     const limit = 1;
     const request: LoadRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
-      offset: this.currentOffset,
-      limit
+      date: this.replies.slice(-1)[0].creation_date,
+      limit,
+      initialLoad: false
     };
     this.store$.dispatch(
       new CommentsStoreActions.GetReplyRequestAction(request)
     );
-    this.currentOffset += limit;
-    this.numLoaded += limit;
   }
 
   setOptions(value) {

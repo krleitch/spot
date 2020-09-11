@@ -81,7 +81,7 @@ export function featureReducer(state = initialState, action: Actions): State {
             totalReplies: 0
           };
         }
-        if ( action.response.offset === 0 ) {
+        if ( action.response.initialLoad) {
           state.replies[action.response.postId][action.response.commentId] = {
             replies: action.response.replies,
             totalReplies: action.response.totalReplies

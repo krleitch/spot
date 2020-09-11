@@ -8,6 +8,7 @@ import { SocialStoreNotificationsActions, SocialStoreSelectors } from '@store/so
 import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest,
           SetAllNotificationsSeenRequest } from '@models/notifications';
 import { STRINGS } from '@assets/strings/en';
+import { NOTIFICATIONS_CONSTANTS } from '@constants/notifications';
 
 
 @Component({
@@ -21,13 +22,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
-  loadLimit = 10;
+  // Notifications state variables
   notificationDate: string = null;
-
   notifications$: Observable<Notification[]>;
   notificationsLoading$: Observable<boolean>;
   notificationsSuccess$: Observable<boolean>;
   isLoading = false;
+  initialLoad = true;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
@@ -38,7 +39,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     );
 
     this.notificationsLoading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
-      if ( loading != null ) {
+      if ( loading !== null ) {
         this.isLoading = loading;
       }
     });
@@ -53,7 +54,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     // Get last date that was loaded
     this.notifications$.pipe(takeUntil(this.onDestroy)).subscribe( (notifications: Notification[]) => {
-      if ( notifications && notifications.length > 1 ) {
+      if ( notifications && notifications.length > 0 ) {
         this.notificationDate = notifications.slice(-1)[0].creation_date;
       }
     });
@@ -72,13 +73,16 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
       const request: GetNotificationsRequest = {
         date: loadBeforeDate,
-        limit: this.loadLimit,
+        limit: NOTIFICATIONS_CONSTANTS.LIMIT,
+        initialLoad: this.initialLoad
       };
 
       // load the notifications
       this.store$.dispatch(
         new SocialStoreNotificationsActions.GetNotificationsAction(request)
       );
+
+      this.initialLoad = false;
 
     }
 

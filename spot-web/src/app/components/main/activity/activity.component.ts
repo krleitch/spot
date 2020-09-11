@@ -111,7 +111,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
     if ( this.location && !this.commentActivityLoading ) {
 
       const activityCommentRequest: ActivityCommentRequest = {
-        date: this.commentActivity.length > 0 ? this.commentActivity.slice(-1).pop().creation_date : new Date().toString(),
+        date: this.commentActivity.length > 0 ? this.commentActivity.slice(-1)[0].creation_date : new Date().toString(),
         limit: this.postLimit
       };
 
@@ -131,7 +131,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
     if ( this.location && !this.postActivityLoading ) {
 
       const activityPostRequest: ActivityPostRequest = {
-        date: this.postActivity.length > 0 ? this.postActivity.slice(-1).pop().creation_date : new Date().toString(),
+        date: this.postActivity.length > 0 ? this.postActivity.slice(-1)[0].creation_date : new Date().toString(),
         limit: this.postLimit,
         location: this.location
       };
