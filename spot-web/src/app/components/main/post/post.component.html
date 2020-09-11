@@ -5,7 +5,7 @@
       <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': post.rated == 1}"> keyboard_arrow_up </i>
       <div class="points"> {{ post.likes - post.dislikes }} </div>
       <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': post.rated == 0}"> keyboard_arrow_down </i>
-      <div class="time">
+      <div class="time" [routerLink]="'/posts/' + post.link">
           {{ getTime() }}
       </div>
     </div>

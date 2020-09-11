@@ -47,6 +47,10 @@
 .time {
   font-size: 12px;
   color: $subtle-grey;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 
 .distance {
