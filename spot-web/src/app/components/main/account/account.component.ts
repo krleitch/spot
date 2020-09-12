@@ -94,7 +94,6 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log('ran')
     gapi.signin2.render('my-signin2', {
         scope: 'profile email',
         width: 240,

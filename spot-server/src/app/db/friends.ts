@@ -72,7 +72,7 @@ function addFriendRequest(senderId: string, receiverId: string) {
 function acceptFriendRequest(id: string, accountId: string) {
     var sql = `UPDATE friends SET confirmed_date = ? WHERE id = ? AND friend_id = ? AND confirmed_date IS NULL`;
     var values = [new Date(), id, accountId];
-    return db.query(sql, values).then( (rows:" any") => {
+    return db.query(sql, values).then( (rows: any) => {
         return getFriendsById(id);
     });
 }

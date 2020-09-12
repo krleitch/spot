@@ -132,8 +132,14 @@ router.post('/requests/accept', function (req: any, res: any, next: any) {
         if ( rows.length < 1 ) {
             return next(new FriendsError.AcceptFriendRequest(500));
         } else {
-            const response = { friend: rows[0] };
-            res.status(200).json(response);
+            // Get the username
+            accounts.getAccountById(rows[0].account_id).then( (account: any) => {
+                rows[0].username = account[0].username;
+                const response = { friend: rows[0] };
+                res.status(200).json(response);
+            }, (err: any) => {
+
+            });
         }
 
     }, (err: any) => {

@@ -1,4 +1,5 @@
 @import '../../../styles/colors';
+@import '../../../styles/sizes';
 
 spot-main-nav {
   position: fixed;
@@ -50,4 +51,17 @@ spot-main-nav {
 
 spot-post {
   width: 95%;
+}
+
+// Mobile stylings
+@media screen and (max-width: $mobile-width) {
+  
+  .post-detailed {
+
+    .content {
+      width: 95%;
+    }
+
+  }
+
 }
