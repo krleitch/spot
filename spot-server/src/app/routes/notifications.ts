@@ -25,13 +25,16 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
     const limit = Number(req.query.limit);
 
     notifications.getNotificationByReceiverId(accountId, date, limit).then(ErrorHandler.catchAsync( async (rows: any) => {
-
         // Add the tags to each comment
         for (let i = 0; i < rows.length; i++) {
             try {
-                // rows[i].comment_content = await commentsService.addTagsToContent( rows[i].comment_id, accountId, rows[i].account_id, rows[i].comment_content);
+                if ( rows[i].comment_content ) {
+                    rows[i].comment_content = await commentsService.addTagsToContent( rows[i].comment_id, accountId, rows[i].account_id, rows[i].comment_content);
+                }
+                if ( rows[i].reply_content ) {
+                    rows[i].reply_content = await commentsService.addTagsToContent( rows[i].reply_id, accountId, rows[i].account_id, rows[i].reply_content);
+                }
             } catch (err) {
-                console.log(err)
                 return next(new NotificationsError.GetNotifications(500));
             }
         }
@@ -39,7 +42,6 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
         res.status(200).json(response);
 
     }, (err: any) => {
-        console.log(err);
         return next(new NotificationsError.GetNotifications(500));
     }));
 

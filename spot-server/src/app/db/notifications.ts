@@ -8,14 +8,14 @@ const db = require('./mySql');
 
 function getNotificationByReceiverId(receiverId: string, date: string, limit: number) {
     var sql = `SELECT n.id, n.post_id, n.comment_id, n.reply_id, n.creation_date, n.seen, a.username,
-                p.image_src, p.content, p.link, 
-                c.link as comment_link, c.image_src as comment_image_src, c.content as comment_content, c.account_id as account_id,
-                r.image_src as reply_image_src, r.content as reply_content
+                p.image_src, p.content, p.link, p.deletion_date, 
+                c.link as comment_link, c.image_src as comment_image_src, c.content as comment_content, c.account_id as account_id, c.deletion_date as comment_deletion_date,
+                r.image_src as reply_image_src, r.content as reply_content, r.deletion_date as reply_deletion_date
                 FROM notifications n
                 LEFT JOIN accounts a ON a.id = n.sender_id
                 LEFT JOIN posts p ON n.post_id = p.id
                 LEFT JOIN comments c ON n.comment_id = c.id
-                LEFT JOIN comments r ON n.reply_id = r.id WHERE receiver_id = ? AND n.creation_date < ?
+                LEFT JOIN comments r ON n.reply_id = r.id WHERE receiver_id = ? AND n.creation_date < ? AND c.deletion_date IS NULL AND r.deletion_date IS NULL AND p.deletion_date IS NULL
                 ORDER BY n.creation_date DESC LIMIT ?`;
     var values = [receiverId, new Date(date), limit];
     return db.query(sql, values);

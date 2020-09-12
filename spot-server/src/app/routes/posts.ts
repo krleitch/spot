@@ -228,7 +228,7 @@ router.get('/activity', function (req: any, res: any, next: any) {
 
     posts.getPostsActivity(accountId, date, limit).then((rows: any) => {
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
-        const response = { actviity: rows };
+        const response = { activity: rows };
         res.status(200).json(response);
     }, (err: any) => {
         return next(new PostsError.PostActivity(500));

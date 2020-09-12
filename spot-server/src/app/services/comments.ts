@@ -188,7 +188,7 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 }
 
 async function addTagsToContent( commentId: string, accountId: string, commentAccountId: string, commentContent: string ): Promise<string> {
-
+    
     let ret = '';
 
     await tags.getTagsByCommentId(commentId).then( async (tagList: any) => {
