@@ -18,6 +18,9 @@ const CommentsError = require('@exceptions/comments');
 const comments_constants = require('@constants/comments');
 const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
 
+// sources
+const profileImages = require('@src/app/profileImages');
+
 function validContent(content: string): Error | null {
 
 	if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH || content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH ) {
@@ -97,18 +100,9 @@ async function getProfilePictureFromBucket( index: number ) {
         return aws.getUrlFromBucket('profile/op.png');
     }
 
-    const urls = [
-        'profile/icons/icons8-avocado-48.png',
-        'profile/icons/icons8-banana-split-48.png',
-        'profile/icons/icons8-bao-bun-48.png',
-        'profile/icons/icons8-beet-48.png',
-        'profile/icons/icons8-cheese-48.png',
-        'profile/icons/icons8-cute-pumpkin-48.png',
-        'profile/icons/icons8-kawaii-french-fries-48.png',
-        'profile/icons/icons8-kawaii-sushi-48.png'
-    ];
+    return aws.getUrlFromBucket(profileImages[index % profileImages.length])
 
-    return aws.getUrlFromBucket(urls[index % urls.length])
+    // This code should be moved somewhere else
 
     // var params = { 
     //     Bucket: 'spot',

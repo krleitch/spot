@@ -84,6 +84,12 @@ export const ERROR_MESSAGES = {
             DELETE_NOTIFICATION: 'Error deleting notification',
             DELETE_ALL_NOTIFICATION: 'Error deleting all notifications'
 
+        },
+
+        ACCOUNTS: {
+
+            DELETE_ACCOUNT: 'Error deleting account'
+
         }
     
     },

@@ -13,12 +13,15 @@ const friendsService = require('@services/friends');
 const mail = require('@services/mail');
 
 // exceptions
-const AuthError = require('@exceptions/authentication');
+const AuthenticationError = require('@exceptions/authentication');
+const AccountsError = require('@exceptions/accounts');
+const ErrorHandler = require('@src/app/errorHandler');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
+// soft deletes the user account
 router.delete('/', function (req: any, res: any) {
     const accountId = req.user.id;
     accounts.deleteAccount(accountId).then( (rows: any) => {
@@ -60,12 +63,12 @@ router.put('/username', function (req: any, res: any, next: any) {
             const column = err.sqlMessage.match(/'.*?'/g).slice(-1)[0].replace(/[']+/g, '');
 
             if ( column == 'username' ) {
-                return next(new AuthError.UsernameTakenError(400));
+                return next(new AuthenticationError.UsernameTakenError(400));
             }
 
         }
 
-        return next(new AuthError.UpdateUsernameError(500));
+        return next(new AuthenticationError.UpdateUsernameError(500));
 
     });
 
@@ -92,12 +95,12 @@ router.put('/email', function (req: any, res: any, next: any) {
             const column = err.sqlMessage.match(/'.*?'/g).slice(-1)[0].replace(/[']+/g, '');
 
             if ( column == 'email' ) {
-                return next(new AuthError.EmailTakenError(400));
+                return next(new AuthenticationError.EmailTakenError(400));
             }
 
         }
 
-        // return next(new AuthError.UpdateUsernameError(500));
+        // return next(new AuthenticationError.UpdateUsernameError(500));
 
     });
 
@@ -125,7 +128,7 @@ router.put('/phone', function (req: any, res: any, next: any) {
             const column = err.sqlMessage.match(/'.*?'/g).slice(-1)[0].replace(/[']+/g, '');
 
             if ( column == 'phone' ) {
-                return next(new AuthError.PhoneTakenError(400));
+                return next(new AuthenticationError.PhoneTakenError(400));
             }
 
         }
