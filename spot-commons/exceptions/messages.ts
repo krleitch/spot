@@ -116,14 +116,12 @@ export const ERROR_MESSAGES = {
 
         AUTHENTICATION: {
 
-            // Generic
-            SERVER_ERROR: 'Something has gone wrong. Please try again',
-
             // Standard Authentication Error
             NO_AUTHENTICATION: 'User not Authenticated',
             VERIFY: 'User email not verified',
 
-            // Register Validation
+            // Register
+            REGISTER: 'Something has gone wrong. Please try again',
 
             // Username
             USERNAME_TAKEN: 'Username is not available',
@@ -145,8 +143,9 @@ export const ERROR_MESSAGES = {
             USERNAME_OR_PASSWORD: 'Email / Username or Password is invalid',
 
             // Password Reset
-            TOKEN: 'This token as expired or is invalid',
-            PASSWORD_RESET: 'Error resetting password',
+            PASSWORD_RESET: 'Error sending password reset',
+            PASSWORD_RESET_VALIDATE: 'Error validating password reset token',
+            NEW_PASSWORD: 'Error setting new passowrd',
 
             // Update Username
             UPDATE_USERNAME: 'There was an error updating your username',

@@ -5,13 +5,7 @@ const AUTHENTICATION_ERROR_MESSAGES = ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
 
 // Most General Error Classes
 
-export class AuthenticationServerError extends SpotError {
-  constructor(statusCode) {
-    super(AUTHENTICATION_ERROR_MESSAGES.SERVER_ERROR, statusCode);
-    this.name = "AuthenticationServerError";
-  }
-}
-
+// The user is not authenticated
 export class AuthenticationError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.NO_AUTHENTICATION, statusCode);
@@ -19,6 +13,7 @@ export class AuthenticationError extends SpotError {
   }
 }
 
+// Account email is not verified
 export class VerifyError extends SpotError {
   constructor(statusCode) {
     super(AUTHENTICATION_ERROR_MESSAGES.VERIFY, statusCode);
@@ -27,6 +22,13 @@ export class VerifyError extends SpotError {
 }
 
 // Validation Auth Errors for signup
+
+export class Register extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.REGISTER, statusCode);
+    this.name = "Register";
+  }
+}
 
 export class UsernameLengthError extends SpotError {
   constructor(statusCode, minLength, maxLength) {
@@ -97,17 +99,24 @@ export class UsernameOrPasswordError extends SpotError {
 }
 
 // Password Reset Errors
-export class TokenError extends SpotError {
+export class PasswordReset extends SpotError {
   constructor(statusCode) {
-    super(AUTHENTICATION_ERROR_MESSAGES.TOKEN, statusCode);
-    this.name = "TokenError";
+    super(AUTHENTICATION_ERROR_MESSAGES.PASSWORD_RESET, statusCode);
+    this.name = "PasswordReset";
   }
 }
 
-export class PasswordResetError extends SpotError {
+export class PasswordResetValidate extends SpotError {
   constructor(statusCode) {
-    super(AUTHENTICATION_ERROR_MESSAGES.PASSWORD_RESET, statusCode);
-    this.name = "PasswordResetError";
+    super(AUTHENTICATION_ERROR_MESSAGES.PASSWORD_RESET_VALIDATE, statusCode);
+    this.name = "PasswordResetValidate";
+  }
+}
+
+export class NewPassword extends SpotError {
+  constructor(statusCode) {
+    super(AUTHENTICATION_ERROR_MESSAGES.NEW_PASSWORD, statusCode);
+    this.name = "NewPassword";
   }
 }
 

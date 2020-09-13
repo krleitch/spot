@@ -22,7 +22,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// Register - Given password should already be hashed once
+// Register for a new account
 router.post('/register', function (req: any, res: any, next: any) {
 
     const { email, username, password, phone } = req.body;
@@ -61,7 +61,7 @@ router.post('/register', function (req: any, res: any, next: any) {
                 account: user
             });  
         }, (err: any) => {
-            return next(new AuthError.AuthenticationServerError(500));
+            return next(new AuthError.Register(500));
         });
     }, (err: any) => {
 
@@ -81,12 +81,12 @@ router.post('/register', function (req: any, res: any, next: any) {
 
         }
 
-        return next(new AuthError.AuthenticationServerError(500));
+        return next(new AuthError.Register(500));
         
     });
 });
 
-// Get a user token
+// Get a user token, use passport local authentication
 router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, function (req: any, res: any) {
     const user = req.user;
     const token = authentication.generateToken(user);
@@ -145,7 +145,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
             }
         }, (err: any) => {
             return next(new AuthError.FacebookSignUpError(500));
-        })   
+        });
     }, (err: any) => {
         return next(new AuthError.FacebookSignUpError(500));
     });
@@ -212,7 +212,7 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
 
 
 // password reset
-router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: any, res: any) {
+router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: any, res: any, next: any) {
 
     const { email } = req.body;
 
@@ -221,7 +221,7 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
             
             const token = shortid.generate();
 
-            // send email with nodemailer
+            // Send email with nodemailer and aws ses transport
 
             mail.transporter.sendMail({
                 from: 'krleitch.ca@gmail.com', // TODO: CHANGE
@@ -238,13 +238,13 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
             }, (err: any, info: any) => {
                 
                 if ( err ) {
-                    res.status(500).send({});
+                    return next(new AuthError.PasswordReset(500));
                 } else {
                     // add to table
                     passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
                         res.status(200).send({});
                     }, (err: any) => {
-                        res.status(500).send({});
+                        return next(new AuthError.PasswordReset(500));
                     });
                 }
 
@@ -252,11 +252,11 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
 
         } else {
             // No account
-            res.status(200).send({});
+            return next(new AuthError.PasswordReset(500));
         }
 
     }, (err: any) => {
-        res.status(500).send({});
+        return next(new AuthError.PasswordReset(500));
     });
                       
 });
@@ -273,15 +273,15 @@ router.post('/new-password/validate', rateLimiter.tokenLimiter, function (req: a
                 res.status(200).send({  token: token, valid: true });
             } else {
                 // Token expired
-                return next(new AuthError.TokenError(400));
+                return next(new AuthError.PasswordResetValidate(400));
             }
 
         } else {
             // No token exists
-            return next(new AuthError.TokenError(400));
+            return next(new AuthError.PasswordResetValidate(400));
         }
     }, (err: any) => {
-        return next(new AuthError.TokenError(500));
+        return next(new AuthError.PasswordResetValidate(400));
     });
                       
 });
@@ -306,15 +306,15 @@ router.post('/new-password', rateLimiter.newPasswordLimiter, function (req: any,
             accounts.changePassword( rows[0].account_id, hash, salt ).then( (r: any) => {
                 res.status(200).send({ reset: true });
             }, (err: any) => {
-                return next(new AuthError.PasswordResetError(500));
+                return next(new AuthError.NewPassword(500));
             });
 
         } else {
             // Either no token , or expired
-            return next(new AuthError.PasswordResetError(500));
+            return next(new AuthError.NewPassword(500));
         }
     }, (err: any) => {
-        return next(new AuthError.PasswordResetError(500));
+        return next(new AuthError.NewPassword(500));
     });
                       
 });
