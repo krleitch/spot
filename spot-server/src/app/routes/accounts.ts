@@ -8,7 +8,7 @@ const accounts = require('@db/accounts');
 const verifyAccount = require('@db/verifyAccount');
 
 // services
-const authService = require('@services/authentication/authentication');
+const authenticationService = require('@services/authentication/authentication');
 const friendsService = require('@services/friends');
 const mail = require('@services/mail');
 
@@ -55,7 +55,7 @@ router.put('/username', function (req: any, res: any, next: any) {
     const { username } = req.body;
 
     // Make sure the username is valid
-    const usernameError = authService.validUsername(username);
+    const usernameError = authenticationService.validUsername(username);
     if ( usernameError) {
         return next(usernameError);
     }
@@ -88,7 +88,7 @@ router.put('/email', function (req: any, res: any, next: any) {
     const accountId = req.user.id;
     const { email } = req.body;
 
-    const emailError = authService.validEmail(email);
+    const emailError = authenticationService.validEmail(email);
     if ( emailError) {
         return next(emailError);
     }
@@ -121,7 +121,7 @@ router.put('/phone', function (req: any, res: any, next: any) {
     const accountId = req.user.id;
     const { phone } = req.body;
 
-    const phoneError = authService.validPhone(phone);
+    const phoneError = authenticationService.validPhone(phone);
     if ( phoneError) {
         return next(phoneError);
     }
@@ -149,60 +149,55 @@ router.put('/phone', function (req: any, res: any, next: any) {
 });
 
 // Facebook Connect
-router.post('/facebook', function (req: any, res: any) {
+router.post('/facebook', function (req: any, res: any, next: any) {
 
     const { accessToken } = req.body;
     const accountId = req.user.id;
 
-    authService.getFacebookId(accessToken).then( ( facebookId: any) => {
-
+    authenticationService.getFacebookId(accessToken).then( ( facebookId: any) => {
         accounts.getFacebookAccount(facebookId.body.id).then(( user: any) => {
             if ( user.length == 0 ) {
                 // create the account
                 accounts.connectFacebookAccount(facebookId.body.id, accountId).then( (rows: any) => {
-
                     friendsService.addFacebookFriends(accessToken, accountId).then( (res: any) => {
 
-                        res.status(200).json({
-                            created: true
-                        });  
+                        const response = { created: true };
+                        res.status(200).json(response);  
 
                     }, ( err: any ) => {
-                        res.status(500).send('Error connecting account with facebook');
+                        return next(new AccountsError.FacebookConnect(500));
                     });
-
                 }, (err: any) => {
-                    res.status(500).send('Error connecting account with facebook');
+                    return next(new AccountsError.FacebookConnect(500));
                 });            
             } else {
                 // account already exists
-                res.status(500).send('Error connecting account with facebook');
+                return next(new AccountsError.FacebookConnect(500));
             }
         }, (err: any) => {
-            res.status(500).send('Error signing in with facebook');
-        })   
+            return next(new AccountsError.FacebookConnect(500));
+        });
     }, (err: any) => {
-        res.status(500).send('Error signing in with facebook');
+        return next(new AccountsError.FacebookConnect(500));
     });
 
 });
 
-router.post('/facebook/disconnect', function (req: any, res: any) {
+router.post('/facebook/disconnect', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     // remove the facebook id from the account
-
     accounts.disconnectFacebookAccount(accountId).then( (rows: any) => {
-        res.sendStatus(200);
+        res.status(200).send({});
     }, (err: any) => {
-        res.status(500).send('Error disconnecting account with facebook');
+        return next(new AccountsError.FacebookDisconnect(500));
     });   
   
 });
 
 // Google Connect
-router.post('/google', async function (req: any, res: any) {
+router.post('/google', async function (req: any, res: any, next: any) {
 
     const { accessToken } = req.body;
     const accountId = req.user.id;
@@ -219,109 +214,108 @@ router.post('/google', async function (req: any, res: any) {
                 // create the account
                 accounts.connectGoogleAccount(userid, accountId).then( (rows: any) => {
 
-                    res.status(200).json({
-                        created: false
-                    });  
+                    const response = { created: false };
+                    res.status(200).json(response);  
 
                 }, (err: any) => {
-                    res.status(500).send('Error connecting account with google');
+                    return next(new AccountsError.GoogleConnect(500));
                 });            
             } else {
                 // account already exists
-                res.status(500).send('Error connecting account with google');
+                return next(new AccountsError.GoogleConnect(500));
             }
         }, (err: any) => {
-            res.status(500).send('Error signing in with google');
+            return next(new AccountsError.GoogleConnect(500));
         }); 
 
     } catch (err) {
-        res.status(500).send('Error signing in with google');
+        return next(new AccountsError.GoogleConnect(500));
     }
 
 });
 
-router.post('/google/disconnect', function (req: any, res: any) {
+router.post('/google/disconnect', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     // remove the google id from the account
     accounts.disconnectGoogleAccount(accountId).then( (rows: any) => {
-        res.sendStatus(200);
+        res.status(200).send({});
     }, (err: any) => {
-        res.status(500).send('Error disconnecting account with google');
+        return next(new AccountsError.GoogleConnect(500));
     });   
   
 });
 
-// Account Metadata
-router.get('/metadata', function (req: any, res: any) {
+// Get account metadata
+router.get('/metadata', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     // Get account metadata
     accounts.getAccountMetadata(accountId).then( (rows: any) => {
-        res.status(200).json({ metadata: rows[0] });
+        const response = { metadata: rows[0] };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error getting account metadata');
+        return next(new AccountsError.GetMetadata(500));
     });   
   
 });
 
-router.put('/metadata', async function (req: any, res: any) {
+router.put('/metadata', async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     const { distance_unit, search_type, search_distance } = req.body;
 
+    // TODO, really dont like the await strategy here
     // We only ever change metadata 1 property at a time right now
     // Will need to be changed later
 
     if ( distance_unit ) {
         await accounts.updateAccountsMetadataDistanceUnit(accountId, distance_unit).then( (rows: any) => {
-
         }, (err: any) => {
-            res.status(500).send('Error updating distance unit');
+            return next(new AccountsError.MetadataDistanceUnit(500));
         });   
     }
     
     if ( search_type ) {
         await accounts.updateAccountsMetadataSearchType(accountId, search_type).then( (rows: any) => {
-
         }, (err: any) => {
-            res.status(500).send('Error updating search type');
+            return next(new AccountsError.MetadataSearchType(500));
         });   
     }
 
     if ( search_distance ) {
         await accounts.updateAccountsMetadataSearchDistance(accountId, search_distance).then( (rows: any) => {
         }, (err: any) => {
-            
-            res.status(500).send('Error updating search distance');
+            return next(new AccountsError.MetadataSearchDistance(500));
         });   
     }
 
     // Get account metadata
     accounts.getAccountMetadata(accountId).then( (rows: any) => {
-        res.status(200).json({ metadata: rows[0] });
+        const response = { metadata: rows[0] };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error getting account metadata');
+        return next(new AccountsError.GetMetadata(500));
     });   
 
 });
 
 // Verify Account
-router.post('/verify', function (req: any, res: any) {
+router.post('/verify', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     const value = new Date().toString() + accountId.toString();
     const iterations = 10000;
     const hashLength = 16;
-    const salt = 'salt'
+    const salt = 'salt';
     const digest = 'sha512';
     const token = pbkdf2Sync(value, salt, iterations, hashLength, digest).toString('hex');
 
-    // send email with nodemailer
+    // send email with nodemailerm using aws ses transport
 
     mail.transporter.sendMail({
         from: 'krleitch.ca@gmail.com', // TODO: CHANGE
@@ -338,14 +332,13 @@ router.post('/verify', function (req: any, res: any) {
     }, (err: any, info: any) => {
         
         if ( err ) {
-            res.status(500).send({});
+            return next(new AccountsError.SendVerify(500));
         } else {
             // Add record to verify account
             verifyAccount.addVerifyAccount(accountId, token).then( (rows: any) => {
                 res.status(200).json({});
             }, (err: any) => {
-                console.log(err, token)
-                res.status(500).send('Error sending verify');
+                return next(new AccountsError.SendVerify(500));
             });   
         }
 
@@ -354,34 +347,35 @@ router.post('/verify', function (req: any, res: any) {
 });
 
 // Verify Account
-router.post('/verify/confirm', function (req: any, res: any) {
+router.post('/verify/confirm', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
-
     const { token } = req.body;
 
     // Add record to verify account
     verifyAccount.getByToken(accountId, token).then( (rows: any) => {
 
-        // TODO: check valid expirary date
+        // check valid expirary date
+        if ( !authenticationService.isValidToken(rows[0]) ) {
+            return next(new AccountsError.ConfirmVerify(500));
+        }
 
         if ( rows.length > 0 ) {
 
             const verifiedDate = new Date();
             accounts.verifyAccount( rows[0].account_id, verifiedDate ).then( (r: any) => {
-                res.status(200).send({ account: r[0] });
+                const response = { account: r[0] };
+                res.status(200).send(response);
             }, (err: any) => {
-                console.log(err)
+                return next(new AccountsError.ConfirmVerify(500));
             });
 
         } else {
-            // FIX
-            // weird case
-            res.status(500).send('Error confirming verify');
+            return next(new AccountsError.ConfirmVerify(500));
         }
 
     }, (err: any) => {
-        res.status(500).send('Error confirming verify');
+        return next(new AccountsError.ConfirmVerify(500));
     });   
   
 });

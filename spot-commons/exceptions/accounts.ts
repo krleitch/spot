@@ -37,3 +37,73 @@ export class UpdatePhone extends SpotError {
       this.name = "UpdatePhone";
     }
 }
+
+export class FacebookConnect extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.FACEBOOK_CONNECT, statusCode);
+      this.name = "FacebookConnect";
+    }
+}
+
+export class FacebookDisconnect extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.FACEBOOK_DISCONNECT, statusCode);
+      this.name = "FacebookDisconnect";
+    }
+}
+
+export class GoogleConnect extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.GOOGLE_CONNECT, statusCode);
+      this.name = "GoogleConnect";
+    }
+}
+
+export class GoogleDisconnect extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.GOOGLE_DISCONNECT, statusCode);
+      this.name = "GoogleDisconnect";
+    }
+}
+
+export class GetMetadata extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.GET_METADATA, statusCode);
+      this.name = "GetMetadata";
+    }
+}
+
+export class MetadataDistanceUnit extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.METADATA_DISTANCE_UNIT, statusCode);
+      this.name = "MetadataDistanceUnit";
+    }
+}
+
+export class MetadataSearchType extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.METADATA_SEARCH_TYPE, statusCode);
+      this.name = "MetadataSearchType";
+    }
+}
+
+export class MetadataSearchDistance extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.METADATA_SEARCH_DISTANCE, statusCode);
+      this.name = "MetadataSearchDistance";
+    }
+}
+
+export class SendVerify extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.SEND_VERIFY, statusCode);
+      this.name = "SendVerify";
+    }
+}
+
+export class ConfirmVerify extends SpotError {
+    constructor(statusCode) {
+      super(ACCOUNTS_ERROR_MESSAGES.CONFIRM_VERIFY, statusCode);
+      this.name = "ConfirmVerify";
+    }
+}

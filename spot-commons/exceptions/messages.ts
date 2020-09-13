@@ -93,7 +93,20 @@ export const ERROR_MESSAGES = {
 
             UPDATE_USERNAME: 'Error updating username',
             UPDATE_EMAIL: 'Error updating email',
-            UPDATE_PHONE: 'Error updating phone'
+            UPDATE_PHONE: 'Error updating phone',
+
+            FACEBOOK_CONNECT: 'Error connecting account to facebook',
+            FACEBOOK_DISCONNECT: 'Error disconnecting account from facebook',
+            GOOGLE_CONNECT: 'Error connecting account to google',
+            GOOGLE_DISCONNECT: 'Error disconnecting account from google',
+
+            GET_METADATA: 'Error getting account metadata',
+            METADATA_DISTANCE_UNIT: 'Error updating metadata distance unit',
+            METADATA_SEARCH_TYPE: 'Error updating metadata search type',
+            METADATA_SEARCH_DISTANCE: 'Error updating metadata search distance',
+
+            SEND_VERIFY: 'Error sending verification email',
+            CONFIRM_VERIFY: 'Error confirming email verification'
 
         }
     
