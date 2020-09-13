@@ -1,5 +1,5 @@
 export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest, deleteFriendById,
-            friendRequestFrom }
+            friendRequestFrom, getFriendsExist }
 
 const uuid = require('uuid');
 
@@ -22,6 +22,15 @@ function getFriends(accountId: string, date: string, limit: string) {
     }
     const sql = selectSql + limitSql;
 
+    return db.query(sql, values);
+}
+
+function getFriendsExist(firstId: string, secondId: string) {
+    const sql = `SELECT * FROM 
+                 (SELECT * FROM friends WHERE account_id = ? AND friend_id = ? AND confirmed_date IS NOT NULL
+                  UNION
+                  SELECT * FROM friends WHERE account_id = ? and friend_id = ? AND confirmed_date IS NOT NULL) results LIMIT 1`;
+    const values = [firstId, secondId, secondId, firstId];
     return db.query(sql, values);
 }
 

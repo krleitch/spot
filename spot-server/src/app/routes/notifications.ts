@@ -5,6 +5,7 @@ const router = express.Router();
 const notifications = require('@db/notifications');
 const accounts = require('@db/accounts');
 const posts = require('@db/posts');
+const friends = require('@db/friends');
 
 // services
 const commentsService = require('@services/comments');
@@ -25,7 +26,8 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
     const limit = Number(req.query.limit);
 
     notifications.getNotificationByReceiverId(accountId, date, limit).then(ErrorHandler.catchAsync( async (rows: any) => {
-        // Add the tags to each comment
+
+        // Add tags to comments and replies
         for (let i = 0; i < rows.length; i++) {
             try {
                 if ( rows[i].comment_content ) {
@@ -38,6 +40,7 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
                 return next(new NotificationsError.GetNotifications(500));
             }
         }
+
         const response = { notifications: rows, date: date };
         res.status(200).json(response);
 
@@ -48,90 +51,119 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
 }));
 
 // get # of unread notifications
-router.get('/unread', function (req: any, res: any) {
+router.get('/unread', function (req: any, res: any, next: any) {
 
     const id = req.user.id;
 
     notifications.getNotificationUnreadByReceiverId(id).then((rows: any) => {
-        res.status(200).json({ unread: rows[0].unread });
+        const response = { unread: rows[0].unread };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error getting unread notifications');
-    })
+        return next(new NotificationsError.GetNotifications(500));
+    });
 
 });
 
-
-router.post('/', function (req: any, res: any) {
+// Send a notification
+// Keep errors generic
+router.post('/', function (req: any, res: any, next: any) {
 
     const { receiver, postLink } = req.body;
+    const accountId = req.user.id;
 
-    const senderId = req.user.id;
-
-    accounts.getAccountByUsername(receiver).then((retAccount: any) => {
-        if ( retAccount[0] === undefined ) {
-            res.status(500).send('No user exists with that username');
+    accounts.getAccountByUsername(receiver).then(ErrorHandler.catchAsync(async (receiver: any) => {
+        // The receiving account doesnt exist
+        if ( !receiver[0] ) {
+            return next(new NotificationsError.SendNotification(500));
         } else {
-            posts.getPostByLink(postLink, senderId).then((postRes: any) => {
-                notifications.addNotification(senderId, retAccount[0].id, postRes[0].id).then((rows: any) => {
-                    res.status(200).json({ notification: rows[0] });
-                }, (err: any) => {
-                    return Promise.reject(err);
-                });
+            receiver = receiver[0];
+
+            // Make sure they are friends
+            await friends.getFriendsExist(accountId, receiver.id).then( (friendExists: any) => {
+                if ( !friendExists[0] ) {
+                    return next(new NotificationsError.SendNotification(500));
+                }
             }, (err: any) => {
-                return Promise.reject(err);
+                return next(new NotificationsError.SendNotification(500));
+            });
+
+            posts.getPostByLink(postLink, accountId).then((post: any) => {
+                // The post doesnt exist
+                if ( !post[0] ) {
+                    return next(new NotificationsError.SendNotification(500));
+                }
+                post = post[0];
+
+                notifications.addNotification(accountId, receiver.id, post.id).then((rows: any) => {
+                    const response = { notification: rows[0] };
+                    res.status(200).json(response);
+                }, (err: any) => {
+                    return next(new NotificationsError.SendNotification(500));
+                });
+
+            }, (err: any) => {
+                return next(new NotificationsError.SendNotification(500));
             });
         }
     }, (err: any) => {
-        res.status(500).send('Error sending notification');
-    })
+        return next(new NotificationsError.SendNotification(500));
+    }));
 
 });
 
-router.put('/:notificationId/seen', function (req: any, res: any) {
+// Set a notification as seen
+router.put('/:notificationId/seen', function (req: any, res: any, next: any) {
 
     const notificationId = req.params.notificationId;
+    const accountId = req.user.id;
 
-    notifications.setNotificationSeen(notificationId).then((rows: any) => {
-        res.status(200).send();
+    // only sets seen if you own it
+    notifications.setNotificationSeen(notificationId, accountId).then((rows: any) => {
+        res.status(200).send({});
     }, (err: any) => {
-        res.status(500).send('Error updating notification');
-    })
+        return next(new NotificationsError.SeenNotification(500));
+    });
 
 });
 
-router.put('/seen', function (req: any, res: any) {
+// Set all notifications as seen
+router.put('/seen', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     notifications.setAllNotificationsSeen(accountId).then((rows: any) => {
-        res.status(200).send();
+        res.status(200).send({});
     }, (err: any) => {
-        res.status(500).send('Error updating notifications');
-    })
+        return next(new NotificationsError.SeenAllNotification(500));
+    });
 
 });
 
-router.delete('/:notificationId', function (req: any, res: any) {
+// Delete a notification
+router.delete('/:notificationId', function (req: any, res: any, next: any) {
 
     const notificationId = req.params.notificationId;
+    const accountId = req.user.id;
 
-    notifications.deleteNotificationById(notificationId).then((rows: any) => {
+    // only removes if you own it
+    notifications.deleteNotificationById(notificationId, accountId).then((rows: any) => {
         res.status(200).send({ notificationId: notificationId });
     }, (err: any) => {
-        res.status(500).send('Error deleting notification');
-    })
+        return next(new NotificationsError.DeleteNotification(500));
+    });
 
 });
 
-router.delete('/', function (req: any, res: any) {
+// Delete all notifications
+router.delete('/', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
     notifications.deleteAllNotificationsForAccount(accountId).then((rows: any) => {
         res.status(200).send();
     }, (err: any) => {
-        res.status(500).send('Error deleting all notifications');
-    })
+        return next(new NotificationsError.DeleteAllNotification(500));
+    });
 
 });
 
