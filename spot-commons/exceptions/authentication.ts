@@ -111,14 +111,6 @@ export class PasswordResetError extends SpotError {
   }
 }
 
-// Update Username
-export class UpdateUsernameError extends SpotError {
-  constructor(statusCode) {
-    super(AUTHENTICATION_ERROR_MESSAGES.UPDATE_USERNAME, statusCode);
-    this.name = "UpdateUsernameError";
-  }
-}
-
 // Facebook
 export class FacebookSignUpError extends SpotError {
   constructor(statusCode) {

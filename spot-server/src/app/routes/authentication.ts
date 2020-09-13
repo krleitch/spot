@@ -103,7 +103,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
         accounts.getFacebookAccount(facebookDetails.body.id).then( async( user: any) => {
             if ( user.length == 0 ) {
 
-                const username = await authentication.createFacebookUsername(facebookDetails.body.email);
+                const username = await authentication.createUsernameFromEmail(facebookDetails.body.email);
 
                 // create the account
                 accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email, username).then( (user2: any) => {
@@ -169,7 +169,7 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
         accounts.getGoogleAccount(userid).then( async( user: any) => {
             if ( user.length == 0 ) {
 
-                const username = await authentication.createFacebookUsername(email);
+                const username = await authentication.createUsernameFromEmail(email);
 
                 // create the account
                 accounts.addGoogleAccount(userid, email, username).then( (user2: any) => {

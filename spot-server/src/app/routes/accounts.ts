@@ -22,31 +22,39 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // soft deletes the user account
-router.delete('/', function (req: any, res: any) {
+router.delete('/', function (req: any, res: any, next: any) {
+
     const accountId = req.user.id;
+
     accounts.deleteAccount(accountId).then( (rows: any) => {
-        res.status(200);   
+        res.status(200).send({});
     }, (err: any) => {
-        res.status(500).send('Error deleting account');
+        return next(new AccountsError.DeleteAccount(500));
     });
-})
 
-router.get('/', function (req: any, res: any) {
+});
+
+// Get account information
+router.get('/', function (req: any, res: any, next: any) {
+
     const accountId = req.user.id;
+
     accounts.getAccountById(accountId).then((rows: any) => {
-        res.status(200).json({ account: rows[0] });
+        const response = { account: rows[0] };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send("Error getting the account");
-    })
-})
+        return next(new AccountsError.GetAccount(500));
+    });
 
-// Update account infos
+});
 
+// Update username
 router.put('/username', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
 
+    // Make sure the username is valid
     const usernameError = authService.validUsername(username);
     if ( usernameError) {
         return next(usernameError);
@@ -68,12 +76,13 @@ router.put('/username', function (req: any, res: any, next: any) {
 
         }
 
-        return next(new AuthenticationError.UpdateUsernameError(500));
+        return next(new AccountsError.UpdateUsername(500));
 
     });
 
 });
 
+// Update email
 router.put('/email', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
@@ -100,7 +109,7 @@ router.put('/email', function (req: any, res: any, next: any) {
 
         }
 
-        // return next(new AuthenticationError.UpdateUsernameError(500));
+        return next(new AccountsError.UpdateEmail(500));
 
     });
 
@@ -133,7 +142,7 @@ router.put('/phone', function (req: any, res: any, next: any) {
 
         }
 
-        // return next(new AuthError.UpdateUsernameError(500));
+        return next(new AccountsError.UpdatePhone(500));
 
     });
 
@@ -175,6 +184,7 @@ router.post('/facebook', function (req: any, res: any) {
     }, (err: any) => {
         res.status(500).send('Error signing in with facebook');
     });
+
 });
 
 router.post('/facebook/disconnect', function (req: any, res: any) {
@@ -225,8 +235,9 @@ router.post('/google', async function (req: any, res: any) {
         }); 
 
     } catch (err) {
-
+        res.status(500).send('Error signing in with google');
     }
+
 });
 
 router.post('/google/disconnect', function (req: any, res: any) {
@@ -234,7 +245,6 @@ router.post('/google/disconnect', function (req: any, res: any) {
     const accountId = req.user.id;
 
     // remove the google id from the account
-
     accounts.disconnectGoogleAccount(accountId).then( (rows: any) => {
         res.sendStatus(200);
     }, (err: any) => {

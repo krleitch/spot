@@ -1,5 +1,5 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
-            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken, createFacebookUsername,
+            validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken, createUsernameFromEmail,
             verifyGoogleIdToken }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
@@ -18,7 +18,10 @@ const passport = require('@services/authentication/passport');
 // db
 const accounts = require('@db/accounts');
 
+// exceptions
 const AuthenticationError = require('@exceptions/authentication');
+
+// constants
 const AUTH_CONSTANTS = require('@constants/authentication');
 const AUTHENTICATION_CONSTANTS = AUTH_CONSTANTS.AUTHENTICATION_CONSTANTS
 
@@ -141,7 +144,7 @@ function validatePassword(user: any, password: string): boolean {
 }
 
 function generateToken(user: any): any {
-    return jwt.sign({ id: user }, secret.secret);
+    return jwt.sign({ id: user }, secret.secret, { expiresIn: '2h' });
 }
 
 // Password Reset
@@ -157,8 +160,7 @@ function isValidToken(token: any): boolean {
 
 }
 
-// Facebook
-async function createFacebookUsername(email: string): Promise<string> {
+async function createUsernameFromEmail(email: string): Promise<string> {
 
     // Try using the email first
     const index = email.indexOf('@');
@@ -186,6 +188,7 @@ async function createFacebookUsername(email: string): Promise<string> {
 
 }
 
+// Facebook
 function getFacebookDetails(accessToken: string): Promise<any> {
     
     const url = "https://graph.facebook.com/me?fields=id,email&access_token=" + accessToken;

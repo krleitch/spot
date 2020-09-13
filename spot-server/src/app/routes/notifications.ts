@@ -160,7 +160,7 @@ router.delete('/', function (req: any, res: any, next: any) {
     const accountId = req.user.id;
 
     notifications.deleteAllNotificationsForAccount(accountId).then((rows: any) => {
-        res.status(200).send();
+        res.status(200).send({});
     }, (err: any) => {
         return next(new NotificationsError.DeleteAllNotification(500));
     });

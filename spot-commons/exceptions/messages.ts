@@ -88,7 +88,12 @@ export const ERROR_MESSAGES = {
 
         ACCOUNTS: {
 
-            DELETE_ACCOUNT: 'Error deleting account'
+            DELETE_ACCOUNT: 'Error deleting account',
+            GET_ACCOUNT: 'Error getting account',
+
+            UPDATE_USERNAME: 'Error updating username',
+            UPDATE_EMAIL: 'Error updating email',
+            UPDATE_PHONE: 'Error updating phone'
 
         }
     
