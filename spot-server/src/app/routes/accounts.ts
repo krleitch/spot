@@ -197,7 +197,7 @@ router.post('/facebook/disconnect', function (req: any, res: any, next: any) {
 });
 
 // Google Connect
-router.post('/google', async function (req: any, res: any, next: any) {
+router.post('/google', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const { accessToken } = req.body;
     const accountId = req.user.id;
@@ -232,7 +232,7 @@ router.post('/google', async function (req: any, res: any, next: any) {
         return next(new AccountsError.GoogleConnect(500));
     }
 
-});
+}));
 
 router.post('/google/disconnect', function (req: any, res: any, next: any) {
 
@@ -262,7 +262,7 @@ router.get('/metadata', function (req: any, res: any, next: any) {
   
 });
 
-router.put('/metadata', async function (req: any, res: any, next: any) {
+router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
@@ -301,7 +301,7 @@ router.put('/metadata', async function (req: any, res: any, next: any) {
         return next(new AccountsError.GetMetadata(500));
     });   
 
-});
+}));
 
 // Verify Account
 router.post('/verify', function (req: any, res: any, next: any) {

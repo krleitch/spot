@@ -1,4 +1,5 @@
 import { AuthInterceptor } from './helpers/auth.interceptor';
+import { ErrorInterceptor } from './helpers/error.interceptor';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -101,7 +102,8 @@ import { FilterPipe } from './pipes/filter.pipe';
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([])
   ],
-  providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+               { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true } ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
