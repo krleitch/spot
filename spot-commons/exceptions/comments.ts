@@ -3,11 +3,12 @@ import { ERROR_MESSAGES } from './messages';
 
 const COMMENTS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.COMMENTS;
 
-// Generic error
-export class CommentError extends SpotError {
+// Create comment
+
+export class AddComment extends SpotError {
     constructor(statusCode) {
-      super(COMMENTS_ERROR_MESSAGES.COMMENT_ERROR, statusCode);
-      this.name = "CommentError";
+      super(COMMENTS_ERROR_MESSAGES.ADD_COMMENT, statusCode);
+      this.name = "AddComment";
     }
 }
 
@@ -53,4 +54,76 @@ export class NoCommentContent extends SpotError {
       super(COMMENTS_ERROR_MESSAGES.NO_CONTENT, statusCode);
       this.name = "NoCommentContent";
     }
+}
+
+// Other
+
+export class CommentActivity extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.COMMENT_ACTIVITY, statusCode);
+    this.name = "CommentActivity";
+  }
+}
+
+export class GetComments extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.GET_COMMENTS, statusCode);
+    this.name = "GetComments";
+  }
+}
+
+export class GetReplies extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.GET_REPLIES, statusCode);
+    this.name = "GetReplies";
+  }
+}
+
+export class DeleteComment extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.DELETE_COMMENT, statusCode);
+    this.name = "DeleteComment";
+  }
+}
+
+export class DeleteReply extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.DELETE_REPLY, statusCode);
+    this.name = "DeleteReply";
+  }
+}
+
+export class LikeComment extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.LIKE_COMMENT, statusCode);
+    this.name = "LikeComment";
+  }
+}
+
+export class DislikeComment extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.DISLIKE_COMMENT, statusCode);
+    this.name = "DislikeComment";
+  }
+}
+
+export class LikeReply extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.LIKE_REPLY, statusCode);
+    this.name = "LikeReply";
+  }
+}
+
+export class DislikeReply extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.DISLIKE_REPLY, statusCode);
+    this.name = "DislikeReply";
+  }
+}
+
+export class ReportComment extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.REPORT_COMMENT, statusCode);
+    this.name = "ReportComment";
+  }
 }

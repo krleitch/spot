@@ -1,5 +1,3 @@
-import { addTag } from "../db/tags";
-
 const express = require('express');
 const router = express.Router();
 const uuid = require('uuid');
@@ -33,7 +31,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Get comment activity
-router.get('/activity', async function (req: any, res: any, next: any) {
+router.get('/activity', function (req: any, res: any, next: any) {
 
     // You must have an account to make a comment
     if ( !req.authenticated ) {
@@ -41,31 +39,30 @@ router.get('/activity', async function (req: any, res: any, next: any) {
     }
 
     const accountId = req.user.id;
-    
     const date = req.query.date;
     const limit = Number(req.query.limit);
 
-    comments.getCommentsActivity(accountId, date, limit).then(async (activities: any) => {
+    comments.getCommentsActivity(accountId, date, limit).then(ErrorHandler.catchAsync(async (activities: any) => {
 
         for (let i = 0; i < activities.length; i++) {
-
             try {
-                //commentId: string, accountId: string, commentAccountId: string, commentContent: string
                 activities[i].content = await commentsService.addTagsToContent( activities[i].id, accountId, activities[i].account_id, activities[i].content);
             } catch (err) {
-                res.status(500).send('Error getting activity');
+                return next(new CommentsError.CommentActivity(500));
             }
-
         }
 
-        res.status(200).json({ activity: activities });
+        const response = { activity: activities };
+        res.status(200).json(response);
+
     }, (err: any) => {
-        res.status(500).send('Error getting activity');
-    })
+        return next(new CommentsError.CommentActivity(500));
+    }));
+
 });
 
 // Get all comments for a post
-router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: any) {
+router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
     
     const postId = req.params.postId;
 
@@ -97,9 +94,13 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
 
         commentsArray = commentsArray.concat(rows)
 
-        await commentsService.getTags( commentsArray, req.authenticated ? req.user.id : null ).then( (taggedComments: any) => {
-            commentsArray = taggedComments;
-        });
+        try {
+            await commentsService.getTags( commentsArray, req.authenticated ? req.user.id : null ).then( (taggedComments: any) => {
+                commentsArray = taggedComments;
+            });
+        } catch (err) {
+            return next(new CommentsError.GetComments(500));
+        }
 
         let numCommentsBefore = -1;
         if ( type == 'before' ) {
@@ -109,7 +110,7 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
             await comments.getNumberOfCommentsForPostBeforeDate(postId, lastDate).then( (num: any) => {
               numCommentsBefore = num[0].total
             }, (err: any) => {
-              res.status(500).send('Error getting comments');
+                return next(new CommentsError.GetComments(500));
             });
           }
         }
@@ -119,16 +120,51 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
                 commentsArray = a;
             });
         }, (err: any) => {
-            res.status(500).send('Error getting comments');
+            return next(new CommentsError.GetComments(500));
         });
 
-        res.status(200).json({ postId: postId, comments: commentsArray, totalCommentsBefore: numCommentsBefore, type: type });
+        const response = { 
+            postId: postId,
+            comments: commentsArray,
+            totalCommentsBefore: numCommentsBefore,
+            type: type 
+        };
+        res.status(200).json(response);
         
     }, (err: any) => {
-        res.status(500).send('Error getting comments');
+        return next(new CommentsError.GetComments(500));
     });
 
 }));
+
+// Get all replies for a comment on a post
+router.get('/:postId/:commentId', function (req: any, res: any, next: any) {
+    
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const date = req.query.date || null;
+    const limit = Number(req.query.limit);
+
+    comments.getRepliesByCommentId(postId, commentId, date, limit, req.authenticated ? req.user.id : null).then( ErrorHandler.catchAsync(async (rows: any) => {
+
+        await commentsService.getTags( rows, req.authenticated ? req.user.id : null ).then( (taggedComments: any) => {
+            rows = taggedComments;
+        });
+
+        comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
+            posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
+                await commentsService.addProfilePicture(rows, postCreator[0].account_id);
+                res.status(200).json({ postId: postId, commentId: commentId, replies: rows, totalReplies: num[0].total });
+            }, (err: any) => {
+                return next(new CommentsError.GetReplies(500));
+            }));
+        }, (err: any) => {
+            return next(new CommentsError.GetReplies(500));
+        });
+    }, (err: any) => {
+        return next(new CommentsError.GetReplies(500));
+    }));
+});
 
 // Create a comment
 router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
@@ -142,7 +178,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
     const commentId = uuid.v4();
     req.filename = 'comments/' + Date.now().toString();
 
-    singleUpload(req, res, async function(err: any) {
+    singleUpload(req, res, ErrorHandler.catchAsync(async function(err: any) {
 
         if (err) {
             return next(new CommentsError.CommentImage(422));
@@ -177,12 +213,12 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
     
-                await accounts.getAccountByUsername(tagsList[index].username).then( async (account: any) => {
+                await accounts.getAccountByUsername(tagsList[index].username).then( ErrorHandler.catchAsync(async (account: any) => {
                     await tags.addTag( account[0].id, comment[0].id, Math.min(tagsList[index].offset, content.length) );
                     await notifications.addCommentNotification( comment[0].account_id, account[0].id, comment[0].post_id, comment[0].id );
                 }, (err: any) => {
-                    return next(new CommentsError.CommentError(500));
-                });
+                    return next(new CommentsError.AddComment(500));
+                }));
     
             }
     
@@ -190,71 +226,27 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             await commentsService.getTags( comment, accountId ).then( (taggedComments: any) => {
                 comment = taggedComments;
             }, (err: any) => {
-                return next(new CommentsError.CommentError(500));
+                return next(new CommentsError.AddComment(500));
             });
     
             // Add profile picture and send
-            posts.getPostCreator(postId).then( async (postCreator: any) => {
+            posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
                 await commentsService.addProfilePicture(comment, postCreator[0].account_id);
                 res.status(200).json({ postId: postId, comment: comment[0] } );
             }, (err: any) => {
-                return next(new CommentsError.CommentError(500));
-            });
+                return next(new CommentsError.AddComment(500));
+            }));
 
         }, (err: any) => {
-            return next(new CommentsError.CommentError(500));
+            return next(new CommentsError.AddComment(500));
         });
 
-    });
+    }));
 
 }));
 
-// Delete a single comment
-router.delete('/:postId/:commentId', function (req: any, res: any) {
-
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
-        res.status(200).json({ postId: postId, commentId: commentId })
-    }, (err: any) => {
-        res.status(500).send('Error deleting comment');
-    });
-});
-
-// Get all replies for a comment on a post
-router.get('/:postId/:commentId', function (req: any, res: any) {
-    
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const date = req.query.date || null;
-    const limit = Number(req.query.limit);
-
-    comments.getRepliesByCommentId(postId, commentId, date, limit, req.authenticated ? req.user.id : null).then( async (rows: any) => {
-
-        await commentsService.getTags( rows, req.authenticated ? req.user.id : null ).then( (taggedComments: any) => {
-            rows = taggedComments;
-        })
-
-        comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
-            posts.getPostCreator(postId).then( async (postCreator: any) => {
-                await commentsService.addProfilePicture(rows, postCreator[0].account_id);
-                res.status(200).json({ postId: postId, commentId: commentId, replies: rows, totalReplies: num[0].total });
-            }, (err: any) => {
-                return Promise.reject(err);
-            });
-        }, (err: any) => {
-            return Promise.reject(err);
-        });
-    }, (err: any) => {
-        console.log(err)
-        res.status(500).send('Error getting replies');
-    });
-});
-
 // Create a reply
-router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req: any, res: any) {
+router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const replyId = uuid.v4();
@@ -263,17 +255,17 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
     singleUpload(req, res, async function(err: any) {
 
         if (err) {
-            return res.status(422).send('Error uploading comment image');
+            return next(new CommentsError.CommentImage(422));
         }
 
-        const { content, tagsList, commentParentId } = JSON.parse(req.body.json)
-        const image = req.file ? req.file.location: null
+        const { content, tagsList, commentParentId } = JSON.parse(req.body.json);
+        const image = req.file ? req.file.location: null;
 
         const postId = req.params.postId;
         const commentId = req.params.commentId;
         const link = await commentsService.generateLink();
 
-        comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, link).then( async (reply: any) => {
+        comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, link).then( ErrorHandler.catchAsync(async (reply: any) => {
 
             // TODO: add catches for these
 
@@ -291,22 +283,42 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
     
             posts.getPostCreator(postId).then( async (postCreator: any) => {
                 await commentsService.addProfilePicture(reply, postCreator[0].account_id);
-                res.status(200).json({ postId: postId, commentId: commentId, reply: reply[0] } );
+                const response = {
+                    postId: postId,
+                    commentId: commentId,
+                    reply: reply[0]
+                };
+                res.status(200).json(response);
             }, (err: any) => {
-                return Promise.reject(err);
+                return next(new CommentsError.AddComment(500));
             });
     
         }, (err: any) => {
-            console.log(err)
-            res.status(500).send('Error adding reply');
-        });
+            return next(new CommentsError.AddComment(500));
+        }));
 
     });
 
 }));
 
-// Delete a single comment
-router.delete('/:postId/:parentId/:commentId', function (req: any, res: any) {
+// Delete a comment
+router.delete('/:postId/:commentId', function (req: any, res: any, next: any) {
+
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const accountId = req.user.id;
+
+    comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
+        const response = { postId: postId, commentId: commentId };
+        res.status(200).json(response);
+    }, (err: any) => {
+        return next(new CommentsError.DeleteComment(500));
+    });
+
+});
+
+// Delete a reply
+router.delete('/:postId/:parentId/:commentId', function (req: any, res: any, next: any) {
 
     const postId = req.params.postId;
     const parentId = req.params.parentId;
@@ -314,64 +326,82 @@ router.delete('/:postId/:parentId/:commentId', function (req: any, res: any) {
     const accountId = req.user.id;
 
     comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
-        res.status(200).json({ postId: postId, parentId: parentId, commentId: commentId })
+        const response = { postId: postId, parentId: parentId, commentId: commentId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error deleting comment');
+        return next(new CommentsError.DeleteReply(500));
     });
+
 });
 
 // Like a comment
-router.put('/:postId/:commentId/like', function(req: any, res: any) {
+router.put('/:postId/:commentId/like', function(req: any, res: any, next: any) {
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
+
     comments.likeComment(commentId, accountId).then((rows: any) => {
-        res.status(200).json({ postId: postId, commentId: commentId });
+        const response = { postId: postId, commentId: commentId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error liking comment');
-    })
-})
+        return next(new CommentsError.LikeComment(500));
+    });
+
+});
 
 // Dislike a comment
-router.put('/:postId/:commentId/dislike', function(req: any, res: any) {
+router.put('/:postId/:commentId/dislike', function(req: any, res: any, next: any) {
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
+
     comments.dislikeComment(commentId, accountId).then((rows: any) => {
-        res.status(200).json({ postId: postId, commentId: commentId });
+        const response = { postId: postId, commentId: commentId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error disliking comment');
-    })
-})
+        return next(new CommentsError.DislikeComment(500));
+    });
+
+});
 
 // Like a reply
-router.put('/:postId/:parentId/:commentId/like', function(req: any, res: any) {
+router.put('/:postId/:parentId/:commentId/like', function(req: any, res: any, next: any) {
+
     const postId = req.params.postId;
     const parentId = req.params.parentId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
+
     comments.likeComment(commentId, accountId).then((rows: any) => {
-        res.status(200).json({ postId: postId, parentId: parentId, commentId: commentId });
+        const response = { postId: postId, parentId: parentId, commentId: commentId };
+        res.status(200).json(response);
     }, (err: any) => {
-        res.status(500).send('Error liking reply');
-    })
-})
+        return next(new CommentsError.LikeReply(500));
+    });
+
+});
 
 // Dislike a reply
-router.put('/:postId/:parentId/:commentId/dislike', function(req: any, res: any) {
+router.put('/:postId/:parentId/:commentId/dislike', function(req: any, res: any, next: any) {
+
     const postId = req.params.postId;
     const parentId = req.params.parentId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
-    comments.dislikeComment(commentId, accountId).then((rows: any) => {
-        res.status(200).json({ postId: postId, parentId: parentId, commentId: commentId });
-    }, (err: any) => {
-        res.status(500).send('Error disliking reply');
-    });
-})
 
-// report a comment
-router.put('/:postId/:commentId/report', function(req: any, res: any) {
+    comments.dislikeComment(commentId, accountId).then((rows: any) => {
+        const response = { postId: postId, parentId: parentId, commentId: commentId };
+        res.status(200).json(response);
+    }, (err: any) => {
+        return next(new CommentsError.DislikeReply(500));
+    });
+
+});
+
+// Report a comment
+router.put('/:postId/:commentId/report', function(req: any, res: any, next: any) {
 
     const postId = req.params.postId;
     const commentId = req.params.commentId;
@@ -381,9 +411,9 @@ router.put('/:postId/:commentId/report', function(req: any, res: any) {
     reports.addCommentReport( postId, commentId, accountId, content ).then((rows: any) => {
         res.status(200).send({});
     }, (err: any) => {
-        res.status(500).send('Error reporting comment');
+        return next(new CommentsError.ReportComment(500));
     });
 
-})
+});
 
 export = router;

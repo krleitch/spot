@@ -51,13 +51,26 @@ export const ERROR_MESSAGES = {
 
         COMMENTS: {
 
-            COMMENT_ERROR: 'Comment Error',
+            ADD_COMMENT: 'Error creating comment',
             INVALID_COMMENT_CONTENT: 'Invalid comment content',
             INVALID_COMMENT_LENGTH: 'Invalid comment length',
-            IMAGE: 'Error with image',
-            INVALID_COMMENT_LINE_LENGTH: 'Invalid post line length',
+            IMAGE: 'Error with comment image',
+            INVALID_COMMENT_LINE_LENGTH: 'Invalid comment line length',
             NO_CONTENT: 'No content',
-            INVALID_COMMENT_PROFANITY: 'Comment cannot contain profanity'
+            INVALID_COMMENT_PROFANITY: 'Comment cannot contain profanity',
+
+            COMMENT_ACTIVITY: 'Error getting comment activity',
+            GET_COMMENTS: 'Error getting comments',
+            GET_REPLIES: 'Error getting replies',
+            DELETE_COMMENT: 'Error deleting comment',
+            DELETE_REPLY: 'Error deleting reply',
+
+            LIKE_COMMENT: 'Error liking comment',
+            DISLIKE_COMMENT: 'Error disliking comment',
+            LIKE_REPLY: 'Error liking reply',
+            DISLIKE_REPLY: 'Error disliking reply',
+
+            REPORT_COMMENT: 'Error reporting comment'
 
         },
 
