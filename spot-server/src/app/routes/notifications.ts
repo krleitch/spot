@@ -147,7 +147,8 @@ router.delete('/:notificationId', function (req: any, res: any, next: any) {
 
     // only removes if you own it
     notifications.deleteNotificationById(notificationId, accountId).then((rows: any) => {
-        res.status(200).send({ notificationId: notificationId });
+        const response = { notificationId: notificationId };
+        res.status(200).send(response);
     }, (err: any) => {
         return next(new NotificationsError.DeleteNotification(500));
     });

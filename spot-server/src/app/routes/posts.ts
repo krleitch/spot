@@ -58,7 +58,6 @@ router.get('/', function (req: any, res: any, next: any) {
         const response = { posts: rows };
         res.status(200).json(response);
     }, (err: any) => {
-        console.log(err)
         return next(new PostsError.GetPosts(500));
     });
 
