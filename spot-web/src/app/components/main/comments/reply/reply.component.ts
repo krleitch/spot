@@ -532,24 +532,22 @@ export class ReplyComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // make the request
-
     // Make the request
     const request: AddReplyRequest = {
-      postId: this.reply2.post_id,
-      commentId: this.reply2.parent.id,
-      commentParentId: this.reply2.id,
+      postId: this.reply.post_id,
+      commentId: this.reply.parent_id,
+      commentParentId: this.reply.id,
       content,
       image: this.imageFile,
       tagsList: tags
     };
 
-    this.commentService.addReply(request).pipe(take(1)).subscribe( (reply: AddReplySuccess) => {
+    this.commentService.addReply(request).pipe(take(1)).subscribe( (r: AddReplySuccess) => {
 
       const storeRequest: AddReplyStoreRequest = {
-        postId: reply.postId,
-        commentId: reply.commentId,
-        reply: reply.reply
+        postId: r.postId,
+        commentId: r.commentId,
+        reply: r.reply
       };
 
       this.store$.dispatch(
