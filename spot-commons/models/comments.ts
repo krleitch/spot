@@ -80,7 +80,7 @@ export interface DeleteCommentSuccess {
 }
 
 // Load all replies
-export interface LoadRepliesRequest {
+export interface GetRepliesRequest {
     postId: string;
     commentId: string;
     date: string;
@@ -88,7 +88,16 @@ export interface LoadRepliesRequest {
     initialLoad: boolean;
 }
 
-export interface LoadRepliesSuccess {
+export interface GetRepliesSuccess {
+    postId: string;
+    commentId: string;
+    replies: Comment[];
+    totalReplies: number;
+    date: string;
+    initialLoad: boolean;
+}
+
+export interface SetRepliesStoreRequest {
     postId: string;
     commentId: string;
     replies: Comment[];
@@ -108,6 +117,12 @@ export interface AddReplyRequest {
 }
 
 export interface AddReplySuccess {
+    postId: string;
+    commentId: string;
+    reply: Comment;
+}
+
+export interface AddReplyStoreRequest {
     postId: string;
     commentId: string;
     reply: Comment;

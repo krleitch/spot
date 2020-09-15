@@ -9,8 +9,8 @@ import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-st
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, DeleteCommentRequest, AddReplyRequest, LoadRepliesRequest,
-         LikeCommentRequest, DislikeCommentRequest } from '@models/comments';
+import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetRepliesSuccess, AddReplySuccess,
+         LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AlertService } from '@services/alert.service';
@@ -18,6 +18,7 @@ import { Tag } from '@models/notifications';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 import { TagComponent } from '../../social/tag/tag.component';
 import { Friend } from '@models/friends';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-comment',
@@ -76,7 +77,6 @@ export class CommentComponent implements OnInit, OnDestroy {
   showAddReply = false;
   optionsEnabled = false;
 
-  addReplySuccess$: Observable<{ success: boolean, id: string }>;
   addReplyError = '';
 
   constructor(private store$: Store<RootStoreState.State>,
@@ -99,7 +99,6 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     this.replies$.subscribe( replies => {
       this.replies = replies.replies;
-      this.totalReplies = replies.totalReplies;
     });
 
     this.friends$ = this.store$.pipe(
@@ -110,36 +109,37 @@ export class CommentComponent implements OnInit, OnDestroy {
       this.friendsList = friends;
     });
 
-    // Success Event
-    this.addReplySuccess$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectAddReplySuccess)
-    );
-
-    this.addReplySuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success) => {
-      if ( success.id === this.comment.id && success.success ) {
-        this.removeFile();
-        this.reply.nativeElement.innerText = '';
-        this.reply.nativeElement.innerHtml = '';
-        Array.from(this.reply.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-        this.reply.nativeElement.innerHTML = '';
-        this.currentLength = this.reply.nativeElement.innerHTML.length;
-        this.showAddReply = false;
-      }
-    });
-
     // if detailed load more replies
     const initialLimit = this.detailed ? 10 : 1;
 
-    const request: LoadRepliesRequest = {
+    const request: GetRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
       date: null,
       initialLoad: true,
       limit: initialLimit
     };
-    this.store$.dispatch(
-      new CommentsStoreActions.GetReplyRequestAction(request)
-    );
+
+    this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
+
+      const storeRequest: SetRepliesStoreRequest = {
+        postId: replies.postId,
+        commentId: replies.commentId,
+        date: replies.date,
+        initialLoad: replies.initialLoad,
+        replies: replies.replies,
+        totalReplies: replies.totalReplies
+      };
+
+      this.store$.dispatch(
+        new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
+      );
+
+      this.totalReplies = replies.totalReplies;
+
+    }, (err: SpotError) => {
+
+    });
 
     this.getTime(this.comment.creation_date);
 
@@ -434,16 +434,36 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   loadMoreReplies() {
     const limit = 1;
-    const request: LoadRepliesRequest = {
+
+    const request: GetRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
       date: this.replies.slice(-1)[0].creation_date,
-      limit,
-      initialLoad: false
+      initialLoad: false,
+      limit
     };
-    this.store$.dispatch(
-      new CommentsStoreActions.GetReplyRequestAction(request)
-    );
+
+    this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
+
+      const storeRequest: SetRepliesStoreRequest = {
+        postId: replies.postId,
+        commentId: replies.commentId,
+        date: replies.date,
+        initialLoad: replies.initialLoad,
+        replies: replies.replies,
+        totalReplies: replies.totalReplies
+      };
+
+      this.store$.dispatch(
+        new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
+      );
+
+      this.totalReplies = replies.totalReplies;
+
+    }, (err: SpotError) => {
+
+    });
+
   }
 
   setOptions(value) {
@@ -600,9 +620,29 @@ export class CommentComponent implements OnInit, OnDestroy {
       tagsList: tags
     };
 
-    this.store$.dispatch(
-      new CommentsStoreActions.AddReplyRequestAction(request)
-    );
+    this.commentService.addReply(request).pipe(take(1)).subscribe( (reply: AddReplySuccess) => {
+
+      const storeRequest: AddReplyStoreRequest = {
+        postId: reply.postId,
+        commentId: reply.commentId,
+        reply: reply.reply
+      };
+
+      this.store$.dispatch(
+        new CommentsStoreActions.AddReplyRequestAction(storeRequest)
+      );
+
+      this.removeFile();
+      this.reply.nativeElement.innerText = '';
+      this.reply.nativeElement.innerHtml = '';
+      Array.from(this.reply.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
+      this.reply.nativeElement.innerHTML = '';
+      this.currentLength = this.reply.nativeElement.innerHTML.length;
+      this.showAddReply = false;
+
+    }, (err: SpotError) => {
+      this.addReplyError = err.message;
+    });
 
   }
 

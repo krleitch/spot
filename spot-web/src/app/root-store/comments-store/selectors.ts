@@ -3,8 +3,6 @@ import { SpotError } from '@exceptions/error';
 
 import { State } from './state';
 
-export const AddReplyError = (state: State): { error: SpotError, id: string } => state.addReplyError;
-export const AddReplySuccess = (state: State): { success: boolean, id: string } => state.addReplySuccess;
 export const AddReply2Error = (state: State): { error: SpotError, id: string } => state.addReply2Error;
 export const AddReply2Success = (state: State): { success: boolean, id: string } => state.addReply2Success;
 
@@ -46,16 +44,6 @@ export const selectMyFeatureReplies: MemoizedSelectorWithProps<
 > = createSelector(
   selectMyFeatureState,
   (state, props) => selectReplies(state, props.postId, props.commentId)
-);
-
-export const selectAddReplyError: MemoizedSelector<object,{ error: SpotError, id: string }> = createSelector(
-  selectMyFeatureState,
-  AddReplyError
-);
-
-export const selectAddReplySuccess: MemoizedSelector<object,{ success: boolean, id: string }> = createSelector(
-  selectMyFeatureState,
-  AddReplySuccess
 );
 
 export const selectAddReply2Error: MemoizedSelector<object,{ error: SpotError, id: string }> = createSelector(

@@ -5,16 +5,12 @@ import { SpotError } from '@exceptions/error';
 export interface State {
     comments: any;
     replies: any;
-    addReplyError: { error: SpotError, id: string };
-    addReplySuccess: { success: boolean, id: string };
     addReply2Error: { error: SpotError, id: string };
     addReply2Success: { success: boolean, id: string };
 }
 
 export const initialState: State = (
   {
-    addReplyError: { error: null, id: null },
-    addReplySuccess: { success: null, id: null },
     addReply2Error: { error: null, id: null },
     addReply2Success: { success: null, id: null },
     comments: {},

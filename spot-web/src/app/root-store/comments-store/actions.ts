@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 
 import { AddCommentStoreRequest, SetCommentsStoreRequest,
-          DeleteCommentRequest, DeleteCommentSuccess, AddReplyRequest, AddReplySuccess,
-          LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess,
+          DeleteCommentRequest, DeleteCommentSuccess, AddReplyStoreRequest,
+          SetRepliesStoreRequest, DeleteReplyRequest, DeleteReplySuccess,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
           LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess } from '@models/comments';
 import { SpotError } from '@exceptions/error';
@@ -10,11 +10,8 @@ import { SpotError } from '@exceptions/error';
 export enum ActionTypes {
   ADD_COMMENT_REQUEST = '[Comments] Add Comment Request',
   ADD_REPLY_REQUEST = '[Comments] Add Reply Request',
-  ADD_REPLY_SUCCESS = '[Comments] Add Reply Success',
-  ADD_REPLY_FAILURE = '[Comments] Add Reply Failure',
-  SET_COMMENTS_REQUEST = '[Comments] Set Request',
-  GET_REPLY_REQUEST = '[Comments] Get Reply Request',
-  GET_REPLY_SUCCESS = '[Comments] Get Reply Success',
+  SET_COMMENTS_REQUEST = '[Comments] Set Comments Request',
+  SET_REPLIES_REQUEST = '[Comments] Set Replies Request',
   DELETE_REQUEST = '[Comments] Delete Request',
   DELETE_SUCCESS = '[Comments] Delete Success',
   DELETE_REPLY_REQUEST = '[Comments] Delete Reply Request',
@@ -57,27 +54,12 @@ export class DeleteSuccessAction implements Action {
 
 export class AddReplyRequestAction implements Action {
   readonly type = ActionTypes.ADD_REPLY_REQUEST;
-  constructor(public request: AddReplyRequest) {}
+  constructor(public request: AddReplyStoreRequest) {}
 }
 
-export class AddReplySuccessAction implements Action {
-  readonly type = ActionTypes.ADD_REPLY_SUCCESS;
-  constructor(public response: AddReplySuccess) {}
-}
-
-export class AddReplyFailureAction implements Action {
-  readonly type = ActionTypes.ADD_REPLY_FAILURE;
-  constructor(public error: SpotError, public id: string) {}
-}
-
-export class GetReplyRequestAction implements Action {
-  readonly type = ActionTypes.GET_REPLY_REQUEST;
-  constructor(public request: LoadRepliesRequest) {}
-}
-
-export class GetReplySuccessAction implements Action {
-  readonly type = ActionTypes.GET_REPLY_SUCCESS;
-  constructor(public response: LoadRepliesSuccess) {}
+export class SetRepliesRequestAction implements Action {
+  readonly type = ActionTypes.SET_REPLIES_REQUEST;
+  constructor(public request: SetRepliesStoreRequest) {}
 }
 
 export class DeleteReplyRequestAction implements Action {
@@ -132,11 +114,10 @@ export class DislikeReplySuccessAction implements Action {
 
 export type Actions = AddCommentRequestAction | SetCommentsRequestAction |
                       DeleteRequestAction | DeleteSuccessAction |
-                      AddReplyRequestAction | AddReplySuccessAction |
-                      GetReplyRequestAction | GetReplySuccessAction |
+                      SetRepliesRequestAction | AddReplyRequestAction |
                       DeleteReplyRequestAction | DeleteReplySuccessAction |
                       LikeRequestAction | LikeSuccessAction |
                       DislikeRequestAction | DislikeSuccessAction |
                       LikeReplyRequestAction | LikeReplySuccessAction |
                       DislikeReplyRequestAction | DislikeReplySuccessAction |
-                      GenericFailureAction | AddReplyFailureAction;
+                      GenericFailureAction;

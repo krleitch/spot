@@ -5,12 +5,12 @@ import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
-import { CommentsStoreActions, CommentsStoreSelectors } from '@store/comments-store';
+import { CommentsStoreActions } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
-import { Comment, AddReplyRequest, DeleteReplyRequest, LikeReplyRequest,
-         DislikeReplyRequest } from '@models/comments';
+import { Comment, AddReplyRequest, AddReplyStoreRequest, DeleteReplyRequest, LikeReplyRequest,
+         DislikeReplyRequest, AddReplySuccess } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
@@ -18,6 +18,7 @@ import { Tag } from '@models/notifications';
 import { TagComponent } from '../../social/tag/tag.component';
 import { Friend } from '@models/friends';
 import { AlertService } from '@services/alert.service';
+import { SpotError } from '@exceptions/error';
 
 @Component({
   selector: 'spot-reply',
@@ -58,7 +59,6 @@ export class ReplyComponent implements OnInit, OnDestroy {
   isExpandable = false;
 
   reply2Text: string;
-  addReply2Success$: Observable<{ success: boolean, id: string }>;
   addReply2Error: string;
 
   FILENAME_MAX_SIZE = 20;
@@ -96,23 +96,6 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
       this.friendsList = friends;
-    });
-
-    // Success Event
-    this.addReply2Success$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectAddReplySuccess)
-    );
-
-    this.addReply2Success$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
-      if ( success.id === this.reply.id && success.success ) {
-        this.removeFile();
-        this.reply2.nativeElement.innerText = '';
-        this.reply2.nativeElement.innerHtml = '';
-        Array.from(this.reply2.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-        this.reply2.nativeElement.innerHTML = '';
-        this.currentLength = this.reply2.nativeElement.innerHTML.length;
-        this.showAddReply = false;
-      }
     });
 
     if ( this.reply.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
@@ -551,18 +534,39 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
     // make the request
 
+    // Make the request
     const request: AddReplyRequest = {
-      postId: this.reply.post_id,
-      commentId: this.reply.parent_id,
-      commentParentId: this.reply.id,
+      postId: this.reply2.post_id,
+      commentId: this.reply2.parent.id,
+      commentParentId: this.reply2.id,
       content,
       image: this.imageFile,
       tagsList: tags
     };
 
-    this.store$.dispatch(
-      new CommentsStoreActions.AddReplyRequestAction(request)
-    );
+    this.commentService.addReply(request).pipe(take(1)).subscribe( (reply: AddReplySuccess) => {
+
+      const storeRequest: AddReplyStoreRequest = {
+        postId: reply.postId,
+        commentId: reply.commentId,
+        reply: reply.reply
+      };
+
+      this.store$.dispatch(
+        new CommentsStoreActions.AddReplyRequestAction(storeRequest)
+      );
+
+      this.removeFile();
+      this.reply2.nativeElement.innerText = '';
+      this.reply2.nativeElement.innerHtml = '';
+      Array.from(this.reply2.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
+      this.reply2.nativeElement.innerHTML = '';
+      this.currentLength = this.reply2.nativeElement.innerHTML.length;
+      this.showAddReply = false;
+
+    }, (err: SpotError) => {
+      this.addReply2Error = err.message;
+    });
 
   }
 

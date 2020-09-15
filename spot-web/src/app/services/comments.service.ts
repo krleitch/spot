@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { AddCommentRequest, GetCommentsRequest, GetCommentsSuccess, AddCommentSuccess, DeleteCommentRequest,
-          DeleteCommentSuccess, LoadRepliesRequest, LoadRepliesSuccess, AddReplyRequest, AddReplySuccess,
+          DeleteCommentSuccess, GetRepliesRequest, GetRepliesSuccess, AddReplyRequest, AddReplySuccess,
           DeleteReplyRequest, DeleteReplySuccess, LikeCommentRequest, DislikeCommentRequest,
           LikeCommentSuccess, DislikeCommentSuccess, LikeReplyRequest, DislikeReplyRequest,
           LikeReplySuccess, DislikeReplySuccess, ReportCommentRequest, ReportCommentSuccess,
@@ -49,13 +49,13 @@ export class CommentService {
     return this.http.delete<DeleteCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`);
   }
 
-  getReplies(request: LoadRepliesRequest): Observable<LoadRepliesSuccess> {
+  getReplies(request: GetRepliesRequest): Observable<GetRepliesSuccess> {
     let params = new HttpParams();
     if ( request.date ) {
       params = params.append('date', request.date);
     }
     params = params.append('limit', request.limit.toString());
-    return this.http.get<LoadRepliesSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`, { params });
+    return this.http.get<GetRepliesSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`, { params });
   }
 
   addReply(request: AddReplyRequest): Observable<AddReplySuccess> {

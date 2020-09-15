@@ -45,51 +45,40 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state
       };
     }
-    case ActionTypes.GET_REPLY_SUCCESS: {
-        if (state.replies[action.response.postId] === undefined) {
-          state.replies[action.response.postId] = {};
+    case ActionTypes.SET_REPLIES_REQUEST: {
+        if (state.replies[action.request.postId] === undefined) {
+          state.replies[action.request.postId] = {};
         }
-        if (state.replies[action.response.postId][action.response.commentId] === undefined) {
-          state.replies[action.response.postId][action.response.commentId] = {
-            replies: [],
-            totalReplies: 0
+        if (state.replies[action.request.postId][action.request.commentId] === undefined) {
+          state.replies[action.request.postId][action.request.commentId] = {
+            replies: []
           };
         }
-        if ( action.response.initialLoad) {
-          state.replies[action.response.postId][action.response.commentId] = {
-            replies: action.response.replies,
-            totalReplies: action.response.totalReplies
+        if ( action.request.initialLoad) {
+          state.replies[action.request.postId][action.request.commentId] = {
+            replies: action.request.replies,
           };
         } else {
-          state.replies[action.response.postId][action.response.commentId] = {
-            replies: state.replies[action.response.postId][action.response.commentId].replies.concat(action.response.replies),
-            totalReplies: action.response.totalReplies
+          state.replies[action.request.postId][action.request.commentId] = {
+            replies: state.replies[action.request.postId][action.request.commentId].replies.concat(action.request.replies)
           };
         }
         return {
           ...state
         };
     }
-    case ActionTypes.ADD_REPLY_SUCCESS: {
-      if (state.replies[action.response.postId] === undefined) {
-        state.replies[action.response.postId] = {};
+    case ActionTypes.ADD_REPLY_REQUEST: {
+      if (state.replies[action.request.postId] === undefined) {
+        state.replies[action.request.postId] = {};
       }
-      if (state.replies[action.response.postId][action.response.commentId] === undefined) {
-        state.replies[action.response.postId][action.response.commentId] = {
-          replies: [],
-          totalReplies: 0
+      if (state.replies[action.request.postId][action.request.commentId] === undefined) {
+        state.replies[action.request.postId][action.request.commentId] = {
+          replies: []
         };
       }
-      state.replies[action.response.postId][action.response.commentId].replies.push(action.response.reply);
+      state.replies[action.request.postId][action.request.commentId].replies.push(action.request.reply);
       return {
           ...state,
-          addReplySuccess: { success: true, id: action.response.reply.comment_parent_id }
-      };
-    }
-    case ActionTypes.ADD_REPLY_FAILURE: {
-      return {
-          ...state,
-          addReplyError: { error: action.error, id: action.id }
       };
     }
     case ActionTypes.DELETE_REPLY_SUCCESS: {
