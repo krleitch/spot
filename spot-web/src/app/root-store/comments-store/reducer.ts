@@ -3,24 +3,17 @@ import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
-    case ActionTypes.ADD_SUCCESS: {
-        if (state.comments[action.response.postId] === undefined) {
-            state.comments[action.response.postId] = {
+    case ActionTypes.ADD_COMMENT_REQUEST: {
+        if (state.comments[action.request.postId] === undefined) {
+            state.comments[action.request.postId] = {
               comments: [],
               totalComments: 0
             };
         }
-        state.comments[action.response.postId].comments.unshift(action.response.comment);
+        state.comments[action.request.postId].comments.unshift(action.request.comment);
         return {
-            ...state,
-            addCommentSuccess: { success: true, id: action.response.postId }
+            ...state
         };
-    }
-    case ActionTypes.ADD_FAILURE: {
-      return {
-          ...state,
-          addCommentError: { error: action.error, id: action.id }
-      };
     }
     case ActionTypes.DELETE_SUCCESS: {
       state.comments[action.response.postId].comments.forEach( (comment, i) => {

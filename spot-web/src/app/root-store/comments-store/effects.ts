@@ -25,23 +25,6 @@ export class CommentsStoreEffects {
   );
 
   @Effect()
-  addCommentEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.AddRequestAction>(
-      featureActions.ActionTypes.ADD_REQUEST
-    ),
-    switchMap(action =>
-      this.commentService
-        .addComment(action.request)
-        .pipe(
-            map( (response: AddCommentSuccess) => new featureActions.AddSuccessAction(response)),
-            catchError(errorResponse =>
-              observableOf(new featureActions.AddFailureAction( errorResponse.error, action.request.postId ))
-            )
-          )
-    )
-  );
-
-  @Effect()
   deleteCommentEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.DeleteRequestAction>(
       featureActions.ActionTypes.DELETE_REQUEST

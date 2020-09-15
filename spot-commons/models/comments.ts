@@ -63,6 +63,11 @@ export interface AddCommentSuccess {
     comment: Comment;
 }
 
+export interface AddCommentStoreRequest {
+    postId: string;
+    comment: Comment;
+}
+
 // Delete a comment
 export interface DeleteCommentRequest {
     postId: string;

@@ -8,7 +8,8 @@ import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
-import { GetCommentsRequest, AddCommentRequest, GetCommentsSuccess, SetCommentsStoreRequest } from '@models/comments';
+import { GetCommentsRequest, AddCommentRequest, GetCommentsSuccess, SetCommentsStoreRequest,
+          AddCommentStoreRequest, AddCommentSuccess } from '@models/comments';
 import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 import { SpotError } from '@exceptions/error';
@@ -49,8 +50,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   totalCommentsAfter = 0;
   loadingCommentsBefore = false;
   loadingCommentsAfter = false;
-  addCommentError$: Observable<{ error: SpotError, id: string }>;
-  addCommentSuccess$: Observable<{ success: boolean, id: string }>;
   addCommentError: string;
 
   friends$: Observable<Friend[]>;
@@ -90,33 +89,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
-
-    // Success Event
-    this.addCommentSuccess$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectAddCommentSuccess)
-    );
-
-    this.addCommentSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
-      if ( success.id === this.post.id && success.success ) {
-        this.removeFile();
-        this.comment.nativeElement.innerText = '';
-        this.comment.nativeElement.innerHtml = '';
-        Array.from(this.comment.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-        this.comment.nativeElement.innerHTML = '';
-        this.currentLength = this.comment.nativeElement.innerHTML.length;
-      }
-    });
-
-    // Errors
-    this.addCommentError$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectAddCommentError)
-    );
-
-    this.addCommentError$.pipe(takeUntil(this.onDestroy)).subscribe( error => {
-      if ( error.error && this.post.id === error.id ) {
-        this.addCommentError = error.error.message;
-      }
-    });
 
     // friends
     this.friends$ = this.store$.pipe(
@@ -413,38 +385,96 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       tagsList: tags
     };
 
-    this.store$.dispatch(
-      new CommentsStoreActions.AddRequestAction(request)
-    );
+
+
+    this.commentService.addComment(request).pipe(take(1)).subscribe( (comment: AddCommentSuccess) => {
+
+      const storeRequest: AddCommentStoreRequest = {
+        postId: comment.postId,
+        comment: comment.comment
+      };
+
+      this.store$.dispatch(
+        new CommentsStoreActions.AddCommentRequestAction(storeRequest)
+      );
+
+      this.removeFile();
+      this.comment.nativeElement.innerText = '';
+      this.comment.nativeElement.innerHtml = '';
+      Array.from(this.comment.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
+      this.comment.nativeElement.innerHTML = '';
+      this.currentLength = this.comment.nativeElement.innerHTML.length;
+
+    }, (err: SpotError) => {
+      this.addCommentError = err.message;
+    });
 
   }
 
   loadRecentComments() {
-    // const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
-    // const request: LoadCommentsRequest = {
-    //   postId: this.post.id,
-    //   date: this.comments.length > 0 ? this.comments[0].creation_date : null,
-    //   type: 'after',
-    //   limit,
-    //   initialLoad: this.initialLoad
-    // };
-    // this.store$.dispatch(
-    //   new CommentsStoreActions.GetRequestAction(request)
-    // );
+
+    const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
+
+    const request: GetCommentsRequest = {
+      postId: this.post.id,
+      date: this.comments.length > 0 ? this.comments[0].creation_date : null,
+      type: 'after',
+      limit
+    };
+
+    this.loadingCommentsAfter = true;
+
+    this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
+      this.loadingCommentsAfter = false;
+      if  ( comments.comments ) {
+        const storeRequest: SetCommentsStoreRequest = {
+          postId: this.post.id,
+          type: 'after',
+          initialLoad: this.initialLoad,
+          comments: comments.comments
+        };
+        this.store$.dispatch(
+          new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
+        );
+        this.totalCommentsAfter = comments.totalCommentsAfter;
+      }
+    }, (err: SpotError) => {
+      // Error case
+    });
+
   }
 
   loadMoreComments() {
-    // const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
-    // const request: LoadCommentsRequest = {
-    //   postId: this.post.id,
-    //   date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
-    //   type: 'before',
-    //   limit,
-    //   initialLoad: this.initialLoad
-    // };
-    // this.store$.dispatch(
-    //   new CommentsStoreActions.GetRequestAction(request)
-    // );
+
+    const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
+
+    const request: GetCommentsRequest = {
+      postId: this.post.id,
+      date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
+      type: 'before',
+      limit
+    };
+
+    this.loadingCommentsAfter = true;
+
+    this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
+      this.loadingCommentsAfter = false;
+      if  ( comments.comments ) {
+        const storeRequest: SetCommentsStoreRequest = {
+          postId: this.post.id,
+          type: 'before',
+          initialLoad: this.initialLoad,
+          comments: comments.comments
+        };
+        this.store$.dispatch(
+          new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
+        );
+        this.totalCommentsBefore = comments.totalCommentsBefore;
+      }
+    }, (err: SpotError) => {
+      // Error case
+    });
+
   }
 
   invalidLength(): boolean {

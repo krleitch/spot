@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { AddCommentRequest, AddCommentSuccess, SetCommentsStoreRequest,
+import { AddCommentStoreRequest, SetCommentsStoreRequest,
           DeleteCommentRequest, DeleteCommentSuccess, AddReplyRequest, AddReplySuccess,
           LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
@@ -8,9 +8,7 @@ import { AddCommentRequest, AddCommentSuccess, SetCommentsStoreRequest,
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
-  ADD_REQUEST = '[Comments] Add Request',
-  ADD_SUCCESS = '[Comments] Add Success',
-  ADD_FAILURE = '[Comments] Add Failure',
+  ADD_COMMENT_REQUEST = '[Comments] Add Comment Request',
   ADD_REPLY_REQUEST = '[Comments] Add Reply Request',
   ADD_REPLY_SUCCESS = '[Comments] Add Reply Success',
   ADD_REPLY_FAILURE = '[Comments] Add Reply Failure',
@@ -37,19 +35,9 @@ export class GenericFailureAction implements Action {
   constructor(public error: string) {}
 }
 
-export class AddRequestAction implements Action {
-    readonly type = ActionTypes.ADD_REQUEST;
-    constructor(public request: AddCommentRequest) {}
-}
-
-export class AddSuccessAction implements Action {
-    readonly type = ActionTypes.ADD_SUCCESS;
-    constructor(public response: AddCommentSuccess) {}
-}
-
-export class AddFailureAction implements Action {
-  readonly type = ActionTypes.ADD_FAILURE;
-  constructor(public error: SpotError, public id: string) {}
+export class AddCommentRequestAction implements Action {
+    readonly type = ActionTypes.ADD_COMMENT_REQUEST;
+    constructor(public request: AddCommentStoreRequest) {}
 }
 
 export class SetCommentsRequestAction implements Action {
@@ -142,8 +130,7 @@ export class DislikeReplySuccessAction implements Action {
   constructor(public response: DislikeReplySuccess) {}
 }
 
-export type Actions = AddRequestAction | AddSuccessAction |
-                      AddFailureAction | SetCommentsRequestAction |
+export type Actions = AddCommentRequestAction | SetCommentsRequestAction |
                       DeleteRequestAction | DeleteSuccessAction |
                       AddReplyRequestAction | AddReplySuccessAction |
                       GetReplyRequestAction | GetReplySuccessAction |
