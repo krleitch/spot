@@ -26,21 +26,27 @@ export interface CommentTag {
 }
 
 // Load all comments
-export interface LoadCommentsRequest {
+export interface GetCommentsRequest {
     postId: string;
     commentId?: string; // Will load starting from this comment
     type: string; // before / after
     date: string; // not used if commentId supplied
     limit: number;
-    initialLoad: boolean;
 }
 
-export interface LoadCommentsSuccess {
+export interface GetCommentsSuccess {
     postId: string;
-    totalCommentsBefore: number;
+    totalCommentsBefore: number; // Should we show load more
+    totalCommentsAfter: number; // Should we show load recent
     comments: Comment[];
-    offset: number;
-    type: string;
+    type: string; // before or after
+}
+
+export interface SetCommentsStoreRequest {
+    postId: string;
+    commentId?: string; // Will load starting from this comment
+    comments: Comment[];
+    type: string; // before / after
     initialLoad: boolean;
 }
 

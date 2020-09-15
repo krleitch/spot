@@ -3,9 +3,6 @@ import { SpotError } from '@exceptions/error';
 
 import { State } from './state';
 
-export const LoadingCommentsBefore = (state: State): { loading: boolean, id: string } => state.loadingCommentsBefore;
-export const LoadingCommentsAfter = (state: State): { loading: boolean, id: string } => state.loadingCommentsAfter;
-export const LoadingCommentsAfterSuccess = (state: State): { success: boolean, id: string, length: number } => state.loadingCommentsAfterSuccess;
 export const AddCommentError = (state: State): { error: SpotError, id: string } => state.addCommentError;
 export const AddCommentSuccess = (state: State): { success: boolean, id: string } => state.addCommentSuccess;
 export const AddReplyError = (state: State): { error: SpotError, id: string } => state.addReplyError;
@@ -51,24 +48,6 @@ export const selectMyFeatureReplies: MemoizedSelectorWithProps<
 > = createSelector(
   selectMyFeatureState,
   (state, props) => selectReplies(state, props.postId, props.commentId)
-);
-
-export const selectMyFeatureLoadingCommentsBefore: MemoizedSelector<
-  object,
-  { loading: boolean, id: string }
-> = createSelector(
-  selectMyFeatureState,
-  LoadingCommentsBefore
-);
-
-export const selectMyFeatureLoadingCommentsAfterSuccess: MemoizedSelector<object, { success: boolean, id: string, length: number }> = createSelector(
-  selectMyFeatureState,
-  LoadingCommentsAfterSuccess
-);
-
-export const selectMyFeatureLoadingCommentsAfter: MemoizedSelector<object,{ loading: boolean, id: string }> = createSelector(
-  selectMyFeatureState,
-  LoadingCommentsAfter
 );
 
 export const selectAddCommentError: MemoizedSelector<object,{ error: SpotError, id: string }> = createSelector(

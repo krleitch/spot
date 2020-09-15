@@ -17,8 +17,8 @@
           </ng-template>
         </div>
       </ng-template>
-      <div *ngIf="loadingCommentsAfter$ | async as loadingCommentsAfter" class="load-comments-after">
-        <spot-spinner *ngIf="loadingCommentsAfter.id == post.id" size="small"></spot-spinner>
+      <div *ngIf="loadingCommentsAfter" class="load-comments-after">
+        <spot-spinner size="small"></spot-spinner>
       </div>
     </div>
 
@@ -36,8 +36,8 @@
 
     <div class="load-more-container" *ngIf="totalCommentsBefore > 0">
       <div class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
-      <div *ngIf="loadingCommentsBefore$ | async as loadingCommentsBefore" class="load-comments-before">
-        <spot-spinner *ngIf="loadingCommentsBefore.id == post.id" size="small"></spot-spinner>
+      <div *ngIf="loadingCommentsBefore" class="load-comments-before">
+        <spot-spinner size="small"></spot-spinner>
       </div>
     </div>
 

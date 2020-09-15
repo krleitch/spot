@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { LoadCommentsRequest, LoadCommentsSuccess, AddCommentRequest, AddCommentSuccess,
+import { AddCommentRequest, AddCommentSuccess, SetCommentsStoreRequest,
           DeleteCommentRequest, DeleteCommentSuccess, AddReplyRequest, AddReplySuccess,
           LoadRepliesRequest, LoadRepliesSuccess, DeleteReplyRequest, DeleteReplySuccess,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
@@ -14,8 +14,7 @@ export enum ActionTypes {
   ADD_REPLY_REQUEST = '[Comments] Add Reply Request',
   ADD_REPLY_SUCCESS = '[Comments] Add Reply Success',
   ADD_REPLY_FAILURE = '[Comments] Add Reply Failure',
-  GET_REQUEST = '[Comments] Get Request',
-  GET_SUCCESS = '[Comments] Get Success',
+  SET_COMMENTS_REQUEST = '[Comments] Set Request',
   GET_REPLY_REQUEST = '[Comments] Get Reply Request',
   GET_REPLY_SUCCESS = '[Comments] Get Reply Success',
   DELETE_REQUEST = '[Comments] Delete Request',
@@ -53,14 +52,9 @@ export class AddFailureAction implements Action {
   constructor(public error: SpotError, public id: string) {}
 }
 
-export class GetRequestAction implements Action {
-    readonly type = ActionTypes.GET_REQUEST;
-    constructor(public request: LoadCommentsRequest) {}
-}
-
-export class GetSuccessAction implements Action {
-    readonly type = ActionTypes.GET_SUCCESS;
-    constructor(public response: LoadCommentsSuccess) {}
+export class SetCommentsRequestAction implements Action {
+    readonly type = ActionTypes.SET_COMMENTS_REQUEST;
+    constructor(public request: SetCommentsStoreRequest) {}
 }
 
 export class DeleteRequestAction implements Action {
@@ -149,7 +143,7 @@ export class DislikeReplySuccessAction implements Action {
 }
 
 export type Actions = AddRequestAction | AddSuccessAction |
-                      GetRequestAction | GetSuccessAction |
+                      AddFailureAction | SetCommentsRequestAction |
                       DeleteRequestAction | DeleteSuccessAction |
                       AddReplyRequestAction | AddReplySuccessAction |
                       GetReplyRequestAction | GetReplySuccessAction |
@@ -158,5 +152,4 @@ export type Actions = AddRequestAction | AddSuccessAction |
                       DislikeRequestAction | DislikeSuccessAction |
                       LikeReplyRequestAction | LikeReplySuccessAction |
                       DislikeReplyRequestAction | DislikeReplySuccessAction |
-                      GenericFailureAction | AddReplyFailureAction |
-                      AddFailureAction;
+                      GenericFailureAction | AddReplyFailureAction;

@@ -103,6 +103,7 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
         }
 
         let numCommentsBefore = -1;
+        let numCommentsAfter = -1;
         if ( type == 'before' ) {
           let lastDate;
           if ( commentsArray.length > 0 ) {
@@ -112,6 +113,11 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
             }, (err: any) => {
                 return next(new CommentsError.GetComments(500));
             });
+            await comments.getNumberOfCommentsForPostAfterDate(postId, lastDate).then( (num: any) => {
+                numCommentsAfter = num[0].total
+              }, (err: any) => {
+                  return next(new CommentsError.GetComments(500));
+              });
           }
         }
 
@@ -127,6 +133,7 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
             postId: postId,
             comments: commentsArray,
             totalCommentsBefore: numCommentsBefore,
+            totalCommentsAfter: numCommentsAfter,
             type: type 
         };
         res.status(200).json(response);

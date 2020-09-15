@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
-import { AddCommentRequest, LoadCommentsRequest, LoadCommentsSuccess, AddCommentSuccess, DeleteCommentRequest,
+import { AddCommentRequest, GetCommentsRequest, GetCommentsSuccess, AddCommentSuccess, DeleteCommentRequest,
           DeleteCommentSuccess, LoadRepliesRequest, LoadRepliesSuccess, AddReplyRequest, AddReplySuccess,
           DeleteReplyRequest, DeleteReplySuccess, LikeCommentRequest, DislikeCommentRequest,
           LikeCommentSuccess, DislikeCommentSuccess, LikeReplyRequest, DislikeReplyRequest,
@@ -22,7 +21,7 @@ export class CommentService {
 
   constructor(private http: HttpClient, private alertService: AlertService) { }
 
-  getComments(request: LoadCommentsRequest): Observable<LoadCommentsSuccess> {
+  getComments(request: GetCommentsRequest): Observable<GetCommentsSuccess> {
     let params = new HttpParams();
     params = params.append('date', request.date);
     if ( request.commentId ) {
@@ -30,7 +29,7 @@ export class CommentService {
     }
     params = params.append('type', request.type);
     params = params.append('limit', request.limit.toString());
-    return this.http.get<LoadCommentsSuccess>(`${this.baseUrl}/comments/${request.postId}`, { params });
+    return this.http.get<GetCommentsSuccess>(`${this.baseUrl}/comments/${request.postId}`, { params });
   }
 
   addComment(request: AddCommentRequest): Observable<AddCommentSuccess> {

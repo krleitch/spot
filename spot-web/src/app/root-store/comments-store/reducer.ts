@@ -33,39 +33,20 @@ export function featureReducer(state = initialState, action: Actions): State {
           ...state
       };
     }
-    case ActionTypes.GET_REQUEST: {
+    case ActionTypes.SET_COMMENTS_REQUEST: {
+      if (state.comments[action.request.postId] === undefined || action.request.initialLoad) {
+        state.comments[action.request.postId] = {
+          comments: []
+        };
+      }
       if ( action.request.type === 'after' ) {
-        return {
-          ...state,
-          loadingCommentsAfter: { loading: true, id: action.request.postId }
+        state.comments[action.request.postId] = {
+          comments: action.request.comments.concat(state.comments[action.request.postId].comments)
         };
       } else {
-        return {
-          ...state,
-          loadingCommentsBefore: { loading: true, id: action.request.postId }
+        state.comments[action.request.postId] = {
+          comments: state.comments[action.request.postId].comments.concat(action.request.comments)
         };
-      }
-    }
-    case ActionTypes.GET_SUCCESS: {
-      if (state.comments[action.response.postId] === undefined || action.response.initialLoad) {
-        state.comments[action.response.postId] = {
-          comments: [],
-          totalCommentsBefore: 0
-        };
-      }
-      if ( action.response.type === 'after' ) {
-        state.comments[action.response.postId] = {
-          comments: action.response.comments.concat(state.comments[action.response.postId].comments),
-          totalCommentsBefore: action.response.totalCommentsBefore
-        };
-        state.loadingCommentsAfter = { loading: false, id: null };
-        state.loadingCommentsAfterSuccess = { success: true, id: action.response.postId, length: action.response.comments.length };
-      } else {
-        state.comments[action.response.postId] = {
-          comments: state.comments[action.response.postId].comments.concat(action.response.comments),
-          totalCommentsBefore: action.response.totalCommentsBefore
-        };
-        state.loadingCommentsBefore = { loading: false, id: null };
       }
       return {
         ...state

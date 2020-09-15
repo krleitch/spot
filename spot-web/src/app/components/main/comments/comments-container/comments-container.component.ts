@@ -1,23 +1,24 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
-import { LoadCommentsRequest, AddCommentRequest } from '@models/comments';
+import { GetCommentsRequest, AddCommentRequest, GetCommentsSuccess, SetCommentsStoreRequest } from '@models/comments';
 import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 import { SpotError } from '@exceptions/error';
-import { Friend, GetFriendsRequest } from '@models/friends';
-import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
+import { Friend } from '@models/friends';
+import { SocialStoreSelectors } from '@store/social-store';
 import { AlertService } from '@services/alert.service';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 import { TagComponent } from '../../social/tag/tag.component';
 import { CommentsHelper } from '@helpers/comments';
+import { CommentService } from '@services/comments.service';
 
 @Component({
   selector: 'spot-comments-container',
@@ -45,9 +46,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   comments$: Observable<any>;
   comments = [];
   totalCommentsBefore = 0;
-  loadingCommentsBefore$: Observable<{ loading: boolean, id: string }>;
-  loadingCommentsAfter$: Observable<{ loading: boolean, id: string }>;
-  loadingCommentsAfterSuccess$: Observable<{ success: boolean, id: string, length: number }>;
+  totalCommentsAfter = 0;
+  loadingCommentsBefore = false;
+  loadingCommentsAfter = false;
   addCommentError$: Observable<{ error: SpotError, id: string }>;
   addCommentSuccess$: Observable<{ success: boolean, id: string }>;
   addCommentError: string;
@@ -69,7 +70,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<RootStoreState.State>,
               private alertService: AlertService,
               public domSanitizer: DomSanitizer,
-              public commentsHelper: CommentsHelper) {
+              public commentsHelper: CommentsHelper,
+              public commentService: CommentService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -82,30 +84,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( comments => {
       this.comments = comments.comments;
-      if ( comments.totalCommentsBefore !== -1 ) {
-        this.totalCommentsBefore = comments.totalCommentsBefore;
-      }
-    });
-
-    // Load More
-    this.loadingCommentsBefore$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsBefore)
-    );
-
-    // Recent
-    this.loadingCommentsAfter$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsAfter)
-    );
-
-    // Recent Success Event
-    this.loadingCommentsAfterSuccess$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureLoadingCommentsAfterSuccess)
-    );
-
-    this.loadingCommentsAfterSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( success => {
-      if ( success.id === this.post.id && success.success ) {
-        this.loadedAfter = success.length;
-      }
     });
 
     // Check Authentication
@@ -153,20 +131,36 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
 
     // Get the latest limit # of comments
-    const request: LoadCommentsRequest = {
+    const request: GetCommentsRequest = {
       postId: this.post.id,
       date: new Date().toString(),
       type: 'before',
       limit: initialLimit,
       commentId: this.post.startCommentId || null,
-      initialLoad: this.initialLoad
     };
 
-    this.initialLoad = false;
+    this.loadingCommentsBefore = true;
 
-    this.store$.dispatch(
-      new CommentsStoreActions.GetRequestAction(request)
-    );
+    this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
+      this.loadingCommentsBefore = false;
+      if  ( comments.comments ) {
+        const storeRequest: SetCommentsStoreRequest = {
+          postId: this.post.id,
+          type: 'before',
+          commentId: this.post.startCommentId || null,
+          initialLoad: this.initialLoad,
+          comments: comments.comments
+        };
+        this.store$.dispatch(
+          new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
+        );
+        this.totalCommentsBefore = comments.totalCommentsBefore;
+        this.totalCommentsAfter = comments.totalCommentsAfter;
+        this.initialLoad = false;
+      }
+    }, (err: SpotError) => {
+      // Error case
+    });
 
   }
 
@@ -426,31 +420,31 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   loadRecentComments() {
-    const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
-    const request: LoadCommentsRequest = {
-      postId: this.post.id,
-      date: this.comments.length > 0 ? this.comments[0].creation_date : null,
-      type: 'after',
-      limit,
-      initialLoad: this.initialLoad
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.GetRequestAction(request)
-    );
+    // const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
+    // const request: LoadCommentsRequest = {
+    //   postId: this.post.id,
+    //   date: this.comments.length > 0 ? this.comments[0].creation_date : null,
+    //   type: 'after',
+    //   limit,
+    //   initialLoad: this.initialLoad
+    // };
+    // this.store$.dispatch(
+    //   new CommentsStoreActions.GetRequestAction(request)
+    // );
   }
 
   loadMoreComments() {
-    const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
-    const request: LoadCommentsRequest = {
-      postId: this.post.id,
-      date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
-      type: 'before',
-      limit,
-      initialLoad: this.initialLoad
-    };
-    this.store$.dispatch(
-      new CommentsStoreActions.GetRequestAction(request)
-    );
+    // const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
+    // const request: LoadCommentsRequest = {
+    //   postId: this.post.id,
+    //   date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
+    //   type: 'before',
+    //   limit,
+    //   initialLoad: this.initialLoad
+    // };
+    // this.store$.dispatch(
+    //   new CommentsStoreActions.GetRequestAction(request)
+    // );
   }
 
   invalidLength(): boolean {

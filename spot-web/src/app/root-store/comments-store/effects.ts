@@ -6,9 +6,9 @@ import { catchError, map, switchMap, tap, mergeMap } from 'rxjs/operators';
 
 import * as featureActions from './actions';
 import { CommentService } from '../../services/comments.service';
-import { AddCommentSuccess, LoadCommentsSuccess, DeleteCommentSuccess, AddReplySuccess,
+import { AddCommentSuccess, DeleteCommentSuccess, AddReplySuccess,
           DislikeCommentSuccess, LikeCommentSuccess, LoadRepliesSuccess, DeleteReplySuccess,
-          DislikeReplySuccess, LikeReplySuccess, ReportCommentSuccess} from '@models/comments';
+          DislikeReplySuccess, LikeReplySuccess } from '@models/comments';
 
 @Injectable()
 export class CommentsStoreEffects {
@@ -36,26 +36,6 @@ export class CommentsStoreEffects {
             map( (response: AddCommentSuccess) => new featureActions.AddSuccessAction(response)),
             catchError(errorResponse =>
               observableOf(new featureActions.AddFailureAction( errorResponse.error, action.request.postId ))
-            )
-          )
-    )
-  );
-
-  @Effect()
-  getCommentsEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.GetRequestAction>(
-      featureActions.ActionTypes.GET_REQUEST
-    ),
-    mergeMap(action =>
-      this.commentService
-        .getComments(action.request)
-        .pipe(
-            map( (response: LoadCommentsSuccess) => {
-              response.initialLoad = action.request.initialLoad;
-              return new featureActions.GetSuccessAction(response);
-            }),
-            catchError( errorResponse =>
-              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
             )
           )
     )

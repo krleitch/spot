@@ -5,11 +5,6 @@ import { SpotError } from '@exceptions/error';
 export interface State {
     comments: any;
     replies: any;
-    commentsLeft: number;
-    repliesLeft: number;
-    loadingCommentsBefore: { loading: boolean, id: string };
-    loadingCommentsAfter: { loading: boolean, id: string };
-    loadingCommentsAfterSuccess: { success: boolean, id: string, length: number };
     addCommentError: { error: SpotError, id: string };
     addCommentSuccess: { success: boolean, id: string };
     addReplyError: { error: SpotError, id: string };
@@ -20,9 +15,6 @@ export interface State {
 
 export const initialState: State = (
   {
-    loadingCommentsBefore: { loading: false, id: null },
-    loadingCommentsAfter: { loading: false, id: null },
-    loadingCommentsAfterSuccess: { success: false, id: null, length: null },
     addCommentError: { error: null, id: null },
     addCommentSuccess: { success: null, id: null },
     addReplyError: { error: null, id: null },
@@ -31,7 +23,5 @@ export const initialState: State = (
     addReply2Success: { success: null, id: null },
     comments: {},
     replies: {},
-    commentsLeft: 0,
-    repliesLeft: 0
   }
 );

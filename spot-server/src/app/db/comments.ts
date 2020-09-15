@@ -1,6 +1,6 @@
 export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
-          likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink,
+          likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink, getNumberOfCommentsForPostAfterDate,
           getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists }
 
 const uuid = require('uuid');
@@ -149,6 +149,12 @@ function getNumberOfCommentsForPost(postId: string): Promise<any> {
 // Return the number of comments before a date
 function getNumberOfCommentsForPostBeforeDate(postId: string, date: string): Promise<any> {
     var sql = 'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL AND creation_date < ?';
+    var values = [postId, new Date(date)];
+    return db.query(sql, values);
+}
+
+function getNumberOfCommentsForPostAfterDate(postId: string, date: string): Promise<any> {
+    var sql = 'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL AND creation_date > ?';
     var values = [postId, new Date(date)];
     return db.query(sql, values);
 }
