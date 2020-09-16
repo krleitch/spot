@@ -27,8 +27,14 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	const accountId = req.user.id;
 
 	// For get requests
-    let latitude = Number(req.query.latitude);
-    let longitude = Number(req.query.longitude);
+
+	let latitude: any = null;
+	let longitude: any = null;
+
+	if ( req.query ) {
+		latitude = Number(req.query.latitude);
+		longitude = Number(req.query.longitude);
+	}
 
 	// for post requests
 	const { location } = req.body;

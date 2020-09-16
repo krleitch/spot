@@ -126,7 +126,7 @@ export class CommentComponent implements OnInit, OnDestroy {
         postId: replies.postId,
         commentId: replies.commentId,
         date: replies.date,
-        initialLoad: replies.initialLoad,
+        initialLoad: true,
         replies: replies.replies,
         totalReplies: replies.totalReplies
       };
@@ -610,7 +610,7 @@ export class CommentComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Make the reqest
+    // Make the request
     const request: AddReplyRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
