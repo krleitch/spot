@@ -32,11 +32,69 @@
   color: $button-highlight;
 }
 
-.load-recent-container {
+.load-recent {
+
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 5px;
+  position: relative;
+
+  .load-recent__position {
+    position: relative;
+  }
+
+  .load-recent__recent {
+    cursor: pointer;
+    color: $subtle-grey;
+    &:hover {
+      color: $button-highlight;
+    }
+  }
+
+  .load-recent__refresh {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .load-recent__dummy {
+    visibility: hidden;
+  }
+
+  .load-recent__text {
+    font-size: 14px;
+    color: $subtle-grey;
+    opacity: 1;
+  }
+
+  .load-recent__text__hide {
+    opacity: 0;
+    transition: opacity 2000ms;
+    transition-timing-function: ease-in;
+  }
+
+  .load-recent__icon {
+    font-size: 20px;
+    cursor: pointer;
+    &:hover {
+      color: $button-highlight;
+    }
+  }
+
+  .load-recent__loading {
+    position: absolute;
+    right: -22px;
+    top: 3px;
+  }
+
+  .load-recent__loading-refresh {
+    position: absolute;
+    right: 23px;
+    top: 3px;
+  }
+
 }
 
 .load-more-container {
@@ -55,12 +113,6 @@
   cursor: pointer;
   &:hover {
     @extend .highlight;
-  }
-
-  .load-comments-after {
-    position: absolute;
-    top: 0px;
-    right: -20px;
   }
 
   .load-comments-before {

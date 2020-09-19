@@ -102,18 +102,18 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
             return next(new CommentsError.GetComments(500));
         }
 
-        let numCommentsBefore = -1;
-        let numCommentsAfter = -1;
+        let numCommentsBefore = 0;
+        let numCommentsAfter = 0;
         if ( type == 'before' ) {
-          let lastDate;
           if ( commentsArray.length > 0 ) {
-            lastDate = commentsArray[commentsArray.length-1].creation_date;
+            const lastDate = commentsArray[commentsArray.length-1].creation_date;
             await comments.getNumberOfCommentsForPostBeforeDate(postId, lastDate).then( (num: any) => {
               numCommentsBefore = num[0].total
             }, (err: any) => {
                 return next(new CommentsError.GetComments(500));
             });
-            await comments.getNumberOfCommentsForPostAfterDate(postId, lastDate).then( (num: any) => {
+            const firstDate = commentsArray[0].creation_date;
+            await comments.getNumberOfCommentsForPostAfterDate(postId, firstDate).then( (num: any) => {
                 numCommentsAfter = num[0].total
               }, (err: any) => {
                   return next(new CommentsError.GetComments(500));

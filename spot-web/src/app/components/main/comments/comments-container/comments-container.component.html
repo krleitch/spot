@@ -1,25 +1,26 @@
 <div class="container">
   <div class="comments-container">
 
-    <div class="load-recent-container">
-      <div *ngIf="loadedAfter > 0; else initialloadafter">
-        <div class="load-more" (click)="loadRecentComments()">
-          <span *ngIf="comments.length > 0; else refresh"> {{ STRINGS.LOAD_RECENT_COMMENTS_AGAIN }} </span>
-          <ng-template #refresh>
-            <span> {{ STRINGS.REFRESH_COMMENTS_AGAIN }} </span>
-          </ng-template>
-        </div>      </div>
-      <ng-template #initialloadafter>
-        <div class="load-more" (click)="loadRecentComments()">
-          <span *ngIf="comments.length > 0; else refresh"> {{ STRINGS.LOAD_RECENT_COMMENTS }} </span>
-          <ng-template #refresh>
-            <span> {{ STRINGS.REFRESH_COMMENTS }} </span>
-          </ng-template>
+
+    <div  class="load-recent">
+      <div *ngIf="totalCommentsAfter > 0; else refresh" class="load-recent__position">
+        <span (click)="loadRecentComments()" class="load-recent__recent"> Load Recent Comments </span>
+        <div *ngIf="loadingCommentsAfter" class="load-recent__loading">
+          <spot-spinner size="small"></spot-spinner>
         </div>
-      </ng-template>
-      <div *ngIf="loadingCommentsAfter" class="load-comments-after">
-        <spot-spinner size="small"></spot-spinner>
       </div>
+      <ng-template #refresh>
+        <span class="load-recent__refresh load-recent__position">
+          <!-- Dummy element to help position elements, is always visibilty: hidden -->
+          <span class="load-recent__dummy"> <i class="material-icons load-recent__icon"> refresh </i> </span>
+          <span class="load-recent__text" [ngClass]="{'load-recent__text__hide': refreshed }">  comments are up to date </span>
+          <span (click)="loadRecentComments()"> <i class="material-icons load-recent__icon"> refresh </i> </span>
+          <div *ngIf="loadingCommentsAfter" class="load-recent__loading-refresh">
+            <spot-spinner size="small"></spot-spinner>
+          </div>
+        </span>
+      </ng-template>
+
     </div>
 
     <div *ngIf="comments.length > 0; else noComments">

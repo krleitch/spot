@@ -50,13 +50,13 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   totalCommentsAfter = 0;
   loadingCommentsBefore = false;
   loadingCommentsAfter = false;
+  refreshed = false;
   addCommentError: string;
 
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
   initialLoad = true;
-  loadedAfter = 0; // Have you tried to check for recent comments already, and if so how many did you get
 
   isAuthenticated$: Observable<boolean>;
 
@@ -129,6 +129,11 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         this.totalCommentsBefore = comments.totalCommentsBefore;
         this.totalCommentsAfter = comments.totalCommentsAfter;
         this.initialLoad = false;
+
+        if ( comments.totalCommentsAfter === 0) {
+          this.refreshed = true;
+        }
+
       }
     }, (err: SpotError) => {
       // Error case
@@ -423,6 +428,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     };
 
     this.loadingCommentsAfter = true;
+    this.refreshed = false;
 
     this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
       this.loadingCommentsAfter = false;
@@ -436,7 +442,15 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
         );
+
+        // Nothing new was found
+        // this has to go before totalCommentsAfter is updated
+        if ( comments.totalCommentsAfter === 0) {
+          this.refreshed = true;
+        }
+
         this.totalCommentsAfter = comments.totalCommentsAfter;
+
       }
     }, (err: SpotError) => {
       // Error case
