@@ -126,13 +126,14 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
         );
+
+        // if ( comments.totalCommentsAfter === 0) {
+        //   this.refreshed = true;
+        // }
+
         this.totalCommentsBefore = comments.totalCommentsBefore;
         this.totalCommentsAfter = comments.totalCommentsAfter;
         this.initialLoad = false;
-
-        if ( comments.totalCommentsAfter === 0) {
-          this.refreshed = true;
-        }
 
       }
     }, (err: SpotError) => {

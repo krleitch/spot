@@ -1,7 +1,6 @@
 <div class="container">
   <div class="comments-container">
 
-
     <div  class="load-recent">
       <div *ngIf="totalCommentsAfter > 0; else refresh" class="load-recent__position">
         <span (click)="loadRecentComments()" class="load-recent__recent"> Load Recent Comments </span>
@@ -13,7 +12,7 @@
         <span class="load-recent__refresh load-recent__position">
           <!-- Dummy element to help position elements, is always visibilty: hidden -->
           <span class="load-recent__dummy"> <i class="material-icons load-recent__icon"> refresh </i> </span>
-          <span class="load-recent__text" [ngClass]="{'load-recent__text__hide': refreshed }">  comments are up to date </span>
+          <span class="load-recent__text" [ngClass]="{'load-recent__text--hide': refreshed }">  Comments are up to date </span>
           <span (click)="loadRecentComments()"> <i class="material-icons load-recent__icon"> refresh </i> </span>
           <div *ngIf="loadingCommentsAfter" class="load-recent__loading-refresh">
             <spot-spinner size="small"></spot-spinner>

@@ -64,12 +64,14 @@
   }
 
   .load-recent__text {
+    visibility: hidden;
     font-size: 14px;
     color: $subtle-grey;
     opacity: 1;
   }
 
-  .load-recent__text__hide {
+  .load-recent__text--hide {
+    visibility: visible;
     opacity: 0;
     transition: opacity 2000ms;
     transition-timing-function: ease-in;
