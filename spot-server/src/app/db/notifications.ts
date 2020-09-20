@@ -55,7 +55,7 @@ function addReplyNotification(senderId: string, receiverId: string, postId: stri
 }
 
 function setNotificationSeen(notificationId: string, accountId: string) {
-    var sql = `UPDATE notifications SET seen = true WHERE id = ? AND account_id = ?`;
+    var sql = `UPDATE notifications SET seen = true WHERE id = ? AND receiver_id = ?`;
     var values = [notificationId, accountId];
     return db.query(sql, values);
 }
@@ -67,7 +67,7 @@ function setAllNotificationsSeen(accountId: string) {
 }
 
 function deleteNotificationById(id: string, accountId: string) {
-    var sql = `DELETE FROM notifications WHERE id = ? AND account_id = ?`;
+    var sql = `DELETE FROM notifications WHERE id = ? AND receiver_id = ?`;
     var values = [id, accountId];
     return db.query(sql, values);
 }

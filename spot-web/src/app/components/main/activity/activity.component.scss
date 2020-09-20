@@ -54,6 +54,7 @@ spot-main-nav {
   cursor: pointer;
   margin-right: 10px;
   margin-left: 10px;
+  text-align: center;
 }
 
 .selected {
@@ -258,7 +259,7 @@ img {
 @media screen and (max-width: $mobile-width) {
 
   .activity-content {
-    width: 90%;
+    width: 95%;
   }
 
   .tab-container {

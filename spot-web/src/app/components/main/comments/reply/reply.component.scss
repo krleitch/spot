@@ -1,5 +1,6 @@
 @import '../../../../styles/colors';
 @import '../../../../styles/profiles';
+@import '../../../../styles/sizes';
 
 // Comment
 .reply {
@@ -315,4 +316,17 @@ img {
   &:hover {
     @extend .highlight;
   }
+}
+
+// For Mobile
+@media screen and (max-width: $mobile-width) {
+
+  .reply .reply-icon {
+    visibility: visible;
+  }
+
+  .reply .icon-size {
+    visibility: visible;
+  }
+
 }
