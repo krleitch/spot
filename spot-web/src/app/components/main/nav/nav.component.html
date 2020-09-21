@@ -34,6 +34,8 @@
     </div>
   </div>
   <ng-template #noAccount>
-    <div class="login" (click)="openAuthModal()"> {{ STRINGS.LOGIN }} </div>
+    <div *ngIf="showAccountIndicator$ | async">
+      <div class="login" (click)="openAuthModal()"> {{ STRINGS.LOGIN }} </div>
+    </div>
   </ng-template>
 </div>

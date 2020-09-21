@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { takeUntil, mapTo } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { AccountsActions } from '@store/accounts-store';
@@ -26,6 +26,10 @@ export class NavComponent implements OnInit, OnDestroy {
   STRINGS = STRINGS.MAIN.NAV;
 
   account$: Observable<Account>;
+  showAccountIndicator$ = timer(1000).pipe(
+    mapTo(true),
+    takeUntil(this.account$),
+  );
   accountMetadata$: Observable<AccountMetadata>;
   isAuthenticated$: Observable<boolean>;
   unread$: Observable<number>;
