@@ -52,13 +52,13 @@
             </div>
           </div>
           <ng-template #noPostActivity>
-            <div class="no-post-activity">
+            <div *ngIf="showPostsIndicator$ | async" class="no-post-activity">
               <span class="text"> {{ STRINGS.NO_POST_ACTIVITY }} </span>
               <span class="material-icons icon"> insights </span>
             </div>
           </ng-template>
         </spot-infinite-scroll>
-        <div *ngIf="postActivityLoading" class="loading">
+        <div *ngIf="(showPostsIndicator$ | async) && postActivityLoading" class="loading">
           <span class="text"> {{ STRINGS.LOADING_POST_ACTIVITY }} </span>
           <spot-spinner size="medium"></spot-spinner>
         </div>
@@ -95,13 +95,13 @@
             </div>
           </div>
           <ng-template #noCommentActivity>
-            <div class="no-comment-activity">
+            <div *ngIf="showCommentsIndicator$ | async" class="no-comment-activity">
               <span class="text"> {{ STRINGS.NO_COMMENT_ACTIVITY }} </span>
               <span class="material-icons icon"> insights </span>
             </div>
           </ng-template>
         </spot-infinite-scroll>
-        <div *ngIf="commentActivityLoading" class="loading">
+        <div *ngIf="(showCommentsIndicator$ | async) && commentActivityLoading" class="loading">
           <span class="text"> {{ STRINGS.LOADING_COMMENT_ACTIVITY }} </span>
           <spot-spinner size="medium"></spot-spinner>
         </div>

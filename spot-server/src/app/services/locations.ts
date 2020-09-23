@@ -90,9 +90,10 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
             const numHours = ( new Date().valueOf() - new Date(creation_date).valueOf() ) / 3600000;
 
-            const maxDistance = LOCATIONS_CONSTANTS.MAX_DISTANCE_CHANGE * numHours;
-
-            return distanceBetween( myLatitude, myLongitude, latitude, longitude, 'M' ) <= maxDistance;
+			const maxDistance = LOCATIONS_CONSTANTS.MAX_DISTANCE_CHANGE * numHours;
+			
+			// TODO: fix Math.max(1) to be a constant
+            return distanceBetween( myLatitude, myLongitude, latitude, longitude, 'M' ) <= Math.max(1, maxDistance);
 
         }
 

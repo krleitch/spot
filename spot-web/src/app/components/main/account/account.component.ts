@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, take } from 'rxjs/operators';
+import { Observable, Subject, timer, merge } from 'rxjs';
+import { takeUntil, take, mapTo } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
 import { STRINGS } from '@assets/strings/en';
@@ -32,6 +32,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   STRINGS = STRINGS.MAIN.ACCOUNT;
 
   account$: Observable<Account>;
+  showAccountIndicator$: Observable<boolean>;
   accountMetadata$: Observable<AccountMetadata>;
 
   verificationSent = false;
@@ -77,6 +78,11 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsUser)
+    );
+
+    this.showAccountIndicator$ = merge(
+      timer(1000).pipe( mapTo(true), takeUntil(this.account$) ),
+      this.account$.pipe( mapTo(false) ),
     );
 
     this.account$.pipe(takeUntil(this.onDestroy)).subscribe( ( account: Account ) => {

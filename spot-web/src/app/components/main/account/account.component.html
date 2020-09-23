@@ -146,7 +146,7 @@
     </div>
 
     <ng-template #noAccount>
-      <div class="no-account">
+      <div *ngIf="showAccountIndicator$ | async" class="no-account">
         <span class="material-icons icon"> person </span>
         <span class="text"> {{ STRINGS.NO_ACCOUNT }} </span>
       </div>

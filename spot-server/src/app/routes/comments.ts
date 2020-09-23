@@ -48,6 +48,7 @@ router.get('/activity', function (req: any, res: any, next: any) {
             try {
                 activities[i].content = await commentsService.addTagsToContent( activities[i].id, accountId, activities[i].account_id, activities[i].content);
             } catch (err) {
+                console.log('err1', err)
                 return next(new CommentsError.CommentActivity(500));
             }
         }
@@ -56,6 +57,7 @@ router.get('/activity', function (req: any, res: any, next: any) {
         res.status(200).json(response);
 
     }, (err: any) => {
+        console.log('err2', err)
         return next(new CommentsError.CommentActivity(500));
     }));
 

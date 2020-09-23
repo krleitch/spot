@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil, take, finalize } from 'rxjs/operators';
+import { Observable, Subject, timer, merge } from 'rxjs';
+import { takeUntil, take, finalize, mapTo } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
@@ -35,12 +35,14 @@ export class ActivityComponent implements OnInit, OnDestroy {
                private commentService: CommentService, private router: Router ) { }
 
   postActivity: Post[] = [];
-  postActivityLoading = false;
   postLimit = 10;
+  postActivityLoading = false;
+  showPostsIndicator$: Observable<boolean>;
 
   commentActivity: CommentActivity[] = [];
   commentLimit = 10;
   commentActivityLoading = false;
+  showCommentsIndicator$: Observable<boolean>;
 
   ngOnInit() {
 
@@ -53,9 +55,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
     );
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
-
       this.location = location;
-
     });
 
   }
@@ -117,8 +117,17 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
       this.commentActivityLoading = true;
 
-      this.commentService.getActivity( activityCommentRequest ).pipe(take(1), finalize(() => this.commentActivityLoading = false))
-        .subscribe( (activitySuccess: ActivityCommentSuccess ) => {
+      let comments$ = this.commentService.getActivity( activityCommentRequest ).pipe(
+        take(1),
+        finalize(() => this.commentActivityLoading = false)
+      );
+
+      this.showCommentsIndicator$ = merge(
+        timer(1000).pipe( mapTo(true), takeUntil(comments$) ),
+        comments$.pipe( mapTo(false) ),
+      );
+
+      comments$.subscribe( (activitySuccess: ActivityCommentSuccess ) => {
           this.commentActivity = this.commentActivity.concat(activitySuccess.activity);
       });
 
@@ -138,8 +147,14 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
       this.postActivityLoading = true;
 
-      this.postsService.getActivity( activityPostRequest ).pipe(take(1), finalize(() => this.postActivityLoading = false))
-        .subscribe( (activitySuccess: ActivityPostSuccess ) => {
+      let posts$ = this.postsService.getActivity( activityPostRequest ).pipe(take(1), finalize(() => this.postActivityLoading = false))
+
+      this.showPostsIndicator$ = merge(
+        timer(1000).pipe( mapTo(true), takeUntil(posts$) ),
+        posts$.pipe( mapTo(false) ),
+      );
+
+      posts$.subscribe( (activitySuccess: ActivityPostSuccess ) => {
           this.postActivity = this.postActivity.concat(activitySuccess.activity);
       });
 
