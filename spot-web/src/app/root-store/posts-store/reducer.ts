@@ -14,13 +14,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         return {
           ...state,
           posts:  action.response.posts,
-          loading: false
+          loading: false,
+          noPosts: action.response.posts.length === 0,
         };
       } else {
         return {
           ...state,
           posts: state.posts.concat(action.response.posts),
-          loading: false
+          loading: false,
+          noPosts: action.response.posts.length === 0,
         };
       }
     }

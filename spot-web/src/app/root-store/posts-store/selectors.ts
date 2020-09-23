@@ -8,6 +8,7 @@ export const selectPosts = (state: State): Post[] => state.posts;
 export const selectLoading = (state: State): boolean => state.loading;
 export const selectCreateError = (state: State): SpotError => state.createError;
 export const selectCreateSuccess = (state: State): boolean => state.createSuccess;
+export const selectStateNoPosts = (state: State): boolean => state.noPosts;
 
 export const selectMyFeatureState: MemoizedSelector<
   object,
@@ -38,4 +39,9 @@ export const selectCreatePostsError: MemoizedSelector<object, SpotError> = creat
 export const selectCreatePostsSuccess: MemoizedSelector<object, boolean> = createSelector(
   selectMyFeatureState,
   selectCreateSuccess
+);
+
+export const selectNoPosts: MemoizedSelector<object, boolean> = createSelector(
+  selectMyFeatureState,
+  selectStateNoPosts
 );

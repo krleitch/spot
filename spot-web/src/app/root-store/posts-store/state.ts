@@ -6,6 +6,7 @@ export interface State {
   loading: boolean;
   createError: SpotError;
   createSuccess: boolean;
+  noPosts: boolean;
 }
 
 export const initialState: State = (
@@ -13,6 +14,7 @@ export const initialState: State = (
     posts: [],
     loading: false,
     createError: null,
-    createSuccess: false
+    createSuccess: false,
+    noPosts: false,
   }
 );

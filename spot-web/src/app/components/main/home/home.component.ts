@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer, merge } from 'rxjs';
+import { takeUntil, mapTo } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
@@ -20,13 +20,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
   posts$: Observable<Post[]>;
+  showPostsIndicator$: Observable<boolean>;
   loading$: Observable<boolean>;
 
   STRINGS = STRINGS.MAIN.HOME;
-
-  constructor(private store$: Store<RootStoreState.State>) {
-    document.addEventListener('click', this.offClickHandler.bind(this));
-  }
 
   loadingLocation$: Observable<boolean>;
   location$: Observable<Location>;
@@ -34,6 +31,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
+
+  noPosts$: Observable<boolean>;
 
   postlocation = '';
   postSort = '';
@@ -53,6 +52,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   dropdownLocationEnabled = false;
   @ViewChild('mobileDropdownSort') mobileDropdownSort: ElementRef;
   dropdownSortEnabled = false;
+
+  constructor(private store$: Store<RootStoreState.State>) {
+    document.addEventListener('click', this.offClickHandler.bind(this));
+  }
 
   ngOnInit() {
 
@@ -92,8 +95,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectMyFeaturePosts)
     );
 
+    this.showPostsIndicator$ = merge(
+      timer(1000).pipe( mapTo(true), takeUntil(this.posts$) ),
+      this.posts$.pipe( mapTo(false) ),
+    );
+
     this.loading$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeatureLoading)
+    );
+
+    this.noPosts$ = this.store$.pipe(
+      select(PostsStoreSelectors.selectNoPosts)
     );
 
   }

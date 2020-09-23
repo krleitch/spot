@@ -23,7 +23,16 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit() {
+    // const options = {
+    //   root: this.isHostScrollable() ? this.host.nativeElement : null,
+    //   ...this.options
+    // };
 
+    // this.observer = new IntersectionObserver(([entry]) => {
+    //   entry.isIntersecting && this.scrolled.emit();
+    // }, options);
+
+    // this.observer.observe(this.anchor.nativeElement);
   }
 
   ngAfterViewInit() {
@@ -42,24 +51,24 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
         this.scrolled.emit();
 
         // we look for content if the bottom is on screen every timerDelay
-        // this.timer = setInterval( () => {
-        //   const bounding = this.anchor.nativeElement.getBoundingClientRect();
-        //   if (this.inViewPort(bounding)) {
-        //     this.scrolled.emit();
-        //   } else {
-        //     clearInterval(this.timer);
-        //     this.timer = false;
-        //   }
-        // }, this.timerDelay);
+        this.timer = setInterval( () => {
+          const bounding = this.anchor.nativeElement.getBoundingClientRect();
+          if (this.inViewPort(bounding)) {
+            this.scrolled.emit();
+          } else {
+            clearInterval(this.timer);
+            this.timer = false;
+          }
+        }, this.timerDelay);
 
         } else {
 
         // stop the timer
 
-        // if ( this.timer ) {
-        //   clearInterval(this.timer);
-        // }
-        // this.timer = false;
+        if ( this.timer ) {
+          clearInterval(this.timer);
+        }
+        this.timer = false;
 
       }
 
