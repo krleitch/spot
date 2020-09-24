@@ -38,11 +38,13 @@ export class ActivityComponent implements OnInit, OnDestroy {
   postLimit = 10;
   postActivityLoading = false;
   showPostsIndicator$: Observable<boolean>;
+  postsLoadedOnce = false;
 
   commentActivity: CommentActivity[] = [];
   commentLimit = 10;
   commentActivityLoading = false;
   showCommentsIndicator$: Observable<boolean>;
+  commentsLoadedOnce = false;
 
   ngOnInit() {
 
@@ -119,7 +121,10 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
       let comments$ = this.commentService.getActivity( activityCommentRequest ).pipe(
         take(1),
-        finalize(() => this.commentActivityLoading = false)
+        finalize(() => {
+          this.commentActivityLoading = false;
+          this.commentsLoadedOnce = true;
+        }),
       );
 
       this.showCommentsIndicator$ = merge(
@@ -142,12 +147,18 @@ export class ActivityComponent implements OnInit, OnDestroy {
       const activityPostRequest: ActivityPostRequest = {
         date: this.postActivity.length > 0 ? this.postActivity.slice(-1)[0].creation_date : new Date().toString(),
         limit: this.postLimit,
-        location: this.location
+        location: this.location,
       };
 
       this.postActivityLoading = true;
 
-      let posts$ = this.postsService.getActivity( activityPostRequest ).pipe(take(1), finalize(() => this.postActivityLoading = false))
+      const posts$ = this.postsService.getActivity( activityPostRequest ).pipe(
+        take(1),
+        finalize(() => {
+          this.postActivityLoading = false;
+          this.postsLoadedOnce = true;
+        }),
+      );
 
       this.showPostsIndicator$ = merge(
         timer(1000).pipe( mapTo(true), takeUntil(posts$) ),

@@ -52,7 +52,7 @@
             </div>
           </div>
           <ng-template #noPostActivity>
-            <div *ngIf="showPostsIndicator$ | async" class="no-post-activity">
+            <div *ngIf="postsLoadedOnce" class="no-post-activity">
               <span class="text"> {{ STRINGS.NO_POST_ACTIVITY }} </span>
               <span class="material-icons icon"> insights </span>
             </div>
@@ -95,7 +95,7 @@
             </div>
           </div>
           <ng-template #noCommentActivity>
-            <div *ngIf="showCommentsIndicator$ | async" class="no-comment-activity">
+            <div *ngIf="commentsLoadedOnce" class="no-comment-activity">
               <span class="text"> {{ STRINGS.NO_COMMENT_ACTIVITY }} </span>
               <span class="material-icons icon"> insights </span>
             </div>

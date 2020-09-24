@@ -21,7 +21,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
 
 	// if you aren't logged in then verifying your location doesn't matter
 	if ( !req.authenticated ) {
-		next();
+		return next();
 	}
 
 	const accountId = req.user.id;
@@ -55,14 +55,14 @@ const checkLocation = async (req: any, res: any, next: any) => {
 
 			// We have a new valid location, update it
 			locations.updateLocation(accountId, latitude, longitude).then( (rows: any) => {
-				next();
+				return next();
 			})
 
 		});
 
 	} else {
 		// No location info, so just go next
-		next();
+		return next();
 	}
 
 }

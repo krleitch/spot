@@ -38,12 +38,12 @@
 
 <div class="container">
 
-  <div *ngIf="myLocation || postlocation == 'global'; else noLocation" class="content">
+  <div *ngIf="location || postlocation == 'global'; else noLocation" class="content">
 
       <div class="max-width" *ngIf="account$ | async as account">
 
         <div class="max-width" *ngIf="account.verified_date !== null; else verify">
-          <div *ngIf="myLocation; else createLocation">
+          <div *ngIf="location; else createLocation">
             <spot-create></spot-create>
           </div>
           <ng-template #createLocation>
@@ -84,18 +84,18 @@
           </div>
           <ng-template #empty>
             <!-- THe indicator is always making request, wont be shown TODO: FIX -->
-            <div *ngIf="!(loading$ | async) && (showPostsIndicator | async)">
+            <div *ngIf="postsLoadedOnce">
               <span> There are no posts in this area. Be the first to make a spot! </span>
             </div>
           </ng-template>
-          <div *ngIf="(loading$ | async) && (showPostsIndicator | async)" class="loading">
+          <div *ngIf="(noPosts$ | async)">
+            No More Posts
+          </div>
+          <div *ngIf="(loading$ | async) && (showPostsIndicator$ | async)" class="loading">
             <span class="text"> {{ STRINGS.LOADING_POSTS }} </span>
             <spot-spinner size="medium"></spot-spinner>
           </div>
         </spot-infinite-scroll>
-      </div>
-      <div *ngIf="(noPosts$ | async)">
-        No More Posts
       </div>
 
   </div>

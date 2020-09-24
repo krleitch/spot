@@ -33,7 +33,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Get all posts
-router.get('/', function (req: any, res: any, next: any) {
+router.get('/', async function (req: any, res: any, next: any) {
 
     // You must have an account to get all posts
     if ( !req.authenticated ) {
@@ -51,6 +51,8 @@ router.get('/', function (req: any, res: any, next: any) {
     const offset = Number(req.query.offset);
     const limit = Number(req.query.limit);
     const date = req.query.date || null;
+
+    await new Promise(r => setTimeout(r, 5000));
 
     posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
         // add the distance

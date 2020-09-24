@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subject, timer, merge } from 'rxjs';
-import { takeUntil, mapTo } from 'rxjs/operators';
+import { Observable, Subject, timer, merge, combineLatest } from 'rxjs';
+import { takeUntil, mapTo, finalize, startWith, distinctUntilChanged } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
@@ -22,12 +22,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   posts$: Observable<Post[]>;
   showPostsIndicator$: Observable<boolean>;
   loading$: Observable<boolean>;
+  loading: boolean;
+  postsLoadedOnce = false;
 
   STRINGS = STRINGS.MAIN.HOME;
 
   loadingLocation$: Observable<boolean>;
   location$: Observable<Location>;
-  myLocation: Location = null;
+  location: Location = null;
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
@@ -47,7 +49,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   verificationSent = false;
 
-  mobile = false;
   @ViewChild('mobileDropdownLocation') mobileDropdownLocation: ElementRef;
   dropdownLocationEnabled = false;
   @ViewChild('mobileDropdownSort') mobileDropdownSort: ElementRef;
@@ -68,13 +69,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (metadata: AccountMetadata) => {
-
       if ( metadata ) {
         this.postlocation = metadata.search_distance;
         this.postSort = metadata.search_type;
         this.distanceUnit = metadata.distance_unit;
       }
-
     });
 
     // Difference between location loading and disabled
@@ -87,7 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
-      this.myLocation = location;
+      this.location = location;
     });
 
     // Posts and are the posts loading
@@ -95,14 +94,25 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectMyFeaturePosts)
     );
 
+    this.posts$.pipe(finalize(() => {
+      this.postsLoadedOnce = true;
+    }));
+
     this.showPostsIndicator$ = merge(
       timer(1000).pipe( mapTo(true), takeUntil(this.posts$) ),
-      this.posts$.pipe( mapTo(false) ),
+      combineLatest(this.posts$, timer(2000)).pipe( mapTo(false) ),
+    ).pipe(
+      startWith(false),
+      distinctUntilChanged(),
     );
 
     this.loading$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeatureLoading)
     );
+
+    this.loading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
+      this.loading = loading;
+    });
 
     this.noPosts$ = this.store$.pipe(
       select(PostsStoreSelectors.selectNoPosts)
@@ -133,17 +143,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onScroll() {
 
-    if ( this.postlocation && this.postSort ) {
+    if ( this.postlocation && this.postSort && !this.loading ) {
 
       // global doesnt require location
-      if ( this.myLocation || this.postlocation === 'global' ) {
+      if ( this.location || this.postlocation === 'global' ) {
 
         const request: LoadPostRequest = {
           offset: this.loadedPosts,
           limit: this.POSTS_LIMIT,
           date: new Date().toString(),
           initialLoad: this.initialLoad,
-          location: this.myLocation,
+          location: this.location,
           filter: { location: this.postlocation, sort: this.postSort }
         };
 
@@ -152,7 +162,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         );
 
         this.initialLoad = false;
-
         this.loadedPosts += this.POSTS_LIMIT;
 
       }
@@ -165,13 +174,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.initialLoad = true;
 
-    if ( this.myLocation || this.postlocation === 'global' ) {
+    if ( this.location || this.postlocation === 'global' ) {
 
       // Loads the initial posts
       const request: LoadPostRequest = {
         offset: this.loadedPosts,
         limit: this.POSTS_LIMIT,
-        location: this.myLocation,
+        location: this.location,
         date: new Date().toString(),
         initialLoad: this.initialLoad,
         filter: { location: this.postlocation, sort: this.postSort }

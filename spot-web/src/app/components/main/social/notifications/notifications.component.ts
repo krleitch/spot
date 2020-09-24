@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer, merge } from 'rxjs';
+import { takeUntil, mapTo, finalize } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { SocialStoreNotificationsActions, SocialStoreSelectors } from '@store/social-store';
@@ -29,6 +29,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   notificationsSuccess$: Observable<boolean>;
   isLoading = false;
   initialLoad = true;
+  showNotificationsIndicator$: Observable<boolean>;
+  notificationsLoadedOnce = false;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
@@ -50,6 +52,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     this.notifications$ = this.store$.pipe(
       select(SocialStoreSelectors.selectMyFeatureNotifications)
+    );
+
+    this.notifications$.pipe(finalize(() => {
+      this.notificationsLoadedOnce = true;
+    }));
+
+    this.showNotificationsIndicator$ = merge(
+      timer(1000).pipe( mapTo(true), takeUntil(this.notifications$) ),
+      this.notifications$.pipe( mapTo(false) ),
     );
 
     // Get last date that was loaded
