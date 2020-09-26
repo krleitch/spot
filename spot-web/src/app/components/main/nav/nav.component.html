@@ -1,5 +1,6 @@
 <div class="nav">
-  <span class="title" (click)="navigateHome()"> {{ STRINGS.TITLE }} </span>
+  <img (click)="navigateHome()" class="title-image" src="../../../../assets/images/logo_v5.png">
+  <!-- <span class="title" (click)="navigateHome()"> {{ STRINGS.TITLE }} </span> -->
   <div *ngIf="account$ | async as myaccount; else noAccount" class="features">
     <div *ngIf="accountMetadata$ | async as accountMetadata" class="score">
       <i class="material-icons hot"> whatshot </i>
