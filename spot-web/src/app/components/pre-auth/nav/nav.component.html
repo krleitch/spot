@@ -1,7 +1,9 @@
 <div class="nav">
 
   <div class="left">
-    <span class="title" (click)="home()"> {{ STRINGS.TITLE }} </span>
+
+    <img (click)="home()" class="title-image" src="../../../../assets/images/logo_v5.png">
+    <!-- <span class="title" (click)="home()"> {{ STRINGS.TITLE }} </span> -->
     <button class="about" (click)="about()"> {{ STRINGS.ABOUT }} </button>
     <button class="contact" (click)="contact()"> {{ STRINGS.CONTACT }} </button>
       <!-- <span class="nav-button careers"> {{ STRINGS.CAREERS }} </span> -->
@@ -16,10 +18,10 @@
 
   <div class="right">
     <span *ngIf="routeIsLogin(); else mylogin">
-      <button (click)="register()"> Sign Up </button> 
+      <button (click)="register()"> Sign Up </button>
     </span>
     <ng-template #mylogin>
-      <button (click)="login()"> Login </button> 
+      <button (click)="login()"> Login </button>
     </ng-template>
   </div>
 

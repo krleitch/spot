@@ -5,11 +5,17 @@
 
 .nav {
 
-  height: 50px;
+  height: 64px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px 10px;
+
+  .title-image {
+    height: 64px;
+    margin-right: 35px;
+    cursor: pointer;
+  }
 
   .title {
 

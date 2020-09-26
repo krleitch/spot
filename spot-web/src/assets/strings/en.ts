@@ -337,7 +337,6 @@ export const STRINGS = {
         NAV: {
 
             // NAVIGATION
-            TITLE: 'Spot',
             ABOUT: 'About',
             CAREERS: 'Careers',
             FAQ: 'FAQ',
