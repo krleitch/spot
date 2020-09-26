@@ -243,25 +243,30 @@ input.ng-dirty.ng-invalid {
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
 
-  .mobile {
-    display: block;
+  .container {
+    // position: relative;
+    height: 1000px;
+    width: 100vw;
+    // overflow: hidden;
+    box-shadow: 0 2px 34px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, .3);
   }
 
-  .desktop {
-    display: none;
-  }
-
-  .landing {
-      padding-top: 10px;
-      flex-flow: column;
-  }
-
-  .copyright {
-      display: none;
+  .image {
+    position: absolute;
+    top: 0;
+    left: -15px;
+    // max-width: 100%;
+    // min-width: 1000px;
   }
 
   .signup {
+    top: 200px;
+    right: 10px;
     padding: 15px 10px;
+  }
+
+  .copyright {
+    display: none;
   }
 
 }
