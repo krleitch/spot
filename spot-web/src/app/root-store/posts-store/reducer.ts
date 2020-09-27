@@ -4,6 +4,9 @@ import { initialState, State } from './state';
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
     case ActionTypes.LOAD_REQUEST: {
+      if ( action.request.initialLoad ) {
+        state.posts = [];
+      }
       return {
         ...state,
         loading: true
