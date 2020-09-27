@@ -4,79 +4,68 @@
 
   <div class="landing">
 
-    <!-- <div class="showcase">
-      <div class="showcase-content">
-        <div class="showcase-text">
-          {{ STRINGS.SHOWCASE_TEXT }}
-        </div>
-        <img class="showcase-image" src="../../../../assets/images/landing_v2.png">
-      </div>
-    </div> -->
-
-    <!-- <div class="image-container">
-      <img class="showcase-image" src="../../../../assets/images/landing_v4.png">
-    </div> -->
-
     <div class="container">
 
       <img class="image" src="../../../../assets/images/landing_v6.png">
 
-      <div class="signup">
+      <div class="signup-wrapper">
+        <div class="signup">
 
-        <div class="signup-text">
-          {{ STRINGS.COMMUNITY }}
-        </div>
+          <div class="signup-text">
+            {{ STRINGS.COMMUNITY }}
+          </div>
 
-        <form [formGroup]="form">
+          <form [formGroup]="form">
 
-          <div class="login-options">
-            <div type="button" class="facebook" (click)="facebookLogin()">
-              <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
-              {{ STRINGS.FACEBOOK_LOGIN }}
+            <div class="login-options">
+              <div type="button" class="facebook" (click)="facebookLogin()">
+                <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+                {{ STRINGS.FACEBOOK_LOGIN }}
+              </div>
+              <div id="my-signin2"></div>
             </div>
-            <div id="my-signin2"></div>
+
+            <div>
+              <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
+            </div>
+
+            <fieldset>
+                <div class="form-field">
+                    <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+                </div>
+                <div class="form-field">
+                    <input name="username" formControlName="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
+                </div>
+                <div class="form-field">
+                    <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+                </div>
+                <div class="form-field">
+                    <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
+                </div>
+            </fieldset>
+
+            <div class="error-message">
+              {{ errorMessage }}
+            </div>
+
+            <div class="form-buttons">
+              <button type="button" class="button" (click)="signUp()"> {{ STRINGS.SIGN_UP }} </button>
+            </div>
+
+          </form>
+
+          <div class="terms-and-conditions">
+            <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
           </div>
 
-          <div>
-            <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
+          <div class="bar"></div>
+
+          <div class="existing-account" (click)="signIn()">
+            <span> {{ STRINGS.EXISTING_ACCOUNT }} </span>
+            <span class="sign-in-highlight"> {{ STRINGS.SIGN_IN }} </span>
           </div>
 
-          <fieldset>
-              <div class="form-field">
-                  <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
-              </div>
-              <div class="form-field">
-                  <input name="username" formControlName="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
-              </div>
-              <div class="form-field">
-                  <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
-              </div>
-              <div class="form-field">
-                  <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
-              </div>
-          </fieldset>
-
-          <div class="error-message">
-            {{ errorMessage }}
-          </div>
-
-          <div class="form-buttons">
-            <button type="button" class="button" (click)="signUp()"> {{ STRINGS.SIGN_UP }} </button>
-          </div>
-
-        </form>
-
-        <div class="terms-and-conditions">
-          <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
         </div>
-
-        <div class="bar"></div>
-
-        <div class="existing-account" (click)="signIn()">
-          <span> {{ STRINGS.EXISTING_ACCOUNT }} </span>
-          <span class="sign-in-highlight"> {{ STRINGS.SIGN_IN }} </span>
-        </div>
-
       </div>
 
     </div>

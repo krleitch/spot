@@ -3,43 +3,14 @@
 
 .landing {
     display: flex;
-    // justify-content: center;
     align-items: center;
 }
-
-// showcase
-
-// .showcase {
-//     display: flex;
-//     flex-flow: column;
-//     justify-content: center;
-//     align-items: center;
-//     margin-right: 75px;
-//     margin-left: 30px;
-// }
-
-// .showcase-text {
-//     display: block;
-//     margin-left: 5px;
-//     font-size: 22px;
-//     margin-bottom: 10px;
-// }
-
-// img {
-//   max-height: 100%;
-//   max-width: 100%;
-// }
-
-// .showcase-image {
-//     max-height: 600px;
-// }
 
 .container {
     position: relative;
     height: calc(100vh - 84px - 28px);
     width: 100vw;
     overflow: hidden;
-    box-shadow: 0 2px 34px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, .3);
 }
 
 .image {
@@ -52,24 +23,29 @@
 
 // SIGNUP
 
+.signup-wrapper {
+  display: flex;
+  position: absolute;
+  justify-content: flex-end;
+  top: 50px;
+  right: 25%;
+  z-index: 999;
+  width: 100%;
+}
+
 .signup {
-    position: absolute;
-    top: 50px;
-    right: 25%;
     display: flex;
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    margin-left: 75px;
     background-color: white;
-    z-index: 999;
     padding: 80px 50px;
     box-shadow: 0 2px 34px rgba(0, 0, 0, 1), 0 0 0 1px rgba(0, 0, 0, .3);
 }
 
 .signup-text {
     font-size: 28px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 form {
@@ -222,46 +198,54 @@ input.ng-dirty.ng-invalid {
     font-size: 14px;
 }
 
-// Special stylings, Landing only
-@media screen and (max-width: 1450px) {
+// Special stylings, Landing only constants since landing is very special
+
+// height styles
+@media screen and (max-height: 900px) {
 
   .signup {
-    padding: 60px 40px;
+    padding: 20px 20px;
   }
 
 }
 
-.mobile {
-  display: none;
-}
-
-.desktop {
-  display: block;
-}
-
-
-// Mobile Stylings
-@media screen and (max-width: $mobile-width) {
+@media screen and (max-height: 750px) {
 
   .container {
-    // position: relative;
-    height: 1000px;
+    overflow-y: auto;
+  }
+
+}
+
+// width styles
+@media screen and (max-width: 1250px) {
+
+  .signup-wrapper {
+    right: 125px;
+  }
+
+}
+
+@media screen and (max-width: 850px) {
+
+  .container {
+    height: 800px;
     width: 100vw;
-    // overflow: hidden;
-    box-shadow: 0 2px 34px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, .3);
   }
 
   .image {
     position: absolute;
     top: 0;
     left: -15px;
-    // max-width: 100%;
-    // min-width: 1000px;
+  }
+
+  .signup-wrapper {
+    top: 200px;
+    right: 0px;
+    justify-content: center;
   }
 
   .signup {
-    top: 200px;
-    right: 10px;
     padding: 15px 10px;
   }
 
@@ -270,4 +254,3 @@ input.ng-dirty.ng-invalid {
   }
 
 }
-

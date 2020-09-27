@@ -68,6 +68,13 @@
   .nav {
 
     justify-content: space-between;
+    padding: 10px 10px;
+
+    .title-image {
+      height: 42px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
 
     .title {
       margin-right: 12px;
