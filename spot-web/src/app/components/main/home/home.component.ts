@@ -95,12 +95,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this.posts$.pipe(finalize(() => {
+      console.log('ran finalized')
       this.postsLoadedOnce = true;
     }));
 
     this.showPostsIndicator$ = merge(
-      timer(1000).pipe( mapTo(true), takeUntil(this.posts$.pipe(filter(x => !!x))) ),
-      combineLatest(this.posts$.pipe(filter(x => !!x)), timer(2000)).pipe( mapTo(false) ),
+      timer(1000).pipe( mapTo(true), takeUntil(this.posts$.pipe(filter(x => x.length > 0))) ),
+      combineLatest(this.posts$.pipe(filter(x => x.length > 0)), timer(2000)).pipe( mapTo(false) ),
     ).pipe(
       startWith(false),
       distinctUntilChanged(),

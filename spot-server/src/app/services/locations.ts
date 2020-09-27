@@ -32,6 +32,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	let longitude: any = null;
 
 	if ( req.query ) {
+		console.log('1', req.query ? 'yes' : 'no' )
 		latitude = Number(req.query.latitude);
 		longitude = Number(req.query.longitude);
 	}
@@ -40,6 +41,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	const { location } = req.body;
 
 	if ( location ) {
+		console.log('2', location ? 'yy' : 'nn' )
 		latitude = location.latitude;
 		longitude = location.longitude;
 	}
