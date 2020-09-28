@@ -51,10 +51,18 @@ spot-main-nav {
 
 .title {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-size: 30px;
   margin-bottom: 15px;
+}
+
+.options {
+  justify-content: space-between;
+}
+
+.title-icon {
+  font-size: 32px;
+  margin-right: 8px;
 }
 
 .verify-container {
@@ -87,34 +95,25 @@ spot-main-nav {
 }
 
 .facebook {
-
-  background: none;
-	color: inherit;
-	border: none;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-
+  border: none;
+  outline: none;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: $facebook-blue;
   color: white;
   font-size: 14px;
-  padding: 8px 16px;
+  padding: 12px 8px;
+  margin-bottom: 10px;
   box-sizing: border-box;
-  margin-bottom: 5px;
+  cursor: pointer;
+  width: 240px;
+}
 
-  &:hover {
-    background-color: lighten($facebook-blue, 3%);
-  }
-
-  .facebook-logo {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-  }
-
+.facebook-logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 18px;
 }
 
 .facebook-connected {
@@ -196,6 +195,7 @@ input {
   font-size: 14px;
   background-color: white;
   flex: 1;
+  margin-right: 10px;
 }
 
 .description {
@@ -339,9 +339,17 @@ input {
 // For Mobile
 @media screen and (max-width: $mobile-width) {
 
-  .account-info  {
-    width: 95%;
-    min-width: 0;
+  .account {
+
+    .account-content {
+      width: 95%;
+      min-width: 0;
+    }
+
+  }
+
+  .description {
+    text-align: center;
   }
 
   .mobile-column {
@@ -349,4 +357,5 @@ input {
     justify-content: flex-start;
     align-items: flex-start;
   }
+
 }

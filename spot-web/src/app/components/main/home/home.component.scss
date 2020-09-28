@@ -164,13 +164,31 @@ spot-create {
 }
 
 .empty-no-posts {
+
+  display: flex;
+  flex-flow: column;
   text-align: center;
-  padding: 5px 0px
+  padding: 5px 0px 10px 0px;
+
+  .icon {
+    font-size: 32px;
+    color: $button-highlight;
+  }
+
 }
 
 .no-posts {
+
+  display: flex;
+  flex-flow: column;
   text-align: center;
-  padding: 5px 0px
+  padding: 5px 0px 10px 0px;
+
+  .icon {
+    font-size: 32px;
+    color: $button-highlight;
+  }
+
 }
 
 // When location is disabled
@@ -295,6 +313,7 @@ spot-create {
 
     background-color: #efefef;
     color: black;
+    height: 45px;
     padding: 12px 8px;
     font-size: 14px;
     text-decoration: none;
@@ -302,6 +321,7 @@ spot-create {
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid $lighter-grey;
+    box-sizing: border-box;
     cursor: pointer;
 
     &:hover {
@@ -309,8 +329,8 @@ spot-create {
       color: $button-highlight;
     }
 
-    .icon {
-      margin-right: 6px;
+    .dropdown-icon {
+      font-size: 21px;
     }
 
   }

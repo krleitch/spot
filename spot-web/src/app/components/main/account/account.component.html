@@ -5,10 +5,11 @@
     <div *ngIf="account$ | async as account; else noAccount">
 
       <div class="title">
+        <span class="material-icons title-icon"> settings </span>
         {{ STRINGS.MY_ACCOUNT }}
       </div>
 
-      <div class="subheading mobile-column">
+      <div class="subheading" ngClass="{'mobile-column': account.verified_date == null}">
         <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
         <div *ngIf="account.verified_date == null; else verified">
           <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
@@ -133,7 +134,7 @@
       </ng-template>
 
       <br/>
-      <div class="title mobile-column">
+      <div class="title options">
         {{ STRINGS.ACCOUNT_OPTIONS }}
         <label class="checkbox-container">
           <span class="enable-text"> {{ STRINGS.ENABLE_OPTIONS }} </span>

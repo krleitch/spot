@@ -86,7 +86,7 @@ export const STRINGS = {
             METRIC: 'Metric',
 
             // Account options
-            ACCOUNT_OPTIONS: 'Account Options',
+            ACCOUNT_OPTIONS: 'Options',
             ENABLE_OPTIONS: 'Enable Options',
             DELETE: 'Delete Account',
 
