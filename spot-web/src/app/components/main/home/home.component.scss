@@ -86,8 +86,8 @@ spot-main-nav {
 .locationToggle {
   position: fixed;
   display: flex;
-  top: 20px;
-  left: 105px;
+  top: 18px;
+  left: 115px;
   z-index: 100;
 }
 
@@ -109,7 +109,7 @@ spot-main-nav {
   display: flex;
   justify-content: center;
   width: 80px;
-  top: 15px;
+  top: 12px;
   left: calc(50% - 40px);
   z-index: 100;
 }
@@ -161,6 +161,16 @@ spot-create {
     margin-bottom: 5px;
   }
 
+}
+
+.empty-no-posts {
+  text-align: center;
+  padding: 5px 0px
+}
+
+.no-posts {
+  text-align: center;
+  padding: 5px 0px
 }
 
 // When location is disabled
@@ -225,11 +235,20 @@ spot-create {
   position: fixed;
   display: flex;
   justify-content: center;
-  width: 80px;
-  top: 20px;
-  left: 150px;
+  height: 24px;
+  top: 18px;
+  left: 175px;
   z-index: 100;
   font-size: 18px;
+}
+
+.locationToggleMobile {
+  position: fixed;
+  display: flex;
+  height: 24px;
+  top: 18px;
+  left: 120px;
+  z-index: 100;
 }
 
 .mobile-dropdown-container {
@@ -251,8 +270,8 @@ spot-create {
     position: absolute;
     background-color: white;
     width: 60px;
-    top: 28px;
-    left: -60px;
+    top: 32px;
+    left: -52px;
     box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
     z-index: 1;
     font-size: 18px;
@@ -265,7 +284,7 @@ spot-create {
     position: absolute;
     background-color: white;
     width: 60px;
-    top: 28px;
+    top: 32px;
     left: -47px;
     box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
     z-index: 1;

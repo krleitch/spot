@@ -52,7 +52,8 @@ router.get('/', async function (req: any, res: any, next: any) {
     const limit = Number(req.query.limit);
     const date = req.query.date || null;
 
-    await new Promise(r => setTimeout(r, 5000));
+    // for testing delays
+    // await new Promise(r => setTimeout(r, 5000));
 
     posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
         // add the distance

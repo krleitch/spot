@@ -76,8 +76,8 @@ export class AuthenticationService {
       if ( username.length < AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH ||
            username.length > AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH ) {
             return STRINGS.PRE_AUTH.REGISTER.USERNAME_INVALID_LENGTH
-            .replace('%MIN%', AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH.toString())
-            .replace('%MAX%', AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH.toString());
+            .replace('%MIN%', AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH.toString())
+            .replace('%MAX%', AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH.toString());
       }
 
       // start with alphanumeric_ word with . - ' singular no repetition and not at end

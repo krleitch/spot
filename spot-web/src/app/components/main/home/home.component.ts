@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject, timer, merge, combineLatest } from 'rxjs';
-import { takeUntil, mapTo, finalize, startWith, distinctUntilChanged, filter } from 'rxjs/operators';
+import { takeUntil, mapTo, finalize, startWith, distinctUntilChanged, skipWhile, skip, take } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
@@ -94,26 +94,21 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectMyFeaturePosts)
     );
 
-    this.posts$.pipe(finalize(() => {
-      console.log('ran finalized')
-      this.postsLoadedOnce = true;
-    }));
+    this.posts$.pipe(
+      // skip(1),
+      take(10),
+      ).subscribe( (first) => {
+        console.log('called', first);
+        this.postsLoadedOnce = true;
+    });
 
     this.showPostsIndicator$ = merge(
-      timer(1000).pipe( mapTo(true), takeUntil(this.posts$.pipe(filter(x => x.length > 0))) ),
-      combineLatest(this.posts$.pipe(filter(x => x.length > 0)), timer(2000)).pipe( mapTo(false) ),
+      timer(1000).pipe( mapTo(true), takeUntil(this.posts$.pipe(skipWhile( (v) => !v.length ))) ),
+      combineLatest(this.posts$.pipe(skipWhile( (v) => !v.length )), timer(2000)).pipe( mapTo(false) ),
     ).pipe(
       startWith(false),
       distinctUntilChanged(),
     );
-
-    this.showPostsIndicator$.subscribe( (val) => {
-      console.log(val);
-    });
-
-    this.posts$.subscribe( (val) => {
-      console.log('mee', val)
-    })
 
     this.loading$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeatureLoading)
