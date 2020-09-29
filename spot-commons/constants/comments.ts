@@ -18,7 +18,6 @@ export const COMMENTS_CONSTANTS = {
     MORE_LIMIT: 5, 
     
     // Pictures
-    PROFILE_PICTURES_COUNT: 70,
     PROFILE_COLORS_COUNT: 25,
 
  };

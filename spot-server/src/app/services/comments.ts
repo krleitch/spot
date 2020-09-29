@@ -64,6 +64,12 @@ function stringToInt(str: string, lowerbound: number, upperbound: number, ) {
       result = result + str.charCodeAt(i);
     }
 
+    // TODO: Can take a better look behind the math of this to ensure its actually random enough
+    // but this works for now
+    
+    // Add a sufficiently large random number to ensure randomness
+    result += Math.floor((Math.random() * 1000000));
+
     return (result % (upperbound - lowerbound)) + lowerbound;
 
 }
@@ -72,16 +78,16 @@ async function addProfilePicture( comments: any, postCreator: string) {
 
     for (let i = 0; i < comments.length; i++ ) {
 
-        let profilePictureIndex;
+        let index;
         if ( comments[i].account_id == postCreator ) {
-            profilePictureIndex = -1;
+            index = -1;
         } else {
-            profilePictureIndex = stringToInt( combineStrings(comments[i].account_id, comments[i].post_id), 1, COMMENTS_CONSTANTS.PROFILE_PICTURES_COUNT);
+            index = stringToInt( combineStrings(comments[i].account_id, comments[i].post_id), 0, profileImages.length * COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT);
         }
 
         // Get the image and save the Index
-        comments[i].profilePictureSrc = await getProfilePictureFromBucket(profilePictureIndex);
-        comments[i].profilePicture = profilePictureIndex;
+        comments[i].profilePictureSrc = await getProfilePictureFromBucket(index % profileImages.length);
+        comments[i].profilePicture = index % COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT;
         delete comments[i].account_id;
 
     }
