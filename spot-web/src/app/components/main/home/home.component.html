@@ -2,18 +2,18 @@
 
 <div class="locationToggle desktop">
   <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
-  <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> language </i> </div>
+  <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> public </i> </div>
 </div>
 <div #mobileDropdownLocation class="locationToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
     <i *ngIf="isSelectedLocation('local')" class="material-icons"> home </i>
-    <i *ngIf="isSelectedLocation('global')" class="material-icons"> language </i>
+    <i *ngIf="isSelectedLocation('global')" class="material-icons"> public </i>
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
     <div class="dropdown-content-location" [ngClass]="{'show': dropdownLocationEnabled }">
       <div class="button" [ngClass]="{'selected-highlight': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons dropdown-icon"> home </i> </div>
-      <div class="button" [ngClass]="{'selected-highlight': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons dropdown-icon"> language </i> </div>
+      <div class="button" [ngClass]="{'selected-highlight': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons dropdown-icon"> public </i> </div>
     </div>
   </div>
 </div>

@@ -312,7 +312,7 @@ export const STRINGS = {
 
         WELCOME: {
 
-          TITLE: 'Welcome to spot',
+          TITLE: 'Welcome',
 
           HEADING: 'Heading 1',
           TEXT: 'text'

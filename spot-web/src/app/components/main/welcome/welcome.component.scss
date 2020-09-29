@@ -13,35 +13,76 @@
     align-items: center;
     justify-content: center;
     padding: 5px 10px;
-    background-color: $button-highlight;
-    width: 100%;
+    // background-color: $button-highlight;
+    width: 80%;
     height: 100px;
+    font-weight: 600;
     border-bottom: 1px solid $subtle-grey;
     box-sizing: border-box;
-    color: white;
+    // color: white;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 42px;
+
+    .image {
+      width: 60px;
+      margin-right: 15px;
+    }
 
   }
 
   .body {
 
-    padding: 8px;
+    padding: 20px 30px;
 
     .heading {
-      font-size: 24px;
-      color: $button-highlight;
+
+      display: flex;
+      align-items: center;
+      font-size: 26px;
       margin-bottom: 3px;
+
+      .image {
+        width: 35px;
+        margin-left: 10px;
+      }
+
     }
 
     .text {
-      font-size: 14px;
-      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      flex-flow: wrap;
+    }
+
+    .text-block {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .title-icon {
+      font-size: 32px;
+      margin-left: 10px;
+    }
+
+    li {
+      list-style-type: circle;
+    }
+
+    .icon {
+      font-size: 24px;
+      margin: 0px 3px;
+    }
+
+    .facebook {
+      color: $facebook-blue;
     }
 
     .button-container {
 
       display: flex;
       justify-content: center;
+      margin: 30px 0px 10px 0px;
 
       .continue {
 
@@ -50,9 +91,10 @@
         font: inherit;
         cursor: pointer;
         outline: inherit;
+        font-size: 18px;
 
         color: white;
-        padding: 10px 15px;
+        padding: 15px 45px;
         background-color: $button-highlight;
 
         &:hover {
@@ -61,6 +103,18 @@
 
       }
 
+    }
+
+  }
+
+}
+
+@media screen and (max-width: $mobile-width) {
+
+  .welcome {
+
+    .body {
+      padding: 20px 15px;
     }
 
   }
