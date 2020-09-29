@@ -24,22 +24,24 @@ const profileImages = require('@src/app/profileImages');
 function validContent(content: string): Error | null {
 
 	if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH || content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH ) {
-		return new CommentsError.InvalidPostLength(400);
+		return new CommentsError.InvalidCommentLength(400);
 	}
 
 	// Only ASCII characters allowed currently
 	// content field is setup as utf8mb4 so emoji can be added later
 	if ( ! /^[\x00-\x7F]*$/.test(content) ) {
-		return new CommentsError.InvalidPostContent(400);
+		return new CommentsError.InvalidCommentContent(400);
 	};
 
 	if ( badwords.checkProfanity(content) ) {
-		return new CommentsError.InvalidPostProfanity(400);
+		return new CommentsError.InvalidCommentProfanity(400);
 	}
 
 	return null;
 
 }
+
+// Profile Pictures
 
 // Combine the 2 strings by xor them
 function combineStrings(a: string, b: string): string {
@@ -65,34 +67,8 @@ function stringToInt(str: string, lowerbound: number, upperbound: number, ) {
     }
 
     // TODO: Can take a better look behind the math of this to ensure its actually random enough
-    // but this works for now
-    
-    // Add a sufficiently large random number to ensure randomness
-    result += Math.floor((Math.random() * 1000000));
 
     return (result % (upperbound - lowerbound)) + lowerbound;
-
-}
-
-async function addProfilePicture( comments: any, postCreator: string) {
-
-    for (let i = 0; i < comments.length; i++ ) {
-
-        let index;
-        if ( comments[i].account_id == postCreator ) {
-            index = -1;
-        } else {
-            index = stringToInt( combineStrings(comments[i].account_id, comments[i].post_id), 0, profileImages.length * COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT);
-        }
-
-        // Get the image and save the Index
-        comments[i].profilePictureSrc = await getProfilePictureFromBucket(index % profileImages.length);
-        comments[i].profilePicture = index % COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT;
-        delete comments[i].account_id;
-
-    }
-
-    return comments;
 
 }
 
@@ -126,6 +102,30 @@ async function getProfilePictureFromBucket( index: number ) {
     // }
 
 }
+
+async function addProfilePicture( comments: any, postCreator: string) {
+
+    for (let i = 0; i < comments.length; i++ ) {
+
+        let index;
+        if ( comments[i].account_id == postCreator ) {
+            index = -1;
+        } else {
+            index = stringToInt( combineStrings(comments[i].account_id, comments[i].post_id), 0, profileImages.length * COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT);
+        }
+
+        // Get the image and save the Index
+        comments[i].profilePictureSrc = await getProfilePictureFromBucket(index % profileImages.length);
+        comments[i].profilePicture = index % COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT;
+        delete comments[i].account_id;
+
+    }
+
+    return comments;
+
+}
+
+// Tags
 
 async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
@@ -253,6 +253,8 @@ async function addTagsToContent( commentId: string, accountId: string, commentAc
     return ret;
 
 }
+
+// Links
 
 async function generateLink(): Promise<string> {
 

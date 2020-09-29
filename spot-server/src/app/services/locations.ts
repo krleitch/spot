@@ -31,8 +31,11 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	let latitude: any = null;
 	let longitude: any = null;
 
+	// TODO::::::
+	// There is an issue on signup where says location isnt defined, see logs below
+
 	if ( req.query ) {
-		console.log('1', req.query ? 'yes' : 'no' )
+		// console.log('1', req.query ? 'yes' : 'no' )
 		latitude = Number(req.query.latitude);
 		longitude = Number(req.query.longitude);
 	}
@@ -41,7 +44,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	const { location } = req.body;
 
 	if ( location ) {
-		console.log('2', location ? 'yy' : 'nn' )
+		// console.log('2', location ? 'yy' : 'nn' )
 		latitude = location.latitude;
 		longitude = location.longitude;
 	}

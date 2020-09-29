@@ -35,7 +35,7 @@ begin
 end$$
 
 create trigger accounts_soft_delete
-after update on accounts
+before update on accounts
 for each row
 begin
 IF (new.deletion_date IS NOT NULL) THEN

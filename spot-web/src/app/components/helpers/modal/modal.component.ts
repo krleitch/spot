@@ -13,6 +13,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() id: string;
   @Input() width: number;
   @Input() height: number;
+  @Input() disableClose: boolean;
   private element: any;
 
   isOpen: boolean;
@@ -35,7 +36,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.body.appendChild(this.element);
 
     this.element.addEventListener('click', (e: any) => {
-        if (e.target.className === 'spot-modal') {
+        if (e.target.className === 'spot-modal' && !this.disableClose ) {
             modal.close();
         }
     });

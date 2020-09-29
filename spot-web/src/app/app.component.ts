@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AccountsActions, RootStoreState } from '@store';
 import { AuthenticationService } from '@services/authentication.service';
 import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'app-root',

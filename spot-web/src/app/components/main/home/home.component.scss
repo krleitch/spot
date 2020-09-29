@@ -110,7 +110,7 @@ spot-main-nav {
   justify-content: center;
   width: 80px;
   top: 12px;
-  left: calc(50% - 40px);
+  left: calc(50% - 33px);
   z-index: 100;
 }
 
@@ -119,22 +119,35 @@ spot-main-nav {
   justify-content: center;
   cursor: pointer;
   padding: 8px 8px;
-  min-width: 50px;
-  background-color: $lighter-grey;
+  min-width: 66px;
+  background: linear-gradient(to left, $lighter-grey 50%, $button-highlight 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition:all 1s ease;
 }
 
 .hot {
   display: flex;
   justify-content: center;
-  min-width: 50px;
+  min-width: 66px;
   cursor: pointer;
   padding: 8px 8px;
-  background-color: $lighter-grey;
+  background: linear-gradient(to right, $lighter-grey 50%, $button-highlight 50%);
+  background-size: 200% 100%;
+  background-position: left bottom;
+  transition:all 1s ease;
 }
 
-.selectedSort {
+.hot.selectedSort {
   color: white;
-  background-color: $button-highlight;
+  background-position: right bottom;
+  transition:all 1s ease;
+}
+
+.new.selectedSort {
+  color: white;
+  background-position: left bottom;
+  transition:all 1s ease;
 }
 
 spot-create {
