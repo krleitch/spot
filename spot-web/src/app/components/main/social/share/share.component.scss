@@ -42,7 +42,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .social-media {
@@ -154,13 +154,11 @@ input {
 }
 
 .no-friends {
-  margin-left: 15px;
   color: $subtle-grey;
   margin-bottom: 15px;
 }
 
 .login {
-  margin-left: 15px;
   color: $subtle-grey;
   margin-bottom: 15px;
 }

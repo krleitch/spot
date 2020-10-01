@@ -96,3 +96,10 @@ export class LikePost extends SpotError {
     this.name = "LikePost";
   }
 }
+
+export class UnratedPost extends SpotError {
+  constructor(statusCode) {
+    super(POSTS_ERROR_MESSAGES.UNRATED_POST, statusCode);
+    this.name = "UnratedPost";
+  }
+}

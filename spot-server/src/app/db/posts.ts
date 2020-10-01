@@ -1,5 +1,5 @@
 export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink, getPostsActivity,
-            getPostByIdNoAccount, linkExists }
+            getPostByIdNoAccount, linkExists, unratedPost }
 
 const uuid = require('uuid');
 
@@ -96,6 +96,12 @@ function likePost(postId: string, accountId: string): Promise<any> {
 function dislikePost(postId: string, accountId: string): Promise<any> {
     var sql = 'INSERT INTO posts_rating (id, post_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 0';
     var values = [uuid.v4(), postId, accountId, 0];
+    return db.query(sql, values);
+}
+
+function unratedPost(postId: string, accountId: string): Promise<any> {
+    var sql = 'DELETE FROM posts_rating WHERE post_id = ? AND account_id = ?';
+    var values = [uuid.v4(), postId, accountId, 1];
     return db.query(sql, values);
 }
 

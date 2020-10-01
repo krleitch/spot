@@ -45,6 +45,7 @@ export const ERROR_MESSAGES = {
             DELETE_POST: 'Error deleting post',
             DISLIKE_POST: 'Error disliking post',
             LIKE_POST: 'Error liking post',
+            UNRATED_POST: 'Error removing rating from post',
             GET_POSTS: 'Error getting posts'
 
         },
@@ -67,8 +68,10 @@ export const ERROR_MESSAGES = {
 
             LIKE_COMMENT: 'Error liking comment',
             DISLIKE_COMMENT: 'Error disliking comment',
+            UNRATED_COMMENT: 'Error removing rating from comment',
             LIKE_REPLY: 'Error liking reply',
             DISLIKE_REPLY: 'Error disliking reply',
+            UNRATED_REPLY: 'Error removing rating from reply',
 
             REPORT_COMMENT: 'Error reporting comment'
 

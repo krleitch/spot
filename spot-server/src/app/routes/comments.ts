@@ -257,6 +257,10 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
 // Create a reply
 router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
 
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const accountId = req.user.id;
     const replyId = uuid.v4();
     req.filename = 'replies/' + Date.now().toString();
@@ -313,6 +317,10 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
 // Delete a comment
 router.delete('/:postId/:commentId', function (req: any, res: any, next: any) {
 
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
@@ -328,6 +336,10 @@ router.delete('/:postId/:commentId', function (req: any, res: any, next: any) {
 
 // Delete a reply
 router.delete('/:postId/:parentId/:commentId', function (req: any, res: any, next: any) {
+
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const postId = req.params.postId;
     const parentId = req.params.parentId;
@@ -346,6 +358,10 @@ router.delete('/:postId/:parentId/:commentId', function (req: any, res: any, nex
 // Like a comment
 router.put('/:postId/:commentId/like', function(req: any, res: any, next: any) {
 
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
@@ -362,6 +378,10 @@ router.put('/:postId/:commentId/like', function(req: any, res: any, next: any) {
 // Dislike a comment
 router.put('/:postId/:commentId/dislike', function(req: any, res: any, next: any) {
 
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
@@ -375,8 +395,32 @@ router.put('/:postId/:commentId/dislike', function(req: any, res: any, next: any
 
 });
 
+// remove like / dislike from comment
+router.put('/:postId/:commentId/unrated', function(req: any, res: any, next: any) {
+
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const accountId = req.user.id;
+
+    comments.unratedComment(postId, accountId).then((rows: any) => {
+        const response = { postId: postId, commentId: commentId };
+        res.status(200).json(response);
+    }, (err: any) => {
+        return next(new CommentsError.UnratedComment(500));
+    });
+
+});
+
 // Like a reply
 router.put('/:postId/:parentId/:commentId/like', function(req: any, res: any, next: any) {
+
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const postId = req.params.postId;
     const parentId = req.params.parentId;
@@ -395,6 +439,10 @@ router.put('/:postId/:parentId/:commentId/like', function(req: any, res: any, ne
 // Dislike a reply
 router.put('/:postId/:parentId/:commentId/dislike', function(req: any, res: any, next: any) {
 
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
     const postId = req.params.postId;
     const parentId = req.params.parentId;
     const commentId = req.params.commentId;
@@ -409,8 +457,33 @@ router.put('/:postId/:parentId/:commentId/dislike', function(req: any, res: any,
 
 });
 
+// remove like / dislike from reply
+router.put('/:postId/:parentId/:commentId/unrated', function(req: any, res: any, next: any) {
+
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    const postId = req.params.postId;
+    const parentId = req.params.parentId;
+    const commentId = req.params.commentId;
+    const accountId = req.user.id;
+
+    comments.unratedComment(postId, accountId).then((rows: any) => {
+        const response = { postId: postId, parentId: parentId, commentId: commentId };
+        res.status(200).json(response);
+    }, (err: any) => {
+        return next(new CommentsError.UnratedComment(500));
+    });
+
+});
+
 // Report a comment
 router.put('/:postId/:commentId/report', function(req: any, res: any, next: any) {
+
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
 
     const postId = req.params.postId;
     const commentId = req.params.commentId;

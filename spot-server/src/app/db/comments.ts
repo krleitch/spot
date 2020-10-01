@@ -1,7 +1,7 @@
 export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
           likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink, getNumberOfCommentsForPostAfterDate,
-          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists }
+          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists, unratedComment }
 
 const uuid = require('uuid');
 const db = require('./mySql');
@@ -175,6 +175,12 @@ function likeComment(commentId: string, accountId: string): Promise<any> {
 function dislikeComment(commentId: string, accountId: string): Promise<any> {
     var sql = 'INSERT INTO comments_rating (id, comment_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 0';
     var values = [uuid.v4(), commentId, accountId, 0];
+    return db.query(sql, values);
+}
+
+function unratedComment(commentId: string, accountId: string): Promise<any> {
+    var sql = 'DELETE FROM comments_rating WHERE comment_id = ? AND account_id = ?';
+    var values = [uuid.v4(), commentId, accountId, 1];
     return db.query(sql, values);
 }
 

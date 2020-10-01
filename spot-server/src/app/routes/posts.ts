@@ -169,6 +169,25 @@ router.put('/:postId/dislike', function(req: any, res: any, next: any) {
 
 });
 
+// remove like / dislike from post
+router.put('/:postId/unrated', function(req: any, res: any, next: any) {
+
+    if ( !req.authenticated ) {
+        return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    const postId = req.params.postId;
+    const accountId = req.user.id;
+
+    posts.unratedPost(postId, accountId).then((rows: any) => {
+        const response = { postId: postId };
+        res.status(200).json(response);
+    }, (err: any) => {
+        return next(new PostsError.UnratedPost(500));
+    });
+
+});
+
 // Delete a post
 router.delete('/:postId', function(req: any, res: any, next: any) {
 

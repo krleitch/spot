@@ -12,15 +12,13 @@ import { RegisterResponse, LoginResponse } from '@models/authentication';
 import { VerifyResponse, VerifyConfirmResponse } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 import { GetAccountMetadataSuccess } from '@models/accounts';
-import { ModalService } from '@services/modal.service';
 
 @Injectable()
 export class AccountsStoreEffects {
   constructor(
     private authenticationService: AuthenticationService,
     private accountsService: AccountsService,
-    private actions$: Actions,
-    private modalService: ModalService
+    private actions$: Actions
   ) { }
 
   @Effect({dispatch: false})
@@ -168,7 +166,6 @@ export class AccountsStoreEffects {
     ),
     tap((action: featureActions.AccountSuccessAction) => {
       // none
-      this.modalService.open('spot-welcome-modal')
     }),
     switchMap ( (action: featureActions.AccountSuccessAction) => [
       new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
