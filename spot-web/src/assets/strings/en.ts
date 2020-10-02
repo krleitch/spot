@@ -369,11 +369,11 @@ export const STRINGS = {
 
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'I agree to the',
-            TERMS_AND_CONDITIONS_LINK: 'terms and conditions',
+            TERMS_AND_CONDITIONS_LINK: 'terms and conditions & privacy policy',
             COPYRIGHT: '2020 Spot',
 
             // ERROR MESSAGES
-            TERMS_ERROR: 'You must agree to the terms and conditions',
+            TERMS_ERROR: 'You must agree to the terms and conditions & privacy policy',
             EMAIL_ERROR: 'Email is required',
             USERNAME_ERROR: 'Username is required',
             PASSWORD_ERROR: 'Password is required',
@@ -409,11 +409,11 @@ export const STRINGS = {
 
             // TERMS AND COPYRIGHT
             TERMS_AND_CONDITIONS: 'I agree to the',
-            TERMS_AND_CONDITIONS_LINK: 'terms and conditions',
+            TERMS_AND_CONDITIONS_LINK: 'terms and conditions & privacy policy',
             COPYRIGHT: '2020 Spot',
 
             // ERROR MESSAGES
-            TERMS_ERROR: 'You must agree to the terms and conditions',
+            TERMS_ERROR: 'You must agree to the terms and conditions & privacy policy',
 
             EMAIL_ERROR: 'Email is required',
             EMAIL_INVALID: 'Email is invalid',

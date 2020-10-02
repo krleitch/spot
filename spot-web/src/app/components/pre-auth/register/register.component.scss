@@ -69,6 +69,7 @@ fieldset {
     text-align: center;
     color: $error-red;
     margin-bottom: 10px;
+    max-width: 300px;
 }
 
 input {
@@ -140,14 +141,14 @@ input.ng-dirty.ng-invalid {
   margin-top: 5px;
   margin-bottom: 10px;
   text-align: center;
+  flex-flow: column;
 
   input {
     width: auto;
-    margin: 0px 5px 0px 0px;
+    margin: 0px 3px 0px 0px;
   }
 
   a {
-    margin-left: 3px;
     text-decoration: none;
     color: $button-highlight;
     &:hover {
