@@ -40,7 +40,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       email: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required],
-      phone: ['', Validators.required]
+      phone: ['', Validators.required],
+      terms: [false, Validators.required]
     });
   }
 
@@ -134,6 +135,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   signUp() {
 
     const val = this.form.value;
+
+    if ( !val.terms ) {
+      this.errorMessage = this.STRINGS.TERMS_ERROR;
+      this.form.controls.terms.markAsDirty();
+      return;
+    }
 
     if (!val.email) {
       this.errorMessage = this.STRINGS.EMAIL_ERROR;

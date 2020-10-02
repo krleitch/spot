@@ -368,10 +368,12 @@ export const STRINGS = {
             SIGN_IN: 'Sign in',
 
             // TERMS AND COPYRIGHT
-            TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
+            TERMS_AND_CONDITIONS: 'I agree to the',
+            TERMS_AND_CONDITIONS_LINK: 'terms and conditions',
             COPYRIGHT: '2020 Spot',
 
             // ERROR MESSAGES
+            TERMS_ERROR: 'You must agree to the terms and conditions',
             EMAIL_ERROR: 'Email is required',
             USERNAME_ERROR: 'Username is required',
             PASSWORD_ERROR: 'Password is required',
@@ -406,10 +408,13 @@ export const STRINGS = {
             SIGN_IN: 'Sign in',
 
             // TERMS AND COPYRIGHT
-            TERMS_AND_CONDITIONS: 'By joining, you agree to the terms and conditions',
+            TERMS_AND_CONDITIONS: 'I agree to the',
+            TERMS_AND_CONDITIONS_LINK: 'terms and conditions',
             COPYRIGHT: '2020 Spot',
 
             // ERROR MESSAGES
+            TERMS_ERROR: 'You must agree to the terms and conditions',
+
             EMAIL_ERROR: 'Email is required',
             EMAIL_INVALID: 'Email is invalid',
 
