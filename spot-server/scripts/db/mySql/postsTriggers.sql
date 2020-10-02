@@ -1,5 +1,6 @@
 DROP TRIGGER IF EXISTS posts_rating_create;
 DROP TRIGGER IF EXISTS posts_rating_change;
+DROP TRIGGER IF EXISTS posts_rating_delete;
 DROP TRIGGER IF EXISTS posts_comments_create;
 DROP TRIGGER IF EXISTS posts_comments_delete;
 
@@ -29,6 +30,17 @@ ELSE
 END IF;
 end$$
 
+create trigger posts_rating_delete
+after delete on posts_rating
+for each row
+begin
+IF ( old.rating = 1 ) THEN
+    update posts set likes = likes - 1 where id = old.post_id;
+ELSE
+    update posts set dislikes = dislikes - 1 where id = old.post_id;
+END IF;
+end$$
+
 create trigger posts_comments_create
 after insert on comments
 for each row
@@ -44,5 +56,7 @@ IF ( new.deletion_date IS NOT NULL ) THEN
     update posts set comments = comments - 1 where id = new.post_id;
 END IF;
 end$$
+
+
 
 delimiter ;

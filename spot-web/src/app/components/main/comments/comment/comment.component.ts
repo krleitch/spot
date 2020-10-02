@@ -10,7 +10,8 @@ import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetRepliesSuccess, AddReplySuccess,
-         LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest } from '@models/comments';
+         LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest,
+         UnratedCommentRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AlertService } from '@services/alert.service';
@@ -651,7 +652,15 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   like() {
-    if (this.comment.rated !== 1) {
+    if (this.comment.rated === 1) {
+      const request: UnratedCommentRequest = {
+        postId: this.comment.post_id,
+        commentId: this.comment.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.UnratedRequestAction(request)
+      );
+    } else {
       const request: LikeCommentRequest = {
         postId: this.comment.post_id,
         commentId: this.comment.id
@@ -663,7 +672,15 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   dislike() {
-    if (this.comment.rated !== 0) {
+    if (this.comment.rated === 0) {
+      const request: UnratedCommentRequest = {
+        postId: this.comment.post_id,
+        commentId: this.comment.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.UnratedRequestAction(request)
+      );
+    } else {
       const request: DislikeCommentRequest = {
         postId: this.comment.post_id,
         commentId: this.comment.id

@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
-import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post } from '@models/posts';
+import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, UnratedPostRequest } from '@models/posts';
 import { Location, AccountMetadata } from '@models/accounts';
 import { ModalService } from '@services/modal.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
@@ -182,7 +182,14 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   like() {
-    if (this.post.rated !== 1) {
+    if (this.post.rated === 1) {
+      const request: UnratedPostRequest = {
+        postId: this.post.id
+      };
+      this.store$.dispatch(
+        new PostsStoreActions.UnratedRequestAction(request)
+      );
+    } else {
       const request: LikePostRequest = {
         postId: this.post.id
       };
@@ -193,7 +200,14 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   dislike() {
-    if (this.post.rated !== 0) {
+    if (this.post.rated === 0) {
+      const request: UnratedPostRequest = {
+        postId: this.post.id
+      };
+      this.store$.dispatch(
+        new PostsStoreActions.UnratedRequestAction(request)
+      );
+    } else {
       const request: DislikePostRequest = {
         postId: this.post.id
       };

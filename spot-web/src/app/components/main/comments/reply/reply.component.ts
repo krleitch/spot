@@ -10,7 +10,7 @@ import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, AddReplyRequest, AddReplyStoreRequest, DeleteReplyRequest, LikeReplyRequest,
-         DislikeReplyRequest, AddReplySuccess } from '@models/comments';
+         DislikeReplyRequest, AddReplySuccess, UnratedReplyRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
@@ -569,7 +569,16 @@ export class ReplyComponent implements OnInit, OnDestroy {
   }
 
   like() {
-    if (this.reply.rated !== 1) {
+    if (this.reply.rated === 1) {
+      const request: UnratedReplyRequest = {
+        postId: this.reply.post_id,
+        parentId: this.reply.parent_id,
+        commentId: this.reply.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.UnratedReplyRequestAction(request)
+      );
+    } else {
       const request: LikeReplyRequest = {
         postId: this.reply.post_id,
         parentId: this.reply.parent_id,
@@ -582,7 +591,16 @@ export class ReplyComponent implements OnInit, OnDestroy {
   }
 
   dislike() {
-    if (this.reply.rated !== 0) {
+    if (this.reply.rated === 0) {
+      const request: UnratedReplyRequest = {
+        postId: this.reply.post_id,
+        parentId: this.reply.parent_id,
+        commentId: this.reply.id
+      };
+      this.store$.dispatch(
+        new CommentsStoreActions.UnratedReplyRequestAction(request)
+      );
+    } else {
       const request: DislikeReplyRequest = {
         postId: this.reply.post_id,
         parentId: this.reply.parent_id,
