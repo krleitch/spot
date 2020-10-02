@@ -77,6 +77,15 @@ export interface DislikePostSuccess {
     postId: string;
 }
 
+// Unrated a post
+export interface UnratedPostRequest {
+    postId: string;
+}
+
+export interface UnratedPostSuccess {
+    postId: string;
+}
+
 // Delete a post
 export interface DeletePostRequest {
     postId: string;

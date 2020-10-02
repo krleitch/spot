@@ -163,6 +163,17 @@ export interface DislikeCommentSuccess {
     commentId: string;
 }
 
+// Unrated a comment
+export interface UnratedCommentRequest {
+    postId: string;
+    commentId: string;
+}
+
+export interface UnratedCommentSuccess {
+    postId: string;
+    commentId: string;
+}
+
 // Like a reply
 export interface LikeReplyRequest {
     postId: string;
@@ -184,6 +195,19 @@ export interface DislikeReplyRequest {
 }
 
 export interface DislikeReplySuccess {
+    postId: string;
+    parentId: string;
+    commentId: string;
+}
+
+// Unrated a reply
+export interface UnratedReplyRequest {
+    postId: string;
+    parentId: string;
+    commentId: string;
+}
+
+export interface UnratedReplySuccess {
     postId: string;
     parentId: string;
     commentId: string;

@@ -8,7 +8,8 @@ import { AddCommentRequest, GetCommentsRequest, GetCommentsSuccess, AddCommentSu
           DeleteReplyRequest, DeleteReplySuccess, LikeCommentRequest, DislikeCommentRequest,
           LikeCommentSuccess, DislikeCommentSuccess, LikeReplyRequest, DislikeReplyRequest,
           LikeReplySuccess, DislikeReplySuccess, ReportCommentRequest, ReportCommentSuccess,
-          ActivityCommentRequest, ActivityCommentSuccess } from '@models/comments';
+          ActivityCommentRequest, ActivityCommentSuccess, UnratedCommentRequest, UnratedCommentSuccess,
+          UnratedReplyRequest, UnratedReplySuccess } from '@models/comments';
 import { AlertService } from '@services/alert.service';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 
@@ -83,6 +84,10 @@ export class CommentService {
     return this.http.put<DislikeCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/dislike`, request);
   }
 
+  unratedComment(request: UnratedCommentRequest): Observable<UnratedCommentSuccess> {
+    return this.http.put<UnratedCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/unrated`, request);
+  }
+
   reportComment(request: ReportCommentRequest): Observable<ReportCommentSuccess> {
     return this.http.put<ReportCommentSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}/report`, request);
   }
@@ -102,6 +107,11 @@ export class CommentService {
   dislikeReply(request: DislikeReplyRequest): Observable<DislikeReplySuccess> {
     return this.http.put<DislikeReplySuccess>
     (`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}/dislike`, request);
+  }
+
+  unratedReply(request: UnratedReplyRequest): Observable<UnratedReplySuccess> {
+    return this.http.put<UnratedReplySuccess>
+    (`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}/unrated`, request);
   }
 
   failureMessage(message: string) {

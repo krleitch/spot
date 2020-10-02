@@ -4,7 +4,8 @@ import { AddCommentStoreRequest, SetCommentsStoreRequest,
           DeleteCommentRequest, DeleteCommentSuccess, AddReplyStoreRequest,
           SetRepliesStoreRequest, DeleteReplyRequest, DeleteReplySuccess,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
-          LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess } from '@models/comments';
+          LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess, UnratedCommentRequest,
+          UnratedCommentSuccess, UnratedReplyRequest, UnratedReplySuccess } from '@models/comments';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -20,10 +21,14 @@ export enum ActionTypes {
   LIKE_SUCCESS = '[Comments] Like Success',
   DISLIKE_REQUEST = '[Comments] Dislike Request',
   DISLIKE_SUCCESS = '[Comments] Dislike Success',
+  UNRATED_REQUEST = '[Comments] Unrated Request',
+  UNRATED_SUCCESS = '[Comments] Unrated Success',
   LIKE_REPLY_REQUEST = '[Comments] Like Reply Request',
   LIKE_REPLY_SUCCESS = '[Comments] Like Reply Success',
   DISLIKE_REPLY_REQUEST = '[Comments] Dislike Reply Request',
   DISLIKE_REPLY_SUCCESS = '[Comments] Dislike Reply Success',
+  UNRATED_REPLY_REQUEST = '[Comments] Unrated Reply Request',
+  UNRATED_REPLY_SUCCESS = '[Comments] Unrated Reply Success',
   GENERIC_FAILURE = '[Comments] Generic Failure'
 }
 
@@ -92,6 +97,16 @@ export class DislikeSuccessAction implements Action {
   constructor(public response: DislikeCommentSuccess) {}
 }
 
+export class UnratedRequestAction implements Action {
+  readonly type = ActionTypes.UNRATED_REQUEST;
+  constructor(public request: UnratedCommentRequest) {}
+}
+
+export class UnratedSuccessAction implements Action {
+  readonly type = ActionTypes.UNRATED_SUCCESS;
+  constructor(public response: UnratedCommentSuccess) {}
+}
+
 export class LikeReplyRequestAction implements Action {
   readonly type = ActionTypes.LIKE_REPLY_REQUEST;
   constructor(public request: LikeReplyRequest) {}
@@ -112,6 +127,16 @@ export class DislikeReplySuccessAction implements Action {
   constructor(public response: DislikeReplySuccess) {}
 }
 
+export class UnratedReplyRequestAction implements Action {
+  readonly type = ActionTypes.UNRATED_REPLY_REQUEST;
+  constructor(public request: UnratedReplyRequest) {}
+}
+
+export class UnratedReplySuccessAction implements Action {
+  readonly type = ActionTypes.UNRATED_REPLY_SUCCESS;
+  constructor(public response: UnratedReplySuccess) {}
+}
+
 export type Actions = AddCommentRequestAction | SetCommentsRequestAction |
                       DeleteRequestAction | DeleteSuccessAction |
                       SetRepliesRequestAction | AddReplyRequestAction |
@@ -120,4 +145,5 @@ export type Actions = AddCommentRequestAction | SetCommentsRequestAction |
                       DislikeRequestAction | DislikeSuccessAction |
                       LikeReplyRequestAction | LikeReplySuccessAction |
                       DislikeReplyRequestAction | DislikeReplySuccessAction |
-                      GenericFailureAction;
+                      GenericFailureAction | UnratedRequestAction | UnratedSuccessAction |
+                      UnratedReplyRequestAction | UnratedReplySuccessAction;

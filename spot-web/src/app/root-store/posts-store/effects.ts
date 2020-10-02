@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PostsService } from '@services/posts.service';
 import * as featureActions from './actions';
 
-import { DislikePostSuccess, LikePostSuccess, DeletePostSuccess, LoadPostSuccess, AddPostSuccess, ReportPostSuccess } from '@models/posts';
+import { DislikePostSuccess, LikePostSuccess, DeletePostSuccess, LoadPostSuccess, AddPostSuccess, UnratedPostSuccess } from '@models/posts';
 
 @Injectable()
 export class PostsStoreEffects {
@@ -49,6 +49,23 @@ export class PostsStoreEffects {
         .likePost(action.request)
         .pipe(
           map( (response: LikePostSuccess) => new featureActions.LikeSuccessAction(response)),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  unratedPostEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.UnratedRequestAction>(
+      featureActions.ActionTypes.UNRATED_REQUEST
+    ),
+    switchMap(action =>
+      this.postsService
+        .unratedPost(action.request)
+        .pipe(
+          map( (response: UnratedPostSuccess) => new featureActions.UnratedSuccessAction(response)),
           catchError(errorResponse =>
             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
           )

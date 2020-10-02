@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
-import { catchError, map, switchMap, tap, mergeMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import * as featureActions from './actions';
 import { CommentService } from '../../services/comments.service';
-import { AddCommentSuccess, DeleteCommentSuccess,
-          DislikeCommentSuccess, LikeCommentSuccess, DeleteReplySuccess,
-          DislikeReplySuccess, LikeReplySuccess } from '@models/comments';
+import { DeleteCommentSuccess, DislikeCommentSuccess, LikeCommentSuccess, DeleteReplySuccess,
+          DislikeReplySuccess, LikeReplySuccess, UnratedCommentSuccess, UnratedReplySuccess } from '@models/comments';
 
 @Injectable()
 export class CommentsStoreEffects {
@@ -93,6 +92,23 @@ export class CommentsStoreEffects {
   );
 
   @Effect()
+  unratedCommentEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.UnratedRequestAction>(
+      featureActions.ActionTypes.UNRATED_REQUEST
+    ),
+    switchMap(action =>
+      this.commentService
+        .unratedComment(action.request)
+        .pipe(
+          map( (response: UnratedCommentSuccess) => new featureActions.UnratedSuccessAction(response)),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
   dislikeReplytEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.DislikeReplyRequestAction>(
       featureActions.ActionTypes.DISLIKE_REPLY_REQUEST
@@ -119,6 +135,23 @@ export class CommentsStoreEffects {
         .likeReply(action.request)
         .pipe(
           map( (response: LikeReplySuccess) => new featureActions.LikeReplySuccessAction(response)),
+          catchError(errorResponse =>
+            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+          )
+        )
+    )
+  );
+
+  @Effect()
+  unratedReplyEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.UnratedReplyRequestAction>(
+      featureActions.ActionTypes.UNRATED_REPLY_REQUEST
+    ),
+    switchMap(action =>
+      this.commentService
+        .unratedReply(action.request)
+        .pipe(
+          map( (response: UnratedReplySuccess) => new featureActions.UnratedReplySuccessAction(response)),
           catchError(errorResponse =>
             observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
           )

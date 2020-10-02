@@ -119,6 +119,21 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state
       };
     }
+    case ActionTypes.UNRATED_SUCCESS: {
+      state.comments[action.response.postId].comments.forEach( (comment , i) => {
+        if (comment.id === action.response.commentId) {
+          if (comment.rated === 1) {
+            comment.likes -= 1;
+          } else if ( comment.rated === 0 ) {
+            comment.dislikes -= 1;
+          }
+          comment.rated = -1;
+        }
+      });
+      return {
+        ...state
+      };
+    }
     case ActionTypes.LIKE_REPLY_SUCCESS: {
       state.replies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
@@ -147,8 +162,20 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state
       };
     }
-    default: {
-      return state;
+    case ActionTypes.UNRATED_REPLY_SUCCESS: {
+      state.replies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
+        if (reply.id === action.response.commentId) {
+          if (reply.rated === 1) {
+            reply.likes -= 1;
+          } else if ( reply.rated === 0 ) {
+            reply.dislikes -= 1;
+          }
+          reply.rated = -1;
+        }
+      });
+      return {
+        ...state
+      };
     }
   }
 }

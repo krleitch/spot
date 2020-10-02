@@ -7,7 +7,7 @@ import { SpotError } from '@exceptions/error';
 import { DeletePostRequest, DeletePostSuccess, AddPostRequest, AddPostSuccess, LoadPostSuccess, LikePostSuccess,
           LikePostRequest, DislikePostRequest, DislikePostSuccess, LoadPostRequest,
           LoadSinglePostRequest, LoadSinglePostSuccess, ReportPostRequest, ReportPostSuccess,
-          ActivityPostRequest, ActivityPostSuccess } from '@models/posts';
+          ActivityPostRequest, ActivityPostSuccess, UnratedPostRequest, UnratedPostSuccess } from '@models/posts';
 import { AlertService } from '@services/alert.service';
 
 @Injectable({
@@ -62,8 +62,8 @@ export class PostsService {
     return this.http.put<ReportPostSuccess>(`${this.baseUrl}/posts/${request.postId}/report`, request);
   }
 
-  likePost(request: LikePostRequest): Observable<LikePostSuccess> {
-    return this.http.put<LikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/like`, request);
+  unratedPost(request: UnratedPostRequest): Observable<UnratedPostSuccess> {
+    return this.http.put<UnratedPostSuccess>(`${this.baseUrl}/posts/${request.postId}/unrated`, request);
   }
 
   getActivity(request: ActivityPostRequest): Observable<ActivityPostSuccess> {
@@ -81,6 +81,11 @@ export class PostsService {
 
   dislikePost(request: DislikePostRequest): Observable<DislikePostSuccess> {
     return this.http.put<DislikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/dislike`, request);
+  }
+
+
+  likePost(request: LikePostRequest): Observable<LikePostSuccess> {
+    return this.http.put<LikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/like`, request);
   }
 
   failureMessage(error: SpotError) {

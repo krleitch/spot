@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 
 import { AddPostRequest, AddPostSuccess, LikePostRequest, DislikePostRequest, LikePostSuccess, DislikePostSuccess,
-          DeletePostRequest, DeletePostSuccess, LoadPostSuccess, LoadPostRequest, ReportPostRequest,
-          ReportPostSuccess } from '@models/posts';
+          DeletePostRequest, DeletePostSuccess, LoadPostSuccess, LoadPostRequest, UnratedPostRequest,
+          UnratedPostSuccess } from '@models/posts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -10,6 +10,8 @@ export enum ActionTypes {
   LIKE_SUCCESS = '[Posts] Like Success',
   DISLIKE_REQUEST = '[Posts] Dislike Request',
   DISLIKE_SUCCESS = '[Posts] Dislike Success',
+  UNRATED_REQUEST = '[Posts] Unrated Request',
+  UNRATED_SUCCESS = '[Posts] Unrated Success',
   DELETE_REQUEST = '[Posts] Delete Request',
   DELETE_SUCCESS = '[Posts] Delete Success',
   ADD_REQUEST = '[Posts] Add Request',
@@ -43,6 +45,16 @@ export class DislikeRequestAction implements Action {
 export class DislikeSuccessAction implements Action {
   readonly type = ActionTypes.DISLIKE_SUCCESS;
   constructor(public response: DislikePostSuccess) {}
+}
+
+export class UnratedRequestAction implements Action {
+  readonly type = ActionTypes.UNRATED_REQUEST;
+  constructor(public request: UnratedPostRequest) {}
+}
+
+export class UnratedSuccessAction implements Action {
+  readonly type = ActionTypes.UNRATED_SUCCESS;
+  constructor(public response: UnratedPostSuccess) {}
 }
 
 export class DeleteRequestAction implements Action {
@@ -83,4 +95,5 @@ export class LoadSuccessAction implements Action {
 export type Actions = GenericFailureAction | LoadRequestAction | LoadSuccessAction |
                       AddRequestAction | AddSuccessAction | AddFailureAction |
                       DeleteRequestAction | DeleteSuccessAction | LikeRequestAction |
-                      LikeSuccessAction | DislikeRequestAction | DislikeSuccessAction;
+                      LikeSuccessAction | DislikeRequestAction | DislikeSuccessAction |
+                      UnratedRequestAction | UnratedSuccessAction;
