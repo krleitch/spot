@@ -177,5 +177,8 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state
       };
     }
+    default: {
+      return state;
+    }
   }
 }
