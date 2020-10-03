@@ -94,14 +94,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectMyFeaturePosts)
     );
 
-    this.posts$.pipe(
-      // skip(1),
-      take(10),
-      ).subscribe( (first) => {
-        console.log('called', first);
-        this.postsLoadedOnce = true;
-    });
-
     this.showPostsIndicator$ = merge(
       timer(1000).pipe( mapTo(true), takeUntil(this.posts$.pipe(skipWhile( (v) => !v.length ))) ),
       combineLatest(this.posts$.pipe(skipWhile( (v) => !v.length )), timer(2000)).pipe( mapTo(false) ),
