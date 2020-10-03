@@ -180,7 +180,7 @@ function dislikeComment(commentId: string, accountId: string): Promise<any> {
 
 function unratedComment(commentId: string, accountId: string): Promise<any> {
     var sql = 'DELETE FROM comments_rating WHERE comment_id = ? AND account_id = ?';
-    var values = [uuid.v4(), commentId, accountId, 1];
+    var values = [commentId, accountId];
     return db.query(sql, values);
 }
 

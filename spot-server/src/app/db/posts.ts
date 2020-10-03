@@ -101,7 +101,7 @@ function dislikePost(postId: string, accountId: string): Promise<any> {
 
 function unratedPost(postId: string, accountId: string): Promise<any> {
     var sql = 'DELETE FROM posts_rating WHERE post_id = ? AND account_id = ?';
-    var values = [uuid.v4(), postId, accountId, 1];
+    var values = [postId, accountId];
     return db.query(sql, values);
 }
 

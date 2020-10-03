@@ -406,7 +406,7 @@ router.put('/:postId/:commentId/unrated', function(req: any, res: any, next: any
     const commentId = req.params.commentId;
     const accountId = req.user.id;
 
-    comments.unratedComment(postId, accountId).then((rows: any) => {
+    comments.unratedComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, commentId: commentId };
         res.status(200).json(response);
     }, (err: any) => {
@@ -469,7 +469,7 @@ router.put('/:postId/:parentId/:commentId/unrated', function(req: any, res: any,
     const commentId = req.params.commentId;
     const accountId = req.user.id;
 
-    comments.unratedComment(postId, accountId).then((rows: any) => {
+    comments.unratedComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, parentId: parentId, commentId: commentId };
         res.status(200).json(response);
     }, (err: any) => {
