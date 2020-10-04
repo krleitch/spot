@@ -178,9 +178,9 @@ input.ng-dirty.ng-invalid {
 
   a {
     text-decoration: none;
-    color: $button-highlight;
+    color: $subtle-grey;
     &:hover {
-      color: darken($button-highlight, 5%);
+      color: darken($subtle-grey, 5%);
     }
   }
 

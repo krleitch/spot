@@ -35,6 +35,7 @@ export class PostComponent implements OnInit, OnDestroy {
   location$: Observable<Location>;
   accountMetadata$: Observable<AccountMetadata>;
   location: Location;
+  time: string;
 
   expanded = false;
   isExpandable = false;
@@ -65,6 +66,8 @@ export class PostComponent implements OnInit, OnDestroy {
          || this.post.content.length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
       this.isExpandable = true;
     }
+
+    this.time = this.getTime();
 
   }
 
