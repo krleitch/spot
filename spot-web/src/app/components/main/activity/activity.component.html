@@ -13,6 +13,18 @@
       </div>
     </div>
 
+    <!-- used to push the content down for now, visibility is always hidden -->
+    <div class="tab-container" style="visibility:hidden; position:static">
+      <div class="tab">
+        {{ STRINGS.POSTS }}
+        <div class="selected" [ngClass]="{'show': selectedTab == 'posts'}"></div>
+      </div>
+      <div class="tab">
+        {{ STRINGS.COMMENTS_REPLIES }}
+        <div class="selected" [ngClass]="{'show': selectedTab == 'commentsreplies'}"></div>
+      </div>
+    </div>
+
     <div class="content-container">
 
       <div class="activity-posts-container" *ngIf="selectedTab == 'posts'">

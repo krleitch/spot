@@ -280,8 +280,8 @@ export const STRINGS = {
           POSTS_SCORE: 'Score: ',
           POSTS_COMMENTS: 'Comments: ',
           POSTS_LOCATION: 'Location: ',
-          POSTS_OPEN: 'Open Spot',
-          COMMENTS_OPEN: 'Open Comments',
+          POSTS_OPEN: 'Open',
+          COMMENTS_OPEN: 'Open',
 
           LOADING_POST_ACTIVITY: 'Loading Spot activity ...',
           NO_POST_ACTIVITY: 'You have no spots in recent activity',
