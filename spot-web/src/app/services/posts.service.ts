@@ -27,9 +27,9 @@ export class PostsService {
     }
     params = params.append('location', request.filter.location);
     params = params.append('sort', request.filter.sort);
-    params = params.append('offset', request.offset.toString());
+    params = params.append('offset', request.offset ? request.offset.toString() : null);
     params = params.append('limit', request.limit.toString());
-    params = params.append('date', request.date);
+    params = params.append('date', request.date ? request.date : null);
     return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`, { params });
   }
 

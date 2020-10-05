@@ -84,16 +84,16 @@
         </div>
         <ng-template #empty>
           <!-- THe indicator is always making request, wont be shown TODO: FIX -->
-          <div class="empty-no-posts" *ngIf="postsLoadedOnce">
+          <div class="empty-no-posts" *ngIf="noPosts">
             <span class="material-icons icon"> local_see </span>
             <span> There are no posts in this area. Be the first to make a spot! </span>
           </div>
         </ng-template>
-        <div class="no-posts" *ngIf="(noPosts$ | async)">
+        <div class="no-posts" *ngIf="noPosts">
           <span class="material-icons icon"> check_circle </span>
           No More Posts
         </div>
-        <div *ngIf="(showPostsIndicator$ | async)" class="loading">
+        <div *ngIf="loading && (showPostsIndicator$ | async)" class="loading">
           <span class="text"> {{ STRINGS.LOADING_POSTS }} </span>
           <spot-spinner size="medium"></spot-spinner>
         </div>

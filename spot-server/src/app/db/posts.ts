@@ -7,6 +7,8 @@ const db = require('./mySql');
 
 function getPosts(accountId: string, sort: string, location: string, latitude: string, longitude: string,  offset: number, limit: number, date: string): Promise<any> {
 
+    // TODO: life is filled with regrets, this is one of them
+
     // 10 miles if location === local
     const distance = 10;
 
@@ -51,8 +53,14 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
         sortSql = ' ORDER BY IF( likes - dislikes >= 0, IF( likes - dislikes > 0, 1, 0 ), -1 ) * ( LOG( 10, GREATEST( ABS( likes - dislikes ), 1 ) ) + ( ( UNIX_TIMESTAMP(posts.creation_date) - 1134028003 ) / 45000 ) ) DESC';
     }
 
-    var limitOffsetSql = ' LIMIT ? OFFSET ?';
-    values = values.concat([limit, offset]);
+    var limitOffsetSql;
+    if ( offset ) {
+        limitOffsetSql = ' LIMIT ? OFFSET ?'
+        values = values.concat([limit, offset]);
+    } else {
+        limitOffsetSql = ' LIMIT ?'
+        values = values.concat([limit]);
+    }
 
     var sql = selectSql + locationSql + dateSql + groupSql + sortSql + limitOffsetSql;
 

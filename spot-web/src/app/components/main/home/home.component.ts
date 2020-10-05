@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject, timer, merge, combineLatest } from 'rxjs';
-import { takeUntil, mapTo, finalize, startWith, distinctUntilChanged, skipWhile, skip, take } from 'rxjs/operators';
+import { takeUntil, mapTo, finalize, startWith, endWith, distinctUntilChanged, skipWhile, skip, takeWhile, filter, tap } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
@@ -23,6 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   showPostsIndicator$: Observable<boolean>;
   loading$: Observable<boolean>;
   loading: boolean;
+  noPosts$: Observable<boolean>;
+  noPosts: boolean;
   postsLoadedOnce = false;
 
   STRINGS = STRINGS.MAIN.HOME;
@@ -34,11 +36,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
 
-  noPosts$: Observable<boolean>;
-
   postlocation = '';
   postSort = '';
   distanceUnit = '';
+  lastDate;
 
   loadedPosts = 0;
   POSTS_LIMIT = 10;
@@ -94,13 +95,26 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectMyFeaturePosts)
     );
 
-    this.showPostsIndicator$ = merge(
-      timer(1000).pipe( mapTo(true), takeUntil(this.posts$.pipe(skipWhile( (v) => !v.length ))) ),
-      combineLatest(this.posts$.pipe(skipWhile( (v) => !v.length )), timer(2000)).pipe( mapTo(false) ),
-    ).pipe(
-      startWith(false),
-      distinctUntilChanged(),
-    );
+    this.posts$.pipe(tap( posts => {
+      this.lastDate = posts.length > 0 ? posts.slice(-1).pop().creation_date : null ;
+    }));
+
+      // Situations
+
+      // 1) No Posts - if no posts and loaded once and array empty
+
+      // 2) Posts Loaded and we are none left - if no posts
+
+      // 3) Posts loading, show indicator - if 1 s passed, and loading
+
+      // take while postsLoadedOnce = False
+      // take while postsLoading = False
+
+      // 4) need more than 1 load
+
+      // whenever you get a loading value of true, emit from observable until loading is false,
+      // combine latests  with timer(2000) so loading is shown for at least 1 second
+      //
 
     this.loading$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeatureLoading)
@@ -108,11 +122,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.loading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
       this.loading = loading;
+      if ( this.loading ) {
+        this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loading )).pipe( startWith(false) );
+      }
     });
 
     this.noPosts$ = this.store$.pipe(
       select(PostsStoreSelectors.selectNoPosts)
     );
+
+    this.noPosts$.pipe(takeUntil(this.onDestroy)).subscribe( (noPosts: boolean) => {
+      this.noPosts = noPosts;
+    });
 
   }
 
@@ -141,24 +162,47 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     if ( this.postlocation && this.postSort && !this.loading ) {
 
+      // if sorting by new, just need date
+      // if sorting by hot, need offset
+
       // global doesnt require location
       if ( this.location || this.postlocation === 'global' ) {
 
-        const request: LoadPostRequest = {
-          offset: this.loadedPosts,
-          limit: this.POSTS_LIMIT,
-          date: new Date().toString(),
-          initialLoad: this.initialLoad,
-          location: this.location,
-          filter: { location: this.postlocation, sort: this.postSort }
-        };
+        if ( this.postSort === 'new' ) {
+          // use date
 
-        this.store$.dispatch(
-          new PostsStoreActions.LoadRequestAction(request)
-        );
+          const request: LoadPostRequest = {
+            limit: this.POSTS_LIMIT,
+            date: new Date().toString(),
+            initialLoad: this.initialLoad,
+            location: this.location,
+            filter: { location: this.postlocation, sort: this.postSort }
+          };
+
+          this.store$.dispatch(
+            new PostsStoreActions.LoadRequestAction(request)
+          );
+
+        } else if ( this.postSort === 'hot' ) {
+          // use offset
+
+          const request: LoadPostRequest = {
+            offset: this.loadedPosts,
+            limit: this.POSTS_LIMIT,
+            initialLoad: this.initialLoad,
+            location: this.location,
+            filter: { location: this.postlocation, sort: this.postSort }
+          };
+
+          this.store$.dispatch(
+            new PostsStoreActions.LoadRequestAction(request)
+          );
+
+          this.loadedPosts += this.POSTS_LIMIT;
+
+        }
 
         this.initialLoad = false;
-        this.loadedPosts += this.POSTS_LIMIT;
 
       }
     }
@@ -167,7 +211,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   refresh() {
 
     this.loadedPosts = 0;
-
     this.initialLoad = true;
 
     if ( this.location || this.postlocation === 'global' ) {
@@ -177,7 +220,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         offset: this.loadedPosts,
         limit: this.POSTS_LIMIT,
         location: this.location,
-        date: new Date().toString(),
+        date: this.lastDate || new Date().toString(),
         initialLoad: this.initialLoad,
         filter: { location: this.postlocation, sort: this.postSort }
       };

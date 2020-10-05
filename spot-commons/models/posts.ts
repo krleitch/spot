@@ -26,9 +26,9 @@ export interface PostFilter {
 
 // Load posts
 export interface LoadPostRequest {
-    offset: number;
+    offset?: number;
     limit: number;
-    date: string;
+    date?: string;
     initialLoad: boolean;
     location: Location;
     filter: PostFilter;
@@ -36,7 +36,7 @@ export interface LoadPostRequest {
 
 export interface LoadPostSuccess {
     posts: Post[];
-    offset: number,
+    initialLoad: boolean,
 }
 
 export interface LoadSinglePostRequest {

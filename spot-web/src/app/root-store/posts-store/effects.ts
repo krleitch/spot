@@ -117,7 +117,7 @@ export class PostsStoreEffects {
         .getPosts(action.request)
         .pipe(
           map((response: LoadPostSuccess) => {
-            response.offset = action.request.offset;
+            response.initialLoad = action.request.initialLoad;
             return new featureActions.LoadSuccessAction( response );
           }),
           catchError(errorResponse => {

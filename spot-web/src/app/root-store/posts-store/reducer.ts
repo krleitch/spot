@@ -9,11 +9,12 @@ export function featureReducer(state = initialState, action: Actions): State {
       }
       return {
         ...state,
-        loading: true
+        loading: true,
+        noPosts: false,
       };
     }
     case ActionTypes.LOAD_SUCCESS: {
-      if ( action.response.offset === 0 ) {
+      if ( action.response.initialLoad ) {
         return {
           ...state,
           posts:  action.response.posts,
