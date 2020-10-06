@@ -5,6 +5,7 @@ import { AccountMetadata, Account } from '@models/accounts';
 import { State } from './state';
 
 export const selectAccount = (state: State): Account => state.account;
+export const selectAccountLoad = (state: State): boolean => state.accountLoading;
 export const selectMetadata = (state: State): AccountMetadata => state.accountMetadata;
 export const selectLoadingLocation = (state: State): boolean => state.loadingLocation;
 export const selectLocation = (state: State): any => state.location;
@@ -80,4 +81,12 @@ export const selectAccountMetadata: MemoizedSelector<
 > = createSelector(
   selectAccountsState,
   selectMetadata,
+);
+
+export const selectAccountLoading: MemoizedSelector<
+  object,
+  boolean
+> = createSelector(
+  selectAccountsState,
+  selectAccountLoad,
 );

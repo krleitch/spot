@@ -3,6 +3,7 @@ import { SpotError } from '@exceptions/error';
 
 export interface State {
     account: Account;
+    accountLoading: boolean;
     accountMetadata: AccountMetadata;
     authenticationError: SpotError; // Error for signup / login
     usernameError: SpotError; // Error when chaning or updating username
@@ -16,6 +17,7 @@ export interface State {
 export const initialState: State = (
   {
     account: null,
+    accountLoading: false,
     accountMetadata: null,
     authenticationError: null,
     usernameError: null,

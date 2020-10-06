@@ -81,6 +81,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         location: null
       };
     }
+    case ActionTypes.ACCOUNT_REQUEST: {
+      return {
+        ...state,
+        accountLoading: true,
+      };
+    }
     case ActionTypes.ACCOUNT_SUCCESS: {
 
       if ( action.response.account.facebook_id ) {
@@ -92,7 +98,8 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
 
       return {
         ...state,
-        account: action.response.account
+        account: action.response.account,
+        accountLoading: false,
       };
     }
     case ActionTypes.UPDATE_USERNAME_REQUEST: {

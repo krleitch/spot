@@ -46,7 +46,6 @@ export class AppComponent implements OnInit {
 
   }
 
-
   fbLibrary() {
     (window as any).fbAsyncInit = () => {
       window['FB'].init({
