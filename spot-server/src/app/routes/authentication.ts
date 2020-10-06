@@ -223,18 +223,15 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
 
             // Send email with nodemailer and aws ses transport
 
-            mail.transporter.sendMail({
-                from: 'krleitch.ca@gmail.com', // TODO: CHANGE
-                to: 'krleitch.ca@gmail.com', // TODO: CHANGE
-                subject: 'Message',
-                text: "Password Reset?", // plain text body
-                html: "<b>Token: </b>" + token, // html body
-                ses: { // optional extra arguments for SendRawEmail
-                    Tags: [{
-                        Name: 'tagname',
-                        Value: 'tagvalue'
-                    }]
-                }
+            mail.send({
+                template: 'password',
+                message: {
+                    from: 'krleitch.ca@gmail.com',
+                    to: 'krleitch.ca@gmail.com',
+                },
+                locals: {
+                    token: token
+                },
             }, (err: any, info: any) => {
                 
                 if ( err ) {

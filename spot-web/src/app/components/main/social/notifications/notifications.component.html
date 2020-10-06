@@ -24,7 +24,7 @@
     </spot-infinite-scroll>
 
     <ng-template #empty>
-      <div class="no-notifications">
+      <div *ngIf="!loading" class="no-notifications">
         {{ STRINGS.NO_NOTIFICATIONS }}
       </div>
     </ng-template>

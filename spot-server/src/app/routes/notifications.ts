@@ -25,6 +25,9 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
     const date = req.query.date;
     const limit = Number(req.query.limit);
 
+    // for testing delays
+    await new Promise(r => setTimeout(r, 5000));
+
     notifications.getNotificationByReceiverId(accountId, date, limit).then(ErrorHandler.catchAsync( async (rows: any) => {
 
         // Add tags to comments and replies

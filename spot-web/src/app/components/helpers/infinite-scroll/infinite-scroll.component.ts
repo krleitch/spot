@@ -50,25 +50,26 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
 
         this.scrolled.emit();
 
+        // For timer implementation
         // we look for content if the bottom is on screen every timerDelay
-        this.timer = setInterval( () => {
-          const bounding = this.anchor.nativeElement.getBoundingClientRect();
-          if (this.inViewPort(bounding)) {
-            this.scrolled.emit();
-          } else {
-            clearInterval(this.timer);
-            this.timer = false;
-          }
-        }, this.timerDelay);
+        // this.timer = setInterval( () => {
+        //   const bounding = this.anchor.nativeElement.getBoundingClientRect();
+        //   if (this.inViewPort(bounding)) {
+        //     this.scrolled.emit();
+        //   } else {
+        //     clearInterval(this.timer);
+        //     this.timer = false;
+        //   }
+        // }, this.timerDelay);
 
         } else {
 
         // stop the timer
 
-        if ( this.timer ) {
-          clearInterval(this.timer);
-        }
-        this.timer = false;
+        // if ( this.timer ) {
+        //   clearInterval(this.timer);
+        // }
+        // this.timer = false;
 
       }
 
@@ -79,11 +80,11 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnDestroy() {
 
-    if ( this.timer ) {
-      clearInterval(this.timer);
-    }
-    this.timer = false;
-
+    // Timer implementation
+    // if ( this.timer ) {
+    //   clearInterval(this.timer);
+    // }
+    // this.timer = false;
 
     this.observer.disconnect();
   }

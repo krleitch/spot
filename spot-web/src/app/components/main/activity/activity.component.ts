@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, timer, merge } from 'rxjs';
-import { takeUntil, take, finalize, mapTo } from 'rxjs/operators';
+import { takeUntil, take, finalize, mapTo, takeWhile, startWith } from 'rxjs/operators';
 
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
@@ -127,10 +127,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
         }),
       );
 
-      this.showCommentsIndicator$ = merge(
-        timer(1000).pipe( mapTo(true), takeUntil(comments$) ),
-        comments$.pipe( mapTo(false) ),
-      );
+      this.showCommentsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.commentActivityLoading )).pipe( startWith(false) );
 
       comments$.subscribe( (activitySuccess: ActivityCommentSuccess ) => {
           this.commentActivity = this.commentActivity.concat(activitySuccess.activity);
@@ -160,10 +157,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
         }),
       );
 
-      this.showPostsIndicator$ = merge(
-        timer(1000).pipe( mapTo(true), takeUntil(posts$) ),
-        posts$.pipe( mapTo(false) ),
-      );
+      this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.postActivityLoading )).pipe( startWith(false) );
 
       posts$.subscribe( (activitySuccess: ActivityPostSuccess ) => {
           this.postActivity = this.postActivity.concat(activitySuccess.activity);

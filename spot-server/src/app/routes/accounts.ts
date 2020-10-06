@@ -317,18 +317,15 @@ router.post('/verify', function (req: any, res: any, next: any) {
 
     // send email with nodemailerm using aws ses transport
 
-    mail.transporter.sendMail({
-        from: 'krleitch.ca@gmail.com', // TODO: CHANGE
-        to: 'krleitch.ca@gmail.com', // TODO: CHANGE
-        subject: 'Message',
-        text: "Verify account?", // plain text body
-        html: "<b>Link: </b>" + 'https://localhost:4200/verify/' + token, // html body
-        ses: { // optional extra arguments for SendRawEmail
-            Tags: [{
-                Name: 'tagname',
-                Value: 'tagvalue'
-            }]
-        }
+    mail.send({
+        template: 'verify',
+        message: {
+            from: 'krleitch.ca@gmail.com',
+            to: 'krleitch.ca@gmail.com',
+        },
+        locals: {
+            link: 'https://localhost:4200/verify/' + token
+        },
     }, (err: any, info: any) => {
         
         if ( err ) {

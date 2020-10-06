@@ -10,7 +10,7 @@ router.get('/', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
-    res.status(200).json('Welcom to Admin Area');
+    res.status(200).json('Welcome to Admin Area');
 
 });
 

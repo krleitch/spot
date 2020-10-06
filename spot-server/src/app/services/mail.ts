@@ -2,6 +2,7 @@
 
 const nodemailer = require("nodemailer");
 const aws = require('aws-sdk');
+const Email = require('email-templates');
 
 const awsconfig = require('../../../awskey.json');
 
@@ -20,4 +21,16 @@ let transporter = nodemailer.createTransport({
     })
 });
 
-export { transporter }
+const email = new Email({
+    transport: transporter,
+    send: true,
+    preview: false,
+    views: {
+      options: {
+        extension: 'pug',
+      },
+      root: '../emails/',
+    },
+  });
+
+export { email }

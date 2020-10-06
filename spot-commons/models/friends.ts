@@ -1,6 +1,6 @@
 // Friends
 export interface Friend {
-    id: string;
+    id: string; // The id of the relationship, not the account id of the friend
     username: string;
     creation_date: string;
     confirmed_date: string;

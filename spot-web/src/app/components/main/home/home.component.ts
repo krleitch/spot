@@ -37,8 +37,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
 
-  postlocation = '';
-  postSort = '';
+  postLocation: string = undefined;
+  postSort: string = undefined;
   distanceUnit = '';
 
   loadedPosts = 0;
@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (metadata: AccountMetadata) => {
       if ( metadata ) {
-        this.postlocation = metadata.search_distance;
+        this.postLocation = metadata.search_distance;
         this.postSort = metadata.search_type;
         this.distanceUnit = metadata.distance_unit;
       }
@@ -141,15 +141,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropdownSortEnabled = value;
   }
 
+  waitForLocation() {
+
+    console.log(typeof this.postLocation)
+
+    if ( typeof this.postLocation !== 'undefined' && typeof this.postSort !== 'undefined' ) {
+      console.log('yes')
+      this.loadPosts();
+    } else {
+      console.log('me')
+      setTimeout(this.waitForLocation, 500);
+    }
+
+  }
+
   onScroll() {
 
-    if ( this.postlocation && this.postSort && !this.loading ) {
+    this.waitForLocation();
+
+  }
+
+  loadPosts() {
+
+    if ( this.postLocation && this.postSort && !this.loading ) {
 
       // if sorting by new, just need date
       // if sorting by hot, need offset
 
       // global doesnt require location
-      if ( this.location || this.postlocation === 'global' ) {
+      if ( this.location || this.postLocation === 'global' ) {
 
         if ( this.postSort === 'new' ) {
           // use date
@@ -159,7 +179,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             date: new Date().toString(),
             initialLoad: this.initialLoad,
             location: this.location,
-            filter: { location: this.postlocation, sort: this.postSort }
+            filter: { location: this.postLocation, sort: this.postSort }
           };
 
           this.store$.dispatch(
@@ -174,7 +194,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             limit: this.POSTS_LIMIT,
             initialLoad: this.initialLoad,
             location: this.location,
-            filter: { location: this.postlocation, sort: this.postSort }
+            filter: { location: this.postLocation, sort: this.postSort }
           };
 
           this.store$.dispatch(
@@ -193,36 +213,38 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   refresh() {
 
-    this.loadedPosts = 0;
-    this.initialLoad = true;
+    this.waitForLocation();
 
-    if ( this.location || this.postlocation === 'global' ) {
+    // this.loadedPosts = 0;
+    // this.initialLoad = true;
 
-      // Loads the initial posts
-      const request: LoadPostRequest = {
-        offset: this.loadedPosts,
-        limit: this.POSTS_LIMIT,
-        location: this.location,
-        date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
-        initialLoad: this.initialLoad,
-        filter: { location: this.postlocation, sort: this.postSort }
-      };
+    // if ( this.location || this.postLocation === 'global' ) {
 
-      // Load POSTS_LIMIT posts
-      this.store$.dispatch(
-        new PostsStoreActions.LoadRequestAction(request)
-      );
+    //   // Loads the initial posts
+    //   const request: LoadPostRequest = {
+    //     offset: this.loadedPosts,
+    //     limit: this.POSTS_LIMIT,
+    //     location: this.location,
+    //     date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
+    //     initialLoad: this.initialLoad,
+    //     filter: { location: this.postLocation, sort: this.postSort }
+    //   };
 
-      this.initialLoad = false;
+    //   // Load POSTS_LIMIT posts
+    //   this.store$.dispatch(
+    //     new PostsStoreActions.LoadRequestAction(request)
+    //   );
 
-      this.loadedPosts += this.POSTS_LIMIT;
+    //   this.initialLoad = false;
 
-    }
+    //   this.loadedPosts += this.POSTS_LIMIT;
+
+    // }
 
   }
 
   setGlobal() {
-    this.postlocation = 'global';
+    this.postLocation = 'global';
 
     const request: UpdateAccountMetadataRequest = {
       search_distance: 'global'
@@ -238,7 +260,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setLocal() {
-    this.postlocation = 'local';
+    this.postLocation = 'local';
 
     const request: UpdateAccountMetadataRequest = {
       search_distance: 'local'
@@ -254,7 +276,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   isSelectedLocation(location) {
-    return this.postlocation === location;
+    return this.postLocation === location;
   }
 
   setNew() {
