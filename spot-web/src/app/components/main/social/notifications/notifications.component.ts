@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject, timer, merge } from 'rxjs';
-import { takeUntil, mapTo, finalize } from 'rxjs/operators';
+import { takeUntil, mapTo, finalize, takeWhile, startWith } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { SocialStoreNotificationsActions, SocialStoreSelectors } from '@store/social-store';
@@ -23,14 +23,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
   // Notifications state variables
-  notificationDate: string = null;
   notifications$: Observable<Notification[]>;
+  notifications: Notification[];
   notificationsLoading$: Observable<boolean>;
   notificationsSuccess$: Observable<boolean>;
-  isLoading = false;
+  loading = false;
   initialLoad = true;
   showNotificationsIndicator$: Observable<boolean>;
-  notificationsLoadedOnce = false;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
@@ -41,8 +40,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     );
 
     this.notificationsLoading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
-      if ( loading !== null ) {
-        this.isLoading = loading;
+      this.loading = loading;
+      if ( this.loading ) {
+        this.showNotificationsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loading )).pipe( startWith(false) );
       }
     });
 
@@ -54,20 +54,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       select(SocialStoreSelectors.selectMyFeatureNotifications)
     );
 
-    this.notifications$.pipe(finalize(() => {
-      this.notificationsLoadedOnce = true;
-    }));
-
-    this.showNotificationsIndicator$ = merge(
-      timer(1000).pipe( mapTo(true), takeUntil(this.notifications$) ),
-      this.notifications$.pipe( mapTo(false) ),
-    );
-
     // Get last date that was loaded
     this.notifications$.pipe(takeUntil(this.onDestroy)).subscribe( (notifications: Notification[]) => {
-      if ( notifications && notifications.length > 0 ) {
-        this.notificationDate = notifications.slice(-1)[0].creation_date;
-      }
+      this.notifications = notifications;
     });
 
   }
@@ -78,12 +67,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   onScroll() {
 
-    if ( !this.isLoading ) {
-
-      const loadBeforeDate = this.notificationDate ? this.notificationDate : new Date().toString();
+    if ( !this.loading ) {
 
       const request: GetNotificationsRequest = {
-        date: loadBeforeDate,
+        date: this.notifications.length > 0 ? this.notifications.slice(-1).pop().creation_date : new Date().toString(),
         limit: NOTIFICATIONS_CONSTANTS.LIMIT,
         initialLoad: this.initialLoad
       };

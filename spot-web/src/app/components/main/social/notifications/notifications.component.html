@@ -9,19 +9,23 @@
     <!-- <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span> -->
   </div>
 
-  <div class="notifications-content" *ngIf="notifications$ | async as notifications">
+  <div class="notifications-content">
 
     <spot-infinite-scroll (scrolled)="onScroll()">
-      <ng-container *ngIf="notifications.length; else noNotifications">
-          <div *ngFor="let notification of notifications">
-            <spot-notification-item [notification]="notification"></spot-notification-item>
-          </div>
-      </ng-container>
+      <div *ngIf="notifications.length > 0; else empty">
+        <div *ngFor="let notification of notifications">
+          <spot-notification-item [notification]="notification"></spot-notification-item>
+        </div>
+      </div>
+      <div *ngIf="loading && (showNotificationsIndicator$ | async)" class="loading">
+        <span class="text"> Loading ... </span>
+        <spot-spinner size="medium"></spot-spinner>
+      </div>
     </spot-infinite-scroll>
 
-    <ng-template #noNotifications>
-      <div *ngIf="notificationsLoadedOnce" class="no-notifications"> 
-        {{ STRINGS.NO_NOTIFICATIONS }} 
+    <ng-template #empty>
+      <div class="no-notifications">
+        {{ STRINGS.NO_NOTIFICATIONS }}
       </div>
     </ng-template>
 

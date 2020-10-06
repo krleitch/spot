@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
   posts$: Observable<Post[]>;
+  posts: Post[];
   showPostsIndicator$: Observable<boolean>;
   loading$: Observable<boolean>;
   loading: boolean;
@@ -39,7 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   postlocation = '';
   postSort = '';
   distanceUnit = '';
-  lastDate;
 
   loadedPosts = 0;
   POSTS_LIMIT = 10;
@@ -95,26 +95,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectMyFeaturePosts)
     );
 
-    this.posts$.pipe(tap( posts => {
-      this.lastDate = posts.length > 0 ? posts.slice(-1).pop().creation_date : null ;
-    }));
-
-      // Situations
-
-      // 1) No Posts - if no posts and loaded once and array empty
-
-      // 2) Posts Loaded and we are none left - if no posts
-
-      // 3) Posts loading, show indicator - if 1 s passed, and loading
-
-      // take while postsLoadedOnce = False
-      // take while postsLoading = False
-
-      // 4) need more than 1 load
-
-      // whenever you get a loading value of true, emit from observable until loading is false,
-      // combine latests  with timer(2000) so loading is shown for at least 1 second
-      //
+    this.posts$.pipe(takeUntil(this.onDestroy)).subscribe( (posts: Post[]) => {
+      this.posts = posts;
+    });
 
     this.loading$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeatureLoading)
@@ -220,7 +203,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         offset: this.loadedPosts,
         limit: this.POSTS_LIMIT,
         location: this.location,
-        date: this.lastDate || new Date().toString(),
+        date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
         initialLoad: this.initialLoad,
         filter: { location: this.postlocation, sort: this.postSort }
       };

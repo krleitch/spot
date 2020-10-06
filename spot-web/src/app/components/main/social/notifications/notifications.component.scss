@@ -56,6 +56,21 @@
     max-height: 350px;
     overflow-y: auto;
     overflow-x: none;
+
+    .loading {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-flow: column;
+      margin-bottom: 10px;
+
+      .text {
+        margin-bottom: 5px;
+      }
+
+    }
+
   }
 
   .no-notifications {
