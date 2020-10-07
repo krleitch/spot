@@ -46,7 +46,8 @@ export class AuthModalComponent implements OnInit, AfterViewInit {
       email: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required],
-      phone: ['', Validators.required]
+      phone: ['', Validators.required],
+      terms: [false, Validators.required],
     });
   }
 
@@ -105,45 +106,51 @@ export class AuthModalComponent implements OnInit, AfterViewInit {
     const val = this.registerForm.value;
     let valid = true;
 
+    if ( !val.terms ) {
+      this.registerErrorMessage = this.STRINGS.TERMS_ERROR;
+      this.registerForm.controls.terms.markAsDirty();
+      return;
+    }
+
     if (!val.email) {
-      this.errorMessage = this.STRINGS.EMAIL_ERROR;
+      this.registerErrorMessage = this.STRINGS.EMAIL_ERROR;
       this.registerForm.controls.email.markAsDirty();
       return;
     }
 
     valid = this.authenticationService.validateEmail(val.email);
     if (!valid) {
-      this.errorMessage = this.STRINGS.EMAIL_INVALID;
+      this.registerErrorMessage = this.STRINGS.EMAIL_INVALID;
       this.registerForm.controls.email.markAsDirty();
       return;
     }
 
     if (!val.username) {
-      this.errorMessage = this.STRINGS.USERNAME_ERROR;
+      this.registerErrorMessage = this.STRINGS.USERNAME_ERROR;
       this.registerForm.controls.username.markAsDirty();
       return;
     }
 
     if (!val.password) {
-      this.errorMessage = this.STRINGS.PASSWORD_ERROR;
+      this.registerErrorMessage = this.STRINGS.PASSWORD_ERROR;
       this.registerForm.controls.password.markAsDirty();
       return;
     }
 
     if (!val.phone) {
-      this.errorMessage = this.STRINGS.PHONE_ERROR;
+      this.registerErrorMessage = this.STRINGS.PHONE_ERROR;
       this.registerForm.controls.phone.markAsDirty();
       return;
     }
 
     valid = this.authenticationService.validatePhone(val.phone);
     if (!valid) {
-      this.errorMessage = this.STRINGS.PHONE_INVALID;
+      this.registerErrorMessage = this.STRINGS.PHONE_INVALID;
       this.registerForm.controls.email.markAsDirty();
       return;
     }
 
-    this.errorMessage = '';
+    this.registerErrorMessage = '';
 
     const registerRequest: RegisterRequest = {
       email: val.email,
@@ -155,6 +162,7 @@ export class AuthModalComponent implements OnInit, AfterViewInit {
     this.store$.dispatch(
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
+    
   }
 
   facebookLogin() {

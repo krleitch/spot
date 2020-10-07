@@ -7,6 +7,10 @@
   display: flex;
 }
 
+.container {
+  margin-bottom: 6px;
+}
+
 // Content
 .content-wrapper {
   flex: 1;
@@ -226,6 +230,11 @@ img {
   &:hover {
     @extend .highlight;
   }
+}
+
+.disabled {
+  visibility: hidden !important;
+  cursor: default;
 }
 
 // Add reply form

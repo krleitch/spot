@@ -538,6 +538,8 @@ export const STRINGS = {
           EMAIL_OR_USER_ERROR: 'Email/Username is required',
 
           // Register Form
+          TERMS_AND_CONDITIONS: 'I agree to the',
+          TERMS_AND_CONDITIONS_LINK: 'terms and conditions & privacy policy',
           REGISTER_BUTTON: 'Register',
 
           EMAIL_PLACEHOLDER: 'Email',
@@ -554,7 +556,8 @@ export const STRINGS = {
 
           EMAIL_USED: 'Email is already in use',
           USERNAME_USED: 'Username is already in use',
-          PHONE_USED: 'Phone is already in use'
+          PHONE_USED: 'Phone is already in use',
+          TERMS_ERROR: 'You must agree to the terms and conditions & privacy policy',
 
         }
 

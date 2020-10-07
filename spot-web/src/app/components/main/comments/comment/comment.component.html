@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div [hidden]="!showAddReply" class="add" *ngIf="(comment.tag.tagged || inRange) && (isAuthenticated$ | async)">
+      <div [hidden]="!showAddReply" class="add">
         <div class="editor">
 
           <div #reply contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
@@ -89,7 +89,7 @@
       <div class="time">
         {{ timeMessage }}
       </div>
-      <div class="reply" (click)="setShowAddReply(true)" [hidden]="(!comment.tag.tagged || !inRange) && !(isAuthenticated$ | async)">
+      <div class="reply" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': (!comment.tag.tagged || !inRange) && !(isAuthenticated$ | async)}">
         <i class="material-icons"> reply </i>
       </div>
     </div>

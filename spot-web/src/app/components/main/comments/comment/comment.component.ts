@@ -15,6 +15,7 @@ import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetR
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AlertService } from '@services/alert.service';
+import { AuthenticationService } from '@services/authentication.service';
 import { Tag } from '@models/notifications';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 import { TagComponent } from '../../social/tag/tag.component';
@@ -84,7 +85,8 @@ export class CommentComponent implements OnInit, OnDestroy {
               private commentService: CommentService,
               public domSanitizer: DomSanitizer,
               private modalService: ModalService,
-              private alertService: AlertService) {
+              private alertService: AlertService,
+              private authenticationService: AuthenticationService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -652,6 +654,12 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   like() {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
     if (this.comment.rated === 1) {
       const request: UnratedCommentRequest = {
         postId: this.comment.post_id,
@@ -669,9 +677,16 @@ export class CommentComponent implements OnInit, OnDestroy {
         new CommentsStoreActions.LikeRequestAction(request)
       );
     }
+
   }
 
   dislike() {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
     if (this.comment.rated === 0) {
       const request: UnratedCommentRequest = {
         postId: this.comment.post_id,
@@ -689,6 +704,7 @@ export class CommentComponent implements OnInit, OnDestroy {
         new CommentsStoreActions.DislikeRequestAction(request)
       );
     }
+
   }
 
   getProfilePictureClass(index) {

@@ -181,6 +181,11 @@
   }
 }
 
+.disabled {
+  visibility: hidden !important;
+  cursor: default;
+}
+
 // Add reply form
 
 .add {
@@ -262,8 +267,6 @@
   }
 
 }
-
-
 
 .image {
   display: flex;

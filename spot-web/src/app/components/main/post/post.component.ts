@@ -10,6 +10,7 @@ import { PostsStoreActions } from '@store/posts-store';
 import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, UnratedPostRequest } from '@models/posts';
 import { Location, AccountMetadata } from '@models/accounts';
 import { ModalService } from '@services/modal.service';
+import { AuthenticationService } from '@services/authentication.service';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 
 import { POSTS_CONSTANTS } from '@constants/posts';
@@ -44,7 +45,8 @@ export class PostComponent implements OnInit, OnDestroy {
 
   constructor(private store$: Store<RootStoreState.State>,
               private router: Router,
-              private modalService: ModalService) {
+              private modalService: ModalService,
+              private authenticationService: AuthenticationService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -185,6 +187,12 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   like() {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
     if (this.post.rated === 1) {
       const request: UnratedPostRequest = {
         postId: this.post.id
@@ -200,9 +208,16 @@ export class PostComponent implements OnInit, OnDestroy {
         new PostsStoreActions.LikeRequestAction(request)
       );
     }
+
   }
 
   dislike() {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
     if (this.post.rated === 0) {
       const request: UnratedPostRequest = {
         postId: this.post.id
@@ -218,6 +233,7 @@ export class PostComponent implements OnInit, OnDestroy {
         new PostsStoreActions.DislikeRequestAction(request)
       );
     }
+
   }
 
   setExpanded(value: boolean): void {

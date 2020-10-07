@@ -176,10 +176,36 @@ input.ng-dirty.ng-invalid {
 }
 
 input {
-  width: 250px;
-  padding: 6px 10px;
-  margin: 6px 0;
+  width: 300px;
+  padding: 8px 12px;
+  margin: 6px 0px;
   box-sizing: border-box;
   border: 1px solid $subtle-grey;
   outline: none;
+}
+
+.terms-and-conditions {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  flex-flow: column;
+
+  input {
+    width: auto;
+    margin: 0px 3px 0px 0px;
+  }
+
+  a {
+    text-decoration: none;
+    color: $subtle-grey;
+    &:hover {
+      color: darken($subtle-grey, 5%);
+    }
+  }
+
 }

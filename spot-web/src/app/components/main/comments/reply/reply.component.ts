@@ -13,6 +13,7 @@ import { Comment, AddReplyRequest, AddReplyStoreRequest, DeleteReplyRequest, Lik
          DislikeReplyRequest, AddReplySuccess, UnratedReplyRequest } from '@models/comments';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
+import { AuthenticationService } from '@services/authentication.service';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 import { Tag } from '@models/notifications';
 import { TagComponent } from '../../social/tag/tag.component';
@@ -79,7 +80,8 @@ export class ReplyComponent implements OnInit, OnDestroy {
               private commentService: CommentService,
               public domSanitizer: DomSanitizer,
               private modalService: ModalService,
-              private alertService: AlertService) {
+              private alertService: AlertService,
+              private authenticationService: AuthenticationService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -569,6 +571,12 @@ export class ReplyComponent implements OnInit, OnDestroy {
   }
 
   like() {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
     if (this.reply.rated === 1) {
       const request: UnratedReplyRequest = {
         postId: this.reply.post_id,
@@ -588,9 +596,16 @@ export class ReplyComponent implements OnInit, OnDestroy {
         new CommentsStoreActions.LikeReplyRequestAction(request)
       );
     }
+
   }
 
   dislike() {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
     if (this.reply.rated === 0) {
       const request: UnratedReplyRequest = {
         postId: this.reply.post_id,
@@ -610,6 +625,7 @@ export class ReplyComponent implements OnInit, OnDestroy {
         new CommentsStoreActions.DislikeReplyRequestAction(request)
       );
     }
+    
   }
 
   getProfilePictureClass(index) {

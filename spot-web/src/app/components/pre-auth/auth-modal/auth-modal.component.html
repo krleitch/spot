@@ -53,9 +53,19 @@
               <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
           </div>
         </fieldset>
+
+        <div class="terms-and-conditions">
+          <div>
+            <input name="terms" formControlName="terms" type="checkbox" required/>
+            <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
+          </div>
+          <a [routerLink]="'/about'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
+        </div>
+
         <div class="error-message">
           {{ registerErrorMessage }}
         </div>
+
         <div class="form-buttons">
           <button type="button" class="button" (click)="register()"> {{ STRINGS.REGISTER_BUTTON }} </button>
         </div>
