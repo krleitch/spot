@@ -317,7 +317,7 @@ router.post('/verify', function (req: any, res: any, next: any) {
 
     // send email with nodemailerm using aws ses transport
 
-    mail.send({
+    mail.email.send({
         template: 'verify',
         message: {
             from: 'krleitch.ca@gmail.com',
@@ -327,8 +327,10 @@ router.post('/verify', function (req: any, res: any, next: any) {
             link: 'https://localhost:4200/verify/' + token
         },
     }, (err: any, info: any) => {
-        
+
         if ( err ) {
+            console.log('TEST')
+            console.log(err);
             return next(new AccountsError.SendVerify(500));
         } else {
             // Add record to verify account

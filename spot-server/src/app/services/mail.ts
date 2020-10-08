@@ -3,6 +3,7 @@
 const nodemailer = require("nodemailer");
 const aws = require('aws-sdk');
 const Email = require('email-templates');
+const path = require('path');
 
 const awsconfig = require('../../../awskey.json');
 
@@ -16,21 +17,23 @@ aws.config.update({
 });
 
 let transporter = nodemailer.createTransport({
-    SES: new aws.SES({
-        apiVersion: '2010-12-01'
-    })
+  SES: new aws.SES({
+      apiVersion: '2010-12-01'
+  })
 });
 
+const root = path.join(__dirname, '../emails');
+
 const email = new Email({
-    transport: transporter,
-    send: true,
-    preview: false,
-    views: {
-      options: {
-        extension: 'pug',
-      },
-      root: '../emails/',
+  transport: transporter,
+  send: true,
+  preview: false,
+  views: {
+    options: {
+      extension: 'pug',
     },
-  });
+    root: root,
+  },
+});
 
 export { email }
