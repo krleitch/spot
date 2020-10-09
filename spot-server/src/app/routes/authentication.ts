@@ -223,14 +223,15 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
 
             // Send email with nodemailer and aws ses transport
 
-            mail.send({
+            mail.email.send({
                 template: 'password',
                 message: {
                     from: 'krleitch.ca@gmail.com',
                     to: 'krleitch.ca@gmail.com',
                 },
                 locals: {
-                    token: token
+                    link: 'https://localhost:4200/new-password',
+                    token: token.toString()
                 },
             }, (err: any, info: any) => {
                 

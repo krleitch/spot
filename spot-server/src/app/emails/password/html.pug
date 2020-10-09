@@ -1,0 +1,102 @@
+doctype html
+
+html(lang='en')
+    head
+        meta(name='viewport', content='width=device-width')
+        meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+        title Password Reset
+        style(type='text/css').
+            * {
+                margin: 0;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                box-sizing: border-box;
+            }
+            body {
+                -webkit-font-smoothing: antialiased;
+                -webkit-text-size-adjust: none;
+                width: 100% !important;
+                height: 100%;
+                line-height: 1.6em;
+            }
+            /* -------------------------------
+            CONTAINER
+            -------------------------------- */
+            .container {
+                align-items: center;
+                background-color: #EEEEEE;
+                margin: 12px;
+                padding: 12px;
+                width: 50%;
+                min-width: 300px;
+            }
+
+            /* -------------------------------
+            TITLE
+            -------------------------------- */
+            .title {
+                font-size: 32px;
+                text-align: center;
+                margin-bottom: 12px;
+            }
+            img {
+                width: 125px;
+            }
+
+            /* -------------------------------
+            BAR
+            -------------------------------- */
+            .bar {
+                min-width: 300px;
+                width: 80%;
+                border-bottom: 1px solid #9E9E9E;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* -------------------------------
+            CONTENT
+            -------------------------------- */
+            .content {
+                padding: 12px;
+                margin: 12px 12px;
+                background-color: white;
+            }
+            .text {
+                font-size: 22px;
+                text-align: center;
+            }
+            .highlight {
+                color: #00BFA5;
+            }
+            .link {
+                font-size: 18px;
+                margin-top: 12px;
+                text-align: center;
+            }
+            a {
+                color: #9E9E9E;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+
+    body
+
+        div.container
+
+            div.title
+                img(src='../logo.png')
+
+            div.bar
+
+            div.content
+
+                div.text 
+                    div.line1 Password Reset
+                    div.line2
+                        span Your password reset token is 
+                        span.highlight #{token}
+
+                div.link
+                    a(href=`${link}`) Click to set a new password
