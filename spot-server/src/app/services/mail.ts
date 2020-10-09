@@ -22,17 +22,26 @@ let transporter = nodemailer.createTransport({
   })
 });
 
-const root = path.join(__dirname, '../emails');
+const rootPath = path.join(__dirname, '../emails');
+const imagePath = path.join(__dirname, '../emails/logo.png');
 
 const email = new Email({
   transport: transporter,
   send: true,
   preview: false,
+  message: {
+    // from: 'test@spot.com',
+    attachments: [{
+      filename: 'spot_logo.png',
+      path: imagePath,
+      cid: 'spotlogo'
+    }]
+  },
   views: {
     options: {
       extension: 'pug',
     },
-    root: root,
+    root: rootPath,
   },
 });
 

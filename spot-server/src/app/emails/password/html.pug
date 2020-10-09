@@ -65,6 +65,9 @@ html(lang='en')
                 font-size: 22px;
                 text-align: center;
             }
+            .line1 {
+                margin-bottom: 5px;
+            }
             .highlight {
                 color: #00BFA5;
             }
@@ -86,7 +89,7 @@ html(lang='en')
         div.container
 
             div.title
-                img(src='../logo.png')
+                img(src="cid:spotlogo")
 
             div.bar
 
@@ -95,7 +98,7 @@ html(lang='en')
                 div.text 
                     div.line1 Password Reset
                     div.line2
-                        span Your password reset token is 
+                        span Your password reset token is: 
                         span.highlight #{token}
 
                 div.link
