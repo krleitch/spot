@@ -23,7 +23,7 @@ let transporter = nodemailer.createTransport({
 });
 
 const rootPath = path.join(__dirname, '../emails');
-const imagePath = path.join(__dirname, '../emails/logo.png');
+const imagePath = path.join(__dirname, '../emails/spot_logo.png');
 
 const email = new Email({
   transport: transporter,

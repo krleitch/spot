@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subject, timer, merge, combineLatest } from 'rxjs';
-import { takeUntil, mapTo, finalize, startWith, endWith, distinctUntilChanged, skipWhile, skip, takeWhile, filter, tap } from 'rxjs/operators';
+import { Observable, Subject, timer, interval } from 'rxjs';
+import { takeUntil, mapTo, startWith, skipWhile, takeWhile, take } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
-import { Post, LoadPostRequest, LoadPostSuccess } from '@models/posts';
-import { SetLocationRequest, Location, UpdateAccountMetadataRequest, AccountMetadata, Account, VerifyRequest } from '@models/accounts';
+import { Post, LoadPostRequest } from '@models/posts';
+import { Location, UpdateAccountMetadataRequest, AccountMetadata, Account, VerifyRequest } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
+import { POSTS_CONSTANTS } from '@constants/posts';
 
 @Component({
   selector: 'spot-home',
@@ -26,9 +27,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   loading: boolean;
   noPosts$: Observable<boolean>;
   noPosts: boolean;
-  postsLoadedOnce = false;
 
   STRINGS = STRINGS.MAIN.HOME;
+  POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   loadingLocation$: Observable<boolean>;
   location$: Observable<Location>;
@@ -42,7 +43,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   distanceUnit = '';
 
   loadedPosts = 0;
-  POSTS_LIMIT = 10;
 
   // keep track of whether the initial load was made
   // needed so the infinite scroll doesnt get called right away to overwrite
@@ -141,23 +141,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropdownSortEnabled = value;
   }
 
-  waitForLocation() {
-
-    console.log(typeof this.postLocation)
-
-    if ( typeof this.postLocation !== 'undefined' && typeof this.postSort !== 'undefined' ) {
-      console.log('yes')
-      this.loadPosts();
-    } else {
-      console.log('me')
-      setTimeout(this.waitForLocation, 500);
-    }
-
-  }
-
   onScroll() {
 
-    this.waitForLocation();
+    // check until we have the required info
+    const source = interval(500);
+    source.pipe(
+      skipWhile(() => typeof this.postLocation === 'undefined' || typeof this.postSort === 'undefined'),
+      take(1)
+    ).subscribe(() => {
+      this.loadPosts();
+    });
 
   }
 
@@ -175,7 +168,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           // use date
 
           const request: LoadPostRequest = {
-            limit: this.POSTS_LIMIT,
+            limit: POSTS_CONSTANTS.INITIAL_LIMIT,
             date: new Date().toString(),
             initialLoad: this.initialLoad,
             location: this.location,
@@ -191,7 +184,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
           const request: LoadPostRequest = {
             offset: this.loadedPosts,
-            limit: this.POSTS_LIMIT,
+            limit: POSTS_CONSTANTS.INITIAL_LIMIT,
             initialLoad: this.initialLoad,
             location: this.location,
             filter: { location: this.postLocation, sort: this.postSort }
@@ -201,7 +194,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             new PostsStoreActions.LoadRequestAction(request)
           );
 
-          this.loadedPosts += this.POSTS_LIMIT;
+          this.loadedPosts += POSTS_CONSTANTS.INITIAL_LIMIT;
 
         }
 
@@ -213,33 +206,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   refresh() {
 
-    this.waitForLocation();
-
-    // this.loadedPosts = 0;
-    // this.initialLoad = true;
-
-    // if ( this.location || this.postLocation === 'global' ) {
-
-    //   // Loads the initial posts
-    //   const request: LoadPostRequest = {
-    //     offset: this.loadedPosts,
-    //     limit: this.POSTS_LIMIT,
-    //     location: this.location,
-    //     date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
-    //     initialLoad: this.initialLoad,
-    //     filter: { location: this.postLocation, sort: this.postSort }
-    //   };
-
-    //   // Load POSTS_LIMIT posts
-    //   this.store$.dispatch(
-    //     new PostsStoreActions.LoadRequestAction(request)
-    //   );
-
-    //   this.initialLoad = false;
-
-    //   this.loadedPosts += this.POSTS_LIMIT;
-
-    // }
+    this.loadedPosts = 0;
+    this.initialLoad = true;
+    this.loadPosts();
 
   }
 
