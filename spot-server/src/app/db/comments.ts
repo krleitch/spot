@@ -9,7 +9,7 @@ const db = require('./mySql');
 // Used for getting a comment or reply
 function getCommentById(commentId: string, accountId: string): Promise<any> {
     var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes, comments.comment_parent_id,
+                        comments.likes, comments.dislikes, comments.comment_parent_id, comments.link,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
             WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
             ELSE NULL END) AS rated,
@@ -22,7 +22,7 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
 
 function getCommentByIdNoAccount(commentId: string): Promise<any> {
     var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes
+                        comments.likes, comments.dislikes, comments.link
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
         WHERE comments.id = ? AND comments.deletion_date IS NULL GROUP BY comments.id`;
     var values = [commentId];
@@ -33,7 +33,7 @@ function getCommentByIdNoAccount(commentId: string): Promise<any> {
 // Used for getting just the comments of a post
 function getCommentByPostId(postId: string, date: string, limit: number, type: string, accountId: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes`
+                        comments.likes, comments.dislikes, comments.link`
 
     var accountSql = '';
     var accountValues: any[] = [];
@@ -62,7 +62,7 @@ function getCommentByPostId(postId: string, date: string, limit: number, type: s
 
 function getCommentByPostIdNoAccount(postId: string, date: string, limit: number, type: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes,
+                        comments.likes, comments.dislikes, comments.link
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id
         WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL `;
 
@@ -111,7 +111,7 @@ function addReply(replyId: string, postId: string, commentId: string, commentPar
 // Used for getting just the comments of a post
 function getRepliesByCommentId(postId: string, commentId: string, date: string, limit: number, accountId?: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes`
+                        comments.likes, comments.dislikes, comments.link`
 
     var accountSql = '';
     var values: any[] = [];
