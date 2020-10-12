@@ -73,6 +73,10 @@
               <span class="material-icons icon"> outlined_flag </span>
               {{ STRINGS.REPORT }}
             </div>
+            <div class="button" (click)="openModal('spot-share-modal', { postLink: post.link, postId: post.id, commentLink: comment.link, commentId: comment.id })">
+              <span class="material-icons icon"> share </span>
+              {{ STRINGS.SHARE }}
+            </div>
             <div *ngIf="reply.owned" class="button" (click)="deleteReply()">
               <span class="material-icons icon"> delete </span>
               {{ STRINGS.DELETE }}
@@ -83,7 +87,7 @@
       <div class="time">
         {{ timeMessage }}
       </div>
-      <div class="reply-icon" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': (!reply.tag.tagged || !inRange) && !(isAuthenticated$ | async) }">
+      <div class="reply-icon" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': (!reply.tag.tagged || !post.inRange) && !(isAuthenticated$ | async) }">
         <i class="material-icons"> reply </i>
       </div>
     </div>

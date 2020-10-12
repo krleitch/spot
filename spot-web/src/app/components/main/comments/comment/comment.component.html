@@ -79,6 +79,10 @@
               <span class="material-icons icon"> outlined_flag </span>
               {{ STRINGS.REPORT }}
             </div>
+            <div class="button" (click)="openModal('spot-share-modal', { postId: post.id, postLink: post.link, commentId: comment.id, commentLink: comment.link })">
+              <span class="material-icons icon"> share </span>
+              {{ STRINGS.SHARE }}
+            </div>
             <div *ngIf="comment.owned" class="button" (click)="deleteComment()">
               <span class="material-icons icon"> delete </span>
               {{ STRINGS.DELETE }}
@@ -89,14 +93,14 @@
       <div class="time">
         {{ timeMessage }}
       </div>
-      <div class="reply" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': (!comment.tag.tagged || !inRange) && !(isAuthenticated$ | async)}">
+      <div class="reply" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': (!comment.tag.tagged || !post.inRange) && !(isAuthenticated$ | async)}">
         <i class="material-icons"> reply </i>
       </div>
     </div>
 
   </div>
   <div *ngFor="let reply of replies">
-    <spot-reply [reply]="reply" [postLink]="postLink" [inRange]="inRange" [detailed]="detailed"></spot-reply>
+    <spot-reply [reply]="reply" [comment]="comment" [post]="post" [detailed]="detailed"></spot-reply>
   </div>
   <div *ngIf="replies.length < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
 

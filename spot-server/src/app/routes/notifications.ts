@@ -53,7 +53,7 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
 
 }));
 
-// get # of unread notifications
+// get number of unread notifications
 router.get('/unread', function (req: any, res: any, next: any) {
 
     const id = req.user.id;
@@ -67,47 +67,48 @@ router.get('/unread', function (req: any, res: any, next: any) {
 
 });
 
-// Send a notification
-// Keep errors generic
+// Send a notification, keep errors generic
 router.post('/', function (req: any, res: any, next: any) {
 
-    const { receiver, postLink } = req.body;
+    const { receiver, postId, commentId } = req.body;
     const accountId = req.user.id;
 
     accounts.getAccountByUsername(receiver).then(ErrorHandler.catchAsync(async (receiver: any) => {
         // The receiving account doesnt exist
         if ( !receiver[0] ) {
             return next(new NotificationsError.SendNotification(500));
-        } else {
-            receiver = receiver[0];
-
-            // Make sure they are friends
-            await friends.getFriendsExist(accountId, receiver.id).then( (friendExists: any) => {
-                if ( !friendExists[0] ) {
-                    return next(new NotificationsError.SendNotification(500));
-                }
-            }, (err: any) => {
-                return next(new NotificationsError.SendNotification(500));
-            });
-
-            posts.getPostByLink(postLink, accountId).then((post: any) => {
-                // The post doesnt exist
-                if ( !post[0] ) {
-                    return next(new NotificationsError.SendNotification(500));
-                }
-                post = post[0];
-
-                notifications.addNotification(accountId, receiver.id, post.id).then((rows: any) => {
-                    const response = { notification: rows[0] };
-                    res.status(200).json(response);
-                }, (err: any) => {
-                    return next(new NotificationsError.SendNotification(500));
-                });
-
-            }, (err: any) => {
-                return next(new NotificationsError.SendNotification(500));
-            });
         }
+        receiver = receiver[0];
+
+        // Make sure they are friends
+        await friends.getFriendsExist(accountId, receiver.id).then( (friendExists: any) => {
+            if ( !friendExists[0] ) {
+                return next(new NotificationsError.SendNotification(500));
+            }
+        }, (err: any) => {
+            return next(new NotificationsError.SendNotification(500));
+        });
+
+        if ( commentId ) {
+
+            notifications.addCommentNotification(accountId, receiver.id, postId, commentId).then((rows: any) => {
+                const response = { notification: rows[0] };
+                res.status(200).json(response);
+            }, (err: any) => {
+                return next(new NotificationsError.SendNotification(500));
+            });
+
+        } else {
+
+            notifications.addNotification(accountId, receiver.id, postId).then((rows: any) => {
+                const response = { notification: rows[0] };
+                res.status(200).json(response);
+            }, (err: any) => {
+                return next(new NotificationsError.SendNotification(500));
+            });
+
+        }
+   
     }, (err: any) => {
         return next(new NotificationsError.SendNotification(500));
     }));

@@ -52,9 +52,9 @@
               <span class="material-icons icon"> outlined_flag </span>
               {{ STRINGS.REPORT }}
             </div>
-            <div class="button" (click)="openModal('spot-share-modal', { postId: post.id })">
-              <span class="material-icons icon"> delete </span>
-              <!-- {{ STRINGS.SHARE }} --> TEST
+            <div class="button" (click)="openModal('spot-share-modal', { postId: post.id, postLink: post.link })">
+              <span class="material-icons icon"> share </span>
+              {{ STRINGS.SHARE }}
             </div>
             <div *ngIf="post.owned" class="button" (click)="deletePost()">
               <span class="material-icons icon"> delete </span>
@@ -65,7 +65,7 @@
       </div>
 
       <div>
-        <i class="material-icons share" (click)="openModal('spot-share-modal', post.link)"> share </i>
+        <i class="material-icons share" (click)="openModal('spot-share-modal', { postId: post.id, postLink: post.link })"> share </i>
       </div>
 
     </div>

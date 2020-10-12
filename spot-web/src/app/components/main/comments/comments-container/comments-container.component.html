@@ -24,7 +24,7 @@
 
     <div *ngIf="comments.length > 0; else noComments">
       <div *ngFor="let comment of comments">
-          <spot-comment [comment]="comment" [postLink]="post.link" [inRange]="post.inRange" [detailed]="detailed"></spot-comment>
+          <spot-comment [comment]="comment" [post]="post" [detailed]="detailed"></spot-comment>
       </div>
     </div>
     <ng-template #noComments>

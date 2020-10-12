@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
           const request: LoadPostRequest = {
             limit: POSTS_CONSTANTS.INITIAL_LIMIT,
-            date: new Date().toString(),
+            date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
             initialLoad: this.initialLoad,
             location: this.location,
             filter: { location: this.postLocation, sort: this.postSort }

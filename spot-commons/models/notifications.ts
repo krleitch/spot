@@ -32,7 +32,8 @@ export interface GetNotificationsSuccess {
 // Add a notification
 export interface AddNotificationRequest {
     receiver: string;
-    postLink: string
+    postId: string;
+    commentId?: string;
 }
 
 export interface AddNotificationSuccess {

@@ -12,6 +12,7 @@ import { STRINGS } from '@assets/strings/en';
 import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetRepliesSuccess, AddReplySuccess,
          LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest,
          UnratedCommentRequest } from '@models/comments';
+import { Post } from '@models/posts';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AlertService } from '@services/alert.service';
@@ -32,9 +33,8 @@ export class CommentComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
-  @Input() inRange: boolean;
   @Input() comment: Comment;
-  @Input() postLink: string;
+  @Input() post: Post;
 
   @ViewChild('options') options;
   @ViewChild('text') text;
@@ -549,7 +549,7 @@ export class CommentComponent implements OnInit, OnDestroy {
       if ( elem.className === 'tag-inline' ) {
         const tag: Tag = {
           username: elem.textContent,
-          postLink: this.postLink,
+          postLink: this.post.link,
           offset
         };
         tags.push(tag);

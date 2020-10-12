@@ -29,7 +29,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   STRINGS = STRINGS.MAIN.SHARE;
 
   data$: Observable<any>;
-  data: { postLink: string } = { postLink: null };
+  data: { postId: string, postLink: string, commentId?: string, commentLink?: string } = { postId: null, postLink: null };
 
   isAuthenticated: boolean;
   friends$: Observable<Friend[]>;
@@ -51,8 +51,11 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     this.data$ = this.modalService.getData(this.modalId);
 
     this.data$.subscribe( (val) => {
-      this.data.postLink = val;
+      this.data = val;
       this.link = window.location.origin + '/posts/' + this.data.postLink;
+      if ( this.data.commentLink ) {
+        this.link += '/comments/' + this.data.commentLink;
+      }
     });
 
     this.friends$ = this.store$.pipe(
@@ -87,10 +90,20 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sendNotification() {
 
-    const request: AddNotificationRequest = {
-      receiver: this.username,
-      postLink: this.data.postLink
-    };
+    let request: AddNotificationRequest;
+
+    if ( this.data.commentId ) {
+      request = {
+        receiver: this.username,
+        postId: this.data.postId,
+        commentId: this.data.commentId
+      };
+    } else {
+      request = {
+        receiver: this.username,
+        postId: this.data.postId
+      };
+    }
 
     // send the notification
     this.store$.dispatch(
@@ -101,10 +114,20 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sendNotificationToFriend(username: string) {
 
-    const request: AddNotificationRequest = {
-      receiver: username,
-      postLink: this.data.postLink
-    };
+    let request: AddNotificationRequest;
+
+    if ( this.data.commentId ) {
+      request = {
+        receiver: username,
+        postId: this.data.postId,
+        commentId: this.data.commentId
+      };
+    } else {
+      request = {
+        receiver: username,
+        postId: this.data.postId
+      };
+    }
 
     // send the notification
     this.store$.dispatch(

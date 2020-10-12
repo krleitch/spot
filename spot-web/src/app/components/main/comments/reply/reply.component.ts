@@ -11,6 +11,7 @@ import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
 import { Comment, AddReplyRequest, AddReplyStoreRequest, DeleteReplyRequest, LikeReplyRequest,
          DislikeReplyRequest, AddReplySuccess, UnratedReplyRequest } from '@models/comments';
+import { Post } from '@models/posts';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
@@ -32,8 +33,8 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
   @Input() detailed: boolean;
   @Input() reply: Comment;
-  @Input() postLink: string;
-  @Input() inRange: boolean;
+  @Input() comment: Comment;
+  @Input() post: Post;
 
   @ViewChild('options') options;
   @ViewChild('text') text;
@@ -470,7 +471,7 @@ export class ReplyComponent implements OnInit, OnDestroy {
       if ( elem.className === 'tag-inline' ) {
         const tag: Tag = {
           username: elem.textContent,
-          postLink: this.postLink,
+          postLink: this.post.link,
           offset
         };
         tags.push(tag);

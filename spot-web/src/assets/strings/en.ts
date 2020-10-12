@@ -120,7 +120,8 @@ export const STRINGS = {
             // Options
             OPEN_POST: 'Open',
             DELETE: 'Delete',
-            REPORT: 'Report'
+            REPORT: 'Report',
+            SHARE: 'Share',
 
         },
 
@@ -155,6 +156,7 @@ export const STRINGS = {
           // Options
           DELETE: 'Delete',
           REPORT: 'Report',
+          SHARE: 'Share',
 
           // Reply
           ADD_REPLY_PLACEHOLDER: 'Add a reply ...',
@@ -179,6 +181,7 @@ export const STRINGS = {
           // Options
           DELETE: 'Delete',
           REPORT: 'Report',
+          SHARE: 'Share',
 
           // Reply
           ADD_REPLY_PLACEHOLDER: 'Add a reply ...',
