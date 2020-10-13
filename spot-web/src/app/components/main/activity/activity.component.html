@@ -36,9 +36,9 @@
                 <div class="date">
                   {{ STRINGS.DATE_POST_PROMPT }} {{ formatDate(activity.creation_date) }} {{ STRINGS.DATE_PROMPT_END }}
                 </div>
-                <div class="post-link" (click)="openPost(activity.link)">
+                <a class="post-link" [routerLink]="'/posts/' + activity.link">
                   {{ STRINGS.POSTS_OPEN }}
-                </div>
+                </a>
               </div>
 
               <div class="horiz-bar"></div>
@@ -88,9 +88,9 @@
                   {{ formatDate(activity.creation_date) }}
                   {{ STRINGS.DATE_PROMPT_END }}
                 </div>
-                <div class="comment-link" (click)="openComment(activity.post_link, activity.link)">
+                <a class="comment-link" [routerLink]="'/posts/' + activity.post_link + '/comments/' + activity.link">
                   {{ STRINGS.COMMENTS_OPEN }}
-                </div>
+                </a>
               </div>
 
               <div class="horiz-bar"></div>

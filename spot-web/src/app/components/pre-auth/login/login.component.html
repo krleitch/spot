@@ -22,9 +22,9 @@
     <div class="form-buttons">
       <button type="button" (click)="signIn()"> {{ STRINGS.SIGN_IN }} </button>
     </div>
-    <div class="forgot-password" (click)="forgotPassword()">
+    <a class="forgot-password" [routerLink]="'/password-reset'">
       <span> {{ STRINGS.FORGOT_PASSWORD }} </span>
-    </div>
+    </a>
     <div class="sign-up-alternate">
       <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
     </div>
@@ -42,10 +42,10 @@
 
   <div class="bar"></div>
 
-  <div class="existing-account" (click)="register()">
+  <a class="existing-account" [routerLink]="'/register'">
     <span> {{ STRINGS.NO_ACCOUNT }} </span>
     <span class="sign-in-highlight"> {{ STRINGS.SIGN_UP }} </span>
-  </div>
+  </a>
 
 </div>
 

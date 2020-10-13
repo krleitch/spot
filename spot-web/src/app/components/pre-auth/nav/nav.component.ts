@@ -20,22 +20,6 @@ export class NavComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
-  about() {
-    this.router.navigateByUrl('/about');
-  }
-
-  contact() {
-    this.router.navigateByUrl('/contact');
-  }
-
-  login() {
-    this.router.navigateByUrl('/login');
-  }
-
-  register() {
-    this.router.navigateByUrl('/register');
-  }
-
   routeIsLogin(): boolean {
     return this.router.url === '/login';
   }

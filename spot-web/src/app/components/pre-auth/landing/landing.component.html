@@ -64,10 +64,10 @@
 
           <div class="bar"></div>
 
-          <div class="existing-account" (click)="signIn()">
+          <a class="existing-account" [routerLink]="'/register'">
             <span> {{ STRINGS.EXISTING_ACCOUNT }} </span>
             <span class="sign-in-highlight"> {{ STRINGS.SIGN_IN }} </span>
-          </div>
+          </a>
 
         </div>
       </div>

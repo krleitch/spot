@@ -51,7 +51,6 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     this.data$ = this.modalService.getData(this.modalId);
 
     this.data$.subscribe( (val) => {
-      console.log(val)
       this.data = val;
       this.link = window.location.origin + '/posts/' + this.data.postLink;
       if ( this.data.commentLink ) {

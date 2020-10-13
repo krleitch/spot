@@ -152,7 +152,7 @@ input.ng-dirty.ng-invalid {
     text-decoration: none;
     color: $subtle-grey;
     &:hover {
-      color: darken($subtle-grey, 5%);
+      color: $button-highlight;
     }
   }
 
@@ -167,6 +167,8 @@ input.ng-dirty.ng-invalid {
 }
 
 .existing-account {
+    color: black;
+    text-decoration: none;
     text-align: center;
     cursor: pointer;
 }

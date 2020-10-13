@@ -209,8 +209,4 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  signIn() {
-    this.router.navigateByUrl('/login');
-  }
-
 }

@@ -129,6 +129,7 @@ input.ng-dirty.ng-invalid {
 }
 
 .forgot-password {
+    text-decoration: none;
     cursor: pointer;
     color: $subtle-grey;
     margin-bottom: 10px;
@@ -150,6 +151,8 @@ input.ng-dirty.ng-invalid {
 }
 
 .existing-account {
+    text-decoration: none;
+    color: black;
     text-align: center;
     cursor: pointer;
 }

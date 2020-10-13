@@ -100,14 +100,6 @@ export class ActivityComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPost( link: string ) {
-    this.router.navigateByUrl(/posts/ + link);
-  }
-
-  openComment( postLink: string, commentlink: string ) {
-    this.router.navigateByUrl(/posts/ + postLink + '/comments/' + commentlink);
-  }
-
   onScrollComments() {
 
     if ( this.location && !this.commentActivityLoading ) {

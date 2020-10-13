@@ -110,6 +110,7 @@ img {
   margin: 0px 10px 5px 10px;
 
   .post-link {
+    text-decoration: none;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -240,6 +241,7 @@ img {
 }
 
 .comment-link {
+  text-decoration: none;
   cursor: pointer;
   display: flex;
   align-items: center;

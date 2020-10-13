@@ -113,22 +113,10 @@ export class NavComponent implements OnInit, OnDestroy {
     this.accountShowDropdown = value;
   }
 
-  activity() {
-    this.router.navigateByUrl('/activity');
-  }
-
-  friends() {
-    this.router.navigateByUrl('/friends');
-  }
-
   logout() {
     this.store$.dispatch(
       new AccountsActions.LogoutRequestAction()
     );
-  }
-
-  navigateAccount() {
-    this.router.navigateByUrl('/account');
   }
 
   navigateHome() {

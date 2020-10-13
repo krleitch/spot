@@ -42,6 +42,24 @@
     &:hover {
         color: $button-highlight;
     }
+
+  }
+
+  a {
+
+    color: black;
+    text-decoration: none;
+    margin-right: 35px;
+    font-size: 16px;
+
+    &:hover {
+      color: $button-highlight;
+    }
+
+  }
+
+  .title-link {
+    margin: 0;
   }
 
   .left {
@@ -49,14 +67,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-  }
-
-  .right {
-
-    .login {
-      margin-right: 5px;
-    }
 
   }
 
