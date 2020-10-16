@@ -3,6 +3,11 @@ import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
+    case ActionTypes.RESET_STORE: {
+      return {
+        ...initialState,
+      };
+    }
     case ActionTypes.LOAD_REQUEST: {
       if ( action.request.initialLoad ) {
         state.posts = [];

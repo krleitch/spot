@@ -1,17 +1,23 @@
-import { Actions, ActionTypes } from './actions/notifications.actions';
+import { NotificationsActions, NotificationsActionTypes } from './actions/notifications.actions';
 import { FriendsActions, FriendsActionTypes } from './actions/friends.actions';
+import { Actions, ActionTypes } from './actions/actions';
 import { initialState, State } from './state';
 
-export function featureReducer(state = initialState, action: Actions | FriendsActions): State {
+export function featureReducer(state = initialState, action: NotificationsActions | FriendsActions | Actions): State {
   switch (action.type) {
-    case ActionTypes.GET_NOTIFICATIONS_REQUEST: {
+    case ActionTypes.RESET_STORE: {
+      return {
+        ...initialState,
+      };
+    }
+    case NotificationsActionTypes.GET_NOTIFICATIONS_REQUEST: {
       return {
         ...state,
         getNotificationsSuccess: false,
         getNotificationsLoading: true,
       };
     }
-    case ActionTypes.GET_NOTIFICATIONS_SUCCESS: {
+    case NotificationsActionTypes.GET_NOTIFICATIONS_SUCCESS: {
       if (!action.response.date) {
         state.notifications = action.response.notifications;
       } else {
@@ -23,37 +29,37 @@ export function featureReducer(state = initialState, action: Actions | FriendsAc
         getNotificationsLoading: false
       };
     }
-    case ActionTypes.GET_NOTIFICATIONS_FAILURE: {
+    case NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE: {
       return {
         ...state,
         getNotificationsSuccess: false,
         getNotificationsLoading: false
       };
     }
-    case ActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS: {
+    case NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS: {
       return {
         ...state,
         unread: action.response.unread
       };
     }
-    case ActionTypes.ADD_NOTIFICATION_SUCCESS: {
+    case NotificationsActionTypes.ADD_NOTIFICATION_SUCCESS: {
       return {
         ...state,
       };
     }
-    case ActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS: {
+    case NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS: {
       return {
         ...state,
         notifications: []
       };
     }
-    case ActionTypes.DELETE_NOTIFICATION_SUCCESS: {
+    case NotificationsActionTypes.DELETE_NOTIFICATION_SUCCESS: {
       state.notifications = state.notifications.filter( item => item.id !== action.response.notificationId );
       return {
         ...state
       };
     }
-    case ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS: {
+    case NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS: {
       state.notifications.forEach( notif => {
         notif.seen = 1;
       });

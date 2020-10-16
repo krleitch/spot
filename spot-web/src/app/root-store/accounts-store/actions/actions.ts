@@ -1,13 +1,14 @@
 import { Action } from '@ngrx/store';
 
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
-import { SetLocationRequest, UpdateUsernameRequest, UpdateUsernameResponse, GetAccountRequest, GetAccountSuccess,
+import { SetLocationRequest, UpdateUsernameRequest, GetAccountRequest, GetAccountSuccess,
          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess,
-         LoadLocationRequest, VerifyConfirmRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse, LocationFailure,
+         LoadLocationRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse, LocationFailure,
          UpdateEmailRequest, UpdatePhoneRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
+  RESET_STORE = '[Accounts] Reset Store',
   LOGIN_REQUEST = '[Accounts] Login Request',
   LOGIN_SUCCESS = '[Accounts] Login Success',
   LOGIN_FAILURE = '[Accounts] Login Failure',
@@ -15,8 +16,6 @@ export enum ActionTypes {
   REGISTER_SUCCESS = '[Accounts] Register Success',
   REGISTER_FAILURE = '[Accounts] Register Failure',
   LOGOUT_REQUEST = '[Accounts] Logout Request',
-  LOGOUT_SUCCESS = '[Accounts] Logout Success',
-  LOGOUT_FAILURE = '[Accounts] Logout Failure',
   DELETE_REQUEST = '[Accounts] Delete Request',
   DELETE_SUCCESS = '[Accounts] Delete Success',
   DELETE_FAILURE = '[Accounts] Delete Failure',
@@ -40,6 +39,11 @@ export enum ActionTypes {
   UPDATE_EMAIL_REQUEST = '[Accounts] Update Email Request',
   UPDATE_PHONE_REQUEST = '[Accounts] Update Phone Request',
   GENERIC_FAILURE = '[Accounts] Generic Failure'
+}
+
+export class ResetStoreAction implements Action {
+  readonly type = ActionTypes.RESET_STORE;
+  constructor() {}
 }
 
 export class GenericFailureAction implements Action {
@@ -193,4 +197,4 @@ export type Actions = LoginRequestAction | LoginSuccessAction |
                       GetAccountMetadataRequestSuccess | GetAccountMetadataFailureAction |
                       LoadLocationAction | UpdateEmailAction |
                       VerifyRequestAction | VerifySuccessAction | VerifyConfirmRequestAction |
-                      LocationFailureAction;
+                      LocationFailureAction | ResetStoreAction;

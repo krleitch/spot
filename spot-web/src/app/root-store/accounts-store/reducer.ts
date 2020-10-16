@@ -5,6 +5,11 @@ import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions | FacebookActions | GoogleActions): State {
   switch (action.type) {
+    case ActionTypes.RESET_STORE: {
+      return {
+        ...initialState
+      };
+    }
     case ActionTypes.REGISTER_SUCCESS: {
 
       if ( action.response.account.facebook_id ) {

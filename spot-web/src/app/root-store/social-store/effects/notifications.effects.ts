@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { NotificationsService } from '@services/notifications.service';
-import * as featureActions from '../actions/notifications.actions';
+import * as notificationsActions from '../actions/notifications.actions';
 import { GetNotificationsSuccess, AddNotificationSuccess, SetNotificationSeenSuccess,
           DeleteNotificationSuccess, DeleteAllNotificationsSuccess, SetAllNotificationsSeenSuccess,
           GetNotificationsUnreadSuccess } from '@models/notifications';
@@ -16,18 +16,18 @@ export class SocialStoreEffects {
 
   @Effect({dispatch: false})
   GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.GenericFailureAction>(
-      featureActions.ActionTypes.GENERIC_FAILURE
+    ofType<notificationsActions.GenericFailureAction>(
+      notificationsActions.NotificationsActionTypes.GENERIC_FAILURE
     ),
-    tap((action: featureActions.GenericFailureAction) => {
+    tap((action: notificationsActions.GenericFailureAction) => {
       this.notificationsService.failureMessage(action.error);
     })
   );
 
   @Effect()
   getNotificationsEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.GetNotificationsAction>(
-      featureActions.ActionTypes.GET_NOTIFICATIONS_REQUEST
+    ofType<notificationsActions.GetNotificationsAction>(
+      notificationsActions.NotificationsActionTypes.GET_NOTIFICATIONS_REQUEST
     ),
     switchMap(action =>
       this.notificationsService
@@ -36,10 +36,10 @@ export class SocialStoreEffects {
           map((response: GetNotificationsSuccess) => {
             response.date = action.request.date;
             response.initialLoad = action.request.initialLoad;
-            return new featureActions.GetNotificationsSuccessAction( response );
+            return new notificationsActions.GetNotificationsSuccessAction( response );
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GetNotificationsFailureAction( errorResponse.error ))
+            observableOf(new notificationsActions.GetNotificationsFailureAction( errorResponse.error ))
           )
         )
     )
@@ -48,20 +48,20 @@ export class SocialStoreEffects {
 
   @Effect()
   addNotificationEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.AddNotificationAction>(
-      featureActions.ActionTypes.ADD_NOTIFICATION_REQUEST
+    ofType<notificationsActions.AddNotificationAction>(
+      notificationsActions.NotificationsActionTypes.ADD_NOTIFICATION_REQUEST
     ),
-    switchMap((post: featureActions.AddNotificationAction) =>
+    switchMap((post: notificationsActions.AddNotificationAction) =>
       this.notificationsService
         .addNotification(post.request)
         .pipe(
           map( (response: AddNotificationSuccess) => {
             // TODO this success message to STRINGS
             this.notificationsService.successMessage('Notification Sent!');
-            return new featureActions.AddNotificationSuccessAction( response )
+            return new notificationsActions.AddNotificationSuccessAction( response )
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )
@@ -69,18 +69,18 @@ export class SocialStoreEffects {
 
   @Effect()
   deleteNotificationEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.DeleteNotificationAction>(
-      featureActions.ActionTypes.DELETE_NOTIFICATION_REQUEST
+    ofType<notificationsActions.DeleteNotificationAction>(
+      notificationsActions.NotificationsActionTypes.DELETE_NOTIFICATION_REQUEST
     ),
-    switchMap((action: featureActions.DeleteNotificationAction) =>
+    switchMap((action: notificationsActions.DeleteNotificationAction) =>
       this.notificationsService
         .deleteNotification(action.request)
         .pipe(
           map( (response: DeleteNotificationSuccess) => {
-            return new featureActions.DeleteNotificationSuccessAction( response )
+            return new notificationsActions.DeleteNotificationSuccessAction( response )
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )
@@ -88,18 +88,18 @@ export class SocialStoreEffects {
 
   @Effect()
   deleteAllNotificationsEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.DeleteAllNotificationsAction>(
-      featureActions.ActionTypes.DELETE_ALL_NOTIFICATIONS_REQUEST
+    ofType<notificationsActions.DeleteAllNotificationsAction>(
+      notificationsActions.NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_REQUEST
     ),
-    switchMap((action: featureActions.DeleteAllNotificationsAction) =>
+    switchMap((action: notificationsActions.DeleteAllNotificationsAction) =>
       this.notificationsService
         .deleteAllNotifications(action.request)
         .pipe(
           map( (response: DeleteAllNotificationsSuccess) => {
-            return new featureActions.DeleteAllNotificationsSuccessAction( response )
+            return new notificationsActions.DeleteAllNotificationsSuccessAction( response )
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )
@@ -107,18 +107,18 @@ export class SocialStoreEffects {
 
   @Effect()
   setNotificationSeenEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.SetNotificationSeenAction>(
-      featureActions.ActionTypes.SET_NOTIFICATION_SEEN_REQUEST
+    ofType<notificationsActions.SetNotificationSeenAction>(
+      notificationsActions.NotificationsActionTypes.SET_NOTIFICATION_SEEN_REQUEST
     ),
-    switchMap((action: featureActions.SetNotificationSeenAction) =>
+    switchMap((action: notificationsActions.SetNotificationSeenAction) =>
       this.notificationsService
         .setNotificationSeen(action.request)
         .pipe(
           map( (response: SetNotificationSeenSuccess) => {
-            return new featureActions.SetNotificationSeenSuccessAction( response )
+            return new notificationsActions.SetNotificationSeenSuccessAction( response )
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )
@@ -126,18 +126,18 @@ export class SocialStoreEffects {
 
   @Effect()
   setAllNotificationsSeenEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.SetAllNotificationsSeenAction>(
-      featureActions.ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_REQUEST
+    ofType<notificationsActions.SetAllNotificationsSeenAction>(
+      notificationsActions.NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_REQUEST
     ),
-    switchMap((action: featureActions.SetAllNotificationsSeenAction) =>
+    switchMap((action: notificationsActions.SetAllNotificationsSeenAction) =>
       this.notificationsService
         .setAllNotificationsSeen(action.request)
         .pipe(
           map( (response: SetAllNotificationsSeenSuccess) => {
-            return new featureActions.SetAllNotificationsSeenSuccessAction( response )
+            return new notificationsActions.SetAllNotificationsSeenSuccessAction( response )
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )
@@ -145,18 +145,18 @@ export class SocialStoreEffects {
 
   @Effect()
   getNotificationsUnreadEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.GetNotificationsUnreadAction>(
-      featureActions.ActionTypes.GET_NOTIFICATIONS_UNREAD_REQUEST
+    ofType<notificationsActions.GetNotificationsUnreadAction>(
+      notificationsActions.NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_REQUEST
     ),
-    switchMap((action: featureActions.GetNotificationsUnreadAction) =>
+    switchMap((action: notificationsActions.GetNotificationsUnreadAction) =>
       this.notificationsService
         .getNotificationsUnread(action.request)
         .pipe(
           map( (response: GetNotificationsUnreadSuccess) => {
-            return new featureActions.GetNotificationsUnreadSuccessAction( response )
+            return new notificationsActions.GetNotificationsUnreadSuccessAction( response )
           }),
           catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+            observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )

@@ -3,6 +3,11 @@ import { initialState, State } from './state';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
+    case ActionTypes.RESET_STORE: {
+      return {
+          ...initialState
+      };
+  }
     case ActionTypes.ADD_COMMENT_REQUEST: {
         if (state.comments[action.request.postId] === undefined) {
             state.comments[action.request.postId] = {

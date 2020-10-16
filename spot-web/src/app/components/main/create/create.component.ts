@@ -67,7 +67,11 @@ export class CreateComponent implements OnInit, OnDestroy {
 
     this.createError$.pipe(takeUntil(this.onDestroy)).subscribe( (createError: SpotError) => {
       if ( createError ) {
-        this.createError = createError.message;
+        if ( createError.name === "InvalidPostProfanity" ) {
+          this.createError = 'You cannot use profanity: \'' +  createError.body.word + '\'';
+        } else {
+          this.createError = createError.message;
+        }
       }
     });
 

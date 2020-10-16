@@ -1,11 +1,41 @@
-export { checkProfanity }
+export { checkProfanity, checkProfanityIndex }
 
-var Filter = require('bad-words');
-var filter = new Filter({ replaceRegex:  /(\w+)/gi });
+const Filter = require("badwords-filter");
 
-// remove words from filter
-filter.removeWords('shit', 'hell');
+// TODO: languages
+
+// this list should be better and populated from various sources
+const badwordsList = [
+    "nigger",
+    "niggers",
+    "chink",
+    "chinks",
+    "faggot",
+    "fag",
+    "fags",
+    "spick",
+    "spicks",
+];
+
+const config = {
+    list: badwordsList,
+    cleanWith: "*",
+    useRegex: false,
+};
+
+const filter = new Filter(config);
 
 function checkProfanity(text: string): boolean {
-    return filter.isProfane(text);
+    return filter.isUnclean(text);
+}
+
+// Return the first word that is profane
+function checkProfanityIndex(text: string): string | null {
+    const index = filter.getUncleanWordIndexes(text);
+
+    if ( index.length < 0 ) {
+        return null;
+    }
+
+    return text.split(/\b\s+/)[index[0]];
 }

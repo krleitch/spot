@@ -27,9 +27,10 @@ export class InvalidPostLength extends SpotError {
 }
 
 export class InvalidPostProfanity extends SpotError {
-  constructor(statusCode) {
+  constructor(statusCode, profane) {
     super(POSTS_ERROR_MESSAGES.INVALID_POST_PROFANITY, statusCode);
     this.name = "InvalidPostProfanity";
+    this.body = { word: profane };
   }
 }
 

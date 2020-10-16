@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import * as featureActions from '../actions/actions';
+import * as AccountsActions from '../actions/actions';
 import * as friendsActions from '../../social-store/actions/friends.actions';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
@@ -23,10 +23,10 @@ export class AccountsStoreEffects {
 
   @Effect({dispatch: false})
   GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.GenericFailureAction>(
-      featureActions.ActionTypes.GENERIC_FAILURE
+    ofType<AccountsActions.GenericFailureAction>(
+      AccountsActions.ActionTypes.GENERIC_FAILURE
     ),
-    tap((action: featureActions.GenericFailureAction) => {
+    tap((action: AccountsActions.GenericFailureAction) => {
       this.accountsService.failureMessage(action.error);
     })
   );
@@ -34,18 +34,18 @@ export class AccountsStoreEffects {
 
   @Effect()
   registerAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.RegisterRequestAction>(
-      featureActions.ActionTypes.REGISTER_REQUEST
+    ofType<AccountsActions.RegisterRequestAction>(
+      AccountsActions.ActionTypes.REGISTER_REQUEST
     ),
-    switchMap((registerRequest: featureActions.RegisterRequestAction) =>
+    switchMap((registerRequest: AccountsActions.RegisterRequestAction) =>
       this.authenticationService
         .registerAccount(registerRequest.request)
         .pipe(
           map( (response) =>
-            new featureActions.RegisterSuccessAction(response)
+            new AccountsActions.RegisterSuccessAction(response)
           ),
           catchError((errorResponse: any) =>
-            observableOf(new featureActions.RegisterFailureAction(errorResponse.error))
+            observableOf(new AccountsActions.RegisterFailureAction(errorResponse.error))
           )
         )
     )
@@ -53,32 +53,32 @@ export class AccountsStoreEffects {
 
   @Effect()
   registerAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.RegisterSuccessAction>(
-      featureActions.ActionTypes.REGISTER_SUCCESS
+    ofType<AccountsActions.RegisterSuccessAction>(
+      AccountsActions.ActionTypes.REGISTER_SUCCESS
     ),
-    tap( (action: featureActions.RegisterSuccessAction) => {
+    tap( (action: AccountsActions.RegisterSuccessAction) => {
       this.authenticationService.registerAccountSuccess(action.response);
     }),
-    switchMap ( (action: featureActions.RegisterSuccessAction) => [
+    switchMap ( (action: AccountsActions.RegisterSuccessAction) => [
       new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
-      new featureActions.GetAccountMetadataRequestAction({})
+      new AccountsActions.GetAccountMetadataRequestAction({})
     ])
   );
 
   @Effect()
   loginAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LoginRequestAction>(
-      featureActions.ActionTypes.LOGIN_REQUEST
+    ofType<AccountsActions.LoginRequestAction>(
+      AccountsActions.ActionTypes.LOGIN_REQUEST
     ),
     switchMap(authenticateRequest =>
       this.authenticationService
         .loginAccount(authenticateRequest.request)
         .pipe(
           map( (response) =>
-            new featureActions.LoginSuccessAction(response)
+            new AccountsActions.LoginSuccessAction(response)
           ),
           catchError(errorResponse =>
-            observableOf(new featureActions.LoginFailureAction(errorResponse.error))
+            observableOf(new AccountsActions.LoginFailureAction(errorResponse.error))
           )
         )
     )
@@ -86,42 +86,45 @@ export class AccountsStoreEffects {
 
   @Effect()
   loginAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LoginSuccessAction>(
-      featureActions.ActionTypes.LOGIN_SUCCESS
+    ofType<AccountsActions.LoginSuccessAction>(
+      AccountsActions.ActionTypes.LOGIN_SUCCESS
     ),
-    tap((action: featureActions.LoginSuccessAction) => {
+    tap((action: AccountsActions.LoginSuccessAction) => {
       this.authenticationService.loginAccountSuccess(action.response);
     }),
-    switchMap ( (action: featureActions.LoginSuccessAction) => [
+    switchMap ( (action: AccountsActions.LoginSuccessAction) => [
       new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
-      new featureActions.GetAccountMetadataRequestAction({})
+      new AccountsActions.GetAccountMetadataRequestAction({})
     ])
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   logoutAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LogoutRequestAction>(
-      featureActions.ActionTypes.LOGOUT_REQUEST
+    ofType<AccountsActions.LogoutRequestAction>(
+      AccountsActions.ActionTypes.LOGOUT_REQUEST
     ),
-    tap((logoutRequest: featureActions.LogoutRequestAction) => {
+    tap((logoutRequest: AccountsActions.LogoutRequestAction) => {
       this.authenticationService.logoutAccountSuccess();
-    })
+    }),
+    switchMap( (action: AccountsActions.LogoutRequestAction ) => [
+      new AccountsActions.ResetStoreAction()
+    ]),
   );
 
   @Effect()
   deleteAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.DeleteRequestAction>(
-      featureActions.ActionTypes.DELETE_REQUEST
+    ofType<AccountsActions.DeleteRequestAction>(
+      AccountsActions.ActionTypes.DELETE_REQUEST
     ),
     switchMap(deleteRequest =>
       this.accountsService
         .deleteAccount()
         .pipe(
             map(response => {
-              return new featureActions.DeleteSuccessAction();
+              return new AccountsActions.DeleteSuccessAction();
             }),
             catchError(error =>
-              observableOf(new featureActions.DeleteFailureAction(error))
+              observableOf(new AccountsActions.DeleteFailureAction(error))
             )
           )
     )
@@ -129,8 +132,8 @@ export class AccountsStoreEffects {
 
   @Effect({dispatch: false})
   deleteAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.DeleteSuccessAction>(
-      featureActions.ActionTypes.DELETE_SUCCESS
+    ofType<AccountsActions.DeleteSuccessAction>(
+      AccountsActions.ActionTypes.DELETE_SUCCESS
     ),
     tap( deleteRequest => {
       this.accountsService.onDeleteAccountSuccess();
@@ -139,8 +142,8 @@ export class AccountsStoreEffects {
 
   @Effect()
   getAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.AccountRequestAction>(
-      featureActions.ActionTypes.ACCOUNT_REQUEST
+    ofType<AccountsActions.AccountRequestAction>(
+      AccountsActions.ActionTypes.ACCOUNT_REQUEST
     ),
     switchMap(action =>
       this.accountsService
@@ -150,10 +153,10 @@ export class AccountsStoreEffects {
               this.accountsService.getAccountRedirect();
             }),
             map( (response) =>
-              new featureActions.AccountSuccessAction(response)
+              new AccountsActions.AccountSuccessAction(response)
             ),
             catchError(error =>
-              observableOf(new featureActions.AccountFailureAction(error))
+              observableOf(new AccountsActions.AccountFailureAction(error))
             )
           )
     )
@@ -161,32 +164,32 @@ export class AccountsStoreEffects {
 
   @Effect()
   getAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.AccountSuccessAction>(
-      featureActions.ActionTypes.ACCOUNT_SUCCESS
+    ofType<AccountsActions.AccountSuccessAction>(
+      AccountsActions.ActionTypes.ACCOUNT_SUCCESS
     ),
-    tap((action: featureActions.AccountSuccessAction) => {
+    tap((action: AccountsActions.AccountSuccessAction) => {
       // none
     }),
-    switchMap ( (action: featureActions.AccountSuccessAction) => [
+    switchMap ( (action: AccountsActions.AccountSuccessAction) => [
       new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
-      new featureActions.GetAccountMetadataRequestAction({})
+      new AccountsActions.GetAccountMetadataRequestAction({})
     ])
   );
 
   @Effect()
   updateAccountMetadataEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.UpdateAccountMetadataRequestAction>(
-      featureActions.ActionTypes.UPDATE_METADATA_REQUEST
+    ofType<AccountsActions.UpdateAccountMetadataRequestAction>(
+      AccountsActions.ActionTypes.UPDATE_METADATA_REQUEST
     ),
     switchMap(action =>
       this.accountsService
         .updateAccountMetadata(action.request)
         .pipe(
             map(response => {
-              return new featureActions.UpdateAccountMetadataRequestSuccess(response)
+              return new AccountsActions.UpdateAccountMetadataRequestSuccess(response)
             }),
             catchError(error =>
-              observableOf(new featureActions.GenericFailureAction(error))
+              observableOf(new AccountsActions.GenericFailureAction(error))
             )
           )
     )
@@ -194,18 +197,18 @@ export class AccountsStoreEffects {
 
   @Effect()
   getAccountMetadataEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.GetAccountMetadataRequestAction>(
-      featureActions.ActionTypes.GET_METADATA_REQUEST
+    ofType<AccountsActions.GetAccountMetadataRequestAction>(
+      AccountsActions.ActionTypes.GET_METADATA_REQUEST
     ),
-    switchMap( (action: featureActions.GetAccountMetadataRequestAction) =>
+    switchMap( (action: AccountsActions.GetAccountMetadataRequestAction) =>
       this.accountsService
         .getAccountMetadata(action.request)
         .pipe(
             map( (response: GetAccountMetadataSuccess)  => {
-              return new featureActions.GetAccountMetadataRequestSuccess(response);
+              return new AccountsActions.GetAccountMetadataRequestSuccess(response);
             }),
             catchError( (errorResponse: { error: SpotError }) =>
-              observableOf(new featureActions.GetAccountMetadataFailureAction(errorResponse.error))
+              observableOf(new AccountsActions.GetAccountMetadataFailureAction(errorResponse.error))
             )
           )
     )
@@ -213,16 +216,16 @@ export class AccountsStoreEffects {
 
   @Effect()
   verifyAccountEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.VerifyRequestAction>(
-      featureActions.ActionTypes.VERIFY_REQUEST
+    ofType<AccountsActions.VerifyRequestAction>(
+      AccountsActions.ActionTypes.VERIFY_REQUEST
     ),
     switchMap(action =>
       this.accountsService
         .verifyAccount(action.request)
         .pipe(
-            map( (response: VerifyResponse) => new featureActions.VerifySuccessAction(response)),
+            map( (response: VerifyResponse) => new AccountsActions.VerifySuccessAction(response)),
             catchError(errorResponse =>
-              observableOf(new featureActions.GenericFailureAction(errorResponse.error))
+              observableOf(new AccountsActions.GenericFailureAction(errorResponse.error))
             )
           )
     )

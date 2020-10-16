@@ -9,6 +9,7 @@ import { AddCommentStoreRequest, SetCommentsStoreRequest,
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
+  RESET_STORE = '[Comments] Reset Store',
   ADD_COMMENT_REQUEST = '[Comments] Add Comment Request',
   ADD_REPLY_REQUEST = '[Comments] Add Reply Request',
   SET_COMMENTS_REQUEST = '[Comments] Set Comments Request',
@@ -30,6 +31,11 @@ export enum ActionTypes {
   UNRATED_REPLY_REQUEST = '[Comments] Unrated Reply Request',
   UNRATED_REPLY_SUCCESS = '[Comments] Unrated Reply Success',
   GENERIC_FAILURE = '[Comments] Generic Failure'
+}
+
+export class ResetStoreAction implements Action {
+  readonly type = ActionTypes.RESET_STORE;
+  constructor() {}
 }
 
 export class GenericFailureAction implements Action {
@@ -146,4 +152,4 @@ export type Actions = AddCommentRequestAction | SetCommentsRequestAction |
                       LikeReplyRequestAction | LikeReplySuccessAction |
                       DislikeReplyRequestAction | DislikeReplySuccessAction |
                       GenericFailureAction | UnratedRequestAction | UnratedSuccessAction |
-                      UnratedReplyRequestAction | UnratedReplySuccessAction;
+                      UnratedReplyRequestAction | UnratedReplySuccessAction | ResetStoreAction;

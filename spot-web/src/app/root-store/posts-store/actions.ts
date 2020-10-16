@@ -6,6 +6,7 @@ import { AddPostRequest, AddPostSuccess, LikePostRequest, DislikePostRequest, Li
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
+  RESET_STORE = '[Posts] Reset Store',
   LIKE_REQUEST = '[Posts] Like Request',
   LIKE_SUCCESS = '[Posts] Like Success',
   DISLIKE_REQUEST = '[Posts] Dislike Request',
@@ -20,6 +21,11 @@ export enum ActionTypes {
   LOAD_REQUEST = '[Posts] Load Request',
   LOAD_SUCCESS = '[Posts] Load Success',
   GENERIC_FAILURE = '[Posts] Generic Failure'
+}
+
+export class ResetStoreAction implements Action {
+  readonly type = ActionTypes.RESET_STORE;
+  constructor() {}
 }
 
 export class GenericFailureAction implements Action {
@@ -96,4 +102,4 @@ export type Actions = GenericFailureAction | LoadRequestAction | LoadSuccessActi
                       AddRequestAction | AddSuccessAction | AddFailureAction |
                       DeleteRequestAction | DeleteSuccessAction | LikeRequestAction |
                       LikeSuccessAction | DislikeRequestAction | DislikeSuccessAction |
-                      UnratedRequestAction | UnratedSuccessAction;
+                      UnratedRequestAction | UnratedSuccessAction | ResetStoreAction;

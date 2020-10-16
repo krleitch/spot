@@ -7,7 +7,7 @@ import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationReques
           GetNotificationsUnreadSuccess } from '@models/notifications';
 import { SpotError } from '@exceptions/error';
 
-export enum ActionTypes {
+export enum NotificationsActionTypes {
   GET_NOTIFICATIONS_REQUEST = '[Social] Get Notifications Request',
   GET_NOTIFICATIONS_SUCCESS = '[Social] Get Notifications Success',
   GET_NOTIFICATIONS_FAILURE = '[Social] Get Notifications Failure',
@@ -27,86 +27,86 @@ export enum ActionTypes {
 }
 
 export class GenericFailureAction implements Action {
-  readonly type = ActionTypes.GENERIC_FAILURE;
+  readonly type = NotificationsActionTypes.GENERIC_FAILURE;
   constructor(public error: string) {}
 }
 
 export class GetNotificationsAction implements Action {
-  readonly type = ActionTypes.GET_NOTIFICATIONS_REQUEST;
+  readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_REQUEST;
   constructor(public request: GetNotificationsRequest) {}
 }
 
 export class GetNotificationsSuccessAction implements Action {
-  readonly type = ActionTypes.GET_NOTIFICATIONS_SUCCESS;
+  readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_SUCCESS;
   constructor(public response: GetNotificationsSuccess) {}
 }
 
 export class GetNotificationsFailureAction implements Action {
-  readonly type = ActionTypes.GET_NOTIFICATIONS_FAILURE;
+  readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE;
   constructor(public error: SpotError) {}
 }
 
 export class AddNotificationAction implements Action {
-  readonly type = ActionTypes.ADD_NOTIFICATION_REQUEST;
+  readonly type = NotificationsActionTypes.ADD_NOTIFICATION_REQUEST;
   constructor(public request: AddNotificationRequest) {}
 }
 
 export class AddNotificationSuccessAction implements Action {
-  readonly type = ActionTypes.ADD_NOTIFICATION_SUCCESS;
+  readonly type = NotificationsActionTypes.ADD_NOTIFICATION_SUCCESS;
   constructor(public response: AddNotificationSuccess) {}
 }
 
 export class DeleteNotificationAction implements Action {
-  readonly type = ActionTypes.DELETE_NOTIFICATION_REQUEST;
+  readonly type = NotificationsActionTypes.DELETE_NOTIFICATION_REQUEST;
   constructor(public request: DeleteNotificationRequest) {}
 }
 
 export class DeleteNotificationSuccessAction implements Action {
-  readonly type = ActionTypes.DELETE_NOTIFICATION_SUCCESS;
+  readonly type = NotificationsActionTypes.DELETE_NOTIFICATION_SUCCESS;
   constructor(public response: DeleteNotificationSuccess) {}
 }
 
 export class DeleteAllNotificationsAction implements Action {
-  readonly type = ActionTypes.DELETE_ALL_NOTIFICATIONS_REQUEST;
+  readonly type = NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_REQUEST;
   constructor(public request: DeleteAllNotificationsRequest) {}
 }
 
 export class DeleteAllNotificationsSuccessAction implements Action {
-  readonly type = ActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS;
+  readonly type = NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS;
   constructor(public response: DeleteAllNotificationsSuccess) {}
 }
 
 export class SetNotificationSeenAction implements Action {
-  readonly type = ActionTypes.SET_NOTIFICATION_SEEN_REQUEST;
+  readonly type = NotificationsActionTypes.SET_NOTIFICATION_SEEN_REQUEST;
   constructor(public request: SetNotificationSeenRequest) {}
 }
 
 export class SetNotificationSeenSuccessAction implements Action {
-  readonly type = ActionTypes.SET_NOTIFICATION_SEEN_SUCCESS;
+  readonly type = NotificationsActionTypes.SET_NOTIFICATION_SEEN_SUCCESS;
   constructor(public response: SetNotificationSeenSuccess) {}
 }
 
 export class SetAllNotificationsSeenAction implements Action {
-  readonly type = ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_REQUEST;
+  readonly type = NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_REQUEST;
   constructor(public request: SetAllNotificationsSeenRequest) {}
 }
 
 export class SetAllNotificationsSeenSuccessAction implements Action {
-  readonly type = ActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS;
+  readonly type = NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS;
   constructor(public response: SetAllNotificationsSeenSuccess) {}
 }
 
 export class GetNotificationsUnreadAction implements Action {
-  readonly type = ActionTypes.GET_NOTIFICATIONS_UNREAD_REQUEST;
+  readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_REQUEST;
   constructor(public request: GetNotificationsUnreadRequest) {}
 }
 
 export class GetNotificationsUnreadSuccessAction implements Action {
-  readonly type = ActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS;
+  readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS;
   constructor(public response: GetNotificationsUnreadSuccess) {}
 }
 
-export type Actions = GenericFailureAction | GetNotificationsAction | GetNotificationsSuccessAction |
+export type NotificationsActions = GenericFailureAction | GetNotificationsAction | GetNotificationsSuccessAction |
                       AddNotificationAction | AddNotificationSuccessAction | DeleteNotificationAction |
                       SetNotificationSeenAction | SetNotificationSeenSuccessAction | DeleteNotificationSuccessAction |
                       DeleteAllNotificationsAction | DeleteAllNotificationsSuccessAction | SetAllNotificationsSeenAction |

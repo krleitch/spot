@@ -42,8 +42,9 @@ function validContent(content: string): Error | null {
 		return new PostsError.InvalidPostContent(400);
 	};
 
-	if ( badwords.checkProfanity(content) ) {
-		return new PostsError.InvalidPostProfanity(400);
+	const profane = badwords.checkProfanityIndex(content)
+	if ( profane ) {
+		return new PostsError.InvalidPostProfanity(400, profane);
 	}
 
 	return null;
