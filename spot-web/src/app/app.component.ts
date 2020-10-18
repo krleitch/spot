@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>,
               private authenticationService: AuthenticationService) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.twitterLibrary();
     this.fbLibrary();
     this.getAccountIfExists();
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     this.getAccountLocation();
   }
 
-  twitterLibrary() {
+  private twitterLibrary() {
     window['twttr'] = (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0],
         t = window['twttr'] || {};
@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
 
   }
 
-  fbLibrary() {
+  private fbLibrary() {
     (window as any).fbAsyncInit = () => {
       window['FB'].init({
         appId      : '767513270350482',
@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
      }(document, 'script', 'facebook-jssdk'));
   }
 
-  getAccountIfExists() {
+  private getAccountIfExists() {
 
     // checks id_token exists and has not expired
     if ( this.authenticationService.isAuthenticated() ) {
@@ -81,29 +81,29 @@ export class AppComponent implements OnInit {
 
   }
 
-  getAccountLocation() {
+  private getAccountLocation() {
 
     // return a fake location if needed
 
-    const request1: LoadLocationRequest = {};
-    this.store$.dispatch(
-      new AccountsActions.LoadLocationAction(request1)
-    );
+    // const request1: LoadLocationRequest = {};
+    // this.store$.dispatch(
+    //   new AccountsActions.LoadLocationAction(request1)
+    // );
 
-    const request2: SetLocationRequest = {
-      // location: { longitude: -69.3333, latitude: 10.4444 }
-      location: { longitude: -69.3333, latitude: 51.4444 }
-    };
-    this.store$.dispatch(
-      // TODO send login location
-      new AccountsActions.SetLocationAction(request2)
-    );
+    // const request2: SetLocationRequest = {
+    //   // location: { longitude: -69.3333, latitude: 10.4444 }
+    //   location: { longitude: -69.3333, latitude: 51.4444 }
+    // };
+    // this.store$.dispatch(
+    //   // TODO send login location
+    //   new AccountsActions.SetLocationAction(request2)
+    // );
 
-    return;
+    // return;
 
     // END
 
-    if (navigator.geolocation) {
+    if ( navigator.geolocation ) {
 
       const request: LoadLocationRequest = {};
       this.store$.dispatch(
@@ -126,26 +126,26 @@ export class AppComponent implements OnInit {
       // TODO: seperate error issue for this
 
       const request: LocationFailure = {
-        error: 'browser support'
+        error: 'browser support',
       };
       this.store$.dispatch(
-        new AccountsActions.LocationFailureAction(request)
+        new AccountsActions.LocationFailureAction(request),
       );
 
     }
   }
 
-  locationError(error) {
+  private locationError(error) {
 
     // error.code of error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT
     // hide the content
     // TODO: timeout errors for location can be an issue
 
     const request: LocationFailure = {
-      error: error.code
+      error: error.code,
     };
     this.store$.dispatch(
-      new AccountsActions.LocationFailureAction(request)
+      new AccountsActions.LocationFailureAction(request),
     );
 
   }

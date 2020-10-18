@@ -101,8 +101,9 @@
     </div>
 
   </div>
+
   <ng-template #noLocation>
-    <div *ngIf="(loadingLocation$ | async) !== false; else enableLocation" class="loading-location">
+    <div *ngIf="loadingLoading && (showLocationIndicator$ | async); else enableLocation" class="loading-location">
       <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
       <spot-spinner size="medium"></spot-spinner>
     </div>
@@ -115,4 +116,5 @@
       </div>
     </ng-template>
   </ng-template>
+
 </div>

@@ -32,8 +32,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   loadingLocation$: Observable<boolean>;
+  loadingLocation: boolean;
   location$: Observable<Location>;
   location: Location = null;
+  showLocationIndicator$: Observable<boolean>;
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
@@ -86,6 +88,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(AccountsStoreSelectors.selectAccountsLoadingLocation)
     );
 
+    this.loadingLocation$.pipe(takeUntil(this.onDestroy)).subscribe( (loadingLocation: boolean) => {
+      this.loadingLocation = loadingLocation;
+      if ( this.loadingLocation ) {
+        this.showLocationIndicator$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.loadingLocation )).pipe( startWith(false) );
+      }
+    });
+
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
       this.location = location;
     });
@@ -106,7 +115,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
       this.loading = loading;
       if ( this.loading ) {
-        this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loading )).pipe( startWith(false) );
+        this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
       }
     });
 
