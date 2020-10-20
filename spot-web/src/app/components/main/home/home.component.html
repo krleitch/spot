@@ -47,10 +47,16 @@
           <spot-create></spot-create>
         </div>
         <ng-template #createLocation>
-          <div class="no-location-container-create">
-            <span class="material-icons icon"> location_off </span>
-            <span class="text"> {{ STRINGS.LOCATION_CREATE }} </span>
+          <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocationCreate" class="loading-location">
+            <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
+            <spot-spinner size="medium"></spot-spinner>
           </div>
+          <ng-template #enableLocationCreate >
+            <div *ngIf="!loadingLocation" class="no-location-container-create">
+              <span class="material-icons icon"> location_off </span>
+              <span class="text"> {{ STRINGS.LOCATION_CREATE }} </span>
+            </div>  
+          </ng-template>
         </ng-template>
       </div>
 
@@ -103,12 +109,12 @@
   </div>
 
   <ng-template #noLocation>
-    <div *ngIf="loadingLoading && (showLocationIndicator$ | async); else enableLocation" class="loading-location">
+    <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocation" class="loading-location">
       <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
       <spot-spinner size="medium"></spot-spinner>
     </div>
     <ng-template #enableLocation>
-      <div class="no-location-container">
+      <div *ngIf="!loadingLocation" class="no-location-container">
         <span class="text"> {{ STRINGS.LOCATION_REQUIRED }} </span>
         <span class="text"> {{ STRINGS.ENABLE_LOCATION }} </span>
         <span class="material-icons icon"> location_off </span>

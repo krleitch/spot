@@ -152,10 +152,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onScroll() {
 
-    // check until we have the required info
+    // wait until we have the required info to load posts
+    // only local requires location
     const source = interval(500);
     source.pipe(
-      skipWhile(() => typeof this.postLocation === 'undefined' || typeof this.postSort === 'undefined'),
+      skipWhile(() => typeof this.postLocation === 'undefined' ||
+                      typeof this.postSort === 'undefined' ||
+                      (typeof this.location === 'undefined' && this.postLocation === 'local')),
       take(1)
     ).subscribe(() => {
       this.loadPosts();
@@ -165,51 +168,46 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadPosts() {
 
-    if ( this.postLocation && this.postSort && !this.loading ) {
+    // don't load if we are already loading
+    if ( !this.loading ) {
 
       // if sorting by new, just need date
       // if sorting by hot, need offset
 
-      // global doesnt require location
-      if ( this.location || this.postLocation === 'global' ) {
+      if ( this.postSort === 'new' ) {
+        // use date
+        const request: LoadPostRequest = {
+          limit: POSTS_CONSTANTS.INITIAL_LIMIT,
+          date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
+          initialLoad: this.initialLoad,
+          location: this.location,
+          filter: { location: this.postLocation, sort: this.postSort }
+        };
 
-        if ( this.postSort === 'new' ) {
-          // use date
+        this.store$.dispatch(
+          new PostsStoreActions.LoadRequestAction(request)
+        );
 
-          const request: LoadPostRequest = {
-            limit: POSTS_CONSTANTS.INITIAL_LIMIT,
-            date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
-            initialLoad: this.initialLoad,
-            location: this.location,
-            filter: { location: this.postLocation, sort: this.postSort }
-          };
+      } else if ( this.postSort === 'hot' ) {
+        // use offset
+        const request: LoadPostRequest = {
+          offset: this.loadedPosts,
+          limit: POSTS_CONSTANTS.INITIAL_LIMIT,
+          initialLoad: this.initialLoad,
+          location: this.location,
+          filter: { location: this.postLocation, sort: this.postSort }
+        };
 
-          this.store$.dispatch(
-            new PostsStoreActions.LoadRequestAction(request)
-          );
+        this.store$.dispatch(
+          new PostsStoreActions.LoadRequestAction(request)
+        );
 
-        } else if ( this.postSort === 'hot' ) {
-          // use offset
-
-          const request: LoadPostRequest = {
-            offset: this.loadedPosts,
-            limit: POSTS_CONSTANTS.INITIAL_LIMIT,
-            initialLoad: this.initialLoad,
-            location: this.location,
-            filter: { location: this.postLocation, sort: this.postSort }
-          };
-
-          this.store$.dispatch(
-            new PostsStoreActions.LoadRequestAction(request)
-          );
-
-          this.loadedPosts += POSTS_CONSTANTS.INITIAL_LIMIT;
-
-        }
-
-        this.initialLoad = false;
+        this.loadedPosts += POSTS_CONSTANTS.INITIAL_LIMIT;
 
       }
+
+      this.initialLoad = false;
+
     }
   }
 
