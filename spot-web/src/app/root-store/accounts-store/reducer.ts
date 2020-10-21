@@ -82,6 +82,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.LOCATION_FAILURE: {
       return {
         ...state,
+        locationFailure: action.request.error,
         loadingLocation: false,
         location: null
       };

@@ -36,6 +36,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   location$: Observable<Location>;
   location: Location = null;
   showLocationIndicator$: Observable<boolean>;
+  locationFailure$: Observable<string>;
+  locationFailure: string;
 
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
@@ -63,12 +65,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    // ACCOUNT
+
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
-    );
-
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsUser)
     );
 
     this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (metadata: AccountMetadata) => {
@@ -79,10 +79,27 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Difference between location loading and disabled
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsUser)
+    );
+
+    // LOCATION
+
+    this.locationFailure$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountsLocationFailure)
+    );
+
+    this.locationFailure$.pipe(takeUntil(this.onDestroy)).subscribe( (locationFailure: string) => {
+      this.locationFailure = locationFailure;
+    });
+
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLocation)
     );
+
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
+      this.location = location;
+    });
 
     this.loadingLocation$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountsLoadingLocation)
@@ -95,11 +112,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
-      this.location = location;
-    });
+    // POSTS
 
-    // Posts and are the posts loading
     this.posts$ = this.store$.pipe(
       select(PostsStoreSelectors.selectMyFeaturePosts)
     );
@@ -152,14 +166,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onScroll() {
 
-    // wait until we have the required info to load posts
+    // Wait until we have the required info to load posts
     // only local requires location
+    // If location is loading, we should wait for it
     const source = interval(500);
     source.pipe(
       skipWhile(() => typeof this.postLocation === 'undefined' ||
                       typeof this.postSort === 'undefined' ||
-                      (typeof this.location === 'undefined' && this.postLocation === 'local')),
-      take(1)
+                      (typeof this.location === 'undefined' && this.postLocation === 'local') ||
+                      (this.loadingLocation === true)),
+      take(1),
     ).subscribe(() => {
       this.loadPosts();
     });
@@ -215,7 +231,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.loadedPosts = 0;
     this.initialLoad = true;
-    this.loadPosts();
+    this.onScroll();
 
   }
 

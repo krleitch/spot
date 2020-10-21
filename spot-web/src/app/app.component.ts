@@ -3,8 +3,7 @@ import { Store } from '@ngrx/store';
 
 import { AccountsActions, RootStoreState } from '@store';
 import { AuthenticationService } from '@services/authentication.service';
-import { SetLocationRequest, GetAccountRequest, GetAccountMetadataRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
-import { ModalService } from '@services/modal.service';
+import { SetLocationRequest, GetAccountRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +21,6 @@ export class AppComponent implements OnInit {
     this.twitterLibrary();
     this.fbLibrary();
     this.getAccountIfExists();
-    // TODO: move this to get only if account exists
     this.getAccountLocation();
   }
 
@@ -74,7 +72,7 @@ export class AppComponent implements OnInit {
 
       const request: GetAccountRequest = {};
       this.store$.dispatch(
-        new AccountsActions.AccountRequestAction(request)
+        new AccountsActions.AccountRequestAction(request),
       );
 
     }
@@ -83,7 +81,7 @@ export class AppComponent implements OnInit {
 
   private getAccountLocation() {
 
-    // return a fake location if needed
+    // FAKE LOCATION
 
     // const request1: LoadLocationRequest = {};
     // this.store$.dispatch(
@@ -105,28 +103,26 @@ export class AppComponent implements OnInit {
 
     if ( navigator.geolocation ) {
 
-      const request: LoadLocationRequest = {};
+      const loadRequest: LoadLocationRequest = {};
       this.store$.dispatch(
-        new AccountsActions.LoadLocationAction(request)
+        new AccountsActions.LoadLocationAction(loadRequest),
       );
 
       navigator.geolocation.getCurrentPosition((position) => {
 
         const request: SetLocationRequest = {
-          location: { longitude: position.coords.longitude, latitude: position.coords.latitude }
+          location: { longitude: position.coords.longitude, latitude: position.coords.latitude },
         };
         this.store$.dispatch(
-          // TODO send login location
-          new AccountsActions.SetLocationAction(request)
+          new AccountsActions.SetLocationAction(request),
         );
 
       }, this.locationError.bind(this));
+
     } else {
-      // browser doesnt support location
-      // TODO: seperate error issue for this
 
       const request: LocationFailure = {
-        error: 'browser support',
+        error: 'browser',
       };
       this.store$.dispatch(
         new AccountsActions.LocationFailureAction(request),
@@ -135,14 +131,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private locationError(error) {
-
-    // error.code of error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT
-    // hide the content
-    // TODO: timeout errors for location can be an issue
+  private locationError(error: { message: string, code: number }) {
 
     const request: LocationFailure = {
-      error: error.code,
+      error: error.code === 1 ? 'permission' : 'general',
     };
     this.store$.dispatch(
       new AccountsActions.LocationFailureAction(request),

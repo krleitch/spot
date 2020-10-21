@@ -26,10 +26,13 @@ export const STRINGS = {
             LOADING_POSTS: 'Fetching posts...',
 
             LOCATION_REQUIRED: 'Location is required to view local spots and add comments',
-            ENABLE_LOCATION : 'Please enable location in your browser to continue',
+            LOCATION_ENABLE : 'Please enable location in your browser to continue',
             LOCATION_SAFE: 'Your location will never be given away',
-            LOADING_LOCATION: 'Loading location...',
+            LOCATION_BROWSER: 'Your browser does not support geolocation ',
+            LOCATION_ERROR: 'Something went wrong with getting your location ',
+            LOCATION_REFRESH: 'Refresh to try again',
             LOCATION_CREATE: 'Enable browser location to create a spot or add comments',
+            LOADING_LOCATION: 'Loading your location...',
 
             // Posts Toggle
             NEW: 'New',

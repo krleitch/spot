@@ -9,6 +9,7 @@ export interface State {
     usernameError: SpotError; // Error when chaning or updating username
     usernameSuccess: boolean; // Successfully changed username
     location: Location;
+    locationFailure: string;
     loadingLocation: boolean;
     facebookConnected: boolean;
     googleConnected: boolean;
@@ -25,6 +26,7 @@ export const initialState: State = (
     facebookConnected: false,
     googleConnected: false,
     loadingLocation: false,
+    locationFailure: null,
     location: null,
   }
 );
