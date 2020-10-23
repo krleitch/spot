@@ -19,6 +19,8 @@ import { POSTS_CONSTANTS } from '@constants/posts';
 export class HomeComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
+  // Used to cancel posts
+  private readonly stop$ = new Subject<void>();
 
   posts$: Observable<Post[]>;
   posts: Post[];
@@ -173,9 +175,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     source.pipe(
       skipWhile(() => typeof this.postLocation === 'undefined' ||
                       typeof this.postSort === 'undefined' ||
-                      (typeof this.location === 'undefined' && this.postLocation === 'local') ||
+                      (this.location === null && this.postLocation === 'local') ||
                       (this.loadingLocation === true)),
       take(1),
+      takeUntil(this.stop$),
     ).subscribe(() => {
       this.loadPosts();
     });
@@ -229,6 +232,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   refresh() {
 
+    // Cancel previous calls
+    this.stop$.next();
     this.loadedPosts = 0;
     this.initialLoad = true;
     this.onScroll();

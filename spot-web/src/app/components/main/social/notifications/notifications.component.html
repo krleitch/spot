@@ -17,7 +17,8 @@
           <spot-notification-item [notification]="notification"></spot-notification-item>
         </div>
       </div>
-      <div *ngIf="loading && (showNotificationsIndicator$ | async)" class="loading">
+      <!-- We only show loading when first loading notifications now -->
+      <div *ngIf="loading && (showNotificationsIndicator$ | async) && notifications.length === 0" class="loading">
         <span class="text"> Loading ... </span>
         <spot-spinner size="medium"></spot-spinner>
       </div>

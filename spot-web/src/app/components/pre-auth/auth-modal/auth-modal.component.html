@@ -14,7 +14,7 @@
 
     <div *ngIf="selectedTab == 'login'" class="login">
 
-      <form [formGroup]="loginForm">
+      <form [formGroup]="loginForm" (keyup.enter)="login()">
         <fieldset>
           <div class="form-field">
               <input name="emailOrUsername" formControlName="emailOrUsername" [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER" required>
@@ -38,7 +38,7 @@
 
     <div *ngIf="selectedTab == 'register'" class="register">
 
-      <form [formGroup]="registerForm">
+      <form [formGroup]="registerForm" (keyup.enter)="register()">
         <fieldset>
           <div class="form-field">
               <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>

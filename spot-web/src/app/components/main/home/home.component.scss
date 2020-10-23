@@ -232,12 +232,22 @@ spot-create {
   display: flex;
   flex-flow: column;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 5px 5px 0px;
 
   .text {
-    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-wrap: wrap;
+    margin: 3px 0px;
     font-size: 18px;
   }
+
+  .text-icon {
+    margin: 0px 3px;
+  }
+
 
   .icon {
     margin: 5px 0px;
@@ -254,14 +264,21 @@ spot-create {
   align-items: center;
 
   .text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    margin-top: 5px;
-    font-size: 16px;
+    margin: 3px 0px;
+    font-size: 18px;
+  }
+
+  .text-icon {
+    margin: 0px 3px;
   }
 
   .icon {
     margin: 5px 0px;
-    font-size: 42px;
+    font-size: 52px;
     color: $button-highlight;
   }
 

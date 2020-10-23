@@ -240,7 +240,7 @@ async function addTagsToContent( commentId: string, accountId: string, commentAc
     
         tagObject.tags.forEach( (tag: any) => {
             ret += commentContent.substring(myindex, tag.offset);
-            ret += tag.username;
+            ret += '@' + tag.username;
             myindex += tag.offset
         });
 

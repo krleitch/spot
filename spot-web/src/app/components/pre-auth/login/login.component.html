@@ -5,7 +5,7 @@
     {{ STRINGS.COMMUNITY }}
   </div>
 
-  <form [formGroup]="form">
+  <form [formGroup]="form" (keyup.enter)="signIn()">
 
     <fieldset>
       <div class="form-field">

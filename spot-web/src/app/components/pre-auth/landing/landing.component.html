@@ -15,7 +15,7 @@
             {{ STRINGS.COMMUNITY }}
           </div>
 
-          <form [formGroup]="form">
+          <form [formGroup]="form" (keyup.enter)="signUp()">
 
             <div class="login-options">
               <div type="button" class="facebook" (click)="facebookLogin()">

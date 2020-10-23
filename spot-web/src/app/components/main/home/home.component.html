@@ -109,8 +109,9 @@
           <ng-template #empty>
             <!-- no spots in the area -->
             <div class="empty-no-posts" *ngIf="noPosts && !loading">
+              <span> {{ STRINGS.NO_POSTS }} </span>
               <span class="material-icons icon"> local_see </span>
-              <span> There are no posts in this area. Be the first to make a spot! </span>
+              <span> {{ STRINGS.FIRST_POST }}</span>
             </div>
           </ng-template>
           <!-- There are no more spots -->
@@ -139,8 +140,15 @@
           <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
         </div>
         <div *ngIf="locationFailure === 'permission'" class="no-location-container">
-          <span class="text"> {{ STRINGS.LOCATION_REQUIRED }} </span>
-          <span class="text"> {{ STRINGS.LOCATION_ENABLE }} </span>
+          <span class="text">
+            {{ STRINGS.LOCATION_REQUIRED_1 }}
+            <i class="material-icons text-icon"> home </i>
+            {{ STRINGS.LOCATION_REQUIRED_2 }}
+          </span>
+          <span class="text">
+            {{ STRINGS.LOCATION_ENABLE }}
+            <i class="material-icons text-icon"> public </i>
+          </span>
           <span class="material-icons icon"> location_off </span>
           <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
         </div>
