@@ -19,13 +19,14 @@
       </div>
       <!-- We only show loading when first loading notifications now -->
       <div *ngIf="loading && (showNotificationsIndicator$ | async) && notifications.length === 0" class="loading">
-        <span class="text"> Loading ... </span>
-        <spot-spinner size="medium"></spot-spinner>
+        <span class="text"> {{ STRINGS.LOADING }} </span>
+        <spot-spinner size="small"></spot-spinner>
       </div>
     </spot-infinite-scroll>
 
     <ng-template #empty>
-      <div *ngIf="!loading" class="no-notifications">
+      <div *ngIf="!loading && !initialLoad" class="no-notifications">
+        <span class="material-icons icon"> done_all </span>
         {{ STRINGS.NO_NOTIFICATIONS }}
       </div>
     </ng-template>

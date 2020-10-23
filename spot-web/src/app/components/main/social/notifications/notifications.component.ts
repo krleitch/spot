@@ -42,7 +42,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.notificationsLoading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
       this.loading = loading;
       if ( this.loading ) {
-        this.showNotificationsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loading )).pipe( startWith(false) );
+        this.showNotificationsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
       }
     });
 

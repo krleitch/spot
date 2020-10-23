@@ -23,7 +23,7 @@ export const STRINGS = {
         HOME: {
 
             // loading posts
-            LOADING_POSTS: 'Loading posts...',
+            LOADING_POSTS: 'Searching for Spots...',
 
             LOCATION_REQUIRED_1: 'Location is required to view',
             LOCATION_REQUIRED_2: 'Spots and add comments',
@@ -239,8 +239,9 @@ export const STRINGS = {
 
           TITLE: 'Notifications',
           CLEAR: 'Clear all',
-          NO_NOTIFICATIONS: 'No Notifications',
-          MARK_ALL_AS_SEEN: 'Mark all as seen'
+          NO_NOTIFICATIONS: 'You\'re all caught up!',
+          MARK_ALL_AS_SEEN: 'Mark all as seen',
+          LOADING: 'Loading notifications...'
 
         },
 
