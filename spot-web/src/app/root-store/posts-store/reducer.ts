@@ -10,6 +10,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.LOAD_REQUEST: {
       if ( action.request.initialLoad ) {
+        console.log('resetting posts')
         state.posts = [];
       }
       return {
@@ -27,12 +28,21 @@ export function featureReducer(state = initialState, action: Actions): State {
           noPosts: action.response.posts.length === 0,
         };
       } else {
-        return {
-          ...state,
-          posts: state.posts.concat(action.response.posts),
-          loading: false,
-          noPosts: action.response.posts.length === 0,
-        };
+        // only need to concat if we have posts
+        if ( action.response.posts.length === 0 ) {
+          return {
+            ...state,
+            loading: false,
+            noPosts: true,
+          };
+        } else {
+          return {
+            ...state,
+            posts: state.posts.concat(action.response.posts),
+            loading: false,
+            noPosts: false,
+          };
+        }
       }
     }
     case ActionTypes.ADD_REQUEST: {
