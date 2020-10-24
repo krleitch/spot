@@ -36,6 +36,7 @@ export const STRINGS = {
             LOADING_LOCATION: 'Loading your location...',
 
             NO_POSTS: 'There are no Spots in this area',
+            NO_MORE_POSTS: 'No more Spots',
             FIRST_POST: 'Be the first to make a Spot!',
 
             // Posts Toggle

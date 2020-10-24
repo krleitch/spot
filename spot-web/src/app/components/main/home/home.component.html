@@ -116,8 +116,8 @@
           </ng-template>
           <!-- There are no more spots -->
           <div class="no-posts" *ngIf="noPosts && posts.length !== 0">
-            <span class="material-icons icon"> check_circle </span>
-            No More Posts
+            <span class="material-icons icon"> done_all </span>
+            {{ STRINGS.NO_MORE_POSTS }}
           </div>
           <!-- Loading spots -->
           <div *ngIf="loading && (showPostsIndicator$ | async)" class="loading">
