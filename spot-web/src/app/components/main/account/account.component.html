@@ -107,6 +107,7 @@
       </div>
 
       <div class="title">
+        <span class="material-icons title-icon"> people_alt </span>
         {{ STRINGS.SOCIAL }}
       </div>
 
@@ -135,7 +136,10 @@
 
       <br/>
       <div class="title options">
-        {{ STRINGS.ACCOUNT_OPTIONS }}
+        <div class="title">
+          <span class="material-icons title-icon"> security </span>
+          {{ STRINGS.ACCOUNT_OPTIONS }}
+        </div>
         <label class="checkbox-container">
           <span class="enable-text"> {{ STRINGS.ENABLE_OPTIONS }} </span>
           <input type="checkbox" [(ngModel)]="accountOptionsEnabled">
