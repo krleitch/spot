@@ -111,18 +111,18 @@
         {{ STRINGS.SOCIAL }}
       </div>
 
-      <div *ngIf="!(facebookConnected$ | async); else connected">
+      <div *ngIf="!(facebookConnected$ | async); else facebookconnected">
         <button class="facebook" (click)="facebookConnect()">
           <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
           {{ STRINGS.FACEBOOK_CONNECT }}
         </button>
         <div class="description"> {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }} </div>
       </div>
-      <ng-template #connected>
+      <ng-template #facebookconnected>
         <div class="facebook-connected">
           <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
-          <span class="material-icons check"> check_circle </span>
-          <span class="text" (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </span>
+          <span class="text"> Logged in with Facebook </span>
+          <button (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
         </div>
       </ng-template>
 
@@ -131,7 +131,11 @@
         <div id="my-signin2"></div>
       </div>
       <ng-template #googleconnected>
-        Connected to Google
+        <div class="google-connected">
+          <img src="../../../assets/images/google_logo.png" class="google-logo">
+          <span class="text"> Logged in with Google </span>
+          <button (click)="googleDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+        </div>
       </ng-template>
 
       <br/>

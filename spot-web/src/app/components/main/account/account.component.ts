@@ -4,13 +4,13 @@ import { takeUntil, take, mapTo } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 
 import { STRINGS } from '@assets/strings/en';
-import { AccountsActions, AccountsFacebookActions } from '@store/accounts-store';
+import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
          UpdateAccountMetadataRequest, VerifyRequest, UpdateEmailRequest, UpdatePhoneRequest, UpdateEmailResponse,
-         UpdatePhoneResponse, UpdateUsernameResponse } from '@models/accounts';
+         UpdatePhoneResponse, UpdateUsernameResponse, GoogleDisconnectRequest, GoogleConnectRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 import { ModalService } from '@services/modal.service';
 
@@ -106,12 +106,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         height: 55,
         longtitle: true,
         theme: 'light',
-        onsuccess: param => this.googleLogin(param)
+        onsuccess: param => this.googleConnect(param)
     });
-  }
-
-  googleLogin(para) {
-
   }
 
   enableEditUsername() {
@@ -344,6 +340,45 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.store$.dispatch(
       new AccountsFacebookActions.FacebookDisconnectRequestAction(request)
+    );
+
+  }
+
+  googleConnect(googleUser) {
+
+    // profile.getId(), getName(), getImageUrl(), getEmail()
+    // const profile = googleUser.getBasicProfile();
+
+    const id_token = googleUser.getAuthResponse().id_token;
+
+    const request: GoogleConnectRequest = {
+      accessToken: id_token
+    };
+
+    this.store$.dispatch(
+      new AccountsGoogleActions.GoogleConnectRequestAction(request)
+    );
+
+    // sign out of the instance, so we don't auto login
+    this.googleSignOut();
+
+  }
+
+  googleSignOut() {
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+
+    });
+  }
+
+  googleDisconnect() {
+
+    const request: GoogleDisconnectRequest = {
+
+    };
+
+    this.store$.dispatch(
+      new AccountsGoogleActions.GoogleDisconnectRequestAction(request)
     );
 
   }

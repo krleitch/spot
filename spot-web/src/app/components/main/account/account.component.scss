@@ -22,6 +22,7 @@ spot-main-nav {
   .account-content {
     width: 70%;
     max-width: 650px;
+    padding-bottom: 50px;
   }
 
   .mobile-column {
@@ -118,24 +119,60 @@ spot-main-nav {
 }
 
 .facebook-connected {
+
   display: flex;
-  justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
+
+  .facebook-logo {
+    margin-right: 8px;
+  }
 
   .text {
+    margin-right: 8px;
+  }
 
-    margin-right: 3px;
+  button {
+    outline: none;
+    border: none;
+    background-color: $facebook-blue;
+    color: white;
+    padding: 10px 15px;
 
     &:hover {
-      color: $button-highlight;
       cursor: pointer;
     }
 
   }
 
-  .check {
-    color: $success-green;
-    margin-right: 3px;
+}
+
+.google-connected {
+
+  display: flex;
+  align-items: center;
+
+  .google-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+  }
+
+  .text {
+    margin-right: 8px;
+  }
+
+  button {
+    outline: none;
+    border: none;
+    background-color: white;
+    color: black;
+    padding: 10px 15px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
   }
 
 }
