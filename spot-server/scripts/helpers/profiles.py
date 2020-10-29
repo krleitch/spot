@@ -3,14 +3,27 @@ import boto3
 # Make sure you have aws configuration setup
 # Use ```aws configure```
 
-s3 = boto3.resource('s3')
+client = boto3.client('s3')
+
+# Gets a list of urls to profile picture resources and saves to file
 
 def main():
 
-    global s3
-    bucket = s3.Bucket('spot')
-    for obj in bucket.objects.all():
-        print(obj.key)
+    global client
+
+    response = client.list_objects_v2(
+        Bucket='spot',
+        Delimiter='/',
+        MaxKeys=1000,
+        Prefix='profile/icons/',
+    )
+
+    f = open("profiles.txt", "a")
+
+    for obj in response['Contents']:
+        f.write('\'' + obj['Key'] + '\',\n')
+
+    f.close()
 
 
 if __name__ == '__main__':
