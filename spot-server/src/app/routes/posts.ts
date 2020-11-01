@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
+
 const uuid = require('uuid');
 
 // db
-const posts = require('../db/posts');
-const reports = require('../db/reports');
-const locations = require('../db/locations');
+const posts = require('@db/posts');
+const reports = require('@db/reports');
 
 // services
-const postsService = require('../services/posts');
-const locationsService = require('../services/locations');
-const upload = require('../services/image');
+const postsService = require('@services/posts');
+const locationsService = require('@services/locations');
+const upload = require('@services/image');
 const singleUpload = upload.single('image');
 
 // errors
@@ -80,7 +80,7 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
     const postId = uuid.v4();
 
     // set the filename for aws s3 bucket
-    req.filename = 'posts/' + Date.now().toString();
+    req.filename = postId;
 
     singleUpload(req, res, async function(err: any) {
 
@@ -120,6 +120,8 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
             }, (err: any) => {
                 return next(new PostsError.PostError(500));
             });
+        }, ( err: any) => {
+            return next(new PostsError.PostError(500));
         });
 
     });

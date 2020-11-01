@@ -1,14 +1,10 @@
 // Contains the URLS that are used for profile pictures
 // Points to S3 Bucket
 
-// This list should be generated automatically to pull from the bucket so profile pictures
-// can be updated easier
-
-// See code that already exists to do this in comment service
+// This list can be generated using the profiles script
 
 const urls = [
 
-    'profile/icons/',
     'profile/icons/icons8-avocado-48.png',
     'profile/icons/icons8-banana-split-48.png',
     'profile/icons/icons8-bao-bun-48.png',

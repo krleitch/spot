@@ -21,7 +21,24 @@ const upload = multer({
             cb(null, {originalname: file.originalname.substr(0,255)});
         },
         key: function (req: any, file: any, cb: any) {
-            cb(null, req.filename)
+
+            const json = JSON.parse(req.body.json);
+            let prefix = '';
+
+            // Create the name
+            // req.filename contains the id for the content
+            if ( json.postId && json.commentId) {
+                // reply
+                prefix = 'posts/' + json.postId + '/comments/' + json.commentId + '/';
+            } else if ( json.postId) {
+                // comment
+                prefix = 'posts/' + json.postId + '/comments/' + req.filename + '/';
+            } else {
+                // post
+                prefix = 'posts/' + req.filename + '/';
+            }
+
+            cb(null, prefix + req.filename)
         }
     })
 });

@@ -1,26 +1,25 @@
 const express = require('express');
 const router = express.Router();
+
 const uuid = require('uuid');
 
 // db
-const posts = require('../db/posts');
-const reports = require('../db/reports');
-const comments = require('../db/comments');
-const accounts = require('../db/accounts');
-const tags = require('../db/tags');
-const notifications = require('../db/notifications');
+const posts = require('@db/posts');
+const reports = require('@db/reports');
+const comments = require('@db/comments');
+const accounts = require('@db/accounts');
+const tags = require('@db/tags');
+const notifications = require('@db/notifications');
 
 // services
-const commentsService = require('../services/comments');
+const commentsService = require('@services/comments');
+const upload = require('@services/image');
+const singleUpload = upload.single('image');
 
 // errors
 const CommentsError = require('@exceptions/comments');
 const AuthenticationError = require('@exceptions/authentication');
 const ErrorHandler = require('@src/app/errorHandler');
-
-// image
-const upload = require('../services/image');
-const singleUpload = upload.single('image');
 
 // constants
 const comments_constants = require('@constants/comments');
@@ -185,7 +184,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
 
     const accountId = req.user.id;
     const commentId = uuid.v4();
-    req.filename = 'comments/' + Date.now().toString();
+    req.filename = commentId;
 
     singleUpload(req, res, ErrorHandler.catchAsync(async function(err: any) {
 
@@ -195,8 +194,6 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
 
         let { content, tagsList, commentParentId } = JSON.parse(req.body.json)
         const image = req.file ? req.file.location: null
-
-        // TODO: If we were to cleanup whitespace. here
 
         // check if line length matches
         if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
@@ -263,7 +260,7 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
 
     const accountId = req.user.id;
     const replyId = uuid.v4();
-    req.filename = 'replies/' + Date.now().toString();
+    req.filename = replyId;
 
     singleUpload(req, res, async function(err: any) {
 

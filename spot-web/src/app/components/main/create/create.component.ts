@@ -37,6 +37,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   imgSrc: string = null;
 
   createSuccess$: Observable<boolean>;
+  createLoading = false;
   createError$: Observable<SpotError>;
   createError: string;
 
@@ -50,6 +51,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     );
 
     this.createSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success: boolean) => {
+      this.createLoading = false;
       if ( success ) {
         this.removeFile();
         this.create.nativeElement.innerText = '';
@@ -66,6 +68,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     );
 
     this.createError$.pipe(takeUntil(this.onDestroy)).subscribe( (createError: SpotError) => {
+      this.createLoading = false;
       if ( createError ) {
         if ( createError.name === "InvalidPostProfanity" ) {
           this.createError = 'You cannot use profanity: \'' +  createError.body.word + '\'';
@@ -174,6 +177,8 @@ export class CreateComponent implements OnInit, OnDestroy {
       this.store$.dispatch(
         new PostsStoreActions.AddRequestAction(post)
       );
+
+      this.createLoading = true;
 
     } else {
 

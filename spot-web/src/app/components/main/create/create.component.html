@@ -24,6 +24,7 @@
     <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ POSTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }} </span>
     <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
     <span class="submit" (click)="submit()"> {{ STRINGS.SUBMIT }} </span>
+    <span *ngIf="createLoading"> <spot-spinner size="small"> </spot-spinner> </span>
   </div>
 
 </div>
