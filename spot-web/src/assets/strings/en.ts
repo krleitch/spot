@@ -268,6 +268,9 @@ export const STRINGS = {
           FRIEND_SEARCH_PLACEHOLDER: 'Search username',
           REMOVE: 'Remove',
 
+          // Errors
+          USERNAME_REQUIRED: 'A username is required',
+
           NO_FRIENDS: 'Add friends to share spots quickly',
           NO_FRIENDS_FOUND: 'No friends found with this name',
 

@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 // db
-const friends = require('../db/friends');
-const accounts = require('../db/accounts');
+const friends = require('@db/friends');
+const accounts = require('@db/accounts');
 
 // errors
 const FriendsError = require('@exceptions/friends');
@@ -14,7 +14,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// get friends of logged in user
+// Get friends of logged in user
 router.get('/', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
@@ -67,19 +67,27 @@ router.post('/requests', function (req: any, res: any, next: any) {
 
     accounts.getAccountByUsername(username).then((receiverId: any) => {
 
+        // No account with this username
         if ( receiverId[0] === undefined ) {
             return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.NO_USER, 400));
         }
 
-        if ( receiverId[0].id == accountId ) {
+        // Cannot add yourself
+        if ( receiverId[0].id === accountId ) {
             return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.SELF, 400));
         }
 
-        friends.friendRequestFrom(receiverId[0].id).then((friendRequest: any) => {
+        friends.friendRequestExists(receiverId[0].id, accountId).then((friendRequest: any) => {
 
             // If a request already exists, then just accept it
             if ( friendRequest.length > 0 ) {
 
+                // you already sent a request
+                if ( friendRequest[0].account_id === accountId ) {
+                    return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.REQUEST_EXISTS, 400));
+                }
+
+                // accept the request
                 friends.acceptFriendRequest(friendRequest[0].id, accountId).then((rows: any) => {
                     res.status(200).json({ friendRequestId: friendRequest[0].id });
                 }, (err: any) => {
@@ -87,8 +95,6 @@ router.post('/requests', function (req: any, res: any, next: any) {
                 });
 
             } else {
-
-                // TODO: What if friend already added
 
                 friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
                     res.status(200).json({ friendRequest: rows[0] });
@@ -107,19 +113,6 @@ router.post('/requests', function (req: any, res: any, next: any) {
     });
 
 });
-
-// delete a friend request
-// router.delete('/requests/:friendRequestId', function (req: any, res: any) {
-
-//     const accountId = req.user.id;
-//     const friendRequestId = req.params.friendRequestId;
-
-//     friends.deleteFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
-//         res.status(200).json({ friendRequest: rows[0] });
-//     }, (err: any) => {
-//         res.status(500).send('Error deleting friend request');
-//     });
-// });
 
 // accept a friend request
 router.post('/requests/accept', function (req: any, res: any, next: any) {
@@ -162,5 +155,18 @@ router.post('/requests/decline', function (req: any, res: any, next: any) {
     });
 
 });
+
+// delete a friend request
+// router.delete('/requests/:friendRequestId', function (req: any, res: any) {
+
+//     const accountId = req.user.id;
+//     const friendRequestId = req.params.friendRequestId;
+
+//     friends.deleteFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
+//         res.status(200).json({ friendRequest: rows[0] });
+//     }, (err: any) => {
+//         res.status(500).send('Error deleting friend request');
+//     });
+// });
 
 export = router;

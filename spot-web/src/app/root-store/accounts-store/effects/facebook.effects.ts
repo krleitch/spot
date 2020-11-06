@@ -11,10 +11,12 @@ import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { FacebookLoginResponse } from '@models/authentication';
 import { FacebookConnectResponse, FacebookDisconnectResponse } from '@models/accounts';
+import { AlertService } from '@services/alert.service';
 
 @Injectable()
 export class FacebookStoreEffects {
   constructor(private authenticationService: AuthenticationService,
+              private alertService: AlertService,
               private accountsService: AccountsService,
               private actions$: Actions) { }
 
@@ -61,8 +63,8 @@ export class FacebookStoreEffects {
         .connectFacebookAccount( action.request)
         .pipe(
             map( (response: FacebookConnectResponse) => new facebookActions.FacebookConnectSuccessAction(response)),
-            catchError(error =>
-              observableOf(new facebookActions.FacebookConnectFailureAction(error))
+            catchError(errorResponse =>
+              observableOf(new facebookActions.FacebookConnectFailureAction(errorResponse.error))
             )
         )
     )
@@ -75,6 +77,16 @@ export class FacebookStoreEffects {
     ),
     tap( (action: facebookActions.FacebookConnectSuccessAction) => {
       // this.authenticationService.loginFacebookAccountSuccess(action.response);
+    })
+  );
+
+  @Effect({dispatch: false})
+  connectFacebookAccountFailureEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<facebookActions.FacebookConnectFailureAction>(
+      facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_FAILURE
+    ),
+    tap( (action: facebookActions.FacebookConnectFailureAction) => {
+      this.alertService.error(action.error.message)
     })
   );
 

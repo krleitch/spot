@@ -22,10 +22,11 @@ export const ERROR_MESSAGES = {
             GET_FRIEND_REQUESTS: 'There was an error getting your friend requests',
             ACCEPT_FRIEND_REQUEST: 'There was an error accepting the friend request',
             DECLINE_FRIEND_REQUEST: 'There was an error declining the friend request',
-            EXISTS: 'You are already friends with this person',
+            EXISTS: 'You are already friends with this user',
+            REQUEST_EXISTS: 'A friend request has already been sent',
 
-            SELF: 'Cannot add yourself',
-            NO_USER: 'No user exists with that username',
+            SELF: 'You cannot add yourself',
+            NO_USER: 'No account found with that username',
 
             GENERIC: 'Error sending friend request'
 
@@ -112,6 +113,7 @@ export const ERROR_MESSAGES = {
             UPDATE_PHONE: 'Error updating phone',
 
             FACEBOOK_CONNECT: 'Error connecting account to facebook',
+            FACEBOOK_CONNECT_EXISTS: 'This facebook account is already connected to an account',
             FACEBOOK_DISCONNECT: 'Error disconnecting account from facebook',
             GOOGLE_CONNECT: 'Error connecting account to google',
             GOOGLE_DISCONNECT: 'Error disconnecting account from google',

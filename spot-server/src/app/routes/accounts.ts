@@ -172,7 +172,7 @@ router.post('/facebook', function (req: any, res: any, next: any) {
                 });            
             } else {
                 // account already exists
-                return next(new AccountsError.FacebookConnect(500));
+                return next(new AccountsError.FacebookConnectExists(500));
             }
         }, (err: any) => {
             return next(new AccountsError.FacebookConnect(500));

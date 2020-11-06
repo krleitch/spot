@@ -45,6 +45,13 @@ export class FacebookConnect extends SpotError {
     }
 }
 
+export class FacebookConnectExists extends SpotError {
+  constructor(statusCode) {
+    super(ACCOUNTS_ERROR_MESSAGES.FACEBOOK_CONNECT_EXISTS, statusCode);
+    this.name = "FacebookConnectExists";
+  }
+}
+
 export class FacebookDisconnect extends SpotError {
     constructor(statusCode) {
       super(ACCOUNTS_ERROR_MESSAGES.FACEBOOK_DISCONNECT, statusCode);

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { take, takeUntil, mapTo, startWith } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
@@ -19,14 +19,21 @@ import { ModalService } from '@services/modal.service';
   templateUrl: './friends.component.html',
   styleUrls: ['./friends.component.scss']
 })
-export class FriendsComponent implements OnInit {
+export class FriendsComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   STRINGS = STRINGS.MAIN.FRIENDS;
 
   friendRequests$: Observable<FriendRequest[]>;
   friends$: Observable<Friend[]>;
   friendsError$: Observable<SpotError>;
+  friendsError: string;
   facebookConnected$: Observable<boolean>;
+
+  showNoFriendsIndicator$: Observable<boolean>;
+
+  // Input fields
   friendRequestUsername: string;
   friendSearch: string;
 
@@ -35,50 +42,70 @@ export class FriendsComponent implements OnInit {
 
   ngOnInit() {
 
-    // setup observables
+    // Wait 1 second for data to load
+    // TODO: add loading state
+    this.showNoFriendsIndicator$ = timer(1000).pipe( mapTo(true), take(1)).pipe( startWith(false) );
+
+    // Setup observables
     this.friendRequests$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureFriendRequests)
+      select(SocialStoreSelectors.selectMyFeatureFriendRequests),
     );
 
     this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureFriends)
+      select(SocialStoreSelectors.selectMyFeatureFriends),
     );
 
     this.friendsError$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriendsError)
+      select(SocialStoreSelectors.selectFriendsError),
     );
+
+    this.friendsError$.pipe(takeUntil(this.onDestroy)).subscribe( (error: SpotError) => {
+      if ( error ) {
+        this.friendsError = error.message;
+      }
+    });
 
     this.facebookConnected$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectFacebookConnected)
+      select(AccountsStoreSelectors.selectFacebookConnected),
     );
 
-    // get friends and friend requests
+    // Get all friend requests
     const friendRequestsRequest: GetFriendRequestsRequest = {};
 
     this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendRequestsAction(friendRequestsRequest)
+      new SocialStoreFriendsActions.GetFriendRequestsAction(friendRequestsRequest),
     );
 
+    // Get all friends
     const friendRequest: GetFriendsRequest = {
       date: new Date().toString(),
-      limit: null
+      limit: null,
     };
 
     this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendsAction(friendRequest)
+      new SocialStoreFriendsActions.GetFriendsAction(friendRequest),
     );
 
   }
 
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
   addFriendRequest() {
 
+    if ( typeof(this.friendRequestUsername) === 'undefined' || this.friendRequestUsername.length === 0 ) {
+      this.friendsError = this.STRINGS.USERNAME_REQUIRED;
+      return;
+    }
+
+    // Send the friend request
     const request: AddFriendRequestsRequest = {
-      username: this.friendRequestUsername
+      username: this.friendRequestUsername,
     };
 
-    // accept
     this.store$.dispatch(
-      new SocialStoreFriendsActions.AddFriendRequestsAction(request)
+      new SocialStoreFriendsActions.AddFriendRequestsAction(request),
     );
 
   }
@@ -86,12 +113,12 @@ export class FriendsComponent implements OnInit {
   acceptFriendRequest(id: string) {
 
     const request: AcceptFriendRequestsRequest = {
-      friendRequestId: id
+      friendRequestId: id,
     };
 
     // accept
     this.store$.dispatch(
-      new SocialStoreFriendsActions.AcceptFriendRequestsAction(request)
+      new SocialStoreFriendsActions.AcceptFriendRequestsAction(request),
     );
 
   }
@@ -99,12 +126,12 @@ export class FriendsComponent implements OnInit {
   declineFriendRequest(id: string) {
 
     const request: DeclineFriendRequestsRequest = {
-      friendRequestId: id
+      friendRequestId: id,
     };
 
     // decline
     this.store$.dispatch(
-      new SocialStoreFriendsActions.DeclineFriendRequestsAction(request)
+      new SocialStoreFriendsActions.DeclineFriendRequestsAction(request),
     );
 
   }
@@ -119,13 +146,13 @@ export class FriendsComponent implements OnInit {
 
       if ( result.status === 'confirm' ) {
 
+        // Delete the friend
         const request: DeleteFriendsRequest = {
-          friendId: id
+          friendId: id,
         };
 
-        // delete
         this.store$.dispatch(
-          new SocialStoreFriendsActions.DeleteFriendsAction(request)
+          new SocialStoreFriendsActions.DeleteFriendsAction(request),
         );
 
       }
@@ -142,23 +169,23 @@ export class FriendsComponent implements OnInit {
             if (loginResponse.status === 'connected') {
 
               const request: FacebookConnectRequest = {
-                accessToken: loginResponse.authResponse.accessToken
+                accessToken: loginResponse.authResponse.accessToken,
               };
 
               this.store$.dispatch(
-                new AccountsFacebookActions.FacebookConnectRequestAction(request)
+                new AccountsFacebookActions.FacebookConnectRequestAction(request),
               );
 
             }
           });
       } else {
-        // already logged in
+        // Already logged in to facebook
         const request: FacebookConnectRequest = {
-          accessToken: statusResponse.authResponse.accessToken
+          accessToken: statusResponse.authResponse.accessToken,
         };
 
         this.store$.dispatch(
-          new AccountsFacebookActions.FacebookConnectRequestAction(request)
+          new AccountsFacebookActions.FacebookConnectRequestAction(request),
         );
       }
     });

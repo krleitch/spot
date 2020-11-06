@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { takeUntil, mapTo, startWith, takeWhile } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { STRINGS } from '@assets/strings/en';
@@ -38,6 +38,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   createSuccess$: Observable<boolean>;
   createLoading = false;
+  showCreateLoading$: Observable<boolean>;
   createError$: Observable<SpotError>;
   createError: string;
 
@@ -179,6 +180,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       );
 
       this.createLoading = true;
+      this.showCreateLoading$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.createLoading )).pipe( startWith(false) );
 
     } else {
 

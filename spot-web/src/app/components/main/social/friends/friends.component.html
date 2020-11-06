@@ -41,8 +41,8 @@
         <span class="send-container" (click)="addFriendRequest()"> <i class="material-icons send"> send </i> </span>
       </div>
     </div>
-    <div *ngIf="friendsError$ | async as friendsError" class="add-friends-error">
-      {{ friendsError.message }}
+    <div *ngIf="friendsError" class="add-friends-error">
+      {{ friendsError }}
     </div>
 
     <div class="friends-search">
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="friend-content-section">
+    <div class="friend-content-section min">
       <div *ngIf="friends$ | async | filter: { filter: friendSearch, field: 'username' } as friends">
 
         <div *ngIf="friends.length > 0; else noFriends">
@@ -73,9 +73,8 @@
               {{ STRINGS.NO_FRIENDS_FOUND }}
             </span>
           </div>
-
           <ng-template #addFriends>
-            <span class="no-friends">
+            <span *ngIf="showNoFriendsIndicator$ | async" class="no-friends">
               <span class="material-icons icon"> person_add </span>
               {{ STRINGS.NO_FRIENDS }}
             </span>

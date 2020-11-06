@@ -45,6 +45,7 @@ spot-main-nav {
     .people {
       font-size: 32px;
       margin-right: 8px;
+      padding-top: 3px;
     }
 
   }
@@ -81,6 +82,10 @@ spot-main-nav {
     box-sizing: border-box;
     background-color: white;
     margin-bottom: 10px;
+}
+
+.min {
+  min-height: 64px;
 }
 
 // Requests
@@ -173,7 +178,6 @@ input {
 .add-friends-error {
   color: $error-red;
   margin-bottom: 10px;
-  margin-left: 25px;
 }
 
 // Friends list
@@ -233,6 +237,8 @@ input {
   justify-content: center;
   align-items: center;
   padding: 10px;
+  box-sizing: border-box;
+  min-height: 54px;
 
   .icon {
     margin-right: 8px;
@@ -242,6 +248,15 @@ input {
 
 // For Mobile
 @media screen and (max-width: $mobile-width) {
+
+  .facebook {
+    margin-bottom: 5px;
+  }
+
+  .subtitle {
+    margin-bottom: 5px;
+  }
+
   .friends-content  {
     width: 95%;
     min-width: 0;
@@ -256,4 +271,5 @@ input {
     flex-flow: column;
     align-items: flex-start;
   }
+
 }
