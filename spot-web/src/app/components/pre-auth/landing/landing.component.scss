@@ -2,15 +2,11 @@
 @import '../../../styles/sizes';
 
 .landing {
-    display: flex;
-    align-items: center;
-}
-
-.container {
-    position: relative;
-    height: calc(100vh - 84px - 28px);
-    width: 100vw;
-    overflow: hidden;
+  position: relative;
+  height: calc(100vh - 84px - 28px);
+  width: 100vw;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .image {
@@ -18,7 +14,7 @@
     top: 0;
     left: 0;
     max-width: 100%;
-    min-width: 1000px;
+    min-width: 1100px;
 }
 
 // SIGNUP
@@ -31,6 +27,7 @@
   right: 25%;
   z-index: 999;
   width: 100%;
+  overflow-y: auto;
 }
 
 .signup {
@@ -231,9 +228,9 @@ input.ng-dirty.ng-invalid {
 
 }
 
-@media screen and (max-height: 850px) {
+@media screen and (max-height: 750px) {
 
-  .container {
+  .landing {
     overflow-y: auto;
   }
 
@@ -250,9 +247,8 @@ input.ng-dirty.ng-invalid {
 
 @media screen and (max-width: 850px) {
 
-  .container {
-    height: 800px;
-    width: 100vw;
+  .landing {
+    overflow-y: auto;
   }
 
   .image {
@@ -269,10 +265,6 @@ input.ng-dirty.ng-invalid {
 
   .signup {
     padding: 15px 10px;
-  }
-
-  .copyright {
-    display: none;
   }
 
 }

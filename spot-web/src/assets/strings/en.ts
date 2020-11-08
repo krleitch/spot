@@ -367,7 +367,7 @@ export const STRINGS = {
             SHOWCASE_TEXT: 'See what those around you are really saying',
 
             // SIGNUP FROM
-            COMMUNITY: 'Join your community',
+            COMMUNITY: 'Join Your Community',
             FACEBOOK_LOGIN: 'Continue with Facebook',
 
             SIGN_UP_ALTERNATE: 'Or',
@@ -406,7 +406,7 @@ export const STRINGS = {
         REGISTER: {
 
             // SIGNUP FORM
-            COMMUNITY: 'Join your community',
+            TITLE: 'Join Your Community',
             FACEBOOK_LOGIN: 'Continue with Facebook',
             GOOGLE_LOGIN: 'Sign In With Google',
 
@@ -448,7 +448,7 @@ export const STRINGS = {
         LOGIN: {
 
             // SIGNUP FROM
-            COMMUNITY: 'Join your community',
+            TITLE: 'Login',
             FACEBOOK_LOGIN: 'Continue with Facebook',
             GOOGLE_LOGIN: 'Sign In With Google',
 
@@ -490,7 +490,7 @@ export const STRINGS = {
         PASSWORD_RESET: {
 
           TITLE: 'Reset Your Passsword',
-          DESCRIPTION: 'You will be emailed a code and a link. Follow the link and enter the code where you will be prompted to change your password',
+          DESCRIPTION: 'Please enter your email, you will be sent a verification code which you will need to enter to reset your password',
 
           EMAIL_PLACEHOLDER: 'Enter email',
           REQUEST_RESET: 'Request Reset',

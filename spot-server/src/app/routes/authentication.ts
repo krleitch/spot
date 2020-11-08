@@ -219,10 +219,10 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
     accounts.getAccountByEmail(email).then( (rows: any) => {
         if ( rows.length > 0 ) {
             
+            // generate the token
             const token = shortid.generate();
 
             // Send email with nodemailer and aws ses transport
-
             mail.email.send({
                 template: 'password',
                 message: {
@@ -236,6 +236,7 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
             }, (err: any, info: any) => {
                 
                 if ( err ) {
+                    // error sending the email
                     return next(new AuthError.PasswordReset(500));
                 } else {
                     // add to table
@@ -250,7 +251,7 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
 
         } else {
             // No account
-            return next(new AuthError.PasswordReset(500));
+            res.status(200).send({})
         }
 
     }, (err: any) => {
@@ -308,7 +309,7 @@ router.post('/new-password', rateLimiter.newPasswordLimiter, function (req: any,
             });
 
         } else {
-            // Either no token , or expired
+            // Either no token, or expired
             return next(new AuthError.NewPassword(500));
         }
     }, (err: any) => {

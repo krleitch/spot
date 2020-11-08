@@ -6,7 +6,7 @@
 .register {
     display: flex;
     flex-flow: column;
-    justify-content: center;
+    padding-top: 100px;
     align-items: center;
     position: relative;
     height: calc(100vh - 84px - 28px);
@@ -193,8 +193,16 @@ input.ng-dirty.ng-invalid {
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
 
-    .register {
-        padding-top: 10px;
-    }
+  .register {
+      padding-top: 10px;
+  }
+
+}
+
+@media screen and (max-height: 800px) {
+
+  .register {
+      padding-top: 10px;
+  }
 
 }

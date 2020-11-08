@@ -6,7 +6,7 @@
 .login {
     display: flex;
     flex-flow: column;
-    justify-content: center;
+    padding-top: 100px;
     align-items: center;
     position: relative;
     height: calc(100vh - 84px - 28px);
@@ -178,8 +178,16 @@ input.ng-dirty.ng-invalid {
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
 
-    .login {
-        padding-top: 10px;
-    }
+  .login {
+      padding-top: 10px;
+  }
+
+}
+
+@media screen and (max-height: 800px) {
+
+  .login {
+      padding-top: 10px;
+  }
 
 }
