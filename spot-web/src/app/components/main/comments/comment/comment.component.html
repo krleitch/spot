@@ -19,7 +19,7 @@
     <div class="content-wrapper">
 
       <div class="content">
-        
+
         <div class="tagger" *ngIf="comment.tag.tagged">
             <span class="highlight"> {{ comment.tag.tagger }} </span> {{ STRINGS.TAGGER }}
         </div>
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <span #tag ><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="postLink" (tag)="addTag($event)"></spot-tag></span>
+      <span #tag ><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
 
     </div>
 
