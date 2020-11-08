@@ -6,31 +6,21 @@
       <img class="title-image" src="../../../../assets/images/logo_v5.png">
     </a>
     
-    <!-- <span class="title" (click)="home()"> {{ STRINGS.TITLE }} </span> -->
     <a class="about" [routerLink]="'/about'">
       {{ STRINGS.ABOUT }}
     </a>
     <a class="contact" [routerLink]="'/contact'">
       {{ STRINGS.CONTACT }}
     </a>
-      <!-- <span class="nav-button careers"> {{ STRINGS.CAREERS }} </span> -->
-      <!-- <span class="nav-button faq"> {{ STRINGS.FAQ }} </span> -->
-      <!-- <span class="nav-button support"> {{ STRINGS.SUPPORT }} </span> -->
-      <!-- <div class="mobile-links">
-        <span class="mobile-download-text"> {{ STRINGS.MOBILE_DOWNLOAD }} </span>
-        <img class="mobile-download-button" src="../../../../assets/images/google_play_badge.png">
-        <img class="mobile-download-button" src="../../../../assets/images/app_store_badge.svg">
-      </div> -->
+
   </div>
 
   <div class="right">
-    <span *ngIf="routeIsLogin(); else mylogin">
-      <a [routerLink]="'/register'">
-        Sign Up
-      </a>
-    </span>
+    <a *ngIf="routeIsLogin(); else mylogin" class="auth-link" [routerLink]="'/register'">
+      Sign Up
+    </a>
     <ng-template #mylogin>
-      <a [routerLink]="'/login'">
+      <a class="auth-link" [routerLink]="'/login'">
         Login
       </a>
     </ng-template>

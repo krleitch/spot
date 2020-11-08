@@ -231,7 +231,7 @@ input.ng-dirty.ng-invalid {
 
 }
 
-@media screen and (max-height: 750px) {
+@media screen and (max-height: 850px) {
 
   .container {
     overflow-y: auto;
@@ -262,7 +262,7 @@ input.ng-dirty.ng-invalid {
   }
 
   .signup-wrapper {
-    top: 200px;
+    top: 225px;
     right: 0px;
     justify-content: center;
   }

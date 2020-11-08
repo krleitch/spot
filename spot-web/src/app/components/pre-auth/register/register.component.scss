@@ -8,7 +8,11 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    padding-top: 100px;
+    position: relative;
+    height: calc(100vh - 84px - 28px);
+    width: 100vw;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .register-text {

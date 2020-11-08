@@ -121,7 +121,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this.posts$.pipe(takeUntil(this.onDestroy)).subscribe( (posts: Post[]) => {
-      console.log('setting posts')
       this.posts = posts;
       if ( this.posts.length !== 0 ) {
         this.initialLoad = false;

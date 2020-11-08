@@ -29,7 +29,9 @@ export class FriendsComponent implements OnInit, OnDestroy {
   friends$: Observable<Friend[]>;
   friendsError$: Observable<SpotError>;
   friendsError: string;
+
   facebookConnected$: Observable<boolean>;
+  showFacebookConnected$: Observable<boolean>;
 
   showNoFriendsIndicator$: Observable<boolean>;
 
@@ -45,6 +47,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
     // Wait 1 second for data to load
     // TODO: add loading state
     this.showNoFriendsIndicator$ = timer(1000).pipe( mapTo(true), take(1)).pipe( startWith(false) );
+    this.showFacebookConnected$ = timer(500).pipe( mapTo(true), take(1)).pipe( startWith(false) );
 
     // Setup observables
     this.friendRequests$ = this.store$.pipe(
@@ -167,6 +170,8 @@ export class FriendsComponent implements OnInit, OnDestroy {
       if (statusResponse.status !== 'connected') {
           window['FB'].login((loginResponse) => {
             if (loginResponse.status === 'connected') {
+
+              console.log('sending')
 
               const request: FacebookConnectRequest = {
                 accessToken: loginResponse.authResponse.accessToken,

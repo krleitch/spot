@@ -10,7 +10,6 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.LOAD_REQUEST: {
       if ( action.request.initialLoad ) {
-        console.log('resetting posts')
         state.posts = [];
       }
       return {

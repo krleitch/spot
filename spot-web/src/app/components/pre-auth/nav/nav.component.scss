@@ -10,39 +10,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
+  overflow: hidden;
 
   .title-image {
     height: 50px;
-    margin-right: 35px;
-    cursor: pointer;
-  }
-
-  .title {
-
-    font-size: 35px;
-    margin-right: 35px;
-    cursor: pointer;
-    &:hover {
-      color: $button-highlight;
-    }
-
-  }
-
-  button {
-
-    background: none;
-    border: none;
-    text-decoration: none;
-    outline: none;
-    cursor: pointer;
-
-    margin-right: 35px;
-    font-size: 16px;
-
-    &:hover {
-        color: $button-highlight;
-    }
-
   }
 
   a {
@@ -51,6 +22,7 @@
     text-decoration: none;
     margin-right: 35px;
     font-size: 16px;
+    text-align: center;
 
     &:hover {
       color: $button-highlight;
@@ -58,16 +30,22 @@
 
   }
 
+  .auth-link {
+    display: flex;
+    margin-right: 0px;
+    text-align: center;
+  }
+
   .title-link {
-    margin: 0;
+    display: flex;
+    margin-right: 35px;
+    cursor: pointer;
   }
 
   .left {
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-
   }
 
 }
@@ -82,36 +60,20 @@
 
     .title-image {
       height: 42px;
-      margin-right: 12px;
-      cursor: pointer;
     }
 
-    .title {
+    .title-link {
       margin-right: 12px;
     }
 
-    button {
-      margin-right: 5px;
+    a {
+      margin-right: 12px;
+    }
+
+    .auth-link {
+      margin-right: 0px;
     }
 
   }
 
-}
-
-// MOBILE LINKS
-
-.mobile-links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.mobile-download-text {
-    font-size: 16px;
-    margin-right: 10px;
-}
-
-.mobile-download-button {
-    height: 40px;
-    width: 120px;
 }
