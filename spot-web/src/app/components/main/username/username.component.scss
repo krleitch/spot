@@ -11,9 +11,8 @@
     align-items: center;
     padding: 5px 10px;
 
-    .title {
-      font-size: 35px;
-      cursor: pointer;
+    .title-image {
+      height: 42px;
     }
 
   }
@@ -25,7 +24,7 @@
   }
 
   .container {
-    margin-top: 100px;
+    padding: 100px 5px 5px 5px;
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -68,6 +67,32 @@
 
   }
 
+  .terms-and-conditions {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    flex-flow: column;
+  
+    input {
+      width: auto;
+      margin: 0px 3px 0px 0px;
+    }
+  
+    a {
+      text-decoration: none;
+      color: $subtle-grey;
+      &:hover {
+        color: $button-highlight;
+      }
+    }
+  
+  }
+
   .description {
     margin-top: 10px;
     color: $subtle-grey;
@@ -77,6 +102,7 @@
   .error {
     color: $error-red;
     margin-bottom: 10px;
+    text-align: center;
   }
 
 }
@@ -87,7 +113,19 @@
   .username {
 
     .container {
-      margin-top: 25px;
+      padding-top: 10px;
+    }
+
+  }
+
+}
+
+@media screen and (max-height: 800px) {
+
+  .username {
+
+    .container {
+      padding-top: 10px;
     }
 
   }

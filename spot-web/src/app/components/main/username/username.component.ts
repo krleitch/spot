@@ -25,6 +25,7 @@ export class UsernameComponent implements OnInit, OnDestroy {
 
   account$: Observable<Account>;
   username: string;
+  terms: boolean;
   errorMessage: string;
 
   constructor(private store$: Store<RootStoreState.State>,
@@ -53,6 +54,13 @@ export class UsernameComponent implements OnInit, OnDestroy {
   // Send the request
   continueToSpot() {
 
+    console.log(this.terms)
+
+    if (!this.terms) {
+      this.errorMessage = this.STRINGS.TERMS_ERROR;
+      return;
+    }
+
     if (!this.username) {
       this.errorMessage = this.STRINGS.USERNAME_ERROR;
       return;
@@ -65,13 +73,13 @@ export class UsernameComponent implements OnInit, OnDestroy {
     }
 
     const request: UpdateUsernameRequest = {
-      username: this.username
+      username: this.username,
     };
 
     this.accountsService.updateUsername(request).pipe(take(1)).subscribe( (response: UpdateUsernameResponse ) => {
 
       this.store$.dispatch(
-        new AccountsActions.UpdateUsernameAction(request)
+        new AccountsActions.UpdateUsernameAction(request),
       );
 
       this.router.navigateByUrl('/home');

@@ -476,14 +476,17 @@ export const STRINGS = {
 
         USERNAME: {
 
-          TITLE: 'Spot',
           HEADING: 'Create a username for your account',
           DESCRIPTION: '*Your username will not be visible to anyone. All posts are anonymous',
+
+          TERMS_AND_CONDITIONS: 'I agree to the',
+          TERMS_AND_CONDITIONS_LINK: 'terms and conditions & privacy policy',
 
           USERNAME_PLACEHOLDER: 'Enter username',
           CONTINUE: 'Continue to Spot',
 
-          USERNAME_ERROR: 'Username is required'
+          USERNAME_ERROR: 'Username is required',
+          TERMS_ERROR: 'You must agree to the terms and conditions & privacy policy',
 
         },
 

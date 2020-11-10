@@ -1,7 +1,7 @@
 <div class="username">
 
   <div class="nav">
-    <div class="title"> {{ STRINGS.TITLE }} </div>
+    <img class="title-image" src="../../../../assets/images/logo_v5.png">
   </div>
 
   <div class="container">
@@ -9,6 +9,14 @@
     <span class="material-icons icon"> account_circle </span>
     <div class="heading"> {{ STRINGS.HEADING }} </div>
     <input type="text" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" [(ngModel)]="username">
+
+    <div class="terms-and-conditions">
+      <div>
+        <input type="checkbox" [(ngModel)]="terms" />
+        <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
+      </div>
+      <a [routerLink]="'/about'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
+    </div>
 
     <div *ngIf="errorMessage" class="error">
       {{ errorMessage }}
