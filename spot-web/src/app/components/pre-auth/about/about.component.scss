@@ -5,8 +5,7 @@
 
   display: flex;
   flex-flow: column;
-  margin-left: 50px;
-  margin-top: 50px;
+  margin: 25px 50px;
 
   .heading {
     font-size: 30px;
@@ -18,6 +17,14 @@
     margin-bottom: 10px;
   }
 
+  a {
+    text-decoration: none;
+    color: $subtle-grey;
+    &:hover {
+      color: $button-highlight;
+    }
+  }
+
 }
 
 // Mobile Stylings
@@ -25,6 +32,7 @@
 
   .about {
     margin-left: 10px;
+    margin-right: 10px;
     margin-top: 10px;
   }
 

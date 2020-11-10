@@ -66,6 +66,7 @@
           <ng-template #noPostActivity>
             <div *ngIf="postsLoadedOnce" class="no-post-activity">
               <span class="text"> {{ STRINGS.NO_POST_ACTIVITY }} </span>
+              <span class="text time"> {{ STRINGS.NO_POST_TIME }} </span>
               <span class="material-icons icon"> insights </span>
             </div>
           </ng-template>
@@ -109,6 +110,7 @@
           <ng-template #noCommentActivity>
             <div *ngIf="commentsLoadedOnce" class="no-comment-activity">
               <span class="text"> {{ STRINGS.NO_COMMENT_ACTIVITY }} </span>
+              <span class="text time"> {{ STRINGS.NO_COMMENT_TIME }} </span>
               <span class="material-icons icon"> insights </span>
             </div>
           </ng-template>

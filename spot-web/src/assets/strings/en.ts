@@ -36,7 +36,7 @@ export const STRINGS = {
             LOADING_LOCATION: 'Loading your location...',
 
             NO_POSTS: 'There are no Spots in this area',
-            NO_MORE_POSTS: 'No more Spots',
+            NO_MORE_POSTS: 'You\'re all caught up!',
             FIRST_POST: 'Be the first to make a Spot!',
 
             // Posts Toggle
@@ -300,9 +300,11 @@ export const STRINGS = {
 
           LOADING_POST_ACTIVITY: 'Loading Spot activity ...',
           NO_POST_ACTIVITY: 'You have no spots in recent activity',
+          NO_POST_TIME: 'Activity is only shown for the last 72 hours',
 
           LOADING_COMMENT_ACTIVITY: 'Loading comment & replies activity ...',
-          NO_COMMENT_ACTIVITY: 'You have no comments or replies in recent activity'
+          NO_COMMENT_ACTIVITY: 'You have no comments or replies in recent activity',
+          NO_COMMENT_TIME: 'Activity is only shown for the last 72 hours',
 
         },
 

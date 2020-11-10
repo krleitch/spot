@@ -9,6 +9,7 @@ import { ContactComponent } from './components/pre-auth/contact/contact.componen
 import { AboutComponent } from './components/pre-auth/about/about.component';
 import { PasswordResetComponent } from './components/pre-auth/password-reset/password-reset.component';
 import { NewPasswordComponent } from './components/pre-auth/new-password/new-password.component';
+import { TermsComponent } from './components/pre-auth/terms/terms.component';
 
 import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
@@ -74,6 +75,10 @@ export const routes: Routes = [
   {
     path: 'about',
     component: AboutComponent
+  },
+  {
+    path: 'terms',
+    component: TermsComponent
   },
   {
     path: 'contact',

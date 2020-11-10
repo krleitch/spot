@@ -1,7 +1,7 @@
 @import '../../../styles/colors';
 @import '../../../styles/sizes';
 
-.contact {
+.terms {
 
   display: flex;
   flex-flow: column;
@@ -10,6 +10,11 @@
   .heading {
     font-size: 30px;
     margin-bottom: 10px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    color: black;
   }
 
   .text {
@@ -22,10 +27,10 @@
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
 
-  .contact {
+  .terms {
     margin-left: 10px;
-    margin-right: 10px;
     margin-top: 10px;
+    margin-right: 10px;
   }
 
 }
