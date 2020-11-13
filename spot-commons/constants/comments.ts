@@ -20,5 +20,8 @@ export const COMMENTS_CONSTANTS = {
     // Pictures
     PROFILE_COLORS_COUNT: 25,
 
+    // Activity
+    ACTIVITY_DAYS: 3, // 3 days history
+
  };
  

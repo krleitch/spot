@@ -3,7 +3,12 @@ export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getP
 
 const uuid = require('uuid');
 
+// db
 const db = require('./mySql');
+
+// constants
+const postConstants = require('@constants/posts');
+const POST_CONSTANTS = postConstants.POSTS_CONSTANTS;
 
 function getPosts(accountId: string, sort: string, location: string, latitude: string, longitude: string,  offset: number, limit: number, date: string): Promise<any> {
 
@@ -143,12 +148,11 @@ function getPostByLink(link: string, accountId?: string) {
 }
 
 function getPostsActivity(accountId: string, date: string, limit: number) {
-    const days = 365;
-    var d = new Date();
-    d.setDate(d.getDate() - days);
+    var activityDate = new Date();
+    activityDate.setDate(activityDate.getDate() - POST_CONSTANTS.ACTIVITY_DAYS);
     var sql = `SELECT id, creation_date, longitude, latitude, geolocation, content, link, image_src, likes, dislikes, comments
                 FROM posts WHERE account_id = ? AND deletion_date IS NULL AND creation_date < ? AND creation_date > ? ORDER BY creation_date DESC LIMIT ?`;
-    var values = [accountId,  new Date(date), d, limit];
+    var values = [accountId,  new Date(date), activityDate, limit];
     return db.query(sql, values);
 }
 
