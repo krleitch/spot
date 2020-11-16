@@ -233,7 +233,23 @@ spot-create {
 
   .loading-location-text {
     font-size: 18px;
+  }
+
+  .loading-location-background {
+    color: $subtle-grey;
+    font-size: 18px;
     margin-bottom: 5px;
+    &:hover {
+      color: $button-highlight;
+      cursor: pointer;
+    }
+
+    .icon {
+      margin-top: 3px;
+      margin-left: 3px;
+      margin-right: 3px;
+    }
+
   }
 
 }

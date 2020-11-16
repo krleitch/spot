@@ -17,11 +17,12 @@
     justify-content: center;
     align-items: center;
 
-    padding: 5px 0px;
+    margin-top: 5px;
 
     .icon {
       font-size: 18px;
       margin-right: 5px;
+      padding-top: 3px;
     }
 
   }
@@ -37,7 +38,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 5px;
+  margin-top: 5px;
   position: relative;
 
   .load-recent__position {
@@ -130,7 +131,7 @@
 .add {
   display: flex;
   flex-flow: column;
-  margin-bottom: 5px;
+  margin-top: 10px;
   justify-content: center;
   align-items: center;
 }
@@ -267,6 +268,47 @@ img {
   cursor: pointer;
   &:hover {
     color: $error-red;
+  }
+}
+
+.auth-message {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: $lighter-grey;
+  border-radius: 3px;
+  min-height: 30px;
+  padding: 6px 6px;
+  margin-top: 5px;
+
+  .text {
+    flex: 1;
+    text-align: center;
+    color: $subtle-grey;
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    width: 30px;
+    color: $subtle-grey;
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+
+}
+
+.comment-reminder {
+  margin-top: 5px;
+  color: $subtle-grey;
+  &:hover {
+    cursor: pointer;
+    color: $button-highlight;
   }
 }
 

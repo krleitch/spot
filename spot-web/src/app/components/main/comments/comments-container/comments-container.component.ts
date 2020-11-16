@@ -78,10 +78,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     // Get Comments
     this.comments$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id })
+      select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id }),
     );
 
-    this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( comments => {
+    this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (comments) => {
       this.comments = comments.comments;
     });
 
@@ -95,7 +95,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       select(SocialStoreSelectors.selectMyFeatureFriends)
     );
 
-    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( friends => {
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends) => {
       this.friendsList = friends;
     });
 
@@ -506,6 +506,15 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   removeFile() {
     this.imageFile = null;
     this.imgSrc = null;
+  }
+
+  makeComment() {
+    const yOffset = -100;
+    const y = this.comment.nativeElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({top: y, behavior: 'smooth'});
+    this.comment.nativeElement.focus({
+      preventScroll: true,
+    });
   }
 
 }

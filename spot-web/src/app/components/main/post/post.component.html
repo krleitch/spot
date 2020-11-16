@@ -29,7 +29,13 @@
       </div>
 
       <div class="options">
-        <span class="comment-number"> {{ post.comments }} {{ STRINGS.COMMENTS }} </span>
+        <span class="comment-number"> 
+          {{ post.comments }} 
+          <span *ngIf="post.comments === 1; else plural"> {{ STRINGS.COMMENTS_SINGLE }} </span>
+          <ng-template #plural>
+            {{ STRINGS.COMMENTS }}
+          </ng-template>
+        </span>
         <div *ngIf="accountMetadata$ | async as accountMetadata" class="distance">
           <span *ngIf="post.distance"> {{ getDistance(post.distance, accountMetadata.distance_unit ) }} - </span>
           {{ post.geolocation }}

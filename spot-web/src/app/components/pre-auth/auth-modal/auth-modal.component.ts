@@ -94,7 +94,7 @@ export class AuthModalComponent implements OnInit, AfterViewInit {
 
     const loginRequest: LoginRequest = {
       emailOrUsername: val.emailOrUsername,
-      password: this.authenticationService.md5Hash(val.password),
+      password: val.password,
     };
 
     this.store$.dispatch(
@@ -221,10 +221,6 @@ export class AuthModalComponent implements OnInit, AfterViewInit {
     auth2.signOut().then(() => {
 
     });
-  }
-
-  forgotPassword() {
-    this.router.navigateByUrl('/password-reset');
   }
 
 }

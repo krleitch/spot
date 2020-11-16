@@ -20,12 +20,15 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
 
-  constructor(private route: ActivatedRoute, private postsService: PostsService, private store$: Store<RootStoreState.State>) { }
+  constructor(private route: ActivatedRoute,
+              private postsService: PostsService,
+              private store$: Store<RootStoreState.State>) { }
 
   STRINGS = STRINGS.MAIN.POST_DETAILED;
 
   post$: Observable<Post>;
 
+  isAuthenticated$: Observable<boolean>
   location$: Observable<Location>;
   myLocation: Location;
   locationEnabled = false;
@@ -67,6 +70,46 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         );
 
       });
+
+    });
+
+    this.isAuthenticated$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsAuthenticated)
+    );
+
+    // reload if user becomes authenticated
+    this.isAuthenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (isAuthenticated: boolean) => {
+
+      console.log(isAuthenticated)
+
+      if ( isAuthenticated ) {
+
+        this.route.paramMap.subscribe( p => {
+
+          this.commentId = p.get('commentId');
+
+          const request: LoadSinglePostRequest = {
+            postLink: p.get('postId'),
+            location: this.myLocation
+          };
+
+          this.post$ = this.postsService.getPost(request).pipe(
+            map( postSuccess =>  {
+              this.error = false;
+              if ( this.commentId ) {
+                postSuccess.post.startCommentId = this.commentId;
+              }
+              return postSuccess.post;
+            }),
+            catchError( (errorResponse: any) => {
+              this.error = true;
+              return throwError(errorResponse.error);
+            })
+          );
+
+        });
+
+      }
 
     });
 

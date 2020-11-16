@@ -127,7 +127,6 @@ export class AuthenticationService {
       this.addIdToken(response.jwt);
       if ( this.modalService.isOpen('spot-auth-modal') ) {
         this.modalService.close('spot-auth-modal');
-        // TODO: refresh the page so u get the updated content form being logged in
       } else {
         this.zone.run(() => {
           this.router.navigateByUrl('/home');
@@ -142,9 +141,13 @@ export class AuthenticationService {
           this.router.navigateByUrl('/username');
         });
       } else {
-        this.zone.run(() => {
-          this.router.navigateByUrl('/home');
-        });
+        if ( this.modalService.isOpen('spot-auth-modal') ) {
+          this.modalService.close('spot-auth-modal');
+        } else {
+          this.zone.run(() => {
+            this.router.navigateByUrl('/home');
+          });
+        }
       }
     }
 
@@ -155,9 +158,13 @@ export class AuthenticationService {
           this.router.navigateByUrl('/username');
         });
       } else {
-        this.zone.run(() => {
-          this.router.navigateByUrl('/home');
-        });
+        if ( this.modalService.isOpen('spot-auth-modal') ) {
+          this.modalService.close('spot-auth-modal');
+        } else {
+          this.zone.run(() => {
+            this.router.navigateByUrl('/home');
+          });
+        }
       }
     }
 

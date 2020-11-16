@@ -40,6 +40,12 @@ export class ModalService {
     modal.close();
   }
 
+  closeAll() {
+    this.modals.forEach((modal) => {
+      modal.close();
+    });
+  }
+
   getData(id: string): Observable<any> {
     const modal: any = this.modals.filter(x => x.id === id)[0];
     return modal.data.asObservable();

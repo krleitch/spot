@@ -29,9 +29,7 @@
         <div class="form-buttons">
           <button type="button" class="button" (click)="login()"> {{ STRINGS.LOGIN_BUTTON }} </button>
         </div>
-        <div class="forgot-password" (click)="forgotPassword()">
-          <span> {{ STRINGS.FORGOT_PASSWORD }} </span>
-        </div>
+        <a (click)="close()" [routerLink]="'/password-reset'"> {{ STRINGS.FORGOT_PASSWORD }} </a>
       </form>
 
     </div>
@@ -59,7 +57,7 @@
             <input name="terms" formControlName="terms" type="checkbox" required/>
             <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
           </div>
-          <a [routerLink]="'/terms'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
+          <a (click)="close()" [routerLink]="'/terms'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
         </div>
 
         <div class="error-message">

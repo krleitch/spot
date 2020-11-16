@@ -323,4 +323,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.verificationSent = true;
   }
 
+  loadLocationBackground() {
+    this.postLocation = 'global';
+    // the location is actually still loading, we just say in this component we arent worried about it anymore
+    // So onScroll() posts are loaded
+    this.loadingLocation = false;
+  }
+
 }

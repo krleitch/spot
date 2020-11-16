@@ -10,7 +10,7 @@ export const STRINGS = {
         NAV: {
 
             TITLE: 'Spot',
-            LOGIN: 'Login',
+            LOGIN_REGISTER: 'Login / Sign Up',
 
             // Options
             ACTIVITY: 'Activity',
@@ -34,6 +34,8 @@ export const STRINGS = {
             LOCATION_REFRESH: 'Refresh to try again',
             LOCATION_CREATE: 'Enable browser location to create a spot or add comments',
             LOADING_LOCATION: 'Loading your location...',
+            LOCATION_BACKGROUND_1: 'View',
+            LOCATION_BACKGROUND_2: 'Spots while your location loads',
 
             NO_POSTS: 'There are no Spots in this area',
             NO_MORE_POSTS: 'You\'re all caught up!',
@@ -122,6 +124,7 @@ export const STRINGS = {
             CURRENT_TIME: 'Now',
 
             COMMENTS: 'comments',
+            COMMENTS_SINGLE: 'comment',
             SEE_MORE: 'See more',
             SEE_LESS: 'See less',
 
@@ -148,14 +151,17 @@ export const STRINGS = {
           REFRESH_COMMENTS_AGAIN: 'No More Comments, Refresh again',
 
           // Form
-          ADD_COMMENT_PLACEHOLDER: 'Add a comment ...',
+          ADD_COMMENT_PLACEHOLDER: 'Write a comment...',
 
           TAGS_TITLE: 'Tags:',
 
           // File options
           FILE_TITLE: 'File:',
 
-          NO_COMMENTS: 'There are no comments on this spot'
+          NO_COMMENTS: 'There are no comments on this spot',
+          LOGIN: 'Login or Sign Up to Comment',
+
+          MAKE_COMMENT: 'Write a comment...',
 
         },
 
@@ -167,7 +173,7 @@ export const STRINGS = {
           SHARE: 'Share',
 
           // Reply
-          ADD_REPLY_PLACEHOLDER: 'Add a reply ...',
+          ADD_REPLY_PLACEHOLDER: 'Write a reply...',
           LOAD_MORE_REPLIES: 'Load more replies',
 
           // See more
@@ -192,7 +198,7 @@ export const STRINGS = {
           SHARE: 'Share',
 
           // Reply
-          ADD_REPLY_PLACEHOLDER: 'Add a reply ...',
+          ADD_REPLY_PLACEHOLDER: 'Write a reply...',
 
           // See more
           SEE_MORE: 'See more',
@@ -535,9 +541,9 @@ export const STRINGS = {
         AUTH_MODAL: {
 
           // Modal Strings
-          TITLE: 'Login / Register',
+          TITLE: 'Login / Sign Up',
           LOGIN: 'Login',
-          REGISTER: 'Register',
+          REGISTER: 'Sign Up',
 
           // Other options
           FACEBOOK_LOGIN: 'Continue with Facebook',
@@ -560,7 +566,7 @@ export const STRINGS = {
           // Register Form
           TERMS_AND_CONDITIONS: 'I agree to the',
           TERMS_AND_CONDITIONS_LINK: 'terms and conditions & privacy policy',
-          REGISTER_BUTTON: 'Register',
+          REGISTER_BUTTON: 'Sign Up',
 
           EMAIL_PLACEHOLDER: 'Email',
           USERNAME_PLACEHOLDER: 'Username',

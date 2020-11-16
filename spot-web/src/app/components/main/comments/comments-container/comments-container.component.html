@@ -1,4 +1,50 @@
 <div class="container">
+
+  <!-- Add -->
+  <div *ngIf="post.inRange">
+
+    <div class="add" *ngIf="(isAuthenticated$ | async); else auth">
+      <div class="editor">
+
+        <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
+        <div class="image" *ngIf="imgSrc != null">
+          <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
+        </div>
+
+        <div class="file-options" *ngIf="imgSrc != null">
+          <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
+          <span class="file-name"> {{ imageFile.name }} </span>
+          <span class="file-remove" (click)="removeFile()">
+            <i class="material-icons"> delete </i>
+          </span>
+        </div>
+
+        <div class="comment-options">
+          <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }} </span>
+          <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
+          <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
+          <span class="send" (click)="addComment()">
+            <i class="material-icons"> send </i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <ng-template #auth>
+      <div class="auth-message">
+        <i style="visibility: hidden" class="material-icons icon"> send </i>
+        <span class="text"> {{ STRINGS.LOGIN }} </span>
+        <i class="material-icons  icon"> send </i>
+      </div>
+    </ng-template>
+
+  </div>
+
+  <span *ngIf="addCommentError" class="add-comment-error">
+    {{ addCommentError }}
+  </span>
+  <span class="tag-relative" #tag><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
+
+  <!-- Comments -->
   <div class="comments-container">
 
     <div  class="load-recent">
@@ -19,9 +65,9 @@
           </div>
         </span>
       </ng-template>
-
     </div>
 
+    <!-- Comments -->
     <div *ngIf="comments.length > 0; else noComments">
       <div *ngFor="let comment of comments">
           <spot-comment [comment]="comment" [post]="post" [detailed]="detailed"></spot-comment>
@@ -34,6 +80,7 @@
       </div>
     </ng-template>
 
+    <!-- Load More -->
     <div class="load-more-container" *ngIf="totalCommentsBefore > 0">
       <div class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
       <div *ngIf="loadingCommentsBefore" class="load-comments-before">
@@ -43,37 +90,9 @@
 
   </div>
 
-  <div class="add" *ngIf="(isAuthenticated$ | async) && post.inRange">
-
-    <div class="editor">
-
-      <div #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
-      <div class="image" *ngIf="imgSrc != null">
-        <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
-      </div>
-
-      <div class="file-options" *ngIf="imgSrc != null">
-        <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
-        <span class="file-name"> {{ imageFile.name }} </span>
-        <span class="file-remove" (click)="removeFile()">
-          <i class="material-icons"> delete </i>
-        </span>
-      </div>
-
-      <div class="comment-options">
-        <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }} </span>
-        <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
-        <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
-        <span class="send" (click)="addComment()">
-          <i class="material-icons"> send </i>
-        </span>
-      </div>
-
-    </div>
+  <div *ngIf="comments.length >= 5 && (isAuthenticated$ | async) && post.inRange" class="comment-reminder" (click)="makeComment()">
+    {{ STRINGS.MAKE_COMMENT }}
   </div>
-  <span *ngIf="addCommentError" class="add-comment-error">
-    {{ addCommentError }}
-  </span>
-  <span class="tag-relative" #tag><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
+
 
 </div>

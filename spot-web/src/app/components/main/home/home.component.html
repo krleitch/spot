@@ -132,6 +132,11 @@
     <ng-template #noLocation>
       <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocation" class="loading-location">
         <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
+        <span class="loading-location-background" (click)="loadLocationBackground()">
+           {{ STRINGS.LOCATION_BACKGROUND_1 }}
+           <i class="material-icons icon"> public </i>
+           {{ STRINGS.LOCATION_BACKGROUND_2 }}
+        </span>
         <spot-spinner size="medium"></spot-spinner>
       </div>
       <ng-template #enableLocation>

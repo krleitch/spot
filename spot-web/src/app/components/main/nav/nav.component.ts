@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject, timer, merge } from 'rxjs';
@@ -31,6 +31,7 @@ export class NavComponent implements OnInit, OnDestroy {
   showAccountIndicator$: Observable<boolean>;
   accountMetadata$: Observable<AccountMetadata>;
   isAuthenticated$: Observable<boolean>;
+  isAuthenticated: boolean;
   unread$: Observable<number>;
   unreadNotifications = '0';
 
@@ -41,7 +42,8 @@ export class NavComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router,
               private store$: Store<RootStoreState.State>,
-              private modalService: ModalService) {
+              private modalService: ModalService,
+              private ref: ChangeDetectorRef) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -64,7 +66,13 @@ export class NavComponent implements OnInit, OnDestroy {
     );
 
     this.isAuthenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (isAuthenticated: boolean) => {
+      this.isAuthenticated  = isAuthenticated;
       if (isAuthenticated) {
+
+        console.log('I RAN')
+
+        this.ref.markForCheck();
+
         const request: GetNotificationsUnreadRequest = {};
 
         this.store$.dispatch(
@@ -120,6 +128,14 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   navigateHome() {
+
+    // Bring to landing  if not logged in
+    if ( !this.isAuthenticated ) {
+      this.router.navigateByUrl('/');
+      return;
+    }
+
+    // Bring back to home or scroll up in home
     if (this.router.url === '/home') {
       this.titleEvent.emit(true);
       const scrollToTop = window.setInterval(() => {

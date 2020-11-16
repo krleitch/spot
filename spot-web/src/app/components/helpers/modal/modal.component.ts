@@ -64,7 +64,9 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.body.classList.remove('spot-modal-open');
 
     this.isOpen = false;
-    this.result.complete();
+    if ( this.result ) {
+      this.result.complete();
+    }
 
   }
 
