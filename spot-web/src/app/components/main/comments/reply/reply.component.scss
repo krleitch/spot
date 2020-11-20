@@ -16,6 +16,16 @@
   // margin-bottom: 3px;
 }
 
+.tag-relative {
+  position: relative;
+}
+
+spot-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 :host ::ng-deep .tag-inline-comment {
 
   line-height: 1.2em;
@@ -281,8 +291,6 @@ img {
   max-width: 100%;
   max-height: 500px;
 }
-
-
 
 .comment-options {
   margin-left: auto;

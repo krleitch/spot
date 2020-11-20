@@ -18,6 +18,16 @@
 
 // Tag
 
+.tag-relative {
+  position: relative;
+}
+
+spot-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .content-tag-container{
 
   display: flex;
