@@ -13,8 +13,6 @@ export enum NotificationsActionTypes {
   GET_NOTIFICATIONS_FAILURE = '[Social] Get Notifications Failure',
   GET_NOTIFICATIONS_UNREAD_REQUEST = '[Social] Get Notifications Unread Request',
   GET_NOTIFICATIONS_UNREAD_SUCCESS = '[Social] Get Notifications Unread Success',
-  ADD_NOTIFICATION_REQUEST = '[Social] Add Notification Request',
-  ADD_NOTIFICATION_SUCCESS = '[Social] Add Notification Success',
   DELETE_NOTIFICATION_REQUEST = '[Social] Delete Notification Request',
   DELETE_NOTIFICATION_SUCCESS = '[Social] Delete Notification Success',
   DELETE_ALL_NOTIFICATIONS_REQUEST = '[Social] Delete All Notifications Request',
@@ -23,12 +21,12 @@ export enum NotificationsActionTypes {
   SET_NOTIFICATION_SEEN_SUCCESS = '[Social] Set Notification Seen Success',
   SET_ALL_NOTIFICATIONS_SEEN_REQUEST = '[Social] Set All Notifications Seen Request',
   SET_ALL_NOTIFICATIONS_SEEN_SUCCESS = '[Social] Set All Notifications Seen Success',
-  GENERIC_FAILURE = '[Social] Generic Failure'
+  GENERIC_FAILURE = '[Social] Generic Failure',
 }
 
 export class GenericFailureAction implements Action {
   readonly type = NotificationsActionTypes.GENERIC_FAILURE;
-  constructor(public error: string) {}
+  constructor(public error: SpotError) {}
 }
 
 export class GetNotificationsAction implements Action {
@@ -44,16 +42,6 @@ export class GetNotificationsSuccessAction implements Action {
 export class GetNotificationsFailureAction implements Action {
   readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE;
   constructor(public error: SpotError) {}
-}
-
-export class AddNotificationAction implements Action {
-  readonly type = NotificationsActionTypes.ADD_NOTIFICATION_REQUEST;
-  constructor(public request: AddNotificationRequest) {}
-}
-
-export class AddNotificationSuccessAction implements Action {
-  readonly type = NotificationsActionTypes.ADD_NOTIFICATION_SUCCESS;
-  constructor(public response: AddNotificationSuccess) {}
 }
 
 export class DeleteNotificationAction implements Action {
@@ -107,8 +95,7 @@ export class GetNotificationsUnreadSuccessAction implements Action {
 }
 
 export type NotificationsActions = GenericFailureAction | GetNotificationsAction | GetNotificationsSuccessAction |
-                      AddNotificationAction | AddNotificationSuccessAction | DeleteNotificationAction |
+                      DeleteNotificationAction | GetNotificationsUnreadSuccessAction | GetNotificationsFailureAction |
                       SetNotificationSeenAction | SetNotificationSeenSuccessAction | DeleteNotificationSuccessAction |
                       DeleteAllNotificationsAction | DeleteAllNotificationsSuccessAction | SetAllNotificationsSeenAction |
-                      SetAllNotificationsSeenSuccessAction | GetNotificationsUnreadAction | GetNotificationsUnreadSuccessAction |
-                      GetNotificationsFailureAction;
+                      SetAllNotificationsSeenSuccessAction | GetNotificationsUnreadAction;

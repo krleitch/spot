@@ -20,7 +20,7 @@ export class SocialStoreEffects {
       notificationsActions.NotificationsActionTypes.GENERIC_FAILURE
     ),
     tap((action: notificationsActions.GenericFailureAction) => {
-      this.notificationsService.failureMessage(action.error);
+      this.notificationsService.failureMessage(action.error.message);
     })
   );
 
@@ -40,28 +40,6 @@ export class SocialStoreEffects {
           }),
           catchError(errorResponse =>
             observableOf(new notificationsActions.GetNotificationsFailureAction( errorResponse.error ))
-          )
-        )
-    )
-  );
-
-
-  @Effect()
-  addNotificationEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<notificationsActions.AddNotificationAction>(
-      notificationsActions.NotificationsActionTypes.ADD_NOTIFICATION_REQUEST
-    ),
-    switchMap((post: notificationsActions.AddNotificationAction) =>
-      this.notificationsService
-        .addNotification(post.request)
-        .pipe(
-          map( (response: AddNotificationSuccess) => {
-            // TODO this success message to STRINGS
-            this.notificationsService.successMessage('Notification Sent!');
-            return new notificationsActions.AddNotificationSuccessAction( response )
-          }),
-          catchError(errorResponse =>
-            observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))
           )
         )
     )

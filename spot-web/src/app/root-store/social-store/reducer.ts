@@ -42,11 +42,6 @@ export function featureReducer(state = initialState, action: NotificationsAction
         unread: action.response.unread
       };
     }
-    case NotificationsActionTypes.ADD_NOTIFICATION_SUCCESS: {
-      return {
-        ...state,
-      };
-    }
     case NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS: {
       return {
         ...state,

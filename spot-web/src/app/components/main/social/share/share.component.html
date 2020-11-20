@@ -6,7 +6,7 @@
   </div>
 
   <div class="links">
-    <div id="social" class="social-media">
+    <div #social id="social" class="social-media">
       <div class="fb-share-button"
             attr.data-href="{{ link }}"
             data-layout="button_count"
@@ -17,12 +17,7 @@
                 Share
             </a>
       </div>
-      <a class="twitter-share-button"
-        href="https://twitter.com/intent/tweet?text=Spot!"
-        attr.data-url="{{ link }}"
-        data-size="large">
-        Tweet
-      </a>
+      <!-- Twitter button generated here from the ts file -->
     </div>
     <span class="copy" (click)="copyLink()"> {{ STRINGS.COPY_LINK }} </span>
   </div>
@@ -32,6 +27,10 @@
     <div class="input-container">
       <input #usernameinput [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
       <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
     </div>
 
     <div class="friends-title"> {{ STRINGS.FRIENDS }} </div>

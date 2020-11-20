@@ -236,6 +236,9 @@ spot-create {
   }
 
   .loading-location-background {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: $subtle-grey;
     font-size: 18px;
     margin-bottom: 5px;
@@ -245,9 +248,9 @@ spot-create {
     }
 
     .icon {
-      margin-top: 3px;
-      margin-left: 3px;
-      margin-right: 3px;
+      padding-top: 3px;
+      margin-left: 5px;
+      margin-right: 5px;
     }
 
   }

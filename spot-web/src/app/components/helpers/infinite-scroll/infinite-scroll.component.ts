@@ -38,8 +38,8 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
   ngAfterViewInit() {
 
     const options = {
+      ...this.options,
       root: this.isHostScrollable() ? this.host.nativeElement : null,
-      ...this.options
     };
 
     this.observer = new IntersectionObserver(([entry]) => {
