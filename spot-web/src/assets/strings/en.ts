@@ -225,7 +225,13 @@ export const STRINGS = {
           FRIENDS: 'Friends',
           NO_FRIENDS_FOUND: 'No friends found with this name',
           NO_FRIENDS: 'Add Friends to share spots quickly',
-          LOGIN: 'Login to share with friends'
+          LOGIN: 'Login to share with friends',
+
+          SUCCESS: 'Notification sent',
+
+          // Errors
+          USERNAME_ERROR: 'Username is required',
+          FRIEND_ERROR: 'You can only send notifications to friends',
 
         },
 

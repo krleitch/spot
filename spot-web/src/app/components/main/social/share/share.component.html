@@ -29,12 +29,16 @@
       <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
     </div>
 
+    <div class="success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
     <div class="error-message" *ngIf="errorMessage">
       {{ errorMessage }}
     </div>
 
     <div class="friends-title"> {{ STRINGS.FRIENDS }} </div>
-    <div class="share-friend-section" *ngIf="friends$ | async | filter: { filter: username, field: 'username' } as friends">
+    <div class="share-friend-section" *ngIf="friends | filter: { filter: username, field: 'username' } as friends">
 
       <div *ngIf="friends.length > 0; else noFriends">
         <div *ngFor="let friend of friends" class="share-friend-container">

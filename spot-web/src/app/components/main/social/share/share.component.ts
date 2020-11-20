@@ -41,6 +41,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 
   isAuthenticated: boolean;
   friends$: Observable<ShareFriend[]>;
+  friends: ShareFriend[];
 
   username: string;
   errorMessage: string;
@@ -82,24 +83,37 @@ export class ShareComponent implements OnInit, OnDestroy {
       }),
     );
 
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends: ShareFriend[]) => {
+      this.friends = friends;
+    });
+
     // whenever the modal is opened and  becomes visible
     this.observer = new IntersectionObserver(([entry]) => {
 
       if ( entry.isIntersecting ) {
+
+        // reset some state
+        this.errorMessage = '';
+        this.successMessage = '';
+
+        this.friends.forEach( (friend: ShareFriend) => {
+          friend.sent = false;
+        });
+
+        // parse the links
         if ( window['FB'] ) {
           window['FB'].XFBML.parse(this.social.nativeElement);
         }
         if ( window['twttr'] ) {
           if ( !this.twitterButtonCreated ) {
             window['twttr'].widgets.createShareButton(
-              "https:\/\/dev.twitter.com\/web\/tweet-button",
+              `https://twitter.com/share?url=${this.link}`,
               this.social.nativeElement,
               {
                 size: "large",
-                text: "Spot",
+                text: "Spotted",
                 hashtags: "spot",
-                via: "spot",
-                related: "twitterapi,twitter"
+                via: "spot"
               }
             );
             this.twitterButtonCreated = true;
@@ -122,8 +136,18 @@ export class ShareComponent implements OnInit, OnDestroy {
 
   sendNotification() {
 
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    // username is required
     if ( !this.username ) {
-      this.errorMessage = 'username is required';
+      this.errorMessage = this.STRINGS.USERNAME_ERROR;
+      return;
+    }
+
+    // Check if they are your friend
+    if ( this.friends.find( (friend: Friend) =>  friend.username === this.username ) === undefined ) {
+      this.errorMessage = this.STRINGS.FRIEND_ERROR;
       return;
     }
 
@@ -142,13 +166,14 @@ export class ShareComponent implements OnInit, OnDestroy {
       };
     }
 
+    // send the request
     this.notificationsService.addNotification(request).pipe(
       takeUntil(this.onDestroy),
       catchError( errorResponse => {
         return throwError(errorResponse.error);
-      })
+      }),
     ).subscribe( (response: AddNotificationSuccess ) => {
-      this.successMessage = 'notification sent'
+      this.successMessage = this.STRINGS.SUCCESS;
     }, ( error: SpotError ) => {
       this.errorMessage = error.message;
     });
@@ -156,6 +181,9 @@ export class ShareComponent implements OnInit, OnDestroy {
   }
 
   sendNotificationToFriend(username: string) {
+
+    this.errorMessage = '';
+    this.successMessage = '';
 
     let request: AddNotificationRequest;
 
@@ -172,15 +200,16 @@ export class ShareComponent implements OnInit, OnDestroy {
       };
     }
 
+    // send the request
     this.notificationsService.addNotification(request).pipe(
       takeUntil(this.onDestroy),
       catchError( errorResponse => {
         return throwError(errorResponse.error);
-      })
+      }),
     ).subscribe( (response: AddNotificationSuccess ) => {
-      this.successMessage = 'notification sent';
+      // none
     }, ( error: SpotError ) => {
-      this.errorMessage = error.message;
+      // none
     });
 
   }

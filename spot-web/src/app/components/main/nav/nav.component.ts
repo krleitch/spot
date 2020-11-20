@@ -69,8 +69,6 @@ export class NavComponent implements OnInit, OnDestroy {
       this.isAuthenticated  = isAuthenticated;
       if (isAuthenticated) {
 
-        console.log('I RAN')
-
         this.ref.markForCheck();
 
         const request: GetNotificationsUnreadRequest = {};

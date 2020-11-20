@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadingLocation$: Observable<boolean>;
   loadingLocation: boolean;
+  bypassLocation = false; // if true we will not wait for location to load for posts
   location$: Observable<Location>;
   location: Location = null;
   showLocationIndicator$: Observable<boolean>;
@@ -179,7 +180,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       skipWhile(() => typeof this.postLocation === 'undefined' ||
                       typeof this.postSort === 'undefined' ||
                       (this.location === null && this.postLocation === 'local') ||
-                      (this.loadingLocation === true)),
+                      ((this.loadingLocation === true) && ( this.bypassLocation === false ))),
       take(1),
       takeUntil(this.stop$),
     ).subscribe(() => {
@@ -260,6 +261,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setLocal() {
+
+    this.bypassLocation = false;
+
     this.postLocation = 'local';
 
     const request: UpdateAccountMetadataRequest = {
@@ -299,7 +303,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.postSort = 'hot';
 
     const request: UpdateAccountMetadataRequest = {
-      search_type: 'hot'
+      search_type: 'hot',
     };
 
     this.store$.dispatch(
@@ -327,7 +331,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.postLocation = 'global';
     // the location is actually still loading, we just say in this component we arent worried about it anymore
     // So onScroll() posts are loaded
-    this.loadingLocation = false;
+    this.bypassLocation = true;
   }
 
 }
