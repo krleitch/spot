@@ -28,6 +28,21 @@ spot-main-nav {
     padding-top: 20px;
   }
 
+  .loading {
+
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    padding-top: 40px;
+
+    .text {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+  }
+
   .error {
 
     display: flex;

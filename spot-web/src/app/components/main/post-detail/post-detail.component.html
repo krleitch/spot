@@ -1,6 +1,10 @@
 
 <spot-main-nav></spot-main-nav>
 <div class="post-detailed">
+  <div class="loading" *ngIf="loadingPost && (showLoadingIndicator$ | async)">
+    <span class="text"> {{ STRINGS.LOADING }} </span>
+    <spot-spinner size="medium"></spot-spinner>
+  </div>
   <div class="content" *ngIf="post$ | async as post">
     <meta property="og:url"           content="{{ getPostLink(post) }}" />
     <meta property="og:type"          content="website" />

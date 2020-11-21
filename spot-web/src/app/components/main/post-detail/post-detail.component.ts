@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, takeUntil, catchError } from 'rxjs/operators';
-import { Observable, Subject, throwError } from 'rxjs';
+import { map, takeUntil, catchError, skipWhile, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
+import { Observable, Subject, throwError, interval, timer } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 
 import { RootStoreState } from '@store';
@@ -26,16 +26,18 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   STRINGS = STRINGS.MAIN.POST_DETAILED;
 
-  post$: Observable<Post>;
+  commentId: string;
+  postId: string;
 
-  isAuthenticated$: Observable<boolean>
+  post$: Observable<Post>;
+  loadingPost: boolean;
+  showLoadingIndicator$: Observable<boolean>;
+
+  authenticated$: Observable<boolean>;
   location$: Observable<Location>;
-  myLocation: Location;
-  locationEnabled = false;
+  location: Location;
 
   error = false;
-
-  commentId: string;
 
   ngOnInit() {
 
@@ -44,79 +46,74 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     );
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
-      this.myLocation = location;
+      this.location = location;
+    });
 
-      this.route.paramMap.subscribe( p => {
-
-        this.commentId = p.get('commentId');
-
-        const request: LoadSinglePostRequest = {
-          postLink: p.get('postId'),
-          location: this.myLocation
-        };
-
-        this.post$ = this.postsService.getPost(request).pipe(
-          map( postSuccess =>  {
-            this.error = false;
-            if ( this.commentId ) {
-              postSuccess.post.startCommentId = this.commentId;
-            }
-            return postSuccess.post;
-          }),
-          catchError( (errorResponse: any) => {
-            this.error = true;
-            return throwError(errorResponse.error);
-          })
-        );
-
-      });
+    this.route.paramMap.pipe(takeUntil(this.onDestroy)).subscribe( (p: any) => {
+      this.commentId = p.get('commentId');
+      this.postId = p.get('postId');
 
     });
 
-    this.isAuthenticated$ = this.store$.pipe(
+    this.authenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
     // reload if user becomes authenticated
-    this.isAuthenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (isAuthenticated: boolean) => {
-
-      console.log(isAuthenticated)
-
-      if ( isAuthenticated ) {
-
-        this.route.paramMap.subscribe( p => {
-
-          this.commentId = p.get('commentId');
-
-          const request: LoadSinglePostRequest = {
-            postLink: p.get('postId'),
-            location: this.myLocation
-          };
-
-          this.post$ = this.postsService.getPost(request).pipe(
-            map( postSuccess =>  {
-              this.error = false;
-              if ( this.commentId ) {
-                postSuccess.post.startCommentId = this.commentId;
-              }
-              return postSuccess.post;
-            }),
-            catchError( (errorResponse: any) => {
-              this.error = true;
-              return throwError(errorResponse.error);
-            })
-          );
-
-        });
-
+    this.authenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticated: boolean) => {
+      if ( authenticated ) {
+        this.waitForPosts();
       }
-
     });
+
+    this.waitForPosts();
 
   }
 
   ngOnDestroy() {
     this.onDestroy.next();
+  }
+
+  waitForPosts() {
+
+    this.loadingPost = true;
+    this.showLoadingIndicator$ = timer(2000).pipe( mapTo(true), takeWhile( (_) => this.loadingPost )).pipe( startWith(false) );
+
+    // wait for location and param map to load
+    const source = interval(500);
+    source.pipe(
+      skipWhile(() => typeof this.postId === 'undefined' ||
+                      typeof this.location === 'undefined'),
+      take(1),
+    ).subscribe(() => {
+      this.loadPost();
+    });
+
+  }
+
+  loadPost() {
+
+    // load the post
+    const request: LoadSinglePostRequest = {
+      postLink: this.postId,
+      location: this.location
+    };
+
+    this.post$ = this.postsService.getPost(request).pipe(
+      map( postSuccess =>  {
+        this.error = false;
+        this.loadingPost = false;
+        if ( this.commentId ) {
+          postSuccess.post.startCommentId = this.commentId;
+        }
+        return postSuccess.post;
+      }),
+      catchError( (errorResponse: any) => {
+        this.error = true;
+        this.loadingPost = false;
+        return throwError(errorResponse.error);
+      }),
+    );
   }
 
   getPostLink(post: Post) {
