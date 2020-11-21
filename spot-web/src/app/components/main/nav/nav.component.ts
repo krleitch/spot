@@ -136,14 +136,7 @@ export class NavComponent implements OnInit, OnDestroy {
     // Bring back to home or scroll up in home
     if (this.router.url === '/home') {
       this.titleEvent.emit(true);
-      const scrollToTop = window.setInterval(() => {
-        const pos = window.pageYOffset;
-        if (pos > 0) {
-            window.scrollTo(0, pos - 20); // how far to scroll on each step
-        } else {
-            window.clearInterval(scrollToTop);
-        }
-    }, 16);
+      window.scrollTo({top: 0, behavior: 'smooth'});
     } else {
       this.router.navigateByUrl('/home');
     }

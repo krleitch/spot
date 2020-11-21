@@ -63,6 +63,17 @@ export function featureReducer(state = initialState, action: NotificationsAction
         unread: 0
       };
     }
+    case NotificationsActionTypes.SET_NOTIFICATION_SEEN_SUCCESS: {
+      state.notifications.forEach( notif => {
+        if ( notif.id === action.response.notificationId ) {
+          notif.seen = 1;
+        }
+      });
+      return {
+        ...state,
+        unread: Math.max(0, state.unread - 1),
+      };
+    }
     case FriendsActionTypes.GET_FRIEND_REQUESTS_SUCCESS: {
       return {
         ...state,

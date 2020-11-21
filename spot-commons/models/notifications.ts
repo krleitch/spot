@@ -63,7 +63,7 @@ export interface SetNotificationSeenRequest {
 }
 
 export interface SetNotificationSeenSuccess {
-
+    notificationId: string;
 }
 
 export interface SetAllNotificationsSeenRequest {

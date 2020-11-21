@@ -25,7 +25,7 @@
   <div *ngIf="isAuthenticated; else auth">
 
     <div class="input-container">
-      <input #usernameinput [(ngModel)]="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
+      <input #usernameinput [(ngModel)]="username" (keyup.enter)="sendNotification()" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
       <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
     </div>
 

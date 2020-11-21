@@ -93,7 +93,7 @@ export class SocialStoreEffects {
         .setNotificationSeen(action.request)
         .pipe(
           map( (response: SetNotificationSeenSuccess) => {
-            return new notificationsActions.SetNotificationSeenSuccessAction( response )
+            return new notificationsActions.SetNotificationSeenSuccessAction(response);
           }),
           catchError(errorResponse =>
             observableOf(new notificationsActions.GenericFailureAction( errorResponse.error ))

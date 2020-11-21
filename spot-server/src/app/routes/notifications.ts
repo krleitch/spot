@@ -120,7 +120,8 @@ router.put('/:notificationId/seen', function (req: any, res: any, next: any) {
 
     // only sets seen if you own it
     notifications.setNotificationSeen(notificationId, accountId).then((rows: any) => {
-        res.status(200).send({});
+        const response = { notificationId: notificationId }
+        res.status(200).send(response);
     }, (err: any) => {
         return next(new NotificationsError.SeenNotification(500));
     });

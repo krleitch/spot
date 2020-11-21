@@ -10,7 +10,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.LOAD_REQUEST: {
       if ( action.request.initialLoad ) {
-        state.posts = [];
+        // state.posts = [];
       }
       return {
         ...state,
