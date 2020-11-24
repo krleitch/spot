@@ -111,10 +111,13 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   enableEditUsername() {
+
     this.editUsernameEnabled = true;
+
     setTimeout(() => {
       this.editUsernameInput.nativeElement.focus();
     }, 0);
+
   }
 
   enableEditEmail() {
@@ -126,12 +129,10 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     result$.subscribe( (result: { status: string }) => {
 
       if ( result.status === 'confirm' ) {
-
         this.editEmailEnabled = true;
         setTimeout(() => {
           this.editEmailInput.nativeElement.focus();
         }, 0);
-
       }
 
     });
@@ -149,12 +150,10 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       result$.subscribe( (result: { status: string }) => {
 
         if ( result.status === 'confirm' ) {
-
           this.editPhoneEnabled = true;
           setTimeout(() => {
             this.editPhoneInput.nativeElement.focus();
           }, 0);
-
         }
 
       });
@@ -197,7 +196,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }, (err: { error: SpotError }) => {
 
-      this.emailErrorMessage = err.error.message;
+      this.usernameErrorMessage = err.error.message;
 
     });
 
@@ -270,6 +269,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteUser() {
+
     if ( this.accountOptionsEnabled ) {
 
       this.modalService.open('spot-confirm-modal');

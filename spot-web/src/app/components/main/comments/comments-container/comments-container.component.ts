@@ -59,6 +59,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   initialLoad = true;
 
   isAuthenticated$: Observable<boolean>;
+  isVerified$: Observable<boolean>;
 
   imageFile: File;
   imgSrc: string = null;
@@ -88,6 +89,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // Check Authentication
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
+    );
+
+    this.isVerified$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsVerified)
     );
 
     // friends
@@ -383,7 +388,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Make the reqest
+    // Make the request
     const request: AddCommentRequest = {
       postId: this.post.id,
       content,

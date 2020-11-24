@@ -171,8 +171,6 @@ export class FriendsComponent implements OnInit, OnDestroy {
           window['FB'].login((loginResponse) => {
             if (loginResponse.status === 'connected') {
 
-              console.log('sending')
-
               const request: FacebookConnectRequest = {
                 accessToken: loginResponse.authResponse.accessToken,
               };

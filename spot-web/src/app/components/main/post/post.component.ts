@@ -1,20 +1,27 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
-import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
+
+// Rxjs
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { take } from 'rxjs/operators';
 
-import { RootStoreState } from '@store';
-import { PostsStoreActions } from '@store/posts-store';
-import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, UnratedPostRequest } from '@models/posts';
-import { Location, AccountMetadata } from '@models/accounts';
+// Services
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { ImageService } from '@services/image.service';
 
+// Store
+import { Store, select } from '@ngrx/store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
+import { RootStoreState } from '@store';
+import { PostsStoreActions } from '@store/posts-store';
+
+// Assets
 import { POSTS_CONSTANTS } from '@constants/posts';
 import { LOCATIONS_CONSTANTS } from '@constants/locations';
+import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, UnratedPostRequest } from '@models/posts';
+import { Location, AccountMetadata } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({

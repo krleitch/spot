@@ -14,6 +14,7 @@ export const selectFacebook = (state: State): boolean => state.facebookConnected
 export const selectGoogle = (state: State): boolean => state.googleConnected;
 export const selectAuthErr = (state: State): SpotError => state.authenticationError;
 export const selectIsAuth = (state: State): boolean => state.account ? true : false;
+export const selectIsVerif = (state: State): boolean => state.account.verified_date ? true : false;
 
 export const selectAccountsState: MemoizedSelector<
   object,
@@ -82,6 +83,14 @@ export const selectIsAuthenticated: MemoizedSelector<
 > = createSelector(
   selectAccountsState,
   selectIsAuth,
+);
+
+export const selectIsVerified: MemoizedSelector<
+  object,
+  boolean
+> = createSelector(
+  selectAccountsState,
+  selectIsVerif,
 );
 
 export const selectAccountMetadata: MemoizedSelector<

@@ -21,10 +21,12 @@
     "@angular/router": "^7.2.13",
     "@ngrx/effects": "^7.4.0",
     "@ngrx/store": "^7.4.0",
+    "@tensorflow/tfjs": "^2.7.0",
     "@types/gapi": "0.0.39",
     "@types/gapi.auth2": "0.0.52",
     "material-icons": "^0.3.1",
     "node-sass": "^4.14.0",
+    "nsfwjs": "^2.3.0",
     "rxjs": "~6.5.4",
     "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
@@ -49,7 +51,7 @@
     "protractor": "~5.4.3",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.2.2",
+    "typescript": "^4.1.2",
     "webpack": "^4.43.0"
   }
 }

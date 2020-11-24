@@ -329,8 +329,6 @@ router.post('/verify', function (req: any, res: any, next: any) {
     }, (err: any, info: any) => {
 
         if ( err ) {
-            console.log('TEST')
-            console.log(err);
             return next(new AccountsError.SendVerify(500));
         } else {
             // Add record to verify account

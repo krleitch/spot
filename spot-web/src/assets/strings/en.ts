@@ -1,5 +1,6 @@
-// All strings should be defined here
-// Localization is a todo
+// String Definitions
+
+// TODO: Localization
 
 // English
 export const STRINGS = {
@@ -45,10 +46,10 @@ export const STRINGS = {
             NEW: 'New',
             HOT: 'Hot',
 
-            VERIFY: 'You must verify your email before you can start posting spots',
+            VERIFY: 'You must verify your email before you can add spots',
             VERIFY_SEND: 'Send email verification',
-            VERIFY_SENT: 'Sent',
-            VERIFY_RESEND: 'Resend'
+            VERIFY_SENT: 'Verification email sent.',
+            VERIFY_RESEND: 'Resend',
 
         },
 
@@ -62,10 +63,10 @@ export const STRINGS = {
 
             EMAIL: 'Email',
             VERIFY: 'Send verification email',
-            VERIFY_SENT: 'Email sent',
+            VERIFY_SENT: 'Verification email sent.',
             VERIFY_RESEND: 'Resend',
             VERIFY_CHECK: 'Verified',
-            EMAIL_VERIFY_DESCRIPTION: 'You will need to verify your email to start posting spots.',
+            EMAIL_VERIFY_DESCRIPTION: 'You will need to verify your email to start making spots.',
             EMAIL_ERROR: 'Email is required',
             EMAIL_INVALID: 'Invalid email',
             EMAIL_CONFIRM: 'If you change your email you will need to verify your email again. Are you sure you would like to continue?',
@@ -161,7 +162,7 @@ export const STRINGS = {
 
           NO_COMMENTS: 'There are no comments on this spot',
           LOGIN: 'Login or Sign Up to Comment',
-
+          VERIFY: 'Email must be verified',
           MAKE_COMMENT: 'Write a comment...',
 
         },
@@ -325,7 +326,7 @@ export const STRINGS = {
 
           TITLE: 'Report',
 
-          REPORT_PLACEHOLDER: 'Enter report message',
+          REPORT_PLACEHOLDER: 'What would you like to report?',
           REPORT_BUTTON: 'Send Report',
 
           SUCCESS_MESSAGE: 'Report Sent'

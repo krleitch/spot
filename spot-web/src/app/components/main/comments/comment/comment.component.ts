@@ -65,6 +65,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   totalReplies = 0;
 
   isAuthenticated$: Observable<boolean>;
+  isVerified$: Observable<boolean>;
 
   // files
   FILENAME_MAX_SIZE = 25;
@@ -98,6 +99,10 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
+    );
+
+    this.isVerified$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsVerified)
     );
 
     this.replies$.subscribe( replies => {

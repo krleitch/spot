@@ -7,9 +7,9 @@ const badwords = require('@services/badwords');
 const aws = require('@services/aws');
 
 // db
-const comments = require('../db/comments');
-const accounts = require('../db/accounts');
-const tags = require('../db/tags');
+const comments = require('@db/comments');
+const accounts = require('@db/accounts');
+const tags = require('@db/tags');
 
 // error
 const CommentsError = require('@exceptions/comments');
@@ -135,11 +135,11 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
             // The required properties
             let tagObject: {
-                owned: boolean;
-                numTagged: number;
-                tagged: boolean;
-                tagger?: string; // only filled if tagged == true
-                tags: any[];
+                owned: boolean; // you own the tag
+                numTagged: number; // how many people were tagged
+                tagged: boolean; // you were  tagged
+                tagger?: string; // only filled if tagged == true, who the tagger is
+                tags: any[]; // list of the tags
             } = {
                 owned: false,
                 numTagged: tagList.length,

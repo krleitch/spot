@@ -278,14 +278,14 @@ img {
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
-  box-sizing: border-box;
   background-color: $lighter-grey;
   border-radius: 3px;
-  min-height: 30px;
-  padding: 6px 6px;
   margin-top: 5px;
 
   .text {
+    min-height: 30px;
+    padding: 6px 6px;
+    box-sizing: border-box;
     flex: 1;
     text-align: center;
     color: $subtle-grey;

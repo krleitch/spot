@@ -54,8 +54,6 @@ export class UsernameComponent implements OnInit, OnDestroy {
   // Send the request
   continueToSpot() {
 
-    console.log(this.terms)
-
     if (!this.terms) {
       this.errorMessage = this.STRINGS.TERMS_ERROR;
       return;

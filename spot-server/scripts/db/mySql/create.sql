@@ -29,9 +29,10 @@ CREATE TABLE accounts (
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,
     verified_date DATETIME,
-    UNIQUE (email, deletion_date),
-    UNIQUE (username, deletion_date),
-    UNIQUE (phone, deletion_date),
+    not_archived int (1) GENERATED ALWAYS AS (IF(deletion_date IS NULL, 1, NULL)) VIRTUAL,
+    UNIQUE (email, not_archived),
+    UNIQUE (username, not_archived),
+    UNIQUE (phone, not_archived),
     PRIMARY KEY (id)
 );
 

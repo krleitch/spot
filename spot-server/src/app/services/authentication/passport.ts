@@ -50,7 +50,6 @@ passport.serializeUser(function (user: any, done: any) {
 });
 
 passport.deserializeUser(function (id: any, done: any) {
-    console.log('CALLED D')
     accounts.getAccountById(id).then( (user: any) => {
         return done(null, user[0])
     }, (err: any) => {

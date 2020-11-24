@@ -54,6 +54,7 @@ export class ReplyComponent implements OnInit, OnDestroy {
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
   isAuthenticated$: Observable<boolean>;
+  isVerified$: Observable<boolean>;
 
   // For large replies
   expanded = false;
@@ -91,6 +92,10 @@ export class ReplyComponent implements OnInit, OnDestroy {
 
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
+    );
+
+    this.isVerified$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsVerified)
     );
 
     this.friends$ = this.store$.pipe(

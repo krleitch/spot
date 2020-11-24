@@ -17,9 +17,7 @@ function addFacebookFriends(accessToken: String, accountId: string): Promise<any
             }
 
             body = JSON.parse(body);
-
-            console.log(body);
-
+            
             resolve({response: response, body: JSON.parse(body)});
           });
     });

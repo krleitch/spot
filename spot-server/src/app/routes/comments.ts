@@ -182,6 +182,11 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    // You must be verified to make a comment
+    if ( !req.verified ) {
+        return next(new AuthenticationError.VerifyError(400));
+    }
+
     const accountId = req.user.id;
     const commentId = uuid.v4();
     req.filename = commentId;
@@ -256,6 +261,11 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    // You must be verified to make a reply
+    if ( !req.verified ) {
+        return next(new AuthenticationError.VerifyError(400));
     }
 
     const accountId = req.user.id;
