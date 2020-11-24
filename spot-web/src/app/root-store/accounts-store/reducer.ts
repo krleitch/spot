@@ -11,18 +11,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       };
     }
     case ActionTypes.REGISTER_SUCCESS: {
-
-      if ( action.response.account.facebook_id ) {
-        state.facebookConnected = true;
-      }
-      if ( action.response.account.google_id ) {
-        state.googleConnected = true;
-      }
-
       return {
         ...state,
         account: action.response.account,
         authenticationError: null,
+        facebookConnected: action.response.account.facebook_id ? true : false,
+        googleConnected: action.response.account.google_id ? true : false,
       };
     }
     case ActionTypes.REGISTER_FAILURE: {
@@ -33,18 +27,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       };
     }
     case ActionTypes.LOGIN_SUCCESS: {
-
-      if ( action.response.account.facebook_id ) {
-          state.facebookConnected = true;
-      }
-      if ( action.response.account.google_id ) {
-        state.googleConnected = true;
-      }
-
       return {
         ...state,
         account: action.response.account,
-        authenticationError: null
+        authenticationError: null,
+        facebookConnected: action.response.account.facebook_id ? true : false,
+        googleConnected: action.response.account.google_id ? true : false,
       };
     }
     case ActionTypes.LOGIN_FAILURE: {
@@ -94,18 +82,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       };
     }
     case ActionTypes.ACCOUNT_SUCCESS: {
-
-      if ( action.response.account.facebook_id ) {
-        state.facebookConnected = true;
-      }
-      if ( action.response.account.google_id ) {
-        state.googleConnected = true;
-      }
-
       return {
         ...state,
         account: action.response.account,
         accountLoading: false,
+        facebookConnected: action.response.account.facebook_id ? true : false,
+        googleConnected: action.response.account.google_id ? true : false,
       };
     }
     case ActionTypes.UPDATE_USERNAME_REQUEST: {

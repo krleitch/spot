@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject, throwError } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
@@ -24,7 +24,7 @@ interface ShareFriend extends Friend {
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss']
 })
-export class ShareComponent implements OnInit, OnDestroy {
+export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
   private observer: IntersectionObserver;
@@ -87,7 +87,10 @@ export class ShareComponent implements OnInit, OnDestroy {
       this.friends = friends;
     });
 
-    // whenever the modal is opened and  becomes visible
+  }
+
+  ngAfterViewInit() {
+    // whenever the modal is opened and becomes visible
     this.observer = new IntersectionObserver(([entry]) => {
 
       if ( entry.isIntersecting ) {

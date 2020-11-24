@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -28,7 +28,7 @@ import { SpotError } from '@exceptions/error';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })
-export class CommentComponent implements OnInit, OnDestroy {
+export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -156,8 +156,10 @@ export class CommentComponent implements OnInit, OnDestroy {
       this.isExpandable = true;
     }
 
-    this.setContentHTML();
+  }
 
+  ngAfterViewInit() {
+    this.setContentHTML();
   }
 
   ngOnDestroy() {

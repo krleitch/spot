@@ -175,6 +175,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Wait until we have the required info to load posts
     // only local requires location
     // If location is loading, we should wait for it
+
     const source = interval(500);
     source.pipe(
       skipWhile(() => typeof this.postLocation === 'undefined' ||

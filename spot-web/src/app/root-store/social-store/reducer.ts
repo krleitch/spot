@@ -18,15 +18,11 @@ export function featureReducer(state = initialState, action: NotificationsAction
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_SUCCESS: {
-      if (!action.response.date) {
-        state.notifications = action.response.notifications;
-      } else {
-        state.notifications = state.notifications.concat(action.response.notifications);
-      }
       return {
         ...state,
         getNotificationsSuccess: true,
-        getNotificationsLoading: false
+        getNotificationsLoading: false,
+        notifications: !action.response.date ? action.response.notifications : state.notifications.concat(action.response.notifications)
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE: {
@@ -49,22 +45,30 @@ export function featureReducer(state = initialState, action: NotificationsAction
       };
     }
     case NotificationsActionTypes.DELETE_NOTIFICATION_SUCCESS: {
-      state.notifications = state.notifications.filter( item => item.id !== action.response.notificationId );
       return {
-        ...state
+        ...state,
+        notifications: state.notifications.filter( item => item.id !== action.response.notificationId )
       };
     }
     case NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS: {
-      state.notifications.forEach( notif => {
+
+      let newNotifications = Object.assign({}, state.notifications);
+
+      newNotifications.forEach( notif => {
         notif.seen = 1;
       });
+
       return {
         ...state,
-        unread: 0
+        unread: 0,
+        notifications: newNotifications
       };
     }
     case NotificationsActionTypes.SET_NOTIFICATION_SEEN_SUCCESS: {
-      state.notifications.forEach( notif => {
+
+      let newNotifications = Object.assign({}, state.notifications);
+
+      newNotifications.forEach( notif => {
         if ( notif.id === action.response.notificationId ) {
           notif.seen = 1;
         }
@@ -72,6 +76,7 @@ export function featureReducer(state = initialState, action: NotificationsAction
       return {
         ...state,
         unread: Math.max(0, state.unread - 1),
+        notifications: newNotifications
       };
     }
     case FriendsActionTypes.GET_FRIEND_REQUESTS_SUCCESS: {
@@ -93,34 +98,48 @@ export function featureReducer(state = initialState, action: NotificationsAction
       };
     }
     case FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_SUCCESS: {
-      state.friendRequests.forEach( (friend , i) => {
+
+      let newFriendRequests = Object.assign({}, state.friendRequests);
+      let newFriends = Object.assign({}, state.friends);
+
+      newFriendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friend.id) {
-          state.friends.unshift(action.response.friend);
-          state.friendRequests.splice(i, 1);
+          newFriends.unshift(action.response.friend);
+          newFriendRequests.splice(i, 1);
         }
       });
       return {
-        ...state
+        ...state,
+        friends: newFriends,
+        friendRequests: newFriendRequests
       };
     }
     case FriendsActionTypes.DECLINE_FRIEND_REQUESTS_SUCCESS: {
-      state.friendRequests.forEach( (friend , i) => {
+
+      let newFriendRequests = Object.assign({}, state.friendRequests);
+
+      newFriendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friendRequestId) {
-          state.friendRequests.splice(i, 1);
+          newFriendRequests.splice(i, 1);
         }
       });
       return {
-        ...state
+        ...state,
+        friendRequests: newFriendRequests
       };
     }
     case FriendsActionTypes.DELETE_FRIENDS_SUCCESS: {
-      state.friends.forEach( (friend , i) => {
+
+      let newFriends = Object.assign({}, state.friends);
+
+      newFriends.forEach( (friend , i) => {
         if (friend.id === action.response.friendId) {
-          state.friends.splice(i, 1);
+          newFriends.splice(i, 1);
         }
       });
       return {
-        ...state
+        ...state,
+        friends: newFriends
       };
     }
     default: {

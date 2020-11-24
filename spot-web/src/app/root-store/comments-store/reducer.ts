@@ -7,97 +7,126 @@ export function featureReducer(state = initialState, action: Actions): State {
       return {
           ...initialState
       };
-  }
+    }
     case ActionTypes.ADD_COMMENT_REQUEST: {
-        if (state.comments[action.request.postId] === undefined) {
-            state.comments[action.request.postId] = {
+
+        let newComments = Object.assign({}, state.comments);
+
+        if (newComments[action.request.postId] === undefined) {
+          newComments[action.request.postId] = {
               comments: [],
               totalComments: 0
             };
         }
-        state.comments[action.request.postId].comments.unshift(action.request.comment);
+        newComments[action.request.postId].comments.unshift(action.request.comment);
         return {
-            ...state
+            ...state,
+            comments: newComments
         };
     }
     case ActionTypes.DELETE_SUCCESS: {
-      state.comments[action.response.postId].comments.forEach( (comment, i) => {
+
+      let newComments = Object.assign({}, state.comments);
+      let newReplies = Object.assign({}, state.comments);
+
+      newComments[action.response.postId].comments.forEach( (comment, i) => {
         if (comment.id === action.response.commentId) {
-          state.comments[action.response.postId].comments.splice(i, 1);
+          newComments[action.response.postId].comments.splice(i, 1);
         }
       });
-      state.replies[action.response.postId][action.response.commentId].comments = [];
+      newReplies[action.response.postId][action.response.commentId].comments = [];
       return {
-          ...state
+          ...state,
+          comments: newComments,
+          replies: newReplies
       };
     }
     case ActionTypes.SET_COMMENTS_REQUEST: {
-      if (state.comments[action.request.postId] === undefined || action.request.initialLoad) {
-        state.comments[action.request.postId] = {
+
+      let newComments = Object.assign({}, state.comments);
+
+      if (newComments[action.request.postId] === undefined || action.request.initialLoad) {
+        newComments[action.request.postId] = {
           comments: []
         };
       }
       if ( action.request.type === 'after' ) {
-        state.comments[action.request.postId] = {
-          comments: action.request.comments.concat(state.comments[action.request.postId].comments)
+        newComments[action.request.postId] = {
+          comments: action.request.comments.concat(newComments[action.request.postId].comments)
         };
       } else {
-        state.comments[action.request.postId] = {
-          comments: state.comments[action.request.postId].comments.concat(action.request.comments)
+        newComments[action.request.postId] = {
+          comments: newComments[action.request.postId].comments.concat(action.request.comments)
         };
       }
       return {
-        ...state
+        ...state,
+        comments: newComments
       };
     }
     case ActionTypes.SET_REPLIES_REQUEST: {
-        if (state.replies[action.request.postId] === undefined) {
-          state.replies[action.request.postId] = {};
+
+        let newReplies = Object.assign({}, state.replies);
+
+        if (newReplies[action.request.postId] === undefined) {
+          newReplies[action.request.postId] = {};
         }
-        if (state.replies[action.request.postId][action.request.commentId] === undefined) {
-          state.replies[action.request.postId][action.request.commentId] = {
+        if (newReplies[action.request.postId][action.request.commentId] === undefined) {
+          newReplies[action.request.postId][action.request.commentId] = {
             replies: []
           };
         }
         if ( action.request.initialLoad) {
-          state.replies[action.request.postId][action.request.commentId] = {
+          newReplies[action.request.postId][action.request.commentId] = {
             replies: action.request.replies,
           };
         } else {
-          state.replies[action.request.postId][action.request.commentId] = {
-            replies: state.replies[action.request.postId][action.request.commentId].replies.concat(action.request.replies)
+          newReplies[action.request.postId][action.request.commentId] = {
+            replies: newReplies[action.request.postId][action.request.commentId].replies.concat(action.request.replies)
           };
         }
         return {
-          ...state
+          ...state,
+          replies: newReplies
         };
     }
     case ActionTypes.ADD_REPLY_REQUEST: {
-      if (state.replies[action.request.postId] === undefined) {
-        state.replies[action.request.postId] = {};
+
+      let newReplies = Object.assign({}, state.replies);
+
+      if (newReplies[action.request.postId] === undefined) {
+        newReplies[action.request.postId] = {};
       }
-      if (state.replies[action.request.postId][action.request.commentId] === undefined) {
-        state.replies[action.request.postId][action.request.commentId] = {
+      if (newReplies[action.request.postId][action.request.commentId] === undefined) {
+        newReplies[action.request.postId][action.request.commentId] = {
           replies: []
         };
       }
-      state.replies[action.request.postId][action.request.commentId].replies.push(action.request.reply);
+      newReplies[action.request.postId][action.request.commentId].replies.push(action.request.reply);
       return {
           ...state,
+          replies: newReplies
       };
     }
     case ActionTypes.DELETE_REPLY_SUCCESS: {
-      state.replies[action.response.postId][action.response.parentId].replies.forEach( (comment, i) => {
+
+      let newReplies = Object.assign({}, state.replies);
+
+      newReplies[action.response.postId][action.response.parentId].replies.forEach( (comment, i) => {
         if (comment.id === action.response.commentId) {
-          state.replies[action.response.postId][action.response.parentId].replies.splice(i, 1);
+          newReplies[action.response.postId][action.response.parentId].replies.splice(i, 1);
         }
       });
       return {
-          ...state
+          ...state,
+          replies: newReplies
       };
     }
     case ActionTypes.LIKE_SUCCESS: {
-      state.comments[action.response.postId].comments.forEach( (comment , i) => {
+
+      let newComments = Object.assign({}, state.comments);
+
+      newComments[action.response.postId].comments.forEach( (comment , i) => {
         if (comment.id === action.response.commentId) {
           comment.likes += 1;
           if (comment.rated === 0) {
@@ -107,11 +136,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        comments: newComments
       };
     }
     case ActionTypes.DISLIKE_SUCCESS: {
-      state.comments[action.response.postId].comments.forEach( (comment , i) => {
+
+      let newComments = Object.assign({}, state.comments);
+
+      newComments[action.response.postId].comments.forEach( (comment , i) => {
         if (comment.id === action.response.commentId) {
           comment.dislikes += 1;
           if (comment.rated === 1) {
@@ -121,11 +154,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        comments: newComments
       };
     }
     case ActionTypes.UNRATED_SUCCESS: {
-      state.comments[action.response.postId].comments.forEach( (comment , i) => {
+
+      let newComments = Object.assign({}, state.comments);
+
+      newComments[action.response.postId].comments.forEach( (comment , i) => {
         if (comment.id === action.response.commentId) {
           if (comment.rated === 1) {
             comment.likes -= 1;
@@ -136,11 +173,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        comments: newComments
       };
     }
     case ActionTypes.LIKE_REPLY_SUCCESS: {
-      state.replies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
+
+      let newReplies = Object.assign({}, state.replies);
+
+      newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
           reply.likes += 1;
           if (reply.rated === 0) {
@@ -150,11 +191,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        replies: newReplies
       };
     }
     case ActionTypes.DISLIKE_REPLY_SUCCESS: {
-      state.replies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
+
+      let newReplies = Object.assign({}, state.replies);
+
+      newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
           reply.dislikes += 1;
           if (reply.rated === 1) {
@@ -164,11 +209,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        replies: newReplies
       };
     }
     case ActionTypes.UNRATED_REPLY_SUCCESS: {
-      state.replies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
+
+      let newReplies = Object.assign({}, state.replies);
+
+      newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
           if (reply.rated === 1) {
             reply.likes -= 1;
@@ -179,7 +228,8 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        replies: newReplies
       };
     }
     default: {

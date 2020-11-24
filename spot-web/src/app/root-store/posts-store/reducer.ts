@@ -51,10 +51,14 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     case ActionTypes.ADD_SUCCESS: {
-      state.posts.unshift(action.response.post);
+
+      let newPosts = Object.assign({}, state.posts);
+
+      newPosts.unshift(action.response.post);
       return {
         ...state,
-        createSuccess: true
+        createSuccess: true,
+        posts: newPosts
       };
     }
     case ActionTypes.ADD_FAILURE: {
@@ -65,7 +69,10 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     case ActionTypes.LIKE_SUCCESS: {
-      state.posts.forEach( (post , i) => {
+
+      let newPosts = Object.assign({}, state.posts);
+
+      newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
           post.likes += 1;
           if (post.rated === 0) {
@@ -75,11 +82,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        posts: newPosts
       };
     }
     case ActionTypes.DISLIKE_SUCCESS: {
-      state.posts.forEach( (post , i) => {
+
+      let newPosts = Object.assign({}, state.posts);
+
+      newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
           post.dislikes += 1;
           if (post.rated === 1) {
@@ -89,11 +100,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        posts: newPosts
       };
     }
     case ActionTypes.UNRATED_SUCCESS: {
-      state.posts.forEach( (post , i) => {
+
+      let newPosts = Object.assign({}, state.posts);
+
+      newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
           if (post.rated === 1) {
             post.likes -= 1;
@@ -104,17 +119,22 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       return {
-        ...state
+        ...state,
+        posts: newPosts
       };
     }
     case ActionTypes.DELETE_SUCCESS: {
-      state.posts.forEach( (post , i) => {
+
+      let newPosts = Object.assign({}, state.posts);
+
+      newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
-          state.posts.splice(i, 1);
+          newPosts.splice(i, 1);
         }
       });
       return {
         ...state,
+        posts: newPosts
       };
     }
     default: {
