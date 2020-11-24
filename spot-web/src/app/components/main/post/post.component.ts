@@ -9,7 +9,7 @@ import { take } from 'rxjs/operators';
 // Services
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
-import { ImageService } from '@services/image.service';
+// import { ImageService } from '@services/image.service';
 
 // Store
 import { Store, select } from '@ngrx/store';

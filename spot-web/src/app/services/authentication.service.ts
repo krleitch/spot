@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Md5 } from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
