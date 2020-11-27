@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Rxjs
@@ -9,7 +9,7 @@ import { take } from 'rxjs/operators';
 // Services
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
-// import { ImageService } from '@services/image.service';
+import { ImageService } from '@services/image.service';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -29,13 +29,14 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss']
 })
-export class PostComponent implements OnInit, OnDestroy {
+export class PostComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
   @Input() post: Post;
   @ViewChild('options') options: ElementRef;
+  @ViewChild('postimage') postImage: ElementRef;
 
   STRINGS = STRINGS.MAIN.POST;
   POSTS_CONSTANTS = POSTS_CONSTANTS;
@@ -53,6 +54,7 @@ export class PostComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<RootStoreState.State>,
               private router: Router,
               private modalService: ModalService,
+              private imageService: ImageService,
               private authenticationService: AuthenticationService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
@@ -78,6 +80,12 @@ export class PostComponent implements OnInit, OnDestroy {
 
     this.time = this.getTime();
 
+  }
+
+  ngAfterViewInit() {
+    if ( this.postImage ) {
+      this.imageService.predict(this.postImage.nativeElement);
+    }
   }
 
   ngOnDestroy() {

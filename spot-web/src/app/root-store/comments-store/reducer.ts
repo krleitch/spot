@@ -72,18 +72,24 @@ export function featureReducer(state = initialState, action: Actions): State {
           newReplies[action.request.postId] = {};
         }
         if (newReplies[action.request.postId][action.request.commentId] === undefined) {
-          newReplies[action.request.postId][action.request.commentId] = {
+          let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+          newRepliesObj[action.request.commentId] = {
             replies: []
           };
+          newReplies[action.request.postId] = newRepliesObj;
         }
         if ( action.request.initialLoad) {
-          newReplies[action.request.postId][action.request.commentId] = {
+          let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+          newRepliesObj[action.request.commentId] = {
             replies: action.request.replies,
           };
+          newReplies[action.request.postId] = newRepliesObj;
         } else {
-          newReplies[action.request.postId][action.request.commentId] = {
-            replies: newReplies[action.request.postId][action.request.commentId].replies.concat(action.request.replies)
+          let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+          newRepliesObj[action.request.commentId] = {
+            replies: newRepliesObj[action.request.commentId].replies.concat(action.request.replies)
           };
+          newReplies[action.request.postId] = newRepliesObj;
         }
         return {
           ...state,
@@ -98,11 +104,15 @@ export function featureReducer(state = initialState, action: Actions): State {
         newReplies[action.request.postId] = {};
       }
       if (newReplies[action.request.postId][action.request.commentId] === undefined) {
-        newReplies[action.request.postId][action.request.commentId] = {
+        let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+        newRepliesObj[action.request.commentId] = {
           replies: []
         };
+        newReplies[action.request.postId] = newRepliesObj;
       }
-      newReplies[action.request.postId][action.request.commentId].replies.push(action.request.reply);
+      let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+      newRepliesObj[action.request.commentId].replies.push(action.request.reply);
+      newReplies[action.request.postId] = newRepliesObj;
       return {
           ...state,
           replies: newReplies
@@ -114,7 +124,9 @@ export function featureReducer(state = initialState, action: Actions): State {
 
       newReplies[action.response.postId][action.response.parentId].replies.forEach( (comment, i) => {
         if (comment.id === action.response.commentId) {
-          newReplies[action.response.postId][action.response.parentId].replies.splice(i, 1);
+          let newRepliesObj = Object.assign({}, newReplies[action.response.postId]);
+          newRepliesObj[action.response.parentId].replies.splice(i, 1);
+          newReplies[action.response.postId] = newRepliesObj;
         }
       });
       return {
