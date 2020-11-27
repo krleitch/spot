@@ -13,8 +13,8 @@ const notifications = require('@db/notifications');
 
 // services
 const commentsService = require('@services/comments');
-const upload = require('@services/image');
-const singleUpload = upload.single('image');
+const imageService =  require('@services/image');
+const singleUpload = imageService.upload.single('image');
 
 // errors
 const CommentsError = require('@exceptions/comments');
@@ -219,7 +219,9 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
 
         const link = await commentsService.generateLink();
 
-        comments.addComment(commentId, postId, accountId, content, image, link, commentParentId).then( async (comment: any) => {
+        const imageNsfw = await imageService.predictNsfw(image);
+
+        comments.addComment(commentId, postId, accountId, content, image, imageNsfw, link, commentParentId).then( async (comment: any) => {
 
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
@@ -283,9 +285,12 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
 
         const postId = req.params.postId;
         const commentId = req.params.commentId;
+
         const link = await commentsService.generateLink();
 
-        comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, link).then( ErrorHandler.catchAsync(async (reply: any) => {
+        const imageNsfw = await imageService.predictNsfw(image);
+
+        comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, imageNsfw, link).then( ErrorHandler.catchAsync(async (reply: any) => {
 
             // TODO: add catches for these
 

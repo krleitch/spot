@@ -19,7 +19,7 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
 
     var values: any[] = [];
     var selectSql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
-                        posts.likes, posts.dislikes, posts.comments, posts.geolocation,
+                        posts.image_nsfw, posts.likes, posts.dislikes, posts.comments, posts.geolocation,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
                       WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                       ELSE NULL END) AS rated,
@@ -74,7 +74,7 @@ function getPosts(accountId: string, sort: string, location: string, latitude: s
 
 function getPostById(postId: string, accountId: string): Promise<any> {
     var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
-                    posts.likes, posts.dislikes, posts.comments, posts.geolocation,
+                    posts.image_nsfw, posts.likes, posts.dislikes, posts.comments, posts.geolocation,
                 (CASE WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 1 THEN 1 
                     WHEN ( SELECT rating FROM posts_rating WHERE post_id = posts.id AND account_id = ? ) = 0 THEN 0
                     ELSE NULL END) AS rated,
@@ -86,15 +86,15 @@ function getPostById(postId: string, accountId: string): Promise<any> {
 
 function getPostByIdNoAccount(postId: string): Promise<any> {
     var sql = `SELECT posts.id, posts.creation_date, posts.longitude, posts.latitude, posts.content, posts.link, posts.image_src,
-                    posts.likes, posts.dislikes, posts.comments, posts.geolocation
+                    posts.image_nsfw, posts.likes, posts.dislikes, posts.comments, posts.geolocation
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? AND posts.deletion_date IS NULL GROUP BY posts.id ORDER BY posts.creation_date DESC`;
     var values = [postId];
     return db.query(sql, values);
 }
 
-function addPost(postId: string, content: string, location: any, imageSrc: string, link: string, accountId: string, geolocation: string): Promise<any> {
-    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, likes, dislikes, comments, geolocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, link, imageSrc, 0, 0, 0, geolocation];
+function addPost(postId: string, content: string, location: any, imageSrc: string, imageNsfw: boolean, link: string, accountId: string, geolocation: string): Promise<any> {
+    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, image_nsfw, likes, dislikes, comments, geolocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, link, imageSrc, imageNsfw, 0, 0, 0, geolocation];
     return db.query(sql, values).then( (rows: any) => {
         return getPostById(postId, accountId);
     });
@@ -150,7 +150,7 @@ function getPostByLink(link: string, accountId?: string) {
 function getPostsActivity(accountId: string, date: string, limit: number) {
     var activityDate = new Date();
     activityDate.setDate(activityDate.getDate() - POST_CONSTANTS.ACTIVITY_DAYS);
-    var sql = `SELECT id, creation_date, longitude, latitude, geolocation, content, link, image_src, likes, dislikes, comments
+    var sql = `SELECT id, creation_date, longitude, latitude, geolocation, content, link, image_src, image_nsfw, likes, dislikes, comments
                 FROM posts WHERE account_id = ? AND deletion_date IS NULL AND creation_date < ? AND creation_date > ? ORDER BY creation_date DESC LIMIT ?`;
     var values = [accountId,  new Date(date), activityDate, limit];
     return db.query(sql, values);

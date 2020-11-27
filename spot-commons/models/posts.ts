@@ -10,6 +10,7 @@ export interface Post {
     geolocation: string;
     content: string;
     image_src: string;
+    image_nsfw: boolean;
     likes: number;
     dislikes: number;
     rated: number;

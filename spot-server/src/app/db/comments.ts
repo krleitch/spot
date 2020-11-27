@@ -15,7 +15,7 @@ const COMMENTS_CONSTANTS = commentsConstants.COMMENTS_CONSTANTS;
 // Used for getting a comment or reply
 function getCommentById(commentId: string, accountId: string): Promise<any> {
     var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes, comments.comment_parent_id, comments.link,
+                        comments.image_nsfw, comments.likes, comments.dislikes, comments.comment_parent_id, comments.link,
         (CASE WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 1 THEN 1 
             WHEN ( SELECT rating FROM comments_rating WHERE comment_id = comments.id AND account_id = ? ) = 0 THEN 0
             ELSE NULL END) AS rated,
@@ -28,7 +28,7 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
 
 function getCommentByIdNoAccount(commentId: string): Promise<any> {
     var sql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes, comments.link
+                        comments.image_nsfw, comments.likes, comments.dislikes, comments.link
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
         WHERE comments.id = ? AND comments.deletion_date IS NULL GROUP BY comments.id`;
     var values = [commentId];
@@ -39,7 +39,7 @@ function getCommentByIdNoAccount(commentId: string): Promise<any> {
 // Used for getting just the comments of a post
 function getCommentByPostId(postId: string, date: string, limit: number, type: string, accountId: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes, comments.link`
+                        comments.image_nsfw, comments.likes, comments.dislikes, comments.link`
 
     var accountSql = '';
     var accountValues: any[] = [];
@@ -68,7 +68,7 @@ function getCommentByPostId(postId: string, date: string, limit: number, type: s
 
 function getCommentByPostIdNoAccount(postId: string, date: string, limit: number, type: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes, comments.link
+                        comments.image_nsfw, comments.likes, comments.dislikes, comments.link
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id
         WHERE comments.post_id = ? AND comments.parent_id IS NULL AND comments.deletion_date IS NULL `;
 
@@ -84,10 +84,10 @@ function getCommentByPostIdNoAccount(postId: string, date: string, limit: number
     return db.query(sql, values);
 }
 
-function addComment(commentId: string, postId: string, accountId: string, content: string, image: string, link: string, commentParentId: string): Promise<any> {
+function addComment(commentId: string, postId: string, accountId: string, content: string, image: string, imageNsfw: boolean, link: string, commentParentId: string): Promise<any> {
     // Note the parent_id is NULL
-    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, comment_parent_id, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [commentId, postId, accountId, new Date(), commentParentId, content, link, image, 0, 0];
+    var sql = 'INSERT INTO comments (id, post_id, account_id, creation_date, comment_parent_id, content, link, image_src, image_nsfw, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [commentId, postId, accountId, new Date(), commentParentId, content, link, image, imageNsfw, 0, 0];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(commentId, accountId);  
     });
@@ -106,9 +106,9 @@ function deleteCommentByPostId(postId: string, accountId: string): Promise<any> 
 }
 
 // Add a reply
-function addReply(replyId: string, postId: string, commentId: string, commentParentId: string, accountId: string, content: string, image: string, link: string): Promise<any> {
-    var sql = 'INSERT INTO comments (id, post_id, parent_id, comment_parent_id, account_id, creation_date, content, link, image_src, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [replyId, postId, commentId, commentParentId, accountId, new Date(), content, link, image, 0, 0];
+function addReply(replyId: string, postId: string, commentId: string, commentParentId: string, accountId: string, content: string, image: string, imageNsfw: boolean, link: string): Promise<any> {
+    var sql = 'INSERT INTO comments (id, post_id, parent_id, comment_parent_id, account_id, creation_date, content, link, image_src, image_nsfw, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var values = [replyId, postId, commentId, commentParentId, accountId, new Date(), content, link, image, imageNsfw, 0, 0];
     return db.query(sql, values).then( (rows: any) => {
         return getCommentById(replyId, accountId);  
     });    
@@ -117,7 +117,7 @@ function addReply(replyId: string, postId: string, commentId: string, commentPar
 // Used for getting just the comments of a post
 function getRepliesByCommentId(postId: string, commentId: string, date: string, limit: number, accountId?: string): Promise<any> {
     var selectSql = `SELECT comments.id, comments.post_id, comments.parent_id, comments.creation_date, comments.content, comments.account_id, comments.image_src,
-                        comments.likes, comments.dislikes, comments.link`
+                        comments.image_nsfw, comments.likes, comments.dislikes, comments.link`
 
     var accountSql = '';
     var values: any[] = [];
@@ -193,9 +193,9 @@ function unratedComment(commentId: string, accountId: string): Promise<any> {
 function getCommentsActivity(accountId: string, date: string, limit: number) {
     var activityDate = new Date();
     activityDate.setDate(activityDate.getDate() - COMMENTS_CONSTANTS.ACTIVITY_DAYS);
-    var sql = `SELECT c1.id, c1.creation_date, c1.likes, c1.dislikes, c1.parent_id, c1.content, c1.image_src, c1.link, c1.account_id,
-                 p.content as post_content, p.image_src as post_image_src, p.link as post_link,
-                 c2.content as parent_content, c2.image_src as parent_image_src, c2.link as parent_link
+    var sql = `SELECT c1.id, c1.creation_date, c1.likes, c1.dislikes, c1.parent_id, c1.content, c1.image_src, c1.image_nsfw, c1.link, c1.account_id,
+                 p.content as post_content, p.image_src as post_image_src, p.image_nsfw as post_image_nsfw, p.link as post_link,
+                 c2.content as parent_content, c2.image_src as parent_image_src, c2.image_nsfw as parent_image_nsfw, c2.link as parent_link
                  FROM comments c1 LEFT JOIN posts p ON p.id = c1.post_id LEFT JOIN comments c2 ON c1.parent_id = c2.id
                  WHERE c1.account_id = ? AND c1.deletion_date IS NULL AND c2.deletion_date IS NULL AND p.deletion_date IS NULL 
                  AND c1.creation_date < ? AND c1.creation_date > ? ORDER BY c1.creation_date DESC LIMIT ?`;

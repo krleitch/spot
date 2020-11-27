@@ -21,17 +21,9 @@
     "@angular/router": "~10.2.0",
     "@ngrx/effects": "^10.0.1",
     "@ngrx/store": "^10.0.1",
-    "@tensorflow/tfjs": "^2.7.0",
-    "buffer": "^6.0.3",
-    "nsfwjs": "^2.3.0",
-    "path": "^0.12.7",
-    "process": "^0.11.10",
     "rxjs": "~6.6.0",
-    "seedrandom": "^2.4.3",
-    "stream": "0.0.2",
     "ts-md5": "^1.2.7",
     "tslib": "^2.0.0",
-    "zlib": "^1.0.5",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

@@ -26,6 +26,7 @@
 
       <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
         <img #postimage [src]="post.image_src" crossOrigin='anonymous' />
+        <span> {{ post.image_nsfw }} </span>
       </div>
 
       <div class="options">

@@ -1,4 +1,4 @@
-export { checkLocation, verifyLocation, distanceBetween, getGeolocation, addDistanceToRows }
+export { checkLocation, verifyLocation, distanceBetween, getGeolocation, addDistanceToRows };
 
 const request = require('request');
 

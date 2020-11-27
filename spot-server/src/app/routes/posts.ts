@@ -10,8 +10,8 @@ const reports = require('@db/reports');
 // services
 const postsService = require('@services/posts');
 const locationsService = require('@services/locations');
-const upload = require('@services/image');
-const singleUpload = upload.single('image');
+const imageService =  require('@services/image');
+const singleUpload = imageService.upload.single('image');
 
 // errors
 const PostsError = require('@exceptions/posts');
@@ -112,8 +112,10 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 
         const link = await postsService.generateLink();
 
+        const imageNsfw = await imageService.predictNsfw(image);
+
         locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
-            posts.addPost(postId, content, location, image, link, accountId, geolocation).then((rows: any) => {
+            posts.addPost(postId, content, location, image, imageNsfw, link, accountId, geolocation).then((rows: any) => {
                 rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude, true);
                 const response = { post: rows[0] }
                 res.status(200).json(response);

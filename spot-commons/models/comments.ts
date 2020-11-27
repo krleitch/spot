@@ -8,6 +8,7 @@ export interface Comment {
     creation_date: string;
     content: string;
     image_src: string;
+    image_nsfw: boolean;
     likes: number;
     dislikes: number;
     rated: number;
@@ -238,13 +239,16 @@ export interface CommentActivity {
     dislikes: number;
     content: string;
     image_src: string;
+    image_nsfw: boolean;
     parent_id: string;
     link: string;
     post_content: string;
     post_image_src: string;
+    post_image_nsfw: boolean;
     post_link: string;
     parent_content: string;
     parent_image_src: string;
+    parent_image_nsfw: boolean;
     parent_link: string;
     tag: CommentTag;
 }
