@@ -393,9 +393,19 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  setMetric() {
+  public setMetric(): void {
     const request: UpdateAccountMetadataRequest = {
       distance_unit: 'metric'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
+  }
+
+  public setMature(value: boolean): void {
+    const request: UpdateAccountMetadataRequest = {
+      mature_filter: value
     };
 
     this.store$.dispatch(

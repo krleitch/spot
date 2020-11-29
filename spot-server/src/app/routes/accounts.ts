@@ -266,7 +266,7 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
 
     const accountId = req.user.id;
 
-    const { distance_unit, search_type, search_distance } = req.body;
+    const { distance_unit, search_type, search_distance, mature_filter } = req.body;
 
     // TODO, really dont like the await strategy here
     // We only ever change metadata 1 property at a time right now
@@ -290,6 +290,13 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
         await accounts.updateAccountsMetadataSearchDistance(accountId, search_distance).then( (rows: any) => {
         }, (err: any) => {
             return next(new AccountsError.MetadataSearchDistance(500));
+        });   
+    }
+
+    if ( mature_filter ) {
+        await accounts.updateAccountsMetadataMatureFilter(accountId, mature_filter).then( (rows: any) => {
+        }, (err: any) => {
+            return next(new AccountsError.MetadataMatureFilter(500));
         });   
     }
 

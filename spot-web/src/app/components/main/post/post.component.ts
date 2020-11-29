@@ -41,10 +41,11 @@ export class PostComponent implements OnInit, OnDestroy {
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   location$: Observable<Location>;
-  accountMetadata$: Observable<AccountMetadata>;
   location: Location;
-  time: string;
+  accountMetadata$: Observable<AccountMetadata>;
 
+  time: string;
+  imageBlurred: boolean; // if content flagged nsfw
   expanded = false;
   isExpandable = false;
 
@@ -75,8 +76,9 @@ export class PostComponent implements OnInit, OnDestroy {
          || this.post.content.length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
       this.isExpandable = true;
     }
-
     this.time = this.getTime();
+    // this.imageBlurred = this.post.image_nsfw;
+    this.imageBlurred = true;
 
   }
 
@@ -257,6 +259,16 @@ export class PostComponent implements OnInit, OnDestroy {
 
   closeModal(id: string): void {
     this.modalService.close(id);
+  }
+
+  imageClicked(): void {
+
+    if ( !this.imageBlurred ) {
+      this.openModal('spot-image-modal', this.post.image_src);
+    } else {
+      this.imageBlurred = false;
+    }
+
   }
 
 }

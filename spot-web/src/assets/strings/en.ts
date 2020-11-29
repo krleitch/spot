@@ -96,6 +96,10 @@ export const STRINGS = {
             IMPERIAL: 'Imperial',
             METRIC: 'Metric',
 
+            MATURE: 'Mature Content Filter',
+            MATURE_TRUE: 'On',
+            MATURE_FALSE: 'Off',
+
             // Account options
             ACCOUNT_OPTIONS: 'Options',
             ENABLE_OPTIONS: 'Enable Options',

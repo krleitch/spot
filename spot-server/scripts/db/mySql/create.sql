@@ -42,6 +42,7 @@ CREATE TABLE accounts_metadata (
     distance_unit VARCHAR(36) NOT NULL,
     search_type VARCHAR(36) NOT NULL,
     search_distance VARCHAR(36) NOT NULL,
+    mature_filter BOOLEAN DEFAULT TRUE,
     score INT NOT NULL,
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     PRIMARY KEY (id)

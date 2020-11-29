@@ -122,6 +122,7 @@ export const ERROR_MESSAGES = {
             METADATA_DISTANCE_UNIT: 'Error updating metadata distance unit',
             METADATA_SEARCH_TYPE: 'Error updating metadata search type',
             METADATA_SEARCH_DISTANCE: 'Error updating metadata search distance',
+            METADATA_MATURE_FILTER: 'Error updating metadata mature filter',
 
             SEND_VERIFY: 'Error sending verification email',
             CONFIRM_VERIFY: 'Error confirming email verification'

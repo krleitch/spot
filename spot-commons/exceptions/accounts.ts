@@ -101,6 +101,13 @@ export class MetadataSearchDistance extends SpotError {
     }
 }
 
+export class MetadataMatureFilter extends SpotError {
+  constructor(statusCode) {
+    super(ACCOUNTS_ERROR_MESSAGES.METADATA_MATURE_FILTER, statusCode);
+    this.name = "MetadataMatureFilter";
+  }
+}
+
 export class SendVerify extends SpotError {
     constructor(statusCode) {
       super(ACCOUNTS_ERROR_MESSAGES.SEND_VERIFY, statusCode);

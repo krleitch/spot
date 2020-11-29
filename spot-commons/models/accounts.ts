@@ -14,6 +14,7 @@ export interface AccountMetadata {
     search_type: string;
     search_distance: string;
     score: number;
+    mature_filter: boolean;
 }
 
 // the location object associated with the account for the login
@@ -98,6 +99,7 @@ export interface UpdateAccountMetadataRequest {
     distance_unit?: string;
     search_type?: string;
     search_distance?: string;
+    mature_filter?: boolean;
 }
 
 export interface UpdateAccountMetadataSuccess {

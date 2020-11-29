@@ -64,6 +64,11 @@ const upload = multer({
 
 //  predict if image is nsfw
 async function predictNsfw(imgUrl: string) {
+
+    if ( !imgUrl ) {
+        return false;
+    }
+
     const pic = await axios.get(imgUrl, {
         responseType: 'arraybuffer',
     });

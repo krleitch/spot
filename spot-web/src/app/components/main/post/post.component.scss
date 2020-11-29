@@ -74,6 +74,7 @@
 }
 
 .image {
+  position: relative;
   display: flex;
   justify-content: center;
   padding: 12px 0px;
@@ -86,7 +87,48 @@ img {
   max-height: 500px;
 }
 
+.image-blur {
+  opacity: 0.4;
+  filter: blur(10px);	
+  -webkit-transition: .3s ease-in-out;
+  transition: .2s ease-in-out;
+  -webkit-filter: blur(10px);
+}
 
+.image-blur-text  {
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $background-grey;
+  padding: 10px 5px;
+
+  -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+     -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+          box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+
+  .icon {
+    font-size: 42px;
+    margin-bottom: 5px;
+    color: $button-highlight;
+  }
+
+  .text {
+    font-size: 16px;
+    color: black;
+    text-align: center;
+  }
+
+}
+
+.image:hover .image-blur-text .text.highlight  {
+  color: $button-highlight;
+}
 
 .options {
     display: flex;

@@ -24,9 +24,13 @@
         </span>
       </div>
 
-      <div (click)="openModal('spot-image-modal', post.image_src)" class="image" *ngIf="post.image_src != null">
-        <img #postimage [src]="post.image_src" crossOrigin='anonymous' />
-        <span> {{ post.image_nsfw }} </span>
+      <div (click)="imageClicked()" class="image" *ngIf="post.image_src != null">
+        <img #postimage [src]="post.image_src" crossOrigin='anonymous' [ngClass]="{'image-blur': imageBlurred }" />
+        <div *ngIf="imageBlurred" class="image-blur-text" >
+          <span class="material-icons icon"> error_outline </span>
+          <span class="text"> Flagged for mature content </span>
+          <span class="text highlight"> Click to show </span>
+        </div>
       </div>
 
       <div class="options">

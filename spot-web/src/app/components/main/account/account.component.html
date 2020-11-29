@@ -9,6 +9,7 @@
         {{ STRINGS.MY_ACCOUNT }}
       </div>
 
+      <!-- Verification -->
       <div class="subheading" ngClass="{'mobile-column': account.verified_date == null}">
         <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
         <div *ngIf="account.verified_date == null; else verified">
@@ -34,6 +35,7 @@
         </ng-template>
       </div>
 
+      <!-- Email -->
       <div class="value editable">
         <input #editEmail [disabled]="!editEmailEnabled" [(ngModel)]="email" type="text" spellcheck="false">
         <div *ngIf="editEmailEnabled; else elseEmailBlock">
@@ -55,6 +57,7 @@
         </div>
       </div>
 
+      <!-- Username -->
       <div class="subheading"> {{ STRINGS.USERNAME }} </div>
       <div class="value editable">
         <input #editUsername [disabled]="!editUsernameEnabled" [(ngModel)]="username" type="text" spellcheck="false">
@@ -72,6 +75,7 @@
         {{ usernameSuccessMessage }}
       </div>
 
+      <!-- Phone -->
       <div class="subheading"> {{ STRINGS.PHONE }} </div>
       <div class="value editable">
         <span *ngIf="!phone && !editPhoneEnabled" class="no-phone"> {{ STRINGS.NO_PHONE }} </span>
@@ -95,15 +99,28 @@
         {{ phoneSuccessMessage }}
       </div>
 
+      <!-- Metadata properties -->
       <div *ngIf="accountMetadata$ | async as accountMetadata">
+
+        <!-- Score -->
         <div class="subheading"> {{ STRINGS.SCORE }} </div>
         <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
         <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
+
+        <!-- Unit -->
         <div class="subheading"> {{ STRINGS.UNIT }} </div>
         <div class="value">
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'imperial' }" (click)="setImperial()"> {{ STRINGS.IMPERIAL }} </div>
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setMetric()"> {{ STRINGS.METRIC }} </div>
         </div>
+
+        <div class="subheading"> {{ STRINGS.MATURE }} </div>
+        <div class="value">
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.mature_filter == true }" (click)="setMature(true)"> {{ STRINGS.MATURE_TRUE }} </div>
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.mature_filter == false }" (click)="setMature(false)"> {{ STRINGS.MATURE_FALSE }} </div>
+        </div>
+
+
       </div>
 
       <div class="title">

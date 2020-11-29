@@ -2,7 +2,8 @@ export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, cha
          getAccountById, addFacebookAccount, getFacebookAccount, updateUsername, connectFacebookAccount,
          disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
          updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount, usernameExists,
-         getGoogleAccount, addGoogleAccount, updateEmail, updatePhone, connectGoogleAccount, disconnectGoogleAccount }
+         getGoogleAccount, addGoogleAccount, updateEmail, updatePhone, connectGoogleAccount, disconnectGoogleAccount,
+         updateAccountsMetadataMatureFilter }
 
 const uuid = require('uuid');
 
@@ -12,13 +13,13 @@ const roles = require('@services/authorization/roles');
 const db = require('./mySql');
 
 function addAccountMetadata(accountId: string): Promise<any> {
-    var sql = `INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score) VALUES (?, ?, ?, ?, ?, ?)`;
-    var values = [uuid.v4(), accountId, 'imperial', 'hot', 'global', 0];
+    var sql = `INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score, mature_filter) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    var values = [uuid.v4(), accountId, 'imperial', 'hot', 'global', 0, true];
     return db.query(sql, values);
 }
 
 function getAccountMetadata(accountId: string): Promise<any> {
-    var sql = 'SELECT distance_unit, search_type, search_distance, score FROM accounts_metadata WHERE account_id = ?';
+    var sql = 'SELECT mature_filter, distance_unit, search_type, search_distance, score FROM accounts_metadata WHERE account_id = ?';
     var values = [accountId];
     return db.query(sql, values);
 }
@@ -38,6 +39,12 @@ function updateAccountsMetadataSearchDistance(accountId: string, searchDistance:
 function updateAccountsMetadataSearchType(accountId: string, searchType: string): Promise<any> {
     var sql = 'UPDATE accounts_metadata SET search_type = ? WHERE account_id = ?';
     var values = [searchType, accountId];
+    return db.query(sql, values);
+}
+
+function updateAccountsMetadataMatureFilter(accountId: string, matureFilter: boolean): Promise<any> {
+    var sql = 'UPDATE accounts_metadata SET mature_filter = ? WHERE account_id = ?';
+    var values = [matureFilter, accountId];
     return db.query(sql, values);
 }
 
