@@ -293,7 +293,7 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
         });   
     }
 
-    if ( mature_filter ) {
+    if ( typeof(mature_filter) !== 'undefined' ) {
         await accounts.updateAccountsMetadataMatureFilter(accountId, mature_filter).then( (rows: any) => {
         }, (err: any) => {
             return next(new AccountsError.MetadataMatureFilter(500));

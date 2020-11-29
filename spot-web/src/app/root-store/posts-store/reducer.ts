@@ -52,7 +52,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.ADD_SUCCESS: {
 
-      let newPosts = Object.assign({}, state.posts);
+      let newPosts = Array.from(state.posts);
 
       newPosts.unshift(action.response.post);
       return {
@@ -70,15 +70,17 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.LIKE_SUCCESS: {
 
-      let newPosts = Object.assign({}, state.posts);
+      let newPosts = Array.from(state.posts);
 
       newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
-          post.likes += 1;
+          let newObj =  Object.assign({}, post);
+          newObj.likes += 1;
           if (post.rated === 0) {
-            post.dislikes -= 1;
+            newObj.dislikes -= 1;
           }
-          post.rated = 1;
+          newObj.rated = 1;
+          newPosts[i] = newObj;
         }
       });
       return {
@@ -88,15 +90,17 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DISLIKE_SUCCESS: {
 
-      let newPosts = Object.assign({}, state.posts);
+      let newPosts = Array.from(state.posts);
 
       newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
-          post.dislikes += 1;
+          let newObj =  Object.assign({}, post);
+          newObj.dislikes += 1;
           if (post.rated === 1) {
-            post.likes -= 1;
+            newObj.likes -= 1;
           }
-          post.rated = 0;
+          newObj.rated = 0;
+          newPosts[i] = newObj;
         }
       });
       return {
@@ -106,16 +110,18 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.UNRATED_SUCCESS: {
 
-      let newPosts = Object.assign({}, state.posts);
+      let newPosts = Array.from(state.posts);
 
       newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
+          let newObj =  Object.assign({}, post);
           if (post.rated === 1) {
-            post.likes -= 1;
+            newObj.likes -= 1;
           } else if ( post.rated === 0 ) {
-            post.dislikes -= 1;
+            newObj.dislikes -= 1;
           }
-          post.rated = -1;
+          newObj.rated = -1;
+          newPosts[i] = newObj;
         }
       });
       return {
@@ -125,7 +131,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DELETE_SUCCESS: {
 
-      let newPosts = Object.assign({}, state.posts);
+      let newPosts = Array.from(state.posts);
 
       newPosts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
