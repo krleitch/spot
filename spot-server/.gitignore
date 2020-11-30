@@ -5,7 +5,7 @@ node_modules/
 build/
 src/app/log/
 
-# Ignore files
-secret.json
-awskey.json
-googlekey.json
+# Ignore config files
+src/config/secret.json
+src/config/awskey.json
+src/config/googlekey.json

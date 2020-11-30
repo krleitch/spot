@@ -6,7 +6,8 @@ const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
 const request = require('request');
 
-const secret = require('../../../../secret.json');
+// config
+const secret = require('@config/secret.json');
 
 // Google auth
 const { OAuth2Client } = require('google-auth-library');

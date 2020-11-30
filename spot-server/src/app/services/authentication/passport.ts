@@ -5,9 +5,14 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 
-const secret = require('../../../../secret.json');
-const auth = require('./authentication');
-const accounts = require('../../db/accounts');
+// config
+const secret = require('@config/secret.json');
+
+// services
+const auth = require('@services/authentication/authentication');
+
+// db
+const accounts = require('@db/accounts');
 
 // Login Local
 const localOptions = {  

@@ -5,7 +5,8 @@ const aws = require('aws-sdk');
 const Email = require('email-templates');
 const path = require('path');
 
-const awsconfig = require('../../../awskey.json');
+// config
+const awsconfig = require('@config/awskey.json');
 
 // TODO: move out of sandbox
 // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html?icmpid=docs_ses_console

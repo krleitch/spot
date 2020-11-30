@@ -1,5 +1,7 @@
 const aws = require('aws-sdk');
-const awsconfig = require('../../../awskey.json');
+
+// config
+const awsconfig = require('@config/awskey.json');
 
 aws.config.update({
     secretAccessKey: awsconfig.SecretAccessKey,

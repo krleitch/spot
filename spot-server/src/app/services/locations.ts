@@ -3,10 +3,10 @@ export { checkLocation, verifyLocation, distanceBetween, getGeolocation, addDist
 const request = require('request');
 
 // config
-const googleconfig = require('../../../googlekey.json');
+const googleconfig = require('@config/googlekey.json');
 
 // db
-const locations = require('../db/locations');
+const locations = require('@db/locations');
 
 // error
 const LocationsError = require('@exceptions/locations');
