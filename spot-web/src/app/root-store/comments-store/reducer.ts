@@ -165,16 +165,22 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.LIKE_SUCCESS: {
 
       let newComments = Object.assign({}, state.comments);
+      let newArr = Array.from(newComments[action.response.postId].comments);
 
-      newComments[action.response.postId].comments.forEach( (comment , i) => {
+      newComments[action.response.postId].comments.forEach( (comment: any , i) => {
         if (comment.id === action.response.commentId) {
-          comment.likes += 1;
+          const newObj = Object.assign({}, comment);
+          newObj.likes += 1;
           if (comment.rated === 0) {
-            comment.dislikes -= 1;
+            newObj.dislikes -= 1;
           }
-          comment.rated = 1;
+          newObj.rated = 1;
+          newArr[i] = newObj;
         }
       });
+      newComments[action.response.postId] = {
+        comments: newArr
+      };
       return {
         ...state,
         comments: newComments
@@ -183,16 +189,22 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.DISLIKE_SUCCESS: {
 
       let newComments = Object.assign({}, state.comments);
+      let newArr = Array.from(newComments[action.response.postId].comments);
 
       newComments[action.response.postId].comments.forEach( (comment , i) => {
         if (comment.id === action.response.commentId) {
-          comment.dislikes += 1;
+          const newObj = Object.assign({}, comment);
+          newObj.dislikes += 1;
           if (comment.rated === 1) {
-            comment.likes -= 1;
+            newObj.likes -= 1;
           }
-          comment.rated = 0;
+          newObj.rated = 0;
+          newArr[i] = newObj;
         }
       });
+      newComments[action.response.postId] = {
+        comments: newArr
+      };
       return {
         ...state,
         comments: newComments
@@ -201,17 +213,23 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.UNRATED_SUCCESS: {
 
       let newComments = Object.assign({}, state.comments);
+      let newArr = Array.from(newComments[action.response.postId].comments);
 
       newComments[action.response.postId].comments.forEach( (comment , i) => {
         if (comment.id === action.response.commentId) {
+          const newObj = Object.assign({}, comment);
           if (comment.rated === 1) {
-            comment.likes -= 1;
+            newObj.likes -= 1;
           } else if ( comment.rated === 0 ) {
-            comment.dislikes -= 1;
+            newObj.dislikes -= 1;
           }
-          comment.rated = -1;
+          newObj.rated = -1;
+          newArr[i] = newObj;
         }
       });
+      newComments[action.response.postId] = {
+        comments: newArr
+      };
       return {
         ...state,
         comments: newComments
@@ -219,17 +237,25 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.LIKE_REPLY_SUCCESS: {
 
-      let newReplies = Object.assign({}, state.replies);
+      const newReplies = Object.assign({}, state.replies);
+      const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
+      const newArr = Array.from(newReplies[action.response.postId][action.response.parentId].replies);
 
       newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
-          reply.likes += 1;
+          const newObj = Object.assign({}, reply);
+          newObj.likes += 1;
           if (reply.rated === 0) {
-            reply.dislikes -= 1;
+            newObj.dislikes -= 1;
           }
-          reply.rated = 1;
+          newObj.rated = 1;
+          newArr[i] = newObj;
         }
       });
+      newRepliesInner[action.response.parentId] = {
+        replies: newArr
+      };
+      newReplies[action.response.postId] = newRepliesInner;
       return {
         ...state,
         replies: newReplies
@@ -237,17 +263,25 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DISLIKE_REPLY_SUCCESS: {
 
-      let newReplies = Object.assign({}, state.replies);
+      const newReplies = Object.assign({}, state.replies);
+      const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
+      const newArr = Array.from(newReplies[action.response.postId][action.response.parentId].replies);
 
       newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
-          reply.dislikes += 1;
+          const newObj = Object.assign({}, reply);
+          newObj.dislikes += 1;
           if (reply.rated === 1) {
-            reply.likes -= 1;
+            newObj.likes -= 1;
           }
-          reply.rated = 0;
+          newObj.rated = 0;
+          newArr[i] = newObj;
         }
       });
+      newRepliesInner[action.response.parentId] = {
+        replies: newArr
+      };
+      newReplies[action.response.postId] = newRepliesInner;
       return {
         ...state,
         replies: newReplies
@@ -255,18 +289,26 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.UNRATED_REPLY_SUCCESS: {
 
-      let newReplies = Object.assign({}, state.replies);
+      const newReplies = Object.assign({}, state.replies);
+      const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
+      const newArr = Array.from(newReplies[action.response.postId][action.response.parentId].replies);
 
       newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
+          const newObj = Object.assign({}, reply);
           if (reply.rated === 1) {
-            reply.likes -= 1;
+            newObj.likes -= 1;
           } else if ( reply.rated === 0 ) {
-            reply.dislikes -= 1;
+            newObj.dislikes -= 1;
           }
-          reply.rated = -1;
+          newObj.rated = -1;
+          newArr[i] = newObj;
         }
       });
+      newRepliesInner[action.response.parentId] = {
+        replies: newArr
+      };
+      newReplies[action.response.postId] = newRepliesInner;
       return {
         ...state,
         replies: newReplies
