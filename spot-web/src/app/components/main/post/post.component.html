@@ -24,12 +24,14 @@
         </span>
       </div>
 
-      <div (click)="imageClicked()" class="image" *ngIf="post.image_src != null">
-        <img #postimage [src]="post.image_src" crossOrigin='anonymous' [ngClass]="{'image-blur': imageBlurred }" />
-        <div *ngIf="imageBlurred" class="image-blur-text" >
-          <span class="material-icons icon"> error_outline </span>
-          <span class="text"> Flagged for mature content </span>
-          <span class="text highlight"> Click to show </span>
+      <div *ngIf="accountMetadata$ | async as accountMetadata">
+        <div *ngIf="post.image_src != null" (click)="imageClicked()" class="image">
+          <img #postimage [src]="post.image_src" crossOrigin='anonymous' [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }" />
+          <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+            <span class="material-icons icon"> error_outline </span>
+            <span class="text"> Flagged for mature content </span>
+            <span class="text highlight"> Click to show </span>
+          </div>
         </div>
       </div>
 
