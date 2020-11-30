@@ -3,6 +3,7 @@
 # Ignore directories
 node_modules/
 build/
+src/app/log/
 
 # Ignore files
 secret.json

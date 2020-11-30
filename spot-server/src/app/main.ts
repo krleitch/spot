@@ -2,22 +2,25 @@ require('module-alias/register');
 const express = require('express');
 const app = express();
 
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const Cors = require('cors');
+const rfs = require('rotating-file-stream')
+const morgan = require('morgan');
+const path = require('path')
 
 // Routes
-const posts = require('./routes/posts');
-const root = require('./routes/root');
-const accounts = require('./routes/accounts');
-const comments = require('./routes/comments');
-const notifications = require('./routes/notifications');
-const friends = require('./routes/friends');
-const auth = require('./routes/authentication');
-const admin = require('./routes/admin');
+const posts = require('@routes/posts');
+const root = require('@routes/root');
+const accounts = require('@routes/accounts');
+const comments = require('@routes/comments');
+const notifications = require('@routes/notifications');
+const friends = require('@routes/friends');
+const auth = require('@routes/authentication');
+const admin = require('@routes/admin');
 
 // Db
-const mySql = require('./db/mySql');
-const mongo = require('./db/mongo');
+const mySql = require('@db/mySql');
+// const mongo = require('@db/mongo');
 
 // Utils
 const errorHandler = require('./errorHandler');
@@ -39,7 +42,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(Cors());
 
-// Unprotected
+// create a rotating write stream
+var accessLogStream = rfs.createStream('access.log', {
+  interval: '1d', // rotate daily
+  path: path.join(__dirname, 'log')
+})
+
+// setup the logger
+app.use(morgan('combined', { stream: accessLogStream }))
+
+// Unprotected routes
 app.use('/', root);
 app.use('/auth', auth);
 
@@ -63,8 +75,8 @@ app.listen(port, (err: any) => {
   if (err) {
     console.log('Error listening: ', err);
     mySql.closeDb().then(() => {
-      console.log('Terminating connection to Db');
+      console.log('Terminated connection to Db');
     });
   }
   console.log(`Server is listening on ${port}`);
-})
+});

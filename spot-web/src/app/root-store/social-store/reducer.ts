@@ -52,10 +52,12 @@ export function featureReducer(state = initialState, action: NotificationsAction
     }
     case NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS: {
 
-      let newNotifications = Object.assign({}, state.notifications);
+      const newNotifications = Array.from(state.notifications);
 
-      newNotifications.forEach( notif => {
+      state.notifications.forEach( (notif, i) => {
+        const newObj = Object.assign({}, notif);
         notif.seen = 1;
+        newNotifications[i] = newObj;
       });
 
       return {
@@ -66,11 +68,13 @@ export function featureReducer(state = initialState, action: NotificationsAction
     }
     case NotificationsActionTypes.SET_NOTIFICATION_SEEN_SUCCESS: {
 
-      let newNotifications = Object.assign({}, state.notifications);
+      const newNotifications = Array.from(state.notifications);
 
-      newNotifications.forEach( notif => {
+      state.notifications.forEach( (notif, i) => {
+        const newObj = Object.assign({}, notif);
         if ( notif.id === action.response.notificationId ) {
           notif.seen = 1;
+          newNotifications[i] = newObj;
         }
       });
       return {
@@ -99,10 +103,10 @@ export function featureReducer(state = initialState, action: NotificationsAction
     }
     case FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_SUCCESS: {
 
-      let newFriendRequests = Object.assign({}, state.friendRequests);
-      let newFriends = Object.assign({}, state.friends);
+      const newFriendRequests = Array.from(state.friendRequests);
+      const newFriends = Array.from(state.friends);
 
-      newFriendRequests.forEach( (friend , i) => {
+      state.friendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friend.id) {
           newFriends.unshift(action.response.friend);
           newFriendRequests.splice(i, 1);
@@ -116,7 +120,7 @@ export function featureReducer(state = initialState, action: NotificationsAction
     }
     case FriendsActionTypes.DECLINE_FRIEND_REQUESTS_SUCCESS: {
 
-      let newFriendRequests = Object.assign({}, state.friendRequests);
+      const newFriendRequests = Array.from(state.friendRequests);
 
       newFriendRequests.forEach( (friend , i) => {
         if (friend.id === action.response.friendRequestId) {
@@ -130,7 +134,7 @@ export function featureReducer(state = initialState, action: NotificationsAction
     }
     case FriendsActionTypes.DELETE_FRIENDS_SUCCESS: {
 
-      let newFriends = Object.assign({}, state.friends);
+      const newFriends = Array.from(state.friends);
 
       newFriends.forEach( (friend , i) => {
         if (friend.id === action.response.friendId) {

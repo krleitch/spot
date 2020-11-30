@@ -52,7 +52,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.ADD_SUCCESS: {
 
-      let newPosts = Array.from(state.posts);
+      const newPosts = Array.from(state.posts);
 
       newPosts.unshift(action.response.post);
       return {
@@ -70,11 +70,11 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.LIKE_SUCCESS: {
 
-      let newPosts = Array.from(state.posts);
+      const newPosts = Array.from(state.posts);
 
-      newPosts.forEach( (post , i) => {
+      state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
-          let newObj =  Object.assign({}, post);
+          const newObj =  Object.assign({}, post);
           newObj.likes += 1;
           if (post.rated === 0) {
             newObj.dislikes -= 1;
@@ -90,11 +90,11 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DISLIKE_SUCCESS: {
 
-      let newPosts = Array.from(state.posts);
+      const newPosts = Array.from(state.posts);
 
-      newPosts.forEach( (post , i) => {
+      state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
-          let newObj =  Object.assign({}, post);
+          const newObj =  Object.assign({}, post);
           newObj.dislikes += 1;
           if (post.rated === 1) {
             newObj.likes -= 1;
@@ -110,11 +110,11 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.UNRATED_SUCCESS: {
 
-      let newPosts = Array.from(state.posts);
+      const newPosts = Array.from(state.posts);
 
-      newPosts.forEach( (post , i) => {
+      state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
-          let newObj =  Object.assign({}, post);
+          const newObj =  Object.assign({}, post);
           if (post.rated === 1) {
             newObj.likes -= 1;
           } else if ( post.rated === 0 ) {
@@ -131,9 +131,9 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DELETE_SUCCESS: {
 
-      let newPosts = Array.from(state.posts);
+      const newPosts = Array.from(state.posts);
 
-      newPosts.forEach( (post , i) => {
+      state.posts.forEach( (post , i) => {
         if (post.id === action.response.postId) {
           newPosts.splice(i, 1);
         }
