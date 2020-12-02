@@ -1,7 +1,8 @@
 export { upload, predictNsfw };
 
 const aws = require('@services/aws');
-const axios = require('axios')
+const axios = require('axios');
+const path = require('path');
 
 // s3 upload
 const multer = require('multer');
@@ -9,16 +10,20 @@ const multerS3 = require('multer-s3');
 
 // nsfwjs
 const tf = require('@tensorflow/tfjs-node');
+
+// config
+const config = require('@config/config');
+
 // TODO: check env
-if  ( false ) {
+if  ( config.production ) {
     tf.enableProdMode();
 }
 const nsfw = require('nsfwjs');
 let model: any;
-nsfw.load().then((m: any) => {
+nsfw.load(`file:///${__dirname}/../../nsfwModel/`).then((m: any) => {
     console.log('Nsfwjs Model Loaded');
     model = m;
-}); // To load a local model, nsfw.load('file://./path/to/model/')
+}); // To load a local model, nsfw.load('file:///Users/kevin/Documents/repos/spot/spot-server/src/nsfwModel/')
 
 // Only allow jpeg and png
 const fileFilter = (req: any, file: any, cb: any) => {
