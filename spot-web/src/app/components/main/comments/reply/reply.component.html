@@ -32,8 +32,15 @@
           </span>
         </div>
 
-        <div class="image" (click)="openModal('spot-image-modal', reply.image_src)" *ngIf="reply.image_src != null">
-          <img [src]="reply.image_src" />
+        <div *ngIf="accountMetadata$ | async as accountMetadata">
+          <div *ngIf="reply.image_src != null" (click)="imageClicked()" class="image">
+            <img [src]="reply.image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }" />
+            <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+              <span class="material-icons icon"> error_outline </span>
+              <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>
+              <span class="text highlight"> {{ STRINGS.MATURE_CONTENT_SHOW }} </span>
+            </div>
+          </div>
         </div>
 
       </div>

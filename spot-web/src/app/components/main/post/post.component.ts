@@ -77,8 +77,7 @@ export class PostComponent implements OnInit, OnDestroy {
       this.isExpandable = true;
     }
     this.time = this.getTime();
-    // this.imageBlurred = this.post.image_nsfw;
-    this.imageBlurred = true;
+    this.imageBlurred = this.post.image_nsfw;
 
   }
 

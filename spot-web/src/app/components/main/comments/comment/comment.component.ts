@@ -22,6 +22,7 @@ import { COMMENTS_CONSTANTS } from '@constants/comments';
 import { TagComponent } from '../../social/tag/tag.component';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
+import { AccountMetadata } from '@models/accounts';
 
 @Component({
   selector: 'spot-comment',
@@ -66,11 +67,13 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
+  accountMetadata$: Observable<AccountMetadata>;
 
   // files
   FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
+  imageBlurred: boolean; // if content flagged nsfw
 
   // displaying used characters for add comment
   MAX_COMMENT_LENGTH = 300;
@@ -117,6 +120,10 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.friendsList = friends;
     });
 
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
+    );
+
     // if detailed load more replies
     const initialLimit = this.detailed ? 10 : 1;
 
@@ -150,6 +157,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.getTime(this.comment.creation_date);
+    this.imageBlurred = this.comment.image_nsfw;
 
     if ( this.comment.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
          || this.comment.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
@@ -750,6 +758,16 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   closeModal(id: string) {
     this.modalService.close(id);
+  }
+
+  imageClicked(): void {
+
+    if ( !this.imageBlurred ) {
+      this.openModal('spot-image-modal', this.post.image_src);
+    } else {
+      this.imageBlurred = false;
+    }
+
   }
 
 }

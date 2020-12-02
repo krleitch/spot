@@ -139,6 +139,9 @@ export const STRINGS = {
             REPORT: 'Report',
             SHARE: 'Share',
 
+            MATURE_CONTENT: 'Flagged for mature content',
+            MATURE_CONTENT_SHOW: 'Click to show',
+
         },
 
         POST_DETAILED: {
@@ -190,9 +193,10 @@ export const STRINGS = {
           FILE_TITLE: 'File:',
 
           // Tags
-          TAGGER: 'tagged you'
+          TAGGER: 'tagged you',
 
-          // Error
+          MATURE_CONTENT: 'Flagged for mature content',
+          MATURE_CONTENT_SHOW: 'Click to show',
 
         },
 
@@ -214,9 +218,10 @@ export const STRINGS = {
           FILE_TITLE: 'File:',
 
           // Tags
-          TAGGER: 'tagged you'
+          TAGGER: 'tagged you',
 
-          // Error
+          MATURE_CONTENT: 'Flagged for mature content',
+          MATURE_CONTENT_SHOW: 'Click to show',
 
         },
 

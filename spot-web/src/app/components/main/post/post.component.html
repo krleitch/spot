@@ -29,8 +29,8 @@
           <img #postimage [src]="post.image_src" crossOrigin='anonymous' [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }" />
           <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
             <span class="material-icons icon"> error_outline </span>
-            <span class="text"> Flagged for mature content </span>
-            <span class="text highlight"> Click to show </span>
+            <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>
+            <span class="text highlight"> {{ STRINGS.MATURE_CONTENT_SHOW }} </span>
           </div>
         </div>
       </div>

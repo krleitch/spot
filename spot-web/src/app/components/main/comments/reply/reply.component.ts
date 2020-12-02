@@ -21,6 +21,7 @@ import { TagComponent } from '../../social/tag/tag.component';
 import { Friend } from '@models/friends';
 import { AlertService } from '@services/alert.service';
 import { SpotError } from '@exceptions/error';
+import { AccountMetadata } from '@models/accounts';
 
 @Component({
   selector: 'spot-reply',
@@ -55,6 +56,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
+  accountMetadata$: Observable<AccountMetadata>;
 
   // For large replies
   expanded = false;
@@ -67,6 +69,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   FILENAME_MAX_SIZE = 20;
   imageFile: File;
   imgSrc: string = null;
+  imageBlurred: boolean; // if content flagged nsfw
 
   // displaying used characters for add reply
   MAX_REPLY_LENGTH = 300;
@@ -88,7 +91,9 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+
     this.getTime(this.reply.creation_date);
+    this.imageBlurred = this.reply.image_nsfw;
 
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
@@ -105,6 +110,10 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
       this.friendsList = friends;
     });
+
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
+    );
 
     if ( this.reply.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
          || this.reply.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
@@ -674,6 +683,16 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   closeModal(id: string) {
     this.modalService.close(id);
+  }
+
+  imageClicked(): void {
+
+    if ( !this.imageBlurred ) {
+      this.openModal('spot-image-modal', this.post.image_src);
+    } else {
+      this.imageBlurred = false;
+    }
+
   }
 
 }
