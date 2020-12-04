@@ -7,6 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { STRINGS } from '@assets/strings/en';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
+import { StoreComment } from '@store/comments-store/state';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { GetCommentsRequest, AddCommentRequest, GetCommentsSuccess, SetCommentsStoreRequest,
           AddCommentStoreRequest, AddCommentSuccess } from '@models/comments';
@@ -43,8 +44,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   tagElement;
   tagCaretPosition;
 
-  // fix this type
-  comments$: Observable<any>;
+  comments$: Observable<StoreComment>;
   comments = [];
   totalCommentsBefore = 0;
   totalCommentsAfter = 0;
@@ -79,7 +79,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     // Get Comments
     this.comments$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureComments, { postId: this.post.id }),
+      select(CommentsStoreSelectors.selectComments, { postId: this.post.id }),
     );
 
     this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (comments) => {

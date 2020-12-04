@@ -6,7 +6,7 @@ export interface State {
   loading: boolean;
   createError: SpotError;
   createSuccess: boolean;
-  noPosts: boolean;
+  noPosts: boolean; // Were any posts loaded flag
 }
 
 export const initialState: State = (

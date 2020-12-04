@@ -1,5 +1,6 @@
 import { Actions, ActionTypes } from './actions';
 import { initialState, State } from './state';
+import { Comment } from '@models/comments';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
@@ -9,21 +10,21 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     case ActionTypes.ADD_COMMENT_REQUEST: {
-        let newComments = Object.assign({}, state.comments);
+        const newComments = Object.assign({}, state.comments);
         if (newComments[action.request.postId] === undefined) {
           // initialize the comments
           newComments[action.request.postId] = {
               comments: [action.request.comment],
-              totalComments: 1
+              tagged: action.request.comment.tag.tagged
           };
         } else {
           // otherwise just add the comment
           const newArr = Array.from(newComments[action.request.postId].comments);
-          const newTotal = newComments[action.request.postId].totalComments;
+          const newTag = newComments[action.request.postId].tagged || action.request.comment.tag.tagged;
           newArr.unshift(action.request.comment);
           newComments[action.request.postId] = {
             comments: newArr,
-            totalComments: newTotal + 1
+            tagged: newTag
           };
         }
         return {
@@ -33,7 +34,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DELETE_SUCCESS: {
 
-      let newComments = Object.assign({}, state.comments);
+      const newComments = Object.assign({}, state.comments);
 
       newComments[action.response.postId].comments.forEach( (comment, i) => {
         if (comment.id === action.response.commentId) {
@@ -45,8 +46,8 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
 
-      let newReplies = Object.assign({}, state.replies);
-      let newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
+      const newReplies = Object.assign({}, state.replies);
+      const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
       delete newRepliesInner[action.response.commentId];
       newReplies[action.response.postId] = newRepliesInner;
 
@@ -58,22 +59,26 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.SET_COMMENTS_REQUEST: {
 
-      let newComments = Object.assign({}, state.comments);
+      const newComments = Object.assign({}, state.comments);
 
-      // initialize
+      // initialize if needed
       if (newComments[action.request.postId] === undefined || action.request.initialLoad) {
         newComments[action.request.postId] = {
-          comments: []
+          comments: [],
+          tagged: false
         };
       }
       // after or before
+      const newTag = newComments[action.request.postId].tagged || action.request.comments.filter( (x: Comment) => x.tag.tagged ).length > 0;
       if ( action.request.type === 'after' ) {
         newComments[action.request.postId] = {
-          comments: action.request.comments.concat(newComments[action.request.postId].comments)
+          comments: action.request.comments.concat(newComments[action.request.postId].comments),
+          tagged: newTag
         };
       } else {
         newComments[action.request.postId] = {
-          comments: newComments[action.request.postId].comments.concat(action.request.comments)
+          comments: newComments[action.request.postId].comments.concat(action.request.comments),
+          tagged: newTag
         };
       }
       return {
@@ -83,26 +88,26 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.SET_REPLIES_REQUEST: {
 
-        let newReplies = Object.assign({}, state.replies);
+        const newReplies = Object.assign({}, state.replies);
 
         if (newReplies[action.request.postId] === undefined) {
           newReplies[action.request.postId] = {};
         }
         if (newReplies[action.request.postId][action.request.commentId] === undefined) {
-          let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+          const newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
           newRepliesObj[action.request.commentId] = {
             replies: []
           };
           newReplies[action.request.postId] = newRepliesObj;
         }
         if ( action.request.initialLoad) {
-          let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+          const newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
           newRepliesObj[action.request.commentId] = {
             replies: action.request.replies,
           };
           newReplies[action.request.postId] = newRepliesObj;
         } else {
-          let newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
+          const newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
           newRepliesObj[action.request.commentId] = {
             replies: newRepliesObj[action.request.commentId].replies.concat(action.request.replies)
           };
@@ -144,12 +149,12 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DELETE_REPLY_SUCCESS: {
 
-      let newReplies = Object.assign({}, state.replies);
-      let newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
+      const newReplies = Object.assign({}, state.replies);
+      const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
 
       newRepliesInner[action.response.parentId].replies.forEach( (comment, i) => {
         if (comment.id === action.response.commentId) {
-          let newArr = Array.from(newRepliesInner[action.response.parentId].replies);
+          const newArr = Array.from(newRepliesInner[action.response.parentId].replies);
           newArr.splice(i, 1);
           newRepliesInner[action.response.parentId] = {
             replies: newArr
@@ -164,8 +169,8 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.LIKE_SUCCESS: {
 
-      let newComments = Object.assign({}, state.comments);
-      let newArr = Array.from(newComments[action.response.postId].comments);
+      const newComments = Object.assign({}, state.comments);
+      const newArr = Array.from(newComments[action.response.postId].comments);
 
       newComments[action.response.postId].comments.forEach( (comment: any , i) => {
         if (comment.id === action.response.commentId) {
@@ -179,6 +184,7 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       newComments[action.response.postId] = {
+        ...newComments[action.response.postId],
         comments: newArr
       };
       return {
@@ -188,8 +194,8 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.DISLIKE_SUCCESS: {
 
-      let newComments = Object.assign({}, state.comments);
-      let newArr = Array.from(newComments[action.response.postId].comments);
+      const newComments = Object.assign({}, state.comments);
+      const newArr = Array.from(newComments[action.response.postId].comments);
 
       newComments[action.response.postId].comments.forEach( (comment , i) => {
         if (comment.id === action.response.commentId) {
@@ -203,6 +209,7 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       newComments[action.response.postId] = {
+        ...newComments[action.response.postId],
         comments: newArr
       };
       return {
@@ -212,8 +219,8 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.UNRATED_SUCCESS: {
 
-      let newComments = Object.assign({}, state.comments);
-      let newArr = Array.from(newComments[action.response.postId].comments);
+      const newComments = Object.assign({}, state.comments);
+      const newArr = Array.from(newComments[action.response.postId].comments);
 
       newComments[action.response.postId].comments.forEach( (comment , i) => {
         if (comment.id === action.response.commentId) {
@@ -228,6 +235,7 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       newComments[action.response.postId] = {
+        ...newComments[action.response.postId],
         comments: newArr
       };
       return {

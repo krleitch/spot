@@ -118,7 +118,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // POSTS
 
     this.posts$ = this.store$.pipe(
-      select(PostsStoreSelectors.selectMyFeaturePosts)
+      select(PostsStoreSelectors.selectPosts)
     );
 
     this.posts$.pipe(takeUntil(this.onDestroy)).subscribe( (posts: Post[]) => {
@@ -129,7 +129,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
 
     this.loading$ = this.store$.pipe(
-      select(PostsStoreSelectors.selectMyFeatureLoading)
+      select(PostsStoreSelectors.selectLoading)
     );
 
     this.loading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {

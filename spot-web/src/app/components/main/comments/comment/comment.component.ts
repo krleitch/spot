@@ -97,7 +97,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
 
     this.replies$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectMyFeatureReplies, { postId: this.comment.post_id, commentId: this.comment.id })
+      select(CommentsStoreSelectors.selectReplies, { postId: this.comment.post_id, commentId: this.comment.id })
     );
 
     this.isAuthenticated$ = this.store$.pipe(
