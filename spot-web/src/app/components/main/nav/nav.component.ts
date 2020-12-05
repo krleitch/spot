@@ -50,7 +50,7 @@ export class NavComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsUser)
+      select(AccountsStoreSelectors.selectAccount)
     );
 
     this.accountMetadata$ = this.store$.pipe(
@@ -58,7 +58,7 @@ export class NavComponent implements OnInit, OnDestroy {
     );
 
     this.unread$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureUnread)
+      select(SocialStoreSelectors.selectUnread)
     );
 
     this.isAuthenticated$ = this.store$.pipe(

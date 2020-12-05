@@ -77,7 +77,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsUser)
+      select(AccountsStoreSelectors.selectAccount)
     );
 
     this.showAccountIndicator$ = merge(

@@ -49,7 +49,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsLocation)
+      select(AccountsStoreSelectors.selectLocation)
     );
 
     this.accountMetadata$ = this.store$.pipe(

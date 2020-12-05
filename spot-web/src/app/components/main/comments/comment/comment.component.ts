@@ -113,7 +113,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureFriends)
+      select(SocialStoreSelectors.selectFriends)
     );
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {

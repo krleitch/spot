@@ -33,7 +33,7 @@ export class TagComponent implements OnInit, OnChanges {
 
     // setup observables
     this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureFriends)
+      select(SocialStoreSelectors.selectFriends)
     );
 
     this.friends$.subscribe ( friends => {

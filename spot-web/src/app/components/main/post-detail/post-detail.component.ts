@@ -42,7 +42,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsLocation)
+      select(AccountsStoreSelectors.selectLocation)
     );
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {

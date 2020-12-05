@@ -51,11 +51,11 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
     // Setup observables
     this.friendRequests$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureFriendRequests),
+      select(SocialStoreSelectors.selectFriendRequests),
     );
 
     this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureFriends),
+      select(SocialStoreSelectors.selectFriends),
     );
 
     this.friendsError$ = this.store$.pipe(

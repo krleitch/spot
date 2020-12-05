@@ -2,14 +2,6 @@ import { createSelector, createFeatureSelector, MemoizedSelector, MemoizedSelect
 
 import { State, StoreComment, StoreReply } from './state';
 
-import { SpotError } from '@exceptions/error';
-import { Comment } from '@models/comments';
-import { AnyFn } from '@ngrx/store/src/selector';
-
-// TODO: Remove these
-export const AddReply2Error = (state: State): { error: SpotError, id: string } => state.addReply2Error;
-export const AddReply2Success = (state: State): { success: boolean, id: string } => state.addReply2Success;
-
 export const selectCommentsFromStore = (state: State, postId: string): StoreComment => {
   // Check existence first
   if (state.comments[postId] === undefined) {
@@ -38,14 +30,4 @@ export const selectComments: MemoizedSelectorWithProps<object, any, StoreComment
 export const selectReplies: MemoizedSelectorWithProps<object, any, StoreReply> = createSelector(
   selectCommentsState,
   (state, props) => selectRepliesFromStore(state, props.postId, props.commentId)
-);
-
-export const selectAddReply2Error: MemoizedSelector<object, { error: SpotError, id: string }> = createSelector(
-  selectCommentsState,
-  AddReply2Error
-);
-
-export const selectAddReply2Success: MemoizedSelector<object, { success: boolean, id: string }> = createSelector(
-  selectCommentsState,
-  AddReply2Success
 );

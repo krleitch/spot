@@ -81,7 +81,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
     // Location
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsLocation)
+      select(AccountsStoreSelectors.selectLocation)
     );
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {

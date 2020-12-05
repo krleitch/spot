@@ -71,7 +71,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Add a sent property to the list of friends
     this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureFriends),
+      select(SocialStoreSelectors.selectFriends),
     ).pipe(
       map( (friends: Friend[]) => {
         return friends.map( (friend: Friend) => {

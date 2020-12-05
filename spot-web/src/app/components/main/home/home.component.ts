@@ -83,13 +83,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
 
     this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsUser)
+      select(AccountsStoreSelectors.selectAccount)
     );
 
     // LOCATION
 
     this.locationFailure$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsLocationFailure)
+      select(AccountsStoreSelectors.selectLocationFailure)
     );
 
     this.locationFailure$.pipe(takeUntil(this.onDestroy)).subscribe( (locationFailure: string) => {
@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
 
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsLocation)
+      select(AccountsStoreSelectors.selectLocation)
     );
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
 
     this.loadingLocation$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsLoadingLocation)
+      select(AccountsStoreSelectors.selectLoadingLocation)
     );
 
     this.loadingLocation$.pipe(takeUntil(this.onDestroy)).subscribe( (loadingLocation: boolean) => {

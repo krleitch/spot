@@ -6,71 +6,47 @@ import { Notification } from '@models/notifications';
 import { Friend, FriendRequest } from '@models/friends';
 import { SpotError } from '@exceptions/error';
 
-export const selectFriendRequests = (state: State): FriendRequest[] => state.friendRequests;
-export const selectFriends = (state: State): Friend[] => state.friends;
-export const selectFriendsErrorMessage = (state: State): SpotError => state.friendsError;
-export const selectNotifications = (state: State): Notification[] => state.notifications;
-export const getNotificationsLoading = (state: State): boolean => state.getNotificationsLoading;
-export const getNotificationsSuccess = (state: State): boolean => state.getNotificationsSuccess;
-export const selectUnread = (state: State): number => state.unread;
+export const selectFriendRequestsFromStore = (state: State): FriendRequest[] => state.friendRequests;
+export const selectFriendsFromStore = (state: State): Friend[] => state.friends;
+export const selectFriendsErrorFromStore = (state: State): SpotError => state.friendsError;
+export const selectNotificationsFromStore = (state: State): Notification[] => state.notifications;
+export const selectGetNotificationsLoadingFromStore = (state: State): boolean => state.getNotificationsLoading;
+export const selectGetNotificationsSuccessFromStore = (state: State): boolean => state.getNotificationsSuccess;
+export const selectUnreadFromStore = (state: State): number => state.unread;
 
-export const selectMyFeatureState: MemoizedSelector<
-  object,
-  State
-> = createFeatureSelector<State>('social');
+export const selectSocialState: MemoizedSelector<object, State> = createFeatureSelector<State>('social');
 
-export const selectMyFeatureNotifications: MemoizedSelector<
-  object,
-  Notification[]
-> = createSelector(
-  selectMyFeatureState,
-  selectNotifications
+export const selectNotifications: MemoizedSelector<object, Notification[]> = createSelector(
+  selectSocialState,
+  selectNotificationsFromStore
 );
 
-export const selectGetNotificationsLoading: MemoizedSelector<
-  object,
-  boolean
-> = createSelector(
-  selectMyFeatureState,
-  getNotificationsLoading
+export const selectGetNotificationsLoading: MemoizedSelector<object, boolean> = createSelector(
+  selectSocialState,
+  selectGetNotificationsLoadingFromStore
 );
 
-export const selectGetNotificationsSuccess: MemoizedSelector<
-  object,
-  boolean
-> = createSelector(
-  selectMyFeatureState,
-  getNotificationsSuccess
+export const selectGetNotificationsSuccess: MemoizedSelector<object, boolean> = createSelector(
+  selectSocialState,
+  selectGetNotificationsSuccessFromStore
 );
 
-export const selectMyFeatureUnread: MemoizedSelector<
-  object,
-  number
-> = createSelector(
-  selectMyFeatureState,
-  selectUnread
+export const selectUnread: MemoizedSelector<object, number> = createSelector(
+  selectSocialState,
+  selectUnreadFromStore
 );
 
-export const selectMyFeatureFriends: MemoizedSelector<
-  object,
-  Friend[]
-> = createSelector(
-  selectMyFeatureState,
-  selectFriends
+export const selectFriends: MemoizedSelector<object, Friend[]> = createSelector(
+  selectSocialState,
+  selectFriendsFromStore
 );
 
-export const selectMyFeatureFriendRequests: MemoizedSelector<
-  object,
-  FriendRequest[]
-> = createSelector(
-  selectMyFeatureState,
-  selectFriendRequests
+export const selectFriendRequests: MemoizedSelector<object, FriendRequest[]> = createSelector(
+  selectSocialState,
+  selectFriendRequestsFromStore
 );
 
-export const selectFriendsError: MemoizedSelector<
-  object,
-  SpotError
-> = createSelector(
-  selectMyFeatureState,
-  selectFriendsErrorMessage
+export const selectFriendsError: MemoizedSelector<object, SpotError> = createSelector(
+  selectSocialState,
+  selectFriendsErrorFromStore
 );

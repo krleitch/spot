@@ -36,7 +36,7 @@ export class UsernameComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountsUser)
+      select(AccountsStoreSelectors.selectAccount)
     );
 
     this.account$.pipe(takeUntil(this.onDestroy)).subscribe( ( account: Account ) => {

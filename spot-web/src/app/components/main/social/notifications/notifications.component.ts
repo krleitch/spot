@@ -51,7 +51,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     );
 
     this.notifications$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectMyFeatureNotifications)
+      select(SocialStoreSelectors.selectNotifications)
     );
 
     // Get last date that was loaded
