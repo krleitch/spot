@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
 import { RootStoreState } from '@store';
-import { CommentsStoreActions } from '@store/comments-store';
+import { CommentsStoreActions, CommentsStoreSelectors } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
@@ -47,6 +47,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   tagName = '';
   tagElement;
   tagCaretPosition;
+  tagged$: Observable<boolean>;
+  tagged: boolean; // Was the user tagged in the comment chain
 
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
@@ -114,6 +116,14 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
+
+    this.tagged$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectTagged, { postId: this.comment.post_id })
+    );
+
+    this.tagged$.pipe(takeUntil(this.onDestroy)).subscribe( (tagged: boolean) => {
+      this.tagged = tagged;
+    });
 
     if ( this.reply.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
          || this.reply.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {

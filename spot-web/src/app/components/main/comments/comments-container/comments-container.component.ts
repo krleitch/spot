@@ -43,6 +43,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   tagName = '';
   tagElement;
   tagCaretPosition;
+  tagged: boolean; // Was the user tagged in this comment chain
 
   comments$: Observable<StoreComment>;
   comments = [];
@@ -75,32 +76,34 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     // Get Comments
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectComments, { postId: this.post.id }),
     );
 
-    this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (comments) => {
-      this.comments = comments.comments;
+    this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (storeComments: StoreComment) => {
+      this.comments = storeComments.comments;
+      this.tagged = storeComments.tagged;
     });
 
-    // Check Authentication
+    // Get Authentication
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
+    // Get Verified
     this.isVerified$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsVerified)
     );
 
-    // friends
+    // Get Friends
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
 
-    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends) => {
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends: Friend[]) => {
       this.friendsList = friends;
     });
 

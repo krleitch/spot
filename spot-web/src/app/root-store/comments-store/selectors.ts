@@ -2,6 +2,13 @@ import { createSelector, createFeatureSelector, MemoizedSelector, MemoizedSelect
 
 import { State, StoreComment, StoreReply } from './state';
 
+export const selectTaggedFromStore = (state: State, postId: string): boolean => {
+  // Check existence first
+  if (state.comments[postId] === undefined) {
+    return false;
+  }
+  return state.comments[postId].tagged;
+};
 export const selectCommentsFromStore = (state: State, postId: string): StoreComment => {
   // Check existence first
   if (state.comments[postId] === undefined) {
@@ -21,6 +28,11 @@ export const selectRepliesFromStore = (state: State, postId: string, commentId):
 };
 
 export const selectCommentsState: MemoizedSelector<object, State> = createFeatureSelector<State>('comments');
+
+export const selectTagged: MemoizedSelectorWithProps<object, any, boolean> = createSelector(
+  selectCommentsState,
+  (state, props) => selectTaggedFromStore(state, props.postId)
+);
 
 export const selectComments: MemoizedSelectorWithProps<object, any, StoreComment> = createSelector(
   selectCommentsState,

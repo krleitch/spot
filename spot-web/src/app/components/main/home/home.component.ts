@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   postSort: string = undefined;
   distanceUnit = '';
 
-  loadedPosts = 0;
+  loadedPosts: number;
 
   // keep track of whether the initial load was made
   // needed so the infinite scroll doesnt get called right away to overwrite
@@ -70,6 +70,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // ACCOUNT
 
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccount)
+    );
+
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
@@ -82,19 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
-    );
-
     // LOCATION
-
-    this.locationFailure$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocationFailure)
-    );
-
-    this.locationFailure$.pipe(takeUntil(this.onDestroy)).subscribe( (locationFailure: string) => {
-      this.locationFailure = locationFailure;
-    });
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectLocation)
@@ -102,6 +94,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
       this.location = location;
+    });
+
+    this.locationFailure$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectLocationFailure)
+    );
+
+    this.locationFailure$.pipe(takeUntil(this.onDestroy)).subscribe( (locationFailure: string) => {
+      this.locationFailure = locationFailure;
     });
 
     this.loadingLocation$ = this.store$.pipe(
@@ -123,6 +123,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.posts$.pipe(takeUntil(this.onDestroy)).subscribe( (posts: Post[]) => {
       this.posts = posts;
+      this.loadedPosts = posts.length;
       if ( this.posts.length !== 0 ) {
         this.initialLoad = false;
       }

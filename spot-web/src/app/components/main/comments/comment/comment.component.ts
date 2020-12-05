@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
+import { StoreReply } from '@store/comments-store/state';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { STRINGS } from '@assets/strings/en';
@@ -57,6 +58,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   tagName = '';
   tagElement;
   tagCaretPosition;
+  tagged$: Observable<boolean>;
+  tagged: boolean; // Was the user tagged in the comment chain
 
   replyText: string;
 
@@ -100,6 +103,18 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       select(CommentsStoreSelectors.selectReplies, { postId: this.comment.post_id, commentId: this.comment.id })
     );
 
+    this.replies$.pipe(takeUntil(this.onDestroy)).subscribe( (storeReply: StoreReply) => {
+      this.replies = storeReply.replies;
+    });
+
+    this.tagged$ = this.store$.pipe(
+      select(CommentsStoreSelectors.selectTagged, { postId: this.comment.post_id })
+    );
+
+    this.tagged$.pipe(takeUntil(this.onDestroy)).subscribe( (tagged: boolean) => {
+      this.tagged = tagged;
+    });
+
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
@@ -107,10 +122,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isVerified$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsVerified)
     );
-
-    this.replies$.subscribe( replies => {
-      this.replies = replies.replies;
-    });
 
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
