@@ -7,7 +7,6 @@
         <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>
   </div>
-
   <span *ngIf="createError" class="create-error">
     {{ createError }}
   </span>
@@ -21,10 +20,19 @@
       </span>
     </div>
     <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
-    <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ POSTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }} </span>
+    <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> 
+      {{ POSTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
+    </span>
     <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
-    <span class="submit" (click)="submit()"> {{ STRINGS.SUBMIT }} </span>
-    <span *ngIf="createLoading && (showCreateLoading$ | async)"> <spot-spinner size="small"> </spot-spinner> </span>
+    <span class="loading" *ngIf="createLoading; else showsubmit"> 
+      <spot-spinner size="small"> </spot-spinner>
+    </span>
+    <ng-template #showsubmit>
+      <span class="submit" (click)="submit()"> 
+        {{ STRINGS.SUBMIT }} 
+      </span>
+    </ng-template>
+
   </div>
 
 </div>

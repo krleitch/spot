@@ -4,16 +4,21 @@ import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+// Store
 import * as accountsActions from '@store/accounts-store/actions/actions';
 import * as friendsActions from '@store/social-store/actions/friends.actions';
 import * as postsActions from '@store/posts-store/actions';
 import * as commentsActions from '@store/comments-store/actions';
 import * as socialActions from '@store/social-store/actions/actions';
+
+// Services
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
+
+// Models
 import { VerifyResponse } from '@models/accounts';
-import { SpotError } from '@exceptions/error';
 import { GetAccountMetadataSuccess } from '@models/accounts';
+import { SpotError } from '@exceptions/error';
 
 @Injectable()
 export class AccountsStoreEffects {

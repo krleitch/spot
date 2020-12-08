@@ -8,13 +8,17 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SpinnerComponent implements OnInit {
 
   @Input() size: string;
+  @Input() light?: boolean; // color the background white, so it can be visible on grey backgrounds
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    if ( typeof(this.light) === 'undefined' ) {
+      this.light = false;
+    }
   }
 
-  getClass() {
+  getClass(): string {
     return 'spinner ' + this.size;
   }
 

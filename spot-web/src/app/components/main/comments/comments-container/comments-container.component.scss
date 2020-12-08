@@ -147,6 +147,13 @@
   }
 }
 
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+}
+
 .photo {
   cursor: pointer;
   color: $subtle-grey;

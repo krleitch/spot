@@ -106,8 +106,6 @@ img {
 
 }
 
-
-
 .counter {
   color: $subtle-grey;
   margin-right: 7px;
@@ -130,7 +128,15 @@ img {
     font-size: 14px;
     color: $subtle-grey;
     cursor: pointer;
+    min-width: 50px;
     &:hover {
       @extend .highlight;
     }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
 }

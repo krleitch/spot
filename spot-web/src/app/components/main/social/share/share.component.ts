@@ -1,22 +1,35 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
 import { Observable, Subject, throwError } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 
-import { RootStoreState } from '@store';
+// Store
+import { Store, select } from '@ngrx/store';
+import { RootStoreState, AccountsStoreSelectors } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
-import { AddNotificationRequest, AddNotificationSuccess } from '@models/notifications';
-import { SpotError } from '@exceptions/error';
-import { Friend } from '@models/friends';
+
+// Services
 import { ModalService } from '@services/modal.service';
-import { AuthenticationService } from '@services/authentication.service';
 import { NotificationsService } from '@services/notifications.service';
 
+// Models
+import { AddNotificationRequest, AddNotificationSuccess } from '@models/notifications';
+import { Friend } from '@models/friends';
+import { SpotError } from '@exceptions/error';
+
+// Assets
 import { STRINGS } from '@assets/strings/en';
 
 // has the friend been sent a notification
 interface ShareFriend extends Friend {
   sent: boolean;
+}
+
+// THe data we expect to receive from modal service
+interface ShareModalData {
+  postId: string;
+  postLink: string;
+  commentId?: string;
+  commentLink?: string;
 }
 
 @Component({
@@ -36,10 +49,10 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   STRINGS = STRINGS.MAIN.SHARE;
 
-  data$: Observable<any>;
-  data: { postId: string, postLink: string, commentId?: string, commentLink?: string } = { postId: null, postLink: null };
-
-  isAuthenticated: boolean;
+  data$: Observable<ShareModalData>;
+  data: ShareModalData = { postId: null, postLink: null };
+  authenticated$: Observable<boolean>;
+  authenticated: boolean;
   friends$: Observable<ShareFriend[]>;
   friends: ShareFriend[];
 
@@ -51,13 +64,19 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   twitterButtonCreated = false;
 
   constructor(private store$: Store<RootStoreState.State>,
-              private authenticationService: AuthenticationService,
               private modalService: ModalService,
               private notificationsService: NotificationsService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
-    this.isAuthenticated = this.authenticationService.isAuthenticated();
+    // Is the user authenticated
+    this.authenticated$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectIsAuthenticated)
+    );
+
+    this.authenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticated: boolean) => {
+      this.authenticated = authenticated;
+    });
 
     this.data$ = this.modalService.getData(this.modalId);
 
@@ -89,7 +108,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     // whenever the modal is opened and becomes visible
     this.observer = new IntersectionObserver(([entry]) => {
 
@@ -129,15 +148,15 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     this.observer.observe(this.social.nativeElement);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  closeShare() {
+  closeShare(): void {
     this.modalService.close(this.modalId);
   }
 
-  sendNotification() {
+  sendNotification(): void {
 
     this.errorMessage = '';
     this.successMessage = '';
@@ -183,7 +202,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  sendNotificationToFriend(username: string) {
+  sendNotificationToFriend(username: string): void {
 
     this.errorMessage = '';
     this.successMessage = '';
@@ -217,7 +236,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  copyLink() {
+  copyLink(): void {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';

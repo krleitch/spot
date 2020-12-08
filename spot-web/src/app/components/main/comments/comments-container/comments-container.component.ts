@@ -1,26 +1,35 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, take } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { STRINGS } from '@assets/strings/en';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, take } from 'rxjs/operators';
+
+// Store
+import { select, Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { StoreComment } from '@store/comments-store/state';
 import { AccountsStoreSelectors } from '@store/accounts-store';
+import { SocialStoreSelectors } from '@store/social-store';
+
+// Services
+import { CommentService } from '@services/comments.service';
+import { AlertService } from '@services/alert.service';
+
+// Models
 import { GetCommentsRequest, AddCommentRequest, GetCommentsSuccess, SetCommentsStoreRequest,
           AddCommentStoreRequest, AddCommentSuccess } from '@models/comments';
 import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
-import { SpotError } from '@exceptions/error';
 import { Friend } from '@models/friends';
-import { SocialStoreSelectors } from '@store/social-store';
-import { AlertService } from '@services/alert.service';
-import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { SpotError } from '@exceptions/error';
+
+// Components
 import { TagComponent } from '../../social/tag/tag.component';
-import { CommentsHelper } from '@helpers/comments';
-import { CommentService } from '@services/comments.service';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
   selector: 'spot-comments-container',
@@ -41,9 +50,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   @ViewChild('tagelem') tagelem: TagComponent;
   showTag = false;
   tagName = '';
-  tagElement;
+  tagElement: Node;
   tagCaretPosition;
-  tagged: boolean; // Was the user tagged in this comment chain
 
   comments$: Observable<StoreComment>;
   comments = [];
@@ -52,10 +60,11 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   loadingCommentsBefore = false;
   loadingCommentsAfter = false;
   refreshed = false;
+  addCommentLoading = false;
   addCommentError: string;
 
   friends$: Observable<Friend[]>;
-  friendsList: Friend[] = [];
+  friends: Friend[] = [];
 
   initialLoad = true;
 
@@ -71,46 +80,44 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<RootStoreState.State>,
               private alertService: AlertService,
               public domSanitizer: DomSanitizer,
-              public commentsHelper: CommentsHelper,
               public commentService: CommentService) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
   ngOnInit(): void {
 
-    // Get Comments
+    // Comments
     this.comments$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectComments, { postId: this.post.id }),
     );
 
     this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (storeComments: StoreComment) => {
       this.comments = storeComments.comments;
-      this.tagged = storeComments.tagged;
     });
 
-    // Get Authentication
+    // Authentication
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
-    // Get Verified
+    // Verified
     this.isVerified$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsVerified)
     );
 
-    // Get Friends
+    // Friends
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends: Friend[]) => {
-      this.friendsList = friends;
+      this.friends = friends;
     });
 
     // if detailed load more comments
     const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
 
-    // Get the latest limit # of comments
+    // Get the latest initialLimit of comments
     const request: GetCommentsRequest = {
       postId: this.post.id,
       date: new Date().toString(),
@@ -134,27 +141,22 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
         );
-
-        // if ( comments.totalCommentsAfter === 0) {
-        //   this.refreshed = true;
-        // }
-
         this.totalCommentsBefore = comments.totalCommentsBefore;
         this.totalCommentsAfter = comments.totalCommentsAfter;
         this.initialLoad = false;
 
       }
     }, (err: SpotError) => {
-      // Error case
+      // Ignore error case for now
     });
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  offClickHandler(event: MouseEvent) {
+  offClickHandler(event: MouseEvent): void {
     if (this.tag && !this.tag.nativeElement.contains(event.target)) {
       this.showTag = false;
       this.tagName = '';
@@ -165,7 +167,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTextInput(event) {
+  onTextInput(event): void {
 
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(event.target.textContent.length + event.target.childNodes.length - 1, 0);
@@ -176,15 +178,14 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  getAndCheckWordOnCaret() {
+  getAndCheckWordOnCaret(): void {
     const range = window.getSelection().getRangeAt(0);
     if (range.collapsed) {
-      return this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+      this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
     }
-    return '';
   }
 
-  private getCurrentWord(element, position) {
+  private getCurrentWord(element: Node, position: number): string {
     // Get content of div
     const content = element.textContent;
 
@@ -202,8 +203,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     return content.substring(startPosition + 1, endPosition);
   }
 
-  private checkWord(word: string, element, position) {
+  private checkWord(word: string, element: Node, position: number): void {
 
+    // Check if starts with '@', if it does then show tag
     if ( word.length > 1 && word[0] === '@' ) {
       this.tagName = word.slice(1);
       this.showTag = true;
@@ -218,7 +220,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  private removeWord(element, position, username) {
+  // Creates the inline tag and removes the word
+  private removeWord(element: Node, position: number, username: string): void {
 
     const content = element.textContent;
 
@@ -250,7 +253,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  onEnter() {
+  onEnter(): boolean {
     // Add tag on enter
     if ( this.showTag ) {
       this.tagelem.onEnter();
@@ -258,10 +261,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     }
   }
 
-  addTag(username: string) {
+  addTag(username: string): void {
 
     // Check if they are your friend
-    if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
+    if ( this.friends.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
       this.alertService.error('Only friends can be tagged');
       return;
     }
@@ -280,7 +283,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  private placeCaretAtEnd(element) {
+  private placeCaretAtEnd(element): void {
     element.focus();
     if (typeof window.getSelection !== 'undefined'
             && typeof document.createRange !== 'undefined') {
@@ -301,7 +304,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     }
   }
 
-  addComment() {
+  addComment(): void {
 
     let content = this.comment.nativeElement.innerHTML;
 
@@ -399,7 +402,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       tagsList: tags
     };
 
-
+    this.addCommentLoading = true;
 
     this.commentService.addComment(request).pipe(take(1)).subscribe( (comment: AddCommentSuccess) => {
 
@@ -412,6 +415,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         new CommentsStoreActions.AddCommentRequestAction(storeRequest)
       );
 
+      this.addCommentLoading = false;
       this.removeFile();
       this.comment.nativeElement.innerText = '';
       this.comment.nativeElement.innerHtml = '';
@@ -420,12 +424,13 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.currentLength = this.comment.nativeElement.innerHTML.length;
 
     }, (err: SpotError) => {
+      this.addCommentLoading = false;
       this.addCommentError = err.message;
     });
 
   }
 
-  loadRecentComments() {
+  loadRecentComments(): void {
 
     const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
 
@@ -467,7 +472,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  loadMoreComments() {
+  loadMoreComments(): void {
 
     const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
 
@@ -504,19 +509,19 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     return this.currentLength > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
-  onFileChanged(event) {
+  onFileChanged(event): void {
     if ( event.target.files.length > 0 ) {
       this.imageFile = event.target.files[0];
       this.imgSrc = window.URL.createObjectURL(this.imageFile);
     }
   }
 
-  removeFile() {
+  removeFile(): void {
     this.imageFile = null;
     this.imgSrc = null;
   }
 
-  makeComment() {
+  makeComment(): void {
     const yOffset = -100;
     const y = this.comment.nativeElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
     window.scrollTo({top: y, behavior: 'smooth'});

@@ -24,9 +24,14 @@
             <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }} </span>
             <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
             <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
-            <span class="send" (click)="addComment()">
-              <i class="material-icons"> send </i>
+            <span class="loading" *ngIf="addCommentLoading; else showsend">
+              <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
+            <ng-template #showsend>
+              <span class="send" (click)="addComment()">
+                <i class="material-icons"> send </i>
+              </span>
+            </ng-template>
           </div>
         </div>
 
@@ -52,7 +57,9 @@
   <span *ngIf="addCommentError" class="add-comment-error">
     {{ addCommentError }}
   </span>
-  <span class="tag-relative" #tag><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
+  <span class="tag-relative" #tag>
+    <spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
+  </span>
 
   <!-- Comments -->
   <div class="comments-container">

@@ -9,11 +9,9 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     case ActionTypes.LOAD_REQUEST: {
-      if ( action.request.initialLoad ) {
-        // state.posts = [];
-      }
       return {
         ...state,
+        posts: action.request.initialLoad ? [] : state.posts,
         loading: true,
         noPosts: false,
       };

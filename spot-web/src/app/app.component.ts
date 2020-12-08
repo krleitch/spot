@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
 
+// Store
+import { Store } from '@ngrx/store';
 import { AccountsActions, RootStoreState } from '@store';
+
+// Services
 import { AuthenticationService } from '@services/authentication.service';
+
+// Models
 import { SetLocationRequest, GetAccountRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
 
 @Component({
@@ -17,14 +22,14 @@ export class AppComponent implements OnInit {
   constructor(private store$: Store<RootStoreState.State>,
               private authenticationService: AuthenticationService) { }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.twitterLibrary();
     this.fbLibrary();
     this.getAccountIfExists();
     this.getAccountLocation();
   }
 
-  private twitterLibrary() {
+  private twitterLibrary(): void {
     window['twttr'] = (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0],
         t = window['twttr'] || {};
@@ -44,7 +49,7 @@ export class AppComponent implements OnInit {
 
   }
 
-  private fbLibrary() {
+  private fbLibrary(): void {
     (window as any).fbAsyncInit = () => {
       window['FB'].init({
         appId      : '767513270350482',
@@ -65,7 +70,7 @@ export class AppComponent implements OnInit {
      }(document, 'script', 'facebook-jssdk'));
   }
 
-  private getAccountIfExists() {
+  private getAccountIfExists(): void {
 
     // checks id_token exists and has not expired
     if ( this.authenticationService.isAuthenticated() ) {
@@ -79,7 +84,7 @@ export class AppComponent implements OnInit {
 
   }
 
-  private getAccountLocation() {
+  private getAccountLocation(): void {
 
     // FAKE LOCATION
 
@@ -100,6 +105,21 @@ export class AppComponent implements OnInit {
     // return;
 
     // END
+
+    // TODO: Move get location to be user prompted on home page, Enable button
+
+    // only get location if permission is already given
+    if ( navigator.permissions) {
+      navigator.permissions.query({
+        name: 'geolocation'
+      }).then(permission => {
+        if (permission.state !== 'granted') {
+          return;
+        }
+      });
+    } else {
+      return;
+    }
 
     if ( navigator.geolocation ) {
 

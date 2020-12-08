@@ -1,16 +1,23 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { Observable, Subject, timer } from 'rxjs';
-import { takeUntil, mapTo, startWith, takeWhile } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { STRINGS } from '@assets/strings/en';
-import { AddPostRequest } from '@models/posts';
+import { Observable, Subject, timer } from 'rxjs';
+import { takeUntil, mapTo, startWith, takeWhile } from 'rxjs/operators';
+
+// Store
+import { Store, select } from '@ngrx/store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+
+// Models
+import { AddPostRequest } from '@models/posts';
 import { Location } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
+
 import { POSTS_CONSTANTS } from '@constants/posts';
 
 @Component({
@@ -27,26 +34,30 @@ export class CreateComponent implements OnInit, OnDestroy {
   STRINGS = STRINGS.MAIN.CREATE;
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
+  // Location
   location$: Observable<Location>;
   location: Location;
 
+  // Content 
   postInnerHtml = '';
   currentLength = 0;
 
+  // Images
   imageFile: File;
   imgSrc: string = null;
 
+  // Create
   createSuccess$: Observable<boolean>;
   createLoading = false;
-  showCreateLoading$: Observable<boolean>;
   createError$: Observable<SpotError>;
   createError: string;
 
-  constructor(private store$: Store<RootStoreState.State>, public domSanitizer: DomSanitizer) { }
+  constructor(private store$: Store<RootStoreState.State>,
+              public domSanitizer: DomSanitizer) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
-    // Success Event
+    // Success
     this.createSuccess$ = this.store$.pipe(
       select(PostsStoreSelectors.selectCreatePostsSuccess)
     );
@@ -63,7 +74,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Errors
+    // Error
     this.createError$ = this.store$.pipe(
       select(PostsStoreSelectors.selectCreatePostsError)
     );
@@ -71,7 +82,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     this.createError$.pipe(takeUntil(this.onDestroy)).subscribe( (createError: SpotError) => {
       this.createLoading = false;
       if ( createError ) {
-        if ( createError.name === "InvalidPostProfanity" ) {
+        if ( createError.name === 'InvalidPostProfanity' ) {
           this.createError = 'You cannot use profanity: \'' +  createError.body.word + '\'';
         } else {
           this.createError = createError.message;
@@ -90,14 +101,15 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  onTextInput(event) {
+  onTextInput(event): void {
     this.postInnerHtml = event.target.innerHTML;
     // Need to count newlines as a character, -1 because the first line is free
-    this.currentLength = event.target.textContent.length + event.target.childNodes.length - 1;
+    this.currentLength = Math.max(0, event.target.textContent.length + event.target.childNodes.length - 1);
+    // Reset the error when you start typing
     this.createError = null;
   }
 
@@ -105,7 +117,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     return this.currentLength > POSTS_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
-  submit() {
+  submit(): void {
 
     let content = this.postInnerHtml;
 
@@ -180,7 +192,6 @@ export class CreateComponent implements OnInit, OnDestroy {
       );
 
       this.createLoading = true;
-      this.showCreateLoading$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.createLoading )).pipe( startWith(false) );
 
     } else {
 
@@ -191,13 +202,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   }
 
-  onFileChanged(event) {
+  onFileChanged(event): void {
     this.imageFile = event.target.files[0];
     this.imgSrc = window.URL.createObjectURL(this.imageFile);
     this.createError = '';
   }
 
-  removeFile() {
+  removeFile(): void {
     this.imageFile = null;
     this.imgSrc = null;
     this.createError = '';

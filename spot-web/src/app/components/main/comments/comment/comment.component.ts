@@ -1,29 +1,39 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
+import { Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+
+// Store
+import { select, Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
 import { StoreReply } from '@store/comments-store/state';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
-import { STRINGS } from '@assets/strings/en';
-import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetRepliesSuccess, AddReplySuccess,
-         LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest,
-         UnratedCommentRequest } from '@models/comments';
-import { Post } from '@models/posts';
+
+// Services
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AlertService } from '@services/alert.service';
 import { AuthenticationService } from '@services/authentication.service';
-import { Tag } from '@models/notifications';
-import { COMMENTS_CONSTANTS } from '@constants/comments';
-import { TagComponent } from '../../social/tag/tag.component';
+
+// Models
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
 import { AccountMetadata } from '@models/accounts';
+import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetRepliesSuccess, AddReplySuccess,
+         LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest,
+         UnratedCommentRequest } from '@models/comments';
+import { Post } from '@models/posts';
+import { Tag } from '@models/notifications';
+
+// Components
+import { TagComponent } from '../../social/tag/tag.component';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
   selector: 'spot-comment',
@@ -63,16 +73,15 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   replyText: string;
 
-  // fix this type
-  replies$: Observable<any>;
-  replies = [];
+  replies$: Observable<StoreReply>;
+  replies: Comment[] = [];
   totalReplies = 0;
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
   accountMetadata$: Observable<AccountMetadata>;
 
-  // files
+  // Image
   FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;

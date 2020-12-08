@@ -22,7 +22,7 @@
     <span class="copy" (click)="copyLink()"> {{ STRINGS.COPY_LINK }} </span>
   </div>
 
-  <div *ngIf="isAuthenticated; else auth">
+  <div *ngIf="authenticated; else auth">
 
     <div class="input-container">
       <input #usernameinput [(ngModel)]="username" (keyup.enter)="sendNotification()" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
