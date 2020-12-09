@@ -23,10 +23,13 @@ export class AppComponent implements OnInit {
               private authenticationService: AuthenticationService) { }
 
   public ngOnInit(): void {
+    // Init third party libaries
     this.twitterLibrary();
     this.fbLibrary();
+    // Get Account if JWT token exists
     this.getAccountIfExists();
-    this.getAccountLocation();
+    // Get Location if permission was already granted
+    this.getAccountLocationIfPermitted();
   }
 
   private twitterLibrary(): void {
@@ -84,9 +87,11 @@ export class AppComponent implements OnInit {
 
   }
 
-  private getAccountLocation(): void {
+  private getAccountLocationIfPermitted(): void {
 
+    // --------------
     // FAKE LOCATION
+    // --------------
 
     // const request1: LoadLocationRequest = {};
     // this.store$.dispatch(
@@ -104,60 +109,89 @@ export class AppComponent implements OnInit {
 
     // return;
 
+    // --------------
     // END
+    // --------------
 
-    // TODO: Move get location to be user prompted on home page, Enable button
-
-    // only get location if permission is already given
+    // Only get location if permission is already given
     if ( navigator.permissions) {
-      navigator.permissions.query({
-        name: 'geolocation'
-      }).then(permission => {
-        if (permission.state !== 'granted') {
-          return;
+      navigator.permissions.query({ name: 'geolocation'}).then( (permission: PermissionStatus) => {
+        if (permission.state === 'granted') {
+
+          if ( navigator.geolocation ) {
+
+            const loadLocationRequest: LoadLocationRequest = {};
+            this.store$.dispatch(
+              new AccountsActions.LoadLocationAction(loadLocationRequest),
+            );
+
+            navigator.geolocation.getCurrentPosition((position) => {
+
+              const setLocationRequest: SetLocationRequest = {
+                location: {
+                  longitude: position.coords.longitude,
+                  latitude: position.coords.latitude
+                },
+              };
+              this.store$.dispatch(
+                new AccountsActions.SetLocationAction(setLocationRequest),
+              );
+
+            }, this.locationError.bind(this));
+
+          } else {
+
+            // geolocation not available in this browser
+            const locationFailure: LocationFailure = {
+              error: 'browser',
+            };
+            this.store$.dispatch(
+              new AccountsActions.LocationFailureAction(locationFailure),
+            );
+
+          }
+
+        } else if ( permission.state === 'denied') {
+
+          const locationFailure: LocationFailure = {
+            error: 'permission',
+          };
+          this.store$.dispatch(
+            new AccountsActions.LocationFailureAction(locationFailure),
+          );
+
+        } else {
+
+          const locationFailure: LocationFailure = {
+            error: 'prompt',
+          };
+          this.store$.dispatch(
+            new AccountsActions.LocationFailureAction(locationFailure),
+          );
+
         }
       });
     } else {
-      return;
-    }
 
-    if ( navigator.geolocation ) {
-
-      const loadRequest: LoadLocationRequest = {};
-      this.store$.dispatch(
-        new AccountsActions.LoadLocationAction(loadRequest),
-      );
-
-      navigator.geolocation.getCurrentPosition((position) => {
-
-        const request: SetLocationRequest = {
-          location: { longitude: position.coords.longitude, latitude: position.coords.latitude },
-        };
-        this.store$.dispatch(
-          new AccountsActions.SetLocationAction(request),
-        );
-
-      }, this.locationError.bind(this));
-
-    } else {
-
-      const request: LocationFailure = {
-        error: 'browser',
+      // the permissions api isnt implemented in this browser so setup to prompt again
+      const locationFailure: LocationFailure = {
+        error: 'prompt',
       };
       this.store$.dispatch(
-        new AccountsActions.LocationFailureAction(request),
+        new AccountsActions.LocationFailureAction(locationFailure),
       );
 
     }
+
   }
 
-  private locationError(error: { message: string, code: number }) {
+  private locationError(error: { message: string, code: number }): void {
 
-    const request: LocationFailure = {
+    const locationFailure: LocationFailure = {
       error: error.code === 1 ? 'permission' : 'general',
     };
     this.store$.dispatch(
-      new AccountsActions.LocationFailureAction(request),
+      new AccountsActions.LocationFailureAction(locationFailure),
     );
 
   }

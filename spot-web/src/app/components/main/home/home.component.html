@@ -4,7 +4,7 @@
   <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
   <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> public </i> </div>
 </div>
-<div #mobileDropdownLocation class="locationToggleMobile mobile">
+<div #mobiledropdownlocation class="locationToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
     <i *ngIf="isSelectedLocation('local')" class="material-icons"> home </i>
     <i *ngIf="isSelectedLocation('global')" class="material-icons"> public </i>
@@ -22,7 +22,7 @@
   <div class="hot" [ngClass]="{'selectedSort': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
   <div class="new" [ngClass]="{'selectedSort': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
 </div>
-<div #mobileDropdownSort class="postFilterToggleMobile mobile">
+<div #mobiledropdownsort class="postFilterToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownSort(true)">
     <div *ngIf="isSelectedPostSort('hot')"> {{ STRINGS.HOT }} </div>
     <div *ngIf="isSelectedPostSort('new')"> {{ STRINGS.NEW }} </div>
@@ -37,133 +37,162 @@
 </div>
 
 <div class="container">
-  <!-- Don't show anything until we get the metadata -->
-  <div class="inner" *ngIf="postLocation && postSort">
 
-    <!-- Determine if we need location -->
-    <div *ngIf="location || postLocation == 'global'; else noLocation" class="content">
+  <!-- If we need to prompt for location, show this first -->
+  <div class="inner" *ngIf="locationFailure !== 'prompt'; else prompt" >
 
-      <div class="max-width" *ngIf="account$ | async as account">
+    <!-- Don't show anything until we get the metadata -->
+    <div *ngIf="postLocation && postSort">
 
-        <!-- Need account to be verified -->
-        <div class="max-width" *ngIf="account.verified_date !== null; else verify">
-          <!-- You still need location to create a spot -->
-          <div *ngIf="location; else createLocation">
-            <spot-create></spot-create>
-          </div>
-          <ng-template #createLocation>
-            <!-- location is still loading -->
-            <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocationCreate" class="loading-location">
-              <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
-              <spot-spinner size="medium"></spot-spinner>
+      <!-- Determine if we need location -->
+      <div *ngIf="location || postLocation == 'global'; else noLocation" class="content">
+
+        <div class="max-width" *ngIf="account$ | async as account">
+
+          <!-- Need account to be verified -->
+          <div class="max-width" *ngIf="account.verified_date !== null; else verify">
+
+            <!-- You still need location to create a spot -->
+            <div *ngIf="location; else createLocation">
+              <spot-create></spot-create>
             </div>
-            <ng-template #enableLocationCreate >
-              <!-- location is not enabled -->
-              <div *ngIf="locationFailure === 'browser'" class="no-location-container-create">
-                <span class="material-icons icon"> location_off </span>
-                <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
+            <ng-template #createLocation>
+              <!-- location is still loading -->
+              <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocationCreate" class="loading-location">
+                <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
+                <spot-spinner size="medium"></spot-spinner>
               </div>
-              <div *ngIf="locationFailure === 'permission'" class="no-location-container-create">
-                <span class="text"> {{ STRINGS.LOCATION_CREATE }} </span>
-                <span class="material-icons icon"> location_off </span>
-                <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
-              </div>
-              <div *ngIf="locationFailure === 'general'" class="no-location-container-create">
-                <span class="material-icons icon"> location_off </span>
-                <span class="text"> {{ STRINGS.LOCATION_ERROR }} </span>
-                <span class="text"> {{ STRINGS.LOCATION_REFRESH }} </span>
-              </div>
+              <ng-template #enableLocationCreate >
+                <!-- location is not enabled -->
+                <div *ngIf="locationFailure === 'browser'" class="no-location-container-create">
+                  <span class="material-icons icon"> location_off </span>
+                  <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
+                </div>
+                <div *ngIf="locationFailure === 'permission'" class="no-location-container-create">
+                  <span class="text"> {{ STRINGS.LOCATION_CREATE }} </span>
+                  <span class="material-icons icon"> location_off </span>
+                  <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
+                </div>
+                <div *ngIf="locationFailure === 'general'" class="no-location-container-create">
+                  <span class="material-icons icon"> location_off </span>
+                  <span class="text"> {{ STRINGS.LOCATION_ERROR }} </span>
+                  <span class="text"> {{ STRINGS.LOCATION_REFRESH }} </span>
+                </div>
+              </ng-template>
             </ng-template>
+          </div>
+
+          <!-- You need to verify your account -->
+          <ng-template #verify>
+            <div class="verify">
+              {{ STRINGS.VERIFY }}
+              <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
+                <span class="verify-text"> {{ STRINGS.VERIFY_SEND }} </span>
+                <span class="material-icons verify-icon"> email </span>
+              </div>
+              <ng-template #sent>
+                <div class="verify-container">
+                  <span class="verify-text"> {{ STRINGS.VERIFY_SENT }} </span>
+                  <div class="verify-click" (click)="verifyAccount()">
+                    <span class="verify-text"> {{ STRINGS.VERIFY_RESEND }} </span>
+                    <span class="material-icons verify-icon"> redo </span>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
           </ng-template>
+
         </div>
 
-        <!-- You need to verify your account -->
-        <ng-template #verify>
-          <div class="verify">
-            {{ STRINGS.VERIFY }}
-            <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
-              <span class="verify-text"> {{ STRINGS.VERIFY_SEND }} </span>
-              <span class="material-icons verify-icon"> email </span>
+        <div class="posts">
+          <spot-infinite-scroll (scrolled)="onScroll()">
+            <div *ngIf="posts.length > 0; else empty">
+              <div *ngFor="let post of posts$ | async">
+                  <spot-post [post]="post" [detailed]="false"></spot-post>
+              </div>
             </div>
-            <ng-template #sent>
-              <div class="verify-container">
-                <span class="verify-text"> {{ STRINGS.VERIFY_SENT }} </span>
-                <div class="verify-click" (click)="verifyAccount()">
-                  <span class="verify-text"> {{ STRINGS.VERIFY_RESEND }} </span>
-                  <span class="material-icons verify-icon"> redo </span>
-                </div>
+            <ng-template #empty>
+              <!-- no spots in the area -->
+              <div class="empty-no-posts" *ngIf="noPosts && !loading">
+                <span class="text"> {{ STRINGS.NO_POSTS }} </span>
+                <span class="material-icons icon"> local_see </span>
+                <span class="text"> {{ STRINGS.FIRST_POST }}</span>
               </div>
             </ng-template>
+            <!-- There are no more spots -->
+            <div class="no-posts" *ngIf="noPosts && posts.length !== 0">
+              <span class="material-icons icon"> done_all </span>
+              {{ STRINGS.NO_MORE_POSTS }}
+            </div>
+            <!-- Loading spots -->
+            <div *ngIf="loading && (showPostsIndicator$ | async)" class="loading">
+              <span class="text"> {{ STRINGS.LOADING_POSTS }} </span>
+              <spot-spinner size="medium"></spot-spinner>
+            </div>
+          </spot-infinite-scroll>
+        </div>
+
+      </div>
+
+      <ng-template #noLocation>
+        <!-- Location is just loading -->
+        <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocation" class="loading-location">
+          <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
+          <span class="loading-location-background" (click)="loadLocationBackground()">
+            {{ STRINGS.LOCATION_BACKGROUND_1 }}
+            <i class="material-icons icon"> public </i>
+            {{ STRINGS.LOCATION_BACKGROUND_2 }}
+          </span>
+          <spot-spinner size="medium"></spot-spinner>
+        </div>
+        <!-- Location was explicitly denied, an error occurred or not supported by browser -->
+        <ng-template #enableLocation>
+          <div *ngIf="locationFailure === 'browser'" class="no-location-container">
+            <span class="material-icons icon"> location_off </span>
+            <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
+          </div>
+          <div *ngIf="locationFailure === 'permission'" class="no-location-container">
+            <span class="text">
+              {{ STRINGS.LOCATION_REQUIRED_1 }}
+              <i class="material-icons text-icon"> home </i>
+              {{ STRINGS.LOCATION_REQUIRED_2 }}
+            </span>
+            <span class="text">
+              {{ STRINGS.LOCATION_ENABLE }}
+              <i class="material-icons text-icon"> public </i>
+            </span>
+            <span class="material-icons icon"> location_off </span>
+            <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
+          </div>
+          <div *ngIf="locationFailure === 'general'" class="no-location-container">
+            <span class="material-icons icon"> location_off </span>
+            <span class="text"> {{ STRINGS.LOCATION_ERROR }} </span>
+            <span class="text"> {{ STRINGS.LOCATION_REFRESH }} </span>
           </div>
         </ng-template>
-
-      </div>
-
-      <div class="posts">
-        <spot-infinite-scroll (scrolled)="onScroll()">
-          <div *ngIf="posts.length > 0; else empty">
-            <div *ngFor="let post of posts$ | async">
-                <spot-post [post]="post" [detailed]="false"></spot-post>
-            </div>
-          </div>
-          <ng-template #empty>
-            <!-- no spots in the area -->
-            <div class="empty-no-posts" *ngIf="noPosts && !loading">
-              <span class="text"> {{ STRINGS.NO_POSTS }} </span>
-              <span class="material-icons icon"> local_see </span>
-              <span class="text"> {{ STRINGS.FIRST_POST }}</span>
-            </div>
-          </ng-template>
-          <!-- There are no more spots -->
-          <div class="no-posts" *ngIf="noPosts && posts.length !== 0">
-            <span class="material-icons icon"> done_all </span>
-            {{ STRINGS.NO_MORE_POSTS }}
-          </div>
-          <!-- Loading spots -->
-          <div *ngIf="loading && (showPostsIndicator$ | async)" class="loading">
-            <span class="text"> {{ STRINGS.LOADING_POSTS }} </span>
-            <spot-spinner size="medium"></spot-spinner>
-          </div>
-        </spot-infinite-scroll>
-      </div>
+      </ng-template>
 
     </div>
 
-    <ng-template #noLocation>
-      <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocation" class="loading-location">
-        <span class="loading-location-text"> {{ STRINGS.LOADING_LOCATION }} </span>
-        <span class="loading-location-background" (click)="loadLocationBackground()">
-           {{ STRINGS.LOCATION_BACKGROUND_1 }}
-           <i class="material-icons icon"> public </i>
-           {{ STRINGS.LOCATION_BACKGROUND_2 }}
-        </span>
-        <spot-spinner size="medium"></spot-spinner>
-      </div>
-      <ng-template #enableLocation>
-        <div *ngIf="locationFailure === 'browser'" class="no-location-container">
-          <span class="material-icons icon"> location_off </span>
-          <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
-        </div>
-        <div *ngIf="locationFailure === 'permission'" class="no-location-container">
-          <span class="text">
-            {{ STRINGS.LOCATION_REQUIRED_1 }}
-            <i class="material-icons text-icon"> home </i>
-            {{ STRINGS.LOCATION_REQUIRED_2 }}
-          </span>
-          <span class="text">
-            {{ STRINGS.LOCATION_ENABLE }}
-            <i class="material-icons text-icon"> public </i>
-          </span>
-          <span class="material-icons icon"> location_off </span>
-          <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
-        </div>
-        <div *ngIf="locationFailure === 'general'" class="no-location-container">
-          <span class="material-icons icon"> location_off </span>
-          <span class="text"> {{ STRINGS.LOCATION_ERROR }} </span>
-          <span class="text"> {{ STRINGS.LOCATION_REFRESH }} </span>
-        </div>
-      </ng-template>
-    </ng-template>
-
   </div>
+  <!-- User needs to be prompted for location -->
+  <ng-template #prompt>
+    <div class="no-location-container">
+      <span class="material-icons icon"> location_off </span>
+      <span class="text"> 
+        Your location is required to view
+        <i class="material-icons text-icon"> home </i>
+        spots, create new spots and to add comments
+      </span>
+      <span class="text clickable" (click)="continueWithGlobal()"> 
+        Continue to
+        <i class="material-icons text-icon"> public </i>
+        spots without location 
+      </span>
+      <span class="line"></span>
+      <span class="text"> Your location will never be given away </span>
+      <button class="enable-location-button" (click)="getLocation()"> Enable Location </button>
+    </div>
+  </ng-template>
+
 </div>

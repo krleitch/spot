@@ -1,13 +1,20 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+
 import { Observable, Subject, timer, interval } from 'rxjs';
 import { takeUntil, mapTo, startWith, skipWhile, takeWhile, take } from 'rxjs/operators';
 
+// Store
+import { select, Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
+
+// Models
 import { Post, LoadPostRequest } from '@models/posts';
 import { Location, UpdateAccountMetadataRequest, AccountMetadata, Account, VerifyRequest } from '@models/accounts';
+import { SetLocationRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
+
+// Assets
 import { STRINGS } from '@assets/strings/en';
 import { POSTS_CONSTANTS } from '@constants/posts';
 
@@ -19,9 +26,12 @@ import { POSTS_CONSTANTS } from '@constants/posts';
 export class HomeComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
-  // Used to cancel posts
-  private readonly stop$ = new Subject<void>();
+  private readonly stop$ = new Subject<void>(); // Used to cancel loading posts
 
+  STRINGS = STRINGS.MAIN.HOME;
+  POSTS_CONSTANTS = POSTS_CONSTANTS;
+
+  // Posts
   posts$: Observable<Post[]>;
   posts: Post[];
   showPostsIndicator$: Observable<boolean>;
@@ -30,9 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   noPosts$: Observable<boolean>;
   noPosts: boolean;
 
-  STRINGS = STRINGS.MAIN.HOME;
-  POSTS_CONSTANTS = POSTS_CONSTANTS;
-
+  // Location
   loadingLocation$: Observable<boolean>;
   loadingLocation: boolean;
   bypassLocation = false; // if true we will not wait for location to load for posts
@@ -42,34 +50,33 @@ export class HomeComponent implements OnInit, OnDestroy {
   locationFailure$: Observable<string>;
   locationFailure: string;
 
+  // Account
   account$: Observable<Account>;
   accountMetadata$: Observable<AccountMetadata>;
 
+  // Metadata
   postLocation: string = undefined;
   postSort: string = undefined;
   distanceUnit = '';
 
-  loadedPosts: number;
-
-  // keep track of whether the initial load was made
-  // needed so the infinite scroll doesnt get called right away to overwrite
-  initialLoad = true;
-
+  // State
+  loadedPosts: number; // offset for loaded posts for 'hot'
+  initialLoad = true; // is this the first load?
   verificationSent = false;
 
-  @ViewChild('mobileDropdownLocation') mobileDropdownLocation: ElementRef;
+  // Dropdowns
+  @ViewChild('mobiledropdownlocation') mobileDropdownLocation: ElementRef;
   dropdownLocationEnabled = false;
-  @ViewChild('mobileDropdownSort') mobileDropdownSort: ElementRef;
+  @ViewChild('mobiledropdownsort') mobileDropdownSort: ElementRef;
   dropdownSortEnabled = false;
 
   constructor(private store$: Store<RootStoreState.State>) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
-    // ACCOUNT
-
+    // Account
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
     );
@@ -86,8 +93,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    // LOCATION
-
+    // Location
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectLocation)
     );
@@ -115,8 +121,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    // POSTS
-
+    // Posts
     this.posts$ = this.store$.pipe(
       select(PostsStoreSelectors.selectPosts)
     );
@@ -150,11 +155,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  offClickHandler(event: MouseEvent) {
+  offClickHandler(event: MouseEvent): void {
     if (this.mobileDropdownLocation && !this.mobileDropdownLocation.nativeElement.contains(event.target)) {
       this.dropdownLocation(false);
     }
@@ -163,15 +168,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  dropdownLocation(value: boolean) {
+  dropdownLocation(value: boolean): void {
     this.dropdownLocationEnabled = value;
   }
 
-  dropdownSort(value: boolean) {
+  dropdownSort(value: boolean): void {
     this.dropdownSortEnabled = value;
   }
 
-  onScroll() {
+  onScroll(): void {
 
     // Wait until we have the required info to load posts
     // only local requires location
@@ -191,7 +196,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   }
 
-  loadPosts() {
+  loadPosts(): void {
 
     // don't load if we are already loading
     if ( !this.loading ) {
@@ -236,7 +241,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  refresh() {
+  refresh(): void {
 
     // Cancel previous calls
     this.stop$.next();
@@ -246,7 +251,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   }
 
-  setGlobal() {
+  setGlobal(): void {
     this.postLocation = 'global';
 
     const request: UpdateAccountMetadataRequest = {
@@ -262,7 +267,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refresh();
   }
 
-  setLocal() {
+  setLocal(): void {
 
     this.bypassLocation = false;
 
@@ -281,11 +286,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refresh();
   }
 
-  isSelectedLocation(location) {
+  isSelectedLocation(location): boolean {
     return this.postLocation === location;
   }
 
-  setNew() {
+  setNew(): void {
     this.postSort = 'new';
 
     const request: UpdateAccountMetadataRequest = {
@@ -301,7 +306,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refresh();
   }
 
-  setHot() {
+  setHot(): void {
     this.postSort = 'hot';
 
     const request: UpdateAccountMetadataRequest = {
@@ -317,11 +322,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refresh();
   }
 
-  isSelectedPostSort(postSort) {
+  isSelectedPostSort(postSort): boolean {
     return this.postSort === postSort;
   }
 
-  verifyAccount() {
+  verifyAccount(): void {
     const request: VerifyRequest = {};
     this.store$.dispatch(
       new AccountsActions.VerifyRequestAction(request)
@@ -329,11 +334,70 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.verificationSent = true;
   }
 
-  loadLocationBackground() {
+  loadLocationBackground(): void {
     this.postLocation = 'global';
     // the location is actually still loading, we just say in this component we arent worried about it anymore
     // So onScroll() posts are loaded
     this.bypassLocation = true;
+  }
+
+  getLocation(): void {
+
+    if ( navigator.geolocation ) {
+
+      const loadLocationRequest: LoadLocationRequest = {};
+      this.store$.dispatch(
+        new AccountsActions.LoadLocationAction(loadLocationRequest),
+      );
+
+      navigator.geolocation.getCurrentPosition((position) => {
+
+        const setLocationRequest: SetLocationRequest = {
+          location: {
+            longitude: position.coords.longitude,
+            latitude: position.coords.latitude
+          },
+        };
+        this.store$.dispatch(
+          new AccountsActions.SetLocationAction(setLocationRequest),
+        );
+
+      }, this.locationError.bind(this));
+
+    } else {
+
+      console.log('me')
+
+      const locationFailure: LocationFailure = {
+        error: 'browser',
+      };
+      this.store$.dispatch(
+        new AccountsActions.LocationFailureAction(locationFailure),
+      );
+
+    }
+
+  }
+
+  private locationError(error: { message: string, code: number }): void {
+
+    console.log('na me', error)
+
+    const locationFailure: LocationFailure = {
+      error: error.code === 1 ? 'permission' : 'general',
+    };
+    this.store$.dispatch(
+      new AccountsActions.LocationFailureAction(locationFailure),
+    );
+
+  }
+
+  continueWithGlobal(): void {
+    this.postLocation = 'global';
+    // the location is actually still loading, we just say in this component we arent worried about it anymore
+    // So onScroll() posts are loaded
+    this.bypassLocation = true;
+
   }
 
 }

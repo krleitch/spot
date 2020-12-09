@@ -262,7 +262,11 @@ spot-create {
   display: flex;
   flex-flow: column;
   align-items: center;
-  margin: 20px 5px 5px 0px;
+  margin: 20px 5px;
+  margin-bottom: auto;
+  padding: 20px;
+  max-width: 450px;
+  background-color: white;
 
   .text {
     display: flex;
@@ -278,11 +282,60 @@ spot-create {
     margin: 0px 3px;
   }
 
-
   .icon {
     margin: 5px 0px;
     font-size: 52px;
     color: $button-highlight;
+  }
+
+  .clickable {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $subtle-grey;
+    font-size: 18px;
+    margin-bottom: 5px;
+    &:hover {
+      color: $button-highlight;
+      cursor: pointer;
+    }
+
+    .icon {
+      padding-top: 3px;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+  }
+
+  .line {
+    width: 100%;
+    margin: 25px 10px;
+    border-bottom: 1px solid $subtle-grey;
+  }
+
+  .enable-location-button {
+
+    border: none;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $button-black;
+    color: $button-font-white;
+    padding: 12px 24px;
+    margin-top: 10px;
+    font-size: 14px;
+    min-width: 250px;
+    border-radius: 5px;
+  
+    &:hover {
+      background-color: lighten($button-black, 10%);
+    }
+  
   }
 
 }
