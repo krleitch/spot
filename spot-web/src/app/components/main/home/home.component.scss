@@ -1,6 +1,15 @@
 @import '../../../styles/colors';
 @import '../../../styles/sizes';
 
+spot-main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 99;
+}
+
 .container {
 
   display: flex;
@@ -11,20 +20,15 @@
   background-color: $background-grey;
   box-sizing: border-box;
 
-  .inner {
+  .fit-container {
     display: flex;
+    justify-content: center;
     min-width: 100%;
     height: 100%;
-    justify-content: center;
+    
   }
 
-  .max-width {
-    width: 100%;
-  }
-
-}
-
-.content {
+  .content {
     display: flex;
     align-items: center;
     flex-flow: column;
@@ -33,63 +37,11 @@
     max-width: 750px;
     min-width: 450px;
     padding-top: 20px;
-}
-
-// For Mobile
-@media screen and (max-width: $mobile-width) {
-  .content {
-    width: 95%;
-    min-width: 0;
   }
+
 }
 
-spot-main-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  z-index: 99;
-}
-
-.verify {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-flow: column;
-  // color: $subtle-grey;
-  text-align: center;
-  font-size: 16px;
-}
-
-.verify-container {
-  font-size: 16px;
-  color: $subtle-grey;
-  display: flex;
-  align-items: center;
-}
-
-.verify-text {
-  margin-right: 3px;
-}
-
-.verify-icon {
-  font-size: 16px;
-}
-
-.verify-icon-highlight {
-  font-size: 16px;
-  color: $button-highlight;
-}
-
-.verify-click {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  &:hover {
-    color: $button-highlight;
-  }
-}
+// options
 
 .locationToggle {
   position: fixed;
@@ -168,105 +120,47 @@ spot-create {
     width: 100%;
 }
 
-// loading
+// no posts, no more posts, loading posts
 
-.loading {
+.empty-container {
 
   display: flex;
   justify-content: center;
   align-items: center;
   flex-flow: column;
-  margin-bottom: 10px;
+  margin: 10px 0px;
 
   .text {
-    margin-bottom: 5px;
-    font-size: 18px;
-  }
-
-}
-
-.empty-no-posts {
-
-  display: flex;
-  flex-flow: column;
-  text-align: center;
-  padding: 5px 0px 10px 0px;
-
-  .text {
+    margin: 3px 0px;
     font-size: 18px;
   }
 
   .icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 6px 0px 0px 0px;
     font-size: 42px;
     color: $button-highlight;
   }
 
-}
-
-.no-posts {
-
-  display: flex;
-  flex-flow: column;
-  text-align: center;
-  padding: 5px 0px 35px 0px;
-  font-size: 18px;
-
-  .icon {
-    font-size: 32px;
-    color: $button-highlight;
+  spot-spinner {
+    margin-bottom: 15px;
   }
 
 }
 
-// When location is disabled
+// location disabled, verified, no posts
 
-.loading-location {
+.info-container {
 
   display: flex;
   flex-flow: column;
   align-items: center;
-  margin-top: 20px;
-
-  .loading-location-text {
-    font-size: 18px;
-  }
-
-  .loading-location-background {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $subtle-grey;
-    font-size: 18px;
-    margin-bottom: 5px;
-    &:hover {
-      color: $button-highlight;
-      cursor: pointer;
-    }
-
-    .icon {
-      padding-top: 3px;
-      margin-left: 5px;
-      margin-right: 5px;
-    }
-
-  }
-
-}
-
-.no-location-container {
-
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  margin: 20px 5px;
   margin-bottom: auto;
   padding: 20px;
-  max-width: 450px;
+  width: 100%;
   background-color: white;
+
+  spot-spinner {
+    margin-bottom: 15px;
+  }
 
   .text {
     display: flex;
@@ -278,23 +172,25 @@ spot-create {
     font-size: 18px;
   }
 
-  .text-icon {
+  .inline-icon {
     margin: 0px 3px;
   }
 
   .icon {
     margin: 5px 0px;
-    font-size: 52px;
+    font-size: 42px;
     color: $button-highlight;
   }
 
   .clickable {
+
     display: flex;
     align-items: center;
     justify-content: center;
     color: $subtle-grey;
     font-size: 18px;
     margin-bottom: 5px;
+
     &:hover {
       color: $button-highlight;
       cursor: pointer;
@@ -339,34 +235,6 @@ spot-create {
   }
 
 }
-
-.no-location-container-create {
-
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-
-  .text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 3px 0px;
-    font-size: 18px;
-  }
-
-  .text-icon {
-    margin: 0px 3px;
-  }
-
-  .icon {
-    margin: 5px 0px;
-    font-size: 52px;
-    color: $button-highlight;
-  }
-
-}
-
 
 // mobile dropdowns
 
@@ -470,7 +338,10 @@ spot-create {
   display: none;
 }
 
+// mobile
+
 @media screen and (max-width: $mobile-width) {
+
   .mobile {
     display: flex;
   }
@@ -478,4 +349,12 @@ spot-create {
   .desktop {
     display: none;
   }
+
+  .container {
+    .content {
+      width: 95%;
+      min-width: 0;
+    }
+  }
+
 }

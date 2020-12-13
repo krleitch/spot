@@ -1,5 +1,7 @@
 @import '../../../styles/colors';
 
+// default
+
 .small {
   width: 12px;
   height: 12px;
@@ -34,4 +36,82 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+// dot  pulse
+
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: $button-highlight;
+  color: $button-highlight;
+  box-shadow: 9999px 0 0 -5px $button-highlight;
+  animation: dotPulse 1.5s infinite linear;
+  animation-delay: .25s;
+}
+
+.dot-pulse::before, .dot-pulse::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: $button-highlight;
+  color: $button-highlight;
+}
+
+.dot-pulse::before {
+  box-shadow: 9984px 0 0 -5px $button-highlight;
+  animation: dotPulseBefore 1.5s infinite linear;
+  animation-delay: 0s;
+}
+
+.dot-pulse::after {
+  box-shadow: 10014px 0 0 -5px $button-highlight;
+  animation: dotPulseAfter 1.5s infinite linear;
+  animation-delay: .5s;
+}
+
+@keyframes dotPulseBefore {
+  0% {
+    box-shadow: 9984px 0 0 -5px $button-highlight;
+  }
+  30% {
+    box-shadow: 9984px 0 0 2px $button-highlight;
+  }
+  60%,
+  100% {
+    box-shadow: 9984px 0 0 -5px $button-highlight;
+  }
+}
+
+@keyframes dotPulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px $button-highlight
+  }
+  30% {
+    box-shadow: 9999px 0 0 2px $button-highlight;
+  }
+  60%,
+  100% {
+    box-shadow: 9999px 0 0 -5px $button-highlight
+  }
+}
+
+@keyframes dotPulseAfter {
+  0% {
+    box-shadow: 10014px 0 0 -5px $button-highlight;
+  }
+  30% {
+    box-shadow: 10014px 0 0 2px $button-highlight;
+  }
+  60%,
+  100% {
+    box-shadow: 10014px 0 0 -5px $button-highlight;
+  }
 }

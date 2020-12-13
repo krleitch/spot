@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SpinnerComponent implements OnInit {
 
   @Input() size: string;
+  @Input() type?: string; // dot or default
   @Input() light?: boolean; // color the background white, so it can be visible on grey backgrounds
 
   constructor() { }
@@ -16,10 +17,17 @@ export class SpinnerComponent implements OnInit {
     if ( typeof(this.light) === 'undefined' ) {
       this.light = false;
     }
+    if ( typeof(this.type) === 'undefined' ) {
+      this.type = 'default';
+    }
   }
 
   getClass(): string {
-    return 'spinner ' + this.size;
+    if ( this.type === 'dot' ) {
+      return 'dot-pulse';
+    } else {
+      return 'spinner ' + this.size;
+    }
   }
 
 }

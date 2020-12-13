@@ -1,18 +1,27 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { STRINGS } from '@assets/strings/en';
-import { AuthenticationService } from '@services/authentication.service';
-import { RegisterRequest } from '@models/authentication';
+// Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions, AccountsStoreSelectors } from '@store/accounts-store';
+
+// Services
+import { AuthenticationService } from '@services/authentication.service';
+
+// Models
 import { FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
+import { RegisterRequest } from '@models/authentication';
 
+// Assets
+import { STRINGS } from '@assets/strings/en';
+
+// google api
 declare const gapi: any;
 
 @Component({
@@ -45,7 +54,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.authError$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationError)
@@ -59,11 +68,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     gapi.signin2.render('my-signin2', {
         scope: 'profile email',
         width: 240,
@@ -74,7 +83,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  facebookLogin() {
+  facebookLogin(): void {
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
@@ -105,7 +114,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleLogin(googleUser) {
+  googleLogin(googleUser): void {
 
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
@@ -125,14 +134,14 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleSignOut() {
+  googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(() => {
 
     });
   }
 
-  signUp() {
+  signUp(): void {
 
     const val = this.form.value;
 

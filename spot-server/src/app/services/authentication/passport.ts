@@ -39,7 +39,7 @@ passport.use(new LocalStrategy(localOptions,
             accounts.getAccountByUsername(emailOrUsername).then( (user: any) => {
                 user = user[0];
                 if (!user) { return done(null, false); }
-                if (!auth.validatePassword(user, password)) { return done(null, false); }
+                if (!auth.validatePassword(user, password.toString())) { return done(null, false); }
                 return done(null, user);
             }, (err: any) => {
                 return done(err);
