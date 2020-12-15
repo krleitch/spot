@@ -49,6 +49,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   @ViewChild('tag') tag: ElementRef;
   @ViewChild('tagelem') tagelem: TagComponent;
   showTag = false;
+  showTagBottom = false;
   tagName = '';
   tagElement: Node;
   tagCaretPosition;
@@ -159,6 +160,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   offClickHandler(event: MouseEvent): void {
     if (this.tag && !this.tag.nativeElement.contains(event.target)) {
       this.showTag = false;
+      this.showTagBottom = false;
       this.tagName = '';
     }
 
@@ -208,12 +210,13 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // Check if starts with '@', if it does then show tag
     if ( word.length > 1 && word[0] === '@' ) {
       this.tagName = word.slice(1);
-      this.showTag = true;
+      this.showTagTrue();
       this.tagElement = element;
       this.tagCaretPosition = position;
     } else {
       this.tagName = '';
       this.showTag = false;
+      this.showTagBottom = false;
       this.tagElement = null;
       this.tagCaretPosition = null;
     }
@@ -278,6 +281,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     // hide tag menu
     this.tagName = '';
     this.showTag = false;
+    this.showTagBottom = false;
     this.tagElement = null;
     this.tagCaretPosition = null;
 
@@ -528,6 +532,20 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.comment.nativeElement.focus({
       preventScroll: true,
     });
+  }
+
+  showTagTrue(): void {
+
+    const distanceToTop = this.tag.nativeElement.getBoundingClientRect().top;
+
+    if ( distanceToTop < 200 ) {
+      this.showTagBottom = true;
+    } else {
+      this.showTagBottom = false;
+    }
+
+    this.showTag = true;
+
   }
 
 }

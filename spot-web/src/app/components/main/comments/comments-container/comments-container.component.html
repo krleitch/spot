@@ -1,5 +1,9 @@
 <div class="container">
 
+  <span class="tag-relative" #tag>
+    <spot-tag [ngClass]="{'tag-bottom': showTagBottom }" #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
+  </span>
+
   <!-- Add -->
   <div *ngIf="post.inRange">
 
@@ -56,9 +60,6 @@
 
   <span *ngIf="addCommentError" class="add-comment-error">
     {{ addCommentError }}
-  </span>
-  <span class="tag-relative" #tag>
-    <spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
   </span>
 
   <!-- Comments -->

@@ -74,7 +74,9 @@ export const ERROR_MESSAGES = {
             DISLIKE_REPLY: 'Error disliking reply',
             UNRATED_REPLY: 'Error removing rating from reply',
 
-            REPORT_COMMENT: 'Error reporting comment'
+            REPORT_COMMENT: 'Error reporting comment',
+            NOT_IN_RANGE: 'Error, you are not close enough to comment on this post',
+            NOT_TAGGED: 'Error, you need to be tagged in this comment chain to add your own comment'
 
         },
 

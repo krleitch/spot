@@ -58,12 +58,14 @@ export class PostComponent implements OnInit, OnDestroy {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
+    // Account
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
 
+    // Location
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectLocation)
     );
@@ -72,20 +74,22 @@ export class PostComponent implements OnInit, OnDestroy {
       this.location = location;
     });
 
+    // Check if content needs to be truncated
     if ( this.post.content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
          || this.post.content.length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
       this.isExpandable = true;
     }
+
     this.time = this.getTime();
     this.imageBlurred = this.post.image_nsfw;
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  offClickHandler(event: MouseEvent) {
+  offClickHandler(event: MouseEvent): void {
     if (this.options && !this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
@@ -99,7 +103,7 @@ export class PostComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('posts/' + this.post.link);
   }
 
-  deletePost() {
+  deletePost(): void {
 
     this.modalService.open('spot-confirm-modal');
 
@@ -122,7 +126,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   }
 
-  getTime() {
+  getTime(): string {
     const curTime = new Date();
     const postTime = new Date(this.post.creation_date);
     const timeDiff = curTime.getTime() - postTime.getTime();
@@ -194,7 +198,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   }
 
-  like() {
+  like(): void {
 
     if ( !this.authenticationService.isAuthenticated() ) {
       this.modalService.open('spot-auth-modal');
@@ -219,7 +223,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   }
 
-  dislike() {
+  dislike(): void {
 
     if ( !this.authenticationService.isAuthenticated() ) {
       this.modalService.open('spot-auth-modal');

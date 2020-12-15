@@ -1,12 +1,14 @@
-export { addProfilePicture, getTags, addTagsToContent, generateLink, validContent }
+export { addProfilePicture, getTags, addTagsToContent, generateLink, validContent, inRange }
 
 const shortid = require('shortid');
 
 // services
 const badwords = require('@services/badwords');
+const locations = require('@services/locations');
 const aws = require('@services/aws');
 
 // db
+const posts = require('@db/posts');
 const comments = require('@db/comments');
 const accounts = require('@db/accounts');
 const tags = require('@db/tags');
@@ -269,4 +271,23 @@ async function generateLink(): Promise<string> {
 
 	return link
 
+}
+
+// Location
+
+// is the user in range to make a comment
+async function inRange( postId: string, latitude: number, longitude: number): Promise<boolean> {
+
+    return posts.getPostByIdNoAccount(postId).then( (rows: any) => {
+
+        if ( rows.length < 1 ) {
+            return false;
+        }
+
+        const post = rows[0];
+        const distance = locations.distanceBetween(post.latitude, post.longitude, latitude, longitude, 'm');
+
+        return distance <= COMMENTS_CONSTANTS.MAX_DISTANCE;
+
+    })
 }

@@ -23,5 +23,8 @@ export const COMMENTS_CONSTANTS = {
     // Activity
     ACTIVITY_DAYS: 3, // 3 days history
 
+    // Distance, miles
+    MAX_DISTANCE: 10
+
  };
  

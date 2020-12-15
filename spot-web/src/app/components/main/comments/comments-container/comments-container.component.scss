@@ -229,8 +229,12 @@
 
 spot-tag {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 5px;
+  left: 10px;
+}
+
+.tag-bottom {
+  top: 35px;
 }
 
 .image {
@@ -324,7 +328,7 @@ img {
 .add-comment-error {
   display: flex;
   box-sizing: border-box;
-  padding: 0px 6px;
+  padding-top: 2px;
   color: $error-red;
   background-color: white;
 }

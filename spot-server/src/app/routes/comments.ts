@@ -47,7 +47,6 @@ router.get('/activity', function (req: any, res: any, next: any) {
             try {
                 activities[i].content = await commentsService.addTagsToContent( activities[i].id, accountId, activities[i].account_id, activities[i].content);
             } catch (err) {
-                console.log('err1', err)
                 return next(new CommentsError.CommentActivity(500));
             }
         }
@@ -56,7 +55,6 @@ router.get('/activity', function (req: any, res: any, next: any) {
         res.status(200).json(response);
 
     }, (err: any) => {
-        console.log('err2', err)
         return next(new CommentsError.CommentActivity(500));
     }));
 
@@ -197,8 +195,15 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             return next(new CommentsError.CommentImage(422));
         }
 
-        let { content, tagsList, commentParentId } = JSON.parse(req.body.json)
-        const image = req.file ? req.file.location: null
+        let { content, tagsList, location } = JSON.parse(req.body.json);
+        const image = req.file ? req.file.location: null;
+        const postId = req.params.postId;
+
+        // Check you are either in range
+        const inRange = await commentsService.inRange(postId, location.latitude, location.longitude);
+        if ( !inRange ) {
+            return next(new CommentsError.NotInRange(400)); 
+        }
 
         // check if line length matches
         if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
@@ -206,7 +211,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
         }
 
         // You must either have some text or an image
-        if ( content.length == 0 && !image && tagsList.length === 0 ) {
+        if ( content.length === 0 && !image && tagsList.length === 0 ) {
             return next(new CommentsError.NoCommentContent(400));
         }
 
@@ -215,13 +220,10 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             return next(contentError);
         }
 
-        const postId = req.params.postId;
-
         const link = await commentsService.generateLink();
-
         const imageNsfw = await imageService.predictNsfw(image);
 
-        comments.addComment(commentId, postId, accountId, content, image, imageNsfw, link, commentParentId).then( async (comment: any) => {
+        comments.addComment(commentId, postId, accountId, content, image, imageNsfw, link, commentId).then( async (comment: any) => {
 
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
@@ -280,14 +282,37 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
             return next(new CommentsError.CommentImage(422));
         }
 
-        const { content, tagsList, commentParentId } = JSON.parse(req.body.json);
+        const { content, tagsList, commentParentId, location } = JSON.parse(req.body.json);
         const image = req.file ? req.file.location: null;
 
         const postId = req.params.postId;
         const commentId = req.params.commentId;
 
-        const link = await commentsService.generateLink();
+        // Check you are either in range, or were tagged in the comment chain
+        const inRange = await commentsService.inRange(postId, location.latitude, location.longitude);
+        const isTagged = await comments.TaggedInCommentChain(commentParentId, accountId);
+        if ( !inRange && !isTagged ) {
+            return next(new CommentsError.NotTagged(400));
+        } else if ( !inRange ) {
+            return next(new CommentsError.NotInRange(400)); 
+        }
 
+        // check if line length matches
+        if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
+            return next(new CommentsError.InvalidCommentLineLength(400, COMMENTS_CONSTANTS.MAX_LINE_LENGTH))
+        }
+
+        // You must either have some text or an image
+        if ( content.length === 0 && !image && tagsList.length === 0 ) {
+            return next(new CommentsError.NoCommentContent(400));
+        }
+
+        const contentError = commentsService.validContent(content);
+        if ( contentError ) {
+            return next(contentError);
+        }
+
+        const link = await commentsService.generateLink();
         const imageNsfw = await imageService.predictNsfw(image);
 
         comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, imageNsfw, link).then( ErrorHandler.catchAsync(async (reply: any) => {

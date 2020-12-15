@@ -141,3 +141,19 @@ export class ReportComment extends SpotError {
     this.name = "ReportComment";
   }
 }
+
+export class NotTagged extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.NOT_TAGGED, statusCode);
+    this.name = "NotTagged";
+  }
+}
+
+export class NotInRange extends SpotError {
+  constructor(statusCode) {
+    super(COMMENTS_ERROR_MESSAGES.NOT_IN_RANGE, statusCode);
+    this.name = "NotInRange";
+  }
+}
+
+

@@ -1,4 +1,4 @@
-export { addTag, getTagsByCommentId }
+export { addTag, getTagsByCommentId, TaggedInCommentChain }
 
 const uuid = require('uuid');
 
@@ -15,4 +15,13 @@ function getTagsByCommentId(commentId: string): Promise<any> {
     var sql = 'SELECT * FROM tags WHERE comment_id = ? ORDER BY offset ASC';
     var values = [commentId];
     return db.query(sql, values);
+}
+
+// the commentId is the parent comment, not a reply
+function TaggedInCommentChain(commentId: string): Promise<boolean> {
+    var sql = 'SELECT * FROM tags WHERE comment_id = ? ORDER BY offset ASC';
+    var values = [commentId];
+    return db.query(sql, values).then( (rows: any) => {
+        return rows.length > 0;
+    });
 }
