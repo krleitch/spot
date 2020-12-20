@@ -48,7 +48,7 @@ export class FacebookStoreEffects {
       this.authenticationService.loginFacebookAccountSuccess(action.response);
     }),
     switchMap ( (action: facebookActions.FacebookLoginSuccessAction) => [
-      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
+      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
       new featureActions.GetAccountMetadataRequestAction({})
     ])
   );

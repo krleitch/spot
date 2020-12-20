@@ -58,7 +58,7 @@ export class NavComponent implements OnInit, OnDestroy {
     );
 
     this.unread$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectUnread)
+      select(SocialStoreSelectors.selectUnreadNotifications)
     );
 
     this.isAuthenticated$ = this.store$.pipe(

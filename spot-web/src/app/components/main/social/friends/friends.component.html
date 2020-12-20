@@ -7,28 +7,27 @@
         <span class="material-icons people"> people_alt </span>
         {{ STRINGS.TITLE }}
       </div>
-      <div *ngIf="!(facebookConnected$ | async) && (showFacebookConnected$ | async)" type="button" class="facebook" (click)="facebookConnect()">
+      <div *ngIf="!(facebookConnected$ | async)" type="button" class="facebook" (click)="facebookConnect()">
         <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
         <span class="facebook-text"> {{ STRINGS.FACEBOOK_CONNECT }} </span>
       </div>
     </div>
 
-    <div *ngIf="friendRequests$ | async as friendRequests">
-      <div *ngIf="friendRequests.length > 0">
-        <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
-        <div class="friend-content-section">
-          <div class="friend-request-container" *ngFor="let friendRequest of friendRequests">
-            <div>
-              <span class="friend-name"> {{ friendRequest.username }} </span>
-            </div>
-            <div class="friend-request-options">
-              <button class="accept friend-button" (click)="acceptFriendRequest(friendRequest.id)">
-                {{ STRINGS.FRIEND_REQUEST_ACCEPT }}
-              </button>
-              <button class="decline friend-button" (click)="declineFriendRequest(friendRequest.id)">
-                {{ STRINGS.FRIEND_REQUEST_DECLINE }}
-              </button>
-            </div>
+
+    <div *ngIf="friendRequests.length > 0">
+      <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
+      <div class="friend-content-section">
+        <div class="friend-request-container" *ngFor="let friendRequest of friendRequests">
+          <div>
+            <span class="friend-name"> {{ friendRequest.username }} </span>
+          </div>
+          <div class="friend-request-options">
+            <button class="accept friend-button" (click)="acceptFriendRequest(friendRequest.id)">
+              {{ STRINGS.FRIEND_REQUEST_ACCEPT }}
+            </button>
+            <button class="decline friend-button" (click)="declineFriendRequest(friendRequest.id)">
+              {{ STRINGS.FRIEND_REQUEST_DECLINE }}
+            </button>
           </div>
         </div>
       </div>
@@ -41,8 +40,11 @@
         <span class="send-container" (click)="addFriendRequest()"> <i class="material-icons send"> send </i> </span>
       </div>
     </div>
-    <div *ngIf="friendsError" class="add-friends-error">
-      {{ friendsError }}
+    <div *ngIf="friendRequestsError" class="add-friends-error">
+      {{ friendRequestsError }}
+    </div>
+    <div *ngIf="friendRequestsSuccess" class="add-friends-success">
+      {{ friendRequestsSuccess }}
     </div>
 
     <div class="friends-search">

@@ -46,7 +46,7 @@ export class GoogleStoreEffects {
       this.authenticationService.loginGoogleAccountSuccess(action.response);
     }),
     switchMap ( (action: googleActions.GoogleLoginSuccessAction) => [
-      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
+      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
       new featureActions.GetAccountMetadataRequestAction({})
     ])
   );

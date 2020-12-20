@@ -14,7 +14,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
 
-// Get friends of logged in user
+// Get friends
 router.get('/', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
@@ -30,7 +30,7 @@ router.get('/', function (req: any, res: any, next: any) {
 
 });
 
-// delete a friend with the given friendId
+// delete a friend
 router.delete('/:friendId', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
@@ -148,7 +148,7 @@ router.post('/requests/decline', function (req: any, res: any, next: any) {
     const { friendRequestId } = req.body
 
     friends.declineFriendRequest(friendRequestId, accountId).then((rows: any) => {
-        const response = { friendRequestId: friendRequestId };
+        const response = {};
         res.status(200).json(response);
     }, (err: any) => {
         return next(new FriendsError.DeclineFriendRequest(500));

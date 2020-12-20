@@ -15,14 +15,10 @@ export interface StoreReply {
 export interface State {
     comments: { [postId: string]: StoreComment };
     replies: { [postId: string]: { [commentId: string]: StoreReply } };
-    addReply2Error: { error: SpotError, id: string };
-    addReply2Success: { success: boolean, id: string };
 }
 
 export const initialState: State = (
   {
-    addReply2Error: { error: null, id: null },
-    addReply2Success: { success: null, id: null },
     comments: {},
     replies: {},
   }

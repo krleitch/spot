@@ -36,7 +36,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.notificationsLoading$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectGetNotificationsLoading)
+      select(SocialStoreSelectors.selectNotificationsLoading)
     );
 
     this.notificationsLoading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
@@ -47,7 +47,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     });
 
     this.notificationsSuccess$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectGetNotificationsSuccess)
+      select(SocialStoreSelectors.selectNotificationsSuccess)
     );
 
     this.notifications$ = this.store$.pipe(

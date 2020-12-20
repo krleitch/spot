@@ -67,7 +67,7 @@ export class AccountsStoreEffects {
       this.authenticationService.registerAccountSuccess(action.response);
     }),
     switchMap ( (action: accountsActions.RegisterSuccessAction) => [
-      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
+      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
       new accountsActions.GetAccountMetadataRequestAction({})
     ])
   );
@@ -100,7 +100,7 @@ export class AccountsStoreEffects {
       this.authenticationService.loginAccountSuccess(action.response);
     }),
     switchMap ( (action: accountsActions.LoginSuccessAction) => [
-      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
+      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
       new accountsActions.GetAccountMetadataRequestAction({})
     ])
   );
@@ -181,7 +181,7 @@ export class AccountsStoreEffects {
       // none
     }),
     switchMap ( (action: accountsActions.AccountSuccessAction) => [
-      new friendsActions.GetFriendsAction({ date: new Date().toString(), limit: null }),
+      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
       new accountsActions.GetAccountMetadataRequestAction({})
     ])
   );

@@ -8,11 +8,14 @@ import { SpotError } from '@exceptions/error';
 
 export const selectFriendRequestsFromStore = (state: State): FriendRequest[] => state.friendRequests;
 export const selectFriendsFromStore = (state: State): Friend[] => state.friends;
+export const selectFriendsLoadingFromStore = (state: State): boolean => state.friendsLoading;
 export const selectFriendsErrorFromStore = (state: State): SpotError => state.friendsError;
+export const selectFriendsSuccessFromStore = (state: State): boolean => state.friendsSuccess;
 export const selectNotificationsFromStore = (state: State): Notification[] => state.notifications;
-export const selectGetNotificationsLoadingFromStore = (state: State): boolean => state.getNotificationsLoading;
-export const selectGetNotificationsSuccessFromStore = (state: State): boolean => state.getNotificationsSuccess;
-export const selectUnreadFromStore = (state: State): number => state.unread;
+export const selectNotificationsLoadingFromStore = (state: State): boolean => state.notificationsLoading;
+export const selectNotificationsSuccessFromStore = (state: State): boolean => state.notificationsSuccess;
+export const selectNotificationsErrorFromStore = (state: State): SpotError => state.notificationsError;
+export const selectUnreadNotificationsFromStore = (state: State): number => state.unreadNotifications;
 
 export const selectSocialState: MemoizedSelector<object, State> = createFeatureSelector<State>('social');
 
@@ -21,19 +24,24 @@ export const selectNotifications: MemoizedSelector<object, Notification[]> = cre
   selectNotificationsFromStore
 );
 
-export const selectGetNotificationsLoading: MemoizedSelector<object, boolean> = createSelector(
+export const selectNotificationsLoading: MemoizedSelector<object, boolean> = createSelector(
   selectSocialState,
-  selectGetNotificationsLoadingFromStore
+  selectNotificationsLoadingFromStore
 );
 
-export const selectGetNotificationsSuccess: MemoizedSelector<object, boolean> = createSelector(
+export const selectNotificationsSuccess: MemoizedSelector<object, boolean> = createSelector(
   selectSocialState,
-  selectGetNotificationsSuccessFromStore
+  selectNotificationsSuccessFromStore
 );
 
-export const selectUnread: MemoizedSelector<object, number> = createSelector(
+export const selectNotificationsError: MemoizedSelector<object, SpotError> = createSelector(
   selectSocialState,
-  selectUnreadFromStore
+  selectNotificationsErrorFromStore
+);
+
+export const selectUnreadNotifications: MemoizedSelector<object, number> = createSelector(
+  selectSocialState,
+  selectUnreadNotificationsFromStore
 );
 
 export const selectFriends: MemoizedSelector<object, Friend[]> = createSelector(
@@ -41,12 +49,22 @@ export const selectFriends: MemoizedSelector<object, Friend[]> = createSelector(
   selectFriendsFromStore
 );
 
-export const selectFriendRequests: MemoizedSelector<object, FriendRequest[]> = createSelector(
+export const selectFriendsLoading: MemoizedSelector<object, boolean> = createSelector(
   selectSocialState,
-  selectFriendRequestsFromStore
+  selectFriendsLoadingFromStore
+);
+
+export const selectFriendsSuccess: MemoizedSelector<object, boolean> = createSelector(
+  selectSocialState,
+  selectFriendsSuccessFromStore
 );
 
 export const selectFriendsError: MemoizedSelector<object, SpotError> = createSelector(
   selectSocialState,
   selectFriendsErrorFromStore
+);
+
+export const selectFriendRequests: MemoizedSelector<object, FriendRequest[]> = createSelector(
+  selectSocialState,
+  selectFriendRequestsFromStore
 );

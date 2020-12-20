@@ -1,18 +1,27 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { Observable, Subject, timer } from 'rxjs';
-import { take, takeUntil, mapTo, startWith } from 'rxjs/operators';
 
+import { Observable, Subject, timer } from 'rxjs';
+import { take, mapTo, startWith } from 'rxjs/operators';
+
+// Store
+import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
 import { AccountsFacebookActions, AccountsStoreSelectors } from '@store/accounts-store';
-import { STRINGS } from '@assets/strings/en';
-import { FriendRequest, GetFriendRequestsRequest, AddFriendRequestsRequest,
-          AcceptFriendRequestsRequest, DeclineFriendRequestsRequest, Friend,
-          GetFriendsRequest, DeleteFriendsRequest } from '@models/friends';
+
+// Services
+import { ModalService } from '@services/modal.service';
+import { FriendsService } from '@services/friends.service';
+
+// Models
+import { FriendRequest, GetFriendRequests, Friend, GetFriendRequestsSuccess, AddFriendRequest, AddFriendRequestSuccess,
+          GetFriendsRequest, DeleteFriendsRequest, AddFriendToStore, AcceptFriendRequest,
+          AcceptFriendRequestSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess } from '@models/friends';
 import { FacebookConnectRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
-import { ModalService } from '@services/modal.service';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-friends',
@@ -25,121 +34,132 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
   STRINGS = STRINGS.MAIN.FRIENDS;
 
-  friendRequests$: Observable<FriendRequest[]>;
+  friendRequests: FriendRequest[] = [];
+  friendRequestsSuccess: string;
+  friendRequestsError: string;
   friends$: Observable<Friend[]>;
-  friendsError$: Observable<SpotError>;
-  friendsError: string;
+  showNoFriendsIndicator$: Observable<boolean>;
 
   facebookConnected$: Observable<boolean>;
-  showFacebookConnected$: Observable<boolean>;
-
-  showNoFriendsIndicator$: Observable<boolean>;
 
   // Input fields
   friendRequestUsername: string;
   friendSearch: string;
 
   constructor(private store$: Store<RootStoreState.State>,
+              private friendsService: FriendsService,
               private modalService: ModalService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
-    // Wait 1 second for data to load
-    // TODO: add loading state
     this.showNoFriendsIndicator$ = timer(1000).pipe( mapTo(true), take(1)).pipe( startWith(false) );
-    this.showFacebookConnected$ = timer(500).pipe( mapTo(true), take(1)).pipe( startWith(false) );
-
-    // Setup observables
-    this.friendRequests$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriendRequests),
-    );
 
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends),
     );
-
-    this.friendsError$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriendsError),
-    );
-
-    this.friendsError$.pipe(takeUntil(this.onDestroy)).subscribe( (error: SpotError) => {
-      if ( error ) {
-        this.friendsError = error.message;
-      }
-    });
 
     this.facebookConnected$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectFacebookConnected),
     );
 
     // Get all friend requests
-    const friendRequestsRequest: GetFriendRequestsRequest = {};
+    const getFriendRequests: GetFriendRequests = {};
 
-    this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendRequestsAction(friendRequestsRequest),
-    );
+    this.friendsService.getFriendRequests(getFriendRequests).pipe(take(1)).subscribe( (response: GetFriendRequestsSuccess) => {
+      this.friendRequests = response.friendRequests;
+    }, (error: SpotError) => {
+
+    });
 
     // Get all friends
-    const friendRequest: GetFriendsRequest = {
+    const getFriends: GetFriendsRequest = {
       date: new Date().toString(),
       limit: null,
     };
 
     this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendsAction(friendRequest),
+      new SocialStoreFriendsActions.GetFriendsRequestAction(getFriends),
     );
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  addFriendRequest() {
+  addFriendRequest(): void {
 
     if ( typeof(this.friendRequestUsername) === 'undefined' || this.friendRequestUsername.length === 0 ) {
-      this.friendsError = this.STRINGS.USERNAME_REQUIRED;
+      this.friendRequestsError = this.STRINGS.USERNAME_REQUIRED;
       return;
     }
 
     // Send the friend request
-    const request: AddFriendRequestsRequest = {
+    const request: AddFriendRequest = {
       username: this.friendRequestUsername,
     };
 
-    this.store$.dispatch(
-      new SocialStoreFriendsActions.AddFriendRequestsAction(request),
-    );
+    this.friendsService.addFriendRequest(request).pipe(take(1)).subscribe( (response: AddFriendRequestSuccess) => {
+      this.friendRequestsSuccess = 'Friend request sent';
+    }, (error: SpotError) => {
+      this.friendRequestsError = error.message;
+    });
 
   }
 
-  acceptFriendRequest(id: string) {
+  acceptFriendRequest(id: string): void {
 
-    const request: AcceptFriendRequestsRequest = {
+    const request: AcceptFriendRequest = {
       friendRequestId: id,
     };
 
-    // accept
-    this.store$.dispatch(
-      new SocialStoreFriendsActions.AcceptFriendRequestsAction(request),
-    );
+    this.friendsService.acceptFriendRequests(request).pipe(take(1)).subscribe( (response: AcceptFriendRequestSuccess) => {
+
+      this.friendRequests.forEach( (friend , i) => {
+        if (friend.id === response.friend.id) {
+          this.friendRequests.splice(i, 1);
+        }
+      });
+
+      const addFriendRequest: AddFriendToStore = {
+        friend: response.friend,
+      };
+
+      // accept
+      this.store$.dispatch(
+        new SocialStoreFriendsActions.AddFriendAction(addFriendRequest),
+      );
+
+
+    }, (error: SpotError) => {
+      this.friendRequestsError = error.message;
+    });
+
+
 
   }
 
-  declineFriendRequest(id: string) {
+  declineFriendRequest(id: string): void {
 
-    const request: DeclineFriendRequestsRequest = {
+    const request: DeclineFriendRequest = {
       friendRequestId: id,
     };
 
-    // decline
-    this.store$.dispatch(
-      new SocialStoreFriendsActions.DeclineFriendRequestsAction(request),
-    );
+    this.friendsService.declineFriendRequests(request).pipe(take(1)).subscribe( (response: DeclineFriendRequestSuccess) => {
+
+      this.friendRequests.forEach( (friend , i) => {
+        if (friend.id === id) {
+          this.friendRequests.splice(i, 1);
+        }
+      });
+
+    }, (error: SpotError) => {
+
+    });
 
   }
 
-  deleteFriend(id: string) {
+  deleteFriend(id: string): void {
 
     this.modalService.open('spot-confirm-modal');
 
@@ -155,7 +175,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
         };
 
         this.store$.dispatch(
-          new SocialStoreFriendsActions.DeleteFriendsAction(request),
+          new SocialStoreFriendsActions.DeleteFriendsRequestAction(request),
         );
 
       }
@@ -164,7 +184,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
   }
 
-  facebookConnect() {
+  facebookConnect(): void {
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {

@@ -13,29 +13,29 @@ export function featureReducer(state = initialState, action: NotificationsAction
     case NotificationsActionTypes.GET_NOTIFICATIONS_REQUEST: {
       return {
         ...state,
-        getNotificationsSuccess: false,
-        getNotificationsLoading: true,
+        notificationsSuccess: false,
+        notificationsLoading: true,
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_SUCCESS: {
       return {
         ...state,
-        getNotificationsSuccess: true,
-        getNotificationsLoading: false,
+        notificationsSuccess: true,
+        notificationsLoading: false,
         notifications: !action.response.date ? action.response.notifications : state.notifications.concat(action.response.notifications)
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE: {
       return {
         ...state,
-        getNotificationsSuccess: false,
-        getNotificationsLoading: false
+        notificationsSuccess: false,
+        notificationsLoading: false
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS: {
       return {
         ...state,
-        unread: action.response.unread
+        unreadNotifications: action.response.unread
       };
     }
     case NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS: {
@@ -62,7 +62,7 @@ export function featureReducer(state = initialState, action: NotificationsAction
 
       return {
         ...state,
-        unread: 0,
+        unreadNotifications: 0,
         notifications: newNotifications
       };
     }
@@ -79,14 +79,8 @@ export function featureReducer(state = initialState, action: NotificationsAction
       });
       return {
         ...state,
-        unread: Math.max(0, state.unread - 1),
+        unreadNotifications: Math.max(0, state.unreadNotifications - 1),
         notifications: newNotifications
-      };
-    }
-    case FriendsActionTypes.GET_FRIEND_REQUESTS_SUCCESS: {
-      return {
-        ...state,
-        friendRequests: action.response.friendRequests
       };
     }
     case FriendsActionTypes.GET_FRIENDS_SUCCESS: {
@@ -95,41 +89,12 @@ export function featureReducer(state = initialState, action: NotificationsAction
         friends: action.response.friends
       };
     }
-    case FriendsActionTypes.ADD_FRIEND_REQUESTS_FAILURE: {
-      return {
-        ...state,
-        friendsError: action.error
-      };
-    }
-    case FriendsActionTypes.ACCEPT_FRIEND_REQUESTS_SUCCESS: {
-
-      const newFriendRequests = Array.from(state.friendRequests);
+    case FriendsActionTypes.ADD_FRIEND: {
       const newFriends = Array.from(state.friends);
-
-      state.friendRequests.forEach( (friend , i) => {
-        if (friend.id === action.response.friend.id) {
-          newFriends.unshift(action.response.friend);
-          newFriendRequests.splice(i, 1);
-        }
-      });
+      newFriends.unshift(action.request.friend);
       return {
         ...state,
-        friends: newFriends,
-        friendRequests: newFriendRequests
-      };
-    }
-    case FriendsActionTypes.DECLINE_FRIEND_REQUESTS_SUCCESS: {
-
-      const newFriendRequests = Array.from(state.friendRequests);
-
-      newFriendRequests.forEach( (friend , i) => {
-        if (friend.id === action.response.friendRequestId) {
-          newFriendRequests.splice(i, 1);
-        }
-      });
-      return {
-        ...state,
-        friendRequests: newFriendRequests
+        friends: newFriends
       };
     }
     case FriendsActionTypes.DELETE_FRIENDS_SUCCESS: {

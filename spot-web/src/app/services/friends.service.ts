@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
 
+// env
 import { environment } from 'src/environments/environment';
-import { AlertService } from '@services/alert.service';
-import { GetFriendRequestsRequest, GetFriendRequestsSuccess, AddFriendRequestsRequest,
-            AddFriendRequestsSuccess, DeleteFriendRequestsRequest, DeleteFriendRequestsSuccess,
-            AcceptFriendRequestsRequest, AcceptFriendRequestsSuccess, DeclineFriendRequestsRequest,
-            DeclineFriendRequestsSuccess, GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest,
-            DeleteFriendsSuccess } from '@models/friends';
 
-import { SpotError } from '@exceptions/error';
+// models
+import { GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest, AddFriendRequest, AddFriendRequestSuccess,
+          AcceptFriendRequest, AcceptFriendRequestSuccess, GetFriendRequests, GetFriendRequestsSuccess,
+          DeleteFriendsSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess } from '@models/friends';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FriendsService {
 
-  constructor(private http: HttpClient, private alertService: AlertService) { }
+  constructor(private http: HttpClient) { }
 
   baseUrl = environment.baseUrl;
 
@@ -32,32 +31,24 @@ export class FriendsService {
     return this.http.delete<DeleteFriendsSuccess>(`${this.baseUrl}/friends/${request.friendId}`);
   }
 
-  getFriendRequests(request: GetFriendRequestsRequest): Observable<GetFriendRequestsSuccess> {
+  getFriendRequests(request: GetFriendRequests): Observable<GetFriendRequestsSuccess> {
     return this.http.get<GetFriendRequestsSuccess>(`${this.baseUrl}/friends/requests`);
   }
 
-  addFriendRequests(request: AddFriendRequestsRequest): Observable<AddFriendRequestsSuccess> {
-    return this.http.post<AddFriendRequestsSuccess>(`${this.baseUrl}/friends/requests`, request);
+  addFriendRequest(request: AddFriendRequest): Observable<AddFriendRequestSuccess> {
+    return this.http.post<AddFriendRequestSuccess>(`${this.baseUrl}/friends/requests`, request);
   }
 
 //   deleteFriendRequests(request: DeleteFriendRequestsRequest): Observable<DeleteFriendRequestsSuccess> {
 //     return this.http.delete<DeleteFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/${request.friendRequestId}`);
 //   }
 
-  acceptFriendRequests(request: AcceptFriendRequestsRequest): Observable<AcceptFriendRequestsSuccess> {
-    return this.http.post<AcceptFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/accept`, request);
+  acceptFriendRequests(request: AcceptFriendRequest): Observable<AcceptFriendRequestSuccess> {
+    return this.http.post<AcceptFriendRequestSuccess>(`${this.baseUrl}/friends/requests/accept`, request);
   }
 
-  declineFriendRequests(request: DeclineFriendRequestsRequest): Observable<DeclineFriendRequestsSuccess> {
-    return this.http.post<DeclineFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/decline`, request);
-  }
-
-  failureMessage(error: SpotError) {
-    this.alertService.error(error.message);
-  }
-
-  successMessage(message: string) {
-    this.alertService.success(message);
+  declineFriendRequests(request: DeclineFriendRequest): Observable<DeclineFriendRequestSuccess> {
+    return this.http.post<DeclineFriendRequestSuccess>(`${this.baseUrl}/friends/requests/decline`, request);
   }
 
 }

@@ -1,4 +1,4 @@
-// Friends
+// Friend
 export interface Friend {
     id: string; // The id of the relationship, not the account id of the friend
     username: string;
@@ -25,6 +25,11 @@ export interface DeleteFriendsSuccess {
     friendId: string;
 }
 
+// add to store
+export interface AddFriendToStore {
+    friend: Friend;
+}
+
 // Friend Requests
 export interface FriendRequest {
     id: string;
@@ -33,7 +38,7 @@ export interface FriendRequest {
 }
 
 // get
-export interface GetFriendRequestsRequest {
+export interface GetFriendRequests {
 
 }
 
@@ -42,37 +47,37 @@ export interface GetFriendRequestsSuccess {
 }
 
 // add
-export interface AddFriendRequestsRequest {
+export interface AddFriendRequest {
     username: string;
 }
 
-export interface AddFriendRequestsSuccess {
+export interface AddFriendRequestSuccess {
     friendRequest: FriendRequest;
 }
 
-// delete
-export interface DeleteFriendRequestsRequest {
+// accept friend request
+export interface AcceptFriendRequest {
+    friendRequestId: string;
+}
+
+export interface AcceptFriendRequestSuccess {
+    friend: Friend;
+}
+
+// decline friend request
+export interface DeclineFriendRequest {
+    friendRequestId: string;
+}
+
+export interface DeclineFriendRequestSuccess {
+
+}
+
+// delete - unused
+export interface DeleteFriendRequests {
     friendRequestId: string;
 }
 
 export interface DeleteFriendRequestsSuccess {
     
-}
-
-// accept / decline
-
-export interface AcceptFriendRequestsRequest {
-    friendRequestId: string;
-}
-
-export interface AcceptFriendRequestsSuccess {
-    friend: Friend;
-}
-
-export interface DeclineFriendRequestsRequest {
-    friendRequestId: string;
-}
-
-export interface DeclineFriendRequestsSuccess {
-    friendRequestId: string;
 }
