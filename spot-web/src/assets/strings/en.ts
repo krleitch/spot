@@ -48,7 +48,7 @@ export const STRINGS = {
 
             VERIFY: 'You must verify your email before you can add spots',
             VERIFY_SEND: 'Send email verification',
-            VERIFY_SENT: 'Verification email sent.',
+            VERIFY_SENT: 'Verification email sent to',
             VERIFY_RESEND: 'Resend',
 
         },

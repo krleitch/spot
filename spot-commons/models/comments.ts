@@ -1,4 +1,5 @@
 import { Tag } from './notifications';
+import { Location } from './accounts';
 
 export interface Comment {
     id: string;
@@ -58,6 +59,7 @@ export interface AddCommentRequest {
     content: string;
     image: File;
     tagsList: Tag[];
+    location: Location;
 }
 
 export interface AddCommentSuccess {
@@ -116,6 +118,7 @@ export interface AddReplyRequest {
     content: string;
     image: File;
     tagsList: Tag[];
+    location: Location;
 }
 
 export interface AddReplySuccess {

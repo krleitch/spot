@@ -21,7 +21,7 @@ import { AuthenticationService } from '@services/authentication.service';
 // Models
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { AccountMetadata } from '@models/accounts';
+import { AccountMetadata, Location } from '@models/accounts';
 import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetRepliesSuccess, AddReplySuccess,
          LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest,
          UnratedCommentRequest } from '@models/comments';
@@ -59,6 +59,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   expanded = false;
   isExpandable = false;
 
+  location$: Observable<Location>;
+  location: Location;
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
@@ -127,6 +129,14 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isAuthenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
+
+    this.location$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectLocation)
+    );
+
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe ( (location: Location) => {
+      this.location = location;
+    });
 
     this.isVerified$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsVerified)
@@ -655,7 +665,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       commentParentId: this.comment.id,
       content,
       image: this.imageFile,
-      tagsList: tags
+      tagsList: tags,
+      location: this.location
     };
 
     this.commentService.addReply(request).pipe(take(1)).subscribe( (reply: AddReplySuccess) => {

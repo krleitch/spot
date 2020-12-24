@@ -78,7 +78,6 @@ async function getProfilePictureFromBucket( index: number ) {
 
     // TODO: REMOVE
     // SAVE on requests to the bucket
-    // Uncomment when not poor :(
 
     if ( index === -1 ) {
         return aws.getUrlFromBucket('profile/op.png');
@@ -163,19 +162,22 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
                 await accounts.getAccountById(comments[index].account_id).then( (account: any) => {
                     tagObject.tagger = account[0].username;
+                }, (err: any) => {
+
                 });
 
             }
 
-            // add the tags, only include username if you won tag, or its you
+            // add the tags, only include username if you own tag, or its you
             let tags: any[] = [];
             for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
                 await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
                     tags.push({username: (tagObject.owned || accountId == tagList[tagIndex].account_id) ? account[0].username : '', offset: tagList[tagIndex].offset});
+                }, (err: any) => {
+
                 });
             }
             tagObject.tags = tags;
-
 
             comments[index].tag = tagObject;
 
@@ -223,6 +225,8 @@ async function addTagsToContent( commentId: string, accountId: string, commentAc
 
             await accounts.getAccountById(commentAccountId).then( (account: any) => {
                 tagObject.tagger = account[0].username;
+            }, (err: any) => {
+
             });
 
         }
@@ -232,6 +236,8 @@ async function addTagsToContent( commentId: string, accountId: string, commentAc
         for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
             await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
                 tags.push({username: (tagObject.owned || accountId == tagList[tagIndex].account_id) ? account[0].username : '', offset: tagList[tagIndex].offset});
+            }, (err: any) => {
+
             });
         }
         tagObject.tags = tags;
@@ -280,6 +286,7 @@ async function inRange( postId: string, latitude: number, longitude: number): Pr
 
     return posts.getPostByIdNoAccount(postId).then( (rows: any) => {
 
+        // No post with this id
         if ( rows.length < 1 ) {
             return false;
         }

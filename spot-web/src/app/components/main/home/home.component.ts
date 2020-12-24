@@ -366,8 +366,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     } else {
 
-      console.log('me')
-
       const locationFailure: LocationFailure = {
         error: 'browser',
       };
@@ -380,8 +378,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private locationError(error: { message: string, code: number }): void {
-
-    console.log('na me', error)
 
     const locationFailure: LocationFailure = {
       error: error.code === 1 ? 'permission' : 'general',

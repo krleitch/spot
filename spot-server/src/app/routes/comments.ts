@@ -189,9 +189,10 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
     const commentId = uuid.v4();
     req.filename = commentId;
 
-    singleUpload(req, res, ErrorHandler.catchAsync(async function(err: any) {
+    singleUpload(req, res, ErrorHandler.catchAsync(async function(error: any) {
 
-        if (err) {
+        // There was an error uploading the image
+        if (error) {
             return next(new CommentsError.CommentImage(422));
         }
 

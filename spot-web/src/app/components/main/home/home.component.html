@@ -60,11 +60,16 @@
               <div class="info-container">
                 <span class="material-icons icon"> email </span>
                 <span class="text"> {{ STRINGS.VERIFY }} </span>
-                <div *ngIf="verificationSent === false; else sentverify" class="text clickable" (click)="verifyAccount()">
-                  {{ STRINGS.VERIFY_SEND }}
+                <div *ngIf="verificationSent === false; else sentverify" >
+                  <div class="text clickable" (click)="verifyAccount()">
+                    {{ STRINGS.VERIFY_SEND }}
+                  </div>
+                  <span class="small-text">
+                    {{ account.email }} ( <a class="clickable small-text" [routerLink]="'/account'"> Change Email </a> )
+                  </span>
                 </div>
                 <ng-template #sentverify>
-                  <span class="text"> {{ STRINGS.VERIFY_SENT }} </span>
+                  <span class="small-text"> {{ STRINGS.VERIFY_SENT }} {{ account.email }} </span>
                 </ng-template>
               </div>
             </ng-template>

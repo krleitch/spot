@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
+import { Observable } from 'rxjs';
+
+// Models
 import { AddCommentRequest, GetCommentsRequest, GetCommentsSuccess, AddCommentSuccess, DeleteCommentRequest,
           DeleteCommentSuccess, GetRepliesRequest, GetRepliesSuccess, AddReplyRequest, AddReplySuccess,
           DeleteReplyRequest, DeleteReplySuccess, LikeCommentRequest, DislikeCommentRequest,
@@ -10,7 +11,12 @@ import { AddCommentRequest, GetCommentsRequest, GetCommentsSuccess, AddCommentSu
           LikeReplySuccess, DislikeReplySuccess, ReportCommentRequest, ReportCommentSuccess,
           ActivityCommentRequest, ActivityCommentSuccess, UnratedCommentRequest, UnratedCommentSuccess,
           UnratedReplyRequest, UnratedReplySuccess } from '@models/comments';
+
+// Services
 import { AlertService } from '@services/alert.service';
+
+// Assets
+import { environment } from 'src/environments/environment';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Injectable({
@@ -20,7 +26,8 @@ export class CommentService {
 
   private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient, private alertService: AlertService) { }
+  constructor(private http: HttpClient,
+              private alertService: AlertService) { }
 
   getComments(request: GetCommentsRequest): Observable<GetCommentsSuccess> {
     let params = new HttpParams();

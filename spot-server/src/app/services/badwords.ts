@@ -6,6 +6,10 @@ const Filter = require("badwords-filter");
 
 // this list should be better and populated from various sources
 const badwordsList = [
+    "n1gger",
+    "n1gg3r",
+    "n1ggers",
+    "n1gg3rs",
     "nigger",
     "niggers",
     "chink",

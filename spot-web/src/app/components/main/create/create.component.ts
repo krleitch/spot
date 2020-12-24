@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { Observable, Subject, timer } from 'rxjs';
-import { takeUntil, mapTo, startWith, takeWhile } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';

@@ -1,27 +1,37 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
 import { DomSanitizer } from '@angular/platform-browser';
+
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
+// Store
+import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { CommentsStoreActions, CommentsStoreSelectors } from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
-import { STRINGS } from '@assets/strings/en';
-import { Comment, AddReplyRequest, AddReplyStoreRequest, DeleteReplyRequest, LikeReplyRequest,
-         DislikeReplyRequest, AddReplySuccess, UnratedReplyRequest } from '@models/comments';
-import { Post } from '@models/posts';
+
+// Services
+import { AlertService } from '@services/alert.service';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
-import { COMMENTS_CONSTANTS } from '@constants/comments';
+
+// Models
+import { Comment, AddReplyRequest, AddReplyStoreRequest, DeleteReplyRequest, LikeReplyRequest,
+  DislikeReplyRequest, AddReplySuccess, UnratedReplyRequest } from '@models/comments';
+import { Post } from '@models/posts';
 import { Tag } from '@models/notifications';
-import { TagComponent } from '../../social/tag/tag.component';
 import { Friend } from '@models/friends';
-import { AlertService } from '@services/alert.service';
 import { SpotError } from '@exceptions/error';
-import { AccountMetadata } from '@models/accounts';
+import { AccountMetadata, Location } from '@models/accounts';
+
+// Components
+import { TagComponent } from '../../social/tag/tag.component';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
   selector: 'spot-reply',
@@ -50,6 +60,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   tagged$: Observable<boolean>;
   tagged: boolean; // Was the user tagged in the comment chain
 
+  location$: Observable<Location>
+  location: Location;
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
@@ -92,7 +104,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.getTime(this.reply.creation_date);
     this.imageBlurred = this.reply.image_nsfw;
@@ -111,6 +123,14 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
       this.friendsList = friends;
+    });
+
+    this.location$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectLocation)
+    );
+
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe ( (location: Location) => {
+      this.location = location;
     });
 
     this.accountMetadata$ = this.store$.pipe(
@@ -569,7 +589,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       commentParentId: this.reply.id,
       content,
       image: this.imageFile,
-      tagsList: tags
+      tagsList: tags,
+      location: this.location
     };
 
     this.commentService.addReply(request).pipe(take(1)).subscribe( (r: AddReplySuccess) => {

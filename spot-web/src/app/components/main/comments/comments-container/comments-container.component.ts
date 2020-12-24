@@ -23,6 +23,7 @@ import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
+import { Location } from '@models/accounts';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -64,6 +65,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   addCommentLoading = false;
   addCommentError: string;
 
+  location$: Observable<Location>
+  location: Location;
   friends$: Observable<Friend[]>;
   friends: Friend[] = [];
 
@@ -105,6 +108,14 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.isVerified$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsVerified)
     );
+
+    this.location$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectLocation)
+    );
+
+    this.location$.pipe(takeUntil(this.onDestroy)).subscribe ( (location: Location) => {
+      this.location = location;
+    });
 
     // Friends
     this.friends$ = this.store$.pipe(
@@ -403,7 +414,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       postId: this.post.id,
       content,
       image: this.imageFile,
-      tagsList: tags
+      tagsList: tags,
+      location: this.location
     };
 
     this.addCommentLoading = true;
