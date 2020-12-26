@@ -45,7 +45,7 @@ function deleteFriendById(id: string, accountId: string) {
 function getFriendRequests(accountId: string) {
     var sql = `SELECT friends.id, friends.creation_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.account_id = accounts.id WHERE friend_id = ? AND friends.confirmed_date IS NULL`;
-    var values = [accountId, accountId];
+    var values = [accountId];
     return db.query(sql, values);
 }
 
@@ -57,7 +57,7 @@ function getFriendsById(id: string) {
 
 // Check if you have a friend request from account friendId
 function friendRequestExists(friendId: string, accountId: string) {
-    var sql = `Select id, account_id FROM friends WHERE account_id = ? OR account_id = ? AND confirmed_date IS NULL`;
+    var sql = `Select id, account_id FROM friends WHERE (account_id = ? OR account_id = ?) AND confirmed_date IS NULL`;
     var values = [friendId, accountId];
     return db.query(sql, values);
 }

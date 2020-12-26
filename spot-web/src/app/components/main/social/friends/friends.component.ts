@@ -104,7 +104,23 @@ export class FriendsComponent implements OnInit, OnDestroy {
     };
 
     this.friendsService.addFriendRequest(request).pipe(take(1)).subscribe( (response: AddFriendRequestSuccess) => {
-      this.friendRequestsSuccess = 'Friend request sent';
+      if ( response.friend ) {
+        this.friendRequests.forEach( (friend , i) => {
+          if (friend.id === response.friend.id) {
+            this.friendRequests.splice(i, 1);
+          }
+        });
+        // friend was added
+        const addFriendRequest: AddFriendToStore = {
+          friend: response.friend,
+        };
+        // accept
+        this.store$.dispatch(
+          new SocialStoreFriendsActions.AddFriendAction(addFriendRequest),
+        );
+      } else {
+        this.friendRequestsSuccess = 'Friend request sent';
+      }
     }, (response: {  error: SpotError }) => {
       this.friendRequestsError = response.error.message;
     });

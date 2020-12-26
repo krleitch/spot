@@ -7,6 +7,7 @@ const accounts = require('@db/accounts');
 
 // errors
 const FriendsError = require('@exceptions/friends');
+const ErrorHandler = require('@src/app/errorHandler');
 const ERROR_MESSAGES = require('@exceptions/messages');
 const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
 
@@ -60,12 +61,12 @@ router.get('/requests', function (req: any, res: any, next: any) {
 });
 
 // send a friend request
-router.post('/requests', function (req: any, res: any, next: any) {
+router.post('/requests', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
 
-    accounts.getAccountByUsername(username).then((receiverId: any) => {
+    accounts.getAccountByUsername(username).then(async (receiverId: any) => {
 
         // No account with this username
         if ( receiverId[0] === undefined ) {
@@ -75,6 +76,11 @@ router.post('/requests', function (req: any, res: any, next: any) {
         // Cannot add yourself
         if ( receiverId[0].id === accountId ) {
             return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.SELF, 400));
+        }
+
+        const exists = await friends.getFriendsExist(accountId, receiverId[0].id);
+        if ( exists.length > 0 ) {
+            return next(new FriendsError.FriendExistsError(500));
         }
 
         friends.friendRequestExists(receiverId[0].id, accountId).then((friendRequest: any) => {
@@ -89,7 +95,13 @@ router.post('/requests', function (req: any, res: any, next: any) {
 
                 // accept the request
                 friends.acceptFriendRequest(friendRequest[0].id, accountId).then((rows: any) => {
-                    res.status(200).json({ friendRequestId: friendRequest[0].id });
+                    accounts.getAccountById(rows[0].account_id).then( (account: any) => {
+                        rows[0].username = account[0].username;
+                        const response = { friend: rows[0] };
+                        res.status(200).json(response);
+                    }, (err: any) => {
+                        return next(new FriendsError.FriendExistsError(500));
+                    });
                 }, (err: any) => {
                     return next(new FriendsError.FriendExistsError(500));
                 });
@@ -97,7 +109,7 @@ router.post('/requests', function (req: any, res: any, next: any) {
             } else {
 
                 friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
-                    res.status(200).json({ friendRequest: rows[0] });
+                    res.status(200).json({});
                 }, (err: any) => {
                     return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500));
                 });
@@ -112,7 +124,7 @@ router.post('/requests', function (req: any, res: any, next: any) {
         return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500))
     });
 
-});
+}));
 
 // accept a friend request
 router.post('/requests/accept', function (req: any, res: any, next: any) {

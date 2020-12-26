@@ -52,7 +52,7 @@ export interface AddFriendRequest {
 }
 
 export interface AddFriendRequestSuccess {
-    friendRequest: FriendRequest;
+    friend?: Friend; // if the friend request was accepted, return its id
 }
 
 // accept friend request
