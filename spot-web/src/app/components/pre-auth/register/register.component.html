@@ -5,20 +5,20 @@
     {{ STRINGS.TITLE }}
   </div>
 
-  <form [formGroup]="form" (keyup.enter)="signUp()">
+  <form [formGroup]="form" (keyup.enter)="signUp()" autocomplete="off">
 
     <fieldset>
       <div class="form-field">
-          <input name="email" formControlName="email" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+          <input name="email" formControlName="email" autocomplete="off" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
       </div>
       <div class="form-field">
-          <input name="username" formControlName="username" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
+          <input name="username" formControlName="username" autocomplete="off" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
       </div>
       <div class="form-field">
-          <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+          <input name="password" formControlName="password" autocomplete="off" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
       </div>
       <div class="form-field">
-          <input name="phone" formControlName="phone" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
+          <input name="phone" formControlName="phone" autocomplete="off" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
       </div>
     </fieldset>
 

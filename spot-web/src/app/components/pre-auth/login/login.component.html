@@ -5,14 +5,14 @@
     {{ STRINGS.TITLE }}
   </div>
 
-  <form [formGroup]="form" (keyup.enter)="signIn()">
+  <form [formGroup]="form" (keyup.enter)="signIn()" autocomplete="on">
 
     <fieldset>
       <div class="form-field">
-          <input name="emailOrUsername" formControlName="emailOrUsername" [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER" required>
+          <input name="emailOrUsername" formControlName="emailOrUsername" autocomplete="username" [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER" required>
       </div>
       <div class="form-field">
-          <input name="password" formControlName="password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+          <input name="password" formControlName="password" autocomplete="current-password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
       </div>
     </fieldset>
 
