@@ -1,16 +1,23 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { STRINGS } from '@assets/strings/en';
-import { AuthenticationService } from '@services/authentication.service';
-import { RegisterRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
+// Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { AccountsActions, AccountsStoreSelectors, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
+
+// Services
+import { AuthenticationService } from '@services/authentication.service';
+
+// Models
+import { RegisterRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
 
 declare const gapi: any;
 
@@ -26,13 +33,11 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   STRINGS = STRINGS.PRE_AUTH.REGISTER;
 
   form: FormGroup;
-  errorMessage = '';
-
   authError$: Observable<SpotError>;
+  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private authenticationService: AuthenticationService,
     private store$: Store<RootStoreState.State>
   ) {
@@ -45,7 +50,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.authError$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationError)
@@ -59,22 +64,22 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     gapi.signin2.render('my-signin2', {
         scope: 'profile email',
         width: 240,
         height: 55,
         longtitle: true,
         theme: 'light',
-        onsuccess: param => this.googleLogin(param)
+        onsuccess: (param: any) => this.googleLogin(param)
     });
   }
 
-  signUp() {
+  signUp(): void {
 
     const val = this.form.value;
 
@@ -150,7 +155,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  facebookLogin() {
+  facebookLogin(): void {
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
@@ -181,7 +186,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleLogin(googleUser) {
+  googleLogin(googleUser): void {
 
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
@@ -201,9 +206,11 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleSignOut() {
+  googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(() => {
+
+    },  (err: any) => {
 
     });
   }

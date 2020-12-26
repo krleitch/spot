@@ -18,9 +18,11 @@ function getTagsByCommentId(commentId: string): Promise<any> {
 }
 
 // the commentId is the parent comment, not a reply
-function TaggedInCommentChain(commentId: string): Promise<boolean> {
-    var sql = 'SELECT * FROM tags WHERE comment_id = ? ORDER BY offset ASC';
-    var values = [commentId];
+function TaggedInCommentChain(commentId: string, accountId: string): Promise<boolean> {
+    var sql = `SELECT * FROM (SELECT id FROM comments WHERE comment_parent_id = ?) results 
+                LEFT JOIN tags t ON t.comment_id = results.id 
+                WHERE t.account_id = ?`;
+    var values = [commentId, commentId, accountId];
     return db.query(sql, values).then( (rows: any) => {
         return rows.length > 0;
     });

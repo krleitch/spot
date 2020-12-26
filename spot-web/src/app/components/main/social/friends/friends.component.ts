@@ -89,6 +89,10 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
   addFriendRequest(): void {
 
+    // Reset messages
+    this.friendRequestsError = '';
+    this.friendRequestsSuccess = '';
+
     if ( typeof(this.friendRequestUsername) === 'undefined' || this.friendRequestUsername.length === 0 ) {
       this.friendRequestsError = this.STRINGS.USERNAME_REQUIRED;
       return;
@@ -101,8 +105,8 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
     this.friendsService.addFriendRequest(request).pipe(take(1)).subscribe( (response: AddFriendRequestSuccess) => {
       this.friendRequestsSuccess = 'Friend request sent';
-    }, (error: SpotError) => {
-      this.friendRequestsError = error.message;
+    }, (response: {  error: SpotError }) => {
+      this.friendRequestsError = response.error.message;
     });
 
   }
@@ -131,8 +135,8 @@ export class FriendsComponent implements OnInit, OnDestroy {
       );
 
 
-    }, (error: SpotError) => {
-      this.friendRequestsError = error.message;
+    }, (response: {  error: SpotError }) => {
+      this.friendRequestsError = response.error.message;
     });
 
 
@@ -153,7 +157,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
         }
       });
 
-    }, (error: SpotError) => {
+    }, (response: { error: SpotError }) => {
 
     });
 

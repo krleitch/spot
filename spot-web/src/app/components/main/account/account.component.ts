@@ -1,18 +1,27 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+
 import { Observable, Subject, timer, merge } from 'rxjs';
 import { takeUntil, take, mapTo } from 'rxjs/operators';
-import { select, Store } from '@ngrx/store';
 
-import { STRINGS } from '@assets/strings/en';
+// Store
+import { select, Store } from '@ngrx/store';
 import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
+
+
+// Services
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
-import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
-         UpdateAccountMetadataRequest, VerifyRequest, UpdateEmailRequest, UpdatePhoneRequest, UpdateEmailResponse,
-         UpdatePhoneResponse, UpdateUsernameResponse, GoogleDisconnectRequest, GoogleConnectRequest } from '@models/accounts';
-import { SpotError } from '@exceptions/error';
 import { ModalService } from '@services/modal.service';
+
+// Models
+import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
+  UpdateAccountMetadataRequest, VerifyRequest, UpdateEmailRequest, UpdatePhoneRequest, UpdateEmailResponse,
+  UpdatePhoneResponse, UpdateUsernameResponse, GoogleDisconnectRequest, GoogleConnectRequest } from '@models/accounts';
+import { SpotError } from '@exceptions/error';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
 
 declare const gapi: any;
 
@@ -62,7 +71,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
               private accountsService: AccountsService,
               private authenticationService: AuthenticationService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
@@ -95,24 +104,26 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     gapi.signin2.render('my-signin2', {
         scope: 'profile email',
         width: 240,
         height: 55,
         longtitle: true,
         theme: 'light',
-        onsuccess: param => this.googleConnect(param)
+        onsuccess: (param: any) => this.googleConnect(param)
     });
   }
 
-  enableEditUsername() {
+  enableEditUsername(): void {
 
     this.editUsernameEnabled = true;
+    this.usernameErrorMessage = '';
+    this.usernameSuccessMessage = '';
 
     setTimeout(() => {
       this.editUsernameInput.nativeElement.focus();
@@ -120,7 +131,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  enableEditEmail() {
+  enableEditEmail(): void {
 
     this.modalService.open('spot-confirm-modal', { message: this.STRINGS.EMAIL_CONFIRM });
 
@@ -130,6 +141,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if ( result.status === 'confirm' ) {
         this.editEmailEnabled = true;
+        this.emailErrorMessage = '';
+        this.emailSuccessMessage = '';
         setTimeout(() => {
           this.editEmailInput.nativeElement.focus();
         }, 0);
@@ -139,7 +152,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  enableEditPhone() {
+  enableEditPhone(): void {
 
     if ( this.phone ) {
 
@@ -151,6 +164,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if ( result.status === 'confirm' ) {
           this.editPhoneEnabled = true;
+          this.phoneErrorMessage = '';
+          this.phoneSuccessMessage = '';
           setTimeout(() => {
             this.editPhoneInput.nativeElement.focus();
           }, 0);
@@ -169,7 +184,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  submitEditUsername() {
+  submitEditUsername(): void {
 
     if (!this.username) {
       this.usernameErrorMessage = this.STRINGS.USERNAME_ERROR;
@@ -189,7 +204,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     this.accountsService.updateUsername(request).pipe(take(1)).subscribe( (response: UpdateUsernameResponse ) => {
 
       this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
+      this.editUsernameEnabled  = false;
 
+      // Update the store
       this.store$.dispatch(
         new AccountsActions.UpdateUsernameAction(request)
       );
@@ -202,7 +219,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  submitEditEmail() {
+  submitEditEmail(): void {
 
     if (!this.email) {
       this.emailErrorMessage = this.STRINGS.EMAIL_ERROR;
@@ -222,6 +239,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     this.accountsService.updateEmail(request).pipe(take(1)).subscribe( (response: UpdateEmailResponse ) => {
 
       this.emailSuccessMessage = this.STRINGS.EMAIL_SUCCESS;
+      this.editEmailEnabled  = false;
 
       this.store$.dispatch(
         new AccountsActions.UpdateEmailAction(request)
@@ -255,6 +273,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     this.accountsService.updatePhone(request).pipe(take(1)).subscribe( (response: UpdatePhoneResponse ) => {
 
       this.phoneSuccessMessage = this.STRINGS.PHONE_SUCCESS;
+      this.editPhoneEnabled  = false;
 
       this.store$.dispatch(
         new AccountsActions.UpdatePhoneAction(request)
@@ -268,7 +287,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  deleteUser() {
+  deleteUser(): void {
 
     if ( this.accountOptionsEnabled ) {
 
@@ -291,7 +310,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  verifyAccount() {
+  verifyAccount(): void {
     const request: VerifyRequest = {};
     this.store$.dispatch(
       new AccountsActions.VerifyRequestAction(request)
@@ -299,7 +318,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     this.verificationSent = true;
   }
 
-  facebookConnect() {
+  facebookConnect(): void {
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
@@ -332,7 +351,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  facebookDisconnect() {
+  facebookDisconnect(): void {
 
     const request: FacebookDisconnectRequest = {
 
@@ -344,7 +363,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleConnect(googleUser) {
+  googleConnect(googleUser): void {
 
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
@@ -364,14 +383,14 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleSignOut() {
+  googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(() => {
 
     });
   }
 
-  googleDisconnect() {
+  googleDisconnect(): void {
 
     const request: GoogleDisconnectRequest = {
 
@@ -383,7 +402,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  setImperial() {
+  setImperial(): void {
     const request: UpdateAccountMetadataRequest = {
       distance_unit: 'imperial'
     };

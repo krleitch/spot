@@ -20,10 +20,6 @@
           <ng-template #sent>
             <div class="verify-container">
               <span class="verify-text"> {{ STRINGS.VERIFY_SENT }} </span>
-              <div class="verify-click" (click)="verifyAccount()">
-                <span class="verify-text"> {{ STRINGS.VERIFY_RESEND }} </span>
-                <span class="material-icons verify-icon"> redo </span>
-              </div>
             </div>
           </ng-template>
         </div>
@@ -42,7 +38,7 @@
           <span class="link" (click)="submitEditEmail()"> {{ STRINGS.SUBMIT }} </span>
         </div>
         <ng-template #elseEmailBlock>
-          <span class="link" (click)="enableEditEmail()"> {{ STRINGS.CHANGE }} </span>
+          <span class="material-icons edit-icon" (click)="enableEditEmail()"> edit </span>
         </ng-template>
       </div>
       <div *ngIf="emailErrorMessage" class="error">
@@ -65,7 +61,7 @@
           <span class="link" (click)="submitEditUsername()"> {{ STRINGS.SUBMIT }} </span>
         </div>
         <ng-template #elseBlock>
-          <span class="link" (click)="enableEditUsername()"> {{ STRINGS.EDIT }} </span>
+          <span class="material-icons edit-icon" (click)="enableEditUsername()"> edit </span>
         </ng-template>
       </div>
       <div *ngIf="usernameErrorMessage" class="error">
@@ -85,7 +81,7 @@
         </div>
         <ng-template #elsePhoneBlock>
           <div *ngIf="phone; else add">
-            <span class="link" (click)="enableEditPhone()"> {{ STRINGS.CHANGE }} </span>
+            <span class="material-icons edit-icon" (click)="enableEditPhone()"> edit </span>
           </div>
           <ng-template #add>
             <span class="link" (click)="enableEditPhone()"> {{ STRINGS.ADD }} </span>
@@ -156,7 +152,7 @@
       </ng-template>
 
       <br/>
-      <div class="title options">
+      <div class="options">
         <div class="title">
           <span class="material-icons title-icon"> security </span>
           {{ STRINGS.ACCOUNT_OPTIONS }}

@@ -63,7 +63,7 @@ export const STRINGS = {
 
             EMAIL: 'Email',
             VERIFY: 'Send verification email',
-            VERIFY_SENT: 'Verification email sent.',
+            VERIFY_SENT: 'Verification email sent',
             VERIFY_RESEND: 'Resend',
             VERIFY_CHECK: 'Verified',
             EMAIL_VERIFY_DESCRIPTION: 'You will need to verify your email to start making spots.',
@@ -473,7 +473,7 @@ export const STRINGS = {
         LOGIN: {
 
             // SIGNUP FROM
-            TITLE: 'Login',
+            TITLE: 'Welcome Back',
             FACEBOOK_LOGIN: 'Continue with Facebook',
             GOOGLE_LOGIN: 'Sign In With Google',
 

@@ -58,6 +58,9 @@ spot-main-nav {
 }
 
 .options {
+  display: flex;
+  align-items: center;
+  font-size: 30px;
   justify-content: space-between;
 }
 
@@ -79,10 +82,12 @@ spot-main-nav {
 }
 
 .verify-icon {
+  padding-top: 3px;
   font-size: 16px;
 }
 
 .verify-icon-highlight {
+  padding-top: 3px;
   font-size: 16px;
   color: $button-highlight;
 }
@@ -197,6 +202,16 @@ spot-main-nav {
   margin-bottom: 5px;
 }
 
+.edit-icon {
+  font-size: 18px;
+  color: $subtle-grey;
+  margin-right: 5px;
+  cursor: pointer;
+  &:hover {
+    color: $button-highlight;
+  }
+}
+
 .link {
   font-size: 14px;
   color: $subtle-grey;
@@ -212,12 +227,10 @@ spot-main-nav {
 }
 
 .error {
-  margin-left: 10px;
   color: $error-red;
 }
 
 .success {
-  margin-left: 10px;
   color: $success-green;
 }
 
@@ -238,7 +251,7 @@ input {
 
 .description {
   color: $subtle-grey;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .hot {
@@ -260,11 +273,11 @@ input {
   color: $button-font-white;
   padding: 12px 12px;
   text-decoration: none;
-  margin-bottom: 15px;
   font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 200px;
 
   &:hover {
       background-color: lighten($button-black, 10%);
@@ -299,6 +312,7 @@ input {
   align-items: center;
   position: relative;
   padding-left: 35px;
+  margin-bottom: 10px;
   height: 25px;
   cursor: pointer;
   font-size: 14px;
