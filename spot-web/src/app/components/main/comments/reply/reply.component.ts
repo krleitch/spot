@@ -79,6 +79,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   reply2Text: string;
   addReply2Error: string;
+  addReply2Loading = false;
 
   FILENAME_MAX_SIZE = 20;
   imageFile: File;
@@ -593,6 +594,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       location: this.location
     };
 
+    this.addReply2Loading = true;
+
     this.commentService.addReply(request).pipe(take(1)).subscribe( (r: AddReplySuccess) => {
 
       const storeRequest: AddReplyStoreRequest = {
@@ -605,6 +608,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
         new CommentsStoreActions.AddReplyRequestAction(storeRequest)
       );
 
+      this.addReply2Loading = false;
       this.removeFile();
       this.reply2.nativeElement.innerText = '';
       this.reply2.nativeElement.innerHtml = '';
@@ -614,6 +618,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showAddReply = false;
 
     }, (err: SpotError) => {
+      this.addReply2Loading = false;
       this.addReply2Error = err.message;
     });
 

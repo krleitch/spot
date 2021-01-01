@@ -98,6 +98,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   optionsEnabled = false;
 
   addReplyError = '';
+  addReplyLoading = false;
+
 
   constructor(private store$: Store<RootStoreState.State>,
               private commentService: CommentService,
@@ -669,6 +671,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       location: this.location
     };
 
+    this.addReplyLoading  = true;
+
     this.commentService.addReply(request).pipe(take(1)).subscribe( (reply: AddReplySuccess) => {
 
       const storeRequest: AddReplyStoreRequest = {
@@ -681,6 +685,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         new CommentsStoreActions.AddReplyRequestAction(storeRequest)
       );
 
+      this.addReplyLoading  = false;
       this.removeFile();
       this.reply.nativeElement.innerText = '';
       this.reply.nativeElement.innerHtml = '';
@@ -690,6 +695,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showAddReply = false;
 
     }, (err: SpotError) => {
+      this.addReplyLoading  = false;
       this.addReplyError = err.message;
     });
 

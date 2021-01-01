@@ -101,6 +101,19 @@ spot-main-nav {
   }
 }
 
+.social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 10px;
+  background-color: white;
+  margin-bottom: 5px;
+}
+
+.social-button {
+  margin: 0px 15px;
+}
+
 .facebook {
   border: none;
   outline: none;
@@ -111,7 +124,6 @@ spot-main-nav {
   color: white;
   font-size: 14px;
   padding: 12px 8px;
-  margin-bottom: 10px;
   box-sizing: border-box;
   cursor: pointer;
   width: 240px;
@@ -408,6 +420,14 @@ input {
     flex-flow: column;
     justify-content: flex-start;
     align-items: flex-start;
+  }
+
+  .social {
+    flex-flow: column;
+  }
+
+  .social-button {
+    margin: 5px 5px;
   }
 
 }

@@ -108,7 +108,7 @@
 
   </div>
 
-  <div *ngIf="comments.length >= 5 && (isAuthenticated$ | async) && post.inRange" class="comment-reminder" (click)="makeComment()">
+  <div *ngIf="comments.length >= 5 && (isAuthenticated$ | async) &&  (isVerified$ | async) && post.inRange" class="comment-reminder" (click)="scrollToComment()">
     {{ STRINGS.MAKE_COMMENT }}
   </div>
 

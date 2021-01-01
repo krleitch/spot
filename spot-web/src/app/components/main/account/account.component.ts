@@ -8,7 +8,6 @@ import { select, Store } from '@ngrx/store';
 import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 
-
 // Services
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
@@ -121,13 +120,24 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditUsername(): void {
 
-    this.editUsernameEnabled = true;
-    this.usernameErrorMessage = '';
-    this.usernameSuccessMessage = '';
+    this.modalService.open('spot-confirm-modal', { message: 'confirm' });
 
-    setTimeout(() => {
-      this.editUsernameInput.nativeElement.focus();
-    }, 0);
+    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+    result$.subscribe( (result: { status: string }) => {
+
+      if ( result.status === 'confirm' ) {
+        this.editEmailEnabled = true;
+        this.editUsernameEnabled = true;
+        this.usernameErrorMessage = '';
+        this.usernameSuccessMessage = '';
+    
+        setTimeout(() => {
+          this.editUsernameInput.nativeElement.focus();
+        }, 0);
+      }
+
+    });
 
   }
 

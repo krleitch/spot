@@ -110,12 +110,12 @@
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setMetric()"> {{ STRINGS.METRIC }} </div>
         </div>
 
+        <!-- Mature Content -->
         <div class="subheading"> {{ STRINGS.MATURE }} </div>
         <div class="value">
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.mature_filter == true }" (click)="setMature(true)"> {{ STRINGS.MATURE_TRUE }} </div>
           <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.mature_filter == false }" (click)="setMature(false)"> {{ STRINGS.MATURE_FALSE }} </div>
         </div>
-
 
       </div>
 
@@ -124,34 +124,34 @@
         {{ STRINGS.SOCIAL }}
       </div>
 
-      <div *ngIf="!(facebookConnected$ | async); else facebookconnected">
-        <button class="facebook" (click)="facebookConnect()">
-          <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
-          {{ STRINGS.FACEBOOK_CONNECT }}
-        </button>
-        <div class="description"> {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }} </div>
-      </div>
-      <ng-template #facebookconnected>
-        <div class="facebook-connected">
-          <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
-          <span class="text"> Logged in with Facebook </span>
-          <button (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+      <div class="social">
+        <div class="social-button" *ngIf="!(facebookConnected$ | async); else facebookconnected">
+          <button class="facebook" (click)="facebookConnect()">
+            <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+            {{ STRINGS.FACEBOOK_CONNECT }}
+          </button>
         </div>
-      </ng-template>
-
-      <div *ngIf="!(googleConnected$ | async); else googleconnected">
-        <!-- GOOGLE -->
-        <div id="my-signin2"></div>
-      </div>
-      <ng-template #googleconnected>
-        <div class="google-connected">
-          <img src="../../../assets/images/google_logo.png" class="google-logo">
-          <span class="text"> Logged in with Google </span>
-          <button (click)="googleDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+        <ng-template #facebookconnected>
+          <div class="facebook-connected">
+            <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
+            <span class="text"> Logged in with Facebook </span>
+            <button (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+          </div>
+        </ng-template>
+        <div class="social-button" *ngIf="!(googleConnected$ | async); else googleconnected">
+          <!-- GOOGLE -->
+          <div id="my-signin2"></div>
         </div>
-      </ng-template>
+        <ng-template #googleconnected>
+          <div class="google-connected">
+            <img src="../../../assets/images/google_logo.png" class="google-logo">
+            <span class="text"> Logged in with Google </span>
+            <button (click)="googleDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+          </div>
+        </ng-template>
+      </div>
+      <div class="description"> {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }} </div>
 
-      <br/>
       <div class="options">
         <div class="title">
           <span class="material-icons title-icon"> security </span>

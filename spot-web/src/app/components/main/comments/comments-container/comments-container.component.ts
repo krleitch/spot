@@ -170,9 +170,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   offClickHandler(event: MouseEvent): void {
     if (this.tag && !this.tag.nativeElement.contains(event.target)) {
-      this.showTag = false;
-      this.showTagBottom = false;
-      this.tagName = '';
+      this.hideTag();
     }
 
     if (this.comment && this.comment.nativeElement.contains(event.target)) {
@@ -225,9 +223,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.tagElement = element;
       this.tagCaretPosition = position;
     } else {
-      this.tagName = '';
-      this.showTag = false;
-      this.showTagBottom = false;
+      this.hideTag();
       this.tagElement = null;
       this.tagCaretPosition = null;
     }
@@ -290,9 +286,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.placeCaretAtEnd(this.comment.nativeElement);
 
     // hide tag menu
-    this.tagName = '';
-    this.showTag = false;
-    this.showTagBottom = false;
+    this.hideTag();
     this.tagElement = null;
     this.tagCaretPosition = null;
 
@@ -537,7 +531,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.imgSrc = null;
   }
 
-  makeComment(): void {
+  scrollToComment(): void {
     const yOffset = -100;
     const y = this.comment.nativeElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
     window.scrollTo({top: y, behavior: 'smooth'});
@@ -558,6 +552,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     this.showTag = true;
 
+  }
+
+  hideTag():  void {
+    this.showTag = false;
+    this.showTagBottom = false;
+    this.tagName = '';
   }
 
 }

@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 
+// Models
 import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
 import { SetLocationRequest, UpdateUsernameRequest, GetAccountRequest, GetAccountSuccess,
          UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess,

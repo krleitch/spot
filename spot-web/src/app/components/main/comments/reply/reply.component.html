@@ -62,9 +62,14 @@
             <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_REPLY_LENGTH - currentLength }} </span>
             <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
             <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
-            <span class="send" (click)="addReply()">
-              <i class="material-icons"> send </i>
+            <span class="loading" *ngIf="addReply2Loading; else showsend">
+              <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
+            <ng-template #showsend>
+              <span class="send" (click)="addReply()">
+                <i class="material-icons"> send </i>
+              </span>
+            </ng-template>
           </div>
         </div>
       </div>

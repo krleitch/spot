@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+
+import { Observable } from 'rxjs';
+
+// Services
 import { AlertService } from '@services/alert.service';
+
+// Models
 import { UpdateUsernameRequest, UpdateUsernameResponse, FacebookConnectRequest, FacebookConnectResponse,
           FacebookDisconnectResponse, FacebookDisconnectRequest, GetAccountMetadataRequest, GetAccountMetadataSuccess,
           UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, VerifyConfirmRequest, VerifyConfirmResponse,
           VerifyRequest, VerifyResponse, GoogleConnectRequest, GoogleDisconnectRequest, GoogleConnectResponse,
           GoogleDisconnectResponse, UpdateEmailRequest, UpdateEmailResponse, UpdatePhoneRequest, UpdatePhoneResponse } from '@models/accounts';
 
+// Assets
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AccountsService {
 
-  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) { }
+  constructor(private http: HttpClient, 
+              private router: Router,
+              private alertService: AlertService) { }
 
   baseUrl = environment.baseUrl;
 
@@ -39,7 +48,7 @@ export class AccountsService {
     return this.http.post<GoogleDisconnectResponse>(`${this.baseUrl}/accounts/google/disconnect`, request);
   }
 
-  // Normal requets
+  // Normal requests
 
   deleteAccount(): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/accounts`);
