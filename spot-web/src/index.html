@@ -8,12 +8,22 @@
     <link rel="icon" type="image/x-icon" href="spoticon.ico">
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- TODO: Re add async defer -->
-    <!-- https://stackoverflow.com/questions/31144874/gapi-is-not-defined-google-sign-in-issue-with-gapi-auth2-init -->
-    <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback"></script>
+    <!-- Google api -->
+    <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
+    <script type="text/javascript">
+      function onLoadCallback() {
+        var interval = setInterval(function() {
+          if ((window).googleListenerAdded) {
+              window.dispatchEvent(new Event("gapi-loaded"));
+              clearInterval(interval);
+          }
+        }, 500);
+      }
+    </script>
     <meta name="google-signin-client_id" content="805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com">
   </head>
   <body>
+    <!--  Facebook api -->
     <div id="fb-root"></div>
     <app-root></app-root>
   </body>

@@ -1,14 +1,23 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+// Store
+import { Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
+
+// Services
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
+
+// Models
 import { LoginRequest, RegisterRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
 
+// Assets
 import { STRINGS } from '@assets/strings/en';
 
 declare const gapi: any;
@@ -18,7 +27,9 @@ declare const gapi: any;
   templateUrl: './auth-modal.component.html',
   styleUrls: ['./auth-modal.component.scss']
 })
-export class AuthModalComponent implements OnInit, AfterViewInit {
+export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  private readonly onDestroy = new Subject<void>();
 
   @Input() modalId: string;
 
@@ -55,14 +66,22 @@ export class AuthModalComponent implements OnInit, AfterViewInit {
 
   }
 
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
   ngAfterViewInit() {
-    gapi.signin2.render('my-signin2', {
-        scope: 'profile email',
-        width: 240,
-        height: 55,
-        longtitle: true,
-        theme: 'light',
-        onsuccess: param => this.googleLogin(param)
+    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
+      if ( service === 'google' ) {
+        gapi.signin2.render('my-signin2', {
+            scope: 'profile email',
+            width: 240,
+            height: 55,
+            longtitle: true,
+            theme: 'light',
+            onsuccess: param => this.googleLogin(param)
+        });
+      }
     });
   }
 

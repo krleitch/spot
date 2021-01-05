@@ -73,13 +73,17 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    gapi.signin2.render('my-signin2', {
-        scope: 'profile email',
-        width: 240,
-        height: 55,
-        longtitle: true,
-        theme: 'light',
-        onsuccess: param => this.googleLogin(param)
+    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
+      if ( service === 'google' ) {
+        gapi.signin2.render('my-signin2', {
+            scope: 'profile email',
+            width: 240,
+            height: 55,
+            longtitle: true,
+            theme: 'light',
+            onsuccess: param => this.googleLogin(param)
+        });
+      }
     });
   }
 

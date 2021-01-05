@@ -17,6 +17,9 @@ const AuthenticationError = require('@exceptions/authentication');
 const AccountsError = require('@exceptions/accounts');
 const ErrorHandler = require('@src/app/errorHandler');
 
+// ratelimiter
+const rateLimiter = require('@src/app/rateLimiter');
+
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
@@ -49,7 +52,7 @@ router.get('/', function (req: any, res: any, next: any) {
 });
 
 // Update username
-router.put('/username', function (req: any, res: any, next: any) {
+router.put('/username', rateLimiter.updateUsernameLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
@@ -61,6 +64,9 @@ router.put('/username', function (req: any, res: any, next: any) {
     }
 
     accounts.updateUsername(username, accountId).then((rows: any) => {
+        if ( rows.length < 0 ) {
+            return next(new AccountsError.UpdateUsername(500));
+        }
         const result = { username: rows[0].username };
         res.status(200).json(result);
     }, (err: any) => {
@@ -94,6 +100,9 @@ router.put('/email', function (req: any, res: any, next: any) {
     }
 
     accounts.updateEmail(email, accountId).then((rows: any) => {
+        if ( rows.length < 0 ) {
+            return next(new AccountsError.UpdateEmail(500));
+        }
         const result = { email: rows[0].email };
         res.status(200).json(result);
     }, (err: any) => {
@@ -127,6 +136,9 @@ router.put('/phone', function (req: any, res: any, next: any) {
     }
 
     accounts.updatePhone(phone, accountId).then((rows: any) => {
+        if ( rows.length < 0 ) {
+            return next(new AccountsError.UpdatePhone(500));
+        }
         const result = { phone: rows[0].phone };
         res.status(200).json(result);
     }, (err: any) => {
@@ -254,6 +266,9 @@ router.get('/metadata', function (req: any, res: any, next: any) {
 
     // Get account metadata
     accounts.getAccountMetadata(accountId).then( (rows: any) => {
+        if ( rows.length < 0 ) {
+            return next(new AccountsError.GetMetadata(500));
+        }
         const response = { metadata: rows[0] };
         res.status(200).json(response);
     }, (err: any) => {
@@ -302,6 +317,9 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
 
     // Get account metadata
     accounts.getAccountMetadata(accountId).then( (rows: any) => {
+        if ( rows.length < 0 ) {
+            return next(new AccountsError.GetMetadata(500));
+        }
         const response = { metadata: rows[0] };
         res.status(200).json(response);
     }, (err: any) => {
@@ -310,7 +328,7 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
 
 }));
 
-// Verify Account
+// Verify Account - Send email
 router.post('/verify', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
@@ -350,7 +368,7 @@ router.post('/verify', function (req: any, res: any, next: any) {
   
 });
 
-// Verify Account
+// Verify Account confirmation
 router.post('/verify/confirm', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;

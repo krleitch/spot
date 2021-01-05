@@ -73,6 +73,7 @@ export const STRINGS = {
             EMAIL_SUCCESS: 'Email was succesfully changed',
 
             USERNAME: 'Username',
+            USERNAME_CONFIRM: 'Are you sure you would like to change your username? You can only change your username once every 24 hours',
             USERNAME_ERROR: 'Username is required',
             USERNAME_SUCCESS: 'Username was succesfully changed',
 

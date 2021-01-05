@@ -10,6 +10,8 @@ import { AuthenticationService } from '@services/authentication.service';
 // Models
 import { SetLocationRequest, GetAccountRequest, LoadLocationRequest, LocationFailure } from '@models/accounts';
 
+declare const gapi: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -23,6 +25,11 @@ export class AppComponent implements OnInit {
               private authenticationService: AuthenticationService) { }
 
   public ngOnInit(): void {
+    // For when gapi is loaded since it is async defer
+    window.addEventListener("gapi-loaded", () => {
+      this.authenticationService.sendSocialServiceReady('google');
+    }, { once: true});
+    (window as any).googleListenerAdded = true;
     // Init third party libaries
     this.twitterLibrary();
     this.fbLibrary();

@@ -108,19 +108,23 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    gapi.signin2.render('my-signin2', {
-        scope: 'profile email',
-        width: 240,
-        height: 55,
-        longtitle: true,
-        theme: 'light',
-        onsuccess: (param: any) => this.googleConnect(param)
+    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
+      if ( service === 'google' ) {
+        gapi.signin2.render('my-signin2', {
+            scope: 'profile email',
+            width: 240,
+            height: 55,
+            longtitle: true,
+            theme: 'light',
+            onsuccess: param => this.googleConnect(param)
+        });
+      }
     });
   }
 
   enableEditUsername(): void {
 
-    this.modalService.open('spot-confirm-modal', { message: 'confirm' });
+    this.modalService.open('spot-confirm-modal', { message: this.STRINGS.USERNAME_CONFIRM });
 
     const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
 
@@ -196,6 +200,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   submitEditUsername(): void {
 
+    this.usernameSuccessMessage = '';
+    this.usernameErrorMessage = '';
+
     if (!this.username) {
       this.usernameErrorMessage = this.STRINGS.USERNAME_ERROR;
       return;
@@ -223,13 +230,21 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }, (err: { error: SpotError }) => {
 
-      this.usernameErrorMessage = err.error.message;
+      console.log(err.error.statusCode )
+      if ( err.error.name === 'RateLimitError' ) {
+        this.usernameErrorMessage = 'You can only change your username once every 24 hours';
+      } else {
+        this.usernameErrorMessage = err.error.message;
+      }
 
     });
 
   }
 
   submitEditEmail(): void {
+
+    this.emailSuccessMessage = '';
+    this.emailErrorMessage = '';
 
     if (!this.email) {
       this.emailErrorMessage = this.STRINGS.EMAIL_ERROR;
@@ -264,6 +279,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   submitEditPhone() {
+
+    this.phoneSuccessMessage = '';
+    this.phoneErrorMessage = '';
 
     if (!this.phone) {
       this.phoneErrorMessage = this.STRINGS.PHONE_ERROR;
