@@ -52,7 +52,7 @@ router.get('/', function (req: any, res: any, next: any) {
 });
 
 // Update username
-router.put('/username', async function (req: any, res: any, next: any) {
+router.put('/username', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
@@ -63,11 +63,20 @@ router.put('/username', async function (req: any, res: any, next: any) {
         return next(usernameError);
     }
 
-    const acc = await accounts.getAccountById(accountId);
-    if ( acc ) {
-        console.log(acc);
+    // make sure you haven't updated recently
+    try  {
+        const rows = await accounts.getAccountById(accountId);
+        if ( rows.length < 1 ) {
+            return next(new AccountsError.UpdateUsername(500));
+        }
+        const valid = authenticationService.isValidAccountUpdateTime(rows[0].username_updated_at);
+        if (!valid) {
+            return next(new AccountsError.UpdateUsernameTimeout(500));
+        }
+    } catch (e)  {
+        return next(new AccountsError.UpdateUsername(500));
     }
-
+    
     accounts.updateUsername(username, accountId).then((rows: any) => {
         if ( rows.length < 0 ) {
             return next(new AccountsError.UpdateUsername(500));
@@ -91,10 +100,10 @@ router.put('/username', async function (req: any, res: any, next: any) {
 
     });
 
-});
+}));
 
 // Update email
-router.put('/email', function (req: any, res: any, next: any) {
+router.put('/email', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { email } = req.body;
@@ -102,6 +111,20 @@ router.put('/email', function (req: any, res: any, next: any) {
     const emailError = authenticationService.validEmail(email);
     if ( emailError) {
         return next(emailError);
+    }
+
+    // make sure you haven't updated recently
+    try  {
+        const rows = await accounts.getAccountById(accountId);
+        if ( rows.length < 1 ) {
+            return next(new AccountsError.UpdateEmail(500));
+        }
+        const valid = authenticationService.isValidAccountUpdateTime(rows[0].email_updated_at);
+        if (!valid) {
+            return next(new AccountsError.UpdateEmailTimeout(500));
+        }
+    } catch (e)  {
+        return next(new AccountsError.UpdateEmail(500));
     }
 
     accounts.updateEmail(email, accountId).then((rows: any) => {
@@ -127,10 +150,10 @@ router.put('/email', function (req: any, res: any, next: any) {
 
     });
 
-});
+}));
 
 // Update username
-router.put('/phone', function (req: any, res: any, next: any) {
+router.put('/phone', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { phone } = req.body;
@@ -138,6 +161,20 @@ router.put('/phone', function (req: any, res: any, next: any) {
     const phoneError = authenticationService.validPhone(phone);
     if ( phoneError) {
         return next(phoneError);
+    }
+
+    // make sure you haven't updated recently
+    try  {
+        const rows = await accounts.getAccountById(accountId);
+        if ( rows.length < 1 ) {
+            return next(new AccountsError.UpdatePhone(500));
+        }
+        const valid = authenticationService.isValidAccountUpdateTime(rows[0].phone_updated_at);
+        if (!valid) {
+            return next(new AccountsError.UpdatePhoneTimeout(500));
+        }
+    } catch (e)  {
+        return next(new AccountsError.UpdatePhone(500));
     }
 
     accounts.updatePhone(phone, accountId).then((rows: any) => {
@@ -163,7 +200,7 @@ router.put('/phone', function (req: any, res: any, next: any) {
 
     });
 
-});
+}));
 
 // Facebook Connect
 router.post('/facebook', function (req: any, res: any, next: any) {

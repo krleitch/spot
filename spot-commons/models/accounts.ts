@@ -1,8 +1,11 @@
 export interface Account {
     email: string;
+    email_updated_at: string;
     username: string;
+    username_updated_at: string;
     password: string;
     phone: string;
+    phone_updated_at: string;
     score: number;
     facebook_id: string;
     google_id: string;

@@ -139,13 +139,14 @@ spot-main-nav {
 
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
 
   .facebook-logo {
     margin-right: 8px;
+    margin-left: 8px;
   }
 
   .text {
+    text-align: center;
     margin-right: 8px;
   }
 
@@ -173,16 +174,18 @@ spot-main-nav {
     width: 30px;
     height: 30px;
     margin-right: 8px;
+    margin-left: 8px;
   }
 
   .text {
+    text-align: center;
     margin-right: 8px;
   }
 
   button {
     outline: none;
     border: none;
-    background-color: white;
+    background-color: $background-grey;
     color: black;
     padding: 10px 15px;
 

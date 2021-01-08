@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
-import { Observable, Subject, timer, interval } from 'rxjs';
+import { Observable, Subject, timer, interval, concat, of } from 'rxjs';
 import { takeUntil, mapTo, startWith, skipWhile, takeWhile, take } from 'rxjs/operators';
 
 // Store
@@ -140,7 +140,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.loading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
       this.loading = loading;
-      this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
+      this.showPostsIndicator$ = 
+      concat(
+        timer(500).pipe(mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false)),
+        of(true)
+      );
     });
 
     this.noPosts$ = this.store$.pipe(

@@ -1,6 +1,6 @@
 export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername,
             validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken, createUsernameFromEmail,
-            verifyGoogleIdToken }
+            verifyGoogleIdToken, isValidAccountUpdateTime }
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -153,7 +153,7 @@ function generateToken(user: any): any {
 function isValidToken(token: any): boolean {
 
     // the constant should be a number in minutes
-    const expire = AUTHENTICATION_CONSTANTS.TOKEN_EXPIRE_TIME * 60 * 1000
+    const expire = AUTHENTICATION_CONSTANTS.TOKEN_EXPIRE_TIME * 60 * 1000;
 
     const now = new Date();
 
@@ -186,6 +186,19 @@ async function createUsernameFromEmail(email: string): Promise<string> {
     } while (exists)
 
 	return username;
+
+}
+
+// Update times
+
+function isValidAccountUpdateTime(time: string): boolean {
+
+    // the constant should be a number in hours
+    const expire = AUTHENTICATION_CONSTANTS.ACCOUNT_UPDATE_TIMEOUT * 60 * 60 * 1000;
+
+    const now = new Date();
+
+    return (now.getTime() - new Date(time).getTime()) > expire;
 
 }
 

@@ -12,4 +12,7 @@ export const AUTHENTICATION_CONSTANTS = {
     // Password Reset
     TOKEN_EXPIRE_TIME: 10, // minutes
 
+    // Username, Email, phone update time
+    ACCOUNT_UPDATE_TIMEOUT: 24 // hours
+
 };
