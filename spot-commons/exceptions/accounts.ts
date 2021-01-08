@@ -24,6 +24,13 @@ export class UpdateUsername extends SpotError {
     }
 }
 
+export class UpdateUsernameTimeout extends SpotError {
+  constructor(statusCode) {
+    super(ACCOUNTS_ERROR_MESSAGES.UPDATE_USERNAME_TIMEOUT, statusCode);
+    this.name = "UpdateUsernameTimeout";
+  }
+}
+
 export class UpdateEmail extends SpotError {
     constructor(statusCode) {
       super(ACCOUNTS_ERROR_MESSAGES.UPDATE_EMAIL, statusCode);
@@ -31,11 +38,25 @@ export class UpdateEmail extends SpotError {
     }
 }
 
+export class UpdateEmailTimeout extends SpotError {
+  constructor(statusCode) {
+    super(ACCOUNTS_ERROR_MESSAGES.UPDATE_EMAIL_TIMEOUT, statusCode);
+    this.name = "UpdateEmailTimeout";
+  }
+}
+
 export class UpdatePhone extends SpotError {
     constructor(statusCode) {
       super(ACCOUNTS_ERROR_MESSAGES.UPDATE_PHONE, statusCode);
       this.name = "UpdatePhone";
     }
+}
+
+export class UpdatePhoneTimeout extends SpotError {
+  constructor(statusCode) {
+    super(ACCOUNTS_ERROR_MESSAGES.UPDATE_PHONE_TIMEOUT, statusCode);
+    this.name = "UpdatePhoneTimeout";
+  }
 }
 
 export class FacebookConnect extends SpotError {

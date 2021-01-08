@@ -52,7 +52,7 @@ router.get('/', function (req: any, res: any, next: any) {
 });
 
 // Update username
-router.put('/username', rateLimiter.updateUsernameLimiter, function (req: any, res: any, next: any) {
+router.put('/username', async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
@@ -61,6 +61,11 @@ router.put('/username', rateLimiter.updateUsernameLimiter, function (req: any, r
     const usernameError = authenticationService.validUsername(username);
     if ( usernameError) {
         return next(usernameError);
+    }
+
+    const acc = await accounts.getAccountById(accountId);
+    if ( acc ) {
+        console.log(acc);
     }
 
     accounts.updateUsername(username, accountId).then((rows: any) => {

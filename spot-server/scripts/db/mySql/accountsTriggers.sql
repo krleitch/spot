@@ -38,11 +38,11 @@ create trigger accounts_soft_delete
 before update on accounts
 for each row
 begin
-IF (new.deletion_date IS NOT NULL) THEN
-    set new.username = old.username + '_deleted.';
-    set new.email = old.email + '_deleted.';
-    set new.phone = old.phone + '_deleted.';
-END IF;
+    IF (new.deletion_date IS NOT NULL) THEN
+        set new.username = old.username + '_deleted.';
+        set new.email = old.email + '_deleted.';
+        set new.phone = old.phone + '_deleted.';
+    END IF;
 end$$
 
 delimiter ;

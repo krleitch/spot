@@ -5,8 +5,7 @@ const rateLimit = require("express-rate-limit");
 
 const RateLimitError = require('@exceptions/rateLimit');
 
-export { createPostLimiter, loginLimiter, passwordResetLimiter, tokenLimiter, newPasswordLimiter,
-            updateUsernameLimiter }
+export { createPostLimiter, loginLimiter, passwordResetLimiter, tokenLimiter, newPasswordLimiter }
 
 // The RateLimitError constructor is (code, limit, timeout)
 
@@ -63,15 +62,5 @@ const newPasswordLimiter = rateLimit({
     max: newPasswordLimit,
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, newPasswordLimit, newPasswordTimeout))
-    }
-});
-
-const updateUsernameTimeout = 1440;
-const updateUsernameLimit = 1;
-const updateUsernameLimiter = rateLimit({
-    windowMs: updateUsernameTimeout * 60 * 1000,
-    max: updateUsernameLimit,
-    handler: function (req: any, res: any, next: any) {
-        return next(new RateLimitError.RateLimitError(429, updateUsernameLimit, updateUsernameTimeout))
     }
 });

@@ -111,8 +111,11 @@ export const ERROR_MESSAGES = {
             GET_ACCOUNT: 'Error getting account',
 
             UPDATE_USERNAME: 'Error updating username',
+            UPDATE_USERNAME_TIMEOUT: 'You can only update your username once every 24h',
             UPDATE_EMAIL: 'Error updating email',
+            UPDATE_EMAIL_TIMEOUT: 'You can only update your email once every 24h',
             UPDATE_PHONE: 'Error updating phone',
+            UPDATE_PHONE_TIMEOUT: 'You can only update your phone number once every 24h',
 
             FACEBOOK_CONNECT: 'Error connecting account to facebook',
             FACEBOOK_CONNECT_EXISTS: 'This facebook account is already connected to an account',

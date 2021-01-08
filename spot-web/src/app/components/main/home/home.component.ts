@@ -140,9 +140,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.loading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
       this.loading = loading;
-      if ( this.loading ) {
-        this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
-      }
+      this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
     });
 
     this.noPosts$ = this.store$.pipe(

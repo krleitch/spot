@@ -12,6 +12,8 @@ const roles = require('@services/authorization/roles');
 
 const db = require('./mySql');
 
+// Metadata
+
 function addAccountMetadata(accountId: string): Promise<any> {
     var sql = `INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score, mature_filter) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     var values = [uuid.v4(), accountId, 'imperial', 'hot', 'global', 0, true];
@@ -48,67 +50,17 @@ function updateAccountsMetadataMatureFilter(accountId: string, matureFilter: boo
     return db.query(sql, values);
 }
 
+// Account
+
 function addAccount(email: string, username: string, pass: string, phone: string, salt: string): Promise<any> {
     const id = uuid.v4();
-    var sql = 'INSERT INTO accounts (id, creation_date, email, username, pass, phone, salt, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [id, new Date(), email, username, pass, phone, salt, false, roles.user];
+    const currentDate = new Date();
+    var sql = `INSERT INTO accounts (id, creation_date, email, email_updated_at, username, username_updated_at, 
+                pass, phone, phone_updated_at, salt, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    var values = [id, currentDate, email, currentDate, username, currentDate, pass, phone, currentDate, salt, false, roles.user];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(id);
     });
-}
-
-// Facebook
-function getFacebookAccount(facebookId: string): Promise<any> {
-    var sql = 'SELECT * FROM accounts WHERE facebook_id = ? AND deletion_date IS NULL LIMIT 1';
-    var values = [facebookId];
-    return db.query(sql, values);
-}
-
-function addFacebookAccount(id: string, email: string, username: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, creation_date, email, username, facebook_id, role) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), new Date(), email, username, id, roles.user];
-    return db.query(sql, values).then( (rows: any) => {
-        return getFacebookAccount(id);
-    });
-}
-
-function connectFacebookAccount(facebookId: string, accountId: string): Promise<any> {
-    var sql = 'UPDATE accounts SET facebook_id = ? WHERE id = ?';
-    var values = [facebookId, accountId];
-    return db.query(sql, values);
-}
-
-function disconnectFacebookAccount(accountId: string): Promise<any> {
-    var sql = 'UPDATE accounts SET facebook_id = NULL WHERE id = ?';
-    var values = [accountId];
-    return db.query(sql, values);
-}
-
-// Google
-function getGoogleAccount(googleId: string): Promise<any> {
-    var sql = 'SELECT * FROM accounts WHERE google_id = ? AND deletion_date IS NULL LIMIT 1';
-    var values = [googleId];
-    return db.query(sql, values);
-}
-
-function addGoogleAccount(id: string, email: string, username: string): Promise<any> {
-    var sql = 'INSERT INTO accounts (id, creation_date, email, username, google_id, role) VALUES (?, ?, ?, ?, ?, ?)';
-    var values = [uuid.v4(), new Date(), email, username, id, roles.user];
-    return db.query(sql, values).then( (rows: any) => {
-        return getGoogleAccount(id);
-    });
-}
-
-function connectGoogleAccount(googleId: string, accountId: string): Promise<any> {
-    var sql = 'UPDATE accounts SET google_id = ? WHERE id = ?';
-    var values = [googleId, accountId];
-    return db.query(sql, values);
-}
-
-function disconnectGoogleAccount(accountId: string): Promise<any> {
-    var sql = 'UPDATE accounts SET google_id = NULL WHERE id = ?';
-    var values = [accountId];
-    return db.query(sql, values);
 }
 
 // TODO, wanna change from *
@@ -185,4 +137,58 @@ function verifyAccount( account_id: string, date: Date) {
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(account_id);
     });;  
+}
+
+// Facebook
+function getFacebookAccount(facebookId: string): Promise<any> {
+    var sql = 'SELECT * FROM accounts WHERE facebook_id = ? AND deletion_date IS NULL LIMIT 1';
+    var values = [facebookId];
+    return db.query(sql, values);
+}
+
+function addFacebookAccount(id: string, email: string, username: string): Promise<any> {
+    var sql = 'INSERT INTO accounts (id, creation_date, email, username, facebook_id, role) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), new Date(), email, username, id, roles.user];
+    return db.query(sql, values).then( (rows: any) => {
+        return getFacebookAccount(id);
+    });
+}
+
+function connectFacebookAccount(facebookId: string, accountId: string): Promise<any> {
+    var sql = 'UPDATE accounts SET facebook_id = ? WHERE id = ?';
+    var values = [facebookId, accountId];
+    return db.query(sql, values);
+}
+
+function disconnectFacebookAccount(accountId: string): Promise<any> {
+    var sql = 'UPDATE accounts SET facebook_id = NULL WHERE id = ?';
+    var values = [accountId];
+    return db.query(sql, values);
+}
+
+// Google
+function getGoogleAccount(googleId: string): Promise<any> {
+    var sql = 'SELECT * FROM accounts WHERE google_id = ? AND deletion_date IS NULL LIMIT 1';
+    var values = [googleId];
+    return db.query(sql, values);
+}
+
+function addGoogleAccount(id: string, email: string, username: string): Promise<any> {
+    var sql = 'INSERT INTO accounts (id, creation_date, email, username, google_id, role) VALUES (?, ?, ?, ?, ?, ?)';
+    var values = [uuid.v4(), new Date(), email, username, id, roles.user];
+    return db.query(sql, values).then( (rows: any) => {
+        return getGoogleAccount(id);
+    });
+}
+
+function connectGoogleAccount(googleId: string, accountId: string): Promise<any> {
+    var sql = 'UPDATE accounts SET google_id = ? WHERE id = ?';
+    var values = [googleId, accountId];
+    return db.query(sql, values);
+}
+
+function disconnectGoogleAccount(accountId: string): Promise<any> {
+    var sql = 'UPDATE accounts SET google_id = NULL WHERE id = ?';
+    var values = [accountId];
+    return db.query(sql, values);
 }
