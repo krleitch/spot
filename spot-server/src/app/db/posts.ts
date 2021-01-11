@@ -1,5 +1,6 @@
-export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink, getPostsActivity,
-            getPostByIdNoAccount, linkExists, unratedPost }
+export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost,
+            getPostCreator, getPostByLink, getPostsActivity, getPostByIdNoAccount,
+            linkExists, unratedPost }
 
 const uuid = require('uuid');
 
@@ -93,8 +94,10 @@ function getPostByIdNoAccount(postId: string): Promise<any> {
 }
 
 function addPost(postId: string, content: string, location: any, imageSrc: string, imageNsfw: boolean, link: string, accountId: string, geolocation: string): Promise<any> {
-    var sql = 'INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, image_nsfw, likes, dislikes, comments, geolocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    var values = [postId, new Date(), accountId, location.longitude, location.latitude, content, link, imageSrc, imageNsfw, 0, 0, 0, geolocation];
+    var utcTime = Date.now();
+    var sql = `INSERT INTO posts (id, creation_date, account_id, longitude, latitude, content, link, image_src, 
+                image_nsfw, likes, dislikes, comments, geolocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    var values = [postId, new Date(utcTime), accountId, location.longitude, location.latitude, content, link, imageSrc, imageNsfw, 0, 0, 0, geolocation];
     return db.query(sql, values).then( (rows: any) => {
         return getPostById(postId, accountId);
     });

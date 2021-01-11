@@ -128,7 +128,7 @@ spot-create {
   justify-content: center;
   align-items: center;
   flex-flow: column;
-  margin: 10px 0px;
+  margin: 25px 0px 10px 0px;
 
   .empty-image {
 
@@ -156,7 +156,7 @@ spot-create {
 
     .c3 {
       position: absolute;
-      top: 10px;
+      top: 5px;
       left: -12px;
       width: 65px;
       height: 65px;
@@ -179,7 +179,7 @@ spot-create {
     margin-top: 77px;
     font-size: 18px;
     text-align: center;
-    color: #212121;
+    color: lighten(#212121, 10%);
     .highlight {
       font-size: 26px;
       color: $button-highlight;
