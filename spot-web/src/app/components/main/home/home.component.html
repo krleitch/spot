@@ -127,9 +127,16 @@
             <ng-template #empty>
               <!-- no spots in the area -->
               <div *ngIf="noPosts && !loading && (showPostsIndicator$ | async)" class="empty-container">
-                <span class="material-icons icon"> local_see </span>
-                <span class="text"> {{ STRINGS.NO_POSTS }} </span>
-                <span class="text"> {{ STRINGS.FIRST_POST }}</span>
+                <div class="empty-image">
+                  <span class="c1"></span>
+                  <span class="c2"></span>
+                  <span class="c3"></span>
+                  <span class="material-icons icon"> travel_explore </span>
+                </div>
+                <span class="empty-text"> 
+                  <span class="highlight"> Be First </span> 
+                  to make a spot in this area 
+                </span>
               </div>
             </ng-template>
             <!-- There are no more spots -->

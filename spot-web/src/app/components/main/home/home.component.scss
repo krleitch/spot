@@ -130,6 +130,62 @@ spot-create {
   flex-flow: column;
   margin: 10px 0px;
 
+  .empty-image {
+
+    position: relative;
+
+    .c1 {
+      position: absolute;
+      top: 0px;
+      left: -52px;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background-color: lighten($button-highlight, 3%);
+    }
+
+    .c2 {
+      position: absolute;
+      top: -10px;
+      left: -32px;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background-color: darken($button-highlight, 3%);
+    }
+
+    .c3 {
+      position: absolute;
+      top: 10px;
+      left: -12px;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background-color: $button-highlight;
+    }
+
+    .icon {
+      position: absolute;
+      left: -25px;
+      top: 7px;
+      font-size: 50px;
+      color: white;
+    }
+
+  }
+
+  .empty-text {
+    margin: 3px 0px;
+    margin-top: 77px;
+    font-size: 18px;
+    text-align: center;
+    color: #212121;
+    .highlight {
+      font-size: 26px;
+      color: $button-highlight;
+    }
+  }
+
   .text {
     margin: 3px 0px;
     font-size: 18px;
