@@ -391,7 +391,8 @@ router.post('/verify', function (req: any, res: any, next: any) {
             to: 'krleitch.ca@gmail.com',
         },
         locals: {
-            link: 'https://localhost:4200/verify/' + token
+            link: 'https://localhost:4200/verify/' + token,
+            username: req.user.username
         },
     }, (err: any, info: any) => {
 

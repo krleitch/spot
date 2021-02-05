@@ -5,10 +5,11 @@ html(lang='en')
         meta(name='viewport', content='width=device-width')
         meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
         title Password Reset
+        link(rel='stylesheet', href='https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap', type='text/css')
         style(type='text/css').
             * {
                 margin: 0;
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-family: 'Noto Sans JP', sans-serif;
                 box-sizing: border-box;
             }
             body {
@@ -24,9 +25,7 @@ html(lang='en')
             .container {
                 align-items: center;
                 background-color: #EEEEEE;
-                margin: 12px;
-                padding: 12px;
-                width: 50%;
+                width: 100%;
                 min-width: 300px;
             }
 
@@ -36,21 +35,11 @@ html(lang='en')
             .title {
                 font-size: 32px;
                 text-align: center;
-                margin-bottom: 12px;
+                background-color: #202124;
+                padding: 12px;
             }
             img {
                 width: 125px;
-            }
-
-            /* -------------------------------
-            BAR
-            -------------------------------- */
-            .bar {
-                min-width: 300px;
-                width: 80%;
-                border-bottom: 1px solid #9E9E9E;
-                margin-left: auto;
-                margin-right: auto;
             }
 
             /* -------------------------------
@@ -58,30 +47,82 @@ html(lang='en')
             -------------------------------- */
             .content {
                 padding: 12px;
-                margin: 12px 12px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 50%;
+                max-width: 475px;
                 background-color: white;
             }
-            .text {
-                font-size: 22px;
+            .content__text {
                 text-align: center;
             }
-            .line1 {
-                margin-bottom: 5px;
+            .big-text {
+                font-size: 22px;
+                padding-top: 10px;
+                padding-bottom: 25px;
+            }
+            .small-text {
+                font-size: 14px;
+                margin-bottom: 15px;
             }
             .highlight {
                 color: #00BFA5;
             }
             .link {
-                font-size: 18px;
-                margin-top: 12px;
-                text-align: center;
+                margin-top: 15px;
+                margin-bottom: 30px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 250px;
             }
             a {
-                color: #9E9E9E;
+                color: white;
+                padding: 10px 20px;
                 text-decoration: none;
+                width: 250px;
+                background-color: #00BFA5;
+                border-radius: 25px;
+                text-align: center;
             }
-            a:hover {
+            .link-text {
+                font-size: 14px;
+                margin-top: 15px;
+            }
+            .link-text-highlight {
+                font-size: 14px;
+                margin-bottom: 15px;
+                color: blue;
                 text-decoration: underline;
+            }
+
+
+            /* -------------------------------
+            FOOTER
+            -------------------------------- */
+            .footer {
+                padding: 12px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 50%;
+                max-width: 475px;
+                background-color: #202124;
+            }
+            .footer__text {
+                color: white;
+                font-size: 14px;
+                text-align: center;
+            }
+
+            /* -------------------------------
+            Small Screens
+            -------------------------------- */
+            @media only screen and (max-width: 550px) {
+                .content {
+                    width: 100%;
+                }
+                .footer {
+                    width: 100%;
+                }
             }
 
     body
@@ -91,15 +132,23 @@ html(lang='en')
             div.title
                 img(src="cid:spotlogo")
 
-            div.bar
-
             div.content
 
-                div.text 
-                    div.line1 Password Reset
-                    div.line2
-                        span Your password reset token is: 
+                div.content__text 
+                    div.big-text PASSWORD RESET
+                    div.small-text Hello <strong> #{username} </strong>
+                    div.small-text Your password is ready to be reset, please copy your reset token and click the button to proceed
+                    div.big-text
+                        span Reset Token: 
                         span.highlight #{token}
 
                 div.link
                     a(href=`${link}`) Click to set a new password
+
+                div.content__text
+                    div.link-text If the above link does not work, copy your token and visit
+                    div.link-text-highlight #{link}
+            
+            div.footer
+
+                div.footer__text Spottables.com

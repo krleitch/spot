@@ -231,7 +231,8 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
                 },
                 locals: {
                     link: 'https://localhost:4200/new-password',
-                    token: token.toString()
+                    token: token.toString(),
+                    username: rows[0].username
                 },
             }, (err: any, info: any) => {
                 

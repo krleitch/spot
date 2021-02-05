@@ -89,8 +89,8 @@ function deleteAccount(accountId: string) {
 }
 
 function updateUsername(username: string, accountId: string) {
-    var sql = 'UPDATE accounts SET username = ? WHERE id = ? AND deletion_date IS NULL';
-    var values = [username, accountId];
+    var sql = 'UPDATE accounts SET username = ?, username_updated_at = ? WHERE id = ? AND deletion_date IS NULL';
+    var values = [username, new Date(), accountId];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(accountId);
     });;  
@@ -108,16 +108,16 @@ function usernameExists(username: string) {
 }
 
 function updateEmail(email: string, accountId: string) {
-    var sql = 'UPDATE accounts SET email = ?, verified_date = NULL WHERE id = ? AND deletion_date IS NULL';
-    var values = [email, accountId];
+    var sql = 'UPDATE accounts SET email = ?, email_updated_at = ? verified_date = NULL WHERE id = ? AND deletion_date IS NULL';
+    var values = [email, new Date(), accountId];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(accountId);
     });;  
 }
 
 function updatePhone(phone: string, accountId: string) {
-    var sql = 'UPDATE accounts SET phone = ? WHERE id = ? AND deletion_date IS NULL';
-    var values = [phone, accountId];
+    var sql = 'UPDATE accounts SET phone = ?, phone_updated_at = ? WHERE id = ? AND deletion_date IS NULL';
+    var values = [phone, new Date(), accountId];
     return db.query(sql, values).then( (rows: any) => {
         return getAccountById(accountId);
     });;  

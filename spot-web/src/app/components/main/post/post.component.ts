@@ -128,6 +128,8 @@ export class PostComponent implements OnInit, OnDestroy {
 
   getTime(): string {
     const curTime = new Date();
+    // Need to convert from UTC  date to current time
+    console.log(this.post.creation_date.toString());
     const postTime = new Date(this.post.creation_date);
     const timeDiff = curTime.getTime() - postTime.getTime();
     if (timeDiff < 60000) {
