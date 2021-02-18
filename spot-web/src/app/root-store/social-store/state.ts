@@ -3,7 +3,6 @@ import { Notification } from '@models/notifications';
 import { SpotError } from '@exceptions/error';
 
 export interface State {
-  friendRequests: FriendRequest[];
   friends: Friend[];
   friendsLoading: boolean;
   friendsError: SpotError;
@@ -17,7 +16,6 @@ export interface State {
 
 export const initialState: State = (
   {
-    friendRequests: [],
     friends: [],
     friendsLoading: false,
     friendsError: null,

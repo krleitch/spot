@@ -6,7 +6,6 @@ import { Notification } from '@models/notifications';
 import { Friend, FriendRequest } from '@models/friends';
 import { SpotError } from '@exceptions/error';
 
-export const selectFriendRequestsFromStore = (state: State): FriendRequest[] => state.friendRequests;
 export const selectFriendsFromStore = (state: State): Friend[] => state.friends;
 export const selectFriendsLoadingFromStore = (state: State): boolean => state.friendsLoading;
 export const selectFriendsErrorFromStore = (state: State): SpotError => state.friendsError;
@@ -62,9 +61,4 @@ export const selectFriendsSuccess: MemoizedSelector<object, boolean> = createSel
 export const selectFriendsError: MemoizedSelector<object, SpotError> = createSelector(
   selectSocialState,
   selectFriendsErrorFromStore
-);
-
-export const selectFriendRequests: MemoizedSelector<object, FriendRequest[]> = createSelector(
-  selectSocialState,
-  selectFriendRequestsFromStore
 );

@@ -16,7 +16,8 @@ import { FriendsService } from '@services/friends.service';
 // Models
 import { FriendRequest, GetFriendRequests, Friend, GetFriendRequestsSuccess, AddFriendRequest, AddFriendRequestSuccess,
           GetFriendsRequest, DeleteFriendsRequest, AddFriendToStore, AcceptFriendRequest,
-          AcceptFriendRequestSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess } from '@models/friends';
+          AcceptFriendRequestSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess, 
+          GetPendingFriendRequests, GetPendingFriendRequestsSuccess, DeletePendingFriendRequest, DeletePendingFriendSuccess } from '@models/friends';
 import { FacebookConnectRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
@@ -34,9 +35,15 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
   STRINGS = STRINGS.MAIN.FRIENDS;
 
+  // Pending
+  pendingFriendRequests: FriendRequest[] = [];
+
+  // Requests
   friendRequests: FriendRequest[] = [];
   friendRequestsSuccess: string;
   friendRequestsError: string;
+
+  // Friends
   friends$: Observable<Friend[]>;
   showNoFriendsIndicator$: Observable<boolean>;
 
@@ -67,6 +74,15 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
     this.friendsService.getFriendRequests(getFriendRequests).pipe(take(1)).subscribe( (response: GetFriendRequestsSuccess) => {
       this.friendRequests = response.friendRequests;
+    }, (error: SpotError) => {
+
+    });
+
+    // Get pending requests
+    const getPendingFriendRequests: GetPendingFriendRequests = {};
+
+    this.friendsService.getPendingFriendRequests(getPendingFriendRequests).pipe(take(1)).subscribe( (response: GetPendingFriendRequestsSuccess) => {
+      this.pendingFriendRequests = response.friendRequests;
     }, (error: SpotError) => {
 
     });
@@ -197,6 +213,40 @@ export class FriendsComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new SocialStoreFriendsActions.DeleteFriendsRequestAction(request),
         );
+
+      }
+
+    });
+
+  }
+
+  deletePendingFriendRequest(id: string) {
+
+    this.modalService.open('spot-confirm-modal');
+
+    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+    result$.subscribe( (result: { status: string }) => {
+
+      if ( result.status === 'confirm' ) {
+
+        // Delete the friend
+        const request: DeletePendingFriendRequest = {
+          friendRequestId: id,
+        };
+
+        this.friendsService.deletePendingFriendRequest(request).pipe(take(1)).subscribe( (response: DeletePendingFriendSuccess) => {
+
+          this.pendingFriendRequests.forEach( (friend , i) => {
+            if (friend.id === id) {
+              this.friendRequests.splice(i, 1);
+            }
+          });
+    
+        }, (response: { error: SpotError }) => {
+    
+        });
+
 
       }
 

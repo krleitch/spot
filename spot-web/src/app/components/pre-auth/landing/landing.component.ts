@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -41,7 +40,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private authenticationService: AuthenticationService,
     private store$: Store<RootStoreState.State>
   ) {

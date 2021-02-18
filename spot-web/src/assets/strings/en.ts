@@ -91,7 +91,7 @@ export const STRINGS = {
             EDIT: 'Edit',
             SUBMIT: 'Submit',
 
-            SCORE_DESCRIPTION: 'Gain score by posting and and commenting on spots!',
+            SCORE_DESCRIPTION: 'Gain score by creating spots and commenting!',
 
             UNIT: 'Preferred Unit',
             IMPERIAL: 'Imperial',

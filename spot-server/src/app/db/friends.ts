@@ -1,5 +1,5 @@
 export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest, deleteFriendById,
-            friendRequestExists, getFriendsExist }
+            friendRequestExists, getFriendsExist, getPendingFriendRequests }
 
 const uuid = require('uuid');
 
@@ -45,6 +45,14 @@ function deleteFriendById(id: string, accountId: string) {
 function getFriendRequests(accountId: string) {
     var sql = `SELECT friends.id, friends.creation_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.account_id = accounts.id WHERE friend_id = ? AND friends.confirmed_date IS NULL`;
+    var values = [accountId];
+    return db.query(sql, values);
+}
+
+// return sent but not yet accepted
+function getPendingFriendRequests(accountId: string) {
+    var sql = `SELECT friends.id, friends.creation_date, accounts.username FROM friends
+                LEFT JOIN accounts ON friends.friend_id = accounts.id WHERE account_id = ? AND friends.confirmed_date IS NULL`;
     var values = [accountId];
     return db.query(sql, values);
 }

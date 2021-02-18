@@ -46,6 +46,35 @@ router.delete('/:friendId', function (req: any, res: any, next: any) {
 
 });
 
+// get pending friend requests
+router.get('/pending', function (req: any, res: any, next: any) {
+
+    const accountId = req.user.id;
+
+    friends.getPendingFriendRequests(accountId).then((rows: any) => {
+        const response = { friendRequests: rows };
+        res.status(200).json(response);
+    }, (err: any) => {
+        return next(new FriendsError.GetPendingFriendRequests(500));
+    });
+
+});
+
+// delete a pending friend
+router.delete('/pending/:friendId', function (req: any, res: any, next: any) {
+
+    const accountId = req.user.id;
+    const friendId = req.params.friendId;
+
+    friends.deleteFriendById(friendId, accountId).then((rows: any) => {
+        const response = { friendId: friendId };
+        res.status(200).json(response);
+    }, (err: any) => {
+        return next(new FriendsError.DeleteFriend(500));
+    });
+
+});
+
 // get friend requests for the user
 router.get('/requests', function (req: any, res: any, next: any) {
 

@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
-import { GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest,
-            DeleteFriendsSuccess, AddFriendToStore } from '@models/friends';
+import { GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest, DeleteFriendsSuccess,
+            AddFriendToStore } from '@models/friends';
 
 import { SpotError } from '@exceptions/error';
 

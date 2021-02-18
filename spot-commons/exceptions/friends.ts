@@ -11,6 +11,20 @@ export class GetFriends extends SpotError {
   }
 }
 
+export class GetFriendRequests extends SpotError {
+  constructor(statusCode) {
+    super(FRIENDS_ERROR_MESSAGES.GET_FRIEND_REQUESTS, statusCode);
+    this.name = "GetFriendRrequests";
+  }
+}
+
+export class GetPendingFriendRequests extends SpotError {
+  constructor(statusCode) {
+    super(FRIENDS_ERROR_MESSAGES.GET_PENDING_FRIEND_REQUESTS, statusCode);
+    this.name = "GetPendingFriendRequests";
+  }
+}
+
 // If username doesnt exist or is yourself, or already added / requested
 export class UsernameError extends SpotError {
     constructor(message, statusCode) {

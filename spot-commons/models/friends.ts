@@ -73,11 +73,22 @@ export interface DeclineFriendRequestSuccess {
 
 }
 
-// delete - unused
-export interface DeleteFriendRequests {
+// Pending
+
+// get
+export interface GetPendingFriendRequests {
+
+}
+
+export interface GetPendingFriendRequestsSuccess {
+    friendRequests: FriendRequest[];
+}
+
+// delete
+export interface DeletePendingFriendRequest {
     friendRequestId: string;
 }
 
-export interface DeleteFriendRequestsSuccess {
-    
+export interface DeletePendingFriendSuccess {
+    friendRequests: FriendRequest[];
 }

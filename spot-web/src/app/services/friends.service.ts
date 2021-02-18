@@ -9,7 +9,9 @@ import { environment } from 'src/environments/environment';
 // models
 import { GetFriendsRequest, GetFriendsSuccess, DeleteFriendsRequest, AddFriendRequest, AddFriendRequestSuccess,
           AcceptFriendRequest, AcceptFriendRequestSuccess, GetFriendRequests, GetFriendRequestsSuccess,
-          DeleteFriendsSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess } from '@models/friends';
+          DeleteFriendsSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess,
+          GetPendingFriendRequests, GetPendingFriendRequestsSuccess,  DeletePendingFriendRequest,
+          DeletePendingFriendSuccess } from '@models/friends';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,7 @@ export class FriendsService {
 
   baseUrl = environment.baseUrl;
 
+  // friends
   getFriends(request: GetFriendsRequest): Observable<GetFriendsSuccess> {
     let params = new HttpParams();
     params = params.append('date', request.date);
@@ -31,6 +34,7 @@ export class FriendsService {
     return this.http.delete<DeleteFriendsSuccess>(`${this.baseUrl}/friends/${request.friendId}`);
   }
 
+  // friend requests
   getFriendRequests(request: GetFriendRequests): Observable<GetFriendRequestsSuccess> {
     return this.http.get<GetFriendRequestsSuccess>(`${this.baseUrl}/friends/requests`);
   }
@@ -39,16 +43,21 @@ export class FriendsService {
     return this.http.post<AddFriendRequestSuccess>(`${this.baseUrl}/friends/requests`, request);
   }
 
-//   deleteFriendRequests(request: DeleteFriendRequestsRequest): Observable<DeleteFriendRequestsSuccess> {
-//     return this.http.delete<DeleteFriendRequestsSuccess>(`${this.baseUrl}/friends/requests/${request.friendRequestId}`);
-//   }
-
   acceptFriendRequests(request: AcceptFriendRequest): Observable<AcceptFriendRequestSuccess> {
     return this.http.post<AcceptFriendRequestSuccess>(`${this.baseUrl}/friends/requests/accept`, request);
   }
 
   declineFriendRequests(request: DeclineFriendRequest): Observable<DeclineFriendRequestSuccess> {
     return this.http.post<DeclineFriendRequestSuccess>(`${this.baseUrl}/friends/requests/decline`, request);
+  }
+
+  // pending
+  getPendingFriendRequests(request: GetPendingFriendRequests): Observable<GetPendingFriendRequestsSuccess> {
+    return this.http.get<GetPendingFriendRequestsSuccess>(`${this.baseUrl}/friends/pending`);
+  }
+
+  deletePendingFriendRequest(request: DeletePendingFriendRequest): Observable<DeletePendingFriendSuccess> {
+    return this.http.delete<DeletePendingFriendSuccess>(`${this.baseUrl}/friends/pending/${request.friendRequestId}`);
   }
 
 }

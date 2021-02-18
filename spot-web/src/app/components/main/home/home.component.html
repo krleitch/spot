@@ -81,11 +81,16 @@
             <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocationCreate" class="info-container">
               <spot-spinner type="dot"></spot-spinner>
               <span class="text"> Loading your location </span>
-              <span class="text clickable" (click)="loadLocationBackground()">
-                {{ STRINGS.LOCATION_BACKGROUND_1 }}
-                <i class="material-icons inline-icon"> public </i>
-                {{ STRINGS.LOCATION_BACKGROUND_2 }}
+              <span *ngIf="bypassLocation === true; else loadglobalblock" class="text">
+                Your location is needed to create Spots
               </span>
+              <ng-template #loadglobalblock>
+                <span class="text clickable" (click)="loadLocationBackground()">
+                  {{ STRINGS.LOCATION_BACKGROUND_1 }}
+                  <i class="material-icons inline-icon"> public </i>
+                  {{ STRINGS.LOCATION_BACKGROUND_2 }}
+                </span>
+              </ng-template>
             </div>
             <ng-template #enableLocationCreate >
               <!-- location is not enabled -->
