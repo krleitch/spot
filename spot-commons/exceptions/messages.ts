@@ -21,6 +21,7 @@ export const ERROR_MESSAGES = {
             DELETE_FRIEND: 'There was an error deleting the requested friend',
             GET_FRIEND_REQUESTS: 'There was an error getting your friend requests',
             GET_PENDING_FRIEND_REQUESTS: 'There was an error getting your pending friend requests',
+            DELETE_PENDING_FRIEND_REQUEST: 'There was an errror deleting you pending friend request',
             ACCEPT_FRIEND_REQUEST: 'There was an error accepting the friend request',
             DECLINE_FRIEND_REQUEST: 'There was an error declining the friend request',
             EXISTS: 'You are already friends with this user',

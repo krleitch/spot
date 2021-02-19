@@ -85,5 +85,5 @@ export interface DeletePendingFriendRequest {
 }
 
 export interface DeletePendingFriendSuccess {
-    friendRequests: Friend[];
+    friendRequestId: string;
 }

@@ -47,6 +47,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
   friends$: Observable<Friend[]>;
   showNoFriendsIndicator$: Observable<boolean>;
 
+  // facebook
   facebookConnected$: Observable<boolean>;
 
   // Input fields
@@ -238,15 +239,14 @@ export class FriendsComponent implements OnInit, OnDestroy {
         this.friendsService.deletePendingFriendRequest(request).pipe(take(1)).subscribe( (response: DeletePendingFriendSuccess) => {
 
           this.pendingFriendRequests.forEach( (friend , i) => {
-            if (friend.id === id) {
-              this.friendRequests.splice(i, 1);
+            if (friend.id === response.friendRequestId) {
+              this.pendingFriendRequests.splice(i, 1);
             }
           });
     
         }, (response: { error: SpotError }) => {
     
         });
-
 
       }
 

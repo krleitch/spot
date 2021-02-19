@@ -25,6 +25,13 @@ export class GetPendingFriendRequests extends SpotError {
   }
 }
 
+export class DeletePendingFriendRequest extends SpotError {
+  constructor(statusCode) {
+    super(FRIENDS_ERROR_MESSAGES.DELETE_PENDING_FRIEND_REQUEST, statusCode);
+    this.name = "DeletePendingFriendRequest";
+  }
+}
+
 // If username doesnt exist or is yourself, or already added / requested
 export class UsernameError extends SpotError {
     constructor(message, statusCode) {

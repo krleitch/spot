@@ -67,10 +67,10 @@ router.delete('/pending/:friendId', function (req: any, res: any, next: any) {
     const friendId = req.params.friendId;
 
     friends.deleteFriendById(friendId, accountId).then((rows: any) => {
-        const response = { friendId: friendId };
+        const response = { friendRequestId: friendId };
         res.status(200).json(response);
     }, (err: any) => {
-        return next(new FriendsError.DeleteFriend(500));
+        return next(new FriendsError.DeletePendingFriendRequest(500));
     });
 
 });
