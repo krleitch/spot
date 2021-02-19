@@ -138,7 +138,8 @@ router.post('/requests', ErrorHandler.catchAsync(async function (req: any, res: 
             } else {
 
                 friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
-                    res.status(200).json({});
+                    const response = { friend: rows[0] }
+                    res.status(200).json(response);
                 }, (err: any) => {
                     return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500));
                 });

@@ -30,12 +30,7 @@ export interface AddFriendToStore {
     friend: Friend;
 }
 
-// Friend Requests
-export interface FriendRequest {
-    id: string;
-    username: string;
-    creation_date: string;
-}
+// Friend Requests, just have a confirmed_date of NULL
 
 // get
 export interface GetFriendRequests {
@@ -43,7 +38,7 @@ export interface GetFriendRequests {
 }
 
 export interface GetFriendRequestsSuccess {
-    friendRequests: FriendRequest[];
+    friendRequests: Friend[];
 }
 
 // add
@@ -52,7 +47,7 @@ export interface AddFriendRequest {
 }
 
 export interface AddFriendRequestSuccess {
-    friend?: Friend; // if the friend request was accepted, return its id
+    friend: Friend; // check confirmed null to see if added on return
 }
 
 // accept friend request
@@ -81,7 +76,7 @@ export interface GetPendingFriendRequests {
 }
 
 export interface GetPendingFriendRequestsSuccess {
-    friendRequests: FriendRequest[];
+    friendRequests: Friend[];
 }
 
 // delete
@@ -90,5 +85,5 @@ export interface DeletePendingFriendRequest {
 }
 
 export interface DeletePendingFriendSuccess {
-    friendRequests: FriendRequest[];
+    friendRequests: Friend[];
 }

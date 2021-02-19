@@ -1,4 +1,4 @@
-import { Friend, FriendRequest } from '@models/friends';
+import { Friend } from '@models/friends';
 import { Notification } from '@models/notifications';
 import { SpotError } from '@exceptions/error';
 

@@ -3,7 +3,7 @@ import { createSelector, createFeatureSelector, MemoizedSelector } from '@ngrx/s
 import { State } from './state';
 
 import { Notification } from '@models/notifications';
-import { Friend, FriendRequest } from '@models/friends';
+import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
 
 export const selectFriendsFromStore = (state: State): Friend[] => state.friends;

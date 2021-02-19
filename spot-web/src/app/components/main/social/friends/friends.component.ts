@@ -14,7 +14,7 @@ import { ModalService } from '@services/modal.service';
 import { FriendsService } from '@services/friends.service';
 
 // Models
-import { FriendRequest, GetFriendRequests, Friend, GetFriendRequestsSuccess, AddFriendRequest, AddFriendRequestSuccess,
+import { GetFriendRequests, Friend, GetFriendRequestsSuccess, AddFriendRequest, AddFriendRequestSuccess,
           GetFriendsRequest, DeleteFriendsRequest, AddFriendToStore, AcceptFriendRequest,
           AcceptFriendRequestSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess, 
           GetPendingFriendRequests, GetPendingFriendRequestsSuccess, DeletePendingFriendRequest, DeletePendingFriendSuccess } from '@models/friends';
@@ -36,10 +36,10 @@ export class FriendsComponent implements OnInit, OnDestroy {
   STRINGS = STRINGS.MAIN.FRIENDS;
 
   // Pending
-  pendingFriendRequests: FriendRequest[] = [];
+  pendingFriendRequests: Friend[] = [];
 
   // Requests
-  friendRequests: FriendRequest[] = [];
+  friendRequests: Friend[] = [];
   friendRequestsSuccess: string;
   friendRequestsError: string;
 
@@ -120,7 +120,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
     };
 
     this.friendsService.addFriendRequest(request).pipe(take(1)).subscribe( (response: AddFriendRequestSuccess) => {
-      if ( response.friend ) {
+      if ( response.friend.confirmed_date ) {
         this.friendRequests.forEach( (friend , i) => {
           if (friend.id === response.friend.id) {
             this.friendRequests.splice(i, 1);
@@ -135,7 +135,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
           new SocialStoreFriendsActions.AddFriendAction(addFriendRequest),
         );
       } else {
-        this.friendRequestsSuccess = 'Friend request sent';
+        this.pendingFriendRequests.push(response.friend)
       }
     }, (response: {  error: SpotError }) => {
       this.friendRequestsError = response.error.message;
