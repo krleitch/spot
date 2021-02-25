@@ -17,6 +17,7 @@
       <span class="file-name"> {{ imageFile.name }} </span>
       <span class="file-remove" (click)="removeFile()">
         <i class="material-icons"> delete </i>
+        {{ STRINGS.FILE_DELETE }}
       </span>
     </div>
     <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>

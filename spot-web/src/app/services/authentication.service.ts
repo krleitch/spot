@@ -1,17 +1,22 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+
 import { Md5 } from 'ts-md5';
+
 import { Observable, ReplaySubject } from 'rxjs';
 import { Router } from '@angular/router';
 
+// Assets
+import { environment } from 'src/environments/environment';
 import { RegisterRequest, RegisterResponse, FacebookLoginRequest, FacebookLoginResponse, LoginResponse,
          PasswordResetRequest, PasswordResetSuccess, ValidateTokenRequest, ValidateTokenSuccess,
          NewPasswordRequest, NewPasswordSuccess, GoogleLoginRequest, GoogleLoginResponse } from '@models/authentication';
-import { AlertService } from '@services/alert.service';
-import { ModalService } from '@services/modal.service';
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
 import { STRINGS } from '@assets/strings/en';
+
+// Services
+import { AlertService } from '@services/alert.service';
+import { ModalService } from '@services/modal.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -60,6 +65,7 @@ export class AuthenticationService {
       return this.http.post<NewPasswordSuccess>(`${this.baseUrl}/auth/new-password`, request);
     }
 
+    // client side validation
     validateEmail(email: string): boolean {
         const regex = /^\S+@\S+\.\S+$/;
         return email.match(regex) != null;
@@ -122,6 +128,8 @@ export class AuthenticationService {
       }
       this.modalService.open('spot-welcome-modal');
     }
+
+    // login / logout
 
     loginAccountSuccess(response: LoginResponse) {
       this.addIdToken(response.jwt);

@@ -120,7 +120,8 @@ export const STRINGS = {
             SUBMIT: 'Submit',
 
             // File options
-            FILE_TITLE: 'File:'
+            FILE_TITLE: 'File:',
+            FILE_DELETE: 'Delete',
 
         },
 
@@ -282,6 +283,11 @@ export const STRINGS = {
 
           TITLE: 'Friends',
 
+          // pending
+          PENDING: 'Pending Requests',
+          CANCEL: 'Cancel',
+
+          // requests
           REQUESTS: 'Requests',
           FRIEND_REQUEST_PLACEHOLDER: 'Enter username',
           FRIEND_REQUEST_ACCEPT: 'Accept',

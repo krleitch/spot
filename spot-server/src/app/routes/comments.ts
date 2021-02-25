@@ -277,7 +277,7 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
     const replyId = uuid.v4();
     req.filename = replyId;
 
-    singleUpload(req, res, async function(err: any) {
+    singleUpload(req, res, ErrorHandler.catchAsync(async function(err: any) {
 
         if (err) {
             return next(new CommentsError.CommentImage(422));
@@ -291,7 +291,7 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
 
         // Check you are either in range, or were tagged in the comment chain
         const inRange = await commentsService.inRange(postId, location.latitude, location.longitude);
-        const isTagged = await comments.TaggedInCommentChain(commentParentId, accountId);
+        const isTagged = await tags.TaggedInCommentChain(commentParentId, accountId);
         if ( !inRange && !isTagged ) {
             return next(new CommentsError.NotTagged(400));
         } else if ( !inRange ) {
@@ -317,8 +317,6 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
         const imageNsfw = await imageService.predictNsfw(image);
 
         comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, imageNsfw, link).then( ErrorHandler.catchAsync(async (reply: any) => {
-
-            // TODO: add catches for these
 
             // Add tags
             for ( let index = 0; index < tagsList.length; index++ ) {
@@ -348,7 +346,7 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
             return next(new CommentsError.AddComment(500));
         }));
 
-    });
+    }));
 
 }));
 

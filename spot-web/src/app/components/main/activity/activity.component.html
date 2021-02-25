@@ -44,17 +44,20 @@
               <div class="horiz-bar"></div>
 
               <div class="post-content">
-                <div class="image" *ngIf="activity.image_src">
-                  <img [src]="activity.image_src">
+                <div class="image" *ngIf="activity.image_src && accountMetadata" (click)="activityClicked(activity)">
+                  <img [src]="activity.image_src" [ngClass]="{'image-blur': activity.imageBlurred && accountMetadata.mature_filter }">
+                  <div *ngIf="activity.imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+                    <span class="material-icons icon"> error_outline </span>
+                  </div>
                 </div>
                 <div class="post-info">
                   <div class="content-preview"> {{ activity.content }} </div>
                   <div class="info-bar">
                     <span class="info-bar-item"> {{ STRINGS.POSTS_SCORE }} {{ activity.likes - activity.dislikes }} </span>
                     <span class="info-bar-item"> {{ STRINGS.POSTS_COMMENTS }} {{ activity.comments }}  </span>
-                    <span *ngIf="accountMetadata$ | async as accountMetadata" class="info-bar-item">
+                    <span class="info-bar-item">
                       {{ STRINGS.POSTS_LOCATION }}
-                      <span *ngIf="activity.distance"> {{ getDistance(activity.distance, accountMetadata.distance_unit) }} - </span>
+                      <span *ngIf="activity.distance && accountMetadata"> {{ getDistance(activity.distance, accountMetadata.distance_unit) }} - </span>
                       {{ activity.geolocation }}
                     </span>
                   </div>

@@ -14,7 +14,7 @@
     </div>
 
     <div *ngIf="pendingFriendRequests.length > 0">
-      <div class="friends-subtitle"> Pending Requests </div>
+      <div class="friends-subtitle"> {{ STRINGS.PENDING }} </div>
       <div class="friend-content-section">
         <div class="friend-request-container" *ngFor="let pendingFriendRequest of pendingFriendRequests">
           <div>
@@ -22,7 +22,7 @@
           </div>
           <div class="friend-request-options">
             <button class="decline friend-button" (click)="deletePendingFriendRequest(pendingFriendRequest.id)">
-              Cancel
+              {{ STRINGS.CANCEL }}
             </button>
           </div>
         </div>

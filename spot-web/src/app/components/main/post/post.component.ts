@@ -82,6 +82,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
     this.time = this.getTime();
     this.imageBlurred = this.post.image_nsfw;
+    this.imageBlurred = true;
 
   }
 

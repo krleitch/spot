@@ -1,17 +1,32 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store, select } from '@ngrx/store';
+
 import { Observable, Subject, timer, merge } from 'rxjs';
 import { takeUntil, take, finalize, mapTo, takeWhile, startWith } from 'rxjs/operators';
 
-import { STRINGS } from '@assets/strings/en';
+// store
 import { RootStoreState } from '@store';
+import { Store, select } from '@ngrx/store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
+
+// services  
 import { PostsService } from '@services/posts.service';
 import { CommentService } from '@services/comments.service';
+
+// assets
 import { ActivityPostRequest, ActivityPostSuccess, Post } from '@models/posts';
 import { ActivityCommentRequest, ActivityCommentSuccess, CommentActivity } from '@models/comments';
 import { Location, AccountMetadata } from '@models/accounts';
+import { STRINGS } from '@assets/strings/en';
+
+// Extend Post and Comment to include acitivty specefic properties
+interface PostActivity extends Post {
+  imageBlurred: boolean;
+}
+
+interface CommentActivityActivity extends CommentActivity {
+  imageBlurred: boolean;
+}
 
 @Component({
   selector: 'spot-activity',
@@ -28,19 +43,20 @@ export class ActivityComponent implements OnInit, OnDestroy {
   location: Location;
 
   accountMetadata$: Observable<AccountMetadata>;
+  accountMetadata: AccountMetadata;
 
   selectedTab = 'posts';
 
   constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
                private commentService: CommentService, private router: Router ) { }
 
-  postActivity: Post[] = [];
+  postActivity: PostActivity[] = [];
   postLimit = 10;
   postActivityLoading = false;
   showPostsIndicator$: Observable<boolean>;
   postsLoadedOnce = false;
 
-  commentActivity: CommentActivity[] = [];
+  commentActivity: CommentActivityActivity[] = [];
   commentLimit = 10;
   commentActivityLoading = false;
   showCommentsIndicator$: Observable<boolean>;
@@ -55,6 +71,10 @@ export class ActivityComponent implements OnInit, OnDestroy {
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
+
+    this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (accountMetadata: AccountMetadata) => {
+      this.accountMetadata = accountMetadata;
+    });
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
       this.location = location;
@@ -122,7 +142,8 @@ export class ActivityComponent implements OnInit, OnDestroy {
       this.showCommentsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.commentActivityLoading )).pipe( startWith(false) );
 
       comments$.subscribe( (activitySuccess: ActivityCommentSuccess ) => {
-          this.commentActivity = this.commentActivity.concat(activitySuccess.activity);
+          const activities: CommentActivityActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
+          this.commentActivity = this.commentActivity.concat(activities);
       });
 
     }
@@ -152,11 +173,17 @@ export class ActivityComponent implements OnInit, OnDestroy {
       this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.postActivityLoading )).pipe( startWith(false) );
 
       posts$.subscribe( (activitySuccess: ActivityPostSuccess ) => {
-          this.postActivity = this.postActivity.concat(activitySuccess.activity);
+          // const activities: ActivityPost[] = activitySuccess.activity.map(activity => ({ ...activity, blurred: activity.image_nsfw }))
+          const activities: PostActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
+          this.postActivity = this.postActivity.concat(activities);
       });
 
     }
 
+  }
+
+  activityClicked(activity) {
+    activity.imageBlurred = false;
   }
 
 }
