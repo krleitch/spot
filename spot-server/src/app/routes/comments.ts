@@ -38,10 +38,11 @@ router.get('/activity', function (req: any, res: any, next: any) {
     }
 
     const accountId = req.user.id;
-    const date = req.query.date;
+    const before = req.query.before ? new Date(req.query.before) : null;
+    const after = req.query.after ? new Date(req.query.after) : null;
     const limit = Number(req.query.limit);
 
-    comments.getCommentsActivity(accountId, date, limit).then(ErrorHandler.catchAsync(async (activities: any) => {
+    comments.getCommentsActivity(accountId, before, after, limit).then(ErrorHandler.catchAsync(async (activities: any) => {
 
         for (let i = 0; i < activities.length; i++) {
             try {
@@ -50,8 +51,14 @@ router.get('/activity', function (req: any, res: any, next: any) {
                 return next(new CommentsError.CommentActivity(500));
             }
         }
-
-        const response = { activity: activities };
+        const response = { 
+            activity: activities,
+             size: activities.length,
+             cursor: { 
+                 before: activities.length > 0 ? activities[0].creation_date : null, 
+                 after: activities.length > 0 ? activities[activities.length - 1].creation_date : null
+            } 
+        };
         res.status(200).json(response);
 
     }, (err: any) => {

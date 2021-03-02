@@ -149,17 +149,28 @@ function getPostByLink(link: string, accountId?: string) {
 
 }
 
-function getPostsActivity(accountId: string, date: string, limit: number) {
-    var activityDate = new Date();
+// Activity
+function getPostsActivity(accountId: string, before: Date, after: Date, limit: number) {
+    const activityDate = new Date();
     activityDate.setDate(activityDate.getDate() - POST_CONSTANTS.ACTIVITY_DAYS);
-    var sql = `SELECT id, creation_date, longitude, latitude, geolocation, content, link, image_src, image_nsfw, likes, dislikes, comments
-                FROM posts WHERE account_id = ? AND deletion_date IS NULL AND creation_date < ? AND creation_date > ? ORDER BY creation_date DESC LIMIT ?`;
-    var values = [accountId,  new Date(date), activityDate, limit];
+    var sql = `SELECT id, creation_date, longitude, latitude, geolocation, content,
+                link, image_src, image_nsfw, likes, dislikes, comments FROM posts
+                WHERE account_id = ? AND creation_date > ? AND deletion_date IS NULL`;
+    var values: any[] = [accountId, activityDate];
+    if ( after ) {
+        sql += ' AND creation_date < ?';
+        values.push(after);
+    }
+    if ( before ) {
+        sql += ' AND creation_date > ?'
+        values.push(before);
+    }
+    sql += ` ORDER BY creation_date DESC LIMIT ?`
+    values.push(limit);
     return db.query(sql, values);
 }
 
 // Check existance
-
 function linkExists(link: string) {
     
     var sql = 'SELECT link FROM posts WHERE link = ?';

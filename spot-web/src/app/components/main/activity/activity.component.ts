@@ -47,22 +47,24 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   selectedTab = 'posts';
 
-  constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
-               private commentService: CommentService, private router: Router ) { }
-
   postActivity: PostActivity[] = [];
   postLimit = 10;
   postActivityLoading = false;
   showPostsIndicator$: Observable<boolean>;
   postsLoadedOnce = false;
+  postAfter: string = null;
 
   commentActivity: CommentActivityActivity[] = [];
   commentLimit = 10;
   commentActivityLoading = false;
   showCommentsIndicator$: Observable<boolean>;
   commentsLoadedOnce = false;
+  commentsAfter: string = null;
 
-  ngOnInit() {
+  constructor( private store$: Store<RootStoreState.State>, private postsService: PostsService,
+               private commentService: CommentService, private router: Router ) { }
+
+  ngOnInit(): void {
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectLocation)
@@ -82,15 +84,15 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  setTab(tab: string) {
+  setTab(tab: string): void {
     this.selectedTab = tab;
   }
 
-  formatDate(date: string) {
+  formatDate(date: string): string {
     const curTime = new Date();
     const postTime = new Date(date);
     const timeDiff = curTime.getTime() - postTime.getTime();
@@ -112,7 +114,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDistance(distance: number, unit: string) {
+  getDistance(distance: number, unit: string): string {
     if ( unit === 'metric' ) {
       return (distance * 1.60934).toFixed(1) + ' km';
     } else {
@@ -120,13 +122,13 @@ export class ActivityComponent implements OnInit, OnDestroy {
     }
   }
 
-  onScrollComments() {
+  onScrollComments(): void {
 
     if ( !this.commentActivityLoading ) {
 
       const activityCommentRequest: ActivityCommentRequest = {
-        date: this.commentActivity.length > 0 ? this.commentActivity.slice(-1)[0].creation_date : new Date().toString(),
-        limit: this.postLimit
+        limit: this.postLimit,
+        after: this.commentsAfter
       };
 
       this.commentActivityLoading = true;
@@ -144,20 +146,23 @@ export class ActivityComponent implements OnInit, OnDestroy {
       comments$.subscribe( (activitySuccess: ActivityCommentSuccess ) => {
           const activities: CommentActivityActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
           this.commentActivity = this.commentActivity.concat(activities);
+          if ( activitySuccess.cursor.after ) {
+            this.commentsAfter = activitySuccess.cursor.after;
+          }
       });
 
     }
 
   }
 
-  onScrollPost() {
+  onScrollPost(): void {
 
     if ( !this.postActivityLoading ) {
 
       const activityPostRequest: ActivityPostRequest = {
-        date: this.postActivity.length > 0 ? this.postActivity.slice(-1)[0].creation_date : new Date().toString(),
         limit: this.postLimit,
         location: this.location,
+        after: this.postAfter
       };
 
       this.postActivityLoading = true;
@@ -176,13 +181,16 @@ export class ActivityComponent implements OnInit, OnDestroy {
           // const activities: ActivityPost[] = activitySuccess.activity.map(activity => ({ ...activity, blurred: activity.image_nsfw }))
           const activities: PostActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
           this.postActivity = this.postActivity.concat(activities);
+          if ( activitySuccess.cursor.after ) {
+            this.postAfter = activitySuccess.cursor.after;
+          }
       });
 
     }
 
   }
 
-  activityClicked(activity) {
+  activityClicked(activity): void {
     activity.imageBlurred = false;
   }
 

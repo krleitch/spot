@@ -231,8 +231,9 @@ export interface ReportCommentSuccess {
 
 // activity
 export interface ActivityCommentRequest {
-    date: string;
     limit: number;
+    before?: string;
+    after?: string;
 }
 
 export interface CommentActivity {
@@ -257,7 +258,12 @@ export interface CommentActivity {
 }
 
 export interface ActivityCommentSuccess {
+    size: number;
     activity: CommentActivity[];
+    cursor: {
+        before: string;
+        after: string;
+    }
 }
 
 // Hash used for storing comments in ngrx

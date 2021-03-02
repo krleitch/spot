@@ -190,7 +190,7 @@ function unratedComment(commentId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function getCommentsActivity(accountId: string, date: string, limit: number) {
+function getCommentsActivity(accountId: string, before: Date, after: Date, limit: number) {
     var activityDate = new Date();
     activityDate.setDate(activityDate.getDate() - COMMENTS_CONSTANTS.ACTIVITY_DAYS);
     var sql = `SELECT c1.id, c1.creation_date, c1.likes, c1.dislikes, c1.parent_id, c1.content, c1.image_src, c1.image_nsfw, c1.link, c1.account_id,
@@ -198,8 +198,18 @@ function getCommentsActivity(accountId: string, date: string, limit: number) {
                  c2.content as parent_content, c2.image_src as parent_image_src, c2.image_nsfw as parent_image_nsfw, c2.link as parent_link
                  FROM comments c1 LEFT JOIN posts p ON p.id = c1.post_id LEFT JOIN comments c2 ON c1.parent_id = c2.id
                  WHERE c1.account_id = ? AND c1.deletion_date IS NULL AND c2.deletion_date IS NULL AND p.deletion_date IS NULL 
-                 AND c1.creation_date < ? AND c1.creation_date > ? ORDER BY c1.creation_date DESC LIMIT ?`;
-    var values = [accountId, new Date(date), activityDate, limit];
+                 AND c1.creation_date > ?`;
+    var values: any = [accountId, activityDate];
+    if ( after ) {
+        sql += ' AND c1.creation_date < ?';
+        values.push(after)
+    }
+    if ( before ) {
+        sql += ' AND c1.creation_date > ?';
+        values.push(before)
+    }
+    sql += ' ORDER BY c1.creation_date DESC LIMIT ?'
+    values.push(limit)
     return db.query(sql, values);
 }
 

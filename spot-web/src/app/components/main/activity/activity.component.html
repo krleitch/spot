@@ -65,6 +65,11 @@
               </div>
 
             </div>
+            <div *ngIf="postsLoadedOnce && postsAfter == null" class="no-post-activity">
+              <span class="text"> You're all caught up </span>
+              <span class="material-icons icon"> insights </span>
+            </div>
+
           </div>
           <ng-template #noPostActivity>
             <div *ngIf="postsLoadedOnce" class="no-post-activity">
@@ -109,6 +114,11 @@
               </div>
 
             </div>
+            <div *ngIf="commentsLoadedOnce && commentsAfter == null" class="no-comment-activity">
+              <span class="text"> You're all caught up </span>
+              <span class="material-icons icon"> insights </span>
+            </div>
+
           </div>
           <ng-template #noCommentActivity>
             <div *ngIf="commentsLoadedOnce" class="no-comment-activity">

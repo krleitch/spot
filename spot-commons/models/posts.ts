@@ -110,9 +110,15 @@ export interface ReportPostSuccess {
 export interface ActivityPostRequest {
     limit: number;
     location: Location;
-    date: string;
+    before?: string;
+    after?: string;
 }
 
 export interface ActivityPostSuccess {
     activity: Post[];
+    size: number;
+    cursor: {
+        before: string;
+        after: string;
+    }
 }

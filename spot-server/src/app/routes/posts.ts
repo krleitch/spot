@@ -243,14 +243,22 @@ router.get('/activity', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     
-    const date = req.query.date;
+    const before = req.query.before ? new Date(req.query.before): null;
+    const after = req.query.after ? new Date(req.query.after): null;
     const limit = Number(req.query.limit);
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
 
-    posts.getPostsActivity(accountId, date, limit).then((rows: any) => {
+    posts.getPostsActivity(accountId, before, after, limit).then((rows: any) => {
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
-        const response = { activity: rows };
+        const response = { 
+            activity: rows,
+             size: rows.length,
+             cursor: { 
+                 before: rows.length > 0 ? rows[0].creation_date : null, 
+                 after: rows.length > 0 ? rows[rows.length - 1].creation_date : null
+            } 
+        };
         res.status(200).json(response);
     }, (err: any) => {
         return next(new PostsError.PostActivity(500));
