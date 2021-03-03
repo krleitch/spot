@@ -5,7 +5,6 @@ DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
-DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS password_reset;
 DROP TABLE IF EXISTS locations;

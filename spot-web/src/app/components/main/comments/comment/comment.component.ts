@@ -807,4 +807,15 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
+  openReportModal(postId: string, commentId: string) {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
+    this.openModal('spot-report-modal', { postId: postId, commentId: commentId })
+
+  }
+
 }

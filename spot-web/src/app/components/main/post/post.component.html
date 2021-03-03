@@ -61,7 +61,7 @@
               <span class="material-icons icon"> chevron_right </span>
               {{ STRINGS.OPEN_POST }}
             </a>
-            <div class="button" (click)="openModal('spot-report-modal', { postId: post.id })">
+            <div class="button" (click)="openReportModal(post.id)">
               <span class="material-icons icon"> outlined_flag </span>
               {{ STRINGS.REPORT }}
             </div>

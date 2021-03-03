@@ -58,8 +58,9 @@ function getPendingFriendRequests(accountId: string) {
 }
 
 function getFriendsById(id: string) {
-    var sql = `SELECT friends.id, friends.creation_date, accounts.username FROM friends
-                LEFT JOIN accounts ON friends.friend_id = accounts.id WHERE friends.id = ?`;
+    var sql = `SELECT friends.id, friends.creation_date, a1.username as friend_username, a2.username as account_username FROM friends
+                LEFT JOIN accounts a1 ON friends.friend_id = a1.id
+                LEFT JOIN accounts a2 ON friends.account_id = a2.id WHERE friends.id = ?`;
     var values = [id];
     return db.query(sql, values);
 }

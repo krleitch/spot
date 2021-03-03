@@ -138,6 +138,9 @@ router.post('/requests', ErrorHandler.catchAsync(async function (req: any, res: 
             } else {
 
                 friends.addFriendRequest(accountId, receiverId[0].id).then((rows: any) => {
+                    rows[0].username = rows[0].friend_username;
+                    delete rows[0].friend_username;
+                    delete rows[0].account_username;
                     const response = { friend: rows[0] }
                     res.status(200).json(response);
                 }, (err: any) => {
@@ -167,14 +170,11 @@ router.post('/requests/accept', function (req: any, res: any, next: any) {
         if ( rows.length < 1 ) {
             return next(new FriendsError.AcceptFriendRequest(500));
         } else {
-            // Get the username
-            accounts.getAccountById(rows[0].account_id).then( (account: any) => {
-                rows[0].username = account[0].username;
-                const response = { friend: rows[0] };
-                res.status(200).json(response);
-            }, (err: any) => {
-
-            });
+            rows[0].username = rows[0].account_username;
+            delete rows[0].friend_username;
+            delete rows[0].account_username;
+            const response = { friend: rows[0] };
+            res.status(200).json(response);
         }
 
     }, (err: any) => {

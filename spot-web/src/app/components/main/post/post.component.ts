@@ -130,7 +130,6 @@ export class PostComponent implements OnInit, OnDestroy {
   getTime(): string {
     const curTime = new Date();
     // Need to convert from UTC  date to current time
-    console.log(this.post.creation_date.toString());
     const postTime = new Date(this.post.creation_date);
     const timeDiff = curTime.getTime() - postTime.getTime();
     if (timeDiff < 60000) {
@@ -265,6 +264,17 @@ export class PostComponent implements OnInit, OnDestroy {
 
   closeModal(id: string): void {
     this.modalService.close(id);
+  }
+
+  openReportModal(postId: string) {
+
+    if ( !this.authenticationService.isAuthenticated() ) {
+      this.modalService.open('spot-auth-modal');
+      return;
+    }
+
+    this.openModal('spot-report-modal', { postId: postId })
+
   }
 
   imageClicked(): void {
