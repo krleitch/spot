@@ -6,13 +6,16 @@ export interface Notification {
     creation_date: string;
     username: string;
     image_src: string;
+    image_nsfw: boolean;
     content: string;
     seen: number;
     link: string;
     comment_link: string;
     comment_image_src: string;
+    comment_image_nsfw: boolean;
     comment_content: string;
     reply_image_src: string;
+    reply_image_nsfw: boolean;
     reply_content: string;
 }
 

@@ -1,12 +1,20 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Notification } from '@models/notifications';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 
+// rxjs
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+// store
 import { RootStoreState } from '@store';
+import { Store, select } from '@ngrx/store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreNotificationsActions } from '@store/social-store';
-import { SetNotificationSeenRequest, DeleteNotificationRequest } from '@models/notifications';
 
+// assets
+import { Notification } from '@models/notifications';
+import { SetNotificationSeenRequest, DeleteNotificationRequest } from '@models/notifications';
+import { AccountMetadata } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -14,15 +22,45 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './notification-item.component.html',
   styleUrls: ['./notification-item.component.scss']
 })
-export class NotificationItemComponent implements OnInit {
+export class NotificationItemComponent implements OnInit, OnDestroy {
+
+  private readonly onDestroy = new Subject<void>();
 
   @Input() notification: Notification;
+  imageBlurred: boolean;
+
+  accountMetadata$: Observable<AccountMetadata>;
+  accountMetadata: AccountMetadata;
 
   STRINGS = STRINGS.MAIN.NOTIFICATION_ITEM;
 
   constructor(private router: Router, private store$: Store<RootStoreState.State>) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+
+    this.accountMetadata$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccountMetadata)
+    );
+
+    this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (accountMetadata: AccountMetadata) => {
+      this.accountMetadata = accountMetadata;
+    });
+
+    if ( this.notification.reply_image_src )
+      this.imageBlurred = this.notification.reply_image_nsfw;
+    else if ( this.notification.comment_image_src ) {
+      this.imageBlurred = this.notification.comment_image_nsfw;
+    } else if ( this.notification.image_src )  {
+      this.imageBlurred = this.notification.image_nsfw;
+    } else {
+      this.imageBlurred = false;
+    }
+
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy.next();
+  }
 
   getTime(date: string) {
     const curTime = new Date();

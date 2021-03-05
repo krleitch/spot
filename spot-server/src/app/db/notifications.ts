@@ -8,9 +8,9 @@ const db = require('./mySql');
 
 function getNotificationByReceiverId(receiverId: string, date: string, limit: number) {
     var sql = `SELECT n.id, n.post_id, n.comment_id, n.reply_id, n.creation_date, n.seen, a.username,
-                p.image_src, p.content, p.link, p.deletion_date, 
-                c.link as comment_link, c.image_src as comment_image_src, c.content as comment_content, c.account_id as account_id, c.deletion_date as comment_deletion_date,
-                r.image_src as reply_image_src, r.content as reply_content, r.deletion_date as reply_deletion_date
+                p.image_src, p.image_nsfw, p.content, p.link, p.deletion_date, 
+                c.link as comment_link, c.image_src as comment_image_src, c.image_nsfw as comment_image_nsfw, c.content as comment_content, c.account_id as account_id, c.deletion_date as comment_deletion_date,
+                r.image_src as reply_image_src, r.image_nsfw as reply_image_nsfw, r.content as reply_content, r.deletion_date as reply_deletion_date
                 FROM notifications n
                 LEFT JOIN accounts a ON a.id = n.sender_id
                 LEFT JOIN posts p ON n.post_id = p.id

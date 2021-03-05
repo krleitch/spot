@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Observable, Subject, timer, merge } from 'rxjs';
+import { Observable, Subject, timer } from 'rxjs';
 import { takeUntil, take, finalize, mapTo, takeWhile, startWith } from 'rxjs/operators';
 
 // store
