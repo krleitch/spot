@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
+// rxjs
 import { Observable, Subject, timer, interval, concat, of } from 'rxjs';
 import { takeUntil, mapTo, startWith, skipWhile, takeWhile, take } from 'rxjs/operators';
 

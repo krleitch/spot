@@ -1,7 +1,7 @@
 <div class="notification-item">
-  <div class="content" (click)="goToPost()" [ngClass]="{'seen': !notification.seen}">
+  <div class="content" (click)="goToPost($event)" [ngClass]="{'seen': !notification.seen}">
 
-    <div class="image-preview" *ngIf="accountMetadata">
+    <div #notificationImage class="image-preview" *ngIf="accountMetadata">
       <div class="preview-content" *ngIf="notification.reply_image_src; else noImageReply">
         <img [src]="notification.reply_image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }">
         <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >

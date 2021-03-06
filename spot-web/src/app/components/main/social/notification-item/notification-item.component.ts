@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 // rxjs
@@ -25,6 +25,8 @@ import { STRINGS } from '@assets/strings/en';
 export class NotificationItemComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
+
+  @ViewChild('notificationImage') notificationImage: ElementRef;
 
   @Input() notification: Notification;
   imageBlurred: boolean;
@@ -55,6 +57,8 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
     } else {
       this.imageBlurred = false;
     }
+
+    this.imageBlurred = true;
 
   }
 
@@ -88,16 +92,28 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  goToPost() {
+  goToPost(event: any) {
 
-    const request: SetNotificationSeenRequest = {
-      notificationId: this.notification.id
-    };
+    console.log(event)
 
-    // set seen
-    this.store$.dispatch(
-      new SocialStoreNotificationsActions.SetNotificationSeenAction(request)
-    );
+    if ( this.notificationImage.nativeElement.contains(event.target) && this.imageBlurred ) {
+      this.imageBlurred = false;
+      console.log('what')
+      return;
+    }
+
+    if ( !this.notification.seen ) {
+
+      const request: SetNotificationSeenRequest = {
+        notificationId: this.notification.id
+      };
+  
+      // set seen
+      this.store$.dispatch(
+        new SocialStoreNotificationsActions.SetNotificationSeenAction(request)
+      );
+
+    }
 
     if ( this.notification.comment_link ) {
       this.router.navigateByUrl('/posts/' + this.notification.link + '/comments/' + this.notification.comment_link);
@@ -122,6 +138,10 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   getImagePreview(notification: Notification): string {
     return notification.username[0].toUpperCase();
+  }
+
+  imageClicked() {
+    this.imageBlurred = false;
   }
 
 }

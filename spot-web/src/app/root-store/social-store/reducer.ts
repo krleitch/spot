@@ -56,7 +56,7 @@ export function featureReducer(state = initialState, action: NotificationsAction
 
       state.notifications.forEach( (notif, i) => {
         const newObj = Object.assign({}, notif);
-        notif.seen = 1;
+        newObj.seen = 1;
         newNotifications[i] = newObj;
       });
 
@@ -73,7 +73,7 @@ export function featureReducer(state = initialState, action: NotificationsAction
       state.notifications.forEach( (notif, i) => {
         const newObj = Object.assign({}, notif);
         if ( notif.id === action.response.notificationId ) {
-          notif.seen = 1;
+          newObj.seen = 1;
           newNotifications[i] = newObj;
         }
       });

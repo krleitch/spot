@@ -1,16 +1,23 @@
 import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { Observable, Subject, timer, merge } from 'rxjs';
+
+// rxjs
+import { Observable, Subject, timer } from 'rxjs';
 import { takeUntil, mapTo, takeWhile, startWith } from 'rxjs/operators';
 
-import { STRINGS } from '@assets/strings/en';
+// store
+import { select, Store } from '@ngrx/store';
 import { AccountsActions } from '@store/accounts-store';
 import { SocialStoreSelectors, SocialStoreNotificationsActions } from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
+
+// services
+import { ModalService } from '@services/modal.service';
+
+// assets
+import { STRINGS } from '@assets/strings/en';
 import { Account, AccountMetadata } from '@models/accounts';
 import { GetNotificationsUnreadRequest } from '@models/notifications';
-import { ModalService } from '@services/modal.service';
 
 @Component({
   selector: 'spot-main-nav',
@@ -21,23 +28,28 @@ export class NavComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
 
+  // on title click
   @Output() titleEvent = new EventEmitter<boolean>();
 
   STRINGS = STRINGS.MAIN.NAV;
 
+  // account
+  @ViewChild('account') accountView;
+  accountShowDropdown = false;
   account$: Observable<Account>;
   accountLoading$: Observable<boolean>;
   loading: boolean;
   showAccountIndicator$: Observable<boolean>;
   accountMetadata$: Observable<AccountMetadata>;
+
+  // Auth
   isAuthenticated$: Observable<boolean>;
   isAuthenticated: boolean;
+
+  // notifications
+  @ViewChild('notifications') notificationsView;
   unread$: Observable<number>;
   unreadNotifications = '0';
-
-  @ViewChild('account') accountView;
-  @ViewChild('notifications') notificationsView;
-  accountShowDropdown = false;
   showNotifications = false;
 
   constructor(private router: Router,
