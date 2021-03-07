@@ -1,17 +1,24 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
+
+// rxjs
 import { Observable, Subject, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 
+// store
 import { RootStoreState } from '@store';
-import { ReportPostRequest, ReportPostSuccess } from '@models/posts';
-import { ReportCommentRequest } from '@models/comments';
-import { SpotError } from '@exceptions/error';
-import { STRINGS } from '@assets/strings/en';
+import { Store } from '@ngrx/store';
+
+// services
 import { ModalService } from '@services/modal.service';
 import { PostsService } from '@services/posts.service';
 import { AlertService } from '@services/alert.service';
 import { CommentService } from '@services/comments.service';
+
+// assets
+import { ReportPostRequest, ReportPostSuccess } from '@models/posts';
+import { ReportCommentRequest } from '@models/comments';
+import { SpotError } from '@exceptions/error';
+import { STRINGS } from '@assets/strings/en';
 import { REPORT_CONSTANTS } from '@constants/report';
 
 @Component({

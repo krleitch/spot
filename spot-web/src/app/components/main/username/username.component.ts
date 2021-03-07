@@ -1,16 +1,23 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+
+// rxjs
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
 
+// store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+
+// services
+import { AuthenticationService } from '@services/authentication.service';
+import { AccountsService } from '@services/accounts.service';
+
+// assets
 import { STRINGS } from '@assets/strings/en';
 import { UpdateUsernameRequest, Account, UpdateUsernameResponse } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
-import { AuthenticationService } from '@services/authentication.service';
-import { AccountsService } from '@services/accounts.service';
 
 @Component({
   selector: 'spot-username',

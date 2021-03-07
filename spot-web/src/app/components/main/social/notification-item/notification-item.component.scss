@@ -57,6 +57,10 @@
         -webkit-filter: blur(3px);
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
       .image-blur-text  {
 
         cursor: pointer;

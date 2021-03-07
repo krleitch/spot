@@ -4,21 +4,21 @@
     <div #notificationImage class="image-preview" *ngIf="accountMetadata">
       <div class="preview-content" *ngIf="notification.reply_image_src; else noImageReply">
         <img [src]="notification.reply_image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }">
-        <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+        <div [hidden]="!(imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
           <span class="material-icons icon"> error_outline </span>
         </div>
       </div>
       <ng-template #noImageReply>
         <div class="preview-content" *ngIf="notification.comment_image_src; else noImageComment">
           <img [src]="notification.comment_image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }">
-          <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+          <div [hidden]="!(imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
             <span class="material-icons icon"> error_outline </span>
           </div>
         </div>
         <ng-template #noImageComment>
           <div class="preview-content" *ngIf="notification.image_src; else noImage">
             <img [src]="notification.image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }">
-            <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+            <div [hidden]="!(imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
               <span class="material-icons icon"> error_outline </span>
             </div>
           </div>

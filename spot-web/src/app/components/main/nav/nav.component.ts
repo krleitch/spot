@@ -59,7 +59,7 @@ export class NavComponent implements OnInit, OnDestroy {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
@@ -112,7 +112,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 

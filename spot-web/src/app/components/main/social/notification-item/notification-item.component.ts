@@ -94,11 +94,9 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   goToPost(event: any) {
 
-    console.log(event)
-
+    // if you click on image that is blurred then don't go to post, unblur it
     if ( this.notificationImage.nativeElement.contains(event.target) && this.imageBlurred ) {
       this.imageBlurred = false;
-      console.log('what')
       return;
     }
 
