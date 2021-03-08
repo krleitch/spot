@@ -28,6 +28,7 @@ export enum ActionTypes {
   UPDATE_USERNAME_FAILURE = '[Accounts] Update Username Failure',
   UPDATE_METADATA_REQUEST = '[Accounts] Update Metadata Request',
   UPDATE_METADATA_SUCCESS = '[Accounts] Update Metadata Success',
+  UPDATE_METADATA_FAILURE = '[Accounts] Update Metadata Failure',
   GET_METADATA_REQUEST = '[Accounts] Get Metadata Request',
   GET_METADATA_SUCCESS = '[Accounts] Get Metadata Success',
   GET_METADATA_FAILURE = '[Accounts] Get Metadata Failure',
@@ -142,6 +143,11 @@ export class UpdateAccountMetadataRequestAction implements Action {
 export class UpdateAccountMetadataRequestSuccess implements Action {
   readonly type = ActionTypes.UPDATE_METADATA_SUCCESS;
   constructor(public response: UpdateAccountMetadataSuccess) {}
+}
+
+export class UpdateAccountMetadataRequestFailure implements Action {
+  readonly type = ActionTypes.UPDATE_METADATA_FAILURE;
+  constructor(public error: SpotError) {}
 }
 
 export class GetAccountMetadataRequestAction implements Action {
