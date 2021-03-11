@@ -24,14 +24,13 @@
         </span>
       </div>
 
-      <div *ngIf="accountMetadata$ | async as accountMetadata">
-        <div *ngIf="post.image_src != null" (click)="imageClicked()" class="image">
-          <img #postimage [src]="post.image_src" crossOrigin='anonymous' [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }" />
-          <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
-            <span class="material-icons icon"> error_outline </span>
-            <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>
-            <span class="text highlight"> {{ STRINGS.MATURE_CONTENT_SHOW }} </span>
-          </div>
+      <!-- Image -->
+      <div *ngIf="post.image_src != null" (click)="imageClicked()" class="image">
+        <img #postimage [src]="post.image_src" crossOrigin='anonymous' [ngClass]="{'image-blur': (accountMetadata == null && imageBlurred) || (imageBlurred && accountMetadata.mature_filter) }" />
+        <div *ngIf="(accountMetadata == null && imageBlurred) || (imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
+          <span class="material-icons icon"> error_outline </span>
+          <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>
+          <span class="text highlight"> {{ STRINGS.MATURE_CONTENT_SHOW }} </span>
         </div>
       </div>
 
@@ -43,8 +42,8 @@
             {{ STRINGS.COMMENTS }}
           </ng-template>
         </span>
-        <div *ngIf="accountMetadata$ | async as accountMetadata" class="distance">
-          <span *ngIf="post.distance"> {{ getDistance(post.distance, accountMetadata.distance_unit ) }} - </span>
+        <div class="distance">
+          <span *ngIf="post.distance"> {{ getDistance(post.distance) }} - </span>
           {{ post.geolocation }}
         </div>
       </div>

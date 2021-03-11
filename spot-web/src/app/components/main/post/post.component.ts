@@ -43,6 +43,7 @@ export class PostComponent implements OnInit, OnDestroy {
   location$: Observable<Location>;
   location: Location;
   accountMetadata$: Observable<AccountMetadata>;
+  accountMetadata: AccountMetadata;
 
   time: string;
   imageBlurred: boolean; // if content flagged nsfw
@@ -64,6 +65,10 @@ export class PostComponent implements OnInit, OnDestroy {
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
+
+    this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (accountMetadata: AccountMetadata) => {
+      this.accountMetadata = accountMetadata;
+    });
 
     // Location
     this.location$ = this.store$.pipe(
@@ -154,8 +159,15 @@ export class PostComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDistance(distance: number, unit: string): string {
+  getDistance(distance: number): string {
 
+    let unit;
+    if ( this.accountMetadata ) {
+      unit = this.accountMetadata.distance_unit;
+    } else {
+      unit = 'imperial';
+    }
+    
     let distanceString = '';
 
     if ( distance <= LOCATIONS_CONSTANTS.MIN_DISTANCE ) {
@@ -167,6 +179,8 @@ export class PostComponent implements OnInit, OnDestroy {
     } else {
       distanceString += distance.toFixed(1) + ' m';
     }
+
+    console.log('strirng is ', distanceString);
 
     return distanceString;
 
