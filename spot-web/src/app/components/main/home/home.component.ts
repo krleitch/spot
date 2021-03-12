@@ -17,6 +17,7 @@ import { SetLocationRequest, LoadLocationRequest, LocationFailure } from '@model
 
 // Assets
 import { STRINGS } from '@assets/strings/en';
+import { LOCATIONS_CONSTANTS } from '@constants/locations';
 import { POSTS_CONSTANTS } from '@constants/posts';
 
 @Component({
@@ -50,6 +51,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   showLocationIndicator$: Observable<boolean>;
   locationFailure$: Observable<string>;
   locationFailure: string;
+  locationTimeReceived$: Observable<Date>;
+  locationTimeReceived: Date;
 
   // Account
   account$: Observable<Account>;
@@ -109,6 +112,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.locationFailure$.pipe(takeUntil(this.onDestroy)).subscribe( (locationFailure: string) => {
       this.locationFailure = locationFailure;
+      if ( !this.locationFailure && !this.location ) {
+        this.getLocation();
+      }
+    });
+
+    this.locationTimeReceived$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectLocationTimeReceived)
+    );
+
+    this.locationTimeReceived$.pipe(takeUntil(this.onDestroy)).subscribe( (locationTimeReceived: Date) => {
+      this.locationTimeReceived = locationTimeReceived;
     });
 
     this.loadingLocation$ = this.store$.pipe(
@@ -180,6 +194,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onScroll(): void {
+
+    let minutesSinceLocation = 0;
+    if ( this.locationTimeReceived ) {
+      minutesSinceLocation = (new Date().getTime() - this.locationTimeReceived.getTime()) / 1000
+    }
+    // check if we need to get location, if location is outdated
+    if ( !this.location || minutesSinceLocation > LOCATIONS_CONSTANTS.VALID_LOCATION_TIME ) {
+      this.getLocation();
+    }
 
     // Wait until we have the required info to load posts
     // only local requires location

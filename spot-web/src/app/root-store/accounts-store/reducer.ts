@@ -64,7 +64,8 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       return {
         ...state,
         loadingLocation: false,
-        location: action.request.location
+        location: action.request.location,
+        locationTimeReceived: new Date()
       };
     }
     case ActionTypes.LOCATION_FAILURE: {
@@ -72,7 +73,8 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         locationFailure: action.request.error,
         loadingLocation: false,
-        location: null
+        location: null,
+        locationTimeReceived: null
       };
     }
     case ActionTypes.ACCOUNT_REQUEST: {

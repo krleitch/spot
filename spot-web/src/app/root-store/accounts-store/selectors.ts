@@ -11,11 +11,12 @@ export const selectAccountMetadataFromStore = (state: State): AccountMetadata =>
 export const selectLoadingLocationFromStore = (state: State): boolean => state.loadingLocation;
 export const selectLocationFromStore = (state: State): Location => state.location;
 export const selectLocationFailureFromStore = (state: State): string => state.locationFailure;
+export const selectLocationTimeReceivedFromStore = (state: State): Date => state.locationTimeReceived;
 export const selectFacebookConnectedFromStore = (state: State): boolean => state.facebookConnected;
 export const selectGoogleConnectedFromStore = (state: State): boolean => state.googleConnected;
 export const selectAuthenticationErrorFromStore = (state: State): SpotError => state.authenticationError;
 export const selectIsAuthenticatedFromStore = (state: State): boolean => state.account ? true : false;
-export const selectIsVerifiedFromStore = (state: State): boolean => state.account.verified_date ? true : false;
+export const selectIsVerifiedFromStore = (state: State): boolean => state.account ? state.account.verified_date ? true : false : false;
 
 export const selectAccountsState: MemoizedSelector<object, State> = createFeatureSelector<State>('accounts');
 
@@ -32,6 +33,11 @@ export const selectLocation: MemoizedSelector<object, Location> = createSelector
 export const selectLocationFailure: MemoizedSelector<object, string> = createSelector(
   selectAccountsState,
   selectLocationFailureFromStore,
+);
+
+export const selectLocationTimeReceived: MemoizedSelector<object, Date> = createSelector(
+  selectAccountsState,
+  selectLocationTimeReceivedFromStore,
 );
 
 export const selectLoadingLocation: MemoizedSelector<object, boolean> = createSelector(

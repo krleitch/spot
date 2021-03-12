@@ -58,8 +58,6 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
       this.imageBlurred = false;
     }
 
-    this.imageBlurred = true;
-
   }
 
   ngOnDestroy(): void {

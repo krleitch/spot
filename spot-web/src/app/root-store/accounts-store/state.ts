@@ -10,6 +10,7 @@ export interface State {
     usernameSuccess: boolean; // Successfully changed username
     location: Location;
     locationFailure: string;
+    locationTimeReceived: Date;
     loadingLocation: boolean;
     facebookConnected: boolean;
     googleConnected: boolean;
@@ -28,5 +29,6 @@ export const initialState: State = (
     loadingLocation: false,
     locationFailure: null,
     location: null,
+    locationTimeReceived: null,
   }
 );

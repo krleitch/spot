@@ -87,7 +87,6 @@ export class PostComponent implements OnInit, OnDestroy {
 
     this.time = this.getTime();
     this.imageBlurred = this.post.image_nsfw;
-    this.imageBlurred = true;
 
   }
 
@@ -179,8 +178,6 @@ export class PostComponent implements OnInit, OnDestroy {
     } else {
       distanceString += distance.toFixed(1) + ' m';
     }
-
-    console.log('strirng is ', distanceString);
 
     return distanceString;
 

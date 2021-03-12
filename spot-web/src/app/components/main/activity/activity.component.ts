@@ -178,8 +178,8 @@ export class ActivityComponent implements OnInit, OnDestroy {
       this.showPostsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.postActivityLoading )).pipe( startWith(false) );
 
       posts$.subscribe( (activitySuccess: ActivityPostSuccess ) => {
-          // const activities: ActivityPost[] = activitySuccess.activity.map(activity => ({ ...activity, blurred: activity.image_nsfw }))
-          const activities: PostActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
+          const activities: PostActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: activity.image_nsfw }))
+          // const activities: PostActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
           this.postActivity = this.postActivity.concat(activities);
           if ( activitySuccess.cursor.after ) {
             this.postAfter = activitySuccess.cursor.after;
