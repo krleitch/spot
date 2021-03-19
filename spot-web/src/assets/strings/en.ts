@@ -393,6 +393,18 @@ export const STRINGS = {
 
         },
 
+        ABOUT: {
+
+            COPYRIGHT: '2020 Spot',
+
+        },
+
+        CONTACT: {
+
+            COPYRIGHT: '2020 Spot',
+            
+        },
+
         LANDING: {
 
             // SHOWCASE

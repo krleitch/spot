@@ -18,13 +18,28 @@
   }
 
   a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    background-color: black;
+    color: white;
     text-decoration: none;
-    color: $subtle-grey;
+    padding: 10px 5px;
+    width: 350px;
     &:hover {
-      color: $button-highlight;
+      cursor: pointer;
+      background-color: lighten(black, 10%);
     }
   }
 
+}
+
+.copyright {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 14px;
 }
 
 // Mobile Stylings

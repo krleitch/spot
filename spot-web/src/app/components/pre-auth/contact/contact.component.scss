@@ -19,6 +19,13 @@
 
 }
 
+.copyright {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 14px;
+}
+
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
 

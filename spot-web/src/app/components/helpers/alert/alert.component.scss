@@ -6,6 +6,7 @@
     left: 50%;
     width: 500px;
     margin-left: -250px;
+    z-index: 9999999999;
 }
 
 .close {
@@ -31,6 +32,7 @@
     padding: 15px 10px;
     margin-bottom: 10px;
     height: auto;
+    box-sizing: border-box;
 }
 
 .message {
