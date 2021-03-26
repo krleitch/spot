@@ -1,54 +1,69 @@
 <spot-nav></spot-nav>
 <div class="login">
 
-  <div class="login-text">
-    {{ STRINGS.TITLE }}
-  </div>
+  <div class="container">
 
-  <form [formGroup]="form" (keyup.enter)="signIn()" autocomplete="on">
-
-    <fieldset>
-      <div class="form-field">
-          <input name="emailOrUsername" formControlName="emailOrUsername" autocomplete="username" [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER" required>
-      </div>
-      <div class="form-field">
-          <input name="password" formControlName="password" autocomplete="current-password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
-      </div>
-    </fieldset>
-
-    <div class="error-message">
-      {{ errorMessage }}
+    <div class="login-text">
+      {{ STRINGS.TITLE }}
     </div>
-    <div class="form-buttons">
-      <button type="button" (click)="signIn()"> {{ STRINGS.SIGN_IN }} </button>
-    </div>
-    <a class="forgot-password" [routerLink]="'/password-reset'">
-      <span> {{ STRINGS.FORGOT_PASSWORD }} </span>
+
+    <form [formGroup]="form" (keyup.enter)="signIn()" autocomplete="on">
+
+      <fieldset>
+        <div class="form-field">
+            <input name="emailOrUsername" formControlName="emailOrUsername" autocomplete="username" [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER" required>
+        </div>
+        <div class="form-field">
+            <input name="password" formControlName="password" autocomplete="current-password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+        </div>
+      </fieldset>
+
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+      <div class="form-buttons">
+        <button type="button" (click)="signIn()"> {{ STRINGS.SIGN_IN }} </button>
+      </div>
+      <a class="forgot-password" [routerLink]="'/password-reset'">
+        <span> {{ STRINGS.FORGOT_PASSWORD }} </span>
+      </a>
+      <div class="sign-up-alternate">
+        <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
+      </div>
+
+      <div class="login-options">
+        <div type="button" class="facebook" (click)="facebookLogin()">
+          <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+          {{ STRINGS.FACEBOOK_LOGIN }}
+        </div>
+        <!-- GOOGLE -->
+        <div id="my-signin2"></div>
+      </div>
+
+    </form>
+
+    <div class="bar"></div>
+
+    <a class="existing-account" [routerLink]="'/register'">
+      <span> {{ STRINGS.NO_ACCOUNT }} </span>
+      <span class="sign-in-highlight"> {{ STRINGS.SIGN_UP }} </span>
     </a>
-    <div class="sign-up-alternate">
-      <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
-    </div>
 
-    <div class="login-options">
-      <div type="button" class="facebook" (click)="facebookLogin()">
-        <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
-        {{ STRINGS.FACEBOOK_LOGIN }}
-      </div>
-      <!-- GOOGLE -->
-      <div id="my-signin2"></div>
-    </div>
-
-  </form>
-
-  <div class="bar"></div>
-
-  <a class="existing-account" [routerLink]="'/register'">
-    <span> {{ STRINGS.NO_ACCOUNT }} </span>
-    <span class="sign-in-highlight"> {{ STRINGS.SIGN_UP }} </span>
-  </a>
+  </div>
 
 </div>
 
-<div class="copyright">
-  <span> &#169; {{ STRINGS.COPYRIGHT }} </span>
+<div class="footer">
+
+  <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <path fill="#00BFA5" fill-opacity="1" d="M0,64L40,106.7C80,149,160,235,240,245.3C320,256,400,192,480,176C560,160,640,192,720,213.3C800,235,880,245,960,245.3C1040,245,1120,235,1200,224C1280,213,1360,203,1400,197.3L1440,192L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"></path>
+  </svg>
+  <svg class="inner-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <path fill="#00dec0" fill-opacity="1" d="M0,192L21.8,186.7C43.6,181,87,171,131,170.7C174.5,171,218,181,262,197.3C305.5,213,349,235,393,224C436.4,213,480,171,524,165.3C567.3,160,611,192,655,213.3C698.2,235,742,245,785,245.3C829.1,245,873,235,916,229.3C960,224,1004,224,1047,208C1090.9,192,1135,160,1178,176C1221.8,192,1265,256,1309,277.3C1352.7,299,1396,277,1418,266.7L1440,256L1440,320L1418.2,320C1396.4,320,1353,320,1309,320C1265.5,320,1222,320,1178,320C1134.5,320,1091,320,1047,320C1003.6,320,960,320,916,320C872.7,320,829,320,785,320C741.8,320,698,320,655,320C610.9,320,567,320,524,320C480,320,436,320,393,320C349.1,320,305,320,262,320C218.2,320,175,320,131,320C87.3,320,44,320,22,320L0,320Z"></path>
+  </svg>
+
+  <div class="copyright">
+    <span> &#169; {{ STRINGS.COPYRIGHT }} </span>
+  </div>
+
 </div>

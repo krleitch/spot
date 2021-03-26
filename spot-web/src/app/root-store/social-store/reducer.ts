@@ -22,7 +22,7 @@ export function featureReducer(state = initialState, action: NotificationsAction
         ...state,
         notificationsSuccess: true,
         notificationsLoading: false,
-        notifications: !action.response.date ? action.response.notifications : state.notifications.concat(action.response.notifications)
+        notifications: !action.response.initialLoad ? action.response.notifications : state.notifications.concat(action.response.notifications)
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE: {

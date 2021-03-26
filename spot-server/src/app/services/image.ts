@@ -23,6 +23,8 @@ let model: any;
 nsfw.load(`file:///${__dirname}/../../nsfwModel/`).then((m: any) => {
     console.log('Nsfwjs Model Loaded');
     model = m;
+}, (err: any) => {
+    console.log('Error loading tensorflow model')
 }); // To load a local model, nsfw.load('file:///Users/kevin/Documents/repos/spot/spot-server/src/nsfwModel/')
 
 // Only allow jpeg and png
@@ -69,6 +71,11 @@ const upload = multer({
 
 //  predict if image is nsfw
 async function predictNsfw(imgUrl: string) {
+
+    // if the model was not loaded
+    if ( !model ) {
+        return false;
+    }
 
     if ( !imgUrl ) {
         return false;

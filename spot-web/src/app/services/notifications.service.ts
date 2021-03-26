@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+
+// rxjs
 import { Observable } from 'rxjs';
+
+// environment
+import { environment } from 'src/environments/environment';
+
+// services
 import { AlertService } from '@services/alert.service';
+
+// assets
 import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess,
           SetNotificationSeenSuccess, SetNotificationSeenRequest, DeleteAllNotificationsRequest,
           DeleteAllNotificationsSuccess, DeleteNotificationRequest, DeleteNotificationSuccess,
@@ -20,7 +28,8 @@ export class NotificationsService {
 
   getNotifications(request: GetNotificationsRequest): Observable<GetNotificationsSuccess> {
     let params = new HttpParams();
-    params = params.append('date', request.date.toString());
+    params = params.append('before', request.before.toString());
+    params = params.append('after', request.after.toString());
     params = params.append('limit', request.limit.toString());
     return this.http.get<GetNotificationsSuccess>(`${this.baseUrl}/notifications`, { params });
   }

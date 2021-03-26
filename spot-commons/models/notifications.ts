@@ -21,15 +21,18 @@ export interface Notification {
 
 // Get notifications
 export interface GetNotificationsRequest {
-    date: string;
-    limit: number;
+    before?: string; // Date
+    after?: string; // Date
     initialLoad: boolean;
+    limit: number;
 }
-
 export interface GetNotificationsSuccess {
-    date: string;
     notifications: Notification[];
     initialLoad: boolean;
+    cursor: {
+        before: string // Date
+        after: string // Date
+    };
 }
 
 // Add a notification

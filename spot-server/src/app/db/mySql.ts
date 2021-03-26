@@ -13,7 +13,7 @@ const mysql = require('mysql');
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'rootroot',
+    password: 'admin',
     database: 'db',
     charset : 'utf8mb4'
   });

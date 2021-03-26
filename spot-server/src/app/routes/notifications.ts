@@ -22,10 +22,11 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
 
     const accountId = req.user.id;
-    const date = req.query.date;
+    const before = new Date(req.query.before);
+    const after = new Date(req.query.after);
     const limit = Number(req.query.limit);
 
-    notifications.getNotificationByReceiverId(accountId, date, limit).then(ErrorHandler.catchAsync( async (rows: any) => {
+    notifications.getNotificationByReceiverId(accountId, before, after, limit).then(ErrorHandler.catchAsync( async (rows: any) => {
 
         // Add tags to comments and replies
         for (let i = 0; i < rows.length; i++) {
@@ -41,7 +42,13 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
             }
         }
 
-        const response = { notifications: rows, date: date };
+        const response = { 
+            notifications: rows,
+            cursor: {
+                before: rows.length > 0 ? rows[0].creation_date : null, 
+                after: rows.length > 0 ? rows[rows.length - 1].creation_date : null
+            } 
+        };
         res.status(200).json(response);
 
     }, (err: any) => {

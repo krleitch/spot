@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { FriendsService } from '@services/friends.service';
 import * as friendsActions from '../actions/friends.actions';
-import { DeleteFriendsRequest, DeleteFriendsSuccess, GetFriendsRequest, GetFriendsSuccess } from '@models/friends';
+import { DeleteFriendsSuccess, GetFriendsSuccess } from '@models/friends';
 
 @Injectable()
 export class FriendsEffects {
@@ -59,5 +59,5 @@ export class FriendsEffects {
         )
     )
   );
-  
+
 }

@@ -1,18 +1,33 @@
 @import '../../../styles/colors';
 @import '../../../styles/sizes';
 
+spot-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 99;
+}
+
 // LOGIN
 
 .login {
-    display: flex;
-    flex-flow: column;
-    padding-top: 100px;
-    align-items: center;
-    position: relative;
-    height: calc(100vh - 84px - 28px);
-    width: 100vw;
+    padding-top: 134px;
+    padding-bottom: 200px;
+    background-color: $background-grey;
     overflow-y: auto;
+    min-height: 100vh;
+    height: 600px;
     box-sizing: border-box;
+}
+
+.container {
+  position: relative;
+  z-index: 9;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 
 .login-text {
@@ -34,7 +49,7 @@ form {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
 }
 
 .facebook {
@@ -151,7 +166,7 @@ input.ng-dirty.ng-invalid {
 .bar {
     width: 300px;
     border-bottom: 1px solid $button-black;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .existing-account {
@@ -165,21 +180,46 @@ input.ng-dirty.ng-invalid {
     color: $button-highlight;
 }
 
-// COPYRIGHT
+// FOOTER
 
-.copyright {
+.footer {
+
+  height: 230px;
+  width: 100%;
+  display: table;
+  overflow: hidden;
+  background-color: $background-grey;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+
+  .wave {
     position: absolute;
-    right: 5px;
-    bottom: 5px;
-    font-size: 14px;
-}
+    bottom: 0px;
+    left: 0px;
+  }
 
+  .inner-wave {
+    position: absolute;
+    bottom: -50px;
+    left: 0px;
+  }
+
+  .copyright {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      font-size: 14px;
+      color: white;
+  }
+
+}
 
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
 
   .login {
-      padding-top: 10px;
+      padding-top: calc(84px + 25px);
   }
 
 }
@@ -187,7 +227,7 @@ input.ng-dirty.ng-invalid {
 @media screen and (max-height: 800px) {
 
   .login {
-      padding-top: 10px;
+      padding-top: calc(84px + 25px);
   }
 
 }

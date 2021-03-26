@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { STRINGS } from '@assets/strings/en';
+// Services
 import { AuthenticationService } from '@services/authentication.service';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
 import { PasswordResetRequest, PasswordResetSuccess } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
-
 @Component({
   selector: 'spot-password-reset',
   templateUrl: './password-reset.component.html',
@@ -27,9 +29,9 @@ export class PasswordResetComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  requestReset() {
+  requestReset(): void {
 
     const val = this.form.value;
 

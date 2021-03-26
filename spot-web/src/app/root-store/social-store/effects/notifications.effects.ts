@@ -5,10 +5,9 @@ import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { NotificationsService } from '@services/notifications.service';
 import * as notificationsActions from '../actions/notifications.actions';
-import { GetNotificationsSuccess, AddNotificationSuccess, SetNotificationSeenSuccess,
+import { GetNotificationsSuccess, SetNotificationSeenSuccess,
           DeleteNotificationSuccess, DeleteAllNotificationsSuccess, SetAllNotificationsSeenSuccess,
           GetNotificationsUnreadSuccess } from '@models/notifications';
-
 
 @Injectable()
 export class SocialStoreEffects {
@@ -34,7 +33,6 @@ export class SocialStoreEffects {
         .getNotifications(action.request)
         .pipe(
           map((response: GetNotificationsSuccess) => {
-            response.date = action.request.date;
             response.initialLoad = action.request.initialLoad;
             return new notificationsActions.GetNotificationsSuccessAction( response );
           }),

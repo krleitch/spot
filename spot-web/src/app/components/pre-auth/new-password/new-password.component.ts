@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { STRINGS } from '@assets/strings/en';
+// Services
 import { AuthenticationService } from '@services/authentication.service';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
 import { ValidateTokenRequest, ValidateTokenSuccess, NewPasswordRequest, NewPasswordSuccess } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 
@@ -36,10 +39,10 @@ export class NewPasswordComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  validateToken() {
+  validateToken(): void {
 
     const val = this.formToken.value;
 
@@ -78,7 +81,7 @@ export class NewPasswordComponent implements OnInit {
 
   }
 
-  resetPassword() {
+  resetPassword(): void {
 
     const val = this.formPassword.value;
 

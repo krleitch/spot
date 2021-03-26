@@ -6,7 +6,7 @@ const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function getNotificationByReceiverId(receiverId: string, date: string, limit: number) {
+function getNotificationByReceiverId(receiverId: string, before: Date, after: Date, limit: number) {
     var sql = `SELECT n.id, n.post_id, n.comment_id, n.reply_id, n.creation_date, n.seen, a.username,
                 p.image_src, p.image_nsfw, p.content, p.link, p.deletion_date, 
                 c.link as comment_link, c.image_src as comment_image_src, c.image_nsfw as comment_image_nsfw, c.content as comment_content, c.account_id as account_id, c.deletion_date as comment_deletion_date,
@@ -15,9 +15,22 @@ function getNotificationByReceiverId(receiverId: string, date: string, limit: nu
                 LEFT JOIN accounts a ON a.id = n.sender_id
                 LEFT JOIN posts p ON n.post_id = p.id
                 LEFT JOIN comments c ON n.comment_id = c.id
-                LEFT JOIN comments r ON n.reply_id = r.id WHERE receiver_id = ? AND n.creation_date < ? AND c.deletion_date IS NULL AND r.deletion_date IS NULL AND p.deletion_date IS NULL
-                ORDER BY n.creation_date DESC LIMIT ?`;
-    var values = [receiverId, new Date(date), limit];
+                LEFT JOIN comments r ON n.reply_id = r.id WHERE receiver_id = ? AND n.creation_date < ? AND c.deletion_date IS NULL AND r.deletion_date IS NULL AND p.deletion_date IS NULL`
+    var values: any = [receiverId, , limit];
+    if ( after || before ) {
+        sql += ` WHERE`;
+    }
+    if ( after ) {
+        sql += ` n.creation_date < ?`;
+        values += [after];
+    }
+    if ( before ) {
+        sql += ` n.creation_date > ?`;
+        values += [before];
+    }
+
+    sql += ` ORDER BY n.creation_date DESC LIMIT ?`;
+    values += [limit]
     return db.query(sql, values);
 }
 

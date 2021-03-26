@@ -155,7 +155,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.loading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
       this.loading = loading;
-      this.showPostsIndicator$ = 
+      this.showPostsIndicator$ =
       concat(
         timer(500).pipe(mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false)),
         of(true)
@@ -197,9 +197,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     let minutesSinceLocation = 0;
     if ( this.locationTimeReceived ) {
-      minutesSinceLocation = (new Date().getTime() - this.locationTimeReceived.getTime()) / 1000
+      minutesSinceLocation = (new Date().getTime() - this.locationTimeReceived.getTime()) / 1000;
     }
-    // check if we need to get location, if location is outdated
+    // check if we need to get location, or if location is outdated
     if ( !this.location || minutesSinceLocation > LOCATIONS_CONSTANTS.VALID_LOCATION_TIME ) {
       this.getLocation();
     }
@@ -227,6 +227,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // don't load if we are already loading
     if ( !this.loading ) {
 
+      // TODO: Change to before/after cursors
       // if sorting by new, just need date
       // if sorting by hot, need offset
 
@@ -369,31 +370,68 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getLocation(): void {
 
-    if ( navigator.geolocation ) {
+    if ( navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation'}).then( (permission: PermissionStatus) => {
+        if (permission.state === 'granted') {
 
-      const loadLocationRequest: LoadLocationRequest = {};
-      this.store$.dispatch(
-        new AccountsActions.LoadLocationAction(loadLocationRequest),
-      );
+          if ( navigator.geolocation ) {
 
-      navigator.geolocation.getCurrentPosition((position) => {
+            const loadLocationRequest: LoadLocationRequest = {};
+            this.store$.dispatch(
+              new AccountsActions.LoadLocationAction(loadLocationRequest),
+            );
 
-        const setLocationRequest: SetLocationRequest = {
-          location: {
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude
-          },
-        };
-        this.store$.dispatch(
-          new AccountsActions.SetLocationAction(setLocationRequest),
-        );
+            navigator.geolocation.getCurrentPosition((position) => {
 
-      }, this.locationError.bind(this));
+              const setLocationRequest: SetLocationRequest = {
+                location: {
+                  longitude: position.coords.longitude,
+                  latitude: position.coords.latitude
+                },
+              };
+              this.store$.dispatch(
+                new AccountsActions.SetLocationAction(setLocationRequest),
+              );
 
+            }, this.locationError.bind(this));
+
+          } else {
+
+            // geolocation not available in this browser
+            const locationFailure: LocationFailure = {
+              error: 'browser',
+            };
+            this.store$.dispatch(
+              new AccountsActions.LocationFailureAction(locationFailure),
+            );
+
+          }
+
+        } else if ( permission.state === 'denied') {
+
+          const locationFailure: LocationFailure = {
+            error: 'permission',
+          };
+          this.store$.dispatch(
+            new AccountsActions.LocationFailureAction(locationFailure),
+          );
+
+        } else {
+
+          const locationFailure: LocationFailure = {
+            error: 'prompt',
+          };
+          this.store$.dispatch(
+            new AccountsActions.LocationFailureAction(locationFailure),
+          );
+
+        }
+      });
     } else {
 
+      // the permissions api isnt implemented in this browser so setup to prompt again
       const locationFailure: LocationFailure = {
-        error: 'browser',
+        error: 'prompt',
       };
       this.store$.dispatch(
         new AccountsActions.LocationFailureAction(locationFailure),

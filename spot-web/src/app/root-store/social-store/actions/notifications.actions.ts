@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
 
-import { GetNotificationsRequest, GetNotificationsSuccess, AddNotificationRequest, AddNotificationSuccess,
+// Models
+import { GetNotificationsRequest, GetNotificationsSuccess, GetNotificationsUnreadSuccess,
           DeleteNotificationRequest, DeleteNotificationSuccess, SetNotificationSeenRequest,
           SetNotificationSeenSuccess, DeleteAllNotificationsRequest, DeleteAllNotificationsSuccess,
-          SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess, GetNotificationsUnreadRequest,
-          GetNotificationsUnreadSuccess } from '@models/notifications';
+          SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess, GetNotificationsUnreadRequest } from '@models/notifications';
 import { SpotError } from '@exceptions/error';
 
 export enum NotificationsActionTypes {

@@ -1,16 +1,22 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+
+// rxjs
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { STRINGS } from '@assets/strings/en';
-import { AuthenticationService } from '@services/authentication.service';
-import { LoginRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
+// Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { AccountsActions, AccountsStoreSelectors, AccountsGoogleActions, AccountsFacebookActions } from '@store/accounts-store';
+
+// Services
+import { AuthenticationService } from '@services/authentication.service';
+
+// Assets
 import { SpotError } from '@exceptions/error';
+import { STRINGS } from '@assets/strings/en';
+import { LoginRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
 
 declare const gapi: any;
 
@@ -31,7 +37,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private authenticationService: AuthenticationService,
     private store$: Store<RootStoreState.State>) {
 
@@ -42,7 +47,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.authError$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationError)
@@ -63,11 +68,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
       if ( service === 'google' ) {
         gapi.signin2.render('my-signin2', {
@@ -82,7 +87,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  signIn() {
+  signIn(): void {
 
     const val = this.form.value;
 
@@ -110,7 +115,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  facebookLogin() {
+  facebookLogin(): void {
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
@@ -141,7 +146,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleLogin(googleUser) {
+  googleLogin(googleUser): void {
 
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
@@ -161,7 +166,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  googleSignOut() {
+  googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(() => {
 

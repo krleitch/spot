@@ -1,16 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+
+// Rxjs
 import { Observable, Subject, timer, merge } from 'rxjs';
 import { takeUntil, mapTo, finalize, takeWhile, startWith } from 'rxjs/operators';
 
+// Store
 import { RootStoreState } from '@store';
 import { SocialStoreNotificationsActions, SocialStoreSelectors } from '@store/social-store';
-import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest,
-          SetAllNotificationsSeenRequest } from '@models/notifications';
+import { select, Store } from '@ngrx/store';
+
+// Assets
 import { STRINGS } from '@assets/strings/en';
 import { NOTIFICATIONS_CONSTANTS } from '@constants/notifications';
-
-
+import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest,
+          SetAllNotificationsSeenRequest,
+          GetNotificationsSuccess} from '@models/notifications';
 @Component({
   selector: 'spot-notifications',
   templateUrl: './notifications.component.html',
@@ -27,13 +31,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   notifications: Notification[];
   notificationsLoading$: Observable<boolean>;
   notificationsSuccess$: Observable<boolean>;
+  notificationsAfter: null;
   loading = false;
   initialLoad = true;
   showNotificationsIndicator$: Observable<boolean>;
 
   constructor(private store$: Store<RootStoreState.State>) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.notificationsLoading$ = this.store$.pipe(
       select(SocialStoreSelectors.selectNotificationsLoading)
@@ -59,20 +64,25 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       this.notifications = notifications;
     });
 
+    // on successful notifications
+    this.notificationsSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success: boolean) => {
+      this.initialLoad = false;
+    });
+
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  onScroll() {
+  onScroll(): void {
 
     if ( !this.loading ) {
 
       const request: GetNotificationsRequest = {
-        date: this.notifications.length > 0 ? this.notifications.slice(-1).pop().creation_date : new Date().toString(),
+        initialLoad: this.initialLoad,
+        after: this.notificationsAfter,
         limit: NOTIFICATIONS_CONSTANTS.LIMIT,
-        initialLoad: this.initialLoad
       };
 
       // load the notifications
@@ -80,14 +90,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         new SocialStoreNotificationsActions.GetNotificationsAction(request)
       );
 
-      this.initialLoad = false;
-
     }
 
   }
 
   // Currently unused
-  clearAll() {
+  clearAll(): void {
 
     const request: DeleteAllNotificationsRequest = {};
 
@@ -97,7 +105,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   }
 
-  seeAll() {
+  seeAll(): void {
 
     const request: SetAllNotificationsSeenRequest = {};
 
