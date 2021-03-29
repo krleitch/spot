@@ -10,35 +10,17 @@
   overflow-x: hidden;
 }
 
-.promo {
-
-  position: absolute;
-  top: 60px;
-  left: 60px;
-  display: flex;
-  flex-flow: column;
-  font-size: 35px;
-  font-family: 'Dela Gothic One', cursive;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  z-index: 99;
-
-  .highlight {
-    color: $button-highlight;
-  }
-}
-
 .image {
     background-image: url('../../../../assets/images/landing_v5.png');
     background-repeat: repeat-x;
     background-size: cover;
     position: absolute;
-    width: 100%;
-    min-height: 100%;
     top: 0;
     left: 0;
-    max-width: 100%;
+    height: 100%;
+    min-height: 800px;
+    max-height: 2000px;
+    width: 100%;
     min-width: 1100px;
 }
 
@@ -240,6 +222,10 @@ input.ng-dirty.ng-invalid {
   height: 15px;
   width: 15px;
   border: 1px solid $subtle-grey;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  background-color: #eee;
 }
 
 /* When the checkbox is checked, add a blue background */

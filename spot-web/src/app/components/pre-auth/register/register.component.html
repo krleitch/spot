@@ -25,8 +25,11 @@
       </fieldset>
 
       <div class="terms-and-conditions">
-        <div>
-          <input name="terms" formControlName="terms" type="checkbox" required/>
+        <div class="checkbox-text">
+          <label class="checkbox-container">
+            <input name="terms" formControlName="terms" type="checkbox" required/>
+            <span class="checkmark"></span>
+          </label>
           <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
         </div>
         <a [routerLink]="'/terms'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
