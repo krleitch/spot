@@ -1,6 +1,6 @@
 @import '../../../styles/colors';
 @import '../../../styles/sizes';
-@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 
 .landing {
   position: relative;
@@ -28,15 +28,85 @@
 
 .signup-wrapper {
   display: flex;
-  position: absolute;
-  justify-content: flex-end;
-  top: 50px;
-  right: 25%;
+  position: relative;
+  justify-content: center;
+  align-items: center;
   z-index: 999;
   width: 100%;
+  height: 100%;
   overflow-y: auto;
-  padding-bottom: 20px;
 }
+
+// showcase
+
+.showcase {
+
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  z-index: 999;
+  background-color: white;
+  margin-right: 25px;
+  width: 750px;
+  height: 450px;
+  box-shadow: 0 2px 34px rgba(0, 0, 0, 1), 0 0 0 1px rgba(0, 0, 0, .3);
+
+  .preview {
+
+    position: relative;
+    flex: 1;
+    padding: 20px;
+
+    .preview-text {
+
+      font-family: 'Roboto Condensed', sans-serif;
+      display: flex;
+      flex-flow: column;
+      position: absolute;
+      top: 35px;
+      left: 35px;
+      font-size: 26px;
+
+      .highlight {
+        color: $button-highlight;
+      }
+
+    }
+
+    .preview-image {
+      width: 100%;
+      height: 100%;
+      background-image: url('../../../../assets/images/ad.png');
+      background-size: cover;
+    }
+
+  }
+
+  .footer {
+
+    padding: 10px 20px;
+    background-color: $background-grey;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100px;
+    border-top: 1px solid $subtle-grey;
+    display: flex;
+    flex-flow: column;
+    font-size: 28px;
+    font-family: 'Roboto Condensed', sans-serif;
+
+    .line2 {
+
+      color: $button-highlight;
+      font-size: 38px;
+
+    }
+
+  }
+
+}
+
+// signup
 
 .signup {
     display: flex;
@@ -45,6 +115,7 @@
     align-items: center;
     background-color: white;
     padding: 80px 50px;
+    margin-left: 25px;
     box-shadow: 0 2px 34px rgba(0, 0, 0, 1), 0 0 0 1px rgba(0, 0, 0, .3);
 }
 
@@ -312,14 +383,6 @@ input.ng-dirty.ng-invalid {
 
 }
 
-// width styles
-@media screen and (max-width: 1250px) {
-
-  .signup-wrapper {
-    right: 125px;
-  }
-
-}
 
 @media screen and (max-width: 850px) {
 
@@ -332,12 +395,6 @@ input.ng-dirty.ng-invalid {
     top: -25px;
     left: -45px;
     min-height: 900px;
-  }
-
-  .signup-wrapper {
-    top: 225px;
-    right: 0px;
-    justify-content: center;
   }
 
   .signup {
