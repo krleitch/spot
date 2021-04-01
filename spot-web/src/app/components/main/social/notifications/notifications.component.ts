@@ -81,7 +81,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
       const request: GetNotificationsRequest = {
         initialLoad: this.initialLoad,
-        after: this.notificationsAfter,
+        after: this.notifications.length > 0 ? this.notifications[this.notifications.length - 1].creation_date : null,
         limit: NOTIFICATIONS_CONSTANTS.LIMIT,
       };
 

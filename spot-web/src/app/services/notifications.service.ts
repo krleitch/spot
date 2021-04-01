@@ -28,8 +28,12 @@ export class NotificationsService {
 
   getNotifications(request: GetNotificationsRequest): Observable<GetNotificationsSuccess> {
     let params = new HttpParams();
-    params = params.append('before', request.before.toString());
-    params = params.append('after', request.after.toString());
+    if ( request.after ) {
+      params = params.append('after', request.after);
+    }
+    if ( request.before ) {
+      params = params.append('before', request.before);
+    }
     params = params.append('limit', request.limit.toString());
     return this.http.get<GetNotificationsSuccess>(`${this.baseUrl}/notifications`, { params });
   }

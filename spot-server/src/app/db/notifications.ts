@@ -15,17 +15,15 @@ function getNotificationByReceiverId(receiverId: string, before: Date, after: Da
                 LEFT JOIN accounts a ON a.id = n.sender_id
                 LEFT JOIN posts p ON n.post_id = p.id
                 LEFT JOIN comments c ON n.comment_id = c.id
-                LEFT JOIN comments r ON n.reply_id = r.id WHERE receiver_id = ? AND n.creation_date < ? AND c.deletion_date IS NULL AND r.deletion_date IS NULL AND p.deletion_date IS NULL`
-    var values: any = [receiverId, , limit];
-    if ( after || before ) {
-        sql += ` WHERE`;
-    }
+                LEFT JOIN comments r ON n.reply_id = r.id 
+                WHERE receiver_id = ? AND c.deletion_date IS NULL AND r.deletion_date IS NULL AND p.deletion_date IS NULL`
+    var values: any = [receiverId];
     if ( after ) {
-        sql += ` n.creation_date < ?`;
+        sql += ` AND n.creation_date < ?`;
         values += [after];
     }
     if ( before ) {
-        sql += ` n.creation_date > ?`;
+        sql += ` AND n.creation_date > ?`;
         values += [before];
     }
 

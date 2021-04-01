@@ -22,9 +22,11 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
 
     const accountId = req.user.id;
-    const before = new Date(req.query.before);
-    const after = new Date(req.query.after);
+    const before = req.quert.before ? new Date(req.query.before) : null;
+    const after = req.query.after ? new Date(req.query.after) : null;
     const limit = Number(req.query.limit);
+
+    console.log('mee')
 
     notifications.getNotificationByReceiverId(accountId, before, after, limit).then(ErrorHandler.catchAsync( async (rows: any) => {
 
@@ -38,6 +40,7 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
                     rows[i].reply_content = await commentsService.addTagsToContent( rows[i].reply_id, accountId, rows[i].account_id, rows[i].reply_content);
                 }
             } catch (err) {
+                console.log(err)
                 return next(new NotificationsError.GetNotifications(500));
             }
         }
@@ -52,6 +55,7 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
         res.status(200).json(response);
 
     }, (err: any) => {
+        console.log(err)
         return next(new NotificationsError.GetNotifications(500));
     }));
 
