@@ -31,7 +31,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   notifications: Notification[];
   notificationsLoading$: Observable<boolean>;
   notificationsSuccess$: Observable<boolean>;
-  notificationsAfter: null;
   loading = false;
   initialLoad = true;
   showNotificationsIndicator$: Observable<boolean>;
@@ -40,6 +39,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    // Loading
     this.notificationsLoading$ = this.store$.pipe(
       select(SocialStoreSelectors.selectNotificationsLoading)
     );
@@ -59,7 +59,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       select(SocialStoreSelectors.selectNotifications)
     );
 
-    // Get last date that was loaded
+    // select notifications
     this.notifications$.pipe(takeUntil(this.onDestroy)).subscribe( (notifications: Notification[]) => {
       this.notifications = notifications;
     });

@@ -77,12 +77,13 @@
     margin-bottom: 10px;
     text-align: center;
     flex-flow: column;
-  
-    input {
-      width: auto;
-      margin: 0px 3px 0px 0px;
+
+    .checkbox-text {
+      display: flex;
+      width: 100%;
+      justify-content: center;
     }
-  
+
     a {
       text-decoration: none;
       color: $subtle-grey;
@@ -90,8 +91,10 @@
         color: $button-highlight;
       }
     }
-  
+
   }
+
+
 
   .description {
     margin-top: 10px;
@@ -105,6 +108,73 @@
     text-align: center;
   }
 
+}
+
+// Checkbox stuff
+
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 23px;
+  margin-top: 2px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  border: 1px solid $subtle-grey;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  background-color: #eee;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkbox-container input:checked ~ .checkmark {
+  border: 1px solid $button-highlight;
+  background-color: $button-highlight;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkbox-container .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 2px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 // For Mobile

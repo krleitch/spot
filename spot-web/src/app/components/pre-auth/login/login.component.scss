@@ -16,7 +16,6 @@ spot-nav {
     padding-top: 134px;
     padding-bottom: 200px;
     background-color: $background-grey;
-    overflow-y: auto;
     min-height: 100vh;
     height: 600px;
     box-sizing: border-box;
@@ -228,6 +227,14 @@ input.ng-dirty.ng-invalid {
 
   .login {
       padding-top: calc(84px + 25px);
+  }
+
+}
+
+@media screen and (max-height: 640px) {
+
+  .container {
+    padding-bottom: 100px;
   }
 
 }

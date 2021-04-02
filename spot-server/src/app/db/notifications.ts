@@ -20,15 +20,15 @@ function getNotificationByReceiverId(receiverId: string, before: Date, after: Da
     var values: any = [receiverId];
     if ( after ) {
         sql += ` AND n.creation_date < ?`;
-        values += [after];
+        values.push(after);
     }
     if ( before ) {
         sql += ` AND n.creation_date > ?`;
-        values += [before];
+        values.push(before);
     }
 
     sql += ` ORDER BY n.creation_date DESC LIMIT ?`;
-    values += [limit]
+    values.push(limit)
     return db.query(sql, values);
 }
 
