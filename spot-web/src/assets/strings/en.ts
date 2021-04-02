@@ -402,7 +402,13 @@ export const STRINGS = {
         CONTACT: {
 
             COPYRIGHT: '2020 Spot',
-            
+
+        },
+
+        TERMS: {
+
+          COPYRIGHT: '2020 Spot',
+
         },
 
         LANDING: {

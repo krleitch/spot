@@ -5,7 +5,10 @@
 
   display: flex;
   flex-flow: column;
-  margin: 25px 50px;
+  padding: 25px 50px;
+  background-color: $background-grey;
+  height: calc(100% - 84px);
+  box-sizing: border-box;
 
   .heading {
     font-size: 30px;
@@ -22,6 +25,13 @@
     margin-bottom: 10px;
   }
 
+}
+
+.copyright {
+  position: fixed;
+  right: 5px;
+  bottom: 5px;
+  font-size: 14px;
 }
 
 // Mobile Stylings

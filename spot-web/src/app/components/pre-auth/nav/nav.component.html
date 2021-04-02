@@ -5,7 +5,7 @@
     <a class="title-link" [routerLink]="'/'">
       <img class="title-image" src="../../../../assets/images/logo_v5.png">
     </a>
-    
+
     <a class="about" [routerLink]="'/about'">
       {{ STRINGS.ABOUT }}
     </a>
@@ -17,7 +17,7 @@
 
   <div class="right">
     <a *ngIf="routeIsLogin(); else mylogin" class="auth-link" [routerLink]="'/register'">
-      Sign Up
+      Register
     </a>
     <ng-template #mylogin>
       <a class="auth-link" [routerLink]="'/login'">
