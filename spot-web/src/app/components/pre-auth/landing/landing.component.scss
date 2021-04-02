@@ -33,7 +33,8 @@
   align-items: center;
   z-index: 999;
   width: 100%;
-  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
   overflow-y: auto;
 }
 
@@ -47,8 +48,8 @@
   z-index: 999;
   background-color: white;
   margin-right: 25px;
-  width: 750px;
-  height: 450px;
+  width: 1040px;
+  height: 600px;
   box-shadow: 0 2px 34px rgba(0, 0, 0, 1), 0 0 0 1px rgba(0, 0, 0, .3);
 
   .preview {
@@ -65,7 +66,7 @@
       position: absolute;
       top: 35px;
       left: 35px;
-      font-size: 26px;
+      font-size: 42px;
 
       .highlight {
         color: $button-highlight;
@@ -102,6 +103,22 @@
 
     }
 
+  }
+
+}
+
+.mobile-showcase {
+
+  font-family: 'Roboto Condensed', sans-serif;
+  text-shadow: 1px 1px $subtle-grey;
+  display: none;
+  font-size: 32px;
+  padding: 20px;
+  color: white;
+
+  .highlight {
+    color: $button-highlight;
+    text-shadow: 1px 1px black;
   }
 
 }
@@ -366,7 +383,7 @@ input.ng-dirty.ng-invalid {
 
 // Special stylings, Landing only constants since landing is very special
 
-// height styles
+// give less padding on smaller screens
 @media screen and (max-height: 900px) {
 
   .signup {
@@ -375,7 +392,8 @@ input.ng-dirty.ng-invalid {
 
 }
 
-@media screen and (max-height: 850px) {
+// allow vertical scroll when not enough height for singup-wrapper
+@media screen and (max-height: 760px) {
 
   .landing {
     overflow-y: auto;
@@ -383,8 +401,47 @@ input.ng-dirty.ng-invalid {
 
 }
 
+// Make the showcase smaller
+@media screen and (max-width: 1500px) {
 
+  .showcase {
+
+    width: 840px;
+    height: 500px;
+
+    .preview {
+
+      .preview-text {
+
+        top: 35px;
+        left: 35px;
+        font-size: 32px;
+
+      }
+
+    }
+
+  }
+
+}
+
+// Use the mobile showcase, enable vertical scroll
 @media screen and (max-width: 850px) {
+
+  .signup-wrapper {
+    flex-flow: column;
+  }
+
+  .showcase {
+    display: none;
+  }
+
+  .mobile-showcase {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+  }
 
   .landing {
     overflow-y: auto;
@@ -399,6 +456,7 @@ input.ng-dirty.ng-invalid {
 
   .signup {
     padding: 15px 10px;
+    margin-left: 0px;
   }
 
 }
