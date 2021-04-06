@@ -5,10 +5,20 @@
 
   display: flex;
   flex-flow: column;
+  align-items: center;
   padding: 25px 50px;
   background-color: $background-grey;
   height: calc(100% - 84px);
   box-sizing: border-box;
+
+  .container {
+
+    background-color: white;
+    padding: 20px;
+    margin: 10px;
+    max-width: 600px;
+
+  }
 
   .heading {
     font-size: 30px;
@@ -33,9 +43,7 @@
 @media screen and (max-width: $mobile-width) {
 
   .contact {
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
+
   }
 
 }

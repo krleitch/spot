@@ -1,22 +1,24 @@
 <spot-nav></spot-nav>
 <div class="about">
-  <div class="heading"> What is Spot? </div>
-  <div class="text">
-    Spot is a social media website which allows you to share your ideas anonymously and with your own chosen network of friends.
-    Find interesting events happening in your area with the gurantee your identity and location information is always secure.
+  <div class="container">
+    <div class="heading"> What is Spot? </div>
+    <div class="text">
+      Spot is a social media website which allows you to share your ideas anonymously and with your own chosen network of friends.
+      Find interesting events happening in your area with the gurantee your identity and location information is always secure.
+    </div>
+    <div class="heading"> Be Anonymous </div>
+    <div class="text">
+      All spots and comments you make are anonymous. If you want to let friends know who you are, tag them in a comment and they will know its you.
+      If they tag you back then you can know each other while remaining anonymous to everyone else.
+    </div>
+    <div class="heading"> See whats happening in your Area </div>
+    <div class="text">
+      You can only comment on spots that are in your area, or if you were tagged by a friend. Sort by local to see
+      whats happening around you and get involved with your community.
+      Your location will never be given away.
+    </div>
+    <a [routerLink]="'/terms'"> Click to view Terms and Condtions & Privacy Policy </a>
   </div>
-  <div class="heading"> Be Anonymous </div>
-  <div class="text">
-    All spots and comments you make are anonymous. If you want to let friends know who you are, tag them in a comment and they will know its you.
-    If they tag you back then you can know each other while remaining anonymous to everyone else.
-  </div>
-  <div class="heading"> See whats happening in your Area </div>
-  <div class="text">
-    You can only comment on spots that are in your area, or if you were tagged by a friend. Sort by local to see
-    whats happening around you and get involved with your community.
-    Your location will never be given away.
-  </div>
-  <a [routerLink]="'/terms'"> Click to view Terms and Condtions & Privacy Policy </a>
 </div>
 <div class="copyright">
   <span> &#169; {{ STRINGS.COPYRIGHT }} </span>

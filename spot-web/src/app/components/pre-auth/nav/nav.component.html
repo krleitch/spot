@@ -3,25 +3,27 @@
   <div class="left">
 
     <a class="title-link" [routerLink]="'/'">
-      <img class="title-image" src="../../../../assets/images/logo_v5.png">
+      <span class="skew-fix"> 
+        <img class="title-image" src="../../../../assets/images/logo_v5.png"> 
+      </span>
     </a>
 
-    <a class="about" [routerLink]="'/about'">
-      {{ STRINGS.ABOUT }}
+    <a class="section start" [routerLink]="'/about'" [ngClass]="{ selected: isSelected('about') }">
+      <span class="skew-fix"> {{ STRINGS.ABOUT }} </span>
     </a>
-    <a class="contact" [routerLink]="'/contact'">
-      {{ STRINGS.CONTACT }}
+    <a class="section end" [routerLink]="'/contact'" [ngClass]="{ selected: isSelected('contact') }">
+      <span class="skew-fix"> {{ STRINGS.CONTACT }} </span>
     </a>
 
   </div>
 
   <div class="right">
     <a *ngIf="routeIsLogin(); else mylogin" class="auth-link" [routerLink]="'/register'">
-      Register
+      <span class="skew-fix"> Register </span>
     </a>
     <ng-template #mylogin>
       <a class="auth-link" [routerLink]="'/login'">
-        Login
+        <span class="skew-fix"> Login </span>
       </a>
     </ng-template>
   </div>

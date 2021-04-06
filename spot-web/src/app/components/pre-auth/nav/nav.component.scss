@@ -5,11 +5,12 @@
 
 .nav {
 
-  height: 64px;
+  height: 84px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 15px;
+  padding: 0px 15px;
+  box-sizing: border-box;
   overflow: hidden;
 
   .title-image {
@@ -18,16 +19,52 @@
 
   a {
 
-    color: black;
+    color: $subtle-grey;
     text-decoration: none;
     margin-right: 35px;
     font-size: 16px;
     text-align: center;
+    transform: skew(-20deg);
 
     &:hover {
       color: $button-highlight;
     }
 
+    .skew-fix {
+      display:inline-block;
+      transform: skew(20deg);
+    }
+
+  }
+
+  .section {
+
+    display: flex;
+    align-items: center;
+    border-right: 1px solid $background-grey;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0px 20px;
+    transition: background-color 0.5s ease;
+  
+    &:hover {
+      background-color: $item-highlight;
+    }
+
+  }
+
+  .start {
+    border-left: 1px solid $background-grey;
+  }
+
+  .end {
+
+  }
+
+  .selected {
+    color: $button-highlight;
+    background-color: $item-highlight;
   }
 
   .auth-link {
@@ -46,6 +83,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 100%;
   }
 
 }
@@ -67,7 +105,33 @@
     }
 
     a {
+
+      padding: 0;
       margin-right: 12px;
+      transform: skew(0);
+
+      .skew-fix {
+        transform: skew(0);
+      }
+
+    }
+
+    .section {
+
+      border: none;
+      margin: 0 10px;
+      padding: 0;
+      display: inline-block;
+      height: auto;
+
+      &:hover {
+        background-color: white;
+      }
+
+    }
+
+    .selected {
+      background-color: white;
     }
 
     .auth-link {
