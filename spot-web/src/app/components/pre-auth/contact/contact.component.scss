@@ -6,26 +6,31 @@
   display: flex;
   flex-flow: column;
   align-items: center;
-  padding: 25px 50px;
   background-color: $background-grey;
-  height: calc(100% - 84px);
+  min-height: calc(100% - 84px);
   box-sizing: border-box;
 
   .container {
 
     background-color: white;
-    padding: 20px;
-    margin: 10px;
-    max-width: 600px;
+    padding: 25px;
+    margin: 25px;
+    max-width: 900px;
 
   }
 
   .heading {
+    display: flex;
+    justify-content: center;
+    text-align: center;
     font-size: 30px;
     margin-bottom: 10px;
   }
 
   .text {
+    display: flex;
+    justify-content: center;
+    text-align: center;
     color: $subtle-grey;
     margin-bottom: 10px;
   }
