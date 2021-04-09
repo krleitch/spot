@@ -89,7 +89,7 @@ function validPhone(phone: string): Error | null {
 const optionalAuth = function(req: any, res: any, next: any) {
     passport.authenticate('jwt', {session: false} , function(err: any, user: any, info: any) {
       req.authenticated = !! user;
-      req.verified = !! user.verified_date;
+      req.verified = user ? !! user.verified_date : null;
       req.user = user || null;
       next();
     })(req, res, next);
@@ -99,7 +99,7 @@ const optionalAuth = function(req: any, res: any, next: any) {
 const requiredAuth = function(req: any, res: any, next: any) {
     passport.authenticate('jwt', {session: false} , function(err: any, user: any, info: any) {
       req.authenticated = !! user;
-      req.verified = !! user.verified_date;
+      req.verified = user ? !! user.verified_date : null;
       req.user = user || null;
       if ( ! req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -114,7 +114,7 @@ const requiredAuth = function(req: any, res: any, next: any) {
 const localAuth = function(req: any, res: any, next: any) {
     passport.authenticate('local', {session: false} , function(err: any, user: any, info: any) {
       req.authenticated = !! user;
-      req.verified = !! user.verified_date;
+      req.verified = user ? !! user.verified_date : null;
       req.user = user || null;
       // No user found
       if ( user == false ) {

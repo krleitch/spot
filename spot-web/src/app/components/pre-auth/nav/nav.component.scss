@@ -47,7 +47,7 @@
     margin: 0;
     padding: 0px 20px;
     transition: background-color 0.5s ease;
-  
+
     &:hover {
       background-color: $item-highlight;
     }
@@ -93,7 +93,7 @@
 
   .nav {
 
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 10px 10px;
 
     .title-image {
@@ -114,6 +114,10 @@
         transform: skew(0);
       }
 
+    }
+
+    .right a {
+      margin: 0px 10px;
     }
 
     .section {

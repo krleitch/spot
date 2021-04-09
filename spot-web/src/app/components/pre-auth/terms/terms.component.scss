@@ -5,6 +5,7 @@
 
   display: flex;
   flex-flow: column;
+  align-items: center;
   background-color: $background-grey;
   min-height: calc(100% - 84px);
   box-sizing: border-box;
