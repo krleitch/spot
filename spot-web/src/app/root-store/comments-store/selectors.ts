@@ -9,6 +9,7 @@ export const selectTaggedFromStore = (state: State, postId: string): boolean => 
   }
   return state.comments[postId].tagged;
 };
+
 export const selectCommentsFromStore = (state: State, postId: string): StoreComment => {
   // Check existence first
   if (state.comments[postId] === undefined) {
@@ -16,6 +17,7 @@ export const selectCommentsFromStore = (state: State, postId: string): StoreComm
   }
   return state.comments[postId];
 };
+
 export const selectRepliesFromStore = (state: State, postId: string, commentId): StoreReply => {
   // Check existence first
   if (state.replies[postId] === undefined) {

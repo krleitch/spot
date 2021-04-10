@@ -13,20 +13,26 @@ spot-nav {
 // Register
 
 .register {
-  padding-top: 134px;
-  padding-bottom: 200px;
+  padding-top: 84px;
+  display: flex;
+  justify-content: center;
   background-color: $background-grey;
   min-height: 100vh;
-  height: 600px;
+  height: 765px;
   box-sizing: border-box;
 }
 
 .container {
+  padding: 25px;
+  margin: 25px;
+  background-color: white;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
   position: relative;
   z-index: 9;
   display: flex;
   flex-flow: column;
   align-items: center;
+  height: 575px;
 }
 
 .register-text {
@@ -306,31 +312,6 @@ input.ng-dirty.ng-invalid {
       bottom: 5px;
       font-size: 14px;
       color: white;
-  }
-
-}
-
-// Mobile Stylings
-@media screen and (max-width: $mobile-width) {
-
-  .register {
-      padding-top: calc(84px + 25px);
-  }
-
-}
-
-@media screen and (max-height: 800px) {
-
-  .register {
-      padding-top: calc(84px + 25px);
-  }
-
-}
-
-@media screen and (max-height: 700px) {
-
-  .container {
-    padding-bottom: 100px;
   }
 
 }
