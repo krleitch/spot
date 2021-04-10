@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, skip } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -33,8 +33,10 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   STRINGS = STRINGS.PRE_AUTH.REGISTER;
 
   form: FormGroup;
-  authError$: Observable<SpotError>;
+  authenticationError$: Observable<SpotError>;
+  authenticationSuccess$: Observable<boolean>;
   errorMessage = '';
+  buttonsDisabled = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,13 +54,25 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
 
-    this.authError$ = this.store$.pipe(
+    // FAILURE
+    this.authenticationError$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationError)
     );
 
-    this.authError$.pipe(takeUntil(this.onDestroy)).subscribe( (authError: SpotError) => {
-      if ( authError ) {
-        this.errorMessage = authError.message;
+    this.authenticationError$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (authenticationError: SpotError) => {
+      if ( authenticationError ) {
+        this.errorMessage = authenticationError.message;
+      }
+    });
+
+    // SUCCESS
+    this.authenticationSuccess$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAuthenticationSuccess)
+    );
+
+    this.authenticationSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticationSuccess: boolean) => {
+      if ( authenticationSuccess ) {
+        this.buttonsDisabled = false;
       }
     });
 
@@ -84,6 +98,10 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   signUp(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     const val = this.form.value;
 
@@ -153,13 +171,19 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       password: val.password,
       phone: val.phone
     };
+
     this.store$.dispatch(
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
+    this.buttonsDisabled = true;
 
   }
 
   facebookLogin(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
@@ -173,6 +197,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.store$.dispatch(
                   new AccountsFacebookActions.FacebookLoginRequestAction(request)
                 );
+                this.buttonsDisabled = true;
 
             }
           });
@@ -185,12 +210,18 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store$.dispatch(
           new AccountsFacebookActions.FacebookLoginRequestAction(request)
         );
+        this.buttonsDisabled = true;
+
       }
     });
 
   }
 
   googleLogin(googleUser): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
@@ -204,6 +235,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store$.dispatch(
       new AccountsGoogleActions.GoogleLoginRequestAction(request)
     );
+    this.buttonsDisabled = true;
 
     // sign out of the instance, so we don't auto login
     this.googleSignOut();

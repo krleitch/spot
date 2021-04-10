@@ -40,14 +40,14 @@
       </div>
 
       <div class="form-buttons">
-        <button type="button" (click)="signUp()"> {{ STRINGS.SIGN_UP }} </button>
+        <button type="button" (click)="signUp()" [ngClass]="{ 'disabled': buttonsDisabled }"> {{ STRINGS.SIGN_UP }} </button>
       </div>
       <div class="sign-up-alternate">
         <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
       </div>
 
       <div class="login-options">
-        <div type="button" class="facebook" (click)="facebookLogin()">
+        <div type="button" class="facebook" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="facebookLogin()">
           <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
           {{ STRINGS.FACEBOOK_LOGIN }}
         </div>

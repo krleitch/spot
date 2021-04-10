@@ -2,6 +2,7 @@ import { createSelector, createFeatureSelector, MemoizedSelector } from '@ngrx/s
 
 import { State } from './state';
 
+// Assets
 import { SpotError } from '@exceptions/error';
 import { AccountMetadata, Account, Location } from '@models/accounts';
 
@@ -15,6 +16,7 @@ export const selectLocationTimeReceivedFromStore = (state: State): Date => state
 export const selectFacebookConnectedFromStore = (state: State): boolean => state.facebookConnected;
 export const selectGoogleConnectedFromStore = (state: State): boolean => state.googleConnected;
 export const selectAuthenticationErrorFromStore = (state: State): SpotError => state.authenticationError;
+export const selectAuthenticationSuccessFromStore = (state: State): boolean => state.authenticationSuccess;
 export const selectIsAuthenticatedFromStore = (state: State): boolean => state.account ? true : false;
 export const selectIsVerifiedFromStore = (state: State): boolean => state.account ? state.account.verified_date ? true : false : false;
 
@@ -58,6 +60,11 @@ export const selectGoogleConnected: MemoizedSelector<object, any> = createSelect
 export const selectAuthenticationError: MemoizedSelector<object, SpotError> = createSelector(
   selectAccountsState,
   selectAuthenticationErrorFromStore,
+);
+
+export const selectAuthenticationSuccess: MemoizedSelector<object, boolean> = createSelector(
+  selectAccountsState,
+  selectAuthenticationSuccessFromStore,
 );
 
 export const selectIsAuthenticated: MemoizedSelector<object, boolean> = createSelector(

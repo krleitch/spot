@@ -15,6 +15,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: action.response.account,
         authenticationError: null,
+        authenticationSuccess: true,
         facebookConnected: action.response.account.facebook_id ? true : false,
         googleConnected: action.response.account.google_id ? true : false,
       };
@@ -24,6 +25,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: null,
         authenticationError: action.error,
+        authenticationSuccess: false,
       };
     }
     case ActionTypes.LOGIN_SUCCESS: {
@@ -31,6 +33,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: action.response.account,
         authenticationError: null,
+        authenticationSuccess: true,
         facebookConnected: action.response.account.facebook_id ? true : false,
         googleConnected: action.response.account.google_id ? true : false,
       };
@@ -39,19 +42,24 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       return {
         ...state,
         account: null,
-        authenticationError: action.error
+        authenticationError: action.error,
+        authenticationSuccess: false,
       };
     }
     case ActionTypes.LOGOUT_REQUEST: {
       return {
         ...state,
-        account: null
+        account: null,
+        facebookConnected: false,
+        googleConnected: false
       };
     }
     case ActionTypes.DELETE_SUCCESS: {
       return {
         ...state,
-        account: null
+        account: null,
+        facebookConnected: false,
+        googleConnected: false
       };
     }
     case ActionTypes.LOAD_LOCATION: {

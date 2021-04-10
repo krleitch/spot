@@ -5,6 +5,7 @@ export interface State {
     account: Account;
     accountLoading: boolean;
     accountMetadata: AccountMetadata;
+    authenticationSuccess: boolean;
     authenticationError: SpotError; // Error for signup / login
     usernameError: SpotError; // Error when chaning or updating username
     usernameSuccess: boolean; // Successfully changed username
@@ -21,6 +22,7 @@ export const initialState: State = (
     account: null,
     accountLoading: false,
     accountMetadata: null,
+    authenticationSuccess: null,
     authenticationError: null,
     usernameError: null,
     usernameSuccess: false,

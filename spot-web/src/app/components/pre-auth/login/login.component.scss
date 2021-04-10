@@ -142,7 +142,12 @@ input.ng-dirty.ng-invalid {
           background-color: lighten($button-black, 10%);
       }
 
-  }
+    }
+
+    button.disabled {
+      background-color: $subtle-grey;
+      cursor: not-allowed;
+    }
 
 }
 
@@ -158,6 +163,11 @@ input.ng-dirty.ng-invalid {
 
 .sign-up-alternate {
     margin-bottom: 10px;
+}
+
+.disabled {
+  background-color: $subtle-grey;
+  cursor: not-allowed;
 }
 
 // EXISTING ACCOUNT

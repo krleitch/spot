@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // rxjs
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, skip } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -32,8 +32,10 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   STRINGS = STRINGS.PRE_AUTH.LOGIN;
 
   form: FormGroup;
-  authError$: Observable<SpotError>;
+  authenticationError$: Observable<SpotError>;
+  authenticationSuccess$: Observable<boolean>;
   errorMessage: string;
+  buttonsDisabled = false;
 
   constructor(
     private fb: FormBuilder,
@@ -49,19 +51,32 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
 
-    this.authError$ = this.store$.pipe(
+    // SUCCESS
+    this.authenticationSuccess$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAuthenticationSuccess)
+    );
+
+    this.authenticationSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticationSuccess: boolean) => {
+      if ( authenticationSuccess ) {
+        this.buttonsDisabled = false;
+      }
+    });
+
+    // FAILURE
+    this.authenticationError$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationError)
     );
 
-    this.authError$.pipe(takeUntil(this.onDestroy)).subscribe( (authError: SpotError) => {
-      if ( authError ) {
+    this.authenticationError$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (authenticationError: SpotError) => {
+      if ( authenticationError ) {
 
-        if ( authError.name === 'RateLimitError') {
-          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authError.body.limit)
-                                                     .replace('%TIMEOUT%', authError.body.timeout);
+        if ( authenticationError.name === 'RateLimitError') {
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
+                                                     .replace('%TIMEOUT%', authenticationError.body.timeout);
         } else {
-          this.errorMessage = authError.message;
+          this.errorMessage = authenticationError.message;
         }
+        this.buttonsDisabled = false;
 
       }
     });
@@ -89,6 +104,10 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   signIn(): void {
 
+    if ( this.buttonsDisabled ) {
+      return;
+    }
+
     const val = this.form.value;
 
     if (!val.emailOrUsername) {
@@ -109,13 +128,20 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       emailOrUsername: val.emailOrUsername,
       password: val.password,
     };
+
     this.store$.dispatch(
       new AccountsActions.LoginRequestAction(loginRequest)
     );
 
+    this.buttonsDisabled = true;
+
   }
 
   facebookLogin(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
@@ -125,28 +151,34 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                 const request: FacebookLoginRequest = {
                   accessToken: loginResponse.authResponse.accessToken
                 };
-
                 this.store$.dispatch(
                   new AccountsFacebookActions.FacebookLoginRequestAction(request)
                 );
+                this.buttonsDisabled = true;
 
             }
           });
       } else {
+
         // already logged in
         const request: FacebookLoginRequest = {
           accessToken: statusResponse.authResponse.accessToken
         };
-
         this.store$.dispatch(
           new AccountsFacebookActions.FacebookLoginRequestAction(request)
         );
+        this.buttonsDisabled = true;
+
       }
     });
 
   }
 
   googleLogin(googleUser): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
@@ -160,6 +192,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store$.dispatch(
       new AccountsGoogleActions.GoogleLoginRequestAction(request)
     );
+    this.buttonsDisabled = true;
 
     // sign out of the instance, so we don't auto login
     this.googleSignOut();
