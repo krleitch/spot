@@ -195,6 +195,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onScroll(): void {
 
+    if ( this.noPosts ) {
+      return;
+    }
+
     let minutesSinceLocation = 0;
     if ( this.locationTimeReceived ) {
       minutesSinceLocation = (new Date().getTime() - this.locationTimeReceived.getTime()) / 1000;

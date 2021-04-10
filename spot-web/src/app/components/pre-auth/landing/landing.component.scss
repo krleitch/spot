@@ -92,15 +92,29 @@
     height: 100px;
     border-top: 1px solid $subtle-grey;
     display: flex;
-    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
     font-size: 28px;
-    font-family: 'Roboto Condensed', sans-serif;
 
-    .line2 {
 
-      color: $button-highlight;
-      font-size: 38px;
+    .left {
 
+      font-family: 'Roboto Condensed', sans-serif;
+      display: flex;
+      flex-flow: column;
+      font-size: 28px;
+
+      .line2 {
+
+        color: $button-highlight;
+        font-size: 38px;
+
+      }
+
+    }
+
+    img {
+      width: 80px;
     }
 
   }

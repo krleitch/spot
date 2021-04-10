@@ -2,8 +2,8 @@
 
 <!-- Location -->
 <div class="locationToggle desktop">
-  <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons"> home </i> </div>
-  <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons"> public </i> </div>
+  <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons icon"> home </i> </div>
+  <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons icon"> public </i> </div>
 </div>
 <div #mobiledropdownlocation class="locationToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
@@ -100,16 +100,16 @@
               </div>
               <div *ngIf="locationFailure === 'permission'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
-                <span class="text"> 
+                <span class="text">
                   Your location is required to view
                   <i class="material-icons inline-icon"> home </i>
                   spots, create new spots and to add comments
                 </span>
                 <span class="text"> Your location will never be given away </span>
                 <span class="line"></span>
-                <span class="text"> 
+                <span class="text">
                   Please enable location in your browser accessibility settings
-                </span>       
+                </span>
               </div>
               <div *ngIf="locationFailure === 'general'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
@@ -138,9 +138,9 @@
                   <span class="c3"></span>
                   <span class="material-icons icon"> travel_explore </span>
                 </div>
-                <span class="empty-text"> 
-                  <span class="highlight"> Be First </span> 
-                  to make a spot in this area 
+                <span class="empty-text">
+                  <span class="highlight"> Be First </span>
+                  to make a spot in this area
                 </span>
               </div>
             </ng-template>
@@ -179,20 +179,20 @@
             </div>
             <div *ngIf="locationFailure === 'permission'" class="info-container">
               <span class="material-icons icon"> location_off </span>
-              <span class="text"> 
+              <span class="text">
                 Your location is required to view
                 <i class="material-icons inline-icon"> home </i>
                 spots, create new spots and to add comments
               </span>
               <span class="text"> Your location will never be given away </span>
               <span class="line"></span>
-              <span class="text"> 
+              <span class="text">
                 Please enable location in your browser accessibility settings
-              </span>       
-              <span class="text clickable" (click)="continueWithGlobal()"> 
+              </span>
+              <span class="text clickable" (click)="continueWithGlobal()">
                 Continue to
                 <i class="material-icons inline-icon"> public </i>
-                spots without location 
+                spots without location
               </span>
             </div>
             <div *ngIf="locationFailure === 'general'" class="info-container">
@@ -212,15 +212,15 @@
     <div class="content">
       <div class="info-container">
         <span class="material-icons icon"> location_off </span>
-        <span class="text"> 
+        <span class="text">
           Your location is required to view
           <i class="material-icons text-icon"> home </i>
           spots, create new spots and to add comments
         </span>
-        <span class="text clickable" (click)="continueWithGlobal()"> 
+        <span class="text clickable" (click)="continueWithGlobal()">
           Continue to
           <i class="material-icons text-icon"> public </i>
-          spots without location 
+          spots without location
         </span>
         <span class="line"></span>
         <span class="text"> Your location will never be given away </span>

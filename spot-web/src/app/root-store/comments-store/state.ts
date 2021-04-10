@@ -4,12 +4,12 @@ import { Comment } from '@models/comments';
 // The id on all is the post id
 
 export interface StoreComment {
-  comments: Comment[]; // the comment
+  comments: Comment[]; // the comments
   tagged: boolean; // was the user tagged in this comment chain?
 }
 
 export interface StoreReply {
-  replies: Comment[]; // the comment
+  replies: Comment[]; // the comments
 }
 
 export interface State {
