@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+// Services
+import { ModalService } from '@services/modal.service';
+
 // Assets
 import { STRINGS } from '@assets/strings/en';
 
@@ -12,9 +15,14 @@ export class AboutComponent implements OnInit {
 
   STRINGS = STRINGS.PRE_AUTH.ABOUT;
 
-  constructor() { }
+  constructor(private modalService: ModalService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+
+  }
+
+  openTerms(): void {
+    this.modalService.open('spot-terms-modal');
   }
 
 }

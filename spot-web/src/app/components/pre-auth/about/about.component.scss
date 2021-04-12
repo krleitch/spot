@@ -38,26 +38,27 @@
 
   }
 
-  a {
+  button {
+
+    border: none;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+
     display: flex;
     flex-flow: column;
-    align-items: center;
     justify-content: center;
-    margin-top: 20px;
-    background-color: black;
-    color: white;
-    text-decoration: none;
-    padding: 10px 5px;
-    max-width: 300px;
-    min-width: 150px;
-    border-radius: 5px;
+    align-items: center;
+    background-color: $button-black;
+    color: $button-font-white;
+    padding: 12px 24px;
+    font-size: 14px;
     margin-left: auto;
     margin-right: auto;
-    text-align: center;
+    margin-top: 20px;
 
     &:hover {
-      cursor: pointer;
-      background-color: lighten(black, 20%);
+        background-color: lighten($button-black, 10%);
     }
 
   }
