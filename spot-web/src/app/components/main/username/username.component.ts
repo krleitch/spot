@@ -13,6 +13,7 @@ import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
 // services
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
+import { ModalService } from '@services/modal.service';
 
 // assets
 import { STRINGS } from '@assets/strings/en';
@@ -38,9 +39,10 @@ export class UsernameComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<RootStoreState.State>,
               private authenticationService: AuthenticationService,
               private accountsService: AccountsService,
+              private modalService: ModalService,
               private router: Router) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
@@ -54,12 +56,12 @@ export class UsernameComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
   // Send the request
-  continueToSpot() {
+  continueToSpot(): void {
 
     if (!this.terms) {
       this.errorMessage = this.STRINGS.TERMS_ERROR;
@@ -95,6 +97,10 @@ export class UsernameComponent implements OnInit, OnDestroy {
 
     });
 
+  }
+
+  openTerms(): void {
+    this.modalService.open('spot-terms-modal');
   }
 
 }

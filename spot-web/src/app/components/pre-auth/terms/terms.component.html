@@ -1,6 +1,11 @@
-<spot-nav></spot-nav>
 <div class="terms">
-  <div class="container">
+
+  <div class="header">
+    <span class="title"> Terms And Conditions & Privacy Policy </span>
+    <span class="close" (click)="close()"> <span class="material-icons"> clear </span> </span>
+  </div>
+
+  <div class="body">
     <div class="heading"> Terms and Conditions </div>
 
     <div class="subtitle">
@@ -290,8 +295,8 @@
       Privacy Policy, and you adhere to the terms and conditions posted on the Site. By submitting your information,
       you agree that it will be governed by our Privacy Policy.
     </div>
+
+    <button (click)="close()"> I understand and agree to the above terms </button>
+
   </div>
-</div>
-<div class="copyright">
-  <span> &#169; {{ STRINGS.COPYRIGHT }} </span>
 </div>

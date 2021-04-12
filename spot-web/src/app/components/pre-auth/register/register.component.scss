@@ -178,8 +178,8 @@ input.ng-dirty.ng-invalid {
     justify-content: center;
   }
 
-  a {
-    text-decoration: none;
+  .text {
+    cursor: pointer;
     color: $subtle-grey;
     &:hover {
       color: $button-highlight;

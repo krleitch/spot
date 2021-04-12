@@ -21,7 +21,7 @@
         </div>
         <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
       </div>
-      <a [routerLink]="'/terms'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
+      <div class="text" (click)="openTerms()"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </div>
     </div>
 
     <div *ngIf="errorMessage" class="error">

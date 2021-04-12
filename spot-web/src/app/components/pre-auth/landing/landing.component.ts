@@ -11,6 +11,7 @@ import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions, Accoun
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
+import { ModalService } from '@services/modal.service';
 
 // Models
 import { FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
@@ -43,6 +44,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
+    private modalService: ModalService,
     private store$: Store<RootStoreState.State>
   ) {
     this.form = this.fb.group({
@@ -249,6 +251,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
     this.buttonsDisabled = true;
+
+  }
+
+  openTerms(): void {
+
+    this.modalService.open('spot-terms-modal');
 
   }
 

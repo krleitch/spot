@@ -49,6 +49,7 @@ import { WelcomeComponent } from './components/main/welcome/welcome.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { TermsComponent } from './components/pre-auth/terms/terms.component';
 
+// TODO: Seperate Modules and optimize load bundles
 
 @NgModule({
   declarations: [

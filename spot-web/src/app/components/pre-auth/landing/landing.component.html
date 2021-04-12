@@ -20,7 +20,7 @@
           <span> See what those around you are </span>
           <span class="line2"> Really Saying </span>
         </div>
-        <img src="../../../../assets/images/logo_plain.png">
+        <!-- <img src="../../../../assets/images/logo_plain.png"> -->
       </div>
     </div>
     <div class="mobile-showcase">
@@ -72,7 +72,7 @@
             </label>
             <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
           </div>
-          <a [routerLink]="'/terms'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
+          <div class="text" (click)="openTerms()"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </div>
         </div>
 
         <div class="error-message">

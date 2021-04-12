@@ -11,6 +11,7 @@ import { AccountsActions, AccountsStoreSelectors, AccountsFacebookActions, Accou
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
+import { ModalService } from '@services/modal.service';
 
 // Models
 import { RegisterRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
@@ -41,6 +42,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
+    private modalService: ModalService,
     private store$: Store<RootStoreState.State>
   ) {
     this.form = this.fb.group({
@@ -249,6 +251,10 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
     },  (err: any) => {
 
     });
+  }
+
+  openTerms(): void {
+    this.modalService.open('spot-terms-modal');
   }
 
 }

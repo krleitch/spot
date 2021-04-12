@@ -84,8 +84,8 @@
       justify-content: center;
     }
 
-    a {
-      text-decoration: none;
+    .text {
+      cursor: pointer;
       color: $subtle-grey;
       &:hover {
         color: $button-highlight;
