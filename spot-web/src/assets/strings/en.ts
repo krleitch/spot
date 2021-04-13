@@ -527,7 +527,7 @@ export const STRINGS = {
         USERNAME: {
 
           HEADING: 'Create a username for your account',
-          DESCRIPTION: '*Your username will not be visible to anyone. All posts are anonymous',
+          DESCRIPTION: '*Your username will not be visible to anyone without your permission. All posts are anonymous',
 
           TERMS_AND_CONDITIONS: 'I agree to the',
           TERMS_AND_CONDITIONS_LINK: 'terms and conditions & privacy policy',

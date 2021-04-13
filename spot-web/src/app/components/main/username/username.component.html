@@ -13,7 +13,7 @@
       <div>
         <div class="checkbox-text">
           <label class="checkbox-container">
-            <input name="terms" formControlName="terms" type="checkbox" required/>
+            <input name="terms" [(ngModel)]="terms" type="checkbox" required/>
             <span class="checkmark"></span>
           </label>
           <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
@@ -26,7 +26,7 @@
       {{ errorMessage }}
     </div>
 
-    <button type="button" (click)="continueToSpot()"> {{ STRINGS.CONTINUE }} </button>
+    <button type="button" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="continueToSpot()"> {{ STRINGS.CONTINUE }} </button>
     <div class="description"> {{ STRINGS.DESCRIPTION }} </div>
 
   </div>

@@ -35,6 +35,7 @@ export class UsernameComponent implements OnInit, OnDestroy {
   username: string;
   terms: boolean;
   errorMessage: string;
+  buttonsDisabled = false;
 
   constructor(private store$: Store<RootStoreState.State>,
               private authenticationService: AuthenticationService,
@@ -63,6 +64,10 @@ export class UsernameComponent implements OnInit, OnDestroy {
   // Send the request
   continueToSpot(): void {
 
+    if ( this.buttonsDisabled ) {
+      return;
+    }
+
     if (!this.terms) {
       this.errorMessage = this.STRINGS.TERMS_ERROR;
       return;
@@ -83,8 +88,10 @@ export class UsernameComponent implements OnInit, OnDestroy {
       username: this.username,
     };
 
+    this.buttonsDisabled = true;
     this.accountsService.updateUsername(request).pipe(take(1)).subscribe( (response: UpdateUsernameResponse ) => {
 
+      this.buttonsDisabled = false;
       this.store$.dispatch(
         new AccountsActions.UpdateUsernameAction(request),
       );
@@ -94,6 +101,7 @@ export class UsernameComponent implements OnInit, OnDestroy {
     }, (err: { error: SpotError }) => {
 
       this.errorMessage = err.error.message;
+      this.buttonsDisabled = false;
 
     });
 
