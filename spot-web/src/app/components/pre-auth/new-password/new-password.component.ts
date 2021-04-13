@@ -27,6 +27,7 @@ export class NewPasswordComponent implements OnInit {
 
   tokenLoading = false;
   passwordLoading = false;
+  buttonsDisabled = false;
 
   constructor(private fb: FormBuilder, private authenticationService: AuthenticationService, private router: Router) {
     this.formToken = this.fb.group({
@@ -44,6 +45,10 @@ export class NewPasswordComponent implements OnInit {
 
   validateToken(): void {
 
+    if ( this.buttonsDisabled ) {
+      return;
+    }
+
     const val = this.formToken.value;
 
     if ( !val.token ) {
@@ -58,6 +63,7 @@ export class NewPasswordComponent implements OnInit {
     // Send request
 
     this.tokenLoading = true;
+    this.buttonsDisabled = true;
 
     const request: ValidateTokenRequest = {
       token: val.token
@@ -69,6 +75,7 @@ export class NewPasswordComponent implements OnInit {
       } else {
         this.errorMessage = this.STRINGS.INVALID_TOKEN;
       }
+      this.buttonsDisabled = false;
       this.tokenLoading = false;
     }, ( errorResponse: any ) => {
       if ( errorResponse.error.name === 'RateLimitError' ) {
@@ -76,12 +83,17 @@ export class NewPasswordComponent implements OnInit {
       } else {
         this.errorMessage = this.STRINGS.INVALID_TOKEN;
       }
+      this.buttonsDisabled = false;
       this.tokenLoading = false;
     });
 
   }
 
   resetPassword(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     const val = this.formPassword.value;
 
@@ -112,6 +124,7 @@ export class NewPasswordComponent implements OnInit {
     // Send request
 
     this.passwordLoading = true;
+    this.buttonsDisabled = true;
 
     const request: NewPasswordRequest = {
       token: this.token,
@@ -120,6 +133,7 @@ export class NewPasswordComponent implements OnInit {
 
     this.authenticationService.newPassword(request).subscribe((response: NewPasswordSuccess) => {
       this.passwordLoading = false;
+      this.buttonsDisabled = false;
       this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
     }, ( errorResponse: { error: SpotError } ) => {
       if ( errorResponse.error.name === 'RateLimitError' ) {
@@ -129,6 +143,7 @@ export class NewPasswordComponent implements OnInit {
       }
       this.errorMessage = this.STRINGS.INVALID_TOKEN;
       this.passwordLoading = false;
+      this.buttonsDisabled = false;
     });
 
   }

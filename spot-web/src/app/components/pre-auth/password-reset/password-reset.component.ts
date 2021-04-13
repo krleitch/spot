@@ -20,6 +20,7 @@ export class PasswordResetComponent implements OnInit {
   form: FormGroup;
   errorMessage = '';
   successMessage = '';
+  buttonsDisabled = false;
 
   emailLoading = false;
 
@@ -32,6 +33,10 @@ export class PasswordResetComponent implements OnInit {
   ngOnInit(): void {}
 
   requestReset(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     const val = this.form.value;
 
@@ -53,14 +58,14 @@ export class PasswordResetComponent implements OnInit {
     this.successMessage = '';
 
     // Send request
-
-    this.emailLoading = true;
-
     const request: PasswordResetRequest = {
       email: val.email
     };
 
+    this.emailLoading = true;
+    this.buttonsDisabled = true;
     this.authenticationService.passwordReset(request).subscribe((response: PasswordResetSuccess) => {
+      this.buttonsDisabled = false;
       this.successMessage = this.STRINGS.REQUEST_SUCCESS;
       this.emailLoading = false;
     }, (errorResponse: { error: SpotError }) => {
@@ -69,6 +74,7 @@ export class PasswordResetComponent implements OnInit {
       } else {
         this.errorMessage = errorResponse.error.message;
       }
+      this.buttonsDisabled = false;
       this.emailLoading = false;
     });
 
