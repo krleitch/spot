@@ -1,21 +1,29 @@
 @import '../../../styles/colors';
 @import '../../../styles/sizes';
 
+.nav {
+
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  box-sizing: border-box;
+
+  .title-image {
+    height: 42px;
+  }
+
+}
+
 .username {
 
-  .nav {
-
-    height: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 10px;
-
-    .title-image {
-      height: 42px;
-    }
-
-  }
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  background-color: $background-grey;
+  min-height: calc(100vh - 60px);
+  box-sizing: border-box;
 
   .heading {
     font-size: 22px;
@@ -24,11 +32,19 @@
   }
 
   .container {
-    padding: 100px 5px 5px 5px;
+
     display: flex;
     flex-flow: column;
     justify-content: center;
     align-items: center;
+    background-color: white;
+    position: relative;
+    z-index: 9;
+    padding: 25px;
+    margin: 25px;
+    max-width: 900px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+
   }
 
   .icon {
@@ -177,27 +193,29 @@
   transform: rotate(45deg);
 }
 
-// For Mobile
-@media screen and (max-width: $mobile-width) {
+// FOOTER
 
-  .username {
+.footer {
 
-    .container {
-      padding-top: 10px;
-    }
+  height: 230px;
+  width: 100%;
+  display: table;
+  overflow: hidden;
+  background-color: $background-grey;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
 
+  .wave {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
   }
 
-}
-
-@media screen and (max-height: 800px) {
-
-  .username {
-
-    .container {
-      padding-top: 10px;
-    }
-
+  .inner-wave {
+    position: absolute;
+    bottom: -50px;
+    left: 0px;
   }
 
 }
