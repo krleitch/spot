@@ -2,18 +2,21 @@ import { createSelector, createFeatureSelector, MemoizedSelector, MemoizedSelect
 
 import { State, StoreComment, StoreReply } from './state';
 
-export const selectTaggedFromStore = (state: State, postId: string): boolean => {
+export const selectTaggedFromStore = (state: State, postId: string, commentId: string): boolean => {
   // Check existence first
   if (state.comments[postId] === undefined) {
     return false;
   }
-  return state.comments[postId].tagged;
+  if (state.comments[postId][commentId] === undefined) {
+    return false;
+  }
+  return state.comments[postId][commentId].tagged;
 };
 
 export const selectCommentsFromStore = (state: State, postId: string): StoreComment => {
   // Check existence first
   if (state.comments[postId] === undefined) {
-    return { comments: [], tagged: false };
+    return { comments: [] };
   }
   return state.comments[postId];
 };
@@ -21,10 +24,10 @@ export const selectCommentsFromStore = (state: State, postId: string): StoreComm
 export const selectRepliesFromStore = (state: State, postId: string, commentId): StoreReply => {
   // Check existence first
   if (state.replies[postId] === undefined) {
-    return { replies: [] };
+    return { replies: [], tagged: false };
   }
   if (state.replies[postId][commentId] === undefined) {
-    return { replies: [] };
+    return { replies: [], tagged: false };
   }
   return state.replies[postId][commentId];
 };
@@ -33,7 +36,7 @@ export const selectCommentsState: MemoizedSelector<object, State> = createFeatur
 
 export const selectTagged: MemoizedSelectorWithProps<object, any, boolean> = createSelector(
   selectCommentsState,
-  (state, props) => selectTaggedFromStore(state, props.postId)
+  (state, props) => selectTaggedFromStore(state, props.postId, props.commentId)
 );
 
 export const selectComments: MemoizedSelectorWithProps<object, any, StoreComment> = createSelector(

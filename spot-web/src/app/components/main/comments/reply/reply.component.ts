@@ -139,7 +139,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.tagged$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectTagged, { postId: this.comment.post_id })
+      select(CommentsStoreSelectors.selectTagged, { postId: this.comment.post_id, commentId: this.comment.id })
     );
 
     this.tagged$.pipe(takeUntil(this.onDestroy)).subscribe( (tagged: boolean) => {
@@ -679,7 +679,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
         new CommentsStoreActions.DislikeReplyRequestAction(request)
       );
     }
-    
+
   }
 
   getProfilePictureClass(index) {

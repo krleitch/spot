@@ -1,5 +1,6 @@
 @import '../../../styles/colors';
 @import '../../../styles/sizes';
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500&display=swap');
 
 spot-main-nav {
   position: fixed;
@@ -78,6 +79,8 @@ spot-main-nav {
   top: 12px;
   left: calc(50% - 33px);
   z-index: 100;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 500;
 }
 
 .new {
@@ -91,7 +94,6 @@ spot-main-nav {
   background-position: right bottom;
   transition:all 1s ease;
   font-size: 16px;
-  font-weight: 600;
 }
 
 .hot {
@@ -105,7 +107,6 @@ spot-main-nav {
   background-position: left bottom;
   transition:all 1s ease;
   font-size: 16px;
-  font-weight: 600;
 }
 
 .hot.selectedSort {

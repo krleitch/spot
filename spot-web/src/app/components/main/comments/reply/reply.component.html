@@ -99,7 +99,7 @@
       <div class="time">
         {{ timeMessage }}
       </div>
-      <div class="reply-icon" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': !(tagged || post.inRange && ((isAuthenticated$ | async) && (isVerified$ | async) && location))}">
+      <div class="reply-icon" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': !( (comment.tag.tagged || tagged) || post.inRange && ((isAuthenticated$ | async) && (isVerified$ | async) && location))}">
         <i class="material-icons"> reply </i>
       </div>
     </div>

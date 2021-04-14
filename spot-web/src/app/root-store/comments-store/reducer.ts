@@ -15,16 +15,13 @@ export function featureReducer(state = initialState, action: Actions): State {
           // initialize the comments
           newComments[action.request.postId] = {
               comments: [action.request.comment],
-              tagged: action.request.comment.tag.tagged
           };
         } else {
           // otherwise just add the comment
           const newArr = Array.from(newComments[action.request.postId].comments);
-          const newTag = newComments[action.request.postId].tagged || action.request.comment.tag.tagged;
           newArr.unshift(action.request.comment);
           newComments[action.request.postId] = {
-            comments: newArr,
-            tagged: newTag
+            comments: newArr
           };
         }
         return {
@@ -64,21 +61,17 @@ export function featureReducer(state = initialState, action: Actions): State {
       // initialize if needed
       if (newComments[action.request.postId] === undefined || action.request.initialLoad) {
         newComments[action.request.postId] = {
-          comments: [],
-          tagged: false
+          comments: []
         };
       }
       // after or before
-      const newTag = newComments[action.request.postId].tagged || action.request.comments.filter( (x: Comment) => x.tag.tagged ).length > 0;
       if ( action.request.type === 'after' ) {
         newComments[action.request.postId] = {
-          comments: action.request.comments.concat(newComments[action.request.postId].comments),
-          tagged: newTag
+          comments: action.request.comments.concat(newComments[action.request.postId].comments)
         };
       } else {
         newComments[action.request.postId] = {
-          comments: newComments[action.request.postId].comments.concat(action.request.comments),
-          tagged: newTag
+          comments: newComments[action.request.postId].comments.concat(action.request.comments)
         };
       }
       return {
@@ -96,20 +89,25 @@ export function featureReducer(state = initialState, action: Actions): State {
         if (newReplies[action.request.postId][action.request.commentId] === undefined) {
           const newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
           newRepliesObj[action.request.commentId] = {
-            replies: []
+            replies: [],
+            tagged: false,
           };
           newReplies[action.request.postId] = newRepliesObj;
         }
+        const newTag = newReplies[action.request.postId][action.request.commentId].tagged ||
+                       action.request.replies.filter( (x: Comment) => x.tag.tagged ).length > 0;
         if ( action.request.initialLoad) {
           const newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
           newRepliesObj[action.request.commentId] = {
             replies: action.request.replies,
+            tagged: newTag
           };
           newReplies[action.request.postId] = newRepliesObj;
         } else {
           const newRepliesObj = Object.assign({}, newReplies[action.request.postId]);
           newRepliesObj[action.request.commentId] = {
-            replies: newRepliesObj[action.request.commentId].replies.concat(action.request.replies)
+            replies: newRepliesObj[action.request.commentId].replies.concat(action.request.replies),
+            tagged: newTag
           };
           newReplies[action.request.postId] = newRepliesObj;
         }
@@ -137,8 +135,10 @@ export function featureReducer(state = initialState, action: Actions): State {
         const newRepliesInner = Object.assign({}, newReplies[action.request.postId]);
         const newArr = Array.from(newRepliesInner[action.request.commentId].replies);
         newArr.push(action.request.reply);
+        const newTag = action.request.reply.tag.tagged || newRepliesInner[action.request.commentId].tagged;
         newRepliesInner[action.request.commentId] = {
-          replies: newArr
+          replies: newArr,
+          tagged: newTag
         };
         newReplies[action.request.postId] = newRepliesInner;
       }
@@ -156,8 +156,10 @@ export function featureReducer(state = initialState, action: Actions): State {
         if (comment.id === action.response.commentId) {
           const newArr = Array.from(newRepliesInner[action.response.parentId].replies);
           newArr.splice(i, 1);
+          const newTag = newArr.filter( (x: Comment) => x.tag.tagged ).length > 0;
           newRepliesInner[action.response.parentId] = {
-            replies: newArr
+            replies: newArr,
+            tagged: newTag,
           };
         }
       });
@@ -248,6 +250,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       const newReplies = Object.assign({}, state.replies);
       const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
       const newArr = Array.from(newReplies[action.response.postId][action.response.parentId].replies);
+      const newTag = newReplies[action.response.postId][action.response.parentId].tagged;
 
       newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
@@ -261,7 +264,8 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       newRepliesInner[action.response.parentId] = {
-        replies: newArr
+        replies: newArr,
+        tagged: newTag,
       };
       newReplies[action.response.postId] = newRepliesInner;
       return {
@@ -274,6 +278,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       const newReplies = Object.assign({}, state.replies);
       const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
       const newArr = Array.from(newReplies[action.response.postId][action.response.parentId].replies);
+      const newTag = newReplies[action.response.postId][action.response.parentId].tagged;
 
       newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
@@ -287,7 +292,8 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       newRepliesInner[action.response.parentId] = {
-        replies: newArr
+        replies: newArr,
+        tagged: newTag,
       };
       newReplies[action.response.postId] = newRepliesInner;
       return {
@@ -300,6 +306,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       const newReplies = Object.assign({}, state.replies);
       const newRepliesInner = Object.assign({}, newReplies[action.response.postId]);
       const newArr = Array.from(newReplies[action.response.postId][action.response.parentId].replies);
+      const newTag = newReplies[action.response.postId][action.response.parentId].tagged;
 
       newReplies[action.response.postId][action.response.parentId].replies.forEach( (reply , i) => {
         if (reply.id === action.response.commentId) {
@@ -314,7 +321,8 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       });
       newRepliesInner[action.response.parentId] = {
-        replies: newArr
+        replies: newArr,
+        tagged: newTag,
       };
       newReplies[action.response.postId] = newRepliesInner;
       return {

@@ -70,8 +70,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   tagName = '';
   tagElement;
   tagCaretPosition;
-  tagged$: Observable<boolean>;
-  tagged: boolean; // Was the user tagged in the comment chain
 
   replyText: string;
 
@@ -118,14 +116,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.replies$.pipe(takeUntil(this.onDestroy)).subscribe( (storeReply: StoreReply) => {
       this.replies = storeReply.replies;
-    });
-
-    this.tagged$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectTagged, { postId: this.comment.post_id })
-    );
-
-    this.tagged$.pipe(takeUntil(this.onDestroy)).subscribe( (tagged: boolean) => {
-      this.tagged = tagged;
     });
 
     this.isAuthenticated$ = this.store$.pipe(
