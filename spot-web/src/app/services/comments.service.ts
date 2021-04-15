@@ -126,11 +126,11 @@ export class CommentService {
     (`${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}/unrated`, request);
   }
 
-  failureMessage(message: string) {
+  failureMessage(message: string): void {
     this.alertService.error(message);
   }
 
-  getProfilePictureClass(index) {
+  getProfilePictureClass(index): string {
     if ( index === -1 ) {
       return 'profile pop';
     }
@@ -138,8 +138,8 @@ export class CommentService {
     return 'profile p' + (index % (COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT + 1));
   }
 
-  onReportSuccess() {
-    this.alertService.success('Report sent');
+  onReportSuccess(): void {
+    this.alertService.success('Your report has been sent');
   }
 
 }

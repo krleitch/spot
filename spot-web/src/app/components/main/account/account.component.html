@@ -106,8 +106,8 @@
         <!-- Unit -->
         <div class="subheading"> {{ STRINGS.UNIT }} </div>
         <div class="value">
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'imperial' }" (click)="setImperial()"> {{ STRINGS.IMPERIAL }} </div>
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setMetric()"> {{ STRINGS.METRIC }} </div>
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'imperial' }" (click)="setUnit('imperial')"> {{ STRINGS.IMPERIAL }} </div>
+          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setUnit('metric')"> {{ STRINGS.METRIC }} </div>
         </div>
 
         <!-- Mature Content -->

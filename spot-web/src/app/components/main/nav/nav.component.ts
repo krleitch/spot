@@ -116,7 +116,7 @@ export class NavComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
-  offClickHandler(event: MouseEvent) {
+  offClickHandler(event: MouseEvent): void {
     // Hide the dropdown if you click outside
     if (this.accountView && !this.accountView.nativeElement.contains(event.target)) {
       this.accountSetDropdown(false);
@@ -127,17 +127,17 @@ export class NavComponent implements OnInit, OnDestroy {
     }
   }
 
-  accountSetDropdown(value: boolean) {
+  accountSetDropdown(value: boolean): void {
     this.accountShowDropdown = value;
   }
 
-  logout() {
+  logout(): void {
     this.store$.dispatch(
       new AccountsActions.LogoutRequestAction()
     );
   }
 
-  navigateHome() {
+  navigateHome(): void {
 
     // Bring to landing  if not logged in
     if ( !this.isAuthenticated ) {
@@ -154,11 +154,11 @@ export class NavComponent implements OnInit, OnDestroy {
     }
   }
 
-  openAuthModal() {
+  openAuthModal(): void {
     this.modalService.open('spot-auth-modal');
   }
 
-  toggleNotifications() {
+  toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
   }
 

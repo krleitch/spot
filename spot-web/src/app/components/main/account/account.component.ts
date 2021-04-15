@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
+// rxjs
 import { Observable, Subject, timer, merge } from 'rxjs';
 import { takeUntil, take, mapTo } from 'rxjs/operators';
 
@@ -135,7 +136,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         this.editUsernameEnabled = true;
         this.usernameErrorMessage = '';
         this.usernameSuccessMessage = '';
-    
+
         setTimeout(() => {
           this.editUsernameInput.nativeElement.focus();
         }, 0);
@@ -278,7 +279,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  submitEditPhone() {
+  submitEditPhone(): void {
 
     this.phoneSuccessMessage = '';
     this.phoneErrorMessage = '';
@@ -430,19 +431,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  setImperial(): void {
+  public setUnit(unit: string): void {
     const request: UpdateAccountMetadataRequest = {
-      distance_unit: 'imperial'
-    };
-
-    this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
-    );
-  }
-
-  public setMetric(): void {
-    const request: UpdateAccountMetadataRequest = {
-      distance_unit: 'metric'
+      distance_unit: unit
     };
 
     this.store$.dispatch(

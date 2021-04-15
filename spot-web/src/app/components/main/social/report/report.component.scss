@@ -43,6 +43,8 @@
     font-size: 14px;
     outline: none;
     margin-bottom: 5px;
+    border: 1px solid $subtle-grey;
+    font-style: inherit;
   }
 
   .error-message {

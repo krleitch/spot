@@ -116,7 +116,7 @@ export class AuthenticationService {
         return Md5.hashStr(data).toString();
     }
 
-    registerAccountSuccess(response: LoginResponse) {
+    registerAccountSuccess(response: LoginResponse): void {
       this.addIdToken(response.jwt);
       if ( this.modalService.isOpen('spot-auth-modal') ) {
         this.modalService.close('spot-auth-modal');
@@ -131,7 +131,7 @@ export class AuthenticationService {
 
     // login / logout
 
-    loginAccountSuccess(response: LoginResponse) {
+    loginAccountSuccess(response: LoginResponse): void {
       this.addIdToken(response.jwt);
       if ( this.modalService.isOpen('spot-auth-modal') ) {
         this.modalService.close('spot-auth-modal');
@@ -142,41 +142,39 @@ export class AuthenticationService {
       }
     }
 
-    loginFacebookAccountSuccess(response: FacebookLoginResponse) {
+    loginFacebookAccountSuccess(response: FacebookLoginResponse): void {
       this.addIdToken(response.jwt);
+      if ( this.modalService.isOpen('spot-auth-modal') ) {
+        this.modalService.close('spot-auth-modal');
+      }
       if (response.created) {
         this.zone.run(() => {
           this.router.navigateByUrl('/username');
         });
       } else {
-        if ( this.modalService.isOpen('spot-auth-modal') ) {
-          this.modalService.close('spot-auth-modal');
-        } else {
-          this.zone.run(() => {
-            this.router.navigateByUrl('/home');
-          });
-        }
+        this.zone.run(() => {
+          this.router.navigateByUrl('/home');
+        });
       }
     }
 
-    loginGoogleAccountSuccess(response: GoogleLoginResponse) {
+    loginGoogleAccountSuccess(response: GoogleLoginResponse): void {
       this.addIdToken(response.jwt);
+      if ( this.modalService.isOpen('spot-auth-modal') ) {
+        this.modalService.close('spot-auth-modal');
+      }
       if (response.created) {
         this.zone.run(() => {
           this.router.navigateByUrl('/username');
         });
       } else {
-        if ( this.modalService.isOpen('spot-auth-modal') ) {
-          this.modalService.close('spot-auth-modal');
-        } else {
-          this.zone.run(() => {
-            this.router.navigateByUrl('/home');
-          });
-        }
+        this.zone.run(() => {
+          this.router.navigateByUrl('/home');
+        });
       }
     }
 
-    logoutAccountSuccess() {
+    logoutAccountSuccess(): void {
       this.removeIdToken();
 
       // Logout of facebook
@@ -197,10 +195,9 @@ export class AuthenticationService {
 
     }
 
-    private addIdToken(jwt: { token: string, expiresIn: number }) {
+    private addIdToken(jwt: { token: string, expiresIn: number }): void {
 
       // expiresIn is # of hours
-
       const expiresDate = new Date();
       expiresDate.setHours(expiresDate.getHours() + jwt.expiresIn);
 
@@ -209,12 +206,12 @@ export class AuthenticationService {
 
     }
 
-    private removeIdToken() {
+    private removeIdToken(): void {
       localStorage.removeItem('id_token');
       localStorage.removeItem('id_expires_at');
     }
 
-    failureMessage(message: string) {
+    failureMessage(message: string): void {
         this.alertService.error(message);
     }
 
@@ -227,7 +224,9 @@ export class AuthenticationService {
         return false;
       }
 
+      // If token has expired
       if ( new Date().getTime() > new Date(expiresAt).getTime()) {
+        this.removeIdToken();
         return false;
       }
 
@@ -235,7 +234,8 @@ export class AuthenticationService {
 
     }
 
-    sendSocialServiceReady(service: string) {
+    sendSocialServiceReady(service: string): void {
+      // used to trigger events in the DOM when social services are connected so they can be async
       this.socialServiceReady.next(service);
     }
 

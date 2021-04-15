@@ -207,7 +207,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
         const image = req.file ? req.file.location: null;
         const postId = req.params.postId;
 
-        // Check you are either in range
+        // Check you are in range of the post
         const inRange = await commentsService.inRange(postId, location.latitude, location.longitude);
         if ( !inRange ) {
             return next(new CommentsError.NotInRange(400)); 

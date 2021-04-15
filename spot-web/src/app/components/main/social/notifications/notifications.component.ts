@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 // Rxjs
-import { Observable, Subject, timer, merge } from 'rxjs';
-import { takeUntil, mapTo, finalize, takeWhile, startWith } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { takeUntil, mapTo, skip, takeWhile, startWith } from 'rxjs/operators';
 
 // Store
 import { RootStoreState } from '@store';
@@ -13,8 +13,7 @@ import { select, Store } from '@ngrx/store';
 import { STRINGS } from '@assets/strings/en';
 import { NOTIFICATIONS_CONSTANTS } from '@constants/notifications';
 import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest,
-          SetAllNotificationsSeenRequest,
-          GetNotificationsSuccess} from '@models/notifications';
+          SetAllNotificationsSeenRequest } from '@models/notifications';
 @Component({
   selector: 'spot-notifications',
   templateUrl: './notifications.component.html',
@@ -65,8 +64,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     });
 
     // on successful notifications
-    this.notificationsSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success: boolean) => {
-      this.initialLoad = false;
+    this.notificationsSuccess$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (success: boolean) => {
+      if ( success ) {
+        this.initialLoad = false;
+      }
     });
 
   }
@@ -80,8 +81,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     if ( !this.loading ) {
 
       const request: GetNotificationsRequest = {
-        initialLoad: this.initialLoad,
-        after: this.notifications.length > 0 ? this.notifications[this.notifications.length - 1].creation_date : null,
+        initialLoad: this.notifications.length > 0 ? false : this.initialLoad,
+        after: this.initialLoad ? null :
+                this.notifications.length > 0 ? this.notifications[this.notifications.length - 1].creation_date : null,
         limit: NOTIFICATIONS_CONSTANTS.LIMIT,
       };
 

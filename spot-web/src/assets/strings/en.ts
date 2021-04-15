@@ -73,7 +73,7 @@ export const STRINGS = {
             EMAIL_SUCCESS: 'Email was succesfully changed',
 
             USERNAME: 'Username',
-            USERNAME_CONFIRM: 'Are you sure you would like to change your username? You can only change your username once every 24 hours',
+            USERNAME_CONFIRM: 'You can only change your username once every 24 hours. Are you sure you would like to continue?',
             USERNAME_ERROR: 'Username is required',
             USERNAME_SUCCESS: 'Username was succesfully changed',
 
@@ -81,7 +81,7 @@ export const STRINGS = {
             PHONE: 'Phone number',
             PHONE_ERROR: 'Phone is required',
             PHONE_INVALID: 'Invalid phone number',
-            PHONE_CONFIRM: 'Are you sure you would like to change your phone number?',
+            PHONE_CONFIRM: 'You can only change your phone once every 24 hours. Are you sure you would like to continue?',
             PHONE_SUCCESS: 'Phone was succesfully changed',
 
             SCORE: 'Spot Score',
@@ -345,7 +345,7 @@ export const STRINGS = {
           REPORT_PLACEHOLDER: 'What would you like to report?',
           REPORT_BUTTON: 'Send Report',
 
-          SUCCESS_MESSAGE: 'Report Sent'
+          SUCCESS_MESSAGE: 'Your report has been sent',
 
         },
 
