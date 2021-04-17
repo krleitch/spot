@@ -270,7 +270,7 @@ input {
 }
 
 .hot {
-  color: $error-red;
+  color: $error-red-light;
   margin-right: 5px;
 }
 
@@ -368,7 +368,7 @@ input {
 }
 
 .checkbox-container input:checked ~ .checkmark {
-  background-color: $error-red;
+  background-color: $error-red-light;
 }
 
 .checkbox-container input:checked ~ .checkmark .checkmark-inner {

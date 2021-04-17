@@ -239,7 +239,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         // use date
         const request: LoadPostRequest = {
           limit: POSTS_CONSTANTS.INITIAL_LIMIT,
-          date: this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
+          date: this.initialLoad ? new Date().toString() :
+                                    this.posts.length > 0 ? this.posts.slice(-1).pop().creation_date : new Date().toString(),
           initialLoad: this.initialLoad,
           location: this.location,
           filter: { location: this.postLocation, sort: this.postSort }
@@ -276,8 +277,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // Cancel previous calls
     this.stop$.next();
+    this.noPosts = false;
     this.loadedPosts = 0;
     this.initialLoad = true;
+    window.scrollTo({top: 0, behavior: 'smooth'});
     this.onScroll();
 
   }
