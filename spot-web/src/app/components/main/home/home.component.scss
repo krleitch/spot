@@ -133,13 +133,16 @@ spot-create {
 
 // no posts, no more posts, loading posts
 
+.empty-placeholder {
+  min-height: 100px;
+}
+
 .empty-container {
 
   display: flex;
   justify-content: center;
   align-items: center;
   flex-flow: column;
-  margin: 25px 0px 10px 0px;
 
   .empty-image {
 
