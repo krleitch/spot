@@ -145,7 +145,7 @@ function validatePassword(user: any, password: string): boolean {
 }
 
 function generateToken(user: any): any {
-    return jwt.sign({ id: user }, secret.secret, { expiresIn: '2h' });
+    return jwt.sign({ id: user }, secret.secret, { expiresIn: '7d' });
 }
 
 // Password Reset

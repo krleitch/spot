@@ -57,7 +57,7 @@ router.post('/register', function (req: any, res: any, next: any) {
             const user = account[0]
             const token = authentication.generateToken(user);
             res.status(200).json({
-                jwt: { token: token, expiresIn: 2 },
+                jwt: { token: token, expiresIn: 7 },
                 account: user
             });  
         }, (err: any) => {
@@ -91,7 +91,7 @@ router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, functi
     const user = req.user;
     const token = authentication.generateToken(user);
     res.status(200).json({
-        jwt: { token: token, expiresIn: 2 },
+        jwt: { token: token, expiresIn: 7 },
         account: user
     });                            
 });
@@ -117,7 +117,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
 
                             res.status(200).json({
                                 created: true,
-                                jwt: { token: token, expiresIn: 2 },
+                                jwt: { token: token, expiresIn: 7 },
                                 account: user2
                             }, ( err: any) => {
                                 // couldnt add your friends
@@ -139,7 +139,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
                 const token = authentication.generateToken(user);
                 res.status(200).json({
                     created: false,
-                    jwt: { token: token, expiresIn: 2 },
+                    jwt: { token: token, expiresIn: 7 },
                     account: user
                 });   
             }
@@ -180,7 +180,7 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
 
                         res.status(200).json({
                             created: true,
-                            jwt: { token: token, expiresIn: 2 },
+                            jwt: { token: token, expiresIn: 7 },
                             account: user2
                         });
 
@@ -197,7 +197,7 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
                 const token = authentication.generateToken(user);
                 res.status(200).json({
                     created: false,
-                    jwt: { token: token, expiresIn: 2 },
+                    jwt: { token: token, expiresIn: 7 },
                     account: user
                 });   
             }

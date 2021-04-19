@@ -197,9 +197,9 @@ export class AuthenticationService {
 
     private addIdToken(jwt: { token: string, expiresIn: number }): void {
 
-      // expiresIn is # of hours
+      // expiresIn is # of days
       const expiresDate = new Date();
-      expiresDate.setHours(expiresDate.getHours() + jwt.expiresIn);
+      expiresDate.setHours(expiresDate.getHours() + (jwt.expiresIn * 24));
 
       localStorage.setItem('id_token', jwt.token);
       localStorage.setItem('id_expires_at', expiresDate.toString());
