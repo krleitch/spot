@@ -1,20 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 // rxjs
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 // Store
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions } from '@store/accounts-store';
+import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
 
 // Services
 import { AccountsService } from '@services/accounts.service';
 
 // Assets
-import { VerifyConfirmRequest, VerifyRequest } from '@models/accounts';
+import { VerifyConfirmRequest, VerifyRequest, Account } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -31,13 +31,18 @@ export class VerifyComponent implements OnInit, OnDestroy {
   successMessage = '';
   errorMessage = '';
   verificationSent = false;
+  account$: Observable<Account>;
 
   constructor(private route: ActivatedRoute,
-              private router: Router,
               private accountsService: AccountsService,
               private store$: Store<RootStoreState.State>) { }
 
   ngOnInit(): void {
+
+    // Account
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccount)
+    );
 
     this.route.paramMap.subscribe( p => {
 
@@ -67,10 +72,6 @@ export class VerifyComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.onDestroy.next();
-  }
-
-  continue(): void {
-    this.router.navigateByUrl('/home');
   }
 
   sendVerification(): void {

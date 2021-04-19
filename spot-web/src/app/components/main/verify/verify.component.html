@@ -1,19 +1,17 @@
 <spot-main-nav></spot-main-nav>
 <div class="verify">
 
-  <div class="container">
-    <div class="section" *ngIf="successMessage && false">
+  <div class="container" *ngIf="account$ | async as account">
 
+    <div class="section" *ngIf="successMessage && false">
       <span class="material-icons icon"> done </span>
       <span class="text"> {{ successMessage }} </span>
       <a class="link" [routerLink]="'/home'">
         <button> {{ STRINGS.CONTINUE }} </button>
       </a>
-
     </div>
 
     <div class="section" *ngIf="errorMessage || true">
-
       <span class="material-icons icon"> error </span>
       <span class="text"> {{ errorMessage }} </span>
       <div *ngIf="verificationSent === false; else sentverify" >
@@ -27,8 +25,8 @@
       <ng-template #sentverify>
         <span class="small-text"> {{ STRINGS.VERIFY_SENT }} {{ account.email }} </span>
       </ng-template>
-
     </div>
+
   </div>
 
 </div>

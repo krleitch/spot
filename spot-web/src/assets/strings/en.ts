@@ -371,8 +371,8 @@ export const STRINGS = {
           SUCCESS: 'Your email was successfully verified',
           CONTINUE: 'Continue to Spot',
           FAILURE: 'There was an error verifying your email. Your verification code is either invalid or expired',
-          SEND: 'Send another verification email',
-          SENT: 'Verification email sent'
+          VERIFY_SEND: 'Send email verification',
+          VERIFY_SENT: 'Verification email sent to',
 
         }
 

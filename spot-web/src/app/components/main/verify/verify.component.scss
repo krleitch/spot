@@ -48,6 +48,39 @@ spot-main-nav {
       }
     }
 
+    .clickable {
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $subtle-grey;
+      font-size: 18px;
+
+      &:hover {
+        color: $button-highlight;
+        cursor: pointer;
+      }
+
+      .icon {
+        padding-top: 3px;
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+
+    }
+
+    .small-text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-wrap: wrap;
+      margin: 3px 0px;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+
     a {
       text-decoration: none;
     }
