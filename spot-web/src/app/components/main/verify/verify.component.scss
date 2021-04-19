@@ -12,12 +12,21 @@ spot-main-nav {
 .verify {
 
   display: flex;
-  justify-content: center;
-  min-height: 100%;
-  width: 100%;
-  padding-top: 100px;
+  flex-flow: column;
+  align-items: center;
   background-color: $background-grey;
+  min-height: 100vh;
+  padding-top: 60px;
   box-sizing: border-box;
+
+  .container {
+    background-color: white;
+    padding: 25px;
+    margin: 25px;
+    max-width: 600px;
+    min-width: 250px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+  }
 
   .section {
 
@@ -28,6 +37,7 @@ spot-main-nav {
     .text {
       font-size: 18px;
       text-align: center;
+      margin-bottom: 10px;
     }
 
     .button {
@@ -36,6 +46,31 @@ spot-main-nav {
       &:hover {
         color: $button-highlight;
       }
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    button {
+
+      border: none;
+      text-decoration: none;
+      outline: none;
+      cursor: pointer;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $button-black;
+      color: $button-font-white;
+      padding: 12px 24px;
+      font-size: 14px;
+
+      &:hover {
+          background-color: lighten($button-black, 10%);
+      }
+
     }
 
     .sent {

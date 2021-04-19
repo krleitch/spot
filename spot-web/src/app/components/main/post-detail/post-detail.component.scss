@@ -26,6 +26,7 @@ spot-main-nav {
     flex-flow: column;
     height: 100%;
     width: 70%;
+    max-width: 1150px;
     padding-top: 20px;
   }
 
@@ -71,7 +72,7 @@ spot-post {
 
 // Mobile stylings
 @media screen and (max-width: $mobile-width) {
-  
+
   .post-detailed {
 
     .content {

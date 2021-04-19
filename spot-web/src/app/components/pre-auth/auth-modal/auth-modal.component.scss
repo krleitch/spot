@@ -157,7 +157,8 @@ a {
 
 }
 
-.button {
+button {
+
   background-color: $button-black;
   width: 100px;
   border: none;
@@ -171,9 +172,21 @@ a {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+
   &:hover {
       background-color: lighten($button-black, 10%);
   }
+
+  button.disabled {
+    background-color: $subtle-grey;
+    cursor: not-allowed;
+  }
+
+}
+
+.disabled {
+  background-color: $subtle-grey;
+  cursor: not-allowed;
 }
 
 input {
@@ -202,8 +215,8 @@ input {
     justify-content: center;
   }
 
-  a {
-    text-decoration: none;
+  .text {
+    cursor: pointer;
     color: $subtle-grey;
     &:hover {
       color: darken($subtle-grey, 5%);

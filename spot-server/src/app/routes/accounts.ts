@@ -420,12 +420,12 @@ router.post('/verify/confirm', function (req: any, res: any, next: any) {
     // Add record to verify account
     verifyAccount.getByToken(accountId, token).then( (rows: any) => {
 
-        // check valid expirary date
-        if ( !authenticationService.isValidToken(rows[0]) ) {
-            return next(new AccountsError.ConfirmVerify(500));
-        }
-
         if ( rows.length > 0 ) {
+
+            // check valid expirary date
+            if ( !authenticationService.isValidToken(rows[-1]) ) {
+                return next(new AccountsError.ConfirmVerify(499));
+            }
 
             const verifiedDate = new Date();
             accounts.verifyAccount( rows[0].account_id, verifiedDate ).then( (r: any) => {

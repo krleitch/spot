@@ -370,7 +370,7 @@ export const STRINGS = {
 
           SUCCESS: 'Your email was successfully verified',
           CONTINUE: 'Continue to Spot',
-          FAILURE: 'There was an error verifying your email. Your verification code was either invalid or expired',
+          FAILURE: 'There was an error verifying your email. Your verification code is either invalid or expired',
           SEND: 'Send another verification email',
           SENT: 'Verification email sent'
 
@@ -626,6 +626,8 @@ export const STRINGS = {
           USERNAME_USED: 'Username is already in use',
           PHONE_USED: 'Phone is already in use',
           TERMS_ERROR: 'You must agree to the terms and conditions & privacy policy',
+
+          RATE_LIMIT: 'Too many requests. Please try again in %TIMEOUT% minutes'
 
         }
 

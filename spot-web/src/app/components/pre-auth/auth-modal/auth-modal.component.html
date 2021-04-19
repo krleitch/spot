@@ -27,7 +27,7 @@
           {{ errorMessage }}
         </div>
         <div class="form-buttons">
-          <button type="button" class="button" (click)="login()"> {{ STRINGS.LOGIN_BUTTON }} </button>
+          <button type="button" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="login()"> {{ STRINGS.LOGIN_BUTTON }} </button>
         </div>
         <a (click)="close()" [routerLink]="'/password-reset'"> {{ STRINGS.FORGOT_PASSWORD }} </a>
       </form>
@@ -60,7 +60,7 @@
             </label>
             <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
           </div>
-          <a (click)="close()" [routerLink]="'/terms'"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </a>
+          <div class="text" (click)="openTerms()"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </div>
         </div>
 
         <div class="error-message">
@@ -68,14 +68,14 @@
         </div>
 
         <div class="form-buttons">
-          <button type="button" class="button" (click)="register()"> {{ STRINGS.REGISTER_BUTTON }} </button>
+          <button type="button" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="register()"> {{ STRINGS.REGISTER_BUTTON }} </button>
         </div>
       </form>
 
     </div>
 
     <div class="login-options">
-      <div type="button" class="facebook" (click)="facebookLogin()">
+      <div type="button" class="facebook" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="facebookLogin()">
         <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
         {{ STRINGS.FACEBOOK_LOGIN }}
       </div>

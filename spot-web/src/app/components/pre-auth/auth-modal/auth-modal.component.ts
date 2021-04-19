@@ -2,13 +2,13 @@ import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/cor
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { takeUntil, skip } from 'rxjs/operators';
 
 // Store
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
+import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions, AccountsStoreSelectors } from '@store/accounts-store';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -16,6 +16,7 @@ import { AuthenticationService } from '@services/authentication.service';
 
 // Models
 import { LoginRequest, RegisterRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
+import { SpotError } from '@exceptions/error';
 
 // Assets
 import { STRINGS } from '@assets/strings/en';
@@ -37,10 +38,13 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectedTab = 'login';
 
+  authenticationError$: Observable<SpotError>;
+  authenticationSuccess$: Observable<boolean>;
   loginForm: FormGroup;
   loginErrorMessage: string;
   registerForm: FormGroup;
   registerErrorMessage: string;
+  buttonsDisabled: boolean;
 
   errorMessage = '';
 
@@ -62,15 +66,45 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+
+    // SUCCESS
+    this.authenticationSuccess$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAuthenticationSuccess)
+    );
+
+    this.authenticationSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticationSuccess: boolean) => {
+      if ( authenticationSuccess ) {
+        this.buttonsDisabled = false;
+      }
+    });
+
+    // FAILURE
+    this.authenticationError$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAuthenticationError)
+    );
+
+    this.authenticationError$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (authenticationError: SpotError) => {
+      if ( authenticationError ) {
+
+        if ( authenticationError.name === 'RateLimitError') {
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
+                                                     .replace('%TIMEOUT%', authenticationError.body.timeout);
+        } else {
+          this.errorMessage = authenticationError.message;
+        }
+        this.buttonsDisabled = false;
+
+      }
+    });
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
       if ( service === 'google' ) {
         gapi.signin2.render('my-signin2', {
@@ -85,15 +119,19 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  close() {
+  close(): void {
     this.modalService.close(this.modalId);
   }
 
-  selectTab(tab: string) {
+  selectTab(tab: string): void {
     this.selectedTab = tab;
   }
 
-  login() {
+  login(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     const val = this.loginForm.value;
 
@@ -121,7 +159,12 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  register() {
+  register(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
+
     const val = this.registerForm.value;
     let valid = true;
 
@@ -181,10 +224,15 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store$.dispatch(
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
-    
+    this.buttonsDisabled = true;
+
   }
 
-  facebookLogin() {
+  facebookLogin(): void {
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
@@ -198,6 +246,7 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.store$.dispatch(
                   new AccountsFacebookActions.FacebookLoginRequestAction(request)
                 );
+                this.buttonsDisabled = true;
 
             }
           });
@@ -210,15 +259,21 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store$.dispatch(
           new AccountsFacebookActions.FacebookLoginRequestAction(request)
         );
+        this.buttonsDisabled = true;
+
       }
     });
 
   }
 
-  googleLogin(googleUser) {
+  googleLogin(googleUser): void {
 
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
+
+    if ( this.buttonsDisabled ) {
+      return;
+    }
 
     const id_token = googleUser.getAuthResponse().id_token;
 
@@ -229,17 +284,22 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store$.dispatch(
       new AccountsGoogleActions.GoogleLoginRequestAction(request)
     );
+    this.buttonsDisabled = true;
 
     // sign out of the instance, so we don't auto login
     this.googleSignOut();
 
   }
 
-  googleSignOut() {
+  googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(() => {
 
     });
+  }
+
+  openTerms(): void {
+    this.modalService.open('spot-terms-modal');
   }
 
 }

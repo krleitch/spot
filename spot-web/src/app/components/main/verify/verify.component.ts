@@ -1,13 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+
+// rxjs
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+// Store
+import { Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { AccountsActions } from '@store/accounts-store';
-import { VerifyConfirmRequest, VerifyRequest } from '@models/accounts';
+
+// Services
 import { AccountsService } from '@services/accounts.service';
+
+// Assets
+import { VerifyConfirmRequest, VerifyRequest } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -30,7 +37,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
               private accountsService: AccountsService,
               private store$: Store<RootStoreState.State>) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.route.paramMap.subscribe( p => {
 
@@ -58,15 +65,15 @@ export class VerifyComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  continue() {
+  continue(): void {
     this.router.navigateByUrl('/home');
   }
 
-  sendVerification() {
+  sendVerification(): void {
     const request: VerifyRequest = {};
     this.store$.dispatch(
       new AccountsActions.VerifyRequestAction(request)
