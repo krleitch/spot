@@ -236,12 +236,13 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
     
-                await accounts.getAccountByUsername(tagsList[index].username).then( ErrorHandler.catchAsync(async (account: any) => {
-                    await tags.addTag( account[0].id, comment[0].id, Math.min(tagsList[index].offset, content.length) );
-                    await notifications.addCommentNotification( comment[0].account_id, account[0].id, comment[0].post_id, comment[0].id );
-                }, (err: any) => {
-                    return next(new CommentsError.AddComment(500));
-                }));
+              try {
+                const account = await accounts.getAccountByUsername(tagsList[index].username);
+                await tags.addTag( account[0].id, comment[0].id, Math.min(tagsList[index].offset, content.length) );
+                await notifications.addCommentNotification( accountId, account[0].id, comment[0].post_id, comment[0].id );
+              } catch (err: any) {
+                return next(new CommentsError.AddComment(500));
+              }
     
             }
     
@@ -327,12 +328,18 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
 
             // Add tags
             for ( let index = 0; index < tagsList.length; index++ ) {
-                await accounts.getAccountByUsername(tagsList[index].username).then( async (account: any) => {
-                    await tags.addTag( account[0].id, reply[0].id, Math.min(tagsList[index].offset, content.length) );
-                    await notifications.addReplyNotification( reply[0].account_id, account[0].id, reply[0].post_id, reply[0].parent_id, reply[0].id );
-                });
+
+              try {
+                const account = await accounts.getAccountByUsername(tagsList[index].username);
+                await tags.addTag( account[0].id, reply[0].id, Math.min(tagsList[index].offset, content.length) );
+                await notifications.addReplyNotification( accountId, account[0].id, reply[0].post_id, reply[0].parent_id, reply[0].id );
+              } catch (err: any) {
+                return next(new CommentsError.AddComment(500));
+              }
+
             }
 
+            // add tags to content
             await commentsService.getTags( reply, accountId ).then( (taggedComments: any) => {
                 reply = taggedComments;
             });
