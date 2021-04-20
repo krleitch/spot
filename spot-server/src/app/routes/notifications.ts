@@ -31,11 +31,10 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
         // Add tags to comments and replies
         for (let i = 0; i < rows.length; i++) {
             try {
-                if ( rows[i].comment_content ) {
-                    rows[i].comment_content = await commentsService.addTagsToContent( rows[i].comment_id, accountId, rows[i].account_id, rows[i].comment_content);
-                }
-                if ( rows[i].reply_content ) {
+                if ( typeof rows[i].reply_content === 'string' ) {
                     rows[i].reply_content = await commentsService.addTagsToContent( rows[i].reply_id, accountId, rows[i].account_id, rows[i].reply_content);
+                } else if ( typeof rows[i].comment_content === 'string' ) {
+                    rows[i].comment_content = await commentsService.addTagsToContent( rows[i].comment_id, accountId, rows[i].account_id, rows[i].comment_content);
                 }
             } catch (err) {
                 return next(new NotificationsError.GetNotifications(500));

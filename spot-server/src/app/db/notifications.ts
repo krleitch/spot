@@ -90,7 +90,14 @@ function deleteAllNotificationsForAccount(accountId: string) {
 }
 
 function getNotificationUnreadByReceiverId(accountId: string) {
-    var sql = `SELECT count(*) as unread FROM notifications WHERE receiver_id = ? AND seen = false`;
+    var sql = `SELECT count(*) as unread 
+                FROM notifications n
+                LEFT JOIN accounts a ON a.id = n.sender_id
+                LEFT JOIN posts p ON n.post_id = p.id
+                LEFT JOIN comments c ON n.comment_id = c.id
+                LEFT JOIN comments r ON n.reply_id = r.id 
+                WHERE receiver_id = ? AND seen = false AND 
+                c.deletion_date IS NULL AND r.deletion_date IS NULL AND p.deletion_date IS NULL `;
     var values = [accountId];
     return db.query(sql, values);
 }
