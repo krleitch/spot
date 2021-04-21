@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
+
+// store
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
+
+// rxjs
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+// actions
 import * as featureActions from './actions';
+import * as postsActions from '@store/posts-store/actions';
+
+// services
 import { CommentService } from '../../services/comments.service';
+
+// assets
 import { DeleteCommentSuccess, DislikeCommentSuccess, LikeCommentSuccess, DeleteReplySuccess,
           DislikeReplySuccess, LikeReplySuccess, UnratedCommentSuccess, UnratedReplySuccess } from '@models/comments';
 
@@ -157,6 +167,58 @@ export class CommentsStoreEffects {
           )
         )
     )
+  );
+
+  @Effect()
+  addCommentEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.AddCommentRequestAction>(
+      featureActions.ActionTypes.ADD_COMMENT_REQUEST
+    ),
+    tap((request: featureActions.AddCommentRequestAction) => {
+      // none
+    }),
+    switchMap( (action: featureActions.AddCommentRequestAction ) => [
+      new postsActions.AddCommentAction({ postId: action.request.postId })
+    ]),
+  );
+
+  @Effect()
+  addReplyEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.AddReplyRequestAction>(
+      featureActions.ActionTypes.ADD_REPLY_REQUEST
+    ),
+    tap((request: featureActions.AddReplyRequestAction) => {
+      // none
+    }),
+    switchMap( (action: featureActions.AddReplyRequestAction ) => [
+      new postsActions.AddCommentAction({ postId: action.request.postId })
+    ]),
+  );
+
+  @Effect()
+  deleteCommentSuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.DeleteSuccessAction>(
+      featureActions.ActionTypes.DELETE_SUCCESS
+    ),
+    tap((request: featureActions.DeleteSuccessAction) => {
+      // none
+    }),
+    switchMap( (action: featureActions.DeleteSuccessAction ) => [
+      new postsActions.DeleteCommentAction({ postId: action.response.postId })
+    ]),
+  );
+
+  @Effect()
+  deleteReplySuccessEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.DeleteReplySuccessAction>(
+      featureActions.ActionTypes.DELETE_REPLY_SUCCESS
+    ),
+    tap((request: featureActions.DeleteReplySuccessAction) => {
+      // none
+    }),
+    switchMap( (action: featureActions.DeleteReplySuccessAction ) => [
+      new postsActions.DeleteCommentAction({ postId: action.response.postId })
+    ]),
   );
 
 }

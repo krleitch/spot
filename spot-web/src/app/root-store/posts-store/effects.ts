@@ -1,11 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+
+
+// rxjs
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { PostsService } from '@services/posts.service';
-import * as featureActions from './actions';
 
+// services
+import { PostsService } from '@services/posts.service';
+
+// store
+import { Action } from '@ngrx/store';
+import * as featureActions from './actions';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+
+// Assets
 import { DislikePostSuccess, LikePostSuccess, DeletePostSuccess, LoadPostSuccess, AddPostSuccess, UnratedPostSuccess } from '@models/posts';
 
 @Injectable()

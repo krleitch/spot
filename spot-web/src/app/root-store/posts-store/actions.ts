@@ -20,6 +20,8 @@ export enum ActionTypes {
   ADD_FAILURE = '[Posts] Add Failure',
   LOAD_REQUEST = '[Posts] Load Request',
   LOAD_SUCCESS = '[Posts] Load Success',
+  ADD_COMMENT = '[Posts] Add Comment',
+  DELETE_COMMENT = '[Posts] Delete Comment',
   GENERIC_FAILURE = '[Posts] Generic Failure'
 }
 
@@ -98,8 +100,19 @@ export class LoadSuccessAction implements Action {
   constructor(public response: LoadPostSuccess) {}
 }
 
+export class AddCommentAction implements Action {
+  readonly type = ActionTypes.ADD_COMMENT;
+  constructor(public request: { postId: string }) {}
+}
+
+export class DeleteCommentAction implements Action {
+  readonly type = ActionTypes.DELETE_COMMENT;
+  constructor(public request: { postId: string }) {}
+}
+
 export type Actions = GenericFailureAction | LoadRequestAction | LoadSuccessAction |
                       AddRequestAction | AddSuccessAction | AddFailureAction |
                       DeleteRequestAction | DeleteSuccessAction | LikeRequestAction |
                       LikeSuccessAction | DislikeRequestAction | DislikeSuccessAction |
-                      UnratedRequestAction | UnratedSuccessAction | ResetStoreAction;
+                      UnratedRequestAction | UnratedSuccessAction | AddCommentAction |
+                      DeleteCommentAction | ResetStoreAction;

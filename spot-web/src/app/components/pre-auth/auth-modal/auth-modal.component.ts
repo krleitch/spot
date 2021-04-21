@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Subject, Observable } from 'rxjs';
@@ -51,8 +50,7 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private store$: Store<RootStoreState.State>,
               private modalService: ModalService,
               private authenticationService: AuthenticationService,
-              private fb: FormBuilder,
-              private router: Router) {
+              private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       emailOrUsername: ['', Validators.required],
       password: ['', Validators.required],

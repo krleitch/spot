@@ -84,23 +84,25 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 				return true;
 			})
 
+		} else {
+
+			const { latitude, longitude, creation_date } = location[0];
+
+			// The max time delay has passed
+			if ( new Date().valueOf() >= new Date( new Date(creation_date).valueOf() + LOCATIONS_CONSTANTS.MAX_TIME_CHANGE * 3600000).valueOf() ) {
+				return true;
+			} else {
+	
+				const numHours = ( new Date().valueOf() - new Date(creation_date).valueOf() ) / 3600000;
+	
+				const maxDistance = LOCATIONS_CONSTANTS.MAX_DISTANCE_CHANGE * numHours;
+				
+				// TODO: fix Math.max(1) to be a constant
+				return distanceBetween( myLatitude, myLongitude, latitude, longitude, 'M' ) <= Math.max(1, maxDistance);
+	
+			}
+
 		}
-
-		const { latitude, longitude, creation_date } = location[0];
-
-        // The max time delay has passed
-        if ( new Date().valueOf() >= new Date( new Date(creation_date).valueOf() + LOCATIONS_CONSTANTS.MAX_TIME_CHANGE * 3600000).valueOf() ) {
-            return true;
-        } else {
-
-            const numHours = ( new Date().valueOf() - new Date(creation_date).valueOf() ) / 3600000;
-
-			const maxDistance = LOCATIONS_CONSTANTS.MAX_DISTANCE_CHANGE * numHours;
-			
-			// TODO: fix Math.max(1) to be a constant
-            return distanceBetween( myLatitude, myLongitude, latitude, longitude, 'M' ) <= Math.max(1, maxDistance);
-
-        }
 
     });
 
