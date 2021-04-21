@@ -22,7 +22,8 @@ export function featureReducer(state = initialState, action: NotificationsAction
         ...state,
         notificationsSuccess: true,
         notificationsLoading: false,
-        notifications: !action.response.initialLoad ? action.response.notifications : state.notifications.concat(action.response.notifications)
+        notifications: !action.response.initialLoad ? action.response.notifications :
+                           state.notifications.concat(action.response.notifications)
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE: {
@@ -41,12 +42,15 @@ export function featureReducer(state = initialState, action: NotificationsAction
     case NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS: {
       return {
         ...state,
+        unreadNotifications: 0,
         notifications: []
       };
     }
     case NotificationsActionTypes.DELETE_NOTIFICATION_SUCCESS: {
       return {
         ...state,
+        unreadNotifications: state.notifications.filter( item => item.id === action.response.notificationId )[0].seen ?
+                              state.unreadNotifications : state.unreadNotifications - 1,
         notifications: state.notifications.filter( item => item.id !== action.response.notificationId )
       };
     }
