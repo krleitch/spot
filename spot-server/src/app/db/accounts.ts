@@ -3,7 +3,7 @@ export { addAccount, getAccountByEmail, getAccountByUsername, deleteAccount, cha
          disconnectFacebookAccount, addAccountMetadata, getAccountMetadata, updateAccountsMetadataDistanceUnit,
          updateAccountsMetadataSearchDistance, updateAccountsMetadataSearchType, verifyAccount, usernameExists,
          getGoogleAccount, addGoogleAccount, updateEmail, updatePhone, connectGoogleAccount, disconnectGoogleAccount,
-         updateAccountsMetadataMatureFilter }
+         updateAccountsMetadataMatureFilter, getAccountByEmailWithPass, getAccountByUsernameWithPass }
 
 const uuid = require('uuid');
 
@@ -63,21 +63,40 @@ function addAccount(email: string, username: string, pass: string, phone: string
     });
 }
 
-// TODO, wanna change from *
 function getAccountByEmail(email: string): Promise<any> {
-    var sql = 'SELECT * FROM accounts WHERE email = ? AND deletion_date IS NULL';
+    var sql = `SELECT id, email, email_updated_at, username, username_updated_at, phone, local_account,
+                 phone_updated_at, facebook_id, google_id, verified_date, creation_date, deletion_date, role
+                 FROM accounts WHERE email = ? AND deletion_date IS NULL LIMIT 1`;
     var values = [email];
     return db.query(sql, values);
 }
 
 function getAccountByUsername(username: string): Promise<any> {
+    var sql = `SELECT id, email, email_updated_at, username, username_updated_at, phone, local_account,
+                phone_updated_at, facebook_id, google_id, verified_date, creation_date, deletion_date, role
+                FROM accounts WHERE username = ? AND deletion_date IS NULL LIMIT 1`;
+    var values = [username];
+    return db.query(sql, values);
+}
+
+// Should only be used by passport, not returned
+function getAccountByEmailWithPass(email: string): Promise<any> {
+    var sql = 'SELECT * FROM accounts WHERE email = ? AND deletion_date IS NULL LIMIT 1';
+    var values = [email];
+    return db.query(sql, values);
+}
+
+// Should only be used by passport, not returned
+function getAccountByUsernameWithPass(username: string): Promise<any> {
     var sql = 'SELECT * FROM accounts WHERE username = ? AND deletion_date IS NULL LIMIT 1';
     var values = [username];
     return db.query(sql, values);
 }
 
 function getAccountById(id: string) {
-    var sql = 'SELECT * FROM accounts WHERE id = ? AND deletion_date IS NULL';
+    var sql = `SELECT id, email, email_updated_at, username, username_updated_at, phone, local_account,
+                phone_updated_at, facebook_id, google_id, verified_date, creation_date, deletion_date, role
+                FROM accounts WHERE id = ? AND deletion_date IS NULL`;
     var values = [id];
     return db.query(sql, values);
 }
@@ -141,7 +160,9 @@ function verifyAccount( account_id: string, date: Date) {
 
 // Facebook
 function getFacebookAccount(facebookId: string): Promise<any> {
-    var sql = 'SELECT * FROM accounts WHERE facebook_id = ? AND deletion_date IS NULL LIMIT 1';
+    var sql = `SELECT id, email, email_updated_at, username, username_updated_at, phone, local_account,
+                phone_updated_at, facebook_id, google_id, verified_date, creation_date, deletion_date, role
+                FROM accounts WHERE facebook_id = ? AND deletion_date IS NULL LIMIT 1`;
     var values = [facebookId];
     return db.query(sql, values);
 }
@@ -168,7 +189,9 @@ function disconnectFacebookAccount(accountId: string): Promise<any> {
 
 // Google
 function getGoogleAccount(googleId: string): Promise<any> {
-    var sql = 'SELECT * FROM accounts WHERE google_id = ? AND deletion_date IS NULL LIMIT 1';
+    var sql = `SELECT id, email, email_updated_at, username, username_updated_at, phone, local_account,
+                phone_updated_at, facebook_id, google_id, verified_date, creation_date, deletion_date, role
+                FROM accounts WHERE google_id = ? AND deletion_date IS NULL LIMIT 1`;
     var values = [googleId];
     return db.query(sql, values);
 }

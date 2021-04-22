@@ -1,5 +1,6 @@
 export = passport;
 
+// passport
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local').Strategy;
@@ -27,19 +28,23 @@ passport.use(new LocalStrategy(localOptions,
         const isEmail = emailOrUsername.match(regex) != null;
 
         if (isEmail) {
-            accounts.getAccountByEmail(emailOrUsername).then( (user: any) => {
+            accounts.getAccountByEmailWithPass(emailOrUsername).then( (user: any) => {
                 user = user[0];
                 if (!user) { return done(null, false); }
                 if (!auth.validatePassword(user, password)) { return done(null, false); }
+                delete user.pass;
+                delete user.salt;
                 return done(null, user);
             }, (err: any) => {
                 return done(err);
             });
         } else {
-            accounts.getAccountByUsername(emailOrUsername).then( (user: any) => {
+            accounts.getAccountByUsernameWithPass(emailOrUsername).then( (user: any) => {
                 user = user[0];
                 if (!user) { return done(null, false); }
                 if (!auth.validatePassword(user, password.toString())) { return done(null, false); }
+                delete user.pass;
+                delete user.salt;
                 return done(null, user);
             }, (err: any) => {
                 return done(err);

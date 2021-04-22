@@ -6,10 +6,13 @@ export interface Account {
     password: string;
     phone: string;
     phone_updated_at: string;
-    score: number;
     facebook_id: string;
     google_id: string;
     verified_date: string;
+    creation_date: string;
+    deletion_date: string;
+    role: string;
+    local_account: boolean;
 }
 
 export interface AccountMetadata {

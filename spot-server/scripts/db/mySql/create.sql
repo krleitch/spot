@@ -22,6 +22,7 @@ CREATE TABLE accounts (
     username VARCHAR(255) NOT NULL,
     username_updated_at DATETIME,
     pass VARCHAR(1024),
+    local_account BOOLEAN GENERATED ALWAYS AS (IF(pass IS NULL, FALSE, TRUE)) VIRTUAL,
     phone VARCHAR(255),
     phone_updated_at DATETIME,
     salt VARCHAR(256),

@@ -99,6 +99,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         this.username = account.username;
         this.email = account.email;
         this.phone = account.phone;
+        console.log(account)
       }
     });
 

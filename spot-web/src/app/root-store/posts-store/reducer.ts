@@ -42,36 +42,37 @@ export function featureReducer(state = initialState, action: Actions): State {
         }
       }
     }
-    case ActionTypes.ADD_COMMENT: {
-      // When you add a comment, add 1 to the post comments counter
-      const newPosts = Array.from(state.posts);
-      state.posts.forEach( (post , i) => {
-        if (post.id === action.request.postId) {
-          const newObj =  Object.assign({}, post);
-          newObj.comments += 1;
-          newPosts[i] = newObj;
-        }
-      });
-      return {
-        ...state,
-        posts: newPosts
-      };
-    }
-    case ActionTypes.DELETE_COMMENT: {
-      // When you delete a comment, remove 1 to the post comments counter
-      const newPosts = Array.from(state.posts);
-      state.posts.forEach( (post , i) => {
-        if (post.id === action.request.postId) {
-          const newObj =  Object.assign({}, post);
-          newObj.comments -= 1;
-          newPosts[i] = newObj;
-        }
-      });
-      return {
-        ...state,
-        posts: newPosts
-      };
-    }
+    // TODO: this needs some workshopping, dont want to mutate everything just 1 property....
+    // case ActionTypes.ADD_COMMENT: {
+    //   // When you add a comment, add 1 to the post comments counter
+    //   const newPosts = Array.from(state.posts);
+    //   state.posts.forEach( (post , i) => {
+    //     if (post.id === action.request.postId) {
+    //       const newObj =  Object.assign({}, post);
+    //       newObj.comments += 1;
+    //       newPosts[i] = newObj;
+    //     }
+    //   });
+    //   return {
+    //     ...state,
+    //     posts: newPosts
+    //   };
+    // }
+    // case ActionTypes.DELETE_COMMENT: {
+    //   // When you delete a comment, remove 1 to the post comments counter
+    //   const newPosts = Array.from(state.posts);
+    //   state.posts.forEach( (post , i) => {
+    //     if (post.id === action.request.postId) {
+    //       const newObj =  Object.assign({}, post);
+    //       newObj.comments -= 1;
+    //       newPosts[i] = newObj;
+    //     }
+    //   });
+    //   return {
+    //     ...state,
+    //     posts: newPosts
+    //   };
+    // }
     case ActionTypes.ADD_REQUEST: {
       return {
         ...state,

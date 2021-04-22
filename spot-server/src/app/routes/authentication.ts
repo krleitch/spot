@@ -115,6 +115,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
                         // add facebook friends
                         friendsService.addFacebookFriends(accessToken, user2[0].id).then( (res: any) => {
 
+                            console.log('creating account');
                             res.status(200).json({
                                 created: true,
                                 jwt: { token: token, expiresIn: 7 },
