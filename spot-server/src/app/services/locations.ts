@@ -15,8 +15,7 @@ const LocationsError = require('@exceptions/locations');
 const locations_constants = require('@constants/locations');
 const LOCATIONS_CONSTANTS = locations_constants.LOCATIONS_CONSTANTS;
 
-// Returns if location object is relevant to your previous location if any
-// Detect Fraud
+// Middleware to call verifyLocation
 const checkLocation = async (req: any, res: any, next: any) => {
 
 	// if you aren't logged in then verifying your location doesn't matter
@@ -31,11 +30,8 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	let latitude: any = null;
 	let longitude: any = null;
 
-	// TODO::::::
-	// There is an issue on signup where says location isnt defined, see logs below
-
+	// for get requests
 	if ( req.query ) {
-		// console.log('1', req.query ? 'yes' : 'no' )
 		latitude = Number(req.query.latitude);
 		longitude = Number(req.query.longitude);
 	}
@@ -44,25 +40,24 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	const { location } = req.body;
 
 	if ( location ) {
-		// console.log('2', location ? 'yy' : 'nn' )
 		latitude = location.latitude;
 		longitude = location.longitude;
 	}
 
-	// If there is a locatiomn attached to the request, compare to last location
+	// If there is a location attached to the request, compare to last location
 	if ( latitude && longitude ) {
 
 		await verifyLocation( accountId, latitude, longitude ).then( (valid: boolean) => {
-
 			if ( !valid ) {
 				return next(new LocationsError.LocationError(500));
+			} else {
+				// We have a new valid location, update it
+				locations.updateLocation(accountId, latitude, longitude).then( (rows: any) => {
+					return next();
+				}, (err: any) => {
+					return next();
+				});
 			}
-
-			// We have a new valid location, update it
-			locations.updateLocation(accountId, latitude, longitude).then( (rows: any) => {
-				return next();
-			})
-
 		});
 
 	} else {
@@ -75,14 +70,18 @@ const checkLocation = async (req: any, res: any, next: any) => {
 // Returns True if the location given is accurate for the user with account_id
 function verifyLocation( account_id: string, myLatitude: number, myLongitude: number ): Promise<boolean> {
 
+	console.log('verify location', account_id, myLatitude, myLongitude);
+
     return locations.getLatestLocation(account_id).then( (location: any) => {
 
 		// No previous info, so add it and return true
 		if ( location.length < 1 ) {
 
-			locations.addLocation(account_id, myLatitude, myLongitude).then( (rows: any) => {
+			return locations.addLocation(account_id, myLatitude, myLongitude).then( (rows: any) => {
 				return true;
-			})
+			}, (err: any) => {
+
+			});
 
 		} else {
 
@@ -104,7 +103,9 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
 		}
 
-    });
+    }, (err: any) => {
+		return true;
+	});
 
 }
 
