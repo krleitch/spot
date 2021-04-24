@@ -119,7 +119,7 @@ export interface FacebookConnectRequest {
 }
 
 export interface FacebookConnectResponse {
-    created: boolean;
+    account: Account;
 }
 
 export interface FacebookDisconnectRequest {
@@ -137,7 +137,7 @@ export interface GoogleConnectRequest {
 }
 
 export interface GoogleConnectResponse {
-    created: boolean;
+    account: Account;
 }
 
 export interface GoogleDisconnectRequest {

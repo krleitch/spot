@@ -178,7 +178,9 @@ function addFacebookAccount(id: string, email: string, username: string): Promis
 function connectFacebookAccount(facebookId: string, accountId: string): Promise<any> {
     var sql = 'UPDATE accounts SET facebook_id = ? WHERE id = ?';
     var values = [facebookId, accountId];
-    return db.query(sql, values);
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(accountId);
+    });
 }
 
 function disconnectFacebookAccount(accountId: string): Promise<any> {
@@ -207,7 +209,9 @@ function addGoogleAccount(id: string, email: string, username: string): Promise<
 function connectGoogleAccount(googleId: string, accountId: string): Promise<any> {
     var sql = 'UPDATE accounts SET google_id = ? WHERE id = ?';
     var values = [googleId, accountId];
-    return db.query(sql, values);
+    return db.query(sql, values).then( (rows: any) => {
+        return getAccountById(accountId);
+    });
 }
 
 function disconnectGoogleAccount(accountId: string): Promise<any> {

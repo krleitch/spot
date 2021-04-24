@@ -135,7 +135,7 @@
           <div class="facebook-connected">
             <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
             <span class="text"> Logged in with Facebook </span>
-            <button (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+            <button *ngIf="account.local_account || account.google_id" (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
           </div>
         </ng-template>
         <div class="social-button" *ngIf="!(googleConnected$ | async); else googleconnected">
@@ -146,7 +146,7 @@
           <div class="google-connected">
             <img src="../../../assets/images/google_logo.png" class="google-logo">
             <span class="text"> Logged in with Google </span>
-            <button (click)="googleDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+            <button *ngIf="account.local_account || account.facebook_id" (click)="googleDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
           </div>
         </ng-template>
       </div>

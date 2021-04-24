@@ -13,8 +13,6 @@ export interface State {
     locationFailure: string;
     locationTimeReceived: Date;
     loadingLocation: boolean;
-    facebookConnected: boolean;
-    googleConnected: boolean;
 }
 
 export const initialState: State = (
@@ -26,8 +24,6 @@ export const initialState: State = (
     authenticationError: null,
     usernameError: null,
     usernameSuccess: false,
-    facebookConnected: false,
-    googleConnected: false,
     loadingLocation: false,
     locationFailure: null,
     location: null,

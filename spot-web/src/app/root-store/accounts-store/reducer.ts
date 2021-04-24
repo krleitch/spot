@@ -16,8 +16,6 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         account: action.response.account,
         authenticationError: null,
         authenticationSuccess: true,
-        facebookConnected: action.response.account.facebook_id ? true : false,
-        googleConnected: action.response.account.google_id ? true : false,
       };
     }
     case ActionTypes.REGISTER_FAILURE: {
@@ -34,8 +32,6 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         account: action.response.account,
         authenticationError: null,
         authenticationSuccess: true,
-        facebookConnected: action.response.account.facebook_id ? true : false,
-        googleConnected: action.response.account.google_id ? true : false,
       };
     }
     case ActionTypes.LOGIN_FAILURE: {
@@ -50,16 +46,12 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       return {
         ...state,
         account: null,
-        facebookConnected: false,
-        googleConnected: false
       };
     }
     case ActionTypes.DELETE_SUCCESS: {
       return {
         ...state,
         account: null,
-        facebookConnected: false,
-        googleConnected: false
       };
     }
     case ActionTypes.LOAD_LOCATION: {
@@ -95,9 +87,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       return {
         ...state,
         account: action.response.account,
-        accountLoading: false,
-        facebookConnected: action.response.account.facebook_id ? true : false,
-        googleConnected: action.response.account.google_id ? true : false,
+        accountLoading: false
       };
     }
     case ActionTypes.UPDATE_USERNAME_REQUEST: {
@@ -139,39 +129,37 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,
-        account: action.response.account,
-        facebookConnected: true
+        account: action.response.account
       };
     }
     case FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS: {
       return {
         ...state,
-        facebookConnected: true
+        account: action.response.account
       };
     }
     case FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS: {
       return {
         ...state,
-        facebookConnected: false
+        account: { ...state.account, facebook_id: null }
       };
     }
     case GoogleActionTypes.GOOGLE_LOGIN_SUCCESS: {
       return {
         ...state,
-        account: action.response.account,
-        googleConnected: true
+        account: action.response.account
       };
     }
     case GoogleActionTypes.GOOGLE_CONNECT_SUCCESS: {
       return {
         ...state,
-        googleConnected: true
+        account: action.response.account
       };
     }
     case GoogleActionTypes.GOOGLE_DISCONNECT_SUCCESS: {
       return {
         ...state,
-        googleConnected: false
+        account: { ...state.account, google_id: null }
       };
     }
     default: {

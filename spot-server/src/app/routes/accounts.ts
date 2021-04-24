@@ -212,10 +212,12 @@ router.post('/facebook', function (req: any, res: any, next: any) {
         accounts.getFacebookAccount(facebookId.body.id).then(( user: any) => {
             if ( user.length == 0 ) {
                 // create the account
-                accounts.connectFacebookAccount(facebookId.body.id, accountId).then( (rows: any) => {
+                accounts.connectFacebookAccount(facebookId.body.id, accountId).then( (account: any) => {
                     friendsService.addFacebookFriends(accessToken, accountId).then( (res: any) => {
 
-                        const response = { created: true };
+                        const response = { 
+                            account: account[0]
+                        };
                         res.status(200).json(response);  
 
                     }, ( err: any ) => {
@@ -266,9 +268,11 @@ router.post('/google', ErrorHandler.catchAsync(async function (req: any, res: an
         accounts.getGoogleAccount(userid).then(( user: any) => {
             if ( user.length == 0 ) {
                 // create the account
-                accounts.connectGoogleAccount(userid, accountId).then( (rows: any) => {
+                accounts.connectGoogleAccount(userid, accountId).then( (account: any) => {
 
-                    const response = { created: false };
+                    const response = { 
+                        account: account[0]
+                    };
                     res.status(200).json(response);  
 
                 }, (err: any) => {
