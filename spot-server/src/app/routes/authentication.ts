@@ -110,7 +110,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
                 // do not assign automatically because of errors if email isnt verified by facebook
                 await accounts.getAccountByEmail(email).then((rows: any) => {
                     if ( rows.length > 0 ) {
-                        email = ''
+                        email = null;
                     }
                 }, (err: any) => {
 
@@ -179,7 +179,7 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
         // do not assign automatically because of errors if email isnt verified by google
         await accounts.getAccountByEmail(email).then((rows: any) => {
             if ( rows.length > 0 ) {
-                email = ''
+                email = null;
             }
         }, (err: any) => {
 

@@ -46,10 +46,14 @@ export const STRINGS = {
             NEW: 'New',
             HOT: 'Hot',
 
+            // Verification
             VERIFY: 'You must verify your email before you can add spots',
             VERIFY_SEND: 'Send email verification',
             VERIFY_SENT: 'Verification email sent to',
             VERIFY_RESEND: 'Resend',
+            NO_EMAIL: 'You must add and verify an email before you can add spots',
+            ADD_EMAIL: 'Click to add email',
+
 
         },
 

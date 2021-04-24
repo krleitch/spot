@@ -271,7 +271,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const request: UpdateEmailRequest = {
-      email: this.username
+      email: this.email
     };
 
     this.accountsService.updateEmail(request).pipe(take(1)).subscribe( (response: UpdateEmailResponse ) => {

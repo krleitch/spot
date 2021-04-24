@@ -13,15 +13,17 @@
       <div class="subheading" ngClass="{'mobile-column': account.verified_date == null}">
         <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
         <div *ngIf="account.verified_date == null; else verified">
-          <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
-            <span class="verify-text"> {{ STRINGS.VERIFY }} </span>
-            <span class="material-icons verify-icon"> email </span>
-          </div>
-          <ng-template #sent>
-            <div class="verify-container">
-              <span class="verify-text"> {{ STRINGS.VERIFY_SENT }} </span>
+          <div *ngIf="account.email">
+            <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
+              <span class="verify-text"> {{ STRINGS.VERIFY }} </span>
+              <span class="material-icons verify-icon"> email </span>
             </div>
-          </ng-template>
+            <ng-template #sent>
+              <div class="verify-container">
+                <span class="verify-text"> {{ STRINGS.VERIFY_SENT }} </span>
+              </div>
+            </ng-template>
+          </div>
         </div>
         <ng-template #verified>
           <div class="verify-container">
@@ -33,13 +35,13 @@
 
       <!-- Email -->
       <div class="value editable">
-        <span *ngIf="email == '' && !editEmailEnabled" class="no-email"> {{ STRINGS.NO_EMAIL }} </span>
+        <span *ngIf="!email && !editEmailEnabled" class="no-email"> {{ STRINGS.NO_EMAIL }} </span>
         <input #editEmail [disabled]="!editEmailEnabled" [(ngModel)]="email" type="text" spellcheck="false">
         <div *ngIf="editEmailEnabled; else elseEmailBlock">
           <span class="link" (click)="submitEditEmail()"> {{ STRINGS.SUBMIT }} </span>
         </div>
         <ng-template #elseEmailBlock>
-          <div *ngIf="phone; else add">
+          <div *ngIf="email; else add">
             <span class="material-icons edit-icon" (click)="enableEditEmail()"> edit </span>
           </div>
           <ng-template #add>

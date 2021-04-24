@@ -65,7 +65,7 @@ function validEmail(email: string): Error | null {
     const regex = /^\S+@\S+\.\S+$/;
 
     if ( email.match(regex) == null ) {
-        return new AuthenticationError.PasswordInvalidError(400);
+        return new AuthenticationError.EmailInvalidError(400);
     }
 
     return null;

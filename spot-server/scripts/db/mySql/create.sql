@@ -17,7 +17,7 @@ ALTER DATABASE db CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE accounts (
     id VARCHAR(36) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
     email_updated_at DATETIME,
     username VARCHAR(255) NOT NULL,
     username_updated_at DATETIME,
@@ -27,8 +27,8 @@ CREATE TABLE accounts (
     phone_updated_at DATETIME,
     salt VARCHAR(256),
     role VARCHAR(36),
-    facebook_id VARCHAR(36) UNIQUE,
-    google_id VARCHAR(36) UNIQUE,
+    facebook_id VARCHAR(36),
+    google_id VARCHAR(36),
     creation_date DATETIME NOT NULL,
     deletion_date DATETIME,
     verified_date DATETIME,
@@ -36,6 +36,8 @@ CREATE TABLE accounts (
     UNIQUE (email, not_archived),
     UNIQUE (username, not_archived),
     UNIQUE (phone, not_archived),
+    UNIQUE (facebook_id, not_archived),
+    UNIQUE (google_id, not_archived),
     PRIMARY KEY (id)
 );
 

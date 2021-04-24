@@ -120,7 +120,7 @@ router.put('/email', ErrorHandler.catchAsync(async function (req: any, res: any,
             return next(new AccountsError.UpdateEmail(500));
         }
         // If its your first email dont check, from facebook/google login where email is taken
-        if ( rows[0].email !== '' ) {
+        if ( rows[0].email ) {
             const valid = authenticationService.isValidAccountUpdateTime(rows[0].email_updated_at);
             if (!valid) {
                 return next(new AccountsError.UpdateEmailTimeout(500));

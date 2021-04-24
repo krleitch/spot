@@ -14,7 +14,7 @@ const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: 'admin',
-    database: 'db',
+    database: 'spot',
     charset : 'utf8mb4'
   });
 
@@ -50,7 +50,7 @@ function closeDb() {
             if (err) {
                 return reject(err);
             }
-            resolve();
+            resolve(true);
         });
     });
 }
