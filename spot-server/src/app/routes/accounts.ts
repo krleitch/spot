@@ -119,9 +119,12 @@ router.put('/email', ErrorHandler.catchAsync(async function (req: any, res: any,
         if ( rows.length < 1 ) {
             return next(new AccountsError.UpdateEmail(500));
         }
-        const valid = authenticationService.isValidAccountUpdateTime(rows[0].email_updated_at);
-        if (!valid) {
-            return next(new AccountsError.UpdateEmailTimeout(500));
+        // If its your first email dont check, from facebook/google login where email is taken
+        if ( rows[0].email !== '' ) {
+            const valid = authenticationService.isValidAccountUpdateTime(rows[0].email_updated_at);
+            if (!valid) {
+                return next(new AccountsError.UpdateEmailTimeout(500));
+            }
         }
     } catch (e)  {
         return next(new AccountsError.UpdateEmail(500));
@@ -213,7 +216,7 @@ router.post('/facebook', function (req: any, res: any, next: any) {
             if ( user.length == 0 ) {
                 // create the account
                 accounts.connectFacebookAccount(facebookId.body.id, accountId).then( (account: any) => {
-                    friendsService.addFacebookFriends(accessToken, accountId).then( (res: any) => {
+                    friendsService.addFacebookFriends(accessToken, accountId).then( (added: boolean) => {
 
                         const response = { 
                             account: account[0]

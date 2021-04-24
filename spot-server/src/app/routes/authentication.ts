@@ -104,9 +104,20 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
             if ( user.length == 0 ) {
 
                 const username = await authentication.createUsernameFromEmail(facebookDetails.body.email);
+                let email = facebookDetails.body.email;
+
+                // if email is used
+                // do not assign automatically because of errors if email isnt verified by facebook
+                await accounts.getAccountByEmail(email).then((rows: any) => {
+                    if ( rows.length > 0 ) {
+                        email = ''
+                    }
+                }, (err: any) => {
+
+                });
 
                 // create the account
-                accounts.addFacebookAccount(facebookDetails.body.id, facebookDetails.body.email, username).then( (user2: any) => {
+                accounts.addFacebookAccount(facebookDetails.body.id, email, username).then( (user2: any) => {
                     accounts.addAccountMetadata(user2[0].id).then( (rows: any ) => {
 
                         user2 = user2[0];
@@ -115,7 +126,6 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
                         // add facebook friends
                         friendsService.addFacebookFriends(accessToken, user2[0].id).then( (res: any) => {
 
-                            console.log('creating account');
                             res.status(200).json({
                                 created: true,
                                 jwt: { token: token, expiresIn: 7 },
@@ -163,10 +173,19 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
 
         const payload = ticket.getPayload();
         const userid = payload['sub'];
-        const email = payload['email'];
+        let email = payload['email'];
+
+        // if email is used
+        // do not assign automatically because of errors if email isnt verified by google
+        await accounts.getAccountByEmail(email).then((rows: any) => {
+            if ( rows.length > 0 ) {
+                email = ''
+            }
+        }, (err: any) => {
+
+        });
 
         // make or retrieve account
-
         accounts.getGoogleAccount(userid).then( async( user: any) => {
             if ( user.length == 0 ) {
 

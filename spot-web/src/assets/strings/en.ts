@@ -61,6 +61,7 @@ export const STRINGS = {
             // My account
             MY_ACCOUNT: 'My Account',
 
+            NO_EMAIL: 'Please add an email to your account',
             EMAIL: 'Email',
             VERIFY: 'Send verification email',
             VERIFY_SENT: 'Verification email sent',

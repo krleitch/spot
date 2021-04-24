@@ -148,22 +148,34 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditEmail(): void {
 
-    this.modalService.open('spot-confirm-modal', { message: this.STRINGS.EMAIL_CONFIRM });
+    if ( this.email === '' ) {
 
-    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+      this.editEmailEnabled = true;
+      this.emailErrorMessage = '';
+      this.emailSuccessMessage = '';
+      setTimeout(() => {
+        this.editEmailInput.nativeElement.focus();
+      }, 0);
 
-    result$.subscribe( (result: { status: string }) => {
+    } else {
 
-      if ( result.status === 'confirm' ) {
-        this.editEmailEnabled = true;
-        this.emailErrorMessage = '';
-        this.emailSuccessMessage = '';
-        setTimeout(() => {
-          this.editEmailInput.nativeElement.focus();
-        }, 0);
-      }
+      this.modalService.open('spot-confirm-modal', { message: this.STRINGS.EMAIL_CONFIRM });
 
-    });
+      const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+
+      result$.subscribe( (result: { status: string }) => {
+
+        if ( result.status === 'confirm' ) {
+          this.editEmailEnabled = true;
+          this.emailErrorMessage = '';
+          this.emailSuccessMessage = '';
+          setTimeout(() => {
+            this.editEmailInput.nativeElement.focus();
+          }, 0);
+        }
+
+      });
+    }
 
   }
 
@@ -340,11 +352,18 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   verifyAccount(): void {
-    const request: VerifyRequest = {};
-    this.store$.dispatch(
-      new AccountsActions.VerifyRequestAction(request)
-    );
-    this.verificationSent = true;
+
+    if ( this.email === '' ) {
+      // give a warning probably
+      // just should show maybe
+      return;
+    } else {
+      const request: VerifyRequest = {};
+      this.store$.dispatch(
+        new AccountsActions.VerifyRequestAction(request)
+      );
+      this.verificationSent = true;
+    }
   }
 
   facebookConnect(): void {
@@ -369,12 +388,15 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
               // could not login
               // TODO some error msg
             }
-          })
+          });
       } else {
-        // already logged in
-        // this.router.navigateByUrl('/home');
-        // TODO THIS // ALSO LANDING
-        window['FB'].logout();
+        const request: FacebookConnectRequest = {
+          accessToken: statusResponse.authResponse.accessToken
+        };
+
+        this.store$.dispatch(
+          new AccountsFacebookActions.FacebookConnectRequestAction(request)
+        );
       }
     });
 

@@ -33,12 +33,18 @@
 
       <!-- Email -->
       <div class="value editable">
+        <span *ngIf="email == '' && !editEmailEnabled" class="no-email"> {{ STRINGS.NO_EMAIL }} </span>
         <input #editEmail [disabled]="!editEmailEnabled" [(ngModel)]="email" type="text" spellcheck="false">
         <div *ngIf="editEmailEnabled; else elseEmailBlock">
           <span class="link" (click)="submitEditEmail()"> {{ STRINGS.SUBMIT }} </span>
         </div>
         <ng-template #elseEmailBlock>
-          <span class="material-icons edit-icon" (click)="enableEditEmail()"> edit </span>
+          <div *ngIf="phone; else add">
+            <span class="material-icons edit-icon" (click)="enableEditEmail()"> edit </span>
+          </div>
+          <ng-template #add>
+            <span class="link" (click)="enableEditEmail()"> {{ STRINGS.ADD }} </span>
+          </ng-template>
         </ng-template>
       </div>
       <div *ngIf="emailErrorMessage" class="error">

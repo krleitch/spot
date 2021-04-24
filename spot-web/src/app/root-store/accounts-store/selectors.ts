@@ -13,8 +13,10 @@ export const selectLoadingLocationFromStore = (state: State): boolean => state.l
 export const selectLocationFromStore = (state: State): Location => state.location;
 export const selectLocationFailureFromStore = (state: State): string => state.locationFailure;
 export const selectLocationTimeReceivedFromStore = (state: State): Date => state.locationTimeReceived;
-export const selectFacebookConnectedFromStore = (state: State): boolean => state.account.facebook_id == null ? false : true;
-export const selectGoogleConnectedFromStore = (state: State): boolean => state.account.google_id == null ? false : true;
+export const selectFacebookConnectedFromStore = (state: State): boolean => state.account &&
+                                                                            state.account.facebook_id == null ? false : true;
+export const selectGoogleConnectedFromStore = (state: State): boolean => state.account &&
+                                                                            state.account.google_id == null ? false : true;
 export const selectAuthenticationErrorFromStore = (state: State): SpotError => state.authenticationError;
 export const selectAuthenticationSuccessFromStore = (state: State): boolean => state.authenticationSuccess;
 export const selectIsAuthenticatedFromStore = (state: State): boolean => state.account ? true : false;

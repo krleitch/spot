@@ -8,18 +8,19 @@ const request = require('request');
 // Must disconnect and reconnect to run again, should provide a sync feature after time
 function addFacebookFriends(accessToken: String, accountId: string): Promise<any> {
     
-    const url = "https://graph.facebook.com/me/friends&access_token=" + accessToken;
+    // const url = "https://graph.facebook.com/me/friends&access_token=" + accessToken;
 
     return new Promise((resolve, reject) => {
-        request(url, function (error: any, response: any, body: any) {
-            if (error) {
-                return reject(error);
-            }
+        // request(url, function (error: any, response: any, body: any) {
+        //     if (error) {
+        //         return reject(error);
+        //     }
 
-            body = JSON.parse(body);
+        //     body = JSON.parse(body);
             
-            resolve({response: response, body: JSON.parse(body)});
-          });
+        //     resolve({response: response, body: JSON.parse(body)});
+        //   });
+        resolve(true);
     });
 
 }

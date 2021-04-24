@@ -70,8 +70,6 @@ const checkLocation = async (req: any, res: any, next: any) => {
 // Returns True if the location given is accurate for the user with account_id
 function verifyLocation( account_id: string, myLatitude: number, myLongitude: number ): Promise<boolean> {
 
-	console.log('verify location', account_id, myLatitude, myLongitude);
-
     return locations.getLatestLocation(account_id).then( (location: any) => {
 
 		// No previous info, so add it and return true
