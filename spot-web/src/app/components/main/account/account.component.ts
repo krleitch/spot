@@ -148,16 +148,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditEmail(): void {
 
-    if ( this.email === '' ) {
-
-      this.editEmailEnabled = true;
-      this.emailErrorMessage = '';
-      this.emailSuccessMessage = '';
-      setTimeout(() => {
-        this.editEmailInput.nativeElement.focus();
-      }, 0);
-
-    } else {
+    if ( this.email ) {
 
       this.modalService.open('spot-confirm-modal', { message: this.STRINGS.EMAIL_CONFIRM });
 
@@ -175,6 +166,16 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
       });
+
+    } else {
+
+      this.editEmailEnabled = true;
+      this.emailErrorMessage = '';
+      this.emailSuccessMessage = '';
+      setTimeout(() => {
+        this.editEmailInput.nativeElement.focus();
+      }, 0);
+
     }
 
   }

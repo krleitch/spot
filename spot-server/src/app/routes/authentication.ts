@@ -99,6 +99,11 @@ router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, functi
 // Facebook login
 router.post('/login/facebook', function (req: any, res: any, next: any) {
     const { accessToken } = req.body;
+
+    if ( !req.body ) {
+        return next(new AuthError.FacebookSignUpError(500));
+    }
+
     authentication.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
         accounts.getFacebookAccount(facebookDetails.body.id).then( async( user: any) => {
             if ( user.length == 0 ) {

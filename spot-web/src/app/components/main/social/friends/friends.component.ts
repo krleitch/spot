@@ -16,7 +16,7 @@ import { FriendsService } from '@services/friends.service';
 // Models
 import { GetFriendRequests, Friend, GetFriendRequestsSuccess, AddFriendRequest, AddFriendRequestSuccess,
           GetFriendsRequest, DeleteFriendsRequest, AddFriendToStore, AcceptFriendRequest,
-          AcceptFriendRequestSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess, 
+          AcceptFriendRequestSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess,
           GetPendingFriendRequests, GetPendingFriendRequestsSuccess, DeletePendingFriendRequest, DeletePendingFriendSuccess } from '@models/friends';
 import { FacebookConnectRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
@@ -136,8 +136,9 @@ export class FriendsComponent implements OnInit, OnDestroy {
           new SocialStoreFriendsActions.AddFriendAction(addFriendRequest),
         );
       } else {
-        this.pendingFriendRequests.push(response.friend)
+        this.pendingFriendRequests.push(response.friend);
       }
+      this.friendRequestUsername = '';
     }, (response: {  error: SpotError }) => {
       this.friendRequestsError = response.error.message;
     });
@@ -243,9 +244,9 @@ export class FriendsComponent implements OnInit, OnDestroy {
               this.pendingFriendRequests.splice(i, 1);
             }
           });
-    
+
         }, (response: { error: SpotError }) => {
-    
+
         });
 
       }

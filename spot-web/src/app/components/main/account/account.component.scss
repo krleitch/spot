@@ -139,6 +139,7 @@ spot-main-nav {
 
   display: flex;
   align-items: center;
+  margin: 5px;
 
   .facebook-logo {
     margin-right: 8px;
@@ -169,6 +170,7 @@ spot-main-nav {
 
   display: flex;
   align-items: center;
+  margin: 5px;
 
   .google-logo {
     width: 30px;
@@ -428,6 +430,16 @@ input {
     justify-content: flex-start;
     align-items: flex-start;
   }
+
+
+  .delete {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
+
+@media screen and (max-width: 800px) {
 
   .social {
     flex-flow: column;
