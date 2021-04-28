@@ -117,7 +117,7 @@ function updateUsername(username: string, accountId: string) {
 
 function usernameExists(username: string) {
     
-    var sql = 'SELECT username FROM accounts WHERE username = ? LIMIT 1';
+    var sql = 'SELECT username FROM accounts WHERE username = ? AND deletion_date IS NULL LIMIT 1';
     var values = [username];
 
     return db.query(sql, values).then( (user: any) => {
