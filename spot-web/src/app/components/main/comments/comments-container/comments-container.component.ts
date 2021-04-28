@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
+// rxjs
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
 
@@ -65,7 +66,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   addCommentLoading = false;
   addCommentError: string;
 
-  location$: Observable<Location>
+  location$: Observable<Location>;
   location: Location;
   friends$: Observable<Friend[]>;
   friends: Friend[] = [];
@@ -440,6 +441,11 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
+  loadRecentCommentsNum(): number {
+    return Math.min(this.totalCommentsAfter,
+      this.detailed ? this.COMMENTS_CONSTANTS.RECENT_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.RECENT_LIMIT);
+  }
+
   loadRecentComments(): void {
 
     const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
@@ -482,15 +488,18 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   }
 
-  loadMoreComments(): void {
+  loadMoreCommentsNum(): number {
+    return Math.min(this.totalCommentsBefore,
+      this.detailed ? this.COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.MORE_LIMIT);
+  }
 
-    const limit = COMMENTS_CONSTANTS.MORE_LIMIT;
+  loadMoreComments(): void {
 
     const request: GetCommentsRequest = {
       postId: this.post.id,
       date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
       type: 'before',
-      limit
+      limit: this.detailed ? COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED : COMMENTS_CONSTANTS.MORE_LIMIT,
     };
 
     this.loadingCommentsAfter = true;

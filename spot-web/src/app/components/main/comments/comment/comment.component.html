@@ -117,6 +117,8 @@
   <div *ngFor="let reply of replies">
     <spot-reply [reply]="reply" [comment]="comment" [post]="post" [detailed]="detailed"></spot-reply>
   </div>
-  <div *ngIf="replies.length < totalReplies" class="load-more" (click)="loadMoreReplies()"> {{ STRINGS.LOAD_MORE_REPLIES }} </div>
+  <div *ngIf="replies.length < totalReplies" class="load-more" (click)="loadMoreReplies()">
+    {{ STRINGS.LOAD }} {{ loadMoreRepliesNum() }} {{ loadMoreRepliesNum() > 1 ? STRINGS.MORE_REPLIES : STRINGS.MORE_REPLIES_SINGULAR }}
+  </div>
 
 </div>

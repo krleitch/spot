@@ -129,17 +129,21 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
                         const token = authentication.generateToken(user2);
 
                         // add facebook friends
-                        friendsService.addFacebookFriends(accessToken, user2[0].id).then( (res: any) => {
+                        friendsService.addFacebookFriends(accessToken, user2.id).then( (res: any) => {
 
                             res.status(200).json({
                                 created: true,
                                 jwt: { token: token, expiresIn: 7 },
                                 account: user2
-                            }, ( err: any) => {
-                                // couldnt add your friends
-                                return next(new AuthError.FacebookSignUpError(500));
-                            });  
+                            });
 
+                        }, ( err: any) => {
+                            // couldnt add your friends
+                            res.status(200).json({
+                                created: true,
+                                jwt: { token: token, expiresIn: 7 },
+                                account: user2
+                            });
                         });
 
                     }, (err: any) => {

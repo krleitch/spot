@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
+// rxjs
 import { Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { min, take, takeUntil } from 'rxjs/operators';
 
 // Store
 import { select, Store } from '@ngrx/store';
@@ -108,7 +109,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.replies$ = this.store$.pipe(
       select(CommentsStoreSelectors.selectReplies, { postId: this.comment.post_id, commentId: this.comment.id })
@@ -116,7 +117,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.replies$.pipe(takeUntil(this.onDestroy)).subscribe( (storeReply: StoreReply) => {
       this.replies = storeReply.replies;
-      this.totalReplies = storeReply.replies.length;
     });
 
     this.isAuthenticated$ = this.store$.pipe(
@@ -172,6 +172,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.store$.dispatch(
         new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
       );
+
+      this.totalReplies = replies.totalReplies;
 
     }, (err: SpotError) => {
 
@@ -470,15 +472,20 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setContentHTML();
   }
 
+  // the number of replies that will be loaded if load more is pressed
+  loadMoreRepliesNum(): number {
+    return Math.min(this.totalReplies - this.replies.length,
+                    this.detailed ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT);
+  }
+
   loadMoreReplies(): void {
-    const limit = 1;
 
     const request: GetRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
       date: this.replies.slice(-1)[0].creation_date,
       initialLoad: false,
-      limit
+      limit: this.detailed ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT,
     };
 
     this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
@@ -495,6 +502,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.store$.dispatch(
         new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
       );
+
+      this.totalReplies = replies.totalReplies;
 
     }, (err: SpotError) => {
 

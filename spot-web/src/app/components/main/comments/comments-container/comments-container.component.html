@@ -67,7 +67,11 @@
 
     <div  class="load-recent">
       <div *ngIf="totalCommentsAfter > 0; else refresh" class="load-recent__position">
-        <span (click)="loadRecentComments()" class="load-recent__recent"> Load Recent Comments </span>
+        <span (click)="loadRecentComments()" class="load-recent__recent">
+          {{ STRINGS.LOAD }}
+          {{ loadRecentCommentsNum() }}
+          {{ loadRecentCommentsNum() > 1 ? STRINGS.RECENT_COMMENTS : STRINGS.RECENT_COMMENTS_SINGULAR }}
+        </span>
         <div *ngIf="loadingCommentsAfter" class="load-recent__loading">
           <spot-spinner size="small"></spot-spinner>
         </div>
@@ -100,7 +104,11 @@
 
     <!-- Load More -->
     <div class="load-more-container" *ngIf="totalCommentsBefore > 0">
-      <div class="load-more" (click)="loadMoreComments()"> {{ STRINGS.LOAD_MORE_COMMENTS }} </div>
+      <div class="load-more" (click)="loadMoreComments()">
+         {{ STRINGS.LOAD }}
+         {{ loadMoreCommentsNum() }}
+         {{ loadMoreCommentsNum() > 1 ? STRINGS.MORE_COMMENTS : STRINGS.MORE_COMMENTS_SINGULAR }}
+      </div>
       <div *ngIf="loadingCommentsBefore" class="load-comments-before">
         <spot-spinner size="small"></spot-spinner>
       </div>

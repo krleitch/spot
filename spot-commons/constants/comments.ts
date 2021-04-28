@@ -14,8 +14,15 @@ export const COMMENTS_CONSTANTS = {
     INITIAL_LIMIT: 1,
     DETAILED_INITIAL_LIMIT: 10,
 
+    // Load More Comments
     RECENT_LIMIT: 5,
+    RECENT_LIMIT_DETAILED: 15,
     MORE_LIMIT: 5, 
+    MORE_LIMIT_DETAILED: 15,
+
+    // Load More REplies
+    REPLY_MORE_LIMIT: 5, 
+    REPLY_MORE_LIMIT_DETAILED: 15,
     
     // Pictures
     PROFILE_COLORS_COUNT: 25,
@@ -23,7 +30,7 @@ export const COMMENTS_CONSTANTS = {
     // Activity
     ACTIVITY_DAYS: 3, // 3 days history
 
-    // Distance, miles
+    // Distance in miles
     MAX_DISTANCE: 10
 
  };

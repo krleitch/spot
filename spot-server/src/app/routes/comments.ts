@@ -376,8 +376,12 @@ router.delete('/:postId/:commentId', function (req: any, res: any, next: any) {
     const accountId = req.user.id;
 
     comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
-        const response = { postId: postId, commentId: commentId };
-        res.status(200).json(response);
+        comments.deleteReplyByParentId(commentId).then( (rows: any) => {
+            const response = { postId: postId, commentId: commentId };
+            res.status(200).json(response);
+        }, (err: any) => {
+            return next(new CommentsError.DeleteComment(500));
+        });
     }, (err: any) => {
         return next(new CommentsError.DeleteComment(500));
     });

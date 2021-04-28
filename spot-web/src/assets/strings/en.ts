@@ -160,11 +160,12 @@ export const STRINGS = {
 
         COMMENTS_CONTAINER: {
 
-          LOAD_MORE_COMMENTS: 'Load more comments',
-          LOAD_RECENT_COMMENTS: 'Load recent commments',
+          LOAD: 'Load',
+          MORE_COMMENTS: 'more comments',
+          MORE_COMMENTS_SINGULAR: 'more comment',
+          RECENT_COMMENTS: 'recent comments',
+          RECENT_COMMENTS_SINGULAR: 'recent comment',
           REFRESH_COMMENTS: 'Refresh commments',
-          LOAD_RECENT_COMMENTS_AGAIN: 'Load recent commments',
-          REFRESH_COMMENTS_AGAIN: 'No More Comments, Refresh again',
 
           // Form
           ADD_COMMENT_PLACEHOLDER: 'Write a comment...',
@@ -190,7 +191,9 @@ export const STRINGS = {
 
           // Reply
           ADD_REPLY_PLACEHOLDER: 'Write a reply...',
-          LOAD_MORE_REPLIES: 'Load more replies',
+          LOAD: 'Load',
+          MORE_REPLIES: 'more replies',
+          MORE_REPLIES_SINGULAR: 'more reply',
 
           // See more
           SEE_MORE: 'See more',

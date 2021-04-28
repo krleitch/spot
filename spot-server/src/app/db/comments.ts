@@ -1,4 +1,4 @@
-export { addComment, deleteCommentById, deleteCommentByPostId, getCommentByPostId,
+export { addComment, deleteCommentById, deleteReplyByParentId, getCommentByPostId,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
           likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink, getNumberOfCommentsForPostAfterDate,
           getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists, unratedComment }
@@ -99,9 +99,9 @@ function deleteCommentById(commentId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function deleteCommentByPostId(postId: string, accountId: string): Promise<any> {
-    var sql = 'UPDATE comments SET deletion_date = ? WHERE post_id = ? AND account_id = ?';
-    var values = [new Date(), postId, accountId];
+function deleteReplyByParentId(parentId: string): Promise<any> {
+    var sql = 'UPDATE comments SET deletion_date = ? WHERE parent_id = ?';
+    var values = [new Date(), parentId];
     return db.query(sql, values);
 }
 
