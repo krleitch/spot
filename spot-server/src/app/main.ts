@@ -30,7 +30,7 @@ const locationService = require('@services/locations');
 const authorization = require('@services/authorization/authorization');
 const roles = require('@services/authorization/roles');
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 mySql.initDb();
 // mongo.initDb();
@@ -76,6 +76,8 @@ app.listen(port, (err: any) => {
     console.log('Error listening: ', err);
     mySql.closeDb().then(() => {
       console.log('Terminated connection to Db');
+    }, (err: any) => {
+      console.log('Error terminating connection to Db', err);
     });
   }
   console.log(`Server is listening on ${port}`);

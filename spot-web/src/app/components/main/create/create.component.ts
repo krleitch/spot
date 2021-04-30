@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, skip } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -38,7 +38,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   location$: Observable<Location>;
   location: Location;
 
-  // Content 
+  // Content
   postInnerHtml = '';
   currentLength = 0;
 
@@ -62,7 +62,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectCreatePostsSuccess)
     );
 
-    this.createSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (success: boolean) => {
+    this.createSuccess$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (success: boolean) => {
       this.createLoading = false;
       if ( success ) {
         this.removeFile();
@@ -79,7 +79,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       select(PostsStoreSelectors.selectCreatePostsError)
     );
 
-    this.createError$.pipe(takeUntil(this.onDestroy)).subscribe( (createError: SpotError) => {
+    this.createError$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (createError: SpotError) => {
       this.createLoading = false;
       if ( createError ) {
         if ( createError.name === 'InvalidPostProfanity' ) {

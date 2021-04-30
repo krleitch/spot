@@ -1,15 +1,5 @@
 const mysql = require('mysql');
 
-// const db: Connection  = mysql.createConnection({
-//     host: "localhost",
-//     user: "root",
-//     password: "admin",
-//     database: "db",
-//     charset : 'utf8mb4'
-// });
-// root / rootroot
-// KEEP CONNECTION OPEN
-
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
@@ -18,11 +8,7 @@ const db = mysql.createPool({
     charset : 'utf8mb4'
   });
 
-// rootroot
-// admin
-
-// KEEP CONNECTION OPEN
-
+// Initialize the db
 function initDb() {
     // db.connect((err: any) => {
     db.getConnection((err: any) => {
@@ -34,6 +20,7 @@ function initDb() {
     });
 }
 
+// Query the db with the sql string
 function query( sql: string, args: Array<any> ) {
     return new Promise((resolve, reject) => {
         db.query(sql, args, (err: any, results: any) => {
@@ -44,6 +31,8 @@ function query( sql: string, args: Array<any> ) {
         });
     });
 }
+
+// Close the db
 function closeDb() {
     return new Promise((resolve, reject) => {
         db.end((err: any) => {
@@ -55,6 +44,7 @@ function closeDb() {
     });
 }
 
+// return the db object
 function getDb() {
     return db;
 }
