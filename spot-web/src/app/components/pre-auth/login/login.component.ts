@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   authenticationSuccess$: Observable<boolean>;
   errorMessage: string;
   buttonsDisabled = false;
+  facebookLoaded = false;
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +57,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       select(AccountsStoreSelectors.selectAuthenticationSuccess)
     );
 
-    this.authenticationSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticationSuccess: boolean) => {
+    this.authenticationSuccess$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (authenticationSuccess: boolean) => {
       if ( authenticationSuccess ) {
         this.buttonsDisabled = false;
       }
@@ -98,6 +99,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             theme: 'light',
             onsuccess: param => this.googleLogin(param)
         });
+      }
+      if ( service === 'FB' ) {
+        this.facebookLoaded = true;
       }
     });
   }
@@ -144,10 +148,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     window['FB'].getLoginStatus((statusResponse) => {
+
       if (statusResponse.status !== 'connected') {
           window['FB'].login((loginResponse) => {
             if (loginResponse.status === 'connected') {
 
+                console.log('logging in FB')
                 const request: FacebookLoginRequest = {
                   accessToken: loginResponse.authResponse.accessToken
                 };

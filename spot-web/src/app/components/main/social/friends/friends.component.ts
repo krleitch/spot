@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 
 import { Observable, Subject, timer } from 'rxjs';
-import { take, mapTo, startWith } from 'rxjs/operators';
+import { take, mapTo, startWith, takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -12,6 +12,7 @@ import { AccountsFacebookActions, AccountsStoreSelectors } from '@store/accounts
 // Services
 import { ModalService } from '@services/modal.service';
 import { FriendsService } from '@services/friends.service';
+import { AuthenticationService } from '@services/authentication.service';
 
 // Models
 import { GetFriendRequests, Friend, GetFriendRequestsSuccess, AddFriendRequest, AddFriendRequestSuccess,
@@ -29,7 +30,7 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './friends.component.html',
   styleUrls: ['./friends.component.scss']
 })
-export class FriendsComponent implements OnInit, OnDestroy {
+export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -49,6 +50,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
   // facebook
   facebookConnected$: Observable<boolean>;
+  facebookLoaded = false;
 
   // Input fields
   friendRequestUsername: string;
@@ -56,6 +58,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
 
   constructor(private store$: Store<RootStoreState.State>,
               private friendsService: FriendsService,
+              private authenticationService: AuthenticationService,
               private modalService: ModalService) { }
 
   ngOnInit(): void {
@@ -98,6 +101,14 @@ export class FriendsComponent implements OnInit, OnDestroy {
       new SocialStoreFriendsActions.GetFriendsRequestAction(getFriends),
     );
 
+  }
+
+  ngAfterViewInit(): void {
+    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
+      if ( service === 'FB' ) {
+        this.facebookLoaded = true;
+      }
+    });
   }
 
   ngOnDestroy(): void {

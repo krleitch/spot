@@ -38,6 +38,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   authenticationSuccess$: Observable<boolean>;
   errorMessage = '';
   buttonsDisabled = false;
+  facebookLoaded = false;
 
   constructor(
     private fb: FormBuilder,
@@ -96,6 +97,9 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
             theme: 'light',
             onsuccess: param => this.googleLogin(param)
         });
+      }
+      if ( service === 'FB' ) {
+        this.facebookLoaded = true;
       }
     });
   }

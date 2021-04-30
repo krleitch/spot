@@ -32,7 +32,7 @@
       </div>
 
       <div class="login-options">
-        <div type="button" class="facebook" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="facebookLogin()">
+        <div *ngIf="facebookLoaded" type="button" class="facebook" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="facebookLogin()">
           <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
           {{ STRINGS.FACEBOOK_LOGIN }}
         </div>

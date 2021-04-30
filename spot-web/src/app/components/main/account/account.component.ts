@@ -65,6 +65,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   googleConnected$: Observable<boolean>;
 
   accountOptionsEnabled: boolean;
+  facebookLoaded = false;
 
   constructor(private store$: Store<RootStoreState.State>,
               private modalService: ModalService,
@@ -119,6 +120,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
             theme: 'light',
             onsuccess: param => this.googleConnect(param)
         });
+      }
+      if ( service === 'FB' ) {
+        this.facebookLoaded = true;
       }
     });
   }
