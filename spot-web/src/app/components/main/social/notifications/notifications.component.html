@@ -20,7 +20,7 @@
       <!-- We only show loading when first loading notifications now -->
       <div *ngIf="loading && (showNotificationsIndicator$ | async) && notifications.length === 0" class="loading">
         <span class="text"> {{ STRINGS.LOADING }} </span>
-        <spot-spinner size="small"></spot-spinner>
+        <spot-spinner size="small" type="dot"></spot-spinner>
       </div>
     </spot-infinite-scroll>
 

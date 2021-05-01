@@ -73,6 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   dropdownLocationEnabled = false;
   @ViewChild('mobiledropdownsort') mobileDropdownSort: ElementRef;
   dropdownSortEnabled = false;
+  @ViewChild('bottom') bottom: ElementRef;
 
   constructor(private store$: Store<RootStoreState.State>) {
     document.addEventListener('click', this.offClickHandler.bind(this));
@@ -147,6 +148,19 @@ export class HomeComponent implements OnInit, OnDestroy {
       if ( this.posts.length !== 0 ) {
         this.initialLoad = false;
       }
+
+      if ( this.bottom ) {
+        const bounding = this.bottom.nativeElement.getBoundingClientRect();
+        if (
+            bounding.top >= 0 &&
+            bounding.left >= 0 &&
+            bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+        ) {
+          this.onScroll();
+        }
+      }
+
     });
 
     this.loading$ = this.store$.pipe(

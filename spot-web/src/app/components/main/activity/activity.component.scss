@@ -33,7 +33,7 @@ spot-main-nav {
   justify-content: center;
   margin-bottom: 10px;
   .text {
-    margin-bottom: 5px;
+    margin: 10px 0px;
   }
 }
 
@@ -98,7 +98,7 @@ img {
   opacity: 0.4;
   -webkit-transition: .3s ease-in-out;
   transition: .2s ease-in-out;
-  filter: blur(3px);	
+  filter: blur(3px);
   -webkit-filter: blur(3px);
 }
 

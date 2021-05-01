@@ -77,7 +77,7 @@
         </spot-infinite-scroll>
         <div *ngIf="(showPostsIndicator$ | async) && postActivityLoading" class="loading">
           <span class="text"> {{ STRINGS.LOADING_POST_ACTIVITY }} </span>
-          <spot-spinner size="medium"></spot-spinner>
+          <spot-spinner size="medium" type="dot"></spot-spinner>
         </div>
       </div>
 
@@ -122,7 +122,7 @@
         </spot-infinite-scroll>
         <div *ngIf="(showCommentsIndicator$ | async) && commentActivityLoading" class="loading">
           <span class="text"> {{ STRINGS.LOADING_COMMENT_ACTIVITY }} </span>
-          <spot-spinner size="medium"></spot-spinner>
+          <spot-spinner size="medium" type="dot"></spot-spinner>
         </div>
       </div>
 

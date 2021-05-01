@@ -137,7 +137,7 @@
                   <spot-post [post]="post" [detailed]="false"></spot-post>
               </div>
             </div>
-            <div class="empty-placeholder">
+            <div #bottom class="empty-placeholder">
               <ng-template #empty>
                 <!-- no spots in the area -->
                 <div *ngIf="noPosts && !loading && (showPostsIndicator$ | async)" class="empty-container">

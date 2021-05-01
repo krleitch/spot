@@ -96,7 +96,7 @@ export const STRINGS = {
             EDIT: 'Edit',
             SUBMIT: 'Submit',
 
-            SCORE_DESCRIPTION: 'Gain score by creating spots and commenting!',
+            SCORE_DESCRIPTION: 'Gain score by creating spots and comments.',
 
             UNIT: 'Preferred Unit',
             IMPERIAL: 'Imperial',
@@ -237,7 +237,7 @@ export const STRINGS = {
 
         SHARE: {
 
-          TITLE: 'Share a Spot!',
+          TITLE: 'Share a Spot',
           USERNAME_PLACEHOLDER: 'Enter Username',
           COPY_LINK: 'Copy link',
           SEND: 'Send',
@@ -336,11 +336,11 @@ export const STRINGS = {
           POSTS_OPEN: 'Open',
           COMMENTS_OPEN: 'Open',
 
-          LOADING_POST_ACTIVITY: 'Loading Spot activity ...',
+          LOADING_POST_ACTIVITY: 'Loading Spot activity',
           NO_POST_ACTIVITY: 'You have no spots in recent activity',
           NO_POST_TIME: 'Activity is only shown for the last 72 hours',
 
-          LOADING_COMMENT_ACTIVITY: 'Loading comment & replies activity ...',
+          LOADING_COMMENT_ACTIVITY: 'Loading comment & replies activity',
           NO_COMMENT_ACTIVITY: 'You have no comments or replies in recent activity',
           NO_COMMENT_TIME: 'Activity is only shown for the last 72 hours',
 
