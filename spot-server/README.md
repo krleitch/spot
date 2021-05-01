@@ -12,29 +12,31 @@
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'admin';
 ```
 
-* clone the repo
-
-```
-git clone https://github.com/krleitch/spot-server.git
-```
-
-* Open folder spot-server in your favourite editor (VScode recommended)
-* Setup node modules
-
-* Create secret.json file in root directory containing key
+- Add awskey.json to config folder
 ```
 {
-    "secret": "my_secret_key"
+    "AccessKeyID": "",
+    "SecretAccessKey": ""
 }
 ```
+- Add googlekey.json to config folder
+```
+{
+    "APIKey": ""
+}
+```
+- Add secret.json to config folder
+```
+{
+    "secret": ""
+}
+```
+- Update config.ts in config folder with nsfwModelDir and logFileDir
 
+## Run
 ```
 npm install
-```
 
-* To run
-
-```
 // Compile ts and and run normally
 npm run tsc
 node build/main.js
@@ -67,6 +69,5 @@ brew services start mongodb-community@4.2
 
 MySQL is the primary storage and MongoDB used as caching/intermediate storage for speed
 
-* Go to http://127.0.0.1:8081/ in any browser to see result
-
-Get Spot-Web at https://github.com/krleitch/spot-web
+### Redis
+- Install and Run Redis for caching

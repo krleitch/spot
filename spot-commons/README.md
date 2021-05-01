@@ -2,8 +2,14 @@
 
 ### Models
 
-Common models for spot-web and spot-server
+Common models for spot-server and spot-web.
 
 ### Exceptions
 
-Common exceptions fro spot-web and spot-server
+The exception classes for spot-server and spot-web.
+All exceptions are based off Spot-Error in error.ts.
+All strings are in messages.ts.
+
+### Constants
+
+Common constants for spot-server and spot-web.
