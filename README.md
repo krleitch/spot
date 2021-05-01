@@ -1,4 +1,4 @@
-![image info](./spot-web/src/assets/images/logo_v7.png)
+![image info](./spot-web/src/assets/images/logo_v7_transparent.png)
 
 Spot is a social media web application for anonymous location based posts you can share with friends across social media including facebook and google
 
