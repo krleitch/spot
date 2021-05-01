@@ -11,11 +11,11 @@ Clone the repository
 git clone https://github.com/krleitch/spot.git
 ```
 
-for spot-web
+spot-web
 - Add SSL certificates to spot-web (server.crt and server.key)
 - Setup environemnt.ts with your googleProviderId and server base url
 
-for spot-server
+spot-server
 - Add awskey.json to config folder
 ```
 {
@@ -41,6 +41,6 @@ for spot-server
 Express Server with MySql Db
 
 ## Spot-Web
-Angular9 with NgRx store
+Angular10 with NgRx10 store
 ## Spot-Commons
 Common Types, Errors, and Constants for both web and server
