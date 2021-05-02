@@ -122,7 +122,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
       if ( service === 'FB' ) {
-        this.facebookLoaded = true;
+        setTimeout(() => {
+          this.facebookLoaded = true;
+        });
       }
     });
   }

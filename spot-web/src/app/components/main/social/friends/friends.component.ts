@@ -106,7 +106,9 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
       if ( service === 'FB' ) {
-        this.facebookLoaded = true;
+        setTimeout(() => {
+          this.facebookLoaded = true;
+        });
       }
     });
   }

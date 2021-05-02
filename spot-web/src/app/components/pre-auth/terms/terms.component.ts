@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Observable } from 'rxjs';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -11,11 +12,13 @@ import { STRINGS } from '@assets/strings/en';
   templateUrl: './terms.component.html',
   styleUrls: ['./terms.component.scss']
 })
-export class TermsComponent implements OnInit, AfterViewInit {
+export class TermsComponent implements OnInit {
 
   STRINGS = STRINGS.PRE_AUTH.TERMS;
 
   @Input() modalId: string;
+  data$: Observable<any>;
+  data: { message: string } = null;
 
   @ViewChild('body') body: ElementRef;
 
@@ -23,15 +26,17 @@ export class TermsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-  }
+    this.data$ = this.modalService.getData(this.modalId);
 
-  ngAfterViewInit(): void {
-    this.scrollToTop();
+    // scroll to top on every open
+    this.data$.subscribe( (val) => {
+      this.scrollToTop();
+    });
+
   }
 
   scrollToTop(): void {
     if ( this.body ) {
-      console.log('scrolling')
       this.body.nativeElement.scrollTop = 0;
     }
   }

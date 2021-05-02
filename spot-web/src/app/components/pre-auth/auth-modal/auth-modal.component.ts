@@ -44,6 +44,7 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   registerForm: FormGroup;
   registerErrorMessage: string;
   buttonsDisabled: boolean;
+  facebookLoaded: false;
 
   errorMessage = '';
 
@@ -112,6 +113,11 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
             longtitle: true,
             theme: 'light',
             onsuccess: param => this.googleLogin(param)
+        });
+      }
+      if ( service === 'FB' ) {
+        setTimeout(() => {
+          this.facebookLoaded = true;
         });
       }
     });
