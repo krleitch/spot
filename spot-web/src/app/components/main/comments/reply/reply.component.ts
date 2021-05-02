@@ -153,15 +153,15 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.setContentHTML();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  offClickHandler(event: MouseEvent) {
+  offClickHandler(event: MouseEvent): void {
     if (this.options && !this.options.nativeElement.contains(event.target)) {
       this.setOptions(false);
     }
@@ -175,7 +175,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onEnter() {
+  onEnter(): boolean {
     // Add tag on enter
     if ( this.showTag ) {
       this.tagelem.onEnter();
@@ -183,7 +183,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  setContentHTML() {
+  setContentHTML(): void {
 
     // Get the content strings
     const content = this.getContent();
@@ -302,7 +302,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  onTextInput(event) {
+  onTextInput(event): void {
 
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.min(event.target.textContent.length + event.target.childNodes.length - 1, 0);
@@ -313,15 +313,19 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  getAndCheckWordOnCaret() {
+  getAndCheckWordOnCaret(): void {
     const range = window.getSelection().getRangeAt(0);
     if (range.collapsed) {
-      return this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+      if ( range.startContainer.parentElement.className === 'tag-inline' ) {
+        range.setStart(range.startContainer.parentElement.nextSibling, 0);
+        range.collapse(true);
+      } else {
+        this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+      }
     }
-    return '';
   }
 
-  private getCurrentWord(element, position) {
+  private getCurrentWord(element, position): string {
     // Get content of div
     const content = element.textContent;
 
@@ -355,7 +359,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  addTag(username: string) {
+  addTag(username: string): void {
 
       // check if they are your friend
       if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
@@ -377,7 +381,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  private placeCaretAtEnd(element) {
+  private placeCaretAtEnd(element): void {
     element.focus();
     if (typeof window.getSelection !== 'undefined'
             && typeof document.createRange !== 'undefined') {
@@ -398,7 +402,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private removeWord(element, position, username) {
+  private removeWord(element, position, username): void {
 
     const content = element.textContent;
 
@@ -430,11 +434,11 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  setOptions(value) {
+  setOptions(value): void {
     this.optionsEnabled = value;
   }
 
-  getTime(date) {
+  getTime(date): void {
     const curTime = new Date();
     const postTime = new Date(date);
     const timeDiff = curTime.getTime() - postTime.getTime();
@@ -460,11 +464,11 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  setExpanded(value: boolean) {
+  setExpanded(value: boolean): void {
     this.expanded = value;
   }
 
-  deleteReply() {
+  deleteReply(): void {
 
     this.modalService.open('spot-confirm-modal');
 
@@ -489,11 +493,11 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  setShowAddReply(val: boolean) {
+  setShowAddReply(val: boolean): void {
     this.showAddReply = val;
   }
 
-  addReply() {
+  addReply(): void {
 
     let content = this.reply2.nativeElement.innerHTML;
 
@@ -624,7 +628,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  like() {
+  like(): void {
 
     if ( !this.authenticationService.isAuthenticated() ) {
       this.modalService.open('spot-auth-modal');
@@ -653,7 +657,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  dislike() {
+  dislike(): void {
 
     if ( !this.authenticationService.isAuthenticated() ) {
       this.modalService.open('spot-auth-modal');
@@ -682,7 +686,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  getProfilePictureClass(index) {
+  getProfilePictureClass(index): string {
     return this.commentService.getProfilePictureClass(index);
   }
 
@@ -690,17 +694,17 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.currentLength > this.MAX_REPLY_LENGTH;
   }
 
-  onFileChanged(event) {
+  onFileChanged(event): void {
     this.imageFile = event.target.files[0];
     this.imgSrc = window.URL.createObjectURL(this.imageFile);
   }
 
-  removeFile() {
+  removeFile(): void {
     this.imageFile = null;
     this.imgSrc = null;
   }
 
-  getDisplayFilename(name: string) {
+  getDisplayFilename(name: string): string {
     if (name.length > this.FILENAME_MAX_SIZE) {
       return name.substr(0, this.FILENAME_MAX_SIZE) + '...';
     } else {
@@ -708,7 +712,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  openModal(id: string, data?: any) {
+  openModal(id: string, data?: any): void {
 
     if ( data ) {
       this.modalService.open(id, data);
@@ -717,7 +721,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
   }
-  closeModal(id: string) {
+  closeModal(id: string): void {
     this.modalService.close(id);
   }
 
@@ -731,7 +735,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  openReportModal(postId: string, commentId: string) {
+  openReportModal(postId: string, commentId: string): void {
 
     if ( !this.authenticationService.isAuthenticated() ) {
       this.modalService.open('spot-auth-modal');

@@ -193,7 +193,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   getAndCheckWordOnCaret(): void {
     const range = window.getSelection().getRangeAt(0);
     if (range.collapsed) {
-      this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+      if ( range.startContainer.parentElement.className === 'tag-inline' ) {
+        range.setStart(range.startContainer.parentElement.nextSibling, 0);
+        range.collapse(true);
+      } else {
+        this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+      }
     }
   }
 
