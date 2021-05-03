@@ -44,7 +44,7 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   registerForm: FormGroup;
   registerErrorMessage: string;
   buttonsDisabled: boolean;
-  facebookLoaded: false;
+  facebookLoaded = false;
 
   errorMessage = '';
 

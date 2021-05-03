@@ -24,8 +24,9 @@
 
 .title-image-highlight {
   position: absolute;
-  top: 5px;
+  top: 50%;
   left: 0;
+  transform: translateY(-50%);
   height: 42px;
   width: 100px;
   background-image: url('../../../../assets/images/logo_v7_highlight.png');
@@ -35,8 +36,9 @@
 
 .title-image {
   position: absolute;
-  top: 5px;
+  top: 50%;
   left: 0;
+  transform: translateY(-50%);
   background: url('../../../../assets/images/logo_v7.png');
   background-size: cover;
   height: 42px;

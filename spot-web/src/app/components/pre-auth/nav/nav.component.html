@@ -3,16 +3,14 @@
   <div class="left">
 
     <a class="title-link" [routerLink]="'/'">
-      <span class="skew-fix">
-        <div class="title-image"></div>
-        <div class="title-image-highlight"></div>
-      </span>
+      <div class="title-image"></div>
+      <div class="title-image-highlight"></div>
     </a>
 
-    <a class="section start" [routerLink]="'/about'" [ngClass]="{ selected: isSelected('about') }">
+    <a class="skew section start" [routerLink]="'/about'" [ngClass]="{ selected: isSelected('about') }">
       <span class="skew-fix"> {{ STRINGS.ABOUT }} </span>
     </a>
-    <a class="section end" [routerLink]="'/contact'" [ngClass]="{ selected: isSelected('contact') }">
+    <a class="skew section end" [routerLink]="'/contact'" [ngClass]="{ selected: isSelected('contact') }">
       <span class="skew-fix"> {{ STRINGS.CONTACT }} </span>
     </a>
 
@@ -20,11 +18,11 @@
 
   <div class="right">
     <a *ngIf="routeIsLogin(); else mylogin" class="auth-link" [routerLink]="'/register'">
-      <span class="skew-fix"> Register </span>
+      Register
     </a>
     <ng-template #mylogin>
       <a class="auth-link" [routerLink]="'/login'">
-        <span class="skew-fix"> Login </span>
+        Login
       </a>
     </ng-template>
   </div>

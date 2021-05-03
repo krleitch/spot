@@ -24,7 +24,7 @@
 
     display: flex;
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     box-sizing: border-box;
     cursor: pointer;
 
@@ -53,7 +53,7 @@
         opacity: 0.4;
         -webkit-transition: .3s ease-in-out;
         transition: .2s ease-in-out;
-        filter: blur(3px);	
+        filter: blur(3px);
         -webkit-filter: blur(3px);
       }
 
@@ -76,12 +76,12 @@
         align-items: center;
         background-color: $background-grey;
         border-radius: 12.5px;
-      
+
         .icon {
           font-size: 32px;
           color: $button-highlight;
         }
-      
+
       }
 
       .no-image-preview {
