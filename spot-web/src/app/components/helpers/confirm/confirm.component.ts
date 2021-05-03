@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 
+// services
 import { ModalService } from '@services/modal.service';
+
+// assets
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -20,7 +23,7 @@ export class ConfirmComponent implements OnInit {
 
   constructor(private modalService: ModalService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.data$ = this.modalService.getData(this.modalId);
 
@@ -30,12 +33,12 @@ export class ConfirmComponent implements OnInit {
 
   }
 
-  cancel() {
+  cancel(): void {
     this.modalService.setResult(this.modalId, { status: 'cancel' });
     this.modalService.close(this.modalId);
   }
 
-  confirm() {
+  confirm(): void {
     this.modalService.setResult(this.modalId, { status: 'confirm' });
     this.modalService.close(this.modalId);
   }
