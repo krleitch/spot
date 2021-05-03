@@ -66,7 +66,7 @@ spot-tag {
 
 .image-blur {
   opacity: 0.4;
-  filter: blur(10px);	
+  filter: blur(10px);
   -webkit-transition: .3s ease-in-out;
   transition: .2s ease-in-out;
   -webkit-filter: blur(10px);
@@ -250,6 +250,8 @@ spot-tag {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 5px;
+  margin-bottom: 5px;
 }
 
 [hidden] {
@@ -293,7 +295,6 @@ spot-tag {
   box-sizing: border-box;
   background-color: $lighter-grey;
   border-radius: 3px;
-  max-height: 300px;
 
   .reply2-content {
     flex-grow: 1;

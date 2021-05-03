@@ -88,9 +88,9 @@
             <!-- location is still loading -->
             <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocationCreate" class="info-container">
               <spot-spinner type="dot"></spot-spinner>
-              <span class="text"> Loading your location </span>
+              <span class="text"> {{ STRINGS.LOADING_LOCATION }} </span>
               <span *ngIf="bypassLocation === true; else loadglobalblock" class="text">
-                Your location is needed to create Spots
+                {{ STRINGS.LOCATION_REQUIRED }}
               </span>
               <ng-template #loadglobalblock>
                 <span class="text clickable" (click)="loadLocationBackground()">
@@ -109,14 +109,14 @@
               <div *ngIf="locationFailure === 'permission'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
                 <span class="text">
-                  Your location is required to view
+                  {{ STRINGS.LOCATION_REQUIRED_CREATE_1 }}
                   <i class="material-icons inline-icon"> home </i>
-                  spots, create new spots and to add comments
+                  {{ STRINGS.LOCATION_REQUIRED_CREATE_2 }}
                 </span>
-                <span class="text"> Your location will never be given away </span>
+                <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
                 <span class="line"></span>
                 <span class="text">
-                  Please enable location in your browser accessibility settings
+                  {{ STRINGS.LOCATION_ENABLE }}
                 </span>
               </div>
               <div *ngIf="locationFailure === 'general'" class="info-container">
@@ -148,8 +148,8 @@
                     <span class="material-icons icon"> travel_explore </span>
                   </div>
                   <span class="empty-text">
-                    <span class="highlight"> Be First </span>
-                    to make a spot in this area
+                    <span class="highlight"> {{ STRINGS.FIRST_POST_1 }} </span>
+                    {{ STRINGS.FIRST_POST_2 }}
                   </span>
                 </div>
               </ng-template>
@@ -161,7 +161,7 @@
               <!-- Loading spots -->
               <div *ngIf="loading && (showPostsIndicator$ | async)" class="empty-container">
                 <spot-spinner type="dot"></spot-spinner>
-                <span class="text"> Searching for Spots </span>
+                <span class="text"> {{ STRINGS.LOADING_POSTS }} </span>
               </div>
             </div>
           </spot-infinite-scroll>
@@ -174,7 +174,7 @@
           <!-- Location is just loading -->
           <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocation" class="info-container">
             <spot-spinner type="dot"></spot-spinner>
-            <span class="text"> Loading your location </span>
+            <span class="text"> {{ STRINGS.LOADING_LOCATION }} </span>
             <span class="text clickable" (click)="loadLocationBackground()">
               {{ STRINGS.LOCATION_BACKGROUND_1 }}
               <i class="material-icons inline-icon"> public </i>
@@ -190,19 +190,19 @@
             <div *ngIf="locationFailure === 'permission'" class="info-container">
               <span class="material-icons icon"> location_off </span>
               <span class="text">
-                Your location is required to view
+                {{ STRINGS.LOCATION_REQUIRED_CREATE_1 }}
                 <i class="material-icons inline-icon"> home </i>
-                spots, create new spots and to add comments
+                {{ STRINGS.LOCATION_REQUIRED_CREATE_2 }}
               </span>
-              <span class="text"> Your location will never be given away </span>
+              <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
               <span class="line"></span>
               <span class="text">
-                Please enable location in your browser accessibility settings
+               {{ STRINGS.LOCATION_ENABLE }}
               </span>
               <span class="text clickable" (click)="continueWithGlobal()">
-                Continue to
+                {{ STRINGS.LOCATION_BACKGROUND_1 }}
                 <i class="material-icons inline-icon"> public </i>
-                spots without location
+                {{ STRINGS.LOCATION_BACKGROUND_2 }}
               </span>
             </div>
             <div *ngIf="locationFailure === 'general'" class="info-container">
@@ -223,17 +223,17 @@
       <div class="info-container">
         <span class="material-icons icon"> location_off </span>
         <span class="text">
-          Your location is required to view
+          {{ STRINGS.LOCATION_REQUIRED_CREATE_1 }}
           <i class="material-icons text-icon"> home </i>
-          spots, create new spots and to add comments
+          {{ STRINGS.LOCATION_REQUIRED_CREATE_2 }}
         </span>
         <span class="text clickable" (click)="continueWithGlobal()">
-          Continue to
+          {{ STRINGS.LOCATION_BACKGROUND_1 }}
           <i class="material-icons text-icon"> public </i>
-          spots without location
+          {{ STRINGS.LOCATION_BACKGROUND_2 }}
         </span>
         <span class="line"></span>
-        <span class="text"> Your location will never be given away </span>
+        <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
         <button class="enable-location-button" (click)="getLocation()"> Enable Location </button>
       </div>
     </div>

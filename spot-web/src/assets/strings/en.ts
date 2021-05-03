@@ -24,23 +24,27 @@ export const STRINGS = {
         HOME: {
 
             // loading posts
-            LOADING_POSTS: 'Searching for Spots...',
+            LOADING_POSTS: 'Searching for Spots',
 
             LOCATION_REQUIRED_1: 'Location is required to view',
             LOCATION_REQUIRED_2: 'Spots and add comments',
-            LOCATION_ENABLE: 'Please enable location in your browser or continue with ',
+            LOCATION_ENABLE: 'Please enable location in your browser accessibility settings',
             LOCATION_SAFE: 'Your location will never be given away',
             LOCATION_BROWSER: 'Your browser does not support geolocation',
             LOCATION_ERROR: 'Something went wrong with getting your location',
             LOCATION_REFRESH: 'Refresh to try again',
             LOCATION_CREATE: 'Enable browser location to create a spot or add comments',
-            LOADING_LOCATION: 'Loading your location...',
-            LOCATION_BACKGROUND_1: 'View',
+            LOCATION_REQUIRED: 'Your location is needed to create Spots',
+            LOCATION_REQUIRED_CREATE_1: 'Your location is required to view',
+            LOCATION_REQUIRED_CREATE_2: 'spots, create new spots and to add comments',
+            LOCATION_BACKGROUND_1: 'Continue to',
             LOCATION_BACKGROUND_2: 'Spots while your location loads',
+            LOADING_LOCATION: 'Loading your location',
 
             NO_POSTS: 'There are no Spots in this area',
             NO_MORE_POSTS: 'You\'re all caught up!',
-            FIRST_POST: 'Be the first to make a Spot!',
+            FIRST_POST_1: 'Be First',
+            FIRST_POST_2: 'to make a spot in this area',
 
             // Posts Toggle
             NEW: 'New',
