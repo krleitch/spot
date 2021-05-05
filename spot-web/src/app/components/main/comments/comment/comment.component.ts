@@ -164,7 +164,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadingReplies = true;
     this.showLoadingRepliesIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loadingReplies )).pipe( startWith(false) );
 
-
     this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
 
       const storeRequest: SetRepliesStoreRequest = {

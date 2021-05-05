@@ -73,7 +73,7 @@
           {{ loadRecentCommentsNum() > 1 ? STRINGS.RECENT_COMMENTS : STRINGS.RECENT_COMMENTS_SINGULAR }}
         </span>
         <div *ngIf="loadingCommentsAfter" class="load-recent__loading">
-          <spot-spinner size="small" type="dot"></spot-spinner>
+          <spot-spinner size="small"></spot-spinner>
         </div>
       </div>
       <ng-template #refresh>
@@ -120,7 +120,7 @@
          {{ loadMoreCommentsNum() > 1 ? STRINGS.MORE_COMMENTS : STRINGS.MORE_COMMENTS_SINGULAR }}
       </div>
       <div *ngIf="loadingCommentsBefore" class="load-comments-before">
-        <spot-spinner size="small" type="dot"></spot-spinner>
+        <spot-spinner size="small"></spot-spinner>
       </div>
     </div>
 
