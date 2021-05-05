@@ -158,7 +158,7 @@ export const STRINGS = {
         POST_DETAILED: {
 
           NO_POST: 'No post found with this link',
-          LOADING: 'Loading Spot ...',
+          LOADING: 'Loading Spot',
 
         },
 

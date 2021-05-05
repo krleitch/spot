@@ -35,11 +35,17 @@ spot-main-nav {
     display: flex;
     align-items: center;
     flex-flow: column;
-    padding-top: 40px;
+    padding: 40px;
+    margin: 20px;
+    background-color: white;
+    box-sizing: border-box;
+    max-height: 139px;
+    width: 70%;
+    max-width: 1150px;
 
     .text {
       font-size: 20px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       text-align: center;
     }
 
