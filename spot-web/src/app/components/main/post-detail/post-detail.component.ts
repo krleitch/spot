@@ -1,14 +1,21 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+// rxjs
 import { map, takeUntil, catchError, skipWhile, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
 import { Observable, Subject, throwError, interval, timer } from 'rxjs';
+
+// store
+import { RootStoreState } from '@store';
+import { AccountsStoreSelectors } from '@store/accounts-store';
 import { select, Store } from '@ngrx/store';
 
-import { RootStoreState } from '@store';
+// services
 import { PostsService } from '@services/posts.service';
+
+// assets
 import { LoadSinglePostRequest, Post } from '@models/posts';
 import { Location } from '@models/accounts';
-import { AccountsStoreSelectors } from '@store/accounts-store';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -29,7 +36,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   commentId: string;
   postId: string;
 
-  post$: Observable<Post>;
+  post: Post;
   loadingPost: boolean;
   showLoadingIndicator$: Observable<boolean>;
 
@@ -39,7 +46,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   error = false;
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectLocation)
@@ -70,11 +77,11 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  waitForPosts() {
+  waitForPosts(): void {
 
     this.loadingPost = true;
     this.showLoadingIndicator$ = timer(2000).pipe( mapTo(true), takeWhile( (_) => this.loadingPost )).pipe( startWith(false) );
@@ -91,7 +98,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   }
 
-  loadPost() {
+  loadPost(): void {
 
     // load the post
     const request: LoadSinglePostRequest = {
@@ -99,24 +106,23 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       location: this.location
     };
 
-    this.post$ = this.postsService.getPost(request).pipe(
-      map( postSuccess =>  {
+    this.postsService.getPost(request).pipe(take(1)).subscribe(( (postSuccess) =>  {
         this.error = false;
         this.loadingPost = false;
         if ( this.commentId ) {
           postSuccess.post.startCommentId = this.commentId;
         }
-        return postSuccess.post;
-      }),
-      catchError( (errorResponse: any) => {
+        this.post = postSuccess.post;
+      }), ( (errorResponse: any) => {
         this.error = true;
         this.loadingPost = false;
         return throwError(errorResponse.error);
-      }),
+      })
     );
+
   }
 
-  getPostLink(post: Post) {
+  getPostLink(post: Post): string {
     return window.location.origin + '/posts/' + post.link;
   }
 

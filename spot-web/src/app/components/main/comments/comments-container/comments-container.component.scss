@@ -108,6 +108,7 @@
 }
 
 .load-more {
+
   display: flex;
   justify-content: center;
   position: relative;
@@ -122,6 +123,19 @@
     position: absolute;
     top: 0px;
     right: -20px;
+  }
+
+}
+
+.no-comments-loading {
+
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+  .loading {
+    margin: 10px 0px;
   }
 
 }

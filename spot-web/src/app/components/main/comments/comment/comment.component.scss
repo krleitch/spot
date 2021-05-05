@@ -416,6 +416,19 @@ img {
   }
 }
 
+.no-replies-loading {
+
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+  .loading {
+    margin: 10px 0px;
+  }
+
+}
+
 // For Mobile
 @media screen and (max-width: $mobile-width) {
 

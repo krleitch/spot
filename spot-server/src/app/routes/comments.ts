@@ -151,7 +151,7 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
 }));
 
 // Get all replies for a comment on a post
-router.get('/:postId/:commentId', function (req: any, res: any, next: any) {
+router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
     
     const postId = req.params.postId;
     const commentId = req.params.commentId;
@@ -177,7 +177,7 @@ router.get('/:postId/:commentId', function (req: any, res: any, next: any) {
     }, (err: any) => {
         return next(new CommentsError.GetReplies(500));
     }));
-});
+}));
 
 // Create a comment
 router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {

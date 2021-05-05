@@ -170,6 +170,7 @@ export const STRINGS = {
           RECENT_COMMENTS: 'recent comments',
           RECENT_COMMENTS_SINGULAR: 'recent comment',
           REFRESH_COMMENTS: 'Refresh commments',
+          LOADING_COMMENTS: 'Loading Comments',
 
           // Form
           ADD_COMMENT_PLACEHOLDER: 'Write a comment...',
@@ -194,6 +195,7 @@ export const STRINGS = {
           SHARE: 'Share',
 
           // Reply
+          LOADING_REPLIES: 'Loading Replies',
           ADD_REPLY_PLACEHOLDER: 'Write a reply...',
           LOAD: 'Load',
           MORE_REPLIES: 'more replies',

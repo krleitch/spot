@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@ang
 import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, take } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { takeUntil, take, finalize, mapTo, takeWhile, startWith } from 'rxjs/operators';
 
 // Store
 import { select, Store } from '@ngrx/store';
@@ -60,6 +60,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   comments = [];
   totalCommentsBefore = 0;
   totalCommentsAfter = 0;
+  showLoadingCommentsIndicator$: Observable<boolean>;
   loadingCommentsBefore = false;
   loadingCommentsAfter = false;
   refreshed = false;
@@ -140,6 +141,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     };
 
     this.loadingCommentsBefore = true;
+    this.showLoadingCommentsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loadingCommentsBefore )).pipe( startWith(false) );
 
     this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
       this.loadingCommentsBefore = false;

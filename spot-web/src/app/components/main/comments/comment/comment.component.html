@@ -114,9 +114,20 @@
     </div>
 
   </div>
-  <div *ngFor="let reply of replies">
-    <spot-reply [reply]="reply" [comment]="comment" [post]="post" [detailed]="detailed"></spot-reply>
+  <div *ngIf="loadingReplies; else loadedReplies">
+    <div *ngIf="showLoadingRepliesIndicator$ | async" class="no-replies-loading">
+      <span> {{ STRINGS.LOADING_REPLIES }} </span>
+      <div class="loading">
+        <spot-spinner size="small" type="dot"></spot-spinner>
+      </div>
+    </div>
   </div>
+  <ng-template #loadedReplies>
+    <div *ngFor="let reply of replies">
+      <spot-reply [reply]="reply" [comment]="comment" [post]="post" [detailed]="detailed"></spot-reply>
+    </div>
+  </ng-template>
+
   <div *ngIf="replies.length < totalReplies" class="load-more" (click)="loadMoreReplies()">
     {{ STRINGS.LOAD }} {{ loadMoreRepliesNum() }} {{ loadMoreRepliesNum() > 1 ? STRINGS.MORE_REPLIES : STRINGS.MORE_REPLIES_SINGULAR }}
   </div>

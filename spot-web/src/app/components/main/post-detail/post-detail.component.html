@@ -1,12 +1,12 @@
 
 <spot-main-nav></spot-main-nav>
 <div class="post-detailed">
-  <div class="loading" *ngIf="loadingPost && (showLoadingIndicator$ | async); else post">
+  <div class="loading" *ngIf="loadingPost && (showLoadingIndicator$ | async); else postLoaded">
     <span class="text"> {{ STRINGS.LOADING }} </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
-  <ng-template #post>
-    <div class="content" *ngIf="post$ | async as post">
+  <ng-template #postLoaded>
+    <div class="content" *ngIf="post">
       <meta property="og:url"           content="{{ getPostLink(post) }}" />
       <meta property="og:type"          content="website" />
       <meta property="og:title"         content="Spot" />

@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewIn
 import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
-import { Observable, Subject } from 'rxjs';
-import { min, take, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { takeUntil, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
 
 // Store
 import { select, Store } from '@ngrx/store';
@@ -35,6 +35,7 @@ import { TagComponent } from '../../social/tag/tag.component';
 // Assets
 import { STRINGS } from '@assets/strings/en';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'spot-comment',
@@ -76,6 +77,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   replies$: Observable<StoreReply>;
   replies: Comment[] = [];
+  loadingReplies = false;
+  showLoadingRepliesIndicator$: Observable<boolean>;
   totalReplies = 0;
 
   isAuthenticated$: Observable<boolean>;
@@ -158,6 +161,10 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       limit: initialLimit
     };
 
+    this.loadingReplies = true;
+    this.showLoadingRepliesIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loadingReplies )).pipe( startWith(false) );
+
+
     this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
 
       const storeRequest: SetRepliesStoreRequest = {
@@ -174,9 +181,10 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       );
 
       this.totalReplies = replies.totalReplies;
+      this.loadingReplies = false;
 
     }, (err: SpotError) => {
-
+      this.loadingReplies = false;
     });
 
     this.getTime(this.comment.creation_date);

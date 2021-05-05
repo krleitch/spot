@@ -73,7 +73,7 @@
           {{ loadRecentCommentsNum() > 1 ? STRINGS.RECENT_COMMENTS : STRINGS.RECENT_COMMENTS_SINGULAR }}
         </span>
         <div *ngIf="loadingCommentsAfter" class="load-recent__loading">
-          <spot-spinner size="small"></spot-spinner>
+          <spot-spinner size="small" type="dot"></spot-spinner>
         </div>
       </div>
       <ng-template #refresh>
@@ -96,9 +96,19 @@
       </div>
     </div>
     <ng-template #noComments>
-      <div class="no-comments">
-        <span class="material-icons icon"> chat </span>
-        {{ STRINGS.NO_COMMENTS }}
+      <div *ngIf="(showLoadingCommentsIndicator$ | async)">
+        <div *ngIf="loadingCommentsBefore; else none" class="no-comments-loading">
+          <span> {{ STRINGS.LOADING_COMMENTS }} </span>
+          <div *ngIf="loadingCommentsBefore" class="loading">
+            <spot-spinner size="small" type="dot"></spot-spinner>
+          </div>
+        </div>
+        <ng-template #none>
+        <div class="no-comments">
+          <span class="material-icons icon"> chat </span>
+          {{ STRINGS.NO_COMMENTS }}
+        </div>
+        </ng-template>
       </div>
     </ng-template>
 
@@ -110,7 +120,7 @@
          {{ loadMoreCommentsNum() > 1 ? STRINGS.MORE_COMMENTS : STRINGS.MORE_COMMENTS_SINGULAR }}
       </div>
       <div *ngIf="loadingCommentsBefore" class="load-comments-before">
-        <spot-spinner size="small"></spot-spinner>
+        <spot-spinner size="small" type="dot"></spot-spinner>
       </div>
     </div>
 
