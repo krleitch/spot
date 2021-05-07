@@ -30,7 +30,6 @@
   display: flex;
   position: relative;
   justify-content: center;
-  align-items: center;
   z-index: 999;
   width: 100%;
   padding: 20px;
@@ -48,6 +47,7 @@
   z-index: 999;
   background-color: white;
   margin-right: 25px;
+  margin-top: 50px;
   width: 1040px;
   height: 600px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);

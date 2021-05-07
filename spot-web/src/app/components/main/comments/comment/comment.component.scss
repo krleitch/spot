@@ -406,6 +406,13 @@ img {
 
 // replies
 
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px;
+}
+
 .load-more {
 
   display: flex;
@@ -413,6 +420,8 @@ img {
   color: $subtle-grey;
   cursor: pointer;
   position: relative;
+  margin-right: 5px;
+
   &:hover {
     @extend .highlight;
   }
