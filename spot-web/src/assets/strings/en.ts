@@ -281,7 +281,7 @@ export const STRINGS = {
           CLEAR: 'Clear all',
           NO_NOTIFICATIONS: 'You\'re all caught up!',
           MARK_ALL_AS_SEEN: 'Mark all as seen',
-          LOADING: 'Loading notifications...'
+          LOADING: 'Loading notifications'
 
         },
 

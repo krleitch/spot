@@ -1,8 +1,13 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+
+// rxjs
 import { Subscription } from 'rxjs';
 
-import { Alert, AlertType } from '@models/alert';
+// services
 import { AlertService } from '@services/alert.service';
+
+// assets
+import { Alert, AlertType } from '@models/alert';
 
 @Component({
   selector: 'spot-alert',
@@ -18,9 +23,9 @@ export class AlertComponent implements OnInit, OnDestroy {
 
   constructor(private alertService: AlertService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscription = this.alertService.onAlert(this.id)
-      .subscribe(alert => {
+      .subscribe( (alert: Alert) => {
         if (!alert.message) {
           // clear alerts when an empty alert is received
           this.alerts = [];
@@ -31,25 +36,25 @@ export class AlertComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
           alert.fade = true;
-        }, 3000);
+        }, 4000);
 
         setTimeout(() => {
           this.closeAlert(alert);
-        }, 4000);
+        }, 4500);
 
       });
   }
 
-  closeAlert(alert: Alert) {
+  closeAlert(alert: Alert): void {
     // remove specified alert from array
     this.alerts = this.alerts.filter(x => x !== alert);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
       this.subscription.unsubscribe();
   }
 
-  cssClass(alert: Alert) {
+  cssClass(alert: Alert): string {
 
       if (!alert) {
           return;
