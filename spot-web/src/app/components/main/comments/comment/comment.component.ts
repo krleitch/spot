@@ -78,6 +78,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   replies$: Observable<StoreReply>;
   replies: Comment[] = [];
   loadingReplies = false;
+  loadingMoreReplies = false;
   showLoadingRepliesIndicator$: Observable<boolean>;
   totalReplies = 0;
 
@@ -492,6 +493,10 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadMoreReplies(): void {
 
+    if ( this.loadingMoreReplies ) {
+      return;
+    }
+
     const request: GetRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
@@ -499,6 +504,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       initialLoad: false,
       limit: this.detailed ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT,
     };
+
+    this.loadingMoreReplies = true;
 
     this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
 
@@ -516,9 +523,10 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       );
 
       this.totalReplies = replies.totalReplies;
+      this.loadingMoreReplies = false;
 
     }, (err: SpotError) => {
-
+      this.loadingMoreReplies = false;
     });
 
   }

@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
+// rxjs
 import { Observable, Subject, throwError } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 
@@ -86,6 +88,13 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
       if ( this.data.commentLink ) {
         this.link += '/comments/' + this.data.commentLink;
       }
+      // reset send status
+      this.friends.forEach((friend: ShareFriend) => {
+        friend.sent = false;
+      });
+      this.username = '';
+      this.errorMessage = null;
+      this.successMessage = null;
     });
 
     // Add a sent property to the list of friends

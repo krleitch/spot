@@ -106,7 +106,7 @@ export class NavComponent implements OnInit, OnDestroy {
     this.accountLoading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
       this.loading = loading;
       if ( this.loading ) {
-        this.showAccountIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loading )).pipe( startWith(false) );
+        this.showAccountIndicator$ = timer(1000).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
       }
     });
 

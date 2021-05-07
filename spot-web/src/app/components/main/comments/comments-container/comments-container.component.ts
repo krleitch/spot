@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
 import { Observable, Subject, timer } from 'rxjs';
-import { takeUntil, take, finalize, mapTo, takeWhile, startWith } from 'rxjs/operators';
+import { takeUntil, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
 
 // Store
 import { select, Store } from '@ngrx/store';
@@ -455,6 +455,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   loadRecentComments(): void {
 
+    if ( this.loadingCommentsAfter ) {
+      return;
+    }
+
     const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
 
     const request: GetCommentsRequest = {
@@ -501,6 +505,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   loadMoreComments(): void {
+
+    if ( this.loadingCommentsAfter ){
+      return;
+    }
 
     const request: GetCommentsRequest = {
       postId: this.post.id,

@@ -343,7 +343,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     return content.substring(startPosition + 1, endPosition);
   }
 
-  private checkWord(word: string, element, position) {
+  private checkWord(word: string, element, position): void {
 
     if ( word.length > 1 && word[0] === '@' ) {
       this.tagName = word.slice(1);

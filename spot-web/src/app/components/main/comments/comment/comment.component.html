@@ -129,7 +129,12 @@
   </ng-template>
 
   <div *ngIf="replies.length < totalReplies" class="load-more" (click)="loadMoreReplies()">
-    {{ STRINGS.LOAD }} {{ loadMoreRepliesNum() }} {{ loadMoreRepliesNum() > 1 ? STRINGS.MORE_REPLIES : STRINGS.MORE_REPLIES_SINGULAR }}
+    {{ STRINGS.LOAD }}
+    {{ loadMoreRepliesNum() }}
+    {{ loadMoreRepliesNum() > 1 ? STRINGS.MORE_REPLIES : STRINGS.MORE_REPLIES_SINGULAR }}
+    <div *ngIf="loadingMoreReplies" class="load-more-replies">
+      <spot-spinner size="small"></spot-spinner>
+    </div>
   </div>
 
 </div>

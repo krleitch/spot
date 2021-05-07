@@ -407,13 +407,22 @@ img {
 // replies
 
 .load-more {
+
   display: flex;
   justify-content: center;
   color: $subtle-grey;
   cursor: pointer;
+  position: relative;
   &:hover {
     @extend .highlight;
   }
+
+  .load-more-replies {
+    position: absolute;
+    top: 0px;
+    right: -20px;
+  }
+
 }
 
 .no-replies-loading {

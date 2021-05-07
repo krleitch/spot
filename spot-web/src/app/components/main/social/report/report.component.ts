@@ -47,7 +47,7 @@ export class ReportComponent implements OnInit, OnDestroy {
               private commentService: CommentService,
               private alertService: AlertService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.data$ = this.modalService.getData(this.modalId);
 
@@ -61,16 +61,17 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
 
       this.data.postId = val.postId;
+      this.content = '';
 
     });
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  closeReport() {
+  closeReport(): void {
     this.modalService.close(this.modalId);
   }
 
@@ -78,7 +79,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     return this.content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
-  sendReport() {
+  sendReport(): void {
 
     if ( this.data.postId && this.data.commentId ) {
 
