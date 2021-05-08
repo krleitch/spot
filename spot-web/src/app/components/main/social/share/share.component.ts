@@ -12,6 +12,7 @@ import { SocialStoreSelectors } from '@store/social-store';
 // Services
 import { ModalService } from '@services/modal.service';
 import { NotificationsService } from '@services/notifications.service';
+import { AlertService } from '@services/alert.service';
 
 // Models
 import { AddNotificationRequest, AddNotificationSuccess } from '@models/notifications';
@@ -67,7 +68,8 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private store$: Store<RootStoreState.State>,
               private modalService: ModalService,
-              private notificationsService: NotificationsService) { }
+              private notificationsService: NotificationsService,
+              private alertService: AlertService) { }
 
   ngOnInit(): void {
 
@@ -204,7 +206,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         return throwError(errorResponse.error);
       }),
     ).subscribe( (response: AddNotificationSuccess ) => {
-      this.successMessage = this.STRINGS.SUCCESS;
+      this.successMessage = this.STRINGS.SUCCESS + request.receiver;
     }, ( error: SpotError ) => {
       this.errorMessage = error.message;
     });
@@ -246,6 +248,8 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   copyLink(): void {
+
+    // create an element to copy from
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
@@ -257,6 +261,10 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+
+    // message
+    this.alertService.success(this.STRINGS.COPY_LINK_SUCCESS);
+
   }
 
 }

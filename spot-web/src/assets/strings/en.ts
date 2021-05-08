@@ -246,6 +246,7 @@ export const STRINGS = {
           TITLE: 'Share a Spot',
           USERNAME_PLACEHOLDER: 'Enter Username',
           COPY_LINK: 'Copy link',
+          COPY_LINK_SUCCESS: 'Successfully copied link',
           SEND: 'Send',
           SENT: 'Sent',
 
@@ -254,7 +255,7 @@ export const STRINGS = {
           NO_FRIENDS: 'Add Friends to share spots quickly',
           LOGIN: 'Login to share with friends',
 
-          SUCCESS: 'Notification sent',
+          SUCCESS: 'Notification sent to ',
 
           // Errors
           USERNAME_ERROR: 'Username is required',
