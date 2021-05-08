@@ -42,7 +42,7 @@
       background-color: $button-highlight;
 
       &:hover {
-        background-color: darken($button-highlight, 10%);
+        background-color: lighten($button-highlight, 3%);
       }
     }
 
@@ -50,7 +50,7 @@
       background-color: $error-red-light;
 
       &:hover {
-        background-color: darken($error-red-light, 10%);
+        background-color: lighten($error-red-light, 5%);
       }
     }
 

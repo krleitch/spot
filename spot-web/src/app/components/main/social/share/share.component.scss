@@ -151,7 +151,7 @@ input {
 }
 
 .share-friend-send:hover {
-  background-color: darken($button-highlight, 10%);
+  background-color: lighten($button-highlight, 3%);
 }
 
 .share-friend-sent {

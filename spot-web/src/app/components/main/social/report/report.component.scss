@@ -76,7 +76,7 @@
       background-color: $button-highlight;
       color: white;
       &:hover {
-        background-color: darken($button-highlight, 5%);
+        background-color: lighten($button-highlight, 3%);
       }
     }
 

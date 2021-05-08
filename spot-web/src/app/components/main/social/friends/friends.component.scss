@@ -62,7 +62,7 @@ spot-main-nav {
     cursor: pointer;
     width: 240px;
   }
-  
+
   .facebook-logo {
     width: 26px;
     height: 26px;
@@ -130,12 +130,12 @@ spot-main-nav {
 }
 
 .accept {
-    background-color: $success-green;
+    background-color: $button-highlight;
     margin-right: 5px;
 }
 
 .accept:hover {
-    background-color: darken($success-green, 10%);
+    background-color: lighten($button-highlight, 3%);
 }
 
 .decline {
@@ -143,7 +143,7 @@ spot-main-nav {
 }
 
 .decline:hover {
-    background-color: darken($error-red-light, 5%);
+    background-color: lighten($error-red-light, 5%);
 }
 
 // Send Friend Requests
@@ -231,7 +231,7 @@ input {
     background-color: $error-red-light;
 
     &:hover {
-      background-color: darken($error-red-light, 5%);
+      background-color: lighten($error-red-light, 5%);
     }
 
 }
