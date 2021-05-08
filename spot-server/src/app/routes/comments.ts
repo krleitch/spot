@@ -164,7 +164,7 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
             rows = taggedComments;
         });
 
-        const lastDate = rows[rows.length-1].creation_date;
+        const lastDate = rows.length > 0 ? rows[rows.length-1].creation_date : null;
         comments.getNumberOfRepliesForCommentAfterDate(postId, commentId, lastDate).then( ( num: any) => {
             posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
                 await commentsService.addProfilePicture(rows, postCreator[0].account_id);
