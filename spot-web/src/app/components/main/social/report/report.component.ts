@@ -64,6 +64,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
       this.data.postId = val.postId;
       this.content = '';
+      this.category = ReportCategory.OFFENSIVE;
 
     });
 

@@ -164,10 +164,17 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
             rows = taggedComments;
         });
 
-        comments.getNumberOfRepliesForComment(postId, commentId).then( ( num: any) => {
+        const lastDate = rows[rows.length-1].creation_date;
+        comments.getNumberOfRepliesForCommentAfterDate(postId, commentId, lastDate).then( ( num: any) => {
             posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
                 await commentsService.addProfilePicture(rows, postCreator[0].account_id);
-                res.status(200).json({ postId: postId, commentId: commentId, replies: rows, totalReplies: num[0].total });
+                const response = {
+                    postId: postId,
+                    commentId: commentId,
+                    replies: rows,
+                    numRepliesAfter: num[0].total
+                }
+                res.status(200).json(response);
             }, (err: any) => {
                 return next(new CommentsError.GetReplies(500));
             }));

@@ -96,7 +96,7 @@ export interface GetRepliesSuccess {
     postId: string;
     commentId: string;
     replies: Comment[];
-    totalReplies: number;
+    numRepliesAfter: number;
     date: string;
     initialLoad: boolean;
 }
@@ -105,7 +105,6 @@ export interface SetRepliesStoreRequest {
     postId: string;
     commentId: string;
     replies: Comment[];
-    totalReplies: number;
     date: string;
     initialLoad: boolean;
 }

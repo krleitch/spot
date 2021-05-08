@@ -1,4 +1,4 @@
-export { addComment, deleteCommentById, deleteReplyByParentId, getCommentByPostId,
+export { addComment, deleteCommentById, deleteReplyByParentId, getCommentByPostId, getNumberOfRepliesForCommentAfterDate,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost,
           likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink, getNumberOfCommentsForPostAfterDate,
           getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists, unratedComment }
@@ -162,6 +162,12 @@ function getNumberOfCommentsForPostBeforeDate(postId: string, date: string): Pro
 function getNumberOfCommentsForPostAfterDate(postId: string, date: string): Promise<any> {
     var sql = 'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL AND creation_date > ?';
     var values = [postId, new Date(date)];
+    return db.query(sql, values);
+}
+
+function getNumberOfRepliesForCommentAfterDate(postId: string, commentId: string, date: string): Promise<any> {
+    var sql = 'SELECT COUNT(*) as total FROM comments WHERE post_id = ? and parent_id = ? AND deletion_date IS NULL AND creation_date > ?';
+    var values = [postId, commentId, new Date(date)];
     return db.query(sql, values);
 }
 

@@ -80,7 +80,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingReplies = false;
   loadingMoreReplies = false;
   showLoadingRepliesIndicator$: Observable<boolean>;
-  totalReplies = 0;
+  numRepliesAfter = 0;
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
@@ -172,15 +172,14 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         commentId: replies.commentId,
         date: replies.date,
         initialLoad: true,
-        replies: replies.replies,
-        totalReplies: replies.totalReplies
+        replies: replies.replies
       };
 
       this.store$.dispatch(
         new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
       );
 
-      this.totalReplies = replies.totalReplies;
+      this.numRepliesAfter = replies.numRepliesAfter;
       this.loadingReplies = false;
 
     }, (err: SpotError) => {
@@ -487,7 +486,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // the number of replies that will be loaded if load more is pressed
   loadMoreRepliesNum(): number {
-    return Math.min(this.totalReplies - this.replies.length,
+    return Math.min(this.numRepliesAfter,
                     this.detailed ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT);
   }
 
@@ -515,14 +514,13 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         date: replies.date,
         initialLoad: replies.initialLoad,
         replies: replies.replies,
-        totalReplies: replies.totalReplies
       };
 
       this.store$.dispatch(
         new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
       );
 
-      this.totalReplies = replies.totalReplies;
+      this.numRepliesAfter = replies.numRepliesAfter;
       this.loadingMoreReplies = false;
 
     }, (err: SpotError) => {
