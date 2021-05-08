@@ -1,6 +1,6 @@
 import { Tag } from './notifications';
 import { Location } from './accounts';
-
+import { ReportCategory } from './report';
 export interface Comment {
     id: string;
     post_id: string;
@@ -223,6 +223,7 @@ export interface ReportCommentRequest {
     postId: string;
     commentId: string;
     content: string;
+    category: ReportCategory;
 }
 
 export interface ReportCommentSuccess {

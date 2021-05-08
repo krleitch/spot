@@ -17,6 +17,7 @@ import { CommentService } from '@services/comments.service';
 // assets
 import { ReportPostRequest, ReportPostSuccess } from '@models/posts';
 import { ReportCommentRequest } from '@models/comments';
+import { ReportCategory } from '@models/report';
 import { SpotError } from '@exceptions/error';
 import { STRINGS } from '@assets/strings/en';
 import { REPORT_CONSTANTS } from '@constants/report';
@@ -39,6 +40,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   REPORT_CONSTANTS = REPORT_CONSTANTS;
 
   content = '';
+  category = ReportCategory.OFFENSIVE;
   errorMessage = '';
 
   constructor(private store$: Store<RootStoreState.State>,
@@ -86,7 +88,8 @@ export class ReportComponent implements OnInit, OnDestroy {
       const request: ReportCommentRequest = {
         postId: this.data.postId,
         commentId: this.data.commentId,
-        content: this.content
+        content: this.content,
+        category: this.category
       };
 
       this.commentService.reportComment(request).pipe(
@@ -106,7 +109,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
       const request: ReportPostRequest = {
         postId: this.data.postId,
-        content: this.content || ''
+        content: this.content || '',
+        category: this.category
       };
 
       this.postsService.reportPost(request).pipe(

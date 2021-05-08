@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS verify_account;
 
 DROP TABLE IF EXISTS accounts;
 
-ALTER DATABASE db CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+ALTER DATABASE spot CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE accounts (
     id VARCHAR(36) NOT NULL,
@@ -145,6 +145,7 @@ CREATE TABLE reports (
     comment_id VARCHAR(36),
     content VARCHAR(300),
     creation_date DATETIME,
+    category INT,
     PRIMARY KEY (id),
     FOREIGN KEY (reporter_id) REFERENCES accounts (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),

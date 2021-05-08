@@ -219,13 +219,13 @@ router.put('/:postId/report', function(req: any, res: any, next: any) {
 
     const postId = req.params.postId;
     const accountId = req.user.id;
-    const { content } = req.body;
+    const { content, category } = req.body;
 
     if ( content.length < REPORT_CONSTANTS.MIN_CONTENT_LENGTH || content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH ) {
         return next(new ReportError.ReportLengthError(400, REPORT_CONSTANTS.MIN_CONTENT_LENGTH, REPORT_CONSTANTS.MAX_CONTENT_LENGTH));
     }
 
-    reports.addPostReport( postId, accountId, content ).then((rows: any) => {
+    reports.addPostReport( postId, accountId, content, category ).then((rows: any) => {
         res.status(200).send({});
     }, (err: any) => {
         return next(new ReportError.ReportError(500))

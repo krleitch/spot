@@ -141,7 +141,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     };
 
     this.loadingCommentsBefore = true;
-    this.showLoadingCommentsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loadingCommentsBefore )).pipe( startWith(false) );
+    this.showLoadingCommentsIndicator$ = timer(500).pipe(
+      mapTo(true),
+      takeWhile( (_) => this.loadingCommentsBefore )).pipe( startWith(false) );
 
     this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
       this.loadingCommentsBefore = false;

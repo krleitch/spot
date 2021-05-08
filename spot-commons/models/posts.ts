@@ -1,5 +1,5 @@
 import { Location } from './accounts';
-
+import { ReportCategory } from './report';
 export interface Post {
     id: string;
     creation_date: string;
@@ -100,6 +100,7 @@ export interface DeletePostSuccess {
 export interface ReportPostRequest {
     postId: string;
     content: string;
+    category: ReportCategory
 }
 
 export interface ReportPostSuccess {

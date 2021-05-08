@@ -542,9 +542,9 @@ router.put('/:postId/:commentId/report', function(req: any, res: any, next: any)
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
-    const { content } = req.body;
+    const { content, category } = req.body;
 
-    reports.addCommentReport( postId, commentId, accountId, content ).then((rows: any) => {
+    reports.addCommentReport( postId, commentId, accountId, content, category ).then((rows: any) => {
         res.status(200).send({});
     }, (err: any) => {
         return next(new CommentsError.ReportComment(500));

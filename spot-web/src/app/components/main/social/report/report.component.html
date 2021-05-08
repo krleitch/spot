@@ -7,6 +7,13 @@
 
   <div class="report-body">
 
+    <select [(ngModel)]="category" name="category">
+      <option value="1"> Offsensive Language, harrassment or negative conduct </option>
+      <option value="2"> Racism, Sexism, Homophobia, or any other hate speech </option>
+      <option value="3"> Innapropriate Mature Content </option>
+      <option value="4"> Other </option>
+    </select>
+
     <textarea [(ngModel)]="content" [placeholder]="STRINGS.REPORT_PLACEHOLDER" rows="10" ></textarea>
     <span *ngIf="errorMessage" class="error-message"> {{ errorMessage }} </span>
     <div class="counter-send-container">
