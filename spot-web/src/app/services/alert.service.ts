@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
+
+// rxjs
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+// Assets
 import { Alert, AlertType } from '@models/alert';
 
 @Injectable({
@@ -34,30 +37,30 @@ export class AlertService {
     }
 
     // convenience methods
-    success(message: string, alertId?: string) {
+    success(message: string, alertId?: string): void {
         this.alert(new Alert({ message, type: AlertType.Success, alertId }));
     }
 
-    error(message: string, alertId?: string) {
+    error(message: string, alertId?: string): void {
         this.alert(new Alert({ message, type: AlertType.Error, alertId }));
     }
 
-    info(message: string, alertId?: string) {
+    info(message: string, alertId?: string): void {
         this.alert(new Alert({ message, type: AlertType.Info, alertId }));
     }
 
-    warn(message: string, alertId?: string) {
+    warn(message: string, alertId?: string): void {
         this.alert(new Alert({ message, type: AlertType.Warning, alertId }));
     }
 
     // main alert method
-    alert(alert: Alert) {
+    alert(alert: Alert): void {
         this.keepAfterRouteChange = alert.keepAfterRouteChange;
         this.subject.next(alert);
     }
 
     // clear alerts
-    clear(alertId?: string) {
+    clear(alertId?: string): void {
         this.subject.next(new Alert({ alertId }));
     }
 

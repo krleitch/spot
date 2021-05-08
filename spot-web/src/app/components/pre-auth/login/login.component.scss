@@ -14,8 +14,6 @@ spot-nav {
 
 .login {
   padding-top: 84px;
-  display: flex;
-  justify-content: center;
   background-color: $background-grey;
   min-height: 100vh;
   height: 650px;
@@ -32,7 +30,10 @@ spot-nav {
   display: flex;
   flex-flow: column;
   align-items: center;
-  height: 450px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 340px;
+  box-sizing: border-box;
 }
 
 .login-text {

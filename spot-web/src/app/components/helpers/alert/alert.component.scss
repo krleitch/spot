@@ -58,13 +58,13 @@
 }
 
 .alert-danger {
-    background-image: linear-gradient($error-red-light, lighten($error-red-light, 5%));
+    background-image: linear-gradient($error-red-light, lighten($error-red-light, 3%));
 }
 
 .alert-info {
-    background-image: linear-gradient($info-blue, lighten($info-blue, 10%));
+    background-image: linear-gradient($info-blue, lighten($info-blue, 3%));
 }
 
 .alert-warning {
-    background-image: linear-gradient($warning-yellow, lighten($warning-yellow, 10%));
+    background-image: linear-gradient($warning-yellow, lighten($warning-yellow, 3%));
 }
