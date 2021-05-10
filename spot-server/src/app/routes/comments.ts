@@ -96,14 +96,35 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
                 return next(new CommentsError.GetComments(500));
             }
 
-            date = comment[0].parent_id ? comment[0].parent_id.creation_date : comment[0].creation_date;
+            // if its a reply, get the parent creation_date
+            if ( comment[0].parent_id ) {
+                let parent;
+                if ( req.authenticated ) {
+                    parent = await comments.getCommentById(comment[0].parent_id, req.user.id);
+                } else {
+                    parent = await comments.getCommentByIdNoAccount(comment[0].parent_id);
+                }
+                date = parent[0].creation_date;
+                commentsArray = commentsArray.concat(parent)
+            } else {
+                date = comment[0].creation_date;
+                commentsArray = commentsArray.concat(comment)
+            }
             type = 'before';
-            limit = limit -= 1 || 0;
-            commentsArray = commentsArray.concat(comment)
+            limit -= 1;
 
             const rows = await comments.getCommentByPostId(postId, date, limit, type, req.authenticated ? req.user.id : null);
             commentsArray = commentsArray.concat(rows)
 
+        } catch (err) {
+            return next(new CommentsError.GetComments(500));
+        }
+
+    } else {
+
+        try {
+            const rows = await comments.getCommentByPostId(postId, date, limit, type, req.authenticated ? req.user.id : null);
+            commentsArray = commentsArray.concat(rows)
         } catch (err) {
             return next(new CommentsError.GetComments(500));
         }
@@ -165,44 +186,54 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
     const date = req.query.date || null;
     const limit = Number(req.query.limit);
 
-    try {
-        const comment = await comments.getCommentByIdNoAccount(commentId);
+    let replies: any;
 
-        let replies: any;
-        console.log(comment);
-        // If its a reply, get all replies up to this comment, otherwise get replies normally
-        if ( comment.parent_id ) {
-            console.log('mee')
-            replies = await comments.getRepliesUpToDate(postId, comment.parent_id, comment.creation_date, req.authenticated ? req.user.id : null)
-        } else {
-            replies = await comments.getRepliesByCommentId(postId, commentId, date, limit, req.authenticated ? req.user.id : null);
+    if ( replyLink ) {
+
+        try {
+
+            const comment = await comments.getCommentByLink( replyLink , req.authenticated ? req.user.id : null )
+            if ( comment.length < 1 ) {
+                return next(new CommentsError.GetReplies(500));
+            }
+
+            // If its a reply, get all replies up to this comment, otherwise get replies normally
+            if ( comment[0].parent_id ) {
+                // its a reply
+                replies = await comments.getRepliesUpToDate(postId, commentId, comment[0].creation_date, req.authenticated ? req.user.id : null);
+            } else {
+                replies = await comments.getRepliesByCommentId(postId, commentId, date, limit, req.authenticated ? req.user.id : null);
+            }
+    
+        } catch (err) {
+            return next(new CommentsError.GetReplies(500));
         }
 
-        await commentsService.getTags(replies, req.authenticated ? req.user.id : null).then( (taggedComments: any) => {
-            replies = taggedComments;
-        });
+    } else {
+        replies = await comments.getRepliesByCommentId(postId, commentId, date, limit, req.authenticated ? req.user.id : null);
+    }
 
-        const lastDate = replies.length > 0 ? replies[replies.length-1].creation_date : null;
-        comments.getNumberOfRepliesForCommentAfterDate(postId, commentId, lastDate).then( ( num: any) => {
-            posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
-                await commentsService.addProfilePicture(replies, postCreator[0].account_id);
-                const response = {
-                    postId: postId,
-                    commentId: commentId,
-                    replies: replies,
-                    numRepliesAfter: num[0].total
-                }
-                res.status(200).json(response);
-            }, (err: any) => {
-                return next(new CommentsError.GetReplies(500));
-            }));
+    await commentsService.getTags(replies, req.authenticated ? req.user.id : null).then( (taggedComments: any) => {
+        replies = taggedComments;
+    });
+
+    const lastDate = replies.length > 0 ? replies[replies.length-1].creation_date : null;
+    comments.getNumberOfRepliesForCommentAfterDate(postId, commentId, lastDate).then( ( num: any) => {
+        posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
+            await commentsService.addProfilePicture(replies, postCreator[0].account_id);
+            const response = {
+                postId: postId,
+                commentId: commentId,
+                replies: replies,
+                numRepliesAfter: num[0].total
+            }
+            res.status(200).json(response);
         }, (err: any) => {
             return next(new CommentsError.GetReplies(500));
-        });
-
-    } catch (err) {
+        }));
+    }, (err: any) => {
         return next(new CommentsError.GetReplies(500));
-    }
+    });
 
 }));
 
