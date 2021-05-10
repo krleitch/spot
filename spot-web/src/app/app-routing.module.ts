@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 
+// pre-auth
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
 import { LoginComponent } from './components/pre-auth/login/login.component';
 import { RegisterComponent } from './components/pre-auth/register/register.component';
@@ -10,6 +11,7 @@ import { AboutComponent } from './components/pre-auth/about/about.component';
 import { PasswordResetComponent } from './components/pre-auth/password-reset/password-reset.component';
 import { NewPasswordComponent } from './components/pre-auth/new-password/new-password.component';
 
+// main
 import { HomeComponent } from './components/main/home/home.component';
 import { AccountComponent } from './components/main/account/account.component';
 import { PostDetailComponent } from './components/main/post-detail/post-detail.component';
@@ -64,11 +66,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'posts/:postId',
+    path: 'posts/:postLink',
     component: PostDetailComponent
   },
   {
-    path: 'posts/:postId/comments/:commentId',
+    path: 'posts/:postLink/comments/:commentLink',
     component: PostDetailComponent
   },
   {

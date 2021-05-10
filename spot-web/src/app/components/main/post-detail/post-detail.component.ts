@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // rxjs
-import { map, takeUntil, catchError, skipWhile, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
+import { map, takeUntil, skipWhile, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
 import { Observable, Subject, throwError, interval, timer } from 'rxjs';
 
 // store
@@ -14,7 +14,7 @@ import { select, Store } from '@ngrx/store';
 import { PostsService } from '@services/posts.service';
 
 // assets
-import { LoadSinglePostRequest, Post } from '@models/posts';
+import { LoadSinglePostRequest, LoadSinglePostSuccess, Post } from '@models/posts';
 import { Location } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
@@ -33,8 +33,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   STRINGS = STRINGS.MAIN.POST_DETAILED;
 
-  commentId: string;
-  postId: string;
+  commentLink: string;
+  postLink: string;
 
   post: Post;
   loadingPost: boolean;
@@ -57,9 +57,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     });
 
     this.route.paramMap.pipe(takeUntil(this.onDestroy)).subscribe( (p: any) => {
-      this.commentId = p.get('commentId');
-      this.postId = p.get('postId');
-
+      this.commentLink = p.get('commentLink');
+      this.postLink = p.get('postLink');
     });
 
     this.authenticated$ = this.store$.pipe(
@@ -89,7 +88,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     // wait for location and param map to load
     const source = interval(500);
     source.pipe(
-      skipWhile(() => typeof this.postId === 'undefined' ||
+      skipWhile(() => typeof this.postLink === 'undefined' ||
                       typeof this.location === 'undefined'),
       take(1),
     ).subscribe(() => {
@@ -102,15 +101,15 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
     // load the post
     const request: LoadSinglePostRequest = {
-      postLink: this.postId,
+      postLink: this.postLink,
       location: this.location
     };
 
-    this.postsService.getPost(request).pipe(take(1)).subscribe(( (postSuccess) =>  {
+    this.postsService.getPost(request).pipe(take(1)).subscribe(( (postSuccess: LoadSinglePostSuccess) =>  {
         this.error = false;
         this.loadingPost = false;
-        if ( this.commentId ) {
-          postSuccess.post.startCommentId = this.commentId;
+        if ( this.commentLink ) {
+          postSuccess.post.startCommentLink = this.commentLink;
         }
         this.post = postSuccess.post;
       }), ( (errorResponse: any) => {

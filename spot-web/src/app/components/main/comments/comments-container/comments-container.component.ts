@@ -137,7 +137,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       date: new Date().toString(),
       type: 'before',
       limit: initialLimit,
-      commentId: this.post.startCommentId || null,
+      commentLink: this.post.startCommentLink || null,
     };
 
     this.loadingCommentsBefore = true;
@@ -151,7 +151,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
         const storeRequest: SetCommentsStoreRequest = {
           postId: this.post.id,
           type: 'before',
-          commentId: this.post.startCommentId || null,
           initialLoad: this.initialLoad,
           comments: comments.comments
         };

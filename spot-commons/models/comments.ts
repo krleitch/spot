@@ -31,7 +31,7 @@ export interface CommentTag {
 // Load all comments
 export interface GetCommentsRequest {
     postId: string;
-    commentId?: string; // Will load starting from this comment
+    commentLink?: string; // Will load starting from this comment
     type: string; // before / after
     date: string; // not used if commentId supplied
     limit: number;
@@ -47,7 +47,6 @@ export interface GetCommentsSuccess {
 
 export interface SetCommentsStoreRequest {
     postId: string;
-    commentId?: string; // Will load starting from this comment
     comments: Comment[];
     type: string; // before / after
     initialLoad: boolean;
@@ -87,6 +86,7 @@ export interface DeleteCommentSuccess {
 export interface GetRepliesRequest {
     postId: string;
     commentId: string;
+    replyLink?: string; // Will load up to this reply
     date: string;
     limit: number;
     initialLoad: boolean;

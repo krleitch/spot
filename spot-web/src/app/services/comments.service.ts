@@ -32,8 +32,8 @@ export class CommentService {
   getComments(request: GetCommentsRequest): Observable<GetCommentsSuccess> {
     let params = new HttpParams();
     params = params.append('date', request.date);
-    if ( request.commentId ) {
-      params = params.append('comment', request.commentId);
+    if ( request.commentLink ) {
+      params = params.append('comment', request.commentLink);
     }
     params = params.append('type', request.type);
     params = params.append('limit', request.limit.toString());
@@ -61,6 +61,9 @@ export class CommentService {
     let params = new HttpParams();
     if ( request.date ) {
       params = params.append('date', request.date);
+    }
+    if ( request.replyLink ) {
+      params = params.append('reply', request.replyLink);
     }
     params = params.append('limit', request.limit.toString());
     return this.http.get<GetRepliesSuccess>(`${this.baseUrl}/comments/${request.postId}/${request.commentId}`, { params });

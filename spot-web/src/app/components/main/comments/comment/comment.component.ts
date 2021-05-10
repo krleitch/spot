@@ -35,7 +35,6 @@ import { TagComponent } from '../../social/tag/tag.component';
 // Assets
 import { STRINGS } from '@assets/strings/en';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'spot-comment',
@@ -157,6 +156,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     const request: GetRepliesRequest = {
       postId: this.comment.post_id,
       commentId: this.comment.id,
+      replyLink: this.post.startCommentLink || null,
       date: null,
       initialLoad: true,
       limit: initialLimit

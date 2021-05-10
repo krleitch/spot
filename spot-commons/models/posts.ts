@@ -17,7 +17,7 @@ export interface Post {
     comments: number;
     owned: boolean;
     link: string;
-    startCommentId?: string; // The comment Id to make first request from
+    startCommentLink?: string; // The comment Link to make first request from
 }
 
 export interface PostFilter {
