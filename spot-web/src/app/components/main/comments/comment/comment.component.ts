@@ -716,6 +716,13 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setShowAddReply(val: boolean): void {
     this.showAddReply = val;
+    setTimeout( () => {
+      if ( this.showAddReply === true && this.reply ) {
+        this.reply.nativeElement.focus({
+          preventScroll: true,
+        });
+      }
+    }, 100);
   }
 
   like(): void {

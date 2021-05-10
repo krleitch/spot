@@ -495,6 +495,13 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setShowAddReply(val: boolean): void {
     this.showAddReply = val;
+    setTimeout( () => {
+      if ( this.showAddReply === true && this.reply2 ) {
+        this.reply2.nativeElement.focus({
+          preventScroll: true,
+        });
+      }
+    }, 100);
   }
 
   addReply(): void {
