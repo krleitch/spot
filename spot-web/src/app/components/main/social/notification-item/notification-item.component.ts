@@ -38,7 +38,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private store$: Store<RootStoreState.State>) { }
 
-  ngOnInit() { 
+  ngOnInit(): void {
 
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
@@ -64,7 +64,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
-  getTime(date: string) {
+  getTime(date: string): string {
     const curTime = new Date();
     const postTime = new Date(date);
     const timeDiff = curTime.getTime() - postTime.getTime();
@@ -90,7 +90,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  goToPost(event: any) {
+  goToPost(event: any): void {
 
     // if you click on image that is blurred then don't go to post, unblur it
     if ( this.notificationImage.nativeElement.contains(event.target) && this.imageBlurred ) {
@@ -103,7 +103,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
       const request: SetNotificationSeenRequest = {
         notificationId: this.notification.id
       };
-  
+
       // set seen
       this.store$.dispatch(
         new SocialStoreNotificationsActions.SetNotificationSeenAction(request)
@@ -111,7 +111,9 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
     }
 
-    if ( this.notification.comment_link ) {
+    if ( this.notification.reply_link ) {
+      this.router.navigateByUrl('/posts/' + this.notification.link + '/comments/' + this.notification.reply_link);
+    } else if ( this.notification.comment_link ) {
       this.router.navigateByUrl('/posts/' + this.notification.link + '/comments/' + this.notification.comment_link);
     } else {
       this.router.navigateByUrl('/posts/' + this.notification.link);
@@ -119,7 +121,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   }
 
-  delete() {
+  delete(): void {
 
     const request: DeleteNotificationRequest = {
       notificationId: this.notification.id
@@ -136,7 +138,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
     return notification.username[0].toUpperCase();
   }
 
-  imageClicked() {
+  imageClicked(): void {
     this.imageBlurred = false;
   }
 

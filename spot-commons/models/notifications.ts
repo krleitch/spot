@@ -17,6 +17,7 @@ export interface Notification {
     reply_image_src: string;
     reply_image_nsfw: boolean;
     reply_content: string;
+    reply_link: string;
 }
 
 // Get notifications
