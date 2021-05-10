@@ -198,7 +198,7 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
             }
 
             // If its a reply, get all replies up to this comment, otherwise get replies normally
-            if ( comment[0].parent_id ) {
+            if ( comment[0].parent_id == commentId ) {
                 // its a reply
                 replies = await comments.getRepliesUpToDate(postId, commentId, comment[0].creation_date, req.authenticated ? req.user.id : null);
             } else {
