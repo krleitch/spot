@@ -57,7 +57,8 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.LOAD_LOCATION: {
       return {
         ...state,
-        loadingLocation: true
+        loadingLocation: true,
+        locationFailure: null
       };
     }
     case ActionTypes.SET_LOCATION: {
@@ -65,7 +66,8 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         loadingLocation: false,
         location: action.request.location,
-        locationTimeReceived: new Date()
+        locationTimeReceived: new Date(),
+        locationFailure: null
       };
     }
     case ActionTypes.LOCATION_FAILURE: {

@@ -235,6 +235,7 @@ spot-create {
   }
 
   .text {
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -242,6 +243,11 @@ spot-create {
     flex-wrap: wrap;
     margin: 3px 0px;
     font-size: 18px;
+
+    .text-icon {
+      margin: 0px 3px;
+    }
+
   }
 
   .inline-icon {

@@ -39,6 +39,7 @@ export const STRINGS = {
             LOCATION_REQUIRED_CREATE_2: 'spots, create new spots and to add comments',
             LOCATION_BACKGROUND_1: 'Continue to',
             LOCATION_BACKGROUND_2: 'Spots while your location loads',
+            LOCATION_BACKGROUND_3: 'Spots without location',
             LOADING_LOCATION: 'Loading your location',
 
             NO_POSTS: 'There are no Spots in this area',

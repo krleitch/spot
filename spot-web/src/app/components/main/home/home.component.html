@@ -41,7 +41,7 @@
 <div class="container">
 
   <!-- If we need to prompt for location, show this first -->
-  <div *ngIf="locationFailure !== 'prompt';else prompt" class="fit-container">
+  <div *ngIf="locationFailure !== 'prompt' || bypassLocation;else prompt" class="fit-container">
 
     <!-- Don't show anything until we get the metadata -->
     <div *ngIf="postLocation && postSort" class="fit-container">
@@ -106,7 +106,7 @@
                 <span class="material-icons icon"> location_off </span>
                 <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
               </div>
-              <div *ngIf="locationFailure === 'permission'" class="info-container">
+              <div *ngIf="locationFailure === 'permission' || locationFailure === 'prompt'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
                 <span class="text">
                   {{ STRINGS.LOCATION_REQUIRED_CREATE_1 }}
@@ -202,7 +202,7 @@
               <span class="text clickable" (click)="continueWithGlobal()">
                 {{ STRINGS.LOCATION_BACKGROUND_1 }}
                 <i class="material-icons inline-icon"> public </i>
-                {{ STRINGS.LOCATION_BACKGROUND_2 }}
+                {{ STRINGS.LOCATION_BACKGROUND_3 }}
               </span>
             </div>
             <div *ngIf="locationFailure === 'general'" class="info-container">
@@ -230,11 +230,11 @@
         <span class="text clickable" (click)="continueWithGlobal()">
           {{ STRINGS.LOCATION_BACKGROUND_1 }}
           <i class="material-icons text-icon"> public </i>
-          {{ STRINGS.LOCATION_BACKGROUND_2 }}
+          {{ STRINGS.LOCATION_BACKGROUND_3 }}
         </span>
         <span class="line"></span>
         <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
-        <button class="enable-location-button" (click)="getLocation()"> Enable Location </button>
+        <button class="enable-location-button" (click)="askLocationPermission()"> Enable Location </button>
       </div>
     </div>
   </ng-template>

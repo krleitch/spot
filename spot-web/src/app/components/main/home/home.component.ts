@@ -389,11 +389,66 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.bypassLocation = true;
   }
 
+  askLocationPermission(): void {
+
+    if ( navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation'}).then( (permission: PermissionStatus) => {
+
+        if ( navigator.geolocation) {
+
+          const loadLocationRequest: LoadLocationRequest = {};
+          this.store$.dispatch(
+            new AccountsActions.LoadLocationAction(loadLocationRequest),
+          );
+
+          navigator.geolocation.getCurrentPosition((position) => {
+
+            const setLocationRequest: SetLocationRequest = {
+              location: {
+                longitude: position.coords.longitude,
+                latitude: position.coords.latitude
+              },
+            };
+            this.store$.dispatch(
+              new AccountsActions.SetLocationAction(setLocationRequest),
+            );
+
+          }, this.locationError.bind(this));
+
+        } else {
+
+          // the permissions api isnt implemented in this browser so setup to prompt again
+          const locationFailure: LocationFailure = {
+            error: 'browser',
+          };
+          this.store$.dispatch(
+            new AccountsActions.LocationFailureAction(locationFailure),
+          );
+
+        }
+
+      });
+
+    } else {
+
+      // the permissions api isnt implemented in this browser so setup to prompt again
+      const locationFailure: LocationFailure = {
+        error: 'browser',
+      };
+      this.store$.dispatch(
+        new AccountsActions.LocationFailureAction(locationFailure),
+      );
+
+    }
+
+  }
+
   getLocation(): void {
 
     if ( navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation'}).then( (permission: PermissionStatus) => {
-        if (permission.state === 'granted') {
+
+        if (permission.state === 'granted' ) {
 
           if ( navigator.geolocation ) {
 
@@ -437,7 +492,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             new AccountsActions.LocationFailureAction(locationFailure),
           );
 
-        } else {
+        } else if ( permission.state === 'prompt') {
 
           const locationFailure: LocationFailure = {
             error: 'prompt',
@@ -446,13 +501,23 @@ export class HomeComponent implements OnInit, OnDestroy {
             new AccountsActions.LocationFailureAction(locationFailure),
           );
 
+        } else {
+
+          const locationFailure: LocationFailure = {
+            error: 'general',
+          };
+          this.store$.dispatch(
+            new AccountsActions.LocationFailureAction(locationFailure),
+          );
+
         }
       });
+
     } else {
 
       // the permissions api isnt implemented in this browser so setup to prompt again
       const locationFailure: LocationFailure = {
-        error: 'prompt',
+        error: 'browser',
       };
       this.store$.dispatch(
         new AccountsActions.LocationFailureAction(locationFailure),
@@ -475,6 +540,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   continueWithGlobal(): void {
     this.postLocation = 'global';
+
+    const request: UpdateAccountMetadataRequest = {
+      search_distance: 'global'
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
     // the location is actually still loading, we just say in this component we arent worried about it anymore
     // So onScroll() posts are loaded
     this.bypassLocation = true;
