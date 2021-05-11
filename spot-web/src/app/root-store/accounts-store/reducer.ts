@@ -58,7 +58,9 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
       return {
         ...state,
         loadingLocation: true,
-        locationFailure: null
+        locationFailure: null,
+        location: null,
+        locationTimeReceived: null
       };
     }
     case ActionTypes.SET_LOCATION: {

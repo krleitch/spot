@@ -178,6 +178,7 @@ export class AppComponent implements OnInit {
 
         }
       });
+
     } else {
 
       // the permissions api isnt implemented in this browser so setup to prompt again
