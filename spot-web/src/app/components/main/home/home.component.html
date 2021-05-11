@@ -118,6 +118,7 @@
                 <span class="text">
                   {{ STRINGS.LOCATION_ENABLE }}
                 </span>
+                <button *ngIf="locationFailure === 'prompt'" class="enable-location-button" (click)="askLocationPermission()"> Enable Location </button>
               </div>
               <div *ngIf="locationFailure === 'general'" class="info-container">
                 <span class="material-icons icon"> location_off </span>

@@ -113,9 +113,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.locationFailure$.pipe(takeUntil(this.onDestroy)).subscribe( (locationFailure: string) => {
       this.locationFailure = locationFailure;
-      // if ( !this.locationFailure && !this.location ) {
-      //   this.getLocation();
-      // }
     });
 
     this.locationTimeReceived$ = this.store$.pipe(
