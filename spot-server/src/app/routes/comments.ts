@@ -161,13 +161,13 @@ router.get('/:postId', rateLimiter.genericCommentLimiter, ErrorHandler.catchAsyn
         }
     }
 
-    await posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
-        await commentsService.addProfilePicture(commentsArray, postCreator[0].account_id).then( (a: any) => {
-            commentsArray = a;
-        });
-    }, (err: any) => {
+    try {
+        const postCreator = await posts.getPostCreator(postId);
+        const a = await commentsService.addProfilePicture(commentsArray, postCreator[0].account_id);
+        commentsArray = a;
+    } catch (err) {
         return next(new CommentsError.GetComments(500));
-    }));
+    }
 
     const response = { 
         postId: postId,
