@@ -250,7 +250,6 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }, (err: { error: SpotError }) => {
 
-      console.log(err.error.statusCode )
       if ( err.error.name === 'RateLimitError' ) {
         this.usernameErrorMessage = 'You can only change your username once every 24 hours';
       } else {

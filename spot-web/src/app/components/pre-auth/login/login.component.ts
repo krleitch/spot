@@ -155,7 +155,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           window['FB'].login((loginResponse) => {
             if (loginResponse.status === 'connected') {
 
-                console.log('logging in FB')
                 const request: FacebookLoginRequest = {
                   accessToken: loginResponse.authResponse.accessToken
                 };

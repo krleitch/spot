@@ -32,7 +32,6 @@ router.delete('/', function (req: any, res: any, next: any) {
     accounts.deleteAccount(accountId).then( (rows: any) => {
         res.status(200).send({});
     }, (err: any) => {
-        console.log(err)
         return next(new AccountsError.DeleteAccount(500));
     });
 
