@@ -33,7 +33,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Get all posts
-router.get('/', async function (req: any, res: any, next: any) {
+router.get('/', rateLimiter.genericPostLimiter, ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     // You must have an account to get all posts
     if ( !req.authenticated ) {
@@ -61,7 +61,7 @@ router.get('/', async function (req: any, res: any, next: any) {
         return next(new PostsError.GetPosts(500));
     });
 
-});
+}));
 
 // Add a post
 router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
@@ -82,7 +82,7 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
     // set the filename for aws s3 bucket
     req.filename = postId;
 
-    singleUpload(req, res, async function(err: any) {
+    singleUpload(req, res, ErrorHandler.catchAsync(async function(err: any) {
 
         // error uploading image
         if (err) {
@@ -126,12 +126,12 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
             return next(new PostsError.PostError(500));
         });
 
-    });
+    }));
 
 }));
 
 // Like a post
-router.put('/:postId/like', function(req: any, res: any, next: any) {
+router.put('/:postId/like', rateLimiter.genericPostLimiter, function(req: any, res: any, next: any) {
 
     // You must have an account to like a post
     if ( !req.authenticated ) {
@@ -151,7 +151,7 @@ router.put('/:postId/like', function(req: any, res: any, next: any) {
 });
 
 // Dislike a post
-router.put('/:postId/dislike', function(req: any, res: any, next: any) {
+router.put('/:postId/dislike', rateLimiter.genericPostLimiter, function(req: any, res: any, next: any) {
 
     // You must have an account to dislike a post
     if ( !req.authenticated ) {
@@ -171,7 +171,7 @@ router.put('/:postId/dislike', function(req: any, res: any, next: any) {
 });
 
 // remove like / dislike from post
-router.put('/:postId/unrated', function(req: any, res: any, next: any) {
+router.put('/:postId/unrated', rateLimiter.genericPostLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -190,7 +190,7 @@ router.put('/:postId/unrated', function(req: any, res: any, next: any) {
 });
 
 // Delete a post
-router.delete('/:postId', function(req: any, res: any, next: any) {
+router.delete('/:postId', rateLimiter.genericPostLimiter, function(req: any, res: any, next: any) {
 
     // You must have an account to delete a post
     if ( !req.authenticated ) {
@@ -210,7 +210,7 @@ router.delete('/:postId', function(req: any, res: any, next: any) {
 });
 
 // report a post
-router.put('/:postId/report', function(req: any, res: any, next: any) {
+router.put('/:postId/report', rateLimiter.genericPostLimiter, function(req: any, res: any, next: any) {
 
     // You must have an account to report something
     if ( !req.authenticated ) {
@@ -234,7 +234,7 @@ router.put('/:postId/report', function(req: any, res: any, next: any) {
 });
 
 // Get post activity
-router.get('/activity', function (req: any, res: any, next: any) {
+router.get('/activity', rateLimiter.genericPostLimiter, function (req: any, res: any, next: any) {
 
     // You must have an account to see activity
     if ( !req.authenticated ) {
@@ -267,7 +267,7 @@ router.get('/activity', function (req: any, res: any, next: any) {
 });
 
 // Get a single post
-router.get('/:postLink', function (req: any, res: any, next: any) {
+router.get('/:postLink', rateLimiter.genericPostLimiter, function (req: any, res: any, next: any) {
 
     // getting individual posts does not need an account
     const postLink = req.params.postLink;

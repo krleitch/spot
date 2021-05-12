@@ -5,6 +5,9 @@ const router = express.Router();
 const friends = require('@db/friends');
 const accounts = require('@db/accounts');
 
+// ratelimiter
+const rateLimiter = require('@src/app/rateLimiter');
+
 // errors
 const FriendsError = require('@exceptions/friends');
 const ErrorHandler = require('@src/app/errorHandler');
@@ -16,7 +19,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Get friends
-router.get('/', function (req: any, res: any, next: any) {
+router.get('/', rateLimiter.genericFriendLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const date = req.query.date;
@@ -32,7 +35,7 @@ router.get('/', function (req: any, res: any, next: any) {
 });
 
 // delete a friend
-router.delete('/:friendId', function (req: any, res: any, next: any) {
+router.delete('/:friendId', rateLimiter.genericFriendLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const friendId = req.params.friendId;
@@ -47,7 +50,7 @@ router.delete('/:friendId', function (req: any, res: any, next: any) {
 });
 
 // get pending friend requests
-router.get('/pending', function (req: any, res: any, next: any) {
+router.get('/pending', rateLimiter.genericFriendLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
@@ -61,7 +64,7 @@ router.get('/pending', function (req: any, res: any, next: any) {
 });
 
 // delete a pending friend
-router.delete('/pending/:friendId', function (req: any, res: any, next: any) {
+router.delete('/pending/:friendId', rateLimiter.genericFriendLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const friendId = req.params.friendId;
@@ -76,7 +79,7 @@ router.delete('/pending/:friendId', function (req: any, res: any, next: any) {
 });
 
 // get friend requests for the user
-router.get('/requests', function (req: any, res: any, next: any) {
+router.get('/requests', rateLimiter.genericFriendLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
@@ -90,12 +93,12 @@ router.get('/requests', function (req: any, res: any, next: any) {
 });
 
 // send a friend request
-router.post('/requests', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
+router.post('/requests', rateLimiter.genericFriendLimiter, ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { username } = req.body;
 
-    accounts.getAccountByUsername(username).then(async (receiverId: any) => {
+    accounts.getAccountByUsername(username).then(ErrorHandler.catchAsync(async (receiverId: any) => {
 
         // No account with this username
         if ( receiverId[0] === undefined ) {
@@ -155,12 +158,12 @@ router.post('/requests', ErrorHandler.catchAsync(async function (req: any, res: 
 
     }, (err: any) => {
         return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500))
-    });
+    }));
 
 }));
 
 // accept a friend request
-router.post('/requests/accept', function (req: any, res: any, next: any) {
+router.post('/requests/accept', rateLimiter.genericFriendLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { friendRequestId } = req.body
@@ -184,7 +187,7 @@ router.post('/requests/accept', function (req: any, res: any, next: any) {
 });
 
 // decline a friend request
-router.post('/requests/decline', function (req: any, res: any, next: any) {
+router.post('/requests/decline', rateLimiter.genericFriendLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { friendRequestId } = req.body

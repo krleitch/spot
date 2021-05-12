@@ -5,6 +5,7 @@ const shortid = require('shortid');
 
 // exceptions
 const AuthError = require('@exceptions/authentication');
+const ErrorHandler = require('@src/app/errorHandler');
 
 // db
 const accounts = require('@db/accounts');
@@ -23,7 +24,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Register for a new account
-router.post('/register', function (req: any, res: any, next: any) {
+router.post('/register', rateLimiter.authenticationLimiter, function (req: any, res: any, next: any) {
 
     const { email, username, password, phone } = req.body;
 
@@ -87,7 +88,7 @@ router.post('/register', function (req: any, res: any, next: any) {
 });
 
 // Get a user token, use passport local authentication
-router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, function (req: any, res: any) {
+router.post('/login', rateLimiter.authenticationLimiter, authentication.localAuth, function (req: any, res: any) {
     const user = req.user;
     const token = authentication.generateToken(user);
     res.status(200).json({
@@ -97,7 +98,7 @@ router.post('/login', rateLimiter.loginLimiter, authentication.localAuth, functi
 });
 
 // Facebook login
-router.post('/login/facebook', function (req: any, res: any, next: any) {
+router.post('/login/facebook', rateLimiter.authenticationLimiter, function (req: any, res: any, next: any) {
     const { accessToken } = req.body;
 
     if ( !req.body ) {
@@ -105,7 +106,7 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
     }
 
     authentication.getFacebookDetails(accessToken).then( (facebookDetails: any) => {
-        accounts.getFacebookAccount(facebookDetails.body.id).then( async( user: any) => {
+        accounts.getFacebookAccount(facebookDetails.body.id).then( ErrorHandler.catchAsync(async( user: any) => {
             if ( user.length == 0 ) {
 
                 const username = await authentication.createUsernameFromEmail(facebookDetails.body.email);
@@ -165,14 +166,14 @@ router.post('/login/facebook', function (req: any, res: any, next: any) {
             }
         }, (err: any) => {
             return next(new AuthError.FacebookSignUpError(500));
-        });
+        }));
     }, (err: any) => {
         return next(new AuthError.FacebookSignUpError(500));
     });
 });
 
-// Google
-router.post('/login/google', async function (req: any, res: any, next: any) {
+// Google Login
+router.post('/login/google', rateLimiter.authenticationLimiter, ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
     
     const { accessToken } = req.body;
     
@@ -195,7 +196,7 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
         });
 
         // make or retrieve account
-        accounts.getGoogleAccount(userid).then( async( user: any) => {
+        accounts.getGoogleAccount(userid).then( ErrorHandler.catchAsync(async( user: any) => {
             if ( user.length == 0 ) {
 
                 const username = await authentication.createUsernameFromEmail(email);
@@ -232,12 +233,12 @@ router.post('/login/google', async function (req: any, res: any, next: any) {
             }
         }, (err: any) => {
             return next(new AuthError.GoogleSignUpError(500));
-        });
+        }));
     } catch (err) {
         return next(new AuthError.GoogleSignUpError(500));
     }
 
-});
+}));
 
 
 // password reset

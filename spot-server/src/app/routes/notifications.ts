@@ -4,11 +4,13 @@ const router = express.Router();
 // db
 const notifications = require('@db/notifications');
 const accounts = require('@db/accounts');
-const posts = require('@db/posts');
 const friends = require('@db/friends');
 
 // services
 const commentsService = require('@services/comments');
+
+// ratelimiter
+const rateLimiter = require('@src/app/rateLimiter');
 
 // errors
 const NotificationsError = require('@exceptions/notifications');
@@ -19,7 +21,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // get notifications for the user
-router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
+router.get('/', rateLimiter.genericNotificationLimiter, ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
 
     const accountId = req.user.id;
     const before = req.query.before ? new Date(req.query.before) : null;
@@ -57,7 +59,7 @@ router.get('/', ErrorHandler.catchAsync(async (req: any, res: any, next: any) =>
 }));
 
 // get number of unread notifications
-router.get('/unread', function (req: any, res: any, next: any) {
+router.get('/unread', rateLimiter.genericNotificationLimiter, function (req: any, res: any, next: any) {
 
     const id = req.user.id;
 
@@ -71,7 +73,7 @@ router.get('/unread', function (req: any, res: any, next: any) {
 });
 
 // Send a notification, keep errors generic
-router.post('/', function (req: any, res: any, next: any) {
+router.post('/', rateLimiter.genericNotificationLimiter, function (req: any, res: any, next: any) {
 
     const { receiver, postId, commentId } = req.body;
     const accountId = req.user.id;
@@ -119,7 +121,7 @@ router.post('/', function (req: any, res: any, next: any) {
 });
 
 // Set a notification as seen
-router.put('/:notificationId/seen', function (req: any, res: any, next: any) {
+router.put('/:notificationId/seen', rateLimiter.genericNotificationLimiter, function (req: any, res: any, next: any) {
 
     const notificationId = req.params.notificationId;
     const accountId = req.user.id;
@@ -135,7 +137,7 @@ router.put('/:notificationId/seen', function (req: any, res: any, next: any) {
 });
 
 // Set all notifications as seen
-router.put('/seen', function (req: any, res: any, next: any) {
+router.put('/seen', rateLimiter.genericNotificationLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
@@ -148,7 +150,7 @@ router.put('/seen', function (req: any, res: any, next: any) {
 });
 
 // Delete a notification
-router.delete('/:notificationId', function (req: any, res: any, next: any) {
+router.delete('/:notificationId', rateLimiter.genericNotificationLimiter, function (req: any, res: any, next: any) {
 
     const notificationId = req.params.notificationId;
     const accountId = req.user.id;
@@ -164,7 +166,7 @@ router.delete('/:notificationId', function (req: any, res: any, next: any) {
 });
 
 // Delete all notifications
-router.delete('/', function (req: any, res: any, next: any) {
+router.delete('/', rateLimiter.genericNotificationLimiter, function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 

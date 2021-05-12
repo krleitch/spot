@@ -16,6 +16,9 @@ const commentsService = require('@services/comments');
 const imageService =  require('@services/image');
 const singleUpload = imageService.upload.single('image');
 
+// ratelimiter
+const rateLimiter = require('@src/app/rateLimiter');
+
 // errors
 const CommentsError = require('@exceptions/comments');
 const AuthenticationError = require('@exceptions/authentication');
@@ -30,7 +33,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // Get comment activity
-router.get('/activity', function (req: any, res: any, next: any) {
+router.get('/activity', rateLimiter.genericCommentLimiter, function (req: any, res: any, next: any) {
 
     // You must have an account to make a comment
     if ( !req.authenticated ) {
@@ -68,7 +71,7 @@ router.get('/activity', function (req: any, res: any, next: any) {
 });
 
 // Get all comments for a post
-router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
+router.get('/:postId', rateLimiter.genericCommentLimiter, ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
     
     const postId = req.params.postId;
 
@@ -158,13 +161,13 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
         }
     }
 
-    await posts.getPostCreator(postId).then( async (postCreator: any) => {
+    await posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
         await commentsService.addProfilePicture(commentsArray, postCreator[0].account_id).then( (a: any) => {
             commentsArray = a;
         });
     }, (err: any) => {
         return next(new CommentsError.GetComments(500));
-    });
+    }));
 
     const response = { 
         postId: postId,
@@ -178,7 +181,7 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
 }));
 
 // Get all replies for a comment on a post
-router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
+router.get('/:postId/:commentId', rateLimiter.genericCommentLimiter, ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
     
     const postId = req.params.postId;
     const commentId = req.params.commentId;
@@ -238,7 +241,7 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
 }));
 
 // Create a comment
-router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
+router.post('/:postId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsync( async (req: any, res: any, next: any) => {
 
     // You must have an account to make a comment
     if ( !req.authenticated ) {
@@ -289,7 +292,7 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
         const link = await commentsService.generateLink();
         const imageNsfw = await imageService.predictNsfw(image);
 
-        comments.addComment(commentId, postId, accountId, content, image, imageNsfw, link, commentId).then( async (comment: any) => {
+        comments.addComment(commentId, postId, accountId, content, image, imageNsfw, link, commentId).then( ErrorHandler.catchAsync(async (comment: any) => {
 
             // Add tags and send notifications
             for ( let index = 0; index < tagsList.length; index++ ) {
@@ -321,14 +324,14 @@ router.post('/:postId', ErrorHandler.catchAsync( async (req: any, res: any, next
 
         }, (err: any) => {
             return next(new CommentsError.AddComment(500));
-        });
+        }));
 
     }));
 
 }));
 
 // Create a reply
-router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
+router.post('/:postId/:commentId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -402,7 +405,7 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
                 reply = taggedComments;
             });
     
-            posts.getPostCreator(postId).then( async (postCreator: any) => {
+            posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
                 await commentsService.addProfilePicture(reply, postCreator[0].account_id);
                 const response = {
                     postId: postId,
@@ -412,7 +415,7 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
                 res.status(200).json(response);
             }, (err: any) => {
                 return next(new CommentsError.AddComment(500));
-            });
+            }));
     
         }, (err: any) => {
             return next(new CommentsError.AddComment(500));
@@ -423,7 +426,7 @@ router.post('/:postId/:commentId', ErrorHandler.catchAsync( async function (req:
 }));
 
 // Delete a comment
-router.delete('/:postId/:commentId', function (req: any, res: any, next: any) {
+router.delete('/:postId/:commentId', rateLimiter.genericCommentLimiter, function (req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -447,7 +450,7 @@ router.delete('/:postId/:commentId', function (req: any, res: any, next: any) {
 });
 
 // Delete a reply
-router.delete('/:postId/:parentId/:commentId', function (req: any, res: any, next: any) {
+router.delete('/:postId/:parentId/:commentId', rateLimiter.genericCommentLimiter, function (req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -468,7 +471,7 @@ router.delete('/:postId/:parentId/:commentId', function (req: any, res: any, nex
 });
 
 // Like a comment
-router.put('/:postId/:commentId/like', function(req: any, res: any, next: any) {
+router.put('/:postId/:commentId/like', rateLimiter.genericCommentLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -488,7 +491,7 @@ router.put('/:postId/:commentId/like', function(req: any, res: any, next: any) {
 });
 
 // Dislike a comment
-router.put('/:postId/:commentId/dislike', function(req: any, res: any, next: any) {
+router.put('/:postId/:commentId/dislike', rateLimiter.genericCommentLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -508,7 +511,7 @@ router.put('/:postId/:commentId/dislike', function(req: any, res: any, next: any
 });
 
 // remove like / dislike from comment
-router.put('/:postId/:commentId/unrated', function(req: any, res: any, next: any) {
+router.put('/:postId/:commentId/unrated', rateLimiter.genericCommentLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -528,7 +531,7 @@ router.put('/:postId/:commentId/unrated', function(req: any, res: any, next: any
 });
 
 // Like a reply
-router.put('/:postId/:parentId/:commentId/like', function(req: any, res: any, next: any) {
+router.put('/:postId/:parentId/:commentId/like', rateLimiter.genericCommentLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -549,7 +552,7 @@ router.put('/:postId/:parentId/:commentId/like', function(req: any, res: any, ne
 });
 
 // Dislike a reply
-router.put('/:postId/:parentId/:commentId/dislike', function(req: any, res: any, next: any) {
+router.put('/:postId/:parentId/:commentId/dislike', rateLimiter.genericCommentLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -570,7 +573,7 @@ router.put('/:postId/:parentId/:commentId/dislike', function(req: any, res: any,
 });
 
 // remove like / dislike from reply
-router.put('/:postId/:parentId/:commentId/unrated', function(req: any, res: any, next: any) {
+router.put('/:postId/:parentId/:commentId/unrated', rateLimiter.genericCommentLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
@@ -591,7 +594,7 @@ router.put('/:postId/:parentId/:commentId/unrated', function(req: any, res: any,
 });
 
 // Report a comment
-router.put('/:postId/:commentId/report', function(req: any, res: any, next: any) {
+router.put('/:postId/:commentId/report', rateLimiter.genericCommentLimiter, function(req: any, res: any, next: any) {
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));

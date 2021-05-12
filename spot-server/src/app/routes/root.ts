@@ -6,7 +6,7 @@ router.use(function timeLog (req: any, res: any, next: any) {
 });
 
 // router.get('/', function (req: any, res: any) {
-//     res.send('SPOT');
+//     res.send('Spot');
 // });
 
 export = router;
