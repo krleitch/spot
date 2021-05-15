@@ -304,10 +304,12 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onTextInput(event): void {
 
+    if ( event.target.textContent.length === 0 ) {
+      this.reply2.nativeElement.innerHTML = '';
+    }
     // Need to count newlines as a character, -1 because the first line is free
-    this.currentLength = Math.min(event.target.textContent.length + event.target.childNodes.length - 1, 0);
+    this.currentLength = Math.max(event.target.textContent.length + event.target.childNodes.length - 1, 0);
     this.addReply2Error = null;
-
     // Check for tag
     this.getAndCheckWordOnCaret();
 
@@ -625,7 +627,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       this.reply2.nativeElement.innerHtml = '';
       Array.from(this.reply2.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
       this.reply2.nativeElement.innerHTML = '';
-      this.currentLength = this.reply2.nativeElement.innerHTML.length;
+      this.currentLength = 0;
       this.showAddReply = false;
 
     }, (err: SpotError) => {

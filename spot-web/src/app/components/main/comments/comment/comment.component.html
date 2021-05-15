@@ -52,7 +52,7 @@
       <div [hidden]="!showAddReply" class="add">
         <div class="editor">
 
-          <div #reply contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></div>
+          <span #reply contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></span>
           <div *ngIf="imgSrc != null" class="image" >
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>

@@ -39,7 +39,6 @@ export class CreateComponent implements OnInit, OnDestroy {
   location: Location;
 
   // Content
-  postInnerHtml = '';
   currentLength = 0;
 
   // Images
@@ -67,10 +66,10 @@ export class CreateComponent implements OnInit, OnDestroy {
       if ( success ) {
         this.removeFile();
         this.create.nativeElement.innerText = '';
-        this.create.nativeElement.innerHtml = '';
+        this.create.nativeElement.innerHTML = '';
         Array.from(this.create.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-        this.postInnerHtml = '';
-        this.currentLength = this.postInnerHtml.length;
+        this.create.nativeElement.innerHTML = '';
+        this.currentLength = 0;
       }
     });
 
@@ -106,7 +105,10 @@ export class CreateComponent implements OnInit, OnDestroy {
   }
 
   onTextInput(event): void {
-    this.postInnerHtml = event.target.innerHTML;
+    // remove <br> if empty
+    if ( event.target.textContent.length === 0 ) {
+      this.create.nativeElement.innerHTML = '';
+    }
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(0, event.target.textContent.length + event.target.childNodes.length - 1);
     // Reset the error when you start typing
@@ -119,7 +121,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   submit(): void {
 
-    let content = this.postInnerHtml;
+    let content = this.create.nativeElement.innerHTML;
 
     // parse the innerhtml to return a string with newlines instead of innerhtml
     const parser = new DOMParser();

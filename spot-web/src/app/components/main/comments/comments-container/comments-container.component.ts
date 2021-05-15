@@ -184,10 +184,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   onTextInput(event): void {
 
+    if ( event.target.textContent.length === 0 ) {
+      this.comment.nativeElement.innerHTML = '';
+    }
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(event.target.textContent.length + event.target.childNodes.length - 1, 0);
     this.addCommentError = null;
-
     // Check for tag
     this.getAndCheckWordOnCaret();
 
@@ -439,8 +441,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.comment.nativeElement.innerText = '';
       this.comment.nativeElement.innerHtml = '';
       Array.from(this.comment.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-      this.comment.nativeElement.innerHTML = '';
-      this.currentLength = this.comment.nativeElement.innerHTML.length;
+      this.currentLength = 0;
 
     }, (err: SpotError) => {
       this.addCommentLoading = false;

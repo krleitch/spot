@@ -2,7 +2,7 @@
 <div class="create">
 
   <div class="editor">
-      <div #create contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" (input)="onTextInput($event)"></div>
+      <span #create contenteditable="true" attr.ph="{{STRINGS.CREATE_PLACEHOLDER}}" class="content" (input)="onTextInput($event)"></span>
       <div class="image" *ngIf="imgSrc != null">
         <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
       </div>
@@ -21,16 +21,16 @@
       </span>
     </div>
     <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
-    <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> 
+    <span class="counter" [ngClass]="{'counter-error': invalidLength() }">
       {{ POSTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
     </span>
     <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
-    <span class="loading" *ngIf="createLoading; else showsubmit"> 
+    <span class="loading" *ngIf="createLoading; else showsubmit">
       <spot-spinner size="small"> </spot-spinner>
     </span>
     <ng-template #showsubmit>
-      <span class="submit" (click)="submit()"> 
-        {{ STRINGS.SUBMIT }} 
+      <span class="submit" (click)="submit()">
+        {{ STRINGS.SUBMIT }}
       </span>
     </ng-template>
 

@@ -349,8 +349,11 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onTextInput(event): void {
 
+      if ( event.target.textContent.length === 0 ) {
+        this.reply.nativeElement.innerHTML = '';
+      }
       // Need to count newlines as a character, -1 because the first line is free
-      this.currentLength = Math.min(event.target.textContent.length + event.target.childNodes.length - 1, 0);
+      this.currentLength = Math.max(event.target.textContent.length + event.target.childNodes.length - 1, 0);
       this.addReplyError = null;
 
       // Check for tag
@@ -704,7 +707,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.reply.nativeElement.innerHtml = '';
       Array.from(this.reply.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
       this.reply.nativeElement.innerHTML = '';
-      this.currentLength = this.reply.nativeElement.innerHTML.length;
+      this.currentLength = 0;
       this.showAddReply = false;
 
     }, (err: SpotError) => {
