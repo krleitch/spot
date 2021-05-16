@@ -416,10 +416,12 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       // remove the word
-      this.removeWord(this.tagElement, this.tagCaretPosition, username);
+      const tagElement = this.removeWord(this.tagElement, this.tagCaretPosition, username);
 
-      // refocus at end of content editable
-      this.placeCaretAtEnd(this.reply.nativeElement);
+      // Focus after the tag
+      const range = window.getSelection().getRangeAt(0);
+      range.setStart(tagElement.nextSibling, 0);
+      range.collapse(true);
 
       // hide tag menu
       this.tagName = '';
@@ -429,28 +431,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  private placeCaretAtEnd(el): void {
-    el.focus();
-    if (typeof window.getSelection !== 'undefined'
-            && typeof document.createRange !== 'undefined') {
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-        // needed for browser compatibility
-        // @ts-ignore
-    } else if (typeof document.body.createTextRange !== 'undefined') {
-        // @ts-ignore
-        const textRange = document.body.createTextRange();
-        textRange.moveToElementText(el);
-        textRange.collapse(false);
-        textRange.select();
-    }
-  }
-
-  private removeWord(element, position, username): void {
+  private removeWord(element, position, username): HTMLElement {
 
     const content = element.textContent;
 
@@ -479,6 +460,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     span.appendChild(afterText);
 
     parent.replaceChild(span, element);
+    return tag;
 
   }
 

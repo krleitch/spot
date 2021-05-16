@@ -1,10 +1,15 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+
+// rxjs
 import { Observable, from } from 'rxjs';
 
-import { STRINGS } from '@assets/strings/en';
+// Store
 import { RootStoreState } from '@store';
+import { Store, select } from '@ngrx/store';
 import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
+
+// Assets
+import { STRINGS } from '@assets/strings/en';
 import { Friend, GetFriendsRequest } from '@models/friends';
 import { Tag } from '@models/notifications';
 
@@ -29,7 +34,7 @@ export class TagComponent implements OnInit, OnChanges {
 
   link: string;
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     // setup observables
     this.friends$ = this.store$.pipe(
@@ -46,11 +51,11 @@ export class TagComponent implements OnInit, OnChanges {
 
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     this.findFriend();
   }
 
-  findFriend() {
+  findFriend(): void {
 
     if ( this.name ) {
       this.filteredFriendsList = this.friendsList.filter( friend => {
@@ -62,14 +67,15 @@ export class TagComponent implements OnInit, OnChanges {
 
   }
 
-  sendTag(username: string) {
+  sendTag(username: string): void {
     this.tag.emit(username);
   }
 
-  onEnter() {
+  onEnter(): boolean {
 
     if ( this.filteredFriendsList.length > 0 ) {
       this.tag.emit(this.filteredFriendsList[0].username);
+      return false;
     }
 
   }

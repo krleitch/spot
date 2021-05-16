@@ -12,8 +12,9 @@
 }
 
 // Content
-.content-wrapper {
+.add-wrapper {
   flex: 1;
+  overflow: hidden;
 }
 
 // Tag
@@ -25,8 +26,7 @@
 
 spot-tag {
   position: absolute;
-  top: 0;
-  left: 0;
+  left: 74px;
 }
 
 .content-tag-container{

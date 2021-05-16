@@ -3,7 +3,7 @@
 .tag {
 
   background-color: white;
-  width: 200px;
+  width: 235px;
   box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
 
   .header {
@@ -32,7 +32,14 @@
 
         display: flex;
         flex-flow: column;
-        width: 100%;
+        width: calc(100% - 24px);
+
+        .text {
+          min-width: 0px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
 
         .bar {
           height: 1px;

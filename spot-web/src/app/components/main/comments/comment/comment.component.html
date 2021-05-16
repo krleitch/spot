@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="content-wrapper">
+    <div class="add-wrapper">
 
       <div class="content">
 
@@ -79,10 +79,6 @@
         </div>
       </div>
 
-      <span class="tag-relative" #tag>
-        <spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
-      </span>
-
     </div>
 
     <div class="right-bar">
@@ -114,6 +110,11 @@
     </div>
 
   </div>
+
+  <span class="tag-relative" #tag>
+    <spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
+  </span>
+
   <div *ngIf="loadingReplies; else loadedReplies">
     <div *ngIf="showLoadingRepliesIndicator$ | async" class="no-replies-loading">
       <span> {{ STRINGS.LOADING_REPLIES }} </span>

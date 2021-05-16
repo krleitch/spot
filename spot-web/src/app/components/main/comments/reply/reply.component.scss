@@ -8,8 +8,9 @@
 }
 
 // Content
-.content-wrapper {
+.add-wrapper {
   flex: 1;
+  overflow: hidden;
 }
 
 .tagger {
@@ -23,8 +24,7 @@
 
 spot-tag {
   position: absolute;
-  top: 0;
-  left: 0;
+  left: 106px;
 }
 
 :host ::ng-deep .tag-inline-comment {

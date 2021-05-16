@@ -8,7 +8,7 @@ spot-main-nav {
   left: 0;
   width: 100%;
   height: 60px;
-  z-index: 99;
+  z-index: 9999999;
 }
 
 .container {
@@ -25,6 +25,7 @@ spot-main-nav {
     display: flex;
     justify-content: center;
     min-width: 100%;
+    max-width: 100%;
     height: 100%;
 
   }
@@ -49,7 +50,7 @@ spot-main-nav {
   display: flex;
   top: 18px;
   left: 125px;
-  z-index: 100;
+  z-index: 999999999;
 }
 
 .global {
@@ -78,7 +79,7 @@ spot-main-nav {
   width: 80px;
   top: 12px;
   left: calc(50% - 33px);
-  z-index: 100;
+  z-index: 999999999;
   font-family: 'Heebo', sans-serif;
   font-weight: 500;
 }
@@ -333,7 +334,7 @@ spot-create {
   height: 24px;
   top: 18px;
   left: 190px;
-  z-index: 100;
+  z-index: 999999999;
   font-size: 18px;
 }
 
@@ -343,7 +344,7 @@ spot-create {
   height: 24px;
   top: 18px;
   left: 130px;
-  z-index: 100;
+  z-index: 999999999;
 }
 
 .mobile-dropdown-container {

@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="content-wrapper">
+    <div class="add-wrapper">
 
       <div class="content">
 
@@ -73,7 +73,6 @@
           </div>
         </div>
       </div>
-      <span class="tag-relative" #tag ><spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag></span>
 
     </div>
     <div class="right-bar">
@@ -104,4 +103,9 @@
       </div>
     </div>
   </div>
+
+  <span class="tag-relative" #tag >
+    <spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
+  </span>
+
 </div>

@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { STRINGS } from '@assets/strings/en';
+// services
 import { ModalService } from '@services/modal.service';
 
+// assets
+import { STRINGS } from '@assets/strings/en';
 @Component({
   selector: 'spot-welcome',
   templateUrl: './welcome.component.html',
@@ -16,10 +18,10 @@ export class WelcomeComponent implements OnInit {
 
   constructor(private modalService: ModalService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  closeWelcome() {
+  closeWelcome(): void {
     this.modalService.close(this.modalId);
   }
 

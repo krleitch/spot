@@ -52,11 +52,11 @@ export const STRINGS = {
             HOT: 'Hot',
 
             // Verification
-            VERIFY: 'You must verify your email before you can add spots',
+            VERIFY: 'You must verify your email before you can make spots',
             VERIFY_SEND: 'Send email verification',
             VERIFY_SENT: 'Verification email sent to',
             VERIFY_RESEND: 'Resend',
-            NO_EMAIL: 'You must add and verify an email before you can add spots',
+            NO_EMAIL: 'You must add and verify an email before you can make spots',
             ADD_EMAIL: 'Click to add email',
 
 
@@ -183,7 +183,7 @@ export const STRINGS = {
 
           NO_COMMENTS: 'There are no comments on this spot',
           LOGIN: 'Login or Sign Up to Comment',
-          VERIFY: 'Email must be verified',
+          VERIFY: 'Verify your email to add comments',
           MAKE_COMMENT: 'Write a comment...',
 
         },

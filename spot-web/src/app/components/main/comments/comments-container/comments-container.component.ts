@@ -164,6 +164,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       }
     }, (err: SpotError) => {
       // Ignore error case for now
+      this.loadingCommentsBefore = false;
     });
 
   }
@@ -242,7 +243,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
   }
 
   // Creates the inline tag and removes the word
-  private removeWord(element: Node, position: number, username: string): void {
+  private removeWord(element: Node, position: number, username: string): HTMLElement {
 
     const content = element.textContent;
 
@@ -271,6 +272,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     span.appendChild(afterText);
 
     parent.replaceChild(span, element);
+    return tag;
 
   }
 
@@ -290,38 +292,19 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // remove the word
-    this.removeWord(this.tagElement, this.tagCaretPosition, username);
+    // remove the word, and add the inline tag
+    const tagElement = this.removeWord(this.tagElement, this.tagCaretPosition, username);
 
-    // refocus at end of content editable
-    this.placeCaretAtEnd(this.comment.nativeElement);
+    // Focus after the tag
+    const range = window.getSelection().getRangeAt(0);
+    range.setStart(tagElement.nextSibling, 0);
+    range.collapse(true);
 
     // hide tag menu
     this.hideTag();
     this.tagElement = null;
     this.tagCaretPosition = null;
 
-  }
-
-  private placeCaretAtEnd(element): void {
-    element.focus();
-    if (typeof window.getSelection !== 'undefined'
-            && typeof document.createRange !== 'undefined') {
-        const range = document.createRange();
-        range.selectNodeContents(element);
-        range.collapse(false);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-        // needed for browser compatibility
-        // @ts-ignore
-    } else if (typeof document.body.createTextRange !== 'undefined') {
-        // @ts-ignore
-        const textRange = document.body.createTextRange();
-        textRange.moveToElementText(element);
-        textRange.collapse(false);
-        textRange.select();
-    }
   }
 
   addComment(): void {
@@ -497,6 +480,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       }
     }, (err: SpotError) => {
       // Error case
+      this.loadingCommentsAfter = false;
     });
 
   }
@@ -519,10 +503,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       limit: this.detailed ? COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED : COMMENTS_CONSTANTS.MORE_LIMIT,
     };
 
-    this.loadingCommentsAfter = true;
+    this.loadingCommentsBefore = true;
 
     this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
-      this.loadingCommentsAfter = false;
+      this.loadingCommentsBefore = false;
       if  ( comments.comments ) {
         const storeRequest: SetCommentsStoreRequest = {
           postId: this.post.id,
@@ -537,6 +521,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       }
     }, (err: SpotError) => {
       // Error case
+      this.loadingCommentsBefore = false;
     });
 
   }
