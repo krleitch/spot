@@ -100,6 +100,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (storeComments: StoreComment) => {
 
       this.comments = storeComments.comments;
+      this.totalCommentsAfter = storeComments.totalCommentsAfter;
+      this.totalCommentsBefore = storeComments.totalCommentsBefore;
 
       // only load comments if we havent already
       if ( this.comments.length === 0 ) {
@@ -127,7 +129,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
               postId: this.post.id,
               type: 'before',
               initialLoad: this.initialLoad,
-              comments: comments.comments
+              comments: comments.comments,
+              totalCommentsBefore: comments.totalCommentsBefore,
+              totalCommentsAfter: comments.totalCommentsAfter
             };
             this.store$.dispatch(
               new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
@@ -469,7 +473,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
           postId: this.post.id,
           type: 'after',
           initialLoad: this.initialLoad,
-          comments: comments.comments
+          comments: comments.comments,
+          totalCommentsAfter: comments.totalCommentsAfter
         };
         this.store$.dispatch(
           new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
@@ -518,7 +523,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
           postId: this.post.id,
           type: 'before',
           initialLoad: this.initialLoad,
-          comments: comments.comments
+          comments: comments.comments,
+          totalCommentsBefore: comments.totalCommentsBefore
         };
         this.store$.dispatch(
           new CommentsStoreActions.SetCommentsRequestAction(storeRequest),

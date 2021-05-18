@@ -228,7 +228,7 @@ router.get('/:postId/:commentId', rateLimiter.genericCommentLimiter, ErrorHandle
                 postId: postId,
                 commentId: commentId,
                 replies: replies,
-                numRepliesAfter: num[0].total
+                totalRepliesAfter: num[0].total
             }
             res.status(200).json(response);
         }, (err: any) => {

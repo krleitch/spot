@@ -79,7 +79,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingReplies = false;
   loadingMoreReplies = false;
   showLoadingRepliesIndicator$: Observable<boolean>;
-  numRepliesAfter = 0;
+  totalRepliesAfter = 0;
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
@@ -121,6 +121,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.replies$.pipe(takeUntil(this.onDestroy)).subscribe( (storeReply: StoreReply) => {
 
       this.replies = storeReply.replies;
+      this.totalRepliesAfter = storeReply.totalRepliesAfter;
 
       // only load replies if we have none
       if ( this.replies.length === 0 ) {
@@ -147,14 +148,15 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
             commentId: replies.commentId,
             date: replies.date,
             initialLoad: true,
-            replies: replies.replies
+            replies: replies.replies,
+            totalRepliesAfter: replies.totalRepliesAfter
           };
 
           this.store$.dispatch(
             new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
           );
 
-          this.numRepliesAfter = replies.numRepliesAfter;
+          this.totalRepliesAfter = replies.totalRepliesAfter;
           this.loadingReplies = false;
 
         }, (err: SpotError) => {
@@ -478,7 +480,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // the number of replies that will be loaded if load more is pressed
   loadMoreRepliesNum(): number {
-    return Math.min(this.numRepliesAfter,
+    return Math.min(this.totalRepliesAfter,
                     this.detailed ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT);
   }
 
@@ -506,13 +508,14 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         date: replies.date,
         initialLoad: replies.initialLoad,
         replies: replies.replies,
+        totalRepliesAfter: replies.totalRepliesAfter
       };
 
       this.store$.dispatch(
         new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
       );
 
-      this.numRepliesAfter = replies.numRepliesAfter;
+      this.totalRepliesAfter = replies.totalRepliesAfter;
       this.loadingMoreReplies = false;
 
     }, (err: SpotError) => {

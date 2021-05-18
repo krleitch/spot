@@ -129,7 +129,7 @@
     </div>
   </ng-template>
 
-  <div *ngIf="numRepliesAfter > 0" class="load-more-container">
+  <div *ngIf="totalRepliesAfter > 0" class="load-more-container">
     <div class="load-more"  (click)="loadMoreReplies()">
       {{ STRINGS.LOAD }}
       {{ loadMoreRepliesNum() }}

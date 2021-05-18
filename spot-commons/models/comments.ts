@@ -50,6 +50,8 @@ export interface SetCommentsStoreRequest {
     comments: Comment[];
     type: string; // before / after
     initialLoad: boolean;
+    totalCommentsBefore?: number;
+    totalCommentsAfter?: number;
 }
 
 // Add a comment
@@ -96,7 +98,7 @@ export interface GetRepliesSuccess {
     postId: string;
     commentId: string;
     replies: Comment[];
-    numRepliesAfter: number;
+    totalRepliesAfter: number;
     date: string;
     initialLoad: boolean;
 }
@@ -107,6 +109,7 @@ export interface SetRepliesStoreRequest {
     replies: Comment[];
     date: string;
     initialLoad: boolean;
+    totalRepliesAfter: number;
 }
 
 // Add a reply

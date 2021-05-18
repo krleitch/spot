@@ -56,7 +56,7 @@ const createPostLimiter = rateLimit({
 });
 
 const genericPostTimeout = 1; // minutes
-const genericPostLimit = 60;
+const genericPostLimit = 300;
 const genericPostLimiter = rateLimit({
     windowMs: genericPostTimeout * 60 * 1000,
     max: genericPostLimit,
@@ -77,7 +77,7 @@ const createCommentLimiter = rateLimit({
 });
 
 const genericCommentTimeout = 1; // minutes
-const genericCommentLimit = 60;
+const genericCommentLimit = 300;
 const genericCommentLimiter = rateLimit({
     windowMs: genericCommentTimeout * 60 * 1000,
     max: genericCommentLimit,

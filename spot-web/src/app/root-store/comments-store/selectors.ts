@@ -16,7 +16,11 @@ export const selectTaggedFromStore = (state: State, postId: string, commentId: s
 export const selectCommentsFromStore = (state: State, postId: string): StoreComment => {
   // Check existence first
   if (state.comments[postId] === undefined) {
-    return { comments: [] };
+    return {
+      comments: [],
+      totalCommentsBefore: 0,
+      totalCommentsAfter: 0
+    };
   }
   return state.comments[postId];
 };
@@ -24,10 +28,18 @@ export const selectCommentsFromStore = (state: State, postId: string): StoreComm
 export const selectRepliesFromStore = (state: State, postId: string, commentId): StoreReply => {
   // Check existence first
   if (state.replies[postId] === undefined) {
-    return { replies: [], tagged: false };
+    return {
+      replies: [],
+      tagged: false,
+      totalRepliesAfter: 0,
+    };
   }
   if (state.replies[postId][commentId] === undefined) {
-    return { replies: [], tagged: false };
+    return {
+      replies: [],
+      tagged: false,
+      totalRepliesAfter: 0
+    };
   }
   return state.replies[postId][commentId];
 };
