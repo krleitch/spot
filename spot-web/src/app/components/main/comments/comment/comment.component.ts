@@ -119,7 +119,50 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.replies$.pipe(takeUntil(this.onDestroy)).subscribe( (storeReply: StoreReply) => {
+
       this.replies = storeReply.replies;
+
+      // only load replies if we have none
+      if ( this.replies.length === 0 ) {
+
+        // if detailed load more replies
+        const initialLimit = this.detailed ? 10 : 1;
+
+        const request: GetRepliesRequest = {
+          postId: this.comment.post_id,
+          commentId: this.comment.id,
+          replyLink: this.post.startCommentLink || null,
+          date: null,
+          initialLoad: true,
+          limit: initialLimit
+        };
+
+        this.loadingReplies = true;
+        this.showLoadingRepliesIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loadingReplies )).pipe( startWith(false) );
+
+        this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
+
+          const storeRequest: SetRepliesStoreRequest = {
+            postId: replies.postId,
+            commentId: replies.commentId,
+            date: replies.date,
+            initialLoad: true,
+            replies: replies.replies
+          };
+
+          this.store$.dispatch(
+            new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
+          );
+
+          this.numRepliesAfter = replies.numRepliesAfter;
+          this.loadingReplies = false;
+
+        }, (err: SpotError) => {
+          this.loadingReplies = false;
+        });
+
+      }
+
     });
 
     this.isAuthenticated$ = this.store$.pipe(
@@ -149,42 +192,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
-
-    // if detailed load more replies
-    const initialLimit = this.detailed ? 10 : 1;
-
-    const request: GetRepliesRequest = {
-      postId: this.comment.post_id,
-      commentId: this.comment.id,
-      replyLink: this.post.startCommentLink || null,
-      date: null,
-      initialLoad: true,
-      limit: initialLimit
-    };
-
-    this.loadingReplies = true;
-    this.showLoadingRepliesIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loadingReplies )).pipe( startWith(false) );
-
-    this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
-
-      const storeRequest: SetRepliesStoreRequest = {
-        postId: replies.postId,
-        commentId: replies.commentId,
-        date: replies.date,
-        initialLoad: true,
-        replies: replies.replies
-      };
-
-      this.store$.dispatch(
-        new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
-      );
-
-      this.numRepliesAfter = replies.numRepliesAfter;
-      this.loadingReplies = false;
-
-    }, (err: SpotError) => {
-      this.loadingReplies = false;
-    });
 
     this.getTime(this.comment.creation_date);
     this.imageBlurred = this.comment.image_nsfw;

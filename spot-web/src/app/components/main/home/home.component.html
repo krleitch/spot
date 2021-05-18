@@ -134,7 +134,7 @@
         <div class="posts">
           <spot-infinite-scroll (scrolled)="onScroll()">
             <div *ngIf="posts.length > 0; else empty">
-              <div *ngFor="let post of posts$ | async">
+              <div *ngFor="let post of posts">
                   <spot-post [post]="post" [detailed]="false"></spot-post>
               </div>
             </div>

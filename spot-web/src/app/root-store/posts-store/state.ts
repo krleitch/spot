@@ -15,6 +15,6 @@ export const initialState: State = (
     loading: false,
     createError: null,
     createSuccess: false,
-    noPosts: false,
+    noPosts: false
   }
 );

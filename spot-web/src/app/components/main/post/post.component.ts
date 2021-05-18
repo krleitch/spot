@@ -14,7 +14,7 @@ import { AuthenticationService } from '@services/authentication.service';
 import { Store, select } from '@ngrx/store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { RootStoreState } from '@store';
-import { PostsStoreActions } from '@store/posts-store';
+import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 
 // Assets
 import { POSTS_CONSTANTS } from '@constants/posts';
@@ -166,7 +166,7 @@ export class PostComponent implements OnInit, OnDestroy {
     } else {
       unit = 'imperial';
     }
-    
+
     let distanceString = '';
 
     if ( distance <= LOCATIONS_CONSTANTS.MIN_DISTANCE ) {
@@ -277,7 +277,7 @@ export class PostComponent implements OnInit, OnDestroy {
     this.modalService.close(id);
   }
 
-  openReportModal(postId: string) {
+  openReportModal(postId: string): void {
 
     if ( !this.authenticationService.isAuthenticated() ) {
       this.modalService.open('spot-auth-modal');

@@ -14,8 +14,14 @@ export interface StoreReply {
 }
 
 export interface State {
-    comments: { [postId: string]: StoreComment };
-    replies: { [postId: string]: { [commentId: string]: StoreReply } };
+    comments: {
+      [postId: string]: StoreComment,
+    };
+    replies: {
+      [postId: string]: {
+          [commentId: string]: StoreReply,
+      };
+    };
 }
 
 export const initialState: State = (

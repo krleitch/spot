@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Posts
   posts$: Observable<Post[]>;
-  posts: Post[];
+  posts: Post[] = [];
   showPostsIndicator$: Observable<boolean>;
   loading$: Observable<boolean>;
   loading: boolean;
@@ -140,6 +140,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this.posts$.pipe(takeUntil(this.onDestroy)).subscribe( (posts: Post[]) => {
+
       this.posts = posts;
       this.loadedPosts = posts.length;
       if ( this.posts.length !== 0 ) {

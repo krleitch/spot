@@ -98,7 +98,52 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     );
 
     this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (storeComments: StoreComment) => {
+
       this.comments = storeComments.comments;
+
+      // only load comments if we havent already
+      if ( this.comments.length === 0 ) {
+        // if detailed load more comments
+        const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
+
+        // Get the latest initialLimit of comments
+        const request: GetCommentsRequest = {
+          postId: this.post.id,
+          date: new Date().toString(),
+          type: 'before',
+          limit: initialLimit,
+          commentLink: this.post.startCommentLink || null,
+        };
+
+        this.loadingCommentsBefore = true;
+        this.showLoadingCommentsIndicator$ = timer(500).pipe(
+          mapTo(true),
+          takeWhile( (_) => this.loadingCommentsBefore )).pipe( startWith(false) );
+
+        this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
+          this.loadingCommentsBefore = false;
+          if  ( comments.comments ) {
+            const storeRequest: SetCommentsStoreRequest = {
+              postId: this.post.id,
+              type: 'before',
+              initialLoad: this.initialLoad,
+              comments: comments.comments
+            };
+            this.store$.dispatch(
+              new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
+            );
+            this.totalCommentsBefore = comments.totalCommentsBefore;
+            this.totalCommentsAfter = comments.totalCommentsAfter;
+            this.initialLoad = false;
+
+          }
+        }, (err: SpotError) => {
+          // Ignore error case for now
+          this.loadingCommentsBefore = false;
+        });
+
+      }
+
     });
 
     // Authentication
@@ -126,45 +171,6 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends: Friend[]) => {
       this.friends = friends;
-    });
-
-    // if detailed load more comments
-    const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
-
-    // Get the latest initialLimit of comments
-    const request: GetCommentsRequest = {
-      postId: this.post.id,
-      date: new Date().toString(),
-      type: 'before',
-      limit: initialLimit,
-      commentLink: this.post.startCommentLink || null,
-    };
-
-    this.loadingCommentsBefore = true;
-    this.showLoadingCommentsIndicator$ = timer(500).pipe(
-      mapTo(true),
-      takeWhile( (_) => this.loadingCommentsBefore )).pipe( startWith(false) );
-
-    this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
-      this.loadingCommentsBefore = false;
-      if  ( comments.comments ) {
-        const storeRequest: SetCommentsStoreRequest = {
-          postId: this.post.id,
-          type: 'before',
-          initialLoad: this.initialLoad,
-          comments: comments.comments
-        };
-        this.store$.dispatch(
-          new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
-        );
-        this.totalCommentsBefore = comments.totalCommentsBefore;
-        this.totalCommentsAfter = comments.totalCommentsAfter;
-        this.initialLoad = false;
-
-      }
-    }, (err: SpotError) => {
-      // Ignore error case for now
-      this.loadingCommentsBefore = false;
     });
 
   }
