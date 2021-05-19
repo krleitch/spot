@@ -9,6 +9,16 @@ export function featureReducer(state = initialState, action: Actions): State {
           ...initialState
       };
     }
+    case ActionTypes.CLEAR_COMMENTS_REQUEST: {
+      const newComments = Object.assign({}, state.comments);
+      newComments[action.request.postId] = { comments: [], totalCommentsBefore: 0, totalCommentsAfter: 0 };
+      const newReplies = Object.assign({}, state.replies);
+      newReplies[action.request.postId] = {};
+      return {
+          comments: newComments,
+          replies: newReplies
+      };
+    }
     case ActionTypes.ADD_COMMENT_REQUEST: {
         const newComments = Object.assign({}, state.comments);
         if (newComments[action.request.postId] === undefined) {

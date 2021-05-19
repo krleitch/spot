@@ -54,6 +54,10 @@ export interface SetCommentsStoreRequest {
     totalCommentsAfter?: number;
 }
 
+export interface ClearCommentsRequest {
+    postId: string;
+}
+
 // Add a comment
 export interface AddCommentRequest {
     postId: string;

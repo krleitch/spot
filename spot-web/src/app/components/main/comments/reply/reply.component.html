@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="reply">
+  <div class="reply" [ngClass]="{ 'linked': post.startCommentLink == reply.link }">
     <div class="left-bar">
       <div class="left-bar-alignment">
         <div class="column">

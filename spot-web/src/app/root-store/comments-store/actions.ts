@@ -5,11 +5,11 @@ import { AddCommentStoreRequest, SetCommentsStoreRequest,
           SetRepliesStoreRequest, DeleteReplyRequest, DeleteReplySuccess,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
           LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess, UnratedCommentRequest,
-          UnratedCommentSuccess, UnratedReplyRequest, UnratedReplySuccess } from '@models/comments';
-import { SpotError } from '@exceptions/error';
+          UnratedCommentSuccess, UnratedReplyRequest, UnratedReplySuccess, ClearCommentsRequest } from '@models/comments';
 
 export enum ActionTypes {
   RESET_STORE = '[Comments] Reset Store',
+  CLEAR_COMMENTS_REQUEST = '[Comments] Clear Comments Request',
   ADD_COMMENT_REQUEST = '[Comments] Add Comment Request',
   ADD_REPLY_REQUEST = '[Comments] Add Reply Request',
   SET_COMMENTS_REQUEST = '[Comments] Set Comments Request',
@@ -36,6 +36,11 @@ export enum ActionTypes {
 export class ResetStoreAction implements Action {
   readonly type = ActionTypes.RESET_STORE;
   constructor() {}
+}
+
+export class ClearCommentsRequestAction implements Action {
+  readonly type = ActionTypes.CLEAR_COMMENTS_REQUEST;
+  constructor(public request: ClearCommentsRequest) {}
 }
 
 export class GenericFailureAction implements Action {
@@ -143,7 +148,7 @@ export class UnratedReplySuccessAction implements Action {
   constructor(public response: UnratedReplySuccess) {}
 }
 
-export type Actions = AddCommentRequestAction | SetCommentsRequestAction |
+export type Actions = AddCommentRequestAction | ClearCommentsRequestAction | SetCommentsRequestAction |
                       DeleteRequestAction | DeleteSuccessAction |
                       SetRepliesRequestAction | AddReplyRequestAction |
                       DeleteReplyRequestAction | DeleteReplySuccessAction |

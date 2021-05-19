@@ -8,6 +8,7 @@ import { Observable, Subject, throwError, interval, timer } from 'rxjs';
 // store
 import { RootStoreState } from '@store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
+import { CommentsStoreActions } from '@store/comments-store';
 import { select, Store } from '@ngrx/store';
 
 // services
@@ -16,6 +17,7 @@ import { PostsService } from '@services/posts.service';
 // assets
 import { LoadSinglePostRequest, LoadSinglePostSuccess, Post } from '@models/posts';
 import { Location } from '@models/accounts';
+import { ClearCommentsRequest } from '@models/comments';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -108,6 +110,14 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.postsService.getPost(request).pipe(take(1)).subscribe(( (postSuccess: LoadSinglePostSuccess) =>  {
         this.error = false;
         this.loadingPost = false;
+
+        const clearCommentsRequest: ClearCommentsRequest = {
+          postId: postSuccess.post.id
+        };
+        this.store$.dispatch(
+          new CommentsStoreActions.ClearCommentsRequestAction(clearCommentsRequest),
+        );
+
         if ( this.commentLink ) {
           postSuccess.post.startCommentLink = this.commentLink;
         }

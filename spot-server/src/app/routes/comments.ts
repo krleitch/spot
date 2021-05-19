@@ -71,7 +71,7 @@ router.get('/activity', rateLimiter.genericCommentLimiter, function (req: any, r
 });
 
 // Get all comments for a post
-router.get('/:postId', rateLimiter.genericCommentLimiter, ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
+router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: any, next: any) {
     
     const postId = req.params.postId;
 
@@ -181,7 +181,7 @@ router.get('/:postId', rateLimiter.genericCommentLimiter, ErrorHandler.catchAsyn
 }));
 
 // Get all replies for a comment on a post
-router.get('/:postId/:commentId', rateLimiter.genericCommentLimiter, ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
+router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
     
     const postId = req.params.postId;
     const commentId = req.params.commentId;

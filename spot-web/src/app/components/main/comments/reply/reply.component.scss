@@ -7,6 +7,11 @@
   display: flex;
 }
 
+.linked {
+  background-color: $item-highlight;
+  border-radius: 15px;
+}
+
 // Content
 .add-wrapper {
   flex: 1;

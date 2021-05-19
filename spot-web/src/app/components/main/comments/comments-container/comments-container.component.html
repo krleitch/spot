@@ -5,7 +5,7 @@
   </span>
 
   <!-- Add -->
-  <div *ngIf="post.inRange">
+  <div *ngIf="post.inRange && location">
 
     <div *ngIf="(isAuthenticated$ | async); else auth">
       <div class="add" *ngIf="(isVerified$ | async); else verify">
@@ -126,7 +126,7 @@
 
   </div>
 
-  <div *ngIf="comments.length >= 5 && (isAuthenticated$ | async) &&  (isVerified$ | async) && post.inRange" class="comment-reminder" (click)="scrollToComment()">
+  <div *ngIf="comments.length >= 5 && (isAuthenticated$ | async) &&  (isVerified$ | async) && post.inRange && location" class="comment-reminder" (click)="scrollToComment()">
     {{ STRINGS.MAKE_COMMENT }}
   </div>
 
