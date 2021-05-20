@@ -69,7 +69,9 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
     // reload if user becomes authenticated
     this.authenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticated: boolean) => {
+      if ( authenticated !== null ) {
         this.waitForPosts();
+      }
     });
 
   }
