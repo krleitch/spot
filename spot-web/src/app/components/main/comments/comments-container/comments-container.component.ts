@@ -103,7 +103,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.totalCommentsAfter = storeComments.totalCommentsAfter;
       this.totalCommentsBefore = storeComments.totalCommentsBefore;
 
-      console.log('init comments', this.comments.length)
+      console.log('init comments', this.comments.length, this.initialLoad)
       // only load comments if we havent already
       if ( this.comments.length === 0 && this.initialLoad ) {
         // if detailed load more comments
@@ -135,12 +135,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
               totalCommentsBefore: comments.totalCommentsBefore,
               totalCommentsAfter: comments.totalCommentsAfter
             };
+            this.initialLoad = false;
             this.store$.dispatch(
               new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
             );
             this.totalCommentsBefore = comments.totalCommentsBefore;
             this.totalCommentsAfter = comments.totalCommentsAfter;
-            this.initialLoad = false;
 
           }
         }, (err: SpotError) => {

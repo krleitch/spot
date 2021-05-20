@@ -76,6 +76,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   replies$: Observable<StoreReply>;
   replies: Comment[] = [];
+  initialLoad = true;
   loadingReplies = false;
   loadingMoreReplies = false;
   showLoadingRepliesIndicator$: Observable<boolean>;
@@ -123,8 +124,10 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.replies = storeReply.replies;
       this.totalRepliesAfter = storeReply.totalRepliesAfter;
 
+      console.log('loading replies for ', this.comment.link );
+
       // only load replies if we have none
-      if ( this.replies.length === 0 ) {
+      if ( this.replies.length === 0 && this.initialLoad ) {
 
         // if detailed load more replies
         const initialLimit = this.detailed ? 10 : 1;
@@ -134,7 +137,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
           commentId: this.comment.id,
           replyLink: this.post.startCommentLink || null,
           date: null,
-          initialLoad: true,
+          initialLoad: this.initialLoad,
           limit: initialLimit
         };
 
@@ -147,11 +150,12 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
             postId: replies.postId,
             commentId: replies.commentId,
             date: replies.date,
-            initialLoad: true,
+            initialLoad: this.initialLoad,
             replies: replies.replies,
             totalRepliesAfter: replies.totalRepliesAfter
           };
 
+          this.initialLoad = false;
           this.store$.dispatch(
             new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
           );
