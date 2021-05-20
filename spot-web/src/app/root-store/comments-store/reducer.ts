@@ -80,9 +80,9 @@ export function featureReducer(state = initialState, action: Actions): State {
         };
       }
 
-      const newTotalCommentsAfter = action.request.totalCommentsAfter ?
+      const newTotalCommentsAfter = action.request.hasOwnProperty('totalCommentsAfter') ?
                                      action.request.totalCommentsAfter : newComments[action.request.postId].totalCommentsAfter;
-      const newTotalCommentsBefore = action.request.totalCommentsBefore ?
+      const newTotalCommentsBefore = action.request.hasOwnProperty('totalCommentsBefore') ?
                                      action.request.totalCommentsBefore : newComments[action.request.postId].totalCommentsBefore;
 
       // after or before
