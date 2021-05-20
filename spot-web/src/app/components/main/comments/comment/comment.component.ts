@@ -165,6 +165,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loadingReplies = false;
         });
 
+      } else {
+        this.initialLoad = false;
       }
 
     });

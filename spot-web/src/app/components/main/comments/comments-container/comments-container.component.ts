@@ -146,6 +146,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
           this.loadingCommentsBefore = false;
         });
 
+      } else {
+        this.initialLoad = false;
       }
 
     });
