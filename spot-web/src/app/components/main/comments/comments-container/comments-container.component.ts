@@ -103,12 +103,10 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
       this.totalCommentsAfter = storeComments.totalCommentsAfter;
       this.totalCommentsBefore = storeComments.totalCommentsBefore;
 
-      console.log('init comments', this.comments.length, this.initialLoad)
       // only load comments if we havent already
       if ( this.comments.length === 0 && this.initialLoad ) {
         // if detailed load more comments
         const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
-        console.log('getting comments')
 
         // Get the latest initialLimit of comments
         const request: GetCommentsRequest = {
@@ -130,7 +128,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
             const storeRequest: SetCommentsStoreRequest = {
               postId: this.post.id,
               type: 'before',
-              initialLoad: this.initialLoad,
+              initialLoad: true,
               comments: comments.comments,
               totalCommentsBefore: comments.totalCommentsBefore,
               totalCommentsAfter: comments.totalCommentsAfter

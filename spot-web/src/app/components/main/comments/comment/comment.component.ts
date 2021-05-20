@@ -124,8 +124,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.replies = storeReply.replies;
       this.totalRepliesAfter = storeReply.totalRepliesAfter;
 
-      console.log('loading replies for ', this.comment.link );
-
       // only load replies if we have none
       if ( this.replies.length === 0 && this.initialLoad ) {
 
@@ -137,7 +135,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
           commentId: this.comment.id,
           replyLink: this.post.startCommentLink || null,
           date: null,
-          initialLoad: this.initialLoad,
+          initialLoad: true,
           limit: initialLimit
         };
 
@@ -150,7 +148,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
             postId: replies.postId,
             commentId: replies.commentId,
             date: replies.date,
-            initialLoad: this.initialLoad,
+            initialLoad: true,
             replies: replies.replies,
             totalRepliesAfter: replies.totalRepliesAfter
           };

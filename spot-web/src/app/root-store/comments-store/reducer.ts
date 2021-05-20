@@ -14,7 +14,6 @@ export function featureReducer(state = initialState, action: Actions): State {
       newComments[action.request.postId] = { comments: [], totalCommentsBefore: 0, totalCommentsAfter: 0 };
       const newReplies = Object.assign({}, state.replies);
       newReplies[action.request.postId] = {};
-      console.log('resetting comments')
       return {
           comments: newComments,
           replies: newReplies
