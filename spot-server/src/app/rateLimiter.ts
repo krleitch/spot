@@ -94,7 +94,8 @@ const authenticationLimiter = rateLimit({
     max: authenticationLimit,
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, authenticationLimit, authenticationTimeout))
-    }
+    },
+    skipSuccessfulRequests: true
 });
 
 const passwordResetTimeout = 5; // minutes
@@ -104,7 +105,8 @@ const passwordResetLimiter = rateLimit({
     max: passwordResetLimit,
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, passwordResetLimit, passwordResetTimeout))
-    }
+    },
+    skipSuccessfulRequests: true
 });
 
 const tokenTimeout = 5; // minutes
@@ -114,7 +116,8 @@ const tokenLimiter = rateLimit({
     max: tokenLimit,
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, tokenLimit, tokenTimeout))
-    }
+    },
+    skipSuccessfulRequests: true
 });
 
 const newPasswordTimeout = 5; // minutes
@@ -124,5 +127,6 @@ const newPasswordLimiter = rateLimit({
     max: newPasswordLimit,
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, newPasswordLimit, newPasswordTimeout))
-    }
+    },
+    skipSuccessfulRequests: true
 });
