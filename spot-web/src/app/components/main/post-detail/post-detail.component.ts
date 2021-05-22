@@ -7,7 +7,7 @@ import { Observable, Subject, throwError, interval, timer } from 'rxjs';
 
 // store
 import { RootStoreState } from '@store';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { AccountsStoreSelectors, AccountsActions } from '@store/accounts-store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { select, Store } from '@ngrx/store';
 
@@ -16,7 +16,7 @@ import { PostsService } from '@services/posts.service';
 
 // assets
 import { LoadSinglePostRequest, LoadSinglePostSuccess, Post } from '@models/posts';
-import { Location } from '@models/accounts';
+import { Location, LoadLocationRequest, LocationFailure, SetLocationRequest } from '@models/accounts';
 import { ClearCommentsRequest } from '@models/comments';
 import { STRINGS } from '@assets/strings/en';
 
@@ -103,6 +103,73 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.onDestroy.next();
+  }
+
+  getLocation(): void {
+
+    if ( navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation'}).then( (permission: PermissionStatus) => {
+
+        if ( navigator.geolocation) {
+
+          const loadLocationRequest: LoadLocationRequest = {};
+          this.store$.dispatch(
+            new AccountsActions.LoadLocationAction(loadLocationRequest),
+          );
+
+          navigator.geolocation.getCurrentPosition((position) => {
+
+            const setLocationRequest: SetLocationRequest = {
+              location: {
+                longitude: position.coords.longitude,
+                latitude: position.coords.latitude
+              },
+            };
+            this.store$.dispatch(
+              new AccountsActions.SetLocationAction(setLocationRequest),
+            );
+            this.bypassLocation = false;
+            this.waitForPosts();
+
+          }, this.locationError.bind(this));
+
+        } else {
+
+          // the permissions api isnt implemented in this browser so setup to prompt again
+          const locationFailure: LocationFailure = {
+            error: 'browser',
+          };
+          this.store$.dispatch(
+            new AccountsActions.LocationFailureAction(locationFailure),
+          );
+
+        }
+
+      });
+
+    } else {
+
+      // the permissions api isnt implemented in this browser so setup to prompt again
+      const locationFailure: LocationFailure = {
+        error: 'browser',
+      };
+      this.store$.dispatch(
+        new AccountsActions.LocationFailureAction(locationFailure),
+      );
+
+    }
+
+  }
+
+  private locationError(error: { message: string, code: number }): void {
+
+    const locationFailure: LocationFailure = {
+      error: error.code === 1 ? 'permission' : 'general',
+    };
+    this.store$.dispatch(
+      new AccountsActions.LocationFailureAction(locationFailure),
+    );
+
   }
 
   skipLocation(): void {

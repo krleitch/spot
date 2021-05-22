@@ -1,19 +1,19 @@
 
 <spot-main-nav></spot-main-nav>
 <div class="post-detailed">
-  <div *ngIf="locationFailure === 'prompt'">
-    <span class="text"> Reload Spot with Location </span>
+  <div *ngIf="locationFailure === 'prompt'" class="loading">
+    <span class="text clickable" click="getLocation()"> Reload Spot with Your Location </span>
   </div>
-  <div *ngIf="loadingLocation && !bypassLocation">
+  <div *ngIf="loadingLocation && !bypassLocation" class="loading">
     <span class="text"> Loading Your Location </span>
     <span class="text clickable" (click)="skipLocation()"> Skip waiting for location </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
-  <div class="loading" *ngIf="loadingPost && (showLoadingIndicator$ | async); else postLoaded">
+  <div class="loading" *ngIf="loadingPost && (showLoadingIndicator$ | async); else postloaded">
     <span class="text"> {{ STRINGS.LOADING }} </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
-  <ng-template #postLoaded>
+  <ng-template #postloaded>
     <div class="content" *ngIf="post">
       <meta property="og:url"           content="{{ getPostLink(post) }}" />
       <meta property="og:type"          content="website" />
