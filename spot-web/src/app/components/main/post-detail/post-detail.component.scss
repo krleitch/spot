@@ -49,6 +49,11 @@ spot-main-nav {
       text-align: center;
     }
 
+    .clickable {
+      cursor: pointer;
+      color: $subtle-grey;
+    }
+
   }
 
   .error {

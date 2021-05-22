@@ -1,6 +1,14 @@
 
 <spot-main-nav></spot-main-nav>
 <div class="post-detailed">
+  <div *ngIf="locationFailure === 'prompt'">
+    <span class="text"> Reload Spot with Location </span>
+  </div>
+  <div *ngIf="loadingLocation && !bypassLocation">
+    <span class="text"> Loading Your Location </span>
+    <span class="text clickable" (click)="skipLocation()"> Skip waiting for location </span>
+    <spot-spinner size="medium" type="dot"></spot-spinner>
+  </div>
   <div class="loading" *ngIf="loadingPost && (showLoadingIndicator$ | async); else postLoaded">
     <span class="text"> {{ STRINGS.LOADING }} </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>

@@ -45,11 +45,17 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   authenticated$: Observable<boolean>;
   location$: Observable<Location>;
   location: Location;
+  loadingLocation$: Observable<boolean>;
+  loadingLocation: boolean;
+  locationFailure$: Observable<string>;
+  locationFailure: string;
+  bypassLocation = false;
 
   error = false;
 
   ngOnInit(): void {
 
+    // Location
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectLocation)
     );
@@ -58,11 +64,32 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       this.location = location;
     });
 
+    this.loadingLocation$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectLoadingLocation)
+    );
+
+    this.loadingLocation$.pipe(takeUntil(this.onDestroy)).subscribe( (loadingLocation: boolean) => {
+      this.loadingLocation = loadingLocation;
+    });
+
+    this.locationFailure$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectLocationFailure)
+    );
+
+    this.locationFailure$.pipe(takeUntil(this.onDestroy)).subscribe( (locationFailure: string) => {
+      this.locationFailure = locationFailure;
+      if ( locationFailure ) {
+        this.bypassLocation = true;
+      }
+    });
+
+    // params
     this.route.paramMap.pipe(takeUntil(this.onDestroy)).subscribe( (p: any) => {
       this.commentLink = p.get('commentLink');
       this.postLink = p.get('postLink');
     });
 
+    // Authenication
     this.authenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
@@ -78,16 +105,21 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
+  skipLocation(): void {
+    this.bypassLocation = true;
+  }
+
   waitForPosts(): void {
 
     this.loadingPost = true;
     this.showLoadingIndicator$ = timer(2000).pipe( mapTo(true), takeWhile( (_) => this.loadingPost )).pipe( startWith(false) );
 
+  
     // wait for location and param map to load
     const source = interval(500);
     source.pipe(
       skipWhile(() => typeof this.postLink === 'undefined' ||
-                      typeof this.location === 'undefined'),
+                      (this.location === null && this.bypassLocation === false)) ,
       take(1),
     ).subscribe(() => {
       this.loadPost();
