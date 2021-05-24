@@ -174,6 +174,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   skipLocation(): void {
     this.bypassLocation = true;
+    this.loadingLocation = false;
   }
 
   waitForPosts(): void {
@@ -181,7 +182,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.loadingPost = true;
     this.showLoadingIndicator$ = timer(2000).pipe( mapTo(true), takeWhile( (_) => this.loadingPost )).pipe( startWith(false) );
 
-  
+
     // wait for location and param map to load
     const source = interval(500);
     source.pipe(

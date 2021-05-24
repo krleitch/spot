@@ -37,12 +37,17 @@ spot-main-nav {
     align-items: center;
     flex-flow: column;
     padding: 40px;
-    margin: 20px;
+    margin: 20px 20px 0px 20px;
     background-color: white;
     box-sizing: border-box;
-    max-height: 139px;
     width: 70%;
     max-width: 1150px;
+
+    .icon {
+      font-size: 52px;
+      color: $button-highlight;
+      margin-bottom: 15px;
+    }
 
     .text {
       font-size: 20px;
@@ -53,9 +58,14 @@ spot-main-nav {
     .clickable {
       cursor: pointer;
       color: $subtle-grey;
+      margin-bottom: 0px;
       &:hover {
         color: $button-highlight;
       }
+    }
+
+    spot-spinner {
+      margin-top: 20px;
     }
 
   }
@@ -82,13 +92,17 @@ spot-main-nav {
 }
 
 spot-post {
-  width: 95%;
+  width: 100%;
 }
 
 // Mobile stylings
 @media screen and (max-width: $mobile-width) {
 
   .post-detailed {
+
+    .loading {
+      width: 95%;
+    }
 
     .content {
       width: 95%;

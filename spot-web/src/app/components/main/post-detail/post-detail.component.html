@@ -2,10 +2,11 @@
 <spot-main-nav></spot-main-nav>
 <div class="post-detailed">
   <div *ngIf="locationFailure === 'prompt'" class="loading">
+    <span class="material-icons icon"> place </span>
     <span class="text"> Spot uses your location to help find spots in your area and show location specefic details </span>
-    <span class="text clickable" click="getLocation()"> Reload Spot with Your Location </span>
+    <span class="text clickable" (click)="getLocation()"> Reload Spot with Your Location </span>
   </div>
-  <div *ngIf="loadingLocation && !bypassLocation && !loadingPost" class="loading">
+  <div *ngIf="loadingLocation" class="loading">
     <span class="text"> Loading Your Location </span>
     <span class="text clickable" (click)="skipLocation()"> Skip waiting for location </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
@@ -15,7 +16,7 @@
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
   <ng-template #postloaded>
-    <div class="content" *ngIf="post">
+    <div class="content" *ngIf="post && !loadingLocation">
       <meta property="og:url"           content="{{ getPostLink(post) }}" />
       <meta property="og:type"          content="website" />
       <meta property="og:title"         content="Spot" />
