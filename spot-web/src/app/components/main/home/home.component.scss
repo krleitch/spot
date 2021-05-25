@@ -145,6 +145,10 @@ spot-create {
   align-items: center;
   flex-flow: column;
 
+  spot-spinner {
+    margin-top: 12px;
+  }
+
   .empty-image {
 
     position: relative;

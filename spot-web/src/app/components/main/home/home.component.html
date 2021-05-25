@@ -162,7 +162,6 @@
               <!-- Loading spots -->
               <div *ngIf="loading && (showPostsIndicator$ | async)" class="empty-container">
                 <spot-spinner type="dot"></spot-spinner>
-                <span class="text"> {{ STRINGS.LOADING_POSTS }} </span>
               </div>
             </div>
           </spot-infinite-scroll>

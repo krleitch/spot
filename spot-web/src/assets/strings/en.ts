@@ -23,9 +23,7 @@ export const STRINGS = {
 
         HOME: {
 
-            // loading posts
-            LOADING_POSTS: 'Searching for Spots',
-
+            // location
             LOCATION_REQUIRED_1: 'Location is required to view',
             LOCATION_REQUIRED_2: 'Spots and add comments',
             LOCATION_ENABLE: 'Please enable location in your browser accessibility settings',
