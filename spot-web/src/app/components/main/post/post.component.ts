@@ -14,7 +14,7 @@ import { AuthenticationService } from '@services/authentication.service';
 import { Store, select } from '@ngrx/store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { RootStoreState } from '@store';
-import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
+import { PostsStoreActions } from '@store/posts-store';
 
 // Assets
 import { POSTS_CONSTANTS } from '@constants/posts';
@@ -124,6 +124,10 @@ export class PostComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new PostsStoreActions.DeleteRequestAction(request)
         );
+        // go home
+        if ( this.detailed ) {
+          this.router.navigateByUrl('/home');
+        }
 
       }
 
@@ -225,6 +229,10 @@ export class PostComponent implements OnInit, OnDestroy {
       this.store$.dispatch(
         new PostsStoreActions.UnratedRequestAction(request)
       );
+      if ( this.detailed ) {
+        this.post.likes -= 1;
+        this.post.rated = -1;
+      }
     } else {
       const request: LikePostRequest = {
         postId: this.post.id
@@ -232,6 +240,10 @@ export class PostComponent implements OnInit, OnDestroy {
       this.store$.dispatch(
         new PostsStoreActions.LikeRequestAction(request)
       );
+      if ( this.detailed ) {
+        this.post.likes += 1;
+        this.post.rated = 1;
+      }
     }
 
   }
@@ -250,6 +262,10 @@ export class PostComponent implements OnInit, OnDestroy {
       this.store$.dispatch(
         new PostsStoreActions.UnratedRequestAction(request)
       );
+      if ( this.detailed ) {
+        this.post.dislikes -= 1;
+        this.post.rated = -1;
+      }
     } else {
       const request: DislikePostRequest = {
         postId: this.post.id
@@ -257,6 +273,10 @@ export class PostComponent implements OnInit, OnDestroy {
       this.store$.dispatch(
         new PostsStoreActions.DislikeRequestAction(request)
       );
+      if ( this.detailed ) {
+        this.post.dislikes += 1;
+        this.post.rated = 0;
+      }
     }
 
   }

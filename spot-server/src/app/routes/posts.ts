@@ -277,6 +277,11 @@ router.get('/:postLink', rateLimiter.genericPostLimiter, function (req: any, res
     const longitude = Number(req.query.longitude);
 
     posts.getPostByLink(postLink, req.authenticated ? req.user.id: null).then((rows: any) => {
+
+        if ( rows.length < 1 ) {
+            return next(new PostsError.GetSinglePost(500));
+        }
+
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
         const response = { post: rows[0] };
         res.status(200).json(response);
