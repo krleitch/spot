@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
@@ -38,7 +38,7 @@ import { COMMENTS_CONSTANTS } from '@constants/comments';
   templateUrl: './comments-container.component.html',
   styleUrls: ['./comments-container.component.scss']
 })
-export class CommentsContainerComponent implements OnInit, OnDestroy {
+export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -90,6 +90,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
+
   ngOnInit(): void {
 
     // Comments
@@ -98,6 +99,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
     );
 
     this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (storeComments: StoreComment) => {
+
+      // comments were reset
 
       this.comments = storeComments.comments;
       this.totalCommentsAfter = storeComments.totalCommentsAfter;
@@ -183,6 +186,54 @@ export class CommentsContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.onDestroy.next();
+  }
+
+  ngOnChanges(changes: any): void {
+
+    if ( !this.initialLoad ) {
+      // if detailed load more comments
+      const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
+
+      // Get the latest initialLimit of comments
+      const request: GetCommentsRequest = {
+        postId: this.post.id,
+        date: new Date().toString(),
+        type: 'before',
+        limit: initialLimit,
+        commentLink: this.post.startCommentLink || null,
+      };
+
+      this.loadingCommentsBefore = true;
+      this.showLoadingCommentsIndicator$ = timer(500).pipe(
+        mapTo(true),
+        takeWhile( (_) => this.loadingCommentsBefore )).pipe( startWith(false) );
+
+      this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
+        this.loadingCommentsBefore = false;
+        if  ( comments.comments ) {
+          const storeRequest: SetCommentsStoreRequest = {
+            postId: this.post.id,
+            type: 'before',
+            initialLoad: true,
+            comments: comments.comments,
+            totalCommentsBefore: comments.totalCommentsBefore,
+            totalCommentsAfter: comments.totalCommentsAfter
+          };
+          this.initialLoad = false;
+          this.store$.dispatch(
+            new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
+          );
+          this.totalCommentsBefore = comments.totalCommentsBefore;
+          this.totalCommentsAfter = comments.totalCommentsAfter;
+
+        }
+      }, (err: SpotError) => {
+        // Ignore error case for now
+        this.loadingCommentsBefore = false;
+      });
+
+    }
+
   }
 
   offClickHandler(event: MouseEvent): void {

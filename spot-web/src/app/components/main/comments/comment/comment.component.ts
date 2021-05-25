@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit, OnChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
@@ -41,7 +41,7 @@ import { COMMENTS_CONSTANTS } from '@constants/comments';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })
-export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -140,7 +140,9 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         };
 
         this.loadingReplies = true;
-        this.showLoadingRepliesIndicator$ = timer(500).pipe( mapTo(true), takeWhile( val => this.loadingReplies )).pipe( startWith(false) );
+        this.showLoadingRepliesIndicator$ = timer(1500).pipe(
+          mapTo(true),
+          takeWhile( val => this.loadingReplies )).pipe( startWith(false) );
 
         this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
 
@@ -215,6 +217,53 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.onDestroy.next();
+  }
+
+  ngOnChanges(changes: any): void {
+
+    if ( !this.initialLoad ) {
+
+      // if detailed load more replies
+      const initialLimit = this.detailed ? 10 : 1;
+
+      const request: GetRepliesRequest = {
+        postId: this.comment.post_id,
+        commentId: this.comment.id,
+        replyLink: this.post.startCommentLink || null,
+        date: null,
+        initialLoad: true,
+        limit: initialLimit
+      };
+
+      this.loadingReplies = true;
+      this.showLoadingRepliesIndicator$ = timer(1500).pipe(
+        mapTo(true),
+        takeWhile( val => this.loadingReplies )).pipe( startWith(false) );
+
+      this.commentService.getReplies(request).pipe(take(1)).subscribe( (replies: GetRepliesSuccess) => {
+
+        const storeRequest: SetRepliesStoreRequest = {
+          postId: replies.postId,
+          commentId: replies.commentId,
+          date: replies.date,
+          initialLoad: true,
+          replies: replies.replies,
+          totalRepliesAfter: replies.totalRepliesAfter
+        };
+
+        this.initialLoad = false;
+        this.store$.dispatch(
+          new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
+        );
+
+        this.totalRepliesAfter = replies.totalRepliesAfter;
+        this.loadingReplies = false;
+
+      }, (err: SpotError) => {
+        this.loadingReplies = false;
+      });
+
+    }
   }
 
   offClickHandler(event: MouseEvent): void {

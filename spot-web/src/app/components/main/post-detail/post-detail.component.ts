@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // rxjs
-import { map, takeUntil, skipWhile, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
+import { takeUntil, skipWhile, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
 import { Observable, Subject, throwError, interval, timer } from 'rxjs';
 
 // store
@@ -13,6 +13,7 @@ import { select, Store } from '@ngrx/store';
 
 // services
 import { PostsService } from '@services/posts.service';
+import { AuthenticationService } from '@services/authentication.service';
 
 // assets
 import { LoadSinglePostRequest, LoadSinglePostSuccess, Post } from '@models/posts';
@@ -31,6 +32,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private postsService: PostsService,
+              private authenticationService: AuthenticationService,
               private store$: Store<RootStoreState.State>) { }
 
   STRINGS = STRINGS.MAIN.POST_DETAILED;
@@ -94,8 +96,11 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
-    // reload if user becomes authenticated
-    this.authenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticated: boolean) => {
+    // reload if user becomes authenticated, skip if we are waiting for store to say authenticated first try
+    this.authenticated$.pipe(takeUntil(this.onDestroy),
+      skipWhile( (val) => {
+        return this.authenticationService.isAuthenticated() && !val;
+      })).subscribe( (authenticated: boolean) => {
       this.waitForPosts();
     });
 

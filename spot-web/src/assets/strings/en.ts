@@ -247,7 +247,7 @@ export const STRINGS = {
           TITLE: 'Share a Spot',
           USERNAME_PLACEHOLDER: 'Enter Username',
           COPY_LINK: 'Copy link',
-          COPY_LINK_SUCCESS: 'Successfully copied link',
+          COPY_LINK_SUCCESS: 'Link copied to clipboard',
           SEND: 'Send',
           SENT: 'Sent',
 
