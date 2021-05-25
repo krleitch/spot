@@ -46,8 +46,6 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   buttonsDisabled: boolean;
   facebookLoaded = false;
 
-  errorMessage = '';
-
   constructor(private store$: Store<RootStoreState.State>,
               private modalService: ModalService,
               private authenticationService: AuthenticationService,
@@ -87,10 +85,13 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
       if ( authenticationError ) {
 
         if ( authenticationError.name === 'RateLimitError') {
-          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
-                                                     .replace('%TIMEOUT%', authenticationError.body.timeout);
+          this.loginErrorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
+                                                      .replace('%TIMEOUT%', authenticationError.body.timeout);
+          this.registerErrorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
+                                                      .replace('%TIMEOUT%', authenticationError.body.timeout);
         } else {
-          this.errorMessage = authenticationError.message;
+          this.loginErrorMessage = authenticationError.message;
+          this.registerErrorMessage = authenticationError.message;
         }
         this.buttonsDisabled = false;
 
@@ -129,6 +130,10 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectTab(tab: string): void {
     this.selectedTab = tab;
+    this.loginErrorMessage = '';
+    this.registerErrorMessage = '';
+    this.loginForm.markAsPristine();
+    this.registerForm.markAsPristine();
   }
 
   login(): void {
@@ -140,18 +145,18 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
     const val = this.loginForm.value;
 
     if (!val.emailOrUsername) {
-      this.errorMessage = this.STRINGS.EMAIL_OR_USER_ERROR;
+      this.loginErrorMessage = this.STRINGS.EMAIL_OR_USER_ERROR;
       this.loginForm.controls.emailOrUsername.markAsDirty();
       return;
     }
 
     if (!val.password) {
-      this.errorMessage = this.STRINGS.PASSWORD_ERROR;
+      this.loginErrorMessage = this.STRINGS.PASSWORD_ERROR;
       this.loginForm.controls.password.markAsDirty();
       return;
     }
 
-    this.errorMessage = '';
+    this.loginErrorMessage = '';
 
     const loginRequest: LoginRequest = {
       emailOrUsername: val.emailOrUsername,

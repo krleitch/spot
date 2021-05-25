@@ -24,7 +24,7 @@
           </div>
         </fieldset>
         <div class="error-message">
-          {{ errorMessage }}
+          {{ loginErrorMessage }}
         </div>
         <div class="form-buttons">
           <button type="button" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="login()"> {{ STRINGS.LOGIN_BUTTON }} </button>
