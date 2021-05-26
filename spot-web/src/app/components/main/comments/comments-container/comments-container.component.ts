@@ -432,22 +432,22 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges 
     // Error checking
 
     if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
-      this.addCommentError = 'Your comment must be less than ' + COMMENTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
+      this.addCommentError = this.STRINGS.ERROR_LINE_LENGTH.replace('%LENGTH%', COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString());
       return;
     }
 
     if ( content.length === 0 && !this.imageFile && tags.length === 0 ) {
-      this.addCommentError = 'Your comment must have a tag, text or an image';
+      this.addCommentError = this.STRINGS.ERROR_NO_CONTENT;
       return;
     }
 
     if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
-      this.addCommentError = 'Comment must be greater than ' + COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH + ' characters';
+      this.addCommentError = this.STRINGS.ERROR_MIN_CONTENT.replace('%MIN%', COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString());
       return;
     }
 
     if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
-      this.addCommentError = 'Comment must be less than ' + COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH + ' characters';
+      this.addCommentError = this.STRINGS.ERROR_MAX_CONTENT.replace('%MAX%', COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString());
       return;
     }
 
@@ -456,7 +456,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges 
     const regex = /^[^\x00-\x7F]*$/;
     const match = content.match(regex);
     if ( match && match[0].length > 0 ) {
-      this.addCommentError = 'Invalid spot content ' + match[0];
+      this.addCommentError = this.STRINGS.ERROR_INVALID_CONTENT + match[0];
+      return;
+    }
+
+    if ( !location ) {
+      this.addCommentError = this.STRINGS.ERROR_LOCATION;
       return;
     }
 
@@ -489,9 +494,13 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges 
       Array.from(this.comment.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
       this.currentLength = 0;
 
-    }, (err: SpotError) => {
+    }, (createError: SpotError) => {
       this.addCommentLoading = false;
-      this.addCommentError = err.message;
+      if ( createError.name === 'InvalidCommentProfanity' ) {
+        this.addCommentError = this.STRINGS.ERROR_PROFANITY.replace('%PROFANITY%', createError.body.word);
+      } else {
+        this.addCommentError = createError.message;
+      }
     });
 
   }

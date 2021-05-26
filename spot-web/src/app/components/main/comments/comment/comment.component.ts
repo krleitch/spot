@@ -693,22 +693,22 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
     // Error checking
 
     if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
-      this.addReplyError = 'Your reply must be less than ' + COMMENTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
+      this.addReplyError = this.STRINGS.ERROR_LINE_LENGTH.replace('%LENGTH%', COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString());
       return;
     }
 
     if ( content.length === 0 && !this.imageFile && tags.length === 0 ) {
-      this.addReplyError = 'Your reply must have a tag, text or an image';
+      this.addReplyError = this.STRINGS.ERROR_NO_CONTENT;
       return;
     }
 
     if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
-      this.addReplyError = 'Reply must be greater than ' + COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH + ' characters';
+      this.addReplyError = this.STRINGS.ERROR_MIN_CONTENT.replace('%MIN%', COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString());
       return;
     }
 
     if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
-      this.addReplyError = 'Reply must be less than ' + COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH + ' characters';
+      this.addReplyError = this.STRINGS.ERROR_MAX_CONTENT.replace('%MAX%', COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString());
       return;
     }
 
@@ -717,7 +717,12 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
     const regex = /^[^\x00-\x7F]*$/;
     const match = content.match(regex);
     if ( match && match[0].length > 0 ) {
-      this.addReplyError = 'Invalid spot content ' + match[0];
+      this.addReplyError = this.STRINGS.ERROR_INVALID_CONTENT + match[0];
+      return;
+    }
+
+    if ( !location ) {
+      this.addReplyError = this.STRINGS.ERROR_LOCATION;
       return;
     }
 
@@ -755,9 +760,13 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
       this.currentLength = 0;
       this.showAddReply = false;
 
-    }, (err: SpotError) => {
+    }, (createError: SpotError) => {
       this.addReplyLoading  = false;
-      this.addReplyError = err.message;
+      if ( createError.name === 'InvalidCommentProfanity' ) {
+        this.addReplyError = this.STRINGS.ERROR_PROFANITY.replace('%PROFANITY%', createError.body.word);
+      } else {
+        this.addReplyError = createError.message;
+      }
     });
 
   }

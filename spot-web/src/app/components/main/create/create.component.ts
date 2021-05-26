@@ -17,7 +17,6 @@ import { SpotError } from '@exceptions/error';
 
 // Assets
 import { STRINGS } from '@assets/strings/en';
-
 import { POSTS_CONSTANTS } from '@constants/posts';
 
 @Component({
@@ -82,7 +81,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       this.createLoading = false;
       if ( createError ) {
         if ( createError.name === 'InvalidPostProfanity' ) {
-          this.createError = 'You cannot use profanity: \'' +  createError.body.word + '\'';
+          this.createError = this.STRINGS.ERROR_PROFANITY.replace('%PROFANITY%', createError.body.word);
         } else {
           this.createError = createError.message;
         }
@@ -112,7 +111,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(0, event.target.textContent.length + event.target.childNodes.length - 1);
     // Reset the error when you start typing
-    this.createError = null;
+    this.createError = '';
   }
 
   invalidLength(): boolean {
@@ -152,22 +151,22 @@ export class CreateComponent implements OnInit, OnDestroy {
     content = text.trim();
 
     if ( content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_LENGTH ) {
-      this.createError = 'Your spot must be less than ' + POSTS_CONSTANTS.MAX_LINE_LENGTH + ' lines';
+      this.createError = this.STRINGS.ERROR_LINE_LENGTH.replace('%LENGTH%', POSTS_CONSTANTS.MAX_LINE_LENGTH.toString());
       return;
     }
 
     if ( content.length === 0 && !this.imageFile ) {
-      this.createError = 'Your spot must have text or an image';
+      this.createError = this.STRINGS.ERROR_NO_CONTENT;
       return;
     }
 
     if ( content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
-      this.createError = 'Spot must be greater than ' + POSTS_CONSTANTS.MIN_CONTENT_LENGTH + ' characters';
+      this.createError = this.STRINGS.ERROR_MIN_CONTENT.replace('%MIN%', POSTS_CONSTANTS.MIN_CONTENT_LENGTH.toString());
       return;
     }
 
     if ( content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH ) {
-      this.createError = 'Spot must be less than ' + POSTS_CONSTANTS.MAX_CONTENT_LENGTH + ' characters';
+      this.createError = this.STRINGS.ERROR_MAX_CONTENT.replace('%MAX%', POSTS_CONSTANTS.MAX_CONTENT_LENGTH.toString());
       return;
     }
 
@@ -176,7 +175,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     const regex = /^[^\x00-\x7F]*$/;
     const match = content.match(regex);
     if ( match && match[0].length > 0 ) {
-      this.createError = 'Invalid spot content ' + match[0];
+      this.createError = this.STRINGS.ERROR_INVALID_CONTENT + match[0];
       return;
     }
 
@@ -188,18 +187,14 @@ export class CreateComponent implements OnInit, OnDestroy {
         location: this.location,
         image: this.imageFile
       };
-
       this.store$.dispatch(
         new PostsStoreActions.AddRequestAction(post)
       );
-
       this.createLoading = true;
 
     } else {
-
-      this.createError = 'Location needed to create spot';
+      this.createError = this.STRINGS.ERROR_LOCATION;
       return;
-
     }
 
   }

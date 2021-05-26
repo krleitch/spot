@@ -131,6 +131,15 @@ export const STRINGS = {
             FILE_TITLE: 'File:',
             FILE_DELETE: 'Delete',
 
+            // Errors
+            ERROR_LINE_LENGTH: 'Your spot must be less than %LENGTH% lines',
+            ERROR_NO_CONTENT: 'Your spot must have text or an image',
+            ERROR_MIN_CONTENT: 'Spot must be greater than %MIN% characters',
+            ERROR_MAX_CONTENT: 'Spot must be less than %MAX% characters',
+            ERROR_INVALID_CONTENT: 'Invalid spot content ',
+            ERROR_LOCATION: 'Location needed to create spot',
+            ERROR_PROFANITY: 'You cannot use profanity: \' %PROFANITY% \'',
+
         },
 
         POST: {
@@ -184,6 +193,15 @@ export const STRINGS = {
           VERIFY: 'Verify your email to add comments',
           MAKE_COMMENT: 'Write a comment...',
 
+          // Errors
+          ERROR_LINE_LENGTH: 'Your comment must be less than %LENGTH% lines',
+          ERROR_NO_CONTENT: 'Your comment must have a tag, text, or image',
+          ERROR_MIN_CONTENT: 'Comment must be greater than %MIN% characters',
+          ERROR_MAX_CONTENT: 'Comment must be less than %MAX% characters',
+          ERROR_INVALID_CONTENT: 'Invalid comment content ',
+          ERROR_LOCATION: 'Location needed to create comment',
+          ERROR_PROFANITY: 'You cannot use profanity: \' %PROFANITY% \'',
+
         },
 
         COMMENTS: {
@@ -213,6 +231,15 @@ export const STRINGS = {
           MATURE_CONTENT: 'Flagged for mature content',
           MATURE_CONTENT_SHOW: 'Click to show',
 
+          // Errors
+          ERROR_LINE_LENGTH: 'Your reply must be less than %LENGTH% lines',
+          ERROR_NO_CONTENT: 'Your reply must have a tag, text, or image',
+          ERROR_MIN_CONTENT: 'Reply must be greater than %MIN% characters',
+          ERROR_MAX_CONTENT: 'Reply must be less than %MAX% characters',
+          ERROR_INVALID_CONTENT: 'Invalid reply content ',
+          ERROR_LOCATION: 'Location needed to create reply',
+          ERROR_PROFANITY: 'You cannot use profanity: \' %PROFANITY% \'',
+
         },
 
         REPLY: {
@@ -237,6 +264,15 @@ export const STRINGS = {
 
           MATURE_CONTENT: 'Flagged for mature content',
           MATURE_CONTENT_SHOW: 'Click to show',
+
+          // Errors
+          ERROR_LINE_LENGTH: 'Your reply must be less than %LENGTH% lines',
+          ERROR_NO_CONTENT: 'Your reply must have a tag, text, or image',
+          ERROR_MIN_CONTENT: 'Reply must be greater than %MIN% characters',
+          ERROR_MAX_CONTENT: 'Reply must be less than %MAX% characters',
+          ERROR_INVALID_CONTENT: 'Invalid reply content ',
+          ERROR_LOCATION: 'Location needed to create reply',
+          ERROR_PROFANITY: 'You cannot use profanity: \' %PROFANITY% \'',
 
         },
 
