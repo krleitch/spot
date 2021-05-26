@@ -8,37 +8,37 @@
   <div class="body">
 
     <div class="heading">
-      Be Anonymous
+      {{ STRINGS.ANONYMOUS_TITLE }}
       <img class="image" src="../../../../assets/images/logo_plain.png">
     </div>
     <div class="text-block">
       <ul>
-        <li> <span class="text"> Have an anonymous identity for each spot  </span> </li>
-        <li> <span class="text"> Share your confessions secretly </span> </li>
+        <li> <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_1 }} </span> </li>
+        <li> <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_2 }} </span> </li>
       </ul>
     </div>
 
     <div class="heading">
-      Share With Friends
+      {{ STRINGS.FRIENDS_TITLE }}
       <span class="material-icons title-icon"> people </span>
     </div>
     <div class="text-block">
       <ul>
-        <li> <span class="text"> Connect with <span class="material-icons icon facebook"> facebook </span> to see your friends </span> </li>
-        <li> <span class="text"> Tag friends by commenting @name to share your identity </span> </li>
-        <li> <span class="text"> Get tagged back to be anonymous together </span> </li>
+        <li> <span class="text"> {{ STRINGS.FRIENDS_TEXT_1_1 }} <span class="material-icons icon facebook"> facebook </span> {{ STRINGS.FRIENDS_TEXT_1_2 }} </span> </li>
+        <li> <span class="text"> {{ STRINGS.FRIENDS_TEXT_2 }} </span> </li>
+        <li> <span class="text"> {{ STRINGS.FRIENDS_TEXT_3 }} </span> </li>
       </ul>
     </div>
 
-    <div class="heading"> Spots In Your Area </div>
+    <div class="heading"> {{ STRINGS.LOCATION_TITLE }} </div>
     <div class="text-block">
       <ul>
-        <li> <span class="text"> Sort by <span class="material-icons icon"> home </span> to see spots in your area </span> </li>
+        <li> <span class="text"> {{ STRINGS.LOCATION_TEXT_1_1 }} <span class="material-icons icon"> home </span> {{ STRINGS.LOCATION_TEXT_1_2 }} </span> </li>
       </ul>
     </div>
 
     <div class="button-container">
-      <button class="continue" (click)="closeWelcome()"> Continue to Spot </button>
+      <button class="continue" (click)="closeWelcome()"> {{ STRINGS.CONTINUE }} </button>
     </div>
 
   </div>

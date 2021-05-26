@@ -361,6 +361,12 @@ export const STRINGS = {
 
           SUCCESS_MESSAGE: 'Your report has been sent',
 
+          // categories
+          OFFENSIVE: 'Offsensive language, harrassment or negative conduct',
+          HATE: 'Racism, sexism, homophobia, or any other hate speech',
+          MATURE: 'Inappropriate mature content',
+          OTHER: 'Other'
+
         },
 
         TAG: {
@@ -376,7 +382,23 @@ export const STRINGS = {
           TITLE: 'Welcome',
 
           HEADING: 'Heading 1',
-          TEXT: 'text'
+          TEXT: 'text',
+
+          ANONYMOUS_TITLE: 'Be Anonymous',
+          ANONYMOUS_TEXT_1: 'Have an anonymous identity for each spot',
+          ANONYMOUS_TEXT_2: 'Share your confessions secretly',
+
+          FRIENDS_TITLE: 'Share With Friends',
+          FRIENDS_TEXT_1_1: 'Connect with',
+          FRIENDS_TEXT_1_2: 'to see your friends',
+          FRIENDS_TEXT_2: 'Tag friends by commenting @name to share your identity',
+          FRIENDS_TEXT_3: 'Get tagged back to be anonymous together',
+
+          LOCATION_TITLE: 'Spots In Your Area',
+          LOCATION_TEXT_1_1: 'Sort by',
+          LOCATION_TEXT_1_2: 'to see spots in your area',
+
+          CONTINUE: 'Continue to Spot',
 
         },
 
@@ -403,7 +425,9 @@ export const STRINGS = {
             FAQ: 'FAQ',
             SUPPORT: 'Support',
             MOBILE_DOWNLOAD: 'Download Us',
-            CONTACT: 'Contact Us'
+            CONTACT: 'Contact Us',
+            LOGIN: 'Login',
+            REGISTER: 'Register',
 
         },
 
@@ -428,7 +452,20 @@ export const STRINGS = {
         LANDING: {
 
             // SHOWCASE
-            SHOWCASE_TEXT: 'See what those around you are really saying',
+            SHOWCASE_LINE_1_1: 'Be',
+            SHOWCASE_LINE_1_2: 'Anonymous',
+            SHOWCASE_LINE_2_1: 'Share',
+            SHOWCASE_LINE_2_2: 'With Friends',
+            SHOWCASE_LINE_3_1: 'See Events In',
+            SHOWCASE_LINE_3_2: 'Your',
+            SHOWCASE_LINE_3_3: 'Area',
+
+            SHOWCASE_FOOTER_1: 'See what those around you are',
+            SHOWCASE_FOOTER_2: 'Really Saying',
+
+            SHOWCASE_MOBILE_1: 'See What Those',
+            SHOWCASE_MOBILE_2: 'Around You Are ',
+            SHOWCASE_MOBILE_3: 'Really Saying',
 
             // SIGNUP FROM
             COMMUNITY: 'Join Your Community',
@@ -587,6 +624,7 @@ export const STRINGS = {
           CONFIRM_NONE: 'Password confirmation is required',
           INVALID_MATCH: 'Passwords must match',
 
+          CREATE_PASSWORD: 'Please create a new password ',
           NEW_PASSWORD_SUCCESS: 'Your password has been reset. Please login to continue',
           CONTINUE_TO_SPOT: 'Login',
 

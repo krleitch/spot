@@ -8,10 +8,10 @@
   <div class="report-body">
 
     <select [(ngModel)]="category" name="category">
-      <option value="1"> Offsensive language, harrassment or negative conduct </option>
-      <option value="2"> Racism, sexism, homophobia, or any other hate speech </option>
-      <option value="3"> Inappropriate mature content </option>
-      <option value="4"> Other </option>
+      <option value="1"> {{ STRINGS.OFFENSIVE }} </option>
+      <option value="2"> {{ STRINGS.HATE }} </option>
+      <option value="3"> {{ STRINGS.MATURE }} </option>
+      <option value="4"> {{ STRINGS.OTHER }} </option>
     </select>
 
     <textarea [(ngModel)]="content" [placeholder]="STRINGS.REPORT_PLACEHOLDER" rows="10" ></textarea>
