@@ -536,7 +536,9 @@ export const STRINGS = {
 
             EMAIL_USED: 'Email is already in use',
             USERNAME_USED: 'Username is already in use',
-            PHONE_USED: 'Phone is already in use'
+            PHONE_USED: 'Phone is already in use',
+
+            RATE_LIMIT: 'Too many requests. Please try again in %TIMEOUT% minutes'
 
         },
 
@@ -579,6 +581,8 @@ export const STRINGS = {
 
             PHONE_ERROR: 'Phone is required',
             PHONE_INVALID: 'Phone number is invalid',
+
+            RATE_LIMIT: 'Too many requests. Please try again in %TIMEOUT% minutes',
 
         },
 

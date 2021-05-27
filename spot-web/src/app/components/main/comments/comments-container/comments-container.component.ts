@@ -565,7 +565,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges 
 
   loadMoreComments(): void {
 
-    if ( this.loadingCommentsAfter ){
+    if ( this.loadingCommentsBefore ){
       return;
     }
 

@@ -72,8 +72,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       if ( authenticationError ) {
 
         if ( authenticationError.name === 'RateLimitError') {
-          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
-                                                     .replace('%TIMEOUT%', authenticationError.body.timeout);
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', authenticationError.body.timeout);
         } else {
           this.errorMessage = authenticationError.message;
         }

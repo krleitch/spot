@@ -64,7 +64,11 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.authenticationError$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (authenticationError: SpotError) => {
       if ( authenticationError ) {
-        this.errorMessage = authenticationError.message;
+        if ( authenticationError.name === 'RateLimitError') {
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', authenticationError.body.timeout);
+        } else {
+          this.errorMessage = authenticationError.message;
+        }
         this.buttonsDisabled = false;
       }
     });

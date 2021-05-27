@@ -27,14 +27,17 @@ spot-main-nav {
 }
 
 .loading {
+
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
-  .text {
-    margin: 10px 0px;
-  }
+
+  spot-spinner {
+    margin-top: 25px;
+  };
+
 }
 
 // Tabs
@@ -59,7 +62,7 @@ spot-main-nav {
 }
 
 .selected {
-  height: 5px;
+  height: 3px;
   background-color: $button-highlight;
   display: none;
 }
