@@ -22,7 +22,7 @@ import { AuthenticationService } from '@services/authentication.service';
 // Models
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { AccountMetadata, Location } from '@models/accounts';
+import { AccountMetadata, Location, Account } from '@models/accounts';
 import { Comment, DeleteCommentRequest, AddReplyRequest, GetRepliesRequest, GetRepliesSuccess, AddReplySuccess,
          LikeCommentRequest, DislikeCommentRequest, SetRepliesStoreRequest, AddReplyStoreRequest,
          UnratedCommentRequest } from '@models/comments';
@@ -85,6 +85,8 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
   accountMetadata$: Observable<AccountMetadata>;
+  account$: Observable<Account>;
+  account: Account;
 
   // Image
   FILENAME_MAX_SIZE = 25;
@@ -195,6 +197,15 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
       this.friendsList = friends;
+    });
+
+    // account
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccount)
+    );
+
+    this.account$.pipe(takeUntil(this.onDestroy)).subscribe ( account => {
+      this.account = account;
     });
 
     this.accountMetadata$ = this.store$.pipe(

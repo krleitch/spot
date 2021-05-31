@@ -35,8 +35,8 @@
       </div>
 
       <div class="options">
-        <span class="comment-number"> 
-          {{ post.comments }} 
+        <span class="comment-number">
+          {{ post.comments }}
           <span *ngIf="post.comments === 1; else plural"> {{ STRINGS.COMMENTS_SINGLE }} </span>
           <ng-template #plural>
             {{ STRINGS.COMMENTS }}
@@ -68,7 +68,7 @@
               <span class="material-icons icon"> share </span>
               {{ STRINGS.SHARE }}
             </div>
-            <div *ngIf="post.owned" class="button" (click)="deletePost()">
+            <div *ngIf="post.owned || account.role === 'admin' || account.role === 'owner'" class="button" (click)="deletePost()">
               <span class="material-icons icon"> delete </span>
               {{ STRINGS.DELETE }}
             </div>

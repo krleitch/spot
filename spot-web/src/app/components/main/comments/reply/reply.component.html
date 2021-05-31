@@ -91,7 +91,7 @@
               <span class="material-icons icon"> share </span>
               {{ STRINGS.SHARE }}
             </div>
-            <div *ngIf="reply.owned" class="button" (click)="deleteReply()">
+            <div *ngIf="reply.owned || account.role === 'admin' || account.role === 'owner'" class="button" (click)="deleteReply()">
               <span class="material-icons icon"> delete </span>
               {{ STRINGS.DELETE }}
             </div>

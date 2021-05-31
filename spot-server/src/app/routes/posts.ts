@@ -59,13 +59,6 @@ router.get('/', rateLimiter.genericPostLimiter, ErrorHandler.catchAsync(async fu
         // add the distance
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
 
-        // admins own all posts
-        if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
-            rows.forEach( (row: any) => {
-                row.owned = true;
-            });
-        }
-
         const response = { posts: rows };
         res.status(200).json(response);
     }, (err: any) => {
@@ -303,11 +296,6 @@ router.get('/:postLink', rateLimiter.genericPostLimiter, function (req: any, res
 
         if ( rows.length < 1 ) {
             return next(new PostsError.GetSinglePost(500));
-        }
-
-        // admins own all posts
-        if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
-            rows[0].owned = true;
         }
 
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);

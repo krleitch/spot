@@ -171,13 +171,6 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
         return next(new CommentsError.GetComments(500));
     }
 
-    // admins own all comments
-    if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
-        commentsArray.forEach( (comment: any) => {
-            comment.owned = true;
-        });
-    }
-
     const response = { 
         postId: postId,
         comments: commentsArray,
@@ -228,13 +221,6 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
     await commentsService.getTags(replies, req.authenticated ? req.user.id : null).then( (taggedComments: any) => {
         replies = taggedComments;
     });
-
-    // admins own all replies
-    if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
-        replies.forEach( (reply: any) => {
-            reply.owned = true;
-        });
-    }
 
     const lastDate = replies.length > 0 ? replies[replies.length-1].creation_date : null;
     comments.getNumberOfRepliesForCommentAfterDate(postId, commentId, lastDate).then( ( num: any) => {

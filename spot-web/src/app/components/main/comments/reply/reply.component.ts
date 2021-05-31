@@ -24,7 +24,7 @@ import { Post } from '@models/posts';
 import { Tag } from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { AccountMetadata, Location } from '@models/accounts';
+import { AccountMetadata, Location, Account } from '@models/accounts';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -71,6 +71,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
   accountMetadata$: Observable<AccountMetadata>;
+  account$: Observable<Account>;
+  account: Account;
 
   // For large replies
   expanded = false;
@@ -132,6 +134,15 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe ( (location: Location) => {
       this.location = location;
+    });
+
+    // account
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccount)
+    );
+
+    this.account$.pipe(takeUntil(this.onDestroy)).subscribe ( account => {
+      this.account = account;
     });
 
     this.accountMetadata$ = this.store$.pipe(

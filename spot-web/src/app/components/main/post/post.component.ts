@@ -20,7 +20,7 @@ import { PostsStoreActions } from '@store/posts-store';
 import { POSTS_CONSTANTS } from '@constants/posts';
 import { LOCATIONS_CONSTANTS } from '@constants/locations';
 import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, UnratedPostRequest } from '@models/posts';
-import { Location, AccountMetadata } from '@models/accounts';
+import { Location, AccountMetadata, Account } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -42,6 +42,8 @@ export class PostComponent implements OnInit, OnDestroy {
 
   location$: Observable<Location>;
   location: Location;
+  account$: Observable<Account>;
+  account: Account;
   accountMetadata$: Observable<AccountMetadata>;
   accountMetadata: AccountMetadata;
 
@@ -62,6 +64,14 @@ export class PostComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     // Account
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccount)
+    );
+
+    this.account$.pipe(takeUntil(this.onDestroy)).subscribe( (account: Account) => {
+      this.account = account;
+    });
+
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
