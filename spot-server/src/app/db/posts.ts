@@ -1,6 +1,6 @@
 export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost,
             getPostCreator, getPostByLink, getPostsActivity, getPostByIdNoAccount,
-            linkExists, unratedPost }
+            linkExists, unratedPost, checkOwned }
 
 const uuid = require('uuid');
 
@@ -120,9 +120,9 @@ function unratedPost(postId: string, accountId: string): Promise<any> {
     return db.query(sql, values);
 }
 
-function deletePost(id: string, accountId: string): Promise<any> {
-    var sql = 'UPDATE posts SET deletion_date = ? WHERE id = ? AND account_id = ?';
-    var values = [new Date(), id, accountId];
+function deletePost(id: string): Promise<any> {
+    var sql = 'UPDATE posts SET deletion_date = ? WHERE id = ?';
+    var values = [new Date(), id];
     return db.query(sql, values);
 }
 
@@ -178,6 +178,17 @@ function linkExists(link: string) {
 
     return db.query(sql, values).then( (link: any) => {
         return link.length > 0;
+    });
+
+}
+
+function checkOwned(postId: string, accountId: string) {
+
+    var sql = 'SELECT count(*) FROM posts WHERE id = ? AND account_id = ?';
+    var values = [postId, accountId];
+
+    return db.query(sql, values).then( (rows: any) => {
+        return rows.length > 0;
     });
 
 }

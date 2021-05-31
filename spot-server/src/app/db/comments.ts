@@ -1,7 +1,7 @@
 export { addComment, deleteCommentById, deleteReplyByParentId, getCommentByPostId, getNumberOfRepliesForCommentAfterDate,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost, getRepliesUpToDate,
           likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink, getNumberOfCommentsForPostAfterDate,
-          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists, unratedComment }
+          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists, unratedComment, checkOwned }
 
 const uuid = require('uuid');
 
@@ -93,9 +93,9 @@ function addComment(commentId: string, postId: string, accountId: string, conten
     });
 }
 
-function deleteCommentById(commentId: string, accountId: string): Promise<any> {
-    var sql = 'UPDATE comments SET deletion_date = ? WHERE id = ? AND account_id = ?';
-    var values = [new Date(), commentId, accountId];
+function deleteCommentById(commentId: string): Promise<any> {
+    var sql = 'UPDATE comments SET deletion_date = ? WHERE id = ?';
+    var values = [new Date(), commentId];
     return db.query(sql, values);
 }
 
@@ -268,6 +268,17 @@ function linkExists(link: string) {
 
     return db.query(sql, values).then( (link: any) => {
         return link.length > 0;
+    });
+
+}
+
+function checkOwned(postId: string, accountId: string) {
+
+    var sql = 'SELECT count(*) FROM comments WHERE id = ? AND account_id = ?';
+    var values = [postId, accountId];
+
+    return db.query(sql, values).then( (rows: any) => {
+        return rows.length > 0;
     });
 
 }

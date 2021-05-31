@@ -14,6 +14,7 @@ const notifications = require('@db/notifications');
 // services
 const commentsService = require('@services/comments');
 const imageService =  require('@services/image');
+const authorization = require('@services/authorization/authorization');
 const singleUpload = imageService.upload.single('image');
 
 // ratelimiter
@@ -27,6 +28,7 @@ const ErrorHandler = require('@src/app/errorHandler');
 // constants
 const comments_constants = require('@constants/comments');
 const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
+const roles = require('@services/authorization/roles');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -169,6 +171,13 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
         return next(new CommentsError.GetComments(500));
     }
 
+    // admins own all comments
+    if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
+        commentsArray.forEach( (comment: any) => {
+            comment.owned = true;
+        });
+    }
+
     const response = { 
         postId: postId,
         comments: commentsArray,
@@ -219,6 +228,13 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
     await commentsService.getTags(replies, req.authenticated ? req.user.id : null).then( (taggedComments: any) => {
         replies = taggedComments;
     });
+
+    // admins own all replies
+    if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
+        replies.forEach( (reply: any) => {
+            reply.owned = true;
+        });
+    }
 
     const lastDate = replies.length > 0 ? replies[replies.length-1].creation_date : null;
     comments.getNumberOfRepliesForCommentAfterDate(postId, commentId, lastDate).then( ( num: any) => {
@@ -436,13 +452,25 @@ router.delete('/:postId/:commentId', rateLimiter.genericCommentLimiter, function
     const commentId = req.params.commentId;
     const accountId = req.user.id;
 
-    comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
-        comments.deleteReplyByParentId(commentId).then( (rows: any) => {
-            const response = { postId: postId, commentId: commentId };
-            res.status(200).json(response);
-        }, (err: any) => {
+    comments.checkOwned(postId, accountId).then((owned: boolean) => {
+
+        if ( owned || authorization.checkRole(req.user, [roles.owner, roles.admin]) ) {
+
+            comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
+                comments.deleteReplyByParentId(commentId).then( (rows: any) => {
+                    const response = { postId: postId, commentId: commentId };
+                    res.status(200).json(response);
+                }, (err: any) => {
+                    return next(new CommentsError.DeleteComment(500));
+                });
+            }, (err: any) => {
+                return next(new CommentsError.DeleteComment(500));
+            });
+
+        } else {
             return next(new CommentsError.DeleteComment(500));
-        });
+        }
+
     }, (err: any) => {
         return next(new CommentsError.DeleteComment(500));
     });
@@ -461,12 +489,26 @@ router.delete('/:postId/:parentId/:commentId', rateLimiter.genericCommentLimiter
     const commentId = req.params.commentId;
     const accountId = req.user.id;
 
-    comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
-        const response = { postId: postId, parentId: parentId, commentId: commentId };
-        res.status(200).json(response);
+    comments.checkOwned(postId, accountId).then((owned: boolean) => {
+
+        if ( owned || authorization.checkRole(req.user, [roles.owner, roles.admin]) ) {
+
+            comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
+                const response = { postId: postId, parentId: parentId, commentId: commentId };
+                res.status(200).json(response);
+            }, (err: any) => {
+                return next(new CommentsError.DeleteReply(500));
+            });
+
+        } else {
+            return next(new CommentsError.DeleteReply(500));
+        }
+
     }, (err: any) => {
         return next(new CommentsError.DeleteReply(500));
     });
+
+  
 
 });
 

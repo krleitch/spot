@@ -208,16 +208,24 @@ router.delete('/:postId', rateLimiter.genericPostLimiter, function(req: any, res
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
-        console.log('admin zone')
-    }
-
     const postId = req.params.postId;
     const accountId = req.user.id;
 
-    posts.deletePost(postId, accountId).then((rows: any) => {
-        const response = { postId: postId };
-        res.status(200).json(response);
+    posts.checkOwned(postId, accountId).then((owned: boolean) => {
+
+        if ( owned || authorization.checkRole(req.user, [roles.owner, roles.admin]) ) {
+
+            posts.deletePost(postId).then((rows: any) => {
+                const response = { postId: postId };
+                res.status(200).json(response);
+            }, (err: any) => {
+                return next(new PostsError.DeletePost(500));
+            });
+
+        } else {
+            return next(new PostsError.DeletePost(500));
+        }
+
     }, (err: any) => {
         return next(new PostsError.DeletePost(500));
     });
