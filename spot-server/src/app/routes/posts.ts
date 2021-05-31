@@ -11,6 +11,7 @@ const reports = require('@db/reports');
 const postsService = require('@services/posts');
 const locationsService = require('@services/locations');
 const imageService =  require('@services/image');
+const authorization = require('@services/authorization/authorization');
 const singleUpload = imageService.upload.single('image');
 
 // errors
@@ -27,6 +28,7 @@ const posts_constants = require('@constants/posts');
 const POSTS_CONSTANTS = posts_constants.POSTS_CONSTANTS;
 const report_constants = require('@constants/report');
 const REPORT_CONSTANTS = report_constants.REPORT_CONSTANTS;
+const roles = require('@services/authorization/roles');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -53,8 +55,17 @@ router.get('/', rateLimiter.genericPostLimiter, ErrorHandler.catchAsync(async fu
     const date = req.query.date || null;
 
     posts.getPosts(accountId, sort, location, latitude, longitude, offset, limit, date).then((rows: any) => {
+
         // add the distance
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
+
+        // admins own all posts
+        if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
+            rows.forEach( (row: any) => {
+                row.owned = true;
+            });
+        }
+
         const response = { posts: rows };
         res.status(200).json(response);
     }, (err: any) => {
@@ -197,6 +208,10 @@ router.delete('/:postId', rateLimiter.genericPostLimiter, function(req: any, res
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
+        console.log('admin zone')
+    }
+
     const postId = req.params.postId;
     const accountId = req.user.id;
 
@@ -280,6 +295,11 @@ router.get('/:postLink', rateLimiter.genericPostLimiter, function (req: any, res
 
         if ( rows.length < 1 ) {
             return next(new PostsError.GetSinglePost(500));
+        }
+
+        // admins own all posts
+        if ( authorization.checkRole(req.user, [roles.owner, roles.admin]) ){
+            rows[0].owned = true;
         }
 
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
