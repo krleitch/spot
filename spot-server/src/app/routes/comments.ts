@@ -303,7 +303,7 @@ router.post('/:postId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsyn
                 const account = await accounts.getAccountByUsername(tagsList[index].username);
                 await tags.addTag( account[0].id, comment[0].id, Math.min(tagsList[index].offset, content.length) );
                 await notifications.addCommentNotification( accountId, account[0].id, comment[0].post_id, comment[0].id );
-              } catch (err: any) {
+              } catch (err) {
                 return next(new CommentsError.AddComment(500));
               }
     
@@ -396,7 +396,7 @@ router.post('/:postId/:commentId', rateLimiter.createCommentLimiter, ErrorHandle
                 const account = await accounts.getAccountByUsername(tagsList[index].username);
                 await tags.addTag( account[0].id, reply[0].id, Math.min(tagsList[index].offset, content.length) );
                 await notifications.addReplyNotification( accountId, account[0].id, reply[0].post_id, reply[0].parent_id, reply[0].id );
-              } catch (err: any) {
+              } catch (err) {
                 return next(new CommentsError.AddComment(500));
               }
 
