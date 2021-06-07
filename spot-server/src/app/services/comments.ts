@@ -162,7 +162,7 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
                 await accounts.getAccountById(comments[index].account_id).then( (account: any) => {
                     tagObject.tagger = account[0].username;
-                }, (err: any) => {
+                }, (err) => {
 
                 });
 
@@ -173,7 +173,7 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
             for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
                 await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
                     tags.push({username: (tagObject.owned || accountId == tagList[tagIndex].account_id) ? account[0].username : '', offset: tagList[tagIndex].offset});
-                }, (err: any) => {
+                }, (err) => {
 
                 });
             }
@@ -181,7 +181,7 @@ async function getTags( comments: any, accountId: string ): Promise<any[]> {
 
             comments[index].tag = tagObject;
 
-        }, (err: any) => {
+        }, (err) => {
 
         });
 
@@ -225,7 +225,7 @@ async function addTagsToContent( commentId: string, accountId: string, commentAc
 
             await accounts.getAccountById(commentAccountId).then( (account: any) => {
                 tagObject.tagger = account[0].username;
-            }, (err: any) => {
+            }, (err) => {
 
             });
 
@@ -236,7 +236,7 @@ async function addTagsToContent( commentId: string, accountId: string, commentAc
         for ( let tagIndex = 0; tagIndex < tagList.length; tagIndex++ ) {
             await accounts.getAccountById(tagList[tagIndex].account_id).then( (account: any) => {
                 tags.push({username: (tagObject.owned || accountId == tagList[tagIndex].account_id) ? account[0].username : '', offset: tagList[tagIndex].offset});
-            }, (err: any) => {
+            }, (err) => {
 
             });
         }
@@ -254,7 +254,7 @@ async function addTagsToContent( commentId: string, accountId: string, commentAc
 
         ret += commentContent.substring(myindex, commentContent.length);
 
-    }, (err: any) => {
+    }, (err) => {
 
     });
 

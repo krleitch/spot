@@ -54,7 +54,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
 				// We have a new valid location, update it
 				locations.updateLocation(accountId, latitude, longitude).then( (rows: any) => {
 					return next();
-				}, (err: any) => {
+				}, (err) => {
 					return next();
 				});
 			}
@@ -77,7 +77,7 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
 			return locations.addLocation(account_id, myLatitude, myLongitude).then( (rows: any) => {
 				return true;
-			}, (err: any) => {
+			}, (err) => {
 
 			});
 
@@ -101,7 +101,7 @@ function verifyLocation( account_id: string, myLatitude: number, myLongitude: nu
 
 		}
 
-    }, (err: any) => {
+    }, (err) => {
 		return true;
 	});
 

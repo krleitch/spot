@@ -52,7 +52,7 @@ router.get('/', rateLimiter.genericNotificationLimiter, ErrorHandler.catchAsync(
         };
         res.status(200).json(response);
 
-    }, (err: any) => {
+    }, (err) => {
         return next(new NotificationsError.GetNotifications(500));
     }));
 
@@ -66,7 +66,7 @@ router.get('/unread', rateLimiter.genericNotificationLimiter, function (req: any
     notifications.getNotificationUnreadByReceiverId(id).then((rows: any) => {
         const response = { unread: rows[0].unread };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new NotificationsError.GetNotifications(500));
     });
 
@@ -90,7 +90,7 @@ router.post('/', rateLimiter.genericNotificationLimiter, function (req: any, res
             if ( !friendExists[0] ) {
                 return next(new NotificationsError.SendNotification(500));
             }
-        }, (err: any) => {
+        }, (err) => {
             return next(new NotificationsError.SendNotification(500));
         });
 
@@ -99,7 +99,7 @@ router.post('/', rateLimiter.genericNotificationLimiter, function (req: any, res
             notifications.addCommentNotification(accountId, receiver.id, postId, commentId).then((rows: any) => {
                 const response = { notification: rows[0] };
                 res.status(200).json(response);
-            }, (err: any) => {
+            }, (err) => {
                 return next(new NotificationsError.SendNotification(500));
             });
 
@@ -108,13 +108,13 @@ router.post('/', rateLimiter.genericNotificationLimiter, function (req: any, res
             notifications.addNotification(accountId, receiver.id, postId).then((rows: any) => {
                 const response = { notification: rows[0] };
                 res.status(200).json(response);
-            }, (err: any) => {
+            }, (err) => {
                 return next(new NotificationsError.SendNotification(500));
             });
 
         }
    
-    }, (err: any) => {
+    }, (err) => {
         return next(new NotificationsError.SendNotification(500));
     }));
 
@@ -130,7 +130,7 @@ router.put('/:notificationId/seen', rateLimiter.genericNotificationLimiter, func
     notifications.setNotificationSeen(notificationId, accountId).then((rows: any) => {
         const response = { notificationId: notificationId }
         res.status(200).send(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new NotificationsError.SeenNotification(500));
     });
 
@@ -143,7 +143,7 @@ router.put('/seen', rateLimiter.genericNotificationLimiter, function (req: any, 
 
     notifications.setAllNotificationsSeen(accountId).then((rows: any) => {
         res.status(200).send({});
-    }, (err: any) => {
+    }, (err) => {
         return next(new NotificationsError.SeenAllNotification(500));
     });
 
@@ -159,7 +159,7 @@ router.delete('/:notificationId', rateLimiter.genericNotificationLimiter, functi
     notifications.deleteNotificationById(notificationId, accountId).then((rows: any) => {
         const response = { notificationId: notificationId };
         res.status(200).send(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new NotificationsError.DeleteNotification(500));
     });
 
@@ -172,7 +172,7 @@ router.delete('/', rateLimiter.genericNotificationLimiter, function (req: any, r
 
     notifications.deleteAllNotificationsForAccount(accountId).then((rows: any) => {
         res.status(200).send({});
-    }, (err: any) => {
+    }, (err) => {
         return next(new NotificationsError.DeleteAllNotification(500));
     });
 

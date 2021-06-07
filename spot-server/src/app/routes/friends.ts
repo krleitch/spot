@@ -28,7 +28,7 @@ router.get('/', rateLimiter.genericFriendLimiter, function (req: any, res: any, 
     friends.getFriends(accountId, date, limit).then((rows: any) => {
         const response = { friends: rows };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.GetFriends(500));
     });
 
@@ -43,7 +43,7 @@ router.delete('/:friendId', rateLimiter.genericFriendLimiter, function (req: any
     friends.deleteFriendById(friendId, accountId).then((rows: any) => {
         const response = { friendId: friendId };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.DeleteFriend(500));
     });
 
@@ -57,7 +57,7 @@ router.get('/pending', rateLimiter.genericFriendLimiter, function (req: any, res
     friends.getPendingFriendRequests(accountId).then((rows: any) => {
         const response = { friendRequests: rows };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.GetPendingFriendRequests(500));
     });
 
@@ -72,7 +72,7 @@ router.delete('/pending/:friendId', rateLimiter.genericFriendLimiter, function (
     friends.deleteFriendById(friendId, accountId).then((rows: any) => {
         const response = { friendRequestId: friendId };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.DeletePendingFriendRequest(500));
     });
 
@@ -86,7 +86,7 @@ router.get('/requests', rateLimiter.genericFriendLimiter, function (req: any, re
     friends.getFriendRequests(accountId).then((rows: any) => {
         const response = { friendRequests: rows };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.GetFriendRequests(500));
     });
 
@@ -131,10 +131,10 @@ router.post('/requests', rateLimiter.genericFriendLimiter, ErrorHandler.catchAsy
                         rows[0].username = account[0].username;
                         const response = { friend: rows[0] };
                         res.status(200).json(response);
-                    }, (err: any) => {
+                    }, (err) => {
                         return next(new FriendsError.FriendExistsError(500));
                     });
-                }, (err: any) => {
+                }, (err) => {
                     return next(new FriendsError.FriendExistsError(500));
                 });
 
@@ -146,17 +146,17 @@ router.post('/requests', rateLimiter.genericFriendLimiter, ErrorHandler.catchAsy
                     delete rows[0].account_username;
                     const response = { friend: rows[0] }
                     res.status(200).json(response);
-                }, (err: any) => {
+                }, (err) => {
                     return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500));
                 });
 
             }
 
-        }, (err: any) => {
+        }, (err) => {
             return next(new FriendsError.FriendExistsError(500));
         });
 
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500))
     }));
 
@@ -180,7 +180,7 @@ router.post('/requests/accept', rateLimiter.genericFriendLimiter, function (req:
             res.status(200).json(response);
         }
 
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.AcceptFriendRequest(500));
     });
 
@@ -195,7 +195,7 @@ router.post('/requests/decline', rateLimiter.genericFriendLimiter, function (req
     friends.declineFriendRequest(friendRequestId, accountId).then((rows: any) => {
         const response = {};
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new FriendsError.DeclineFriendRequest(500));
     });
 
@@ -209,7 +209,7 @@ router.post('/requests/decline', rateLimiter.genericFriendLimiter, function (req
 
 //     friends.deleteFriendRequestsById(friendRequestId, accountId).then((rows: any) => {
 //         res.status(200).json({ friendRequest: rows[0] });
-//     }, (err: any) => {
+//     }, (err) => {
 //         res.status(500).send('Error deleting friend request');
 //     });
 // });

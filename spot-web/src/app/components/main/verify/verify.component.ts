@@ -60,7 +60,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
           new AccountsActions.VerifyConfirmRequestAction(response)
         );
 
-      }, (err: any) => {
+      }, (err) => {
 
         this.errorMessage = this.STRINGS.FAILURE;
 

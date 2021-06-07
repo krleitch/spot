@@ -61,7 +61,7 @@ router.get('/', rateLimiter.genericPostLimiter, ErrorHandler.catchAsync(async fu
 
         const response = { posts: rows };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new PostsError.GetPosts(500));
     });
 
@@ -123,10 +123,10 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
                 rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude, true);
                 const response = { post: rows[0] }
                 res.status(200).json(response);
-            }, (err: any) => {
+            }, (err) => {
                 return next(new PostsError.PostError(500));
             });
-        }, ( err: any) => {
+        }, ( err) => {
             return next(new PostsError.PostError(500));
         });
 
@@ -148,7 +148,7 @@ router.put('/:postId/like', rateLimiter.genericPostLimiter, function(req: any, r
     posts.likePost(postId, accountId).then((rows: any) => {
         const response = { postId: postId };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new PostsError.LikePost(500));
     });
 
@@ -168,7 +168,7 @@ router.put('/:postId/dislike', rateLimiter.genericPostLimiter, function(req: any
     posts.dislikePost(postId, accountId).then((rows: any) => {
         const response = { postId: postId };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new PostsError.DislikePost(500));
     });
 
@@ -187,7 +187,7 @@ router.put('/:postId/unrated', rateLimiter.genericPostLimiter, function(req: any
     posts.unratedPost(postId, accountId).then((rows: any) => {
         const response = { postId: postId };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new PostsError.UnratedPost(500));
     });
 
@@ -211,7 +211,7 @@ router.delete('/:postId', rateLimiter.genericPostLimiter, function(req: any, res
             posts.deletePost(postId).then((rows: any) => {
                 const response = { postId: postId };
                 res.status(200).json(response);
-            }, (err: any) => {
+            }, (err) => {
                 return next(new PostsError.DeletePost(500));
             });
 
@@ -219,7 +219,7 @@ router.delete('/:postId', rateLimiter.genericPostLimiter, function(req: any, res
             return next(new PostsError.DeletePost(500));
         }
 
-    }, (err: any) => {
+    }, (err) => {
         return next(new PostsError.DeletePost(500));
     });
 
@@ -243,7 +243,7 @@ router.put('/:postId/report', rateLimiter.genericPostLimiter, function(req: any,
 
     reports.addPostReport( postId, accountId, content, category ).then((rows: any) => {
         res.status(200).send({});
-    }, (err: any) => {
+    }, (err) => {
         return next(new ReportError.ReportError(500))
     });
 
@@ -276,7 +276,7 @@ router.get('/activity', rateLimiter.genericPostLimiter, function (req: any, res:
             } 
         };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new PostsError.PostActivity(500));
     });
 
@@ -301,7 +301,7 @@ router.get('/:postLink', rateLimiter.genericPostLimiter, function (req: any, res
         rows = locationsService.addDistanceToRows(rows, latitude, longitude, true);
         const response = { post: rows[0] };
         res.status(200).json(response);
-    }, (err: any) => {
+    }, (err) => {
         return next(new PostsError.GetSinglePost(500));
     });
 
