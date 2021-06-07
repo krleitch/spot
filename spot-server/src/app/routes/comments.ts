@@ -66,7 +66,7 @@ router.get('/activity', rateLimiter.genericCommentLimiter, function (req: any, r
         };
         res.status(200).json(response);
 
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.CommentActivity(500));
     }));
 
@@ -151,13 +151,13 @@ router.get('/:postId', ErrorHandler.catchAsync( async function (req: any, res: a
         const lastDate = commentsArray[commentsArray.length-1].creation_date;
         await comments.getNumberOfCommentsForPostBeforeDate(postId, lastDate).then( (num: any) => {
             numCommentsBefore = num[0].total
-        }, (err) => {
+        }, (err: any) => {
             return next(new CommentsError.GetComments(500));
         });
         const firstDate = commentsArray[0].creation_date;
         await comments.getNumberOfCommentsForPostAfterDate(postId, firstDate).then( (num: any) => {
             numCommentsAfter = num[0].total
-            }, (err) => {
+            }, (err: any) => {
                 return next(new CommentsError.GetComments(500));
             });
         }
@@ -233,10 +233,10 @@ router.get('/:postId/:commentId', ErrorHandler.catchAsync(async function (req: a
                 totalRepliesAfter: num[0].total
             }
             res.status(200).json(response);
-        }, (err) => {
+        }, (err: any) => {
             return next(new CommentsError.GetReplies(500));
         }));
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.GetReplies(500));
     });
 
@@ -303,7 +303,7 @@ router.post('/:postId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsyn
                 const account = await accounts.getAccountByUsername(tagsList[index].username);
                 await tags.addTag( account[0].id, comment[0].id, Math.min(tagsList[index].offset, content.length) );
                 await notifications.addCommentNotification( accountId, account[0].id, comment[0].post_id, comment[0].id );
-              } catch (err) {
+              } catch (err: any) {
                 return next(new CommentsError.AddComment(500));
               }
     
@@ -312,7 +312,7 @@ router.post('/:postId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsyn
             // Add tags to our comment
             await commentsService.getTags( comment, accountId ).then( (taggedComments: any) => {
                 comment = taggedComments;
-            }, (err) => {
+            }, (err: any) => {
                 return next(new CommentsError.AddComment(500));
             });
     
@@ -320,11 +320,11 @@ router.post('/:postId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsyn
             posts.getPostCreator(postId).then( ErrorHandler.catchAsync(async (postCreator: any) => {
                 await commentsService.addProfilePicture(comment, postCreator[0].account_id);
                 res.status(200).json({ postId: postId, comment: comment[0] } );
-            }, (err) => {
+            }, (err: any) => {
                 return next(new CommentsError.AddComment(500));
             }));
 
-        }, (err) => {
+        }, (err: any) => {
             return next(new CommentsError.AddComment(500));
         }));
 
@@ -396,7 +396,7 @@ router.post('/:postId/:commentId', rateLimiter.createCommentLimiter, ErrorHandle
                 const account = await accounts.getAccountByUsername(tagsList[index].username);
                 await tags.addTag( account[0].id, reply[0].id, Math.min(tagsList[index].offset, content.length) );
                 await notifications.addReplyNotification( accountId, account[0].id, reply[0].post_id, reply[0].parent_id, reply[0].id );
-              } catch (err) {
+              } catch (err: any) {
                 return next(new CommentsError.AddComment(500));
               }
 
@@ -415,11 +415,11 @@ router.post('/:postId/:commentId', rateLimiter.createCommentLimiter, ErrorHandle
                     reply: reply[0]
                 };
                 res.status(200).json(response);
-            }, (err) => {
+            }, (err: any) => {
                 return next(new CommentsError.AddComment(500));
             }));
     
-        }, (err) => {
+        }, (err: any) => {
             return next(new CommentsError.AddComment(500));
         }));
 
@@ -446,10 +446,10 @@ router.delete('/:postId/:commentId', rateLimiter.genericCommentLimiter, function
                 comments.deleteReplyByParentId(commentId).then( (rows: any) => {
                     const response = { postId: postId, commentId: commentId };
                     res.status(200).json(response);
-                }, (err) => {
+                }, (err: any) => {
                     return next(new CommentsError.DeleteComment(500));
                 });
-            }, (err) => {
+            }, (err: any) => {
                 return next(new CommentsError.DeleteComment(500));
             });
 
@@ -457,7 +457,7 @@ router.delete('/:postId/:commentId', rateLimiter.genericCommentLimiter, function
             return next(new CommentsError.DeleteComment(500));
         }
 
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.DeleteComment(500));
     });
 
@@ -482,7 +482,7 @@ router.delete('/:postId/:parentId/:commentId', rateLimiter.genericCommentLimiter
             comments.deleteCommentById(commentId, accountId).then( (rows: any) => {
                 const response = { postId: postId, parentId: parentId, commentId: commentId };
                 res.status(200).json(response);
-            }, (err) => {
+            }, (err: any) => {
                 return next(new CommentsError.DeleteReply(500));
             });
 
@@ -490,7 +490,7 @@ router.delete('/:postId/:parentId/:commentId', rateLimiter.genericCommentLimiter
             return next(new CommentsError.DeleteReply(500));
         }
 
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.DeleteReply(500));
     });
 
@@ -512,7 +512,7 @@ router.put('/:postId/:commentId/like', rateLimiter.genericCommentLimiter, functi
     comments.likeComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, commentId: commentId };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.LikeComment(500));
     });
 
@@ -532,7 +532,7 @@ router.put('/:postId/:commentId/dislike', rateLimiter.genericCommentLimiter, fun
     comments.dislikeComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, commentId: commentId };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.DislikeComment(500));
     });
 
@@ -552,7 +552,7 @@ router.put('/:postId/:commentId/unrated', rateLimiter.genericCommentLimiter, fun
     comments.unratedComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, commentId: commentId };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.UnratedComment(500));
     });
 
@@ -573,7 +573,7 @@ router.put('/:postId/:parentId/:commentId/like', rateLimiter.genericCommentLimit
     comments.likeComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, parentId: parentId, commentId: commentId };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.LikeReply(500));
     });
 
@@ -594,7 +594,7 @@ router.put('/:postId/:parentId/:commentId/dislike', rateLimiter.genericCommentLi
     comments.dislikeComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, parentId: parentId, commentId: commentId };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.DislikeReply(500));
     });
 
@@ -615,7 +615,7 @@ router.put('/:postId/:parentId/:commentId/unrated', rateLimiter.genericCommentLi
     comments.unratedComment(commentId, accountId).then((rows: any) => {
         const response = { postId: postId, parentId: parentId, commentId: commentId };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.UnratedComment(500));
     });
 
@@ -635,7 +635,7 @@ router.put('/:postId/:commentId/report', rateLimiter.genericCommentLimiter, func
 
     reports.addCommentReport( postId, commentId, accountId, content, category ).then((rows: any) => {
         res.status(200).send({});
-    }, (err) => {
+    }, (err: any) => {
         return next(new CommentsError.ReportComment(500));
     });
 

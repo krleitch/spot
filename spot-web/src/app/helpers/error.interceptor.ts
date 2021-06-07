@@ -19,7 +19,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 private store$: Store<RootStoreState.State>) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(request).pipe(catchError( (err) => {
+        return next.handle(request).pipe(catchError( (err: any) => {
 
             if (err.status === 401) {
                 // auto logout if 401 response returned from api

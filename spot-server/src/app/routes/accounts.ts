@@ -31,7 +31,7 @@ router.delete('/', function (req: any, res: any, next: any) {
 
     accounts.deleteAccount(accountId).then( (rows: any) => {
         res.status(200).send({});
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.DeleteAccount(500));
     });
 
@@ -45,7 +45,7 @@ router.get('/', function (req: any, res: any, next: any) {
     accounts.getAccountById(accountId).then((rows: any) => {
         const response = { account: rows[0] };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.GetAccount(500));
     });
 
@@ -83,7 +83,7 @@ router.put('/username', ErrorHandler.catchAsync(async function (req: any, res: a
         }
         const result = { username: rows[0].username };
         res.status(200).json(result);
-    }, (err) => {
+    }, (err: any) => {
 
         if ( err.code === 'ER_DUP_ENTRY' ) {
 
@@ -136,7 +136,7 @@ router.put('/email', ErrorHandler.catchAsync(async function (req: any, res: any,
         }
         const result = { email: rows[0].email };
         res.status(200).json(result);
-    }, (err) => {
+    }, (err: any) => {
 
         if ( err.code === 'ER_DUP_ENTRY' ) {
 
@@ -186,7 +186,7 @@ router.put('/phone', ErrorHandler.catchAsync(async function (req: any, res: any,
         }
         const result = { phone: rows[0].phone };
         res.status(200).json(result);
-    }, (err) => {
+    }, (err: any) => {
 
         if ( err.code === 'ER_DUP_ENTRY' ) {
 
@@ -223,20 +223,20 @@ router.post('/facebook', function (req: any, res: any, next: any) {
                         };
                         res.status(200).json(response);  
 
-                    }, ( err ) => {
+                    }, ( err: any ) => {
                         return next(new AccountsError.FacebookConnect(500));
                     });
-                }, (err) => {
+                }, (err: any) => {
                     return next(new AccountsError.FacebookConnect(500));
                 });            
             } else {
                 // account already exists
                 return next(new AccountsError.FacebookConnectExists(500));
             }
-        }, (err) => {
+        }, (err: any) => {
             return next(new AccountsError.FacebookConnect(500));
         });
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.FacebookConnect(500));
     });
 
@@ -249,7 +249,7 @@ router.post('/facebook/disconnect', function (req: any, res: any, next: any) {
     // remove the facebook id from the account
     accounts.disconnectFacebookAccount(accountId).then( (rows: any) => {
         res.status(200).send({});
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.FacebookDisconnect(500));
     });   
   
@@ -278,14 +278,14 @@ router.post('/google', ErrorHandler.catchAsync(async function (req: any, res: an
                     };
                     res.status(200).json(response);  
 
-                }, (err) => {
+                }, (err: any) => {
                     return next(new AccountsError.GoogleConnect(500));
                 });            
             } else {
                 // account already exists
                 return next(new AccountsError.GoogleConnect(500));
             }
-        }, (err) => {
+        }, (err: any) => {
             return next(new AccountsError.GoogleConnect(500));
         }); 
 
@@ -302,7 +302,7 @@ router.post('/google/disconnect', function (req: any, res: any, next: any) {
     // remove the google id from the account
     accounts.disconnectGoogleAccount(accountId).then( (rows: any) => {
         res.status(200).send({});
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.GoogleConnect(500));
     });   
   
@@ -320,7 +320,7 @@ router.get('/metadata', function (req: any, res: any, next: any) {
         }
         const response = { metadata: rows[0] };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.GetMetadata(500));
     });   
   
@@ -338,28 +338,28 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
 
     if ( distance_unit ) {
         await accounts.updateAccountsMetadataDistanceUnit(accountId, distance_unit).then( (rows: any) => {
-        }, (err) => {
+        }, (err: any) => {
             return next(new AccountsError.MetadataDistanceUnit(500));
         });   
     }
     
     if ( search_type ) {
         await accounts.updateAccountsMetadataSearchType(accountId, search_type).then( (rows: any) => {
-        }, (err) => {
+        }, (err: any) => {
             return next(new AccountsError.MetadataSearchType(500));
         });   
     }
 
     if ( search_distance ) {
         await accounts.updateAccountsMetadataSearchDistance(accountId, search_distance).then( (rows: any) => {
-        }, (err) => {
+        }, (err: any) => {
             return next(new AccountsError.MetadataSearchDistance(500));
         });   
     }
 
     if ( typeof(mature_filter) !== 'undefined' ) {
         await accounts.updateAccountsMetadataMatureFilter(accountId, mature_filter).then( (rows: any) => {
-        }, (err) => {
+        }, (err: any) => {
             return next(new AccountsError.MetadataMatureFilter(500));
         });   
     }
@@ -371,7 +371,7 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
         }
         const response = { metadata: rows[0] };
         res.status(200).json(response);
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.GetMetadata(500));
     });   
 
@@ -409,7 +409,7 @@ router.post('/verify', function (req: any, res: any, next: any) {
             // Add record to verify account
             verifyAccount.addVerifyAccount(accountId, token).then( (rows: any) => {
                 res.status(200).json({});
-            }, (err) => {
+            }, (err: any) => {
                 return next(new AccountsError.SendVerify(500));
             });   
         }
@@ -438,7 +438,7 @@ router.post('/verify/confirm', function (req: any, res: any, next: any) {
             accounts.verifyAccount( rows[0].account_id, verifiedDate ).then( (r: any) => {
                 const response = { account: r[0] };
                 res.status(200).send(response);
-            }, (err) => {
+            }, (err: any) => {
                 return next(new AccountsError.ConfirmVerify(500));
             });
 
@@ -446,7 +446,7 @@ router.post('/verify/confirm', function (req: any, res: any, next: any) {
             return next(new AccountsError.ConfirmVerify(500));
         }
 
-    }, (err) => {
+    }, (err: any) => {
         return next(new AccountsError.ConfirmVerify(500));
     });   
   

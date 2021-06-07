@@ -35,7 +35,7 @@ passport.use(new LocalStrategy(localOptions,
                 delete user.pass;
                 delete user.salt;
                 return done(null, user);
-            }, (err) => {
+            }, (err: any) => {
                 return done(err);
             });
         } else {
@@ -46,7 +46,7 @@ passport.use(new LocalStrategy(localOptions,
                 delete user.pass;
                 delete user.salt;
                 return done(null, user);
-            }, (err) => {
+            }, (err: any) => {
                 return done(err);
             });            
         }
@@ -62,7 +62,7 @@ passport.serializeUser(function (user: any, done: any) {
 passport.deserializeUser(function (id: any, done: any) {
     accounts.getAccountById(id).then( (user: any) => {
         return done(null, user[0])
-    }, (err) => {
+    }, (err: any) => {
         return done(err);
     });
 });
@@ -80,7 +80,7 @@ passport.use(new JwtStrategy(jwtOptions,
         // concerning verified / facebook / google updates
         accounts.getAccountById(payload.id.id).then( (user: any) => {
             return done(null, user[0])
-        }, (err) => {
+        }, (err: any) => {
             return done(err);
         });
         // OLD

@@ -61,10 +61,10 @@ router.post('/register', rateLimiter.authenticationLimiter, function (req: any, 
                 jwt: { token: token, expiresIn: 7 },
                 account: user
             });  
-        }, (err) => {
+        }, (err: any) => {
             return next(new AuthError.Register(500));
         });
-    }, (err) => {
+    }, (err: any) => {
 
         // A duplicate exists
         if ( err.code === 'ER_DUP_ENTRY' ) {
@@ -118,7 +118,7 @@ router.post('/login/facebook', rateLimiter.authenticationLimiter, function (req:
                     if ( rows.length > 0 ) {
                         email = null;
                     }
-                }, (err) => {
+                }, (err: any) => {
 
                 });
 
@@ -138,7 +138,7 @@ router.post('/login/facebook', rateLimiter.authenticationLimiter, function (req:
                                 account: user2
                             });
 
-                        }, ( err) => {
+                        }, ( err: any) => {
                             // couldnt add your friends
                             res.status(200).json({
                                 created: true,
@@ -147,11 +147,11 @@ router.post('/login/facebook', rateLimiter.authenticationLimiter, function (req:
                             });
                         });
 
-                    }, (err) => {
+                    }, (err: any) => {
                         return next(new AuthError.FacebookSignUpError(500));
                     });
  
-                }, (err) => {
+                }, (err: any) => {
                     return next(new AuthError.FacebookSignUpError(500));
                 });            
             } else {
@@ -164,10 +164,10 @@ router.post('/login/facebook', rateLimiter.authenticationLimiter, function (req:
                     account: user
                 });   
             }
-        }, (err) => {
+        }, (err: any) => {
             return next(new AuthError.FacebookSignUpError(500));
         }));
-    }, (err) => {
+    }, (err: any) => {
         return next(new AuthError.FacebookSignUpError(500));
     });
 });
@@ -191,7 +191,7 @@ router.post('/login/google', rateLimiter.authenticationLimiter, ErrorHandler.cat
             if ( rows.length > 0 ) {
                 email = null;
             }
-        }, (err) => {
+        }, (err: any) => {
 
         });
 
@@ -214,10 +214,10 @@ router.post('/login/google', rateLimiter.authenticationLimiter, ErrorHandler.cat
                             account: user2
                         });
 
-                    }, (err) => {
+                    }, (err: any) => {
                         return next(new AuthError.GoogleSignUpError(500));
                     });
-                }, (err) => {
+                }, (err: any) => {
                     return next(new AuthError.GoogleSignUpError(500));
                 });
  
@@ -231,7 +231,7 @@ router.post('/login/google', rateLimiter.authenticationLimiter, ErrorHandler.cat
                     account: user
                 });   
             }
-        }, (err) => {
+        }, (err: any) => {
             return next(new AuthError.GoogleSignUpError(500));
         }));
     } catch (err) {
@@ -273,7 +273,7 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
                     // add to table
                     passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
                         res.status(200).send({});
-                    }, (err) => {
+                    }, (err: any) => {
                         return next(new AuthError.PasswordReset(500));
                     });
                 }
@@ -285,7 +285,7 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
             res.status(200).send({})
         }
 
-    }, (err) => {
+    }, (err: any) => {
         return next(new AuthError.PasswordReset(500));
     });
                       
@@ -310,7 +310,7 @@ router.post('/new-password/validate', rateLimiter.tokenLimiter, function (req: a
             // No token exists
             return next(new AuthError.PasswordResetValidate(400));
         }
-    }, (err) => {
+    }, (err: any) => {
         return next(new AuthError.PasswordResetValidate(400));
     });
                       
@@ -335,7 +335,7 @@ router.post('/new-password', rateLimiter.newPasswordLimiter, function (req: any,
 
             accounts.changePassword( rows[0].account_id, hash, salt ).then( (r: any) => {
                 res.status(200).send({ reset: true });
-            }, (err) => {
+            }, (err: any) => {
                 return next(new AuthError.NewPassword(500));
             });
 
@@ -343,7 +343,7 @@ router.post('/new-password', rateLimiter.newPasswordLimiter, function (req: any,
             // Either no token, or expired
             return next(new AuthError.NewPassword(500));
         }
-    }, (err) => {
+    }, (err: any) => {
         return next(new AuthError.NewPassword(500));
     });
                       
