@@ -256,8 +256,8 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
             mail.email.send({
                 template: 'password',
                 message: {
-                    from: 'krleitch.ca@gmail.com',
-                    to: 'krleitch.ca@gmail.com',
+                    from: 'spottables.app@gmail.com',
+                    to: email,
                 },
                 locals: {
                     link: 'https://localhost:4200/new-password',

@@ -15,7 +15,7 @@ const checkRoleMiddleware = ( roles: [] ) => (req: any, res: any, next: any) => 
 
 }
 
-// Used within a function given auser
+// Used within a function given a user
 function checkRole( user: any, roles: [] ) {
     return  roles.find(role => user.role === role)
 }

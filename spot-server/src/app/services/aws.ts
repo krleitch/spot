@@ -12,7 +12,7 @@ aws.config.update({
 const s3 = new aws.S3();
 
 const getUrlFromBucket=(fileName: string): string => {
-    return 'https://spot.s3.amazonaws.com/' + fileName;
+    return 'https://spottables.s3.amazonaws.com/' + fileName;
 };
 
 export { s3, getUrlFromBucket }

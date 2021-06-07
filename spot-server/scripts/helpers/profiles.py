@@ -12,7 +12,7 @@ def main():
     global client
 
     response = client.list_objects_v2(
-        Bucket='spot',
+        Bucket='spottables',
         Delimiter='/',
         MaxKeys=1000,
         Prefix='profile/icons/',

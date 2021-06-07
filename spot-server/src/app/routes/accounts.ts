@@ -394,8 +394,8 @@ router.post('/verify', function (req: any, res: any, next: any) {
     mail.email.send({
         template: 'verify',
         message: {
-            from: 'krleitch.ca@gmail.com',
-            to: 'krleitch.ca@gmail.com',
+            from: 'spottables.app@gmail.com',
+            to: req.user.email,
         },
         locals: {
             link: 'https://localhost:4200/verify/' + token,

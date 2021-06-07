@@ -42,7 +42,7 @@ const upload = multer({
     storage: multerS3({
         acl: 'public-read',
         s3: aws.s3,
-        bucket: 'spot',
+        bucket: 'spottables',
         metadata: function (req: any, file: any, cb: any) {
             cb(null, {originalname: file.originalname.substr(0,255)});
         },
