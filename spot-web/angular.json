@@ -71,9 +71,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "spot-web:build",
-            "ssl": false,
-            "sslKey": "server.key",
-            "sslCert": "server.crt"
+            "ssl": false
           },
           "configurations": {
             "production": {
