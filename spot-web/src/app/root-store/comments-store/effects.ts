@@ -29,7 +29,7 @@ export class CommentsStoreEffects {
       featureActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: featureActions.GenericFailureAction) => {
-      this.commentService.failureMessage(action.error);
+      this.commentService.failureMessage('Oops... Somethings went wrong');
     })
   );
 

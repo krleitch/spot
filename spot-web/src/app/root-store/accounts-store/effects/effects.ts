@@ -34,7 +34,7 @@ export class AccountsStoreEffects {
       accountsActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: accountsActions.GenericFailureAction) => {
-      this.accountsService.failureMessage(action.error);
+      this.accountsService.failureMessage('Oops... Somethings went wrong');
     })
   );
 
@@ -198,8 +198,8 @@ export class AccountsStoreEffects {
             map(response => {
               return new accountsActions.UpdateAccountMetadataRequestSuccess(response)
             }),
-            catchError(error =>
-              observableOf(new accountsActions.GenericFailureAction(error))
+            catchError( errorResponse =>
+              observableOf(new accountsActions.GenericFailureAction(errorResponse.error))
             )
           )
     )

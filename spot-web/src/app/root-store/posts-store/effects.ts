@@ -26,7 +26,7 @@ export class PostsStoreEffects {
       featureActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: featureActions.GenericFailureAction) => {
-      this.postsService.failureMessage(action.error);
+      this.postsService.failureMessage('Oops... Somethings went wrong');
     })
   );
 

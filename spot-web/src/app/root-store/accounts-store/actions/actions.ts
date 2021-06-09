@@ -50,7 +50,7 @@ export class ResetStoreAction implements Action {
 
 export class GenericFailureAction implements Action {
   readonly type = ActionTypes.GENERIC_FAILURE;
-  constructor(public error: string) {}
+  constructor(public error: SpotError) {}
 }
 
 export class RegisterRequestAction implements Action {

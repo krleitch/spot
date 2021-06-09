@@ -96,12 +96,8 @@ export class PostsService {
     return this.http.put<LikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/like`, request);
   }
 
-  failureMessage(error: SpotError): void {
-    this.alertService.error(error.message);
-  }
-
-  onReportSuccess(): void {
-    this.alertService.success('Your report has been sent');
+  failureMessage(error: string): void {
+    this.alertService.error(error);
   }
 
 }

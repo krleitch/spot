@@ -6,6 +6,7 @@ import { AddCommentStoreRequest, SetCommentsStoreRequest,
           LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
           LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess, UnratedCommentRequest,
           UnratedCommentSuccess, UnratedReplyRequest, UnratedReplySuccess, ClearCommentsRequest } from '@models/comments';
+import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
   RESET_STORE = '[Comments] Reset Store',
@@ -45,7 +46,7 @@ export class ClearCommentsRequestAction implements Action {
 
 export class GenericFailureAction implements Action {
   readonly type = ActionTypes.GENERIC_FAILURE;
-  constructor(public error: string) {}
+  constructor(public error: SpotError) {}
 }
 
 export class AddCommentRequestAction implements Action {
