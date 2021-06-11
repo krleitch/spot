@@ -96,20 +96,20 @@
       </div>
     </div>
     <ng-template #noComments>
-      <div *ngIf="(showLoadingCommentsIndicator$ | async)">
-        <div *ngIf="loadingCommentsBefore; else none" class="no-comments-loading">
+      <div *ngIf="loadingCommentsBefore; else none" class="no-comments-loading">
+        <div *ngIf="(showLoadingCommentsIndicator$ | async)">
           <span> {{ STRINGS.LOADING_COMMENTS }} </span>
           <div *ngIf="loadingCommentsBefore" class="loading">
             <spot-spinner size="small" type="dot"></spot-spinner>
           </div>
         </div>
-        <ng-template #none>
+      </div>
+      <ng-template #none>
         <div class="no-comments">
           <span class="material-icons icon"> chat </span>
           {{ STRINGS.NO_COMMENTS }}
         </div>
         </ng-template>
-      </div>
     </ng-template>
 
     <!-- Load More -->

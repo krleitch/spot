@@ -80,10 +80,10 @@ async function getProfilePictureFromBucket( index: number ) {
     // SAVE on requests to the bucket
 
     if ( index === -1 ) {
-        return aws.getUrlFromBucket('profile/op.png');
+        return 'op.png';
     }
 
-    return aws.getUrlFromBucket(profileImages[index % profileImages.length])
+    return profileImages[index % profileImages.length];
 
     // This code should be moved somewhere else
 
