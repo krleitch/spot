@@ -50,11 +50,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0px 20px;
-    transition: background-color 0.5s ease;
-
-    &:hover {
-      background-color: $item-highlight;
-    }
 
   }
 
@@ -68,7 +63,6 @@
 
   .selected {
     color: $button-highlight;
-    background-color: $item-highlight;
   }
 
   .auth-link {
@@ -86,18 +80,6 @@
     box-sizing: border-box;
     position: relative;
 
-    .title-image-highlight {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      width: 150px;
-      height: 65px;
-      background-image: url('../../../../assets/images/logo_v7_highlight.png');
-      background-size:cover;
-      z-index: 7
-    }
-
     .title-image {
       position: absolute;
       top: 50%;
@@ -107,15 +89,6 @@
       height: 65px;
       background-image: url('../../../../assets/images/logo_v7.png');
       background-size:cover;
-      z-index: 8
-    }
-
-    .title-image-highlight:hover {
-      z-index: 9
-    }
-
-    .title-image:hover {
-      z-index: 6
     }
 
   }
