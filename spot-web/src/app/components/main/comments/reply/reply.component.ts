@@ -439,7 +439,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     const timeDiff = curTime.getTime() - postTime.getTime();
     if (timeDiff < 60000) {
       const secDiff = Math.round(timeDiff / 1000);
-      if (secDiff === 0) {
+      if (secDiff <= 0) {
         this.timeMessage = 'Now';
       } else {
         this.timeMessage = secDiff + 's';
