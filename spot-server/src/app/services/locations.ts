@@ -247,7 +247,7 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 									} else {
 										redisClient.zadd('geocodes_expires', expireTimestamp, address.short_name);
 										redisClient.geoadd('geocodes', longitude, latitude, address.short_name);
-										return resolve(address.short_name)
+										return resolve(address.short_name);
 									}
 								}
 								
