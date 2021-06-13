@@ -7,6 +7,7 @@ const googleconfig = require('@config/googlekey.json');
 
 // db
 const locations = require('@db/locations');
+const redisClient = require('@db/redis');
 
 // error
 const LocationsError = require('@exceptions/locations');
@@ -177,12 +178,33 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 	const url = baseUrl + latlng + filter + key;
 
 	// we don't want to give away street address
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 
-		// TODO: REMOVE
-		// Also remove the ellipsis, make that frontend
+		// check redis cache first
+		await redisClient.georadius('geocodes', longitude, latitude, '25', 'm', 'WITHCOORD', 'WITHDIST', 'ASC', async (err: any, results: any[]) => {
 
-		return resolve('TEST');
+			if ( results.length > 0 ) {
+
+				// check if the entry needs to be removed from cache due to time expires
+				
+				const locationName = results[0][0];
+
+				await redisClient.zscore('geocodes_expires', locationName, async (err: any, expiresTimestamp: any) => {
+
+					if ( expiresTimestamp >= new Date().getTime() ) {
+
+						await redisClient.zrem('geocodes_expires', locationName);
+						await redisClient.zrem('geocodes', locationName);
+
+					} else {
+						return resolve(locationName);
+					}
+
+				});
+
+			}
+
+		});
 
 		request(url, ( error: any, response: any, body: any ) => {
 
@@ -197,7 +219,6 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 				return resolve('');
 			}
 
-			// TODO: can make better?
 			typeRanks.forEach( (type: string) => {
 				res.results.forEach( (place: any) => {
 
@@ -213,28 +234,30 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 							place.address_components.forEach( (address: any) => {
 
 								// use this address
+								const date = new Date();
+								const geocodeExpiresIn = 7 // days
+								date.setDate(date.getDate() + geocodeExpiresIn);
+								const expireTimestamp = date.getTime();
 
 								if ( address.types.includes(typeAddress) ) {
 									if ( address.long_name.length < max_name_length ) {
+										redisClient.zadd('geocodes_expires', expireTimestamp, address.long_name);
+										redisClient.geoadd('geocodes', longitude, latitude, address.long_name);
 										return resolve(address.long_name);
 									} else {
-	
-										if ( address.long_name.length < max_name_length ) {
-											return resolve(address.short_name)
-										} else {
-											return resolve(address.short_name.substring(0, max_name_length - 3) + '...')
-										}
-	
+										redisClient.zadd('geocodes_expires', expireTimestamp, address.short_name);
+										redisClient.geoadd('geocodes', longitude, latitude, address.short_name);
+										return resolve(address.short_name)
 									}
 								}
 								
 							});
-						})
+						});
 
 					}
-				})
+				});
 	
-			})
+			});
 
 			return resolve('');
 
