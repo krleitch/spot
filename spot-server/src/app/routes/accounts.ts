@@ -439,7 +439,7 @@ router.post('/verify', function (req: any, res: any, next: any) {
             to: req.user.email,
         },
         locals: {
-            link: 'https://localhost:4200/verify/' + token,
+            link: 'https://spottables.com/verify/' + token,
             username: req.user.username
         },
     }, (err: any, info: any) => {

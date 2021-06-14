@@ -264,7 +264,7 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
                     to: email,
                 },
                 locals: {
-                    link: 'https://localhost:4200/new-password',
+                    link: 'https://spottables.com/new-password',
                     token: token.toString(),
                     username: rows[0].username
                 },
