@@ -255,6 +255,10 @@ router.post('/:postId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsyn
         return next(new AuthenticationError.VerifyError(400));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.AddComment(500));
+    }
+
     const accountId = req.user.id;
     const commentId = uuid.v4();
     req.filename = commentId;
@@ -342,6 +346,10 @@ router.post('/:postId/:commentId', rateLimiter.createCommentLimiter, ErrorHandle
     // You must be verified to make a reply
     if ( !req.verified ) {
         return next(new AuthenticationError.VerifyError(400));
+    }
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.AddComment(500));
     }
 
     const accountId = req.user.id;
@@ -434,6 +442,10 @@ router.delete('/:postId/:commentId', rateLimiter.genericCommentLimiter, function
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.DeleteComment(500));
+    }
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
@@ -468,6 +480,10 @@ router.delete('/:postId/:parentId/:commentId', rateLimiter.genericCommentLimiter
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.DeleteReply(500));
     }
 
     const postId = req.params.postId;
@@ -505,6 +521,10 @@ router.put('/:postId/:commentId/like', rateLimiter.genericCommentLimiter, functi
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.LikeComment(500));
+    }
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
@@ -523,6 +543,10 @@ router.put('/:postId/:commentId/dislike', rateLimiter.genericCommentLimiter, fun
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.DislikeComment(500));
     }
 
     const postId = req.params.postId;
@@ -545,6 +569,10 @@ router.put('/:postId/:commentId/unrated', rateLimiter.genericCommentLimiter, fun
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.UnratedComment(500));
+    }
+
     const postId = req.params.postId;
     const commentId = req.params.commentId;
     const accountId = req.user.id;
@@ -563,6 +591,10 @@ router.put('/:postId/:parentId/:commentId/like', rateLimiter.genericCommentLimit
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.LikeReply(500));
     }
 
     const postId = req.params.postId;
@@ -586,6 +618,10 @@ router.put('/:postId/:parentId/:commentId/dislike', rateLimiter.genericCommentLi
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.DislikeReply(500));
+    }
+
     const postId = req.params.postId;
     const parentId = req.params.parentId;
     const commentId = req.params.commentId;
@@ -607,6 +643,10 @@ router.put('/:postId/:parentId/:commentId/unrated', rateLimiter.genericCommentLi
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.UnratedComment(500));
+    }
+
     const postId = req.params.postId;
     const parentId = req.params.parentId;
     const commentId = req.params.commentId;
@@ -626,6 +666,10 @@ router.put('/:postId/:commentId/report', rateLimiter.genericCommentLimiter, func
 
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new CommentsError.ReportComment(500));
     }
 
     const postId = req.params.postId;

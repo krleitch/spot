@@ -22,7 +22,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AccountsService {
 
-  constructor(private http: HttpClient, 
+  constructor(private http: HttpClient,
               private router: Router,
               private alertService: AlertService) { }
 
@@ -88,15 +88,15 @@ export class AccountsService {
 
   // service functions
 
-  onDeleteAccountSuccess() {
+  onDeleteAccountSuccess(): void {
     this.router.navigateByUrl('/');
   }
 
-  failureMessage(message: string) {
+  failureMessage(message: string): void {
     this.alertService.error(message);
   }
 
-  getAccountRedirect() {
+  getAccountRedirect(): void {
     if ( this.router.url === '/' ) {
       this.router.navigateByUrl('/home');
     }

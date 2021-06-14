@@ -164,8 +164,14 @@ function isValidToken(token: any): boolean {
 async function createUsernameFromEmail(email: string): Promise<string> {
 
     // Try using the email first
-    const index = email.indexOf('@');
-    let username = email.substring(0, index);
+    let username;
+    if ( email ) {
+        const index = email.indexOf('@');
+        username = email.substring(0, index);
+    } else {
+        username = null;
+    }
+
 
     if ( !username ) {
         username = 'user' + (10000 + (Math.random() * (99999 - 10000))).toString();
@@ -236,7 +242,7 @@ function getFacebookId(accessToken: string): Promise<any> {
 async function verifyGoogleIdToken(accessToken: string): Promise<any> {
     const ticket = await client.verifyIdToken({
         idToken: accessToken,
-        audience: '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com',
+        audience: '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com',
         // Specify the CLIENT_ID of the app that accesses the backend
         // Or, if multiple clients access the backend:
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]

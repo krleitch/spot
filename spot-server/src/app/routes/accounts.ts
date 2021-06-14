@@ -9,6 +9,7 @@ const verifyAccount = require('@db/verifyAccount');
 
 // services
 const authenticationService = require('@services/authentication/authentication');
+const authorization = require('@services/authorization/authorization');
 const friendsService = require('@services/friends');
 const mail = require('@services/mail');
 
@@ -17,8 +18,8 @@ const AuthenticationError = require('@exceptions/authentication');
 const AccountsError = require('@exceptions/accounts');
 const ErrorHandler = require('@src/app/errorHandler');
 
-// ratelimiter
-const rateLimiter = require('@src/app/rateLimiter');
+// constants
+const roles = require('@services/authorization/roles');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -28,6 +29,10 @@ router.use(function timeLog (req: any, res: any, next: any) {
 router.delete('/', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.DeleteAccount(500));
+    }
 
     accounts.deleteAccount(accountId).then( (rows: any) => {
         res.status(200).send({});
@@ -56,6 +61,10 @@ router.put('/username', ErrorHandler.catchAsync(async function (req: any, res: a
 
     const accountId = req.user.id;
     const { username } = req.body;
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.UpdateUsername(500));
+    }
 
     // Make sure the username is valid
     const usernameError = authenticationService.validUsername(username);
@@ -108,6 +117,10 @@ router.put('/email', ErrorHandler.catchAsync(async function (req: any, res: any,
     const accountId = req.user.id;
     const { email } = req.body;
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.UpdateEmail(500));
+    }
+
     const emailError = authenticationService.validEmail(email);
     if ( emailError) {
         return next(emailError);
@@ -155,11 +168,15 @@ router.put('/email', ErrorHandler.catchAsync(async function (req: any, res: any,
 
 }));
 
-// Update username
+// Update phone
 router.put('/phone', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { phone } = req.body;
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.UpdatePhone(500));
+    }
 
     const phoneError = authenticationService.validPhone(phone);
     if ( phoneError) {
@@ -211,6 +228,10 @@ router.post('/facebook', function (req: any, res: any, next: any) {
     const { accessToken } = req.body;
     const accountId = req.user.id;
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.FacebookConnect(500));
+    }
+
     authenticationService.getFacebookId(accessToken).then( ( facebookId: any) => {
         accounts.getFacebookAccount(facebookId.body.id).then(( user: any) => {
             if ( user.length == 0 ) {
@@ -246,6 +267,10 @@ router.post('/facebook/disconnect', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.FacebookDisconnect(500));
+    }
+
     // remove the facebook id from the account
     accounts.disconnectFacebookAccount(accountId).then( (rows: any) => {
         res.status(200).send({});
@@ -260,6 +285,10 @@ router.post('/google', ErrorHandler.catchAsync(async function (req: any, res: an
 
     const { accessToken } = req.body;
     const accountId = req.user.id;
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.GoogleConnect(500));
+    }
 
     try {
 
@@ -299,6 +328,10 @@ router.post('/google/disconnect', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.GoogleConnect(500));
+    }
+
     // remove the google id from the account
     accounts.disconnectGoogleAccount(accountId).then( (rows: any) => {
         res.status(200).send({});
@@ -329,6 +362,10 @@ router.get('/metadata', function (req: any, res: any, next: any) {
 router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.GetMetadata(500));
+    }
 
     const { distance_unit, search_type, search_distance, mature_filter } = req.body;
 
@@ -389,6 +426,10 @@ router.post('/verify', function (req: any, res: any, next: any) {
     const digest = 'sha512';
     const token = pbkdf2Sync(value, salt, iterations, hashLength, digest).toString('hex');
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.SendVerify(500));
+    }
+
     // send email with nodemailerm using aws ses transport
 
     mail.email.send({
@@ -423,6 +464,10 @@ router.post('/verify/confirm', function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
     const { token } = req.body;
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new AccountsError.ConfirmVerify(500));
+    }
 
     // Add record to verify account
     verifyAccount.getByToken(accountId, token).then( (rows: any) => {

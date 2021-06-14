@@ -8,6 +8,7 @@ const friends = require('@db/friends');
 
 // services
 const commentsService = require('@services/comments');
+const authorization = require('@services/authorization/authorization');
 
 // ratelimiter
 const rateLimiter = require('@src/app/rateLimiter');
@@ -15,6 +16,9 @@ const rateLimiter = require('@src/app/rateLimiter');
 // errors
 const NotificationsError = require('@exceptions/notifications');
 const ErrorHandler = require('@src/app/errorHandler');
+
+// constants
+const roles = require('@services/authorization/roles');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -77,6 +81,10 @@ router.post('/', rateLimiter.genericNotificationLimiter, function (req: any, res
 
     const { receiver, postId, commentId } = req.body;
     const accountId = req.user.id;
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new NotificationsError.SendNotification(500));
+    }
 
     accounts.getAccountByUsername(receiver).then(ErrorHandler.catchAsync(async (receiver: any) => {
         // The receiving account doesnt exist

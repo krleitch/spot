@@ -40,6 +40,8 @@ export const STRINGS = {
             LOCATION_BACKGROUND_3: 'Spots without location',
             LOADING_LOCATION: 'Loading your location',
 
+            GUEST: 'You are logged in on a guest account. Create an account to make and interact with Spots.',
+
             NO_POSTS: 'There are no Spots in this area',
             NO_MORE_POSTS: 'You\'re all caught up!',
             FIRST_POST_1: 'Be First',
@@ -64,6 +66,8 @@ export const STRINGS = {
 
             // No account
             NO_ACCOUNT: 'No account. Please login to continue',
+
+            GUEST: 'You are logged in on a guest account. You will not be able to update any account information.',
 
             // My account
             MY_ACCOUNT: 'My Account',

@@ -14,6 +14,12 @@ const ErrorHandler = require('@src/app/errorHandler');
 const ERROR_MESSAGES = require('@exceptions/messages');
 const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
 
+// services
+const authorization = require('@services/authorization/authorization');
+
+// constants
+const roles = require('@services/authorization/roles');
+
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
@@ -98,6 +104,10 @@ router.post('/requests', rateLimiter.genericFriendLimiter, ErrorHandler.catchAsy
     const accountId = req.user.id;
     const { username } = req.body;
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new FriendsError.FriendExistsError(500));
+    }
+
     accounts.getAccountByUsername(username).then(ErrorHandler.catchAsync(async (receiverId: any) => {
 
         // No account with this username
@@ -167,6 +177,10 @@ router.post('/requests/accept', rateLimiter.genericFriendLimiter, function (req:
 
     const accountId = req.user.id;
     const { friendRequestId } = req.body
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new FriendsError.AcceptFriendRequest(500));
+    }
 
     friends.acceptFriendRequest(friendRequestId, accountId).then((rows: any) => {
 

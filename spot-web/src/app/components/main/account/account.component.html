@@ -9,6 +9,10 @@
         {{ STRINGS.MY_ACCOUNT }}
       </div>
 
+      <div *ngIf="account.role === 'guest'" class="guest">
+        {{ STRINGS.GUEST }}
+      </div>
+
       <!-- Verification -->
       <div class="subheading" ngClass="{'mobile-column': account.verified_date == null}">
         <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>

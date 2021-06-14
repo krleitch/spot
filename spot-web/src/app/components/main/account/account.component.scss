@@ -48,6 +48,11 @@ spot-main-nav {
 
   }
 
+  .guest {
+    color: $error-red;
+    margin-bottom: 10px;
+  }
+
 }
 
 .title {
@@ -423,6 +428,10 @@ input {
   }
 
   .description {
+    text-align: center;
+  }
+
+  .guest {
     text-align: center;
   }
 

@@ -80,6 +80,10 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
         return next(new AuthenticationError.VerifyError(400));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new PostsError.PostError(500));
+    }
+
     const accountId = req.user.id;
     const postId = uuid.v4();
 
@@ -142,6 +146,10 @@ router.put('/:postId/like', rateLimiter.genericPostLimiter, function(req: any, r
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new PostsError.LikePost(500));
+    }
+
     const postId = req.params.postId;
     const accountId = req.user.id;
 
@@ -160,6 +168,10 @@ router.put('/:postId/dislike', rateLimiter.genericPostLimiter, function(req: any
     // You must have an account to dislike a post
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new PostsError.DislikePost(500));
     }
 
     const postId = req.params.postId;
@@ -181,6 +193,10 @@ router.put('/:postId/unrated', rateLimiter.genericPostLimiter, function(req: any
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new PostsError.UnratedPost(500));
+    }
+
     const postId = req.params.postId;
     const accountId = req.user.id;
 
@@ -199,6 +215,10 @@ router.delete('/:postId', rateLimiter.genericPostLimiter, function(req: any, res
     // You must have an account to delete a post
     if ( !req.authenticated ) {
         return next(new AuthenticationError.AuthenticationError(401));
+    }
+
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new PostsError.DeletePost(500));
     }
 
     const postId = req.params.postId;
@@ -233,6 +253,10 @@ router.put('/:postId/report', rateLimiter.genericPostLimiter, function(req: any,
         return next(new AuthenticationError.AuthenticationError(401));
     }
 
+    if ( authorization.checkRole(req.user, [roles.guest])) {
+        return next(new ReportError.ReportError(500));
+    }
+
     const postId = req.params.postId;
     const accountId = req.user.id;
     const { content, category } = req.body;
@@ -244,7 +268,7 @@ router.put('/:postId/report', rateLimiter.genericPostLimiter, function(req: any,
     reports.addPostReport( postId, accountId, content, category ).then((rows: any) => {
         res.status(200).send({});
     }, (err: any) => {
-        return next(new ReportError.ReportError(500))
+        return next(new ReportError.ReportError(500));
     });
 
 });

@@ -13,11 +13,15 @@ const passwordReset = require('@db/passwordReset');
 
 // services
 const authentication = require('@services/authentication/authentication');
+const authorization = require('@services/authorization/authorization');
 const friendsService = require('@services/friends');
 const mail = require('@services/mail');
 
 // ratelimiter
 const rateLimiter = require('@src/app/rateLimiter');
+
+// constants
+const roles = require('@services/authorization/roles');
 
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
@@ -333,8 +337,18 @@ router.post('/new-password', rateLimiter.newPasswordLimiter, function (req: any,
             const salt = authentication.generateSalt();
             const hash = authentication.hashPassword(password, salt);
 
-            accounts.changePassword( rows[0].account_id, hash, salt ).then( (r: any) => {
-                res.status(200).send({ reset: true });
+            accounts.getAccountById(rows[0].account_id).then( (users: any) => {
+
+                if ( authorization.checkRole(users[0], [roles.guest])) {
+                    return next(new AuthError.NewPassword(500));
+                }
+
+                accounts.changePassword( rows[0].account_id, hash, salt ).then( (r: any) => {
+                    res.status(200).send({ reset: true });
+                }, (err: any) => {
+                    return next(new AuthError.NewPassword(500));
+                });
+
             }, (err: any) => {
                 return next(new AuthError.NewPassword(500));
             });
