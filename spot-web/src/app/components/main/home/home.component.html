@@ -49,7 +49,7 @@
       <!-- Determine if we need location -->
       <div *ngIf="location || postLocation == 'global';else noLocation" class="content">
 
-        <div *ngIf="account$ | async as account" class="fit-container">
+        <div *ngIf="account" class="fit-container">
 
           <div *ngIf="account.role !== 'guest';else guest" class="fit-container">
 

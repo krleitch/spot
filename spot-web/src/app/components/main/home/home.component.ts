@@ -56,6 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Account
   account$: Observable<Account>;
+  account: Account;
   accountMetadata$: Observable<AccountMetadata>;
 
   // Metadata
@@ -85,6 +86,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
     );
+
+    this.account$.pipe(takeUntil(this.onDestroy)).subscribe( (account: Account) => {
+      this.account = account;
+    });
 
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)

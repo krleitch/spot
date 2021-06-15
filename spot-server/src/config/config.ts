@@ -1,4 +1,4 @@
-// TODO: Use webpack to build prod and dev envs
+// TODO: create prod and dev env configs
 
 const config = {
     production: false,

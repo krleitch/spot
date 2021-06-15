@@ -81,6 +81,10 @@ async function predictNsfw(imgUrl: string) {
         return false;
     }
 
+    return false;
+    
+    // disable for now for memory concerns
+
     const pic = await axios.get(imgUrl, {
         responseType: 'arraybuffer',
     });
@@ -91,4 +95,5 @@ async function predictNsfw(imgUrl: string) {
     image.dispose(); // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
     // check if porn or hentai
     return predictions[0].className === 'Porn' || predictions[0].className === 'Hentai';
+    
 }
