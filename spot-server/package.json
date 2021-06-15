@@ -33,21 +33,21 @@
     "request": "^2.88.0",
     "rotating-file-stream": "^2.1.3",
     "shortid": "^2.2.15",
-    "typescript": "^3.3.3333",
+    "typescript": "^4.3.2",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
     "ts-node-dev": "^1.0.0-pre.32"
   },
   "_moduleAliases": {
-    "@src": "./src",
-    "@models": "../spot-commons/models",
-    "@exceptions": "../spot-commons/exceptions",
-    "@constants": "../spot-commons/constants",
-    "@db": "./src/app/db",
-    "@routes": "./src/app/routes",
-    "@services": "./src/app/services",
-    "@config": "./src/config"
+    "@models": "../spot-commons/build/models",
+    "@exceptions": "../spot-commons/build/exceptions",
+    "@constants": "../spot-commons/build/constants",
+    "@db": "build/app/db",
+    "@routes": "build/app/routes",
+    "@services": "build/app/services",
+    "@helpers": "build/app/helpers",
+    "@config": "build/config"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -23,7 +23,7 @@ const mySql = require('@db/mySql');
 // const mongo = require('@db/mongo');
 
 // Utils
-const errorHandler = require('./errorHandler');
+const errorHandler = require('@helpers/errorHandler');
 const passport = require('@services/authentication/passport');
 const authentication = require('@services/authentication/authentication');
 const locationService = require('@services/locations');

@@ -18,12 +18,12 @@ const authorization = require('@services/authorization/authorization');
 const singleUpload = imageService.upload.single('image');
 
 // ratelimiter
-const rateLimiter = require('@src/app/rateLimiter');
+const rateLimiter = require('@helpers/rateLimiter');
 
 // errors
 const CommentsError = require('@exceptions/comments');
 const AuthenticationError = require('@exceptions/authentication');
-const ErrorHandler = require('@src/app/errorHandler');
+const ErrorHandler = require('@helpers/errorHandler');
 
 // constants
 const comments_constants = require('@constants/comments');

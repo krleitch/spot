@@ -5,7 +5,7 @@ const LOCATION_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.LOCATION;
 
 // Invalid Location
 export class LocationError extends SpotError {
-    constructor(statusCode) {
+    constructor(statusCode: number) {
       super(LOCATION_ERROR_MESSAGES.LOCATION_ERROR, statusCode);
       this.name = "LocationError";
     }

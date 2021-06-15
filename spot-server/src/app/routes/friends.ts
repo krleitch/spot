@@ -6,11 +6,11 @@ const friends = require('@db/friends');
 const accounts = require('@db/accounts');
 
 // ratelimiter
-const rateLimiter = require('@src/app/rateLimiter');
+const rateLimiter = require('@helpers/rateLimiter');
 
 // errors
 const FriendsError = require('@exceptions/friends');
-const ErrorHandler = require('@src/app/errorHandler');
+const ErrorHandler = require('@helpers/errorHandler');
 const ERROR_MESSAGES = require('@exceptions/messages');
 const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
 

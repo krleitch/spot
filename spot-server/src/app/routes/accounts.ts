@@ -16,7 +16,7 @@ const mail = require('@services/mail');
 // exceptions
 const AuthenticationError = require('@exceptions/authentication');
 const AccountsError = require('@exceptions/accounts');
-const ErrorHandler = require('@src/app/errorHandler');
+const ErrorHandler = require('@helpers/errorHandler');
 
 // constants
 const roles = require('@services/authorization/roles');

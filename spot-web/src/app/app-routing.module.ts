@@ -20,7 +20,7 @@ import { ActivityComponent } from './components/main/activity/activity.component
 import { VerifyComponent } from './components/main/verify/verify.component';
 import { UsernameComponent } from './components/main/username/username.component';
 
-import { AuthGuardService as AuthGuard } from '@src/app/helpers/auth-guard.service';
+import { AuthGuardService as AuthGuard } from '@helpers/auth-guard.service';
 
 export const routes: Routes = [
   {

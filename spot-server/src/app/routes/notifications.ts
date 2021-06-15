@@ -11,11 +11,11 @@ const commentsService = require('@services/comments');
 const authorization = require('@services/authorization/authorization');
 
 // ratelimiter
-const rateLimiter = require('@src/app/rateLimiter');
+const rateLimiter = require('@helpers/rateLimiter');
 
 // errors
 const NotificationsError = require('@exceptions/notifications');
-const ErrorHandler = require('@src/app/errorHandler');
+const ErrorHandler = require('@helpers/errorHandler');
 
 // constants
 const roles = require('@services/authorization/roles');

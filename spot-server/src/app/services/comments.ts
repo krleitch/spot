@@ -21,7 +21,7 @@ const comments_constants = require('@constants/comments');
 const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
 
 // sources
-const profileImages = require('@src/app/profileImages');
+const profileImages = require('@helpers/profileImages');
 
 function validContent(content: string): Error | null {
 

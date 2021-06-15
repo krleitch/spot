@@ -5,7 +5,7 @@ const shortid = require('shortid');
 
 // exceptions
 const AuthError = require('@exceptions/authentication');
-const ErrorHandler = require('@src/app/errorHandler');
+const ErrorHandler = require('@helpers/errorHandler');
 
 // db
 const accounts = require('@db/accounts');
@@ -18,7 +18,7 @@ const friendsService = require('@services/friends');
 const mail = require('@services/mail');
 
 // ratelimiter
-const rateLimiter = require('@src/app/rateLimiter');
+const rateLimiter = require('@helpers/rateLimiter');
 
 // constants
 const roles = require('@services/authorization/roles');
