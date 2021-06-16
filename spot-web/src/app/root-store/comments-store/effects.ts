@@ -29,7 +29,11 @@ export class CommentsStoreEffects {
       featureActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: featureActions.GenericFailureAction) => {
-      this.commentService.failureMessage('Oops... Somethings went wrong');
+      if ( action.error.name === 'LocationError ') {
+        this.commentService.failureMessage('You are using an invalid location');
+      } else {
+        this.commentService.failureMessage('Oops... Somethings went wrong');
+      }
     })
   );
 

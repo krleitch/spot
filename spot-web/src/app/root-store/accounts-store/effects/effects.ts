@@ -34,7 +34,11 @@ export class AccountsStoreEffects {
       accountsActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: accountsActions.GenericFailureAction) => {
-      this.accountsService.failureMessage('Oops... Somethings went wrong');
+      if ( action.error.name === 'LocationError ') {
+        this.accountsService.failureMessage('You are using an invalid location');
+      } else {
+        this.accountsService.failureMessage('Oops... Somethings went wrong');
+      }
     })
   );
 

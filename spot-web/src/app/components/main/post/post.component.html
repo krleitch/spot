@@ -26,7 +26,7 @@
 
       <!-- Image -->
       <div *ngIf="post.image_src != null" (click)="imageClicked()" class="image">
-        <img #postimage [src]="post.image_src" crossOrigin='anonymous' [ngClass]="{'image-blur': (accountMetadata == null && imageBlurred) || (imageBlurred && accountMetadata.mature_filter) }" />
+        <img #postimage [src]="post.image_src" [ngClass]="{'image-blur': (accountMetadata == null && imageBlurred) || (imageBlurred && accountMetadata.mature_filter) }" />
         <div *ngIf="(accountMetadata == null && imageBlurred) || (imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
           <span class="material-icons icon"> error_outline </span>
           <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>

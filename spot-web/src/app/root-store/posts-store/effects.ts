@@ -26,7 +26,11 @@ export class PostsStoreEffects {
       featureActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: featureActions.GenericFailureAction) => {
-      this.postsService.failureMessage('Oops... Somethings went wrong');
+      if ( action.error.name === 'LocationError ') {
+        this.postsService.failureMessage('You are using an invalid location');
+      } else {
+        this.postsService.failureMessage('Oops... Somethings went wrong');
+      }
     })
   );
 

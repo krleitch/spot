@@ -12,9 +12,13 @@ const redisClient = require('@db/redis');
 // error
 const LocationsError = require('@exceptions/locations');
 
+// services
+const authorization = require('@services/authorization/authorization');
+
 // constants
 const locations_constants = require('@constants/locations');
 const LOCATIONS_CONSTANTS = locations_constants.LOCATIONS_CONSTANTS;
+const roles = require('@services/authorization/roles');
 
 // Middleware to call verifyLocation
 const checkLocation = async (req: any, res: any, next: any) => {
@@ -23,6 +27,11 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	if ( !req.authenticated ) {
 		return next();
 	}
+
+	// allow admins to do whatever
+    if ( authorization.checkRole(req.user, [roles.owner, roles.admin])) {
+		return next();
+    }
 
 	const accountId = req.user.id;
 
