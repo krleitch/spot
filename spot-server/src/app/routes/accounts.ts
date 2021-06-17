@@ -475,7 +475,7 @@ router.post('/verify/confirm', function (req: any, res: any, next: any) {
         if ( rows.length > 0 ) {
 
             // check valid expirary date
-            if ( !authenticationService.isValidToken(rows[-1]) ) {
+            if ( !authenticationService.isValidToken(rows[0]) ) {
                 return next(new AccountsError.ConfirmVerify(499));
             }
 

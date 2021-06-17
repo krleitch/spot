@@ -166,6 +166,11 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.setContentHTML();
+    this.reply2.nativeElement.addEventListener('paste', (event: any) => {
+      event.preventDefault();
+      const text = event.clipboardData.getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
   }
 
   ngOnDestroy(): void {

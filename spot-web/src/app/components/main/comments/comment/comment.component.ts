@@ -224,6 +224,11 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
 
   ngAfterViewInit(): void {
     this.setContentHTML();
+    this.reply.nativeElement.addEventListener('paste', (event: any) => {
+      event.preventDefault();
+      const text = event.clipboardData.getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
   }
 
   ngOnDestroy(): void {

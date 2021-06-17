@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 
 // rxjs
 import { Observable, Subject, timer, interval, concat, of } from 'rxjs';
-import { takeUntil, mapTo, startWith, skipWhile, takeWhile, take } from 'rxjs/operators';
+import { takeUntil, mapTo, startWith, skipWhile, takeWhile, take, distinctUntilChanged } from 'rxjs/operators';
 
 // Store
 import { select, Store } from '@ngrx/store';
@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       select(AccountsStoreSelectors.selectLocation)
     );
 
-    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
+    this.location$.pipe(takeUntil(this.onDestroy), distinctUntilChanged()).subscribe( (location: Location) => {
       this.location = location;
       if ( !location ) {
         this.getLocation();
@@ -224,7 +224,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       minutesSinceLocation = (new Date().getTime() - this.locationTimeReceived.getTime()) / 1000;
     }
     // check if we need to get location, or if location is outdated
-    if ( !this.location || minutesSinceLocation > LOCATIONS_CONSTANTS.VALID_LOCATION_TIME ) {
+    if ( !this.loadingLocation && ( !this.location || minutesSinceLocation > LOCATIONS_CONSTANTS.VALID_LOCATION_TIME )) {
       this.getLocation();
     }
 
@@ -308,13 +308,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   setGlobal(): void {
     this.postLocation = 'global';
 
-    const request: UpdateAccountMetadataRequest = {
-      search_distance: 'global'
-    };
+    if ( this.account.role !== 'guest' ) {
+      const request: UpdateAccountMetadataRequest = {
+        search_distance: 'global'
+      };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
-    );
+      this.store$.dispatch(
+        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      );
+    }
 
     this.dropdownLocationEnabled = false;
 
@@ -327,13 +329,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.postLocation = 'local';
 
-    const request: UpdateAccountMetadataRequest = {
-      search_distance: 'local'
-    };
+    if ( this.account.role !== 'guest' ) {
+      const request: UpdateAccountMetadataRequest = {
+        search_distance: 'local'
+      };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
-    );
+      this.store$.dispatch(
+        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      );
+    }
 
     this.dropdownLocationEnabled = false;
 
@@ -347,13 +351,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   setNew(): void {
     this.postSort = 'new';
 
-    const request: UpdateAccountMetadataRequest = {
-      search_type: 'new'
-    };
+    if( this.account.role !== 'guest' ) {
+      const request: UpdateAccountMetadataRequest = {
+        search_type: 'new'
+      };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
-    );
+      this.store$.dispatch(
+        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      );
+    }
 
     this.dropdownSortEnabled = false;
 
@@ -363,13 +369,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   setHot(): void {
     this.postSort = 'hot';
 
-    const request: UpdateAccountMetadataRequest = {
-      search_type: 'hot',
-    };
+    if ( this.account.role !== 'guest' ) {
+      const request: UpdateAccountMetadataRequest = {
+        search_type: 'hot',
+      };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
-    );
+      this.store$.dispatch(
+        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      );
+    }
 
     this.dropdownSortEnabled = false;
 

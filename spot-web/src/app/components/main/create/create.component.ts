@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Observable, Subject } from 'rxjs';
@@ -24,7 +24,7 @@ import { POSTS_CONSTANTS } from '@constants/posts';
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss']
 })
-export class CreateComponent implements OnInit, OnDestroy {
+export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -95,6 +95,16 @@ export class CreateComponent implements OnInit, OnDestroy {
 
     this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
       this.location = location;
+    });
+
+  }
+
+  ngAfterViewInit(): void {
+
+    this.create.nativeElement.addEventListener('paste', (event: any) => {
+      event.preventDefault();
+      const text = event.clipboardData.getData('text/plain');
+      document.execCommand('insertText', false, text);
     });
 
   }

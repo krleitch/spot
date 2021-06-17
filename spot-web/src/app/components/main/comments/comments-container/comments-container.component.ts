@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, OnChanges, AfterViewInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
@@ -38,7 +38,7 @@ import { COMMENTS_CONSTANTS } from '@constants/comments';
   templateUrl: './comments-container.component.html',
   styleUrls: ['./comments-container.component.scss']
 })
-export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges {
+export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   private readonly onDestroy = new Subject<void>();
 
@@ -181,6 +181,18 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges 
     this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends: Friend[]) => {
       this.friends = friends;
     });
+
+  }
+
+  ngAfterViewInit(): void {
+
+    if ( this.comment ) {
+      this.comment.nativeElement.addEventListener('paste', (event: any) => {
+        event.preventDefault();
+        const text = event.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+      });
+    }
 
   }
 

@@ -1,6 +1,9 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
 
+// services
 import { ModalService } from '@services/modal.service';
+
+// rxjs
 import { Subject } from 'rxjs';
 
 @Component({
@@ -25,7 +28,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.element = el.nativeElement;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     const modal = this;
 
@@ -70,7 +73,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   }
 
-  setResult(result: any) {
+  setResult(result: any): void {
     this.result.next(result);
   }
 

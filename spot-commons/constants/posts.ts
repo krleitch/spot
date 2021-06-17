@@ -10,7 +10,7 @@ export const POSTS_CONSTANTS = {
    MAX_LINE_TRUNCATE_LENGTH: 4,
 
    // LIMITS
-   INITIAL_LIMIT: 10, // 10 posts loaded initially
+   INITIAL_LIMIT: 25, // 10 posts loaded initially
 
    // ACTIVITY
    ACTIVITY_DAYS: 3, // 3 days history

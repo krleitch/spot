@@ -158,6 +158,8 @@ function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number,
 
 function getGeolocation( latitude: string, longitude: string ): Promise<string> {
 
+	console.log('mee')
+
 	// In order the most preferred location type
 	const typeRanks = [
 		'point_of_interest',
@@ -249,15 +251,15 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 								const expireTimestamp = date.getTime();
 
 								if ( address.types.includes(typeAddress) ) {
-									if ( address.long_name.length < max_name_length ) {
+									// if ( address.long_name.length < max_name_length ) {
 										redisClient.zadd('geocodes_expires', expireTimestamp, address.long_name);
 										redisClient.geoadd('geocodes', longitude, latitude, address.long_name);
 										return resolve(address.long_name);
-									} else {
-										redisClient.zadd('geocodes_expires', expireTimestamp, address.short_name);
-										redisClient.geoadd('geocodes', longitude, latitude, address.short_name);
-										return resolve(address.short_name);
-									}
+									// } else {
+										// redisClient.zadd('geocodes_expires', expireTimestamp, address.short_name);
+										// redisClient.geoadd('geocodes', longitude, latitude, address.short_name);
+										// return resolve(address.short_name);
+									// }
 								}
 								
 							});

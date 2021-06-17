@@ -11,8 +11,8 @@ export const COMMENTS_CONSTANTS = {
     MAX_LINE_TRUNCATE_LENGTH: 3,
  
     // Limits
-    INITIAL_LIMIT: 1,
-    DETAILED_INITIAL_LIMIT: 10,
+    INITIAL_LIMIT: 5,
+    DETAILED_INITIAL_LIMIT: 25,
 
     // Load More Comments
     RECENT_LIMIT: 5,
@@ -20,7 +20,7 @@ export const COMMENTS_CONSTANTS = {
     MORE_LIMIT: 5, 
     MORE_LIMIT_DETAILED: 15,
 
-    // Load More REplies
+    // Load More Replies
     REPLY_MORE_LIMIT: 5, 
     REPLY_MORE_LIMIT_DETAILED: 15,
     
