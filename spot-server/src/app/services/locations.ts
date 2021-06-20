@@ -158,20 +158,19 @@ function distanceBetween(lat1: number, lon1: number, lat2: number, lon2: number,
 
 function getGeolocation( latitude: string, longitude: string ): Promise<string> {
 
-	console.log('mee')
-
 	// In order the most preferred location type
+	// Nothing with a proper address
 	const typeRanks = [
 		'point_of_interest',
-		'university',
+		'landmark',
+		'establishment',
 		'premise',
+		'transit_station',
+		'university',
 		'neighborhood',
 		'locality',
 		'country'
 	];
-
-	// 10 characters
-	const max_name_length = 10;
 
 	const baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?";
 	const latlng = "latlng=" + parseFloat(latitude) + "," + parseFloat(longitude);
@@ -182,39 +181,28 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 		if ( index !== typeRanks.length - 1 ) {
 			filter += '|'
 		}
-	})
+	});
 
 	const key = "&key=" + googleconfig.APIKey;
 
 	const url = baseUrl + latlng + filter + key;
 
-	// we don't want to give away street address
 	return new Promise(async (resolve, reject) => {
 
 		// check redis cache first
 		await redisClient.georadius('geocodes', longitude, latitude, '25', 'm', 'WITHCOORD', 'WITHDIST', 'ASC', async (err: any, results: any[]) => {
-
 			if ( results.length > 0 ) {
-
 				// check if the entry needs to be removed from cache due to time expires
-				
 				const locationName = results[0][0];
-
 				await redisClient.zscore('geocodes_expires', locationName, async (err: any, expiresTimestamp: any) => {
-
 					if ( expiresTimestamp >= new Date().getTime() ) {
-
 						await redisClient.zrem('geocodes_expires', locationName);
 						await redisClient.zrem('geocodes', locationName);
-
 					} else {
 						return resolve(locationName);
 					}
-
 				});
-
 			}
-
 		});
 
 		request(url, ( error: any, response: any, body: any ) => {
@@ -230,46 +218,39 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 				return resolve('');
 			}
 
-			typeRanks.forEach( (type: string) => {
-				res.results.forEach( (place: any) => {
+			// expire time of the address
+			const date = new Date();
+			const geocodeExpiresIn = 7 // days
+			date.setDate(date.getDate() + geocodeExpiresIn);
+			const expireTimestamp = date.getTime();
 
-					// Use this place
+			// possible address
+			let possibleAddresses: any[] = [];
 
-					if ( place.address_components.length === 0 ) {
-						return resolve('')
-					}
-
-					if ( place.types.includes(type) ) {
-
+			res.results.forEach( (place: any) => {
+					place.address_components.forEach( (address: any) => {
 						typeRanks.forEach( (typeAddress: string) => {
-							place.address_components.forEach( (address: any) => {
-
-								// use this address
-								const date = new Date();
-								const geocodeExpiresIn = 7 // days
-								date.setDate(date.getDate() + geocodeExpiresIn);
-								const expireTimestamp = date.getTime();
-
-								if ( address.types.includes(typeAddress) ) {
-									// if ( address.long_name.length < max_name_length ) {
-										redisClient.zadd('geocodes_expires', expireTimestamp, address.long_name);
-										redisClient.geoadd('geocodes', longitude, latitude, address.long_name);
-										return resolve(address.long_name);
-									// } else {
-										// redisClient.zadd('geocodes_expires', expireTimestamp, address.short_name);
-										// redisClient.geoadd('geocodes', longitude, latitude, address.short_name);
-										// return resolve(address.short_name);
-									// }
-								}
-								
-							});
+							if ( address.types.includes(typeAddress) ) {
+								possibleAddresses.push([address.long_name, typeAddress]);
+							}[]
 						});
-
-					}
-				});
-	
+					});
 			});
 
+			// take the first highest of possible
+
+			typeRanks.forEach( (typeAddress: string) => {
+				possibleAddresses.forEach( (possible: any) => {
+					if ( possible[1] === typeAddress ) {
+						// add to redis and resolve
+						redisClient.zadd('geocodes_expires', expireTimestamp, possible[0]);
+						redisClient.geoadd('geocodes', longitude, latitude, possible[0]);
+						return resolve(possible[0]);
+					}
+				});
+			});
+
+			// nothing
 			return resolve('');
 
 		});

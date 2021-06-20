@@ -430,6 +430,10 @@ router.post('/verify', function (req: any, res: any, next: any) {
         return next(new AccountsError.SendVerify(500));
     }
 
+    if ( !req.user.email ) {
+        return next(new AccountsError.SendVerify(500));
+    }
+
     // send email with nodemailerm using aws ses transport
 
     mail.email.send({
