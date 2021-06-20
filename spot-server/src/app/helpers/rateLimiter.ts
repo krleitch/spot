@@ -52,7 +52,8 @@ const createPostLimiter = rateLimit({
     max: createPostLimit,
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, createPostLimit, createPostTimeout))
-    }
+    },
+    skipFailedRequests: true
 });
 
 const genericPostTimeout = 1; // minutes
@@ -73,7 +74,8 @@ const createCommentLimiter = rateLimit({
     max: createCommentLimit,
     handler: function (req: any, res: any, next: any) {
         return next(new RateLimitError.RateLimitError(429, createCommentLimit, createCommentTimeout))
-    }
+    },
+    skipFailedRequests: true
 });
 
 const genericCommentTimeout = 1; // minutes
