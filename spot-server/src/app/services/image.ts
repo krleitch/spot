@@ -29,10 +29,10 @@ nsfw.load(`file:///${__dirname}/../../nsfwModel/`).then((m: any) => {
 
 // Only allow jpeg and png
 const fileFilter = (req: any, file: any, cb: any) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif' || file.mimetpye === 'image/webp' ) {
         cb(null, true);
     } else {
-        cb(new Error('Invalid file type, only JPEG and PNG is allowed!'), false);
+        cb(new Error('Invalid file type, Jpeg, Png, Gif, WebP allowed'), false);
     }
 }
 
