@@ -36,9 +36,6 @@
     "typescript": "^4.3.2",
     "uuid": "^3.3.3"
   },
-  "devDependencies": {
-    "ts-node-dev": "^1.0.0-pre.32"
-  },
   "_moduleAliases": {
     "@models": "../spot-commons/build/models",
     "@exceptions": "../spot-commons/build/exceptions",
@@ -52,7 +49,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "dev": "ts-node-dev --respawn --trace-warnings --transpileOnly ./src/app/main.ts",
+    "dev": "concurrently 'tsc -w' 'node-dev --respawn build/app/main.js'",
     "prod": "tsc && node ./build/main.js"
   },
   "repository": {
@@ -64,5 +61,9 @@
   "bugs": {
     "url": "https://github.com/krleitch/spot-server/issues"
   },
-  "homepage": "https://github.com/krleitch/spot-server#readme"
+  "homepage": "https://github.com/krleitch/spot-server#readme",
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "node-dev": "^7.0.0"
+  }
 }
