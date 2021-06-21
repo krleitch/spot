@@ -2,7 +2,6 @@ export { upload, predictNsfw };
 
 const aws = require('@services/aws');
 const axios = require('axios');
-const path = require('path');
 
 // s3 upload
 const multer = require('multer');
@@ -29,7 +28,7 @@ nsfw.load(`file:///${__dirname}/../../nsfwModel/`).then((m: any) => {
 
 // Only allow jpeg and png
 const fileFilter = (req: any, file: any, cb: any) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif' || file.mimetpye === 'image/webp' ) {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif' || file.mimetype === 'image/webp' ) {
         cb(null, true);
     } else {
         cb(new Error('Invalid file type, Jpeg, Png, Gif, WebP allowed'), false);

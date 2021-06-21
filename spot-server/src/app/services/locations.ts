@@ -232,13 +232,12 @@ function getGeolocation( latitude: string, longitude: string ): Promise<string> 
 						typeRanks.forEach( (typeAddress: string) => {
 							if ( address.types.includes(typeAddress) ) {
 								possibleAddresses.push([address.long_name, typeAddress]);
-							}[]
+							}
 						});
 					});
 			});
 
 			// take the first highest of possible
-
 			typeRanks.forEach( (typeAddress: string) => {
 				possibleAddresses.forEach( (possible: any) => {
 					if ( possible[1] === typeAddress ) {

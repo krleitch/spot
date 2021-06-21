@@ -30,6 +30,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   @Input() notification: Notification;
   imageBlurred: boolean;
+  time: string;
 
   accountMetadata$: Observable<AccountMetadata>;
   accountMetadata: AccountMetadata;
@@ -58,19 +59,21 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
       this.imageBlurred = false;
     }
 
+    this.time = this.getTime();
+
   }
 
   ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  getTime(date: string): string {
+  getTime(): string {
     const curTime = new Date();
-    const postTime = new Date(date);
-    const timeDiff = curTime.getTime() - postTime.getTime();
+    const notificationTime = new Date(this.notification.creation_date);
+    const timeDiff = curTime.getTime() - notificationTime.getTime();
     if (timeDiff < 60000) {
       const secDiff = Math.round(timeDiff / 1000);
-      if (secDiff === 0) {
+      if (secDiff <= 0) {
         return 'Now';
       } else {
         return secDiff + 's';
