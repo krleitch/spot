@@ -30,12 +30,34 @@ spot-nav {
 
   }
 
+  .logo {
+    width: 50px;
+  }
+
+  .heading-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
   .heading {
     display: flex;
     justify-content: center;
     font-size: 30px;
-    margin-bottom: 10px;
     text-align: center;
+    margin-right: 5px;
+  }
+
+  .heading-icon {
+    font-size: 42px;
+  }
+
+  .heading.main {
+    font-size: 50px;
+    color: $button-highlight;
+    font-weight: 600;
+    margin-right: 15px;
   }
 
   .text {

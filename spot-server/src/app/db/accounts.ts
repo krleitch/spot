@@ -74,7 +74,7 @@ function getAccountByEmail(email: string): Promise<any> {
 function getAccountByUsername(username: string): Promise<any> {
     var sql = `SELECT id, email, email_updated_at, username, username_updated_at, phone, local_account,
                 phone_updated_at, facebook_id, google_id, verified_date, creation_date, deletion_date, role
-                FROM accounts WHERE username = ? AND deletion_date IS NULL LIMIT 1`;
+                FROM accounts WHERE LOWER(username) = LOWER(?) AND deletion_date IS NULL LIMIT 1`;
     var values = [username];
     return db.query(sql, values);
 }
@@ -117,7 +117,7 @@ function updateUsername(username: string, accountId: string) {
 
 function usernameExists(username: string) {
     
-    var sql = 'SELECT username FROM accounts WHERE username = ? AND deletion_date IS NULL LIMIT 1';
+    var sql = 'SELECT username FROM accounts WHERE LOWER(username) = LOWER(?) AND deletion_date IS NULL LIMIT 1';
     var values = [username];
 
     return db.query(sql, values).then( (user: any) => {
