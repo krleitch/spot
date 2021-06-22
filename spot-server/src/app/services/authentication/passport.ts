@@ -30,7 +30,7 @@ passport.use(new LocalStrategy(localOptions,
         if (isEmail) {
             accounts.getAccountByEmailWithPass(emailOrUsername).then( (user: any) => {
                 user = user[0];
-                if (!user || !user.password) { return done(null, false); }
+                if (!user || !user.pass) { return done(null, false); }
                 if (!auth.validatePassword(user, password)) { return done(null, false); }
                 delete user.pass;
                 delete user.salt;
@@ -41,7 +41,7 @@ passport.use(new LocalStrategy(localOptions,
         } else {
             accounts.getAccountByUsernameWithPass(emailOrUsername).then( (user: any) => {
                 user = user[0];
-                if (!user || !user.password) { return done(null, false); }
+                if (!user || !user.pass) { return done(null, false); }
                 if (!auth.validatePassword(user, password.toString())) { return done(null, false); }
                 delete user.pass;
                 delete user.salt;
