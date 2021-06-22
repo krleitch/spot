@@ -51,10 +51,10 @@
 
         <div *ngIf="account" class="fit-container">
 
-          <div *ngIf="account.role !== 'guest';else guest" class="fit-container">
+          <!-- You still need location -->
+          <div *ngIf="location; else createlocation" class="fit-container">
 
-            <!-- You still need location -->
-            <div *ngIf="location; else createlocation" class="fit-container">
+            <div *ngIf="account.role !== 'guest';else guest" class="fit-container">
 
               <!-- Need a verified account -->
               <spot-create *ngIf="account.verified_date !== null;else verify"></spot-create>
@@ -84,16 +84,16 @@
                 </div>
               </ng-template>
             </div>
+            <ng-template #guest>
+              <div class="info-container">
+                <span class="material-icons icon"> account_circle </span>
+                <div class="text">
+                  {{ STRINGS.GUEST }}
+                </div>
+              </div>
+            </ng-template>
 
           </div>
-          <ng-template #guest>
-            <div class="info-container">
-              <span class="material-icons icon"> account_circle </span>
-              <div class="text">
-                {{ STRINGS.GUEST }}
-              </div>
-            </div>
-          </ng-template>
 
           <!-- You need Location -->
           <ng-template #createlocation>
