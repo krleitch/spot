@@ -29,7 +29,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
 	}
 
 	// allow admins to do whatever
-    if ( authorization.checkRole(req.user, [roles.owner, roles.admin])) {
+    if ( authorization.checkRole(req.user, [roles.owner, roles.admin, roles.guest])) {
 		return next();
     }
 
