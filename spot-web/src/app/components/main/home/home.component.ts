@@ -555,13 +555,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   continueWithGlobal(): void {
     this.postLocation = 'global';
 
-    const request: UpdateAccountMetadataRequest = {
-      search_distance: 'global'
-    };
+    if ( this.account.role !== 'guest' ) {
+      const request: UpdateAccountMetadataRequest = {
+        search_distance: 'global'
+      };
 
-    this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
-    );
+      this.store$.dispatch(
+        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      );
+    }
     // the location is actually still loading, we just say in this component we arent worried about it anymore
     // So onScroll() posts are loaded
     this.bypassLocation = true;

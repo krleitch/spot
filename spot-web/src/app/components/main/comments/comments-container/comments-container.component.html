@@ -45,7 +45,7 @@
           <i style="visibility: hidden" class="material-icons icon"> send </i>
           <span *ngIf="account.role !== 'guest'; else guest" class="text"> {{ STRINGS.VERIFY }} </span>
           <ng-template #guest>
-            <span> {{ STRINGS.GUEST }} </span>
+            <span class="text"> {{ STRINGS.GUEST }} </span>
           </ng-template>
           <i class="material-icons  icon"> send </i>
         </div>
