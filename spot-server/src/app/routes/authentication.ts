@@ -250,18 +250,18 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
 
     const { email } = req.body;
 
-    accounts.getAccountByEmail(email).then( (rows: any) => {
+    accounts.getAccountByEmail(email).then( ErrorHandler.catchAsync(async (rows: any) => {
         if ( rows.length > 0 ) {
             
             // generate the token
             const token = shortid.generate();
 
             // Send email with nodemailer and aws ses transport
-            mail.email.send({
+            await mail.email.send({
                 template: 'password',
                 message: {
                     from: 'spottables.app@gmail.com',
-                    to: email,
+                    to: rows[0].email,
                 },
                 locals: {
                     link: 'https://spottables.com/new-password',
@@ -269,19 +269,17 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
                     username: rows[0].username
                 },
             }, (err: any, info: any) => {
-                
                 if ( err ) {
                     // error sending the email
                     return next(new AuthError.PasswordReset(500));
-                } else {
-                    // add to table
-                    passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
-                        res.status(200).send({});
-                    }, (err: any) => {
-                        return next(new AuthError.PasswordReset(500));
-                    });
                 }
+            });
 
+            console.log('meex2')
+            passwordReset.addPasswordReset(rows[0].id, token).then( (r: any) => {
+                res.status(200).send({});
+            }, (err: any) => {
+                return next(new AuthError.PasswordReset(500));
             });
 
         } else {
@@ -291,7 +289,7 @@ router.post('/password-reset', rateLimiter.passwordResetLimiter, function (req: 
 
     }, (err: any) => {
         return next(new AuthError.PasswordReset(500));
-    });
+    }));
                       
 });
 

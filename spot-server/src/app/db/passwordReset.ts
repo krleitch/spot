@@ -11,7 +11,7 @@ function addPasswordReset(account_id: string, token: string): Promise<any> {
 }
 
 function getByToken(token: string): Promise<any> {
-    var sql = 'SELECT account_id, creation_date FROM password_reset WHERE token = ?';
+    var sql = 'SELECT account_id, creation_date FROM password_reset WHERE token = ? ORDER BY creation_date DESC LIMIT 1';
     var values = [token];
     return db.query(sql, values);
 }

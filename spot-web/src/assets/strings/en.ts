@@ -195,6 +195,7 @@ export const STRINGS = {
           NO_COMMENTS: 'There are no comments on this spot',
           LOGIN: 'Login or Sign Up to Comment',
           VERIFY: 'Verify your email to add comments',
+          GUEST: 'Create an account to add comments',
           MAKE_COMMENT: 'Write a comment...',
 
           // Errors

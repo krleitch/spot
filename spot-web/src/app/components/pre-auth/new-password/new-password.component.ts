@@ -148,8 +148,4 @@ export class NewPasswordComponent implements OnInit {
 
   }
 
-  login(): void {
-    this.router.navigateByUrl('/login');
-  }
-
 }

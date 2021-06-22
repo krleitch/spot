@@ -11,7 +11,7 @@ function addVerifyAccount(accountId: string, token: string): Promise<any> {
 }
 
 function getByToken(accountId: string, token: string): Promise<any> {
-    var sql = 'SELECT account_id, creation_date FROM verify_account WHERE token = ? AND account_id = ?';
+    var sql = 'SELECT account_id, creation_date FROM verify_account WHERE token = ? AND account_id = ? ORDER BY creation_date DESC LIMIT 1';
     var values = [token, accountId];
     return db.query(sql, values);
 }

@@ -893,7 +893,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
   imageClicked(): void {
 
     if ( !this.imageBlurred ) {
-      this.openModal('spot-image-modal', this.post.image_src);
+      this.openModal('spot-image-modal', this.comment.image_src);
     } else {
       this.imageBlurred = false;
     }

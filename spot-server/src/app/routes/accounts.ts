@@ -415,7 +415,7 @@ router.put('/metadata', ErrorHandler.catchAsync(async function (req: any, res: a
 }));
 
 // Verify Account - Send email
-router.post('/verify', function (req: any, res: any, next: any) {
+router.post('/verify', ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
 
     const accountId = req.user.id;
 
@@ -436,7 +436,7 @@ router.post('/verify', function (req: any, res: any, next: any) {
 
     // send email with nodemailerm using aws ses transport
 
-    mail.email.send({
+    await mail.email.send({
         template: 'verify',
         message: {
             from: 'spottables.app@gmail.com',
@@ -447,21 +447,18 @@ router.post('/verify', function (req: any, res: any, next: any) {
             username: req.user.username
         },
     }, (err: any, info: any) => {
-
         if ( err ) {
             return next(new AccountsError.SendVerify(500));
-        } else {
-            // Add record to verify account
-            verifyAccount.addVerifyAccount(accountId, token).then( (rows: any) => {
-                res.status(200).json({});
-            }, (err: any) => {
-                return next(new AccountsError.SendVerify(500));
-            });   
         }
-
     });
+
+    verifyAccount.addVerifyAccount(accountId, token).then( (rows: any) => {
+        res.status(200).json({});
+    }, (err: any) => {
+        return next(new AccountsError.SendVerify(500));
+    });   
   
-});
+}));
 
 // Verify Account confirmation
 router.post('/verify/confirm', function (req: any, res: any, next: any) {

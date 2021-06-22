@@ -24,7 +24,7 @@ import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { Location } from '@models/accounts';
+import { Account, Location } from '@models/accounts';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -76,6 +76,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
+  account$: Observable<Account>;
+  account: Account;
 
   imageFile: File;
   imgSrc: string = null;
@@ -153,6 +155,14 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
         this.initialLoad = false;
       }
 
+    });
+
+    this.account$ = this.store$.pipe(
+      select(AccountsStoreSelectors.selectAccount)
+    );
+
+    this.account$.pipe(takeUntil(this.onDestroy)).subscribe ( (account: Account) => {
+      this.account = account;
     });
 
     // Authentication

@@ -67,8 +67,11 @@ function getFriendsById(id: string) {
 
 // Check if you have a friend request from account friendId
 function friendRequestExists(friendId: string, accountId: string) {
-    var sql = `Select id, account_id FROM friends WHERE (account_id = ? OR account_id = ?) AND confirmed_date IS NULL`;
-    var values = [friendId, accountId];
+    var sql = `SELECT id, account_id FROM 
+                (SELECT * FROM friends WHERE account_id = ? AND friend_id = ? AND confirmed_date IS NULL
+                UNION
+                SELECT * FROM friends WHERE account_id = ? and friend_id = ? AND confirmed_date IS NULL) results LIMIT 1`;
+    var values = [friendId, accountId, accountId, friendId];
     return db.query(sql, values);
 }
 

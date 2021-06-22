@@ -103,7 +103,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.UPDATE_EMAIL_REQUEST: {
       return {
         ...state,
-        account: { ...state.account, email: action.request.email }
+        account: { ...state.account, email: action.request.email, verified_date: null }
       };
     }
     case ActionTypes.UPDATE_PHONE_REQUEST: {

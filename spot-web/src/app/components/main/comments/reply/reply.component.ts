@@ -744,7 +744,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   imageClicked(): void {
 
     if ( !this.imageBlurred ) {
-      this.openModal('spot-image-modal', this.post.image_src);
+      this.openModal('spot-image-modal', this.reply.image_src);
     } else {
       this.imageBlurred = false;
     }

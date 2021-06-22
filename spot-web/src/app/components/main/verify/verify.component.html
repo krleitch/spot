@@ -3,7 +3,7 @@
 
   <div class="container" *ngIf="account$ | async as account">
 
-    <div class="section" *ngIf="successMessage && false">
+    <div class="section" *ngIf="successMessage">
       <span class="material-icons icon"> done </span>
       <span class="text"> {{ successMessage }} </span>
       <a class="link" [routerLink]="'/home'">
@@ -11,7 +11,7 @@
       </a>
     </div>
 
-    <div class="section" *ngIf="errorMessage || true">
+    <div class="section" *ngIf="errorMessage">
       <span class="material-icons icon"> error </span>
       <span class="text"> {{ errorMessage }} </span>
       <div *ngIf="verificationSent === false; else sentverify" >
