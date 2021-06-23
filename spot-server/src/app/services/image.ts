@@ -19,7 +19,7 @@ if  ( config.production ) {
 }
 const nsfw = require('nsfwjs');
 let model: any;
-nsfw.load(`file:///${__dirname}/../../nsfwModel/`).then((m: any) => {
+nsfw.load(`file://${__dirname}/../../nsfwModel/`).then((m: any) => {
     console.log('Nsfwjs Model Loaded');
     model = m;
 }, (err: any) => {

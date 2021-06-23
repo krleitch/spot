@@ -49,7 +49,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "dev": "concurrently 'tsc -w' 'node-dev --respawn build/app/main.js'",
+    "dev": "concurrently \"tsc -w\" \"node-dev --respawn build/app/main.js\"",
     "prod": "tsc && node ./build/main.js"
   },
   "repository": {
