@@ -1,4 +1,4 @@
-export { upload, predictNsfw };
+export { upload, predictNsfw, predictNsfwLambda };
 
 const aws = require('@services/aws');
 const axios = require('axios');
@@ -68,19 +68,13 @@ const upload = multer({
     })
 });
 
-//  predict if image is nsfw
-async function predictNsfw(imgUrl: string) {
+//  predict if image is nsfw before the spot is made locally on the server
+async function predictNsfw(imgUrl: string): Promise<boolean> {
 
     // if the model was not loaded
-    if ( !model ) {
+    if ( !model || !imgUrl ) {
         return false;
     }
-
-    if ( !imgUrl ) {
-        return false;
-    }
-
-    return false;
     
     // disable for now for memory concerns
 
@@ -94,5 +88,23 @@ async function predictNsfw(imgUrl: string) {
     image.dispose(); // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
     // check if porn or hentai
     return predictions[0].className === 'Porn' || predictions[0].className === 'Hentai';
+    
+}
+
+//  predict if image is nsfw, using aws lambda after the spot is already made
+async function predictNsfwLambda(imgUrl: string): Promise<any> {
+
+    if ( !imgUrl ) {
+        return false;
+    }
+
+    const params = {
+        FunctionName: 'nsfw-image-prediction',
+        Payload: JSON.stringify({
+            image: imgUrl 
+        }),
+    };
+
+    return aws.lambda.invoke(params).promise();
     
 }

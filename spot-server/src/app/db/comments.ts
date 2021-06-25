@@ -1,7 +1,7 @@
 export { addComment, deleteCommentById, deleteReplyByParentId, getCommentByPostId, getNumberOfRepliesForCommentAfterDate,
           getNumberOfRepliesForComment, addReply, getRepliesByCommentId, getNumberOfCommentsForPost, getRepliesUpToDate,
           likeComment, dislikeComment, getCommentsActivity, getCommentById, getCommentByLink, getNumberOfCommentsForPostAfterDate,
-          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists, unratedComment, checkOwned }
+          getNumberOfCommentsForPostBeforeDate, getCommentByPostIdNoAccount, getCommentByIdNoAccount, linkExists, unratedComment, checkOwned, updateNsfw }
 
 const uuid = require('uuid');
 
@@ -280,5 +280,14 @@ function checkOwned(postId: string, accountId: string) {
     return db.query(sql, values).then( (rows: any) => {
         return rows.length > 0;
     });
+
+}
+
+function updateNsfw(commentId: string, nsfw: boolean) {
+
+    var sql = 'UPDATE comments SET image_nsfw = ? WHERE id = ?';
+    var values = [nsfw, commentId];
+
+    return db.query(sql, values);
 
 }

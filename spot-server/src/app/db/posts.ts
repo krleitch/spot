@@ -1,6 +1,6 @@
 export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost,
             getPostCreator, getPostByLink, getPostsActivity, getPostByIdNoAccount,
-            linkExists, unratedPost, checkOwned }
+            linkExists, unratedPost, checkOwned, updateNsfw }
 
 const uuid = require('uuid');
 
@@ -190,5 +190,14 @@ function checkOwned(postId: string, accountId: string) {
     return db.query(sql, values).then( (rows: any) => {
         return rows.length > 0;
     });
+
+}
+
+function updateNsfw(postId: string, nsfw: boolean) {
+
+    var sql = 'UPDATE posts SET image_nsfw = ? WHERE id = ?';
+    var values = [nsfw, postId];
+
+    return db.query(sql, values);
 
 }

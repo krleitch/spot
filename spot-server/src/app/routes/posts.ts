@@ -30,6 +30,9 @@ const report_constants = require('@constants/report');
 const REPORT_CONSTANTS = report_constants.REPORT_CONSTANTS;
 const roles = require('@services/authorization/roles');
 
+// config
+const config = require('@config/config');
+
 router.use(function timeLog (req: any, res: any, next: any) {
     next();
 });
@@ -120,10 +123,30 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
 
         const link = await postsService.generateLink();
 
-        const imageNsfw = await imageService.predictNsfw(image);
+        let imageNsfw = false;
+        if ( config.testNsfwLocal ) {
+            imageNsfw = await imageService.predictNsfw(postId, image, 'post');
+        }
 
         locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
             posts.addPost(postId, content, location, image, imageNsfw, link, accountId, geolocation).then((rows: any) => {
+
+                // async test nsfw
+                if ( config.testNsfwLambda ) {
+                    imageService.predictNsfwLambda(image).then( (result: any) => {
+                        if ( result.StatusCode === 200 ) {
+                            const payload = JSON.parse(result.Payload);
+                            if ( payload.statusCode === 200 ) {
+                                const predict = JSON.parse(payload.body);
+                                if ( predict.hasOwnProperty('className') ) {
+                                    const isNsfw = predict.className === 'Porn' || predict.className === 'Hentai';
+                                    posts.updateNsfw(postId, isNsfw);     
+                                }
+                            }
+                        }
+                    }, (err: any) => {});
+                }
+
                 rows = locationsService.addDistanceToRows(rows, location.latitude, location.longitude, true);
                 const response = { post: rows[0] }
                 res.status(200).json(response);

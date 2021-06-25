@@ -10,9 +10,10 @@ aws.config.update({
 });
 
 const s3 = new aws.S3();
+const lambda = new aws.Lambda();
 
 const getUrlFromBucket=(fileName: string): string => {
     return 'https://spottables.s3.amazonaws.com/' + fileName;
 };
 
-export { s3, getUrlFromBucket }
+export { s3, lambda, getUrlFromBucket }
