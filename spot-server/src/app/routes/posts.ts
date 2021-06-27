@@ -132,7 +132,7 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
             posts.addPost(postId, content, location, image, imageNsfw, link, accountId, geolocation).then((rows: any) => {
 
                 // async test nsfw
-                if ( config.testNsfwLambda ) {
+                if ( config.testNsfwLambda && image ) {
                     imageService.predictNsfwLambda(image).then( (result: any) => {
                         if ( result.StatusCode === 200 ) {
                             const payload = JSON.parse(result.Payload);
