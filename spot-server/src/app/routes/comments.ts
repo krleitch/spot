@@ -300,17 +300,18 @@ router.post('/:postId', rateLimiter.createCommentLimiter, ErrorHandler.catchAsyn
 
         const link = await commentsService.generateLink();
         let imageNsfw = false;
-        if ( config.testNsfwLocal ) {
-            imageNsfw = await imageService.predictNsfw(image);
+        if ( config.testNsfwLocal && image ) {
+            try {
+                imageNsfw = await imageService.predictNsfw(image);
+            } catch (err) {}
         }
         
         comments.addComment(commentId, postId, accountId, content, image, imageNsfw, link, commentId).then( ErrorHandler.catchAsync(async (comment: any) => {
 
             // async test nsfw
-            // async test nsfw
-            if ( config.testNsfwLambda ) {
+            if ( config.testNsfwLambda && image ) {
                 imageService.predictNsfwLambda(image).then( (result: any) => {
-                    if ( result.StatusCode === 200 ) {
+                    if ( result.hasOwnProperty('StatusCode') && result.StatusCode === 200 ) {
                         const payload = JSON.parse(result.Payload);
                         if ( payload.statusCode === 200 ) {
                             const predict = JSON.parse(payload.body);
@@ -417,16 +418,18 @@ router.post('/:postId/:commentId', rateLimiter.createCommentLimiter, ErrorHandle
 
         const link = await commentsService.generateLink();
         let imageNsfw = false;
-        if ( config.testNsfwLocal ) {
-            imageNsfw = await imageService.predictNsfw(replyId, image, 'comment');
+        if ( config.testNsfwLocal && image ) {
+            try {
+                imageNsfw = await imageService.predictNsfw(image);
+            } catch (err) {}
         }
 
         comments.addReply(replyId, postId, commentId, commentParentId, accountId, content, image, imageNsfw, link).then( ErrorHandler.catchAsync(async (reply: any) => {
 
             // async test nsfw
-            if ( config.testNsfwLambda ) {
+            if ( config.testNsfwLambda && image ) {
                 imageService.predictNsfwLambda(image).then( (result: any) => {
-                    if ( result.StatusCode === 200 ) {
+                    if ( result.hasOwnProperty('StatusCode') && result.StatusCode === 200 ) {
                         const payload = JSON.parse(result.Payload);
                         if ( payload.statusCode === 200 ) {
                             const predict = JSON.parse(payload.body);

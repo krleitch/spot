@@ -124,8 +124,10 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
         const link = await postsService.generateLink();
 
         let imageNsfw = false;
-        if ( config.testNsfwLocal ) {
-            imageNsfw = await imageService.predictNsfw(postId, image, 'post');
+        if ( config.testNsfwLocal && image ) {
+            try {
+                imageNsfw = await imageService.predictNsfw(image);
+            } catch (err) {}
         }
 
         locationsService.getGeolocation( location.latitude, location.longitude ).then( (geolocation: string) => {
@@ -134,7 +136,7 @@ router.post('/', rateLimiter.createPostLimiter , ErrorHandler.catchAsync( async 
                 // async test nsfw
                 if ( config.testNsfwLambda && image ) {
                     imageService.predictNsfwLambda(image).then( (result: any) => {
-                        if ( result.StatusCode === 200 ) {
+                        if ( result.hasOwnProperty('StatusCode') && result.StatusCode === 200 ) {
                             const payload = JSON.parse(result.Payload);
                             if ( payload.statusCode === 200 ) {
                                 const predict = JSON.parse(payload.body);
