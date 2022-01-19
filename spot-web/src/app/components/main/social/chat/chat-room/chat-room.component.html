@@ -1,0 +1,11 @@
+<div class="chat-room-container">
+  <div *ngFor="let message of messages" class="messages-container">
+    <span class="message">{message}</span>
+  </div>
+  <div class="chat-bar">
+    <span #chat contenteditable="true" attr.ph="{{STRINGS.CHAT_PLACEHOLDER}}" class="chat" (input)="onTextInput($event)"></span>
+    <button class="submit" (click)="submit()">
+      {{STRINGS.SUBMIT}}
+    </button>
+  </div>
+</div>

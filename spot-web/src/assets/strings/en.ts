@@ -364,6 +364,11 @@ export const STRINGS = {
 
         },
 
+        CHAT_ROOM: {
+          CHAT_PLACEHOLDER: 'Type to chat...',
+          SUBMIT: 'Submit',
+        },
+
         ACTIVITY: {
 
           TITLE: 'Activity',

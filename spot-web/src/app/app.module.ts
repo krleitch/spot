@@ -48,6 +48,7 @@ import { VerifyComponent } from './components/main/verify/verify.component';
 import { WelcomeComponent } from './components/main/welcome/welcome.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { TermsComponent } from './components/pre-auth/terms/terms.component';
+import { ChatRoomComponent } from './components/main/social/chat/chat-room/chat-room.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -93,7 +94,8 @@ import { TermsComponent } from './components/pre-auth/terms/terms.component';
     VerifyComponent,
     WelcomeComponent,
     FilterPipe,
-    TermsComponent
+    TermsComponent,
+    ChatRoomComponent
   ],
   imports: [
     BrowserModule,
