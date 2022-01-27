@@ -3,7 +3,9 @@ import { ErrorInterceptor } from './helpers/error.interceptor';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -49,8 +51,13 @@ import { WelcomeComponent } from './components/main/welcome/welcome.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { TermsComponent } from './components/pre-auth/terms/terms.component';
 import { ChatRoomComponent } from './components/main/social/chat/chat-room/chat-room.component';
+import { ChatMenuComponent } from './components/main/social/chat/chat-menu/chat-menu.component';
 
 // TODO: Seperate Modules and optimize load bundles
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -95,7 +102,8 @@ import { ChatRoomComponent } from './components/main/social/chat/chat-room/chat-
     WelcomeComponent,
     FilterPipe,
     TermsComponent,
-    ChatRoomComponent
+    ChatRoomComponent,
+    ChatMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -105,7 +113,15 @@ import { ChatRoomComponent } from './components/main/social/chat/chat-room/chat-
     ReactiveFormsModule,
     FormsModule,
     StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([]),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      },
+      defaultLanguage: 'en'
+    })
   ],
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
                { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true } ],

@@ -4,6 +4,7 @@ import { ChatService } from '@services/chat.service';
 
 // Assets
 import { STRINGS } from '@src/assets/strings/en';
+import { NewMessage, Message } from '@models/chat';
 
 @Component({
   selector: 'spot-chat-room',
@@ -15,29 +16,31 @@ export class ChatRoomComponent implements OnInit {
 
   // Chat Text Content
   @ViewChild('chat') chat: ElementRef;
+  joined = false;
   currentLength = 0;
   channel: any;
-  messages = ['TEST'];
+  messages: Message[] = [];
 
-  constructor(chatService: ChatService) {
-    this.channel = chatService.joinRoom('chat_room:lobby');
-    this.channel
-    .join()
-    .receive('ok', ({ messages }) => console.log('catching up', messages))
-    .receive('error', ({ reason }) => console.log('failed join', reason))
-    .receive('timeout', () =>
-      console.log('Networking issue. Still waiting...')
-    );
-
-        // $input.onEnter( e => {
-    //   channel.push("new_msg", {body: e.target.val}, 10000)
-    //     .receive("ok", (msg) => console.log("created message", msg) )
-    //     .receive("error", (reasons) => console.log("create failed", reasons) )
-    //     .receive("timeout", () => console.log("Networking issue...") )
-    // })
+  constructor(private chatService: ChatService) {
+    this.channel = chatService.getChannel('chat_room:lobby', 'token');
+    this.channel.on('new_message', (payload: Message) => {
+      this.messages.push(payload);
+      // scroll to top
+    })
+    this.joinRoom();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
+
+  formatTimestamp(timestamp): string {
+    const time = new Date(timestamp);
+    return time.getHours().toString() + ':' + time.getMinutes().toString() + ':' + time.getSeconds().toString();
+  }
+
+  getProfilePictureClass(index): string {
+    return this.chatService.getProfilePictureClass(index);
+  }
 
   onTextInput(event): void {
     // remove <br> if empty
@@ -53,7 +56,34 @@ export class ChatRoomComponent implements OnInit {
 
   submit(): void {
     const content = this.chat.nativeElement.innerHTML;
-    console.log(content);
+    const newMessage: NewMessage = {
+      content: content
+    }
+    this.channel.push("new_message", newMessage, 10000)
+      .receive("ok", (msg) => {
+        console.log("created message", msg) 
+      })
+      .receive("error", (reasons) => {
+        console.log("create failed", reasons) 
+      })
+      .receive("timeout", () => {
+        console.log("Networking issue...") 
+      })
+  }
+
+  joinRoom(): void {
+    this.channel
+    .join()
+    .receive('ok', ({ messages }) => {
+      console.log('catching up', messages)
+      this.joined = true;
+    })
+    .receive('error', ({ reason }) => {
+      console.log('failed join', reason)
+    })
+    .receive('timeout', () => {
+      console.log('Networking issue. Still waiting...')
+    });
   }
 
 }

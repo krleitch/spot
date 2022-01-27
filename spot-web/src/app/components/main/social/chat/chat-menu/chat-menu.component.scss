@@ -1,0 +1,113 @@
+@import "../../../../../styles/colors";
+
+.container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+// MENU
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 400px;
+  height: 500px;
+  border: 1px solid $lighter-grey;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 4px;
+  margin-right: 25px;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    background-color: $lighter-grey;
+    padding: 3px 5px;
+    justify-content: space-between;
+    align-items: center;
+
+    .close {
+      border: none;
+      text-decoration: none;
+      outline: none;
+      cursor: pointer;
+      background-color: $lighter-grey;
+      margin: 0;
+      padding: 0;
+
+      .icon {
+        color: $error-red;
+      }
+
+      &hover .icon {
+        color: lighten($error-red, 10%);
+      }
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: row;
+
+    .chat {
+      flex: 1;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      width: 175px;
+      border-left: 1px solid $lighter-grey;
+
+      .list-header {
+        display: flex;
+        flex-direction: row;
+
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: none;
+          text-decoration: none;
+          outline: none;
+          cursor: pointer;
+          background-color: white;
+          margin: 0;
+          padding: 10px 10px;
+          flex: 1;
+
+          &hover {
+            color: darken(white, 10%);
+          }
+        }
+
+        button.selected {
+          color: $button-highlight;
+        }
+      }
+
+      .list-body {
+        flex: 1;
+      }
+    }
+  }
+}
+
+// EXPAND
+
+.toggle {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+  padding: 10px 18px;
+  border: 1px solid $lighter-grey;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 4px;
+  margin-right: 25px;
+  &:hover {
+    background-color: darken(white, 10%);
+  }
+}

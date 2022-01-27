@@ -21,10 +21,19 @@ export class ChatService {
     this.phoenixSocket.connect();
   }
 
-  joinRoom(name: string): any {
+  getChannel(name: string, token: string): any {
     const channel = this.phoenixSocket.channel(name, {
-      token: 'roomToken',
+      token: token,
     });
     return channel;
   }
+
+  getProfilePictureClass(index): string {
+    // if ( index === -1 ) {
+      return 'profile pop';
+    // }
+    // the index should already be in the proper range, but this is just for safety
+    // return 'profile p' + (index % (COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT + 1));
+  }
+
 }

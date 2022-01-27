@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="menu" *ngIf="chatExpanded; else expand">
+    <div class="header">
+      <span>Spot Chat</span>
+      <button class="close" (click)="toggleMenu()">
+        <i class="material-icons icon">close</i>
+      </button>
+    </div>
+    <div class="body">
+      <div class="chat"></div>
+      <div class="list">
+        <div class="list-header">
+          <button
+            class="rooms"
+            [ngClass]="{ selected: selectedChatOption === chatOptions.ROOMS }"
+            (click)="selectRooms()"
+          >
+            Rooms
+          </button>
+          <button
+            class="friends"
+            [ngClass]="{ selected: selectedChatOption === chatOptions.FRIENDS }"
+            (click)="selectFriends()"
+          >
+            Friends
+          </button>
+        </div>
+        <div *ngIf="selectedChatOption === chatOptions.ROOMS" class="list-body">
+            
+        </div>
+        <div *ngIf="selectedChatOption === chatOptions.FRIENDS" class="list-body">
+            <div *ngIf="friends$ | async as friends">
+                <div *ngFor="let friend of friends">
+                    <span>{{friend.username}}</span>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #expand>
+    <button class="toggle" (click)="toggleMenu()">
+      <span>Spot Chat</span>
+    </button>
+  </ng-template>
+</div>

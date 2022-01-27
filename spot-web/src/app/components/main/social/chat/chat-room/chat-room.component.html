@@ -1,11 +1,63 @@
-<div class="chat-room-container">
-  <div *ngFor="let message of messages" class="messages-container">
-    <span class="message">{message}</span>
+<div *ngIf="joined; else join" class="chat-room-container">
+  <div class="chat-header">
+    <span class="count-container">
+      <i class="material-icons icon"> person </i>
+      <span class="count">4 -</span>
+    </span>
+    <span class="title">abc</span>
+    <span class="location">QNC (0.5km)</span>
+    <i class="material-icons settings-icon"> settings </i>
+    <i class="material-icons close-icon"> close </i>
+  </div>
+  <div class="messages-container">
+    <div *ngFor="let message of messages" class="message">
+      <div
+        [class]="getProfilePictureClass(message.profilePicture)"
+        [ngClass]="{
+          'profile-owned': message.owned,
+          'profile-info': message.type == 'INFO'
+        }"
+      >
+        <img
+          [ngClass]="{ 'image-info': message.type == 'INFO' }"
+          [src]="
+            '../../../../../assets/images/profile/' + message.profilePictureSrc
+          "
+        />
+      </div>
+      <span
+        class="content"
+        [ngClass]="{ 'content-info': message.type == 'INFO' }"
+        >{{ message.content }}</span
+      >
+      <span class="time">{{ formatTimestamp(message.timestamp) }}</span>
+    </div>
   </div>
   <div class="chat-bar">
-    <span #chat contenteditable="true" attr.ph="{{STRINGS.CHAT_PLACEHOLDER}}" class="chat" (input)="onTextInput($event)"></span>
+    <span
+      #chat
+      contenteditable="true"
+      attr.ph="{{ STRINGS.CHAT_PLACEHOLDER }}"
+      class="chat"
+      (input)="onTextInput($event)"
+    ></span>
     <button class="submit" (click)="submit()">
-      {{STRINGS.SUBMIT}}
+      {{ STRINGS.SUBMIT }}
     </button>
   </div>
 </div>
+<ng-template #join>
+  <div class="join-container">
+    <div class="text-container">
+      <span class="text"> There is a spot chat near you</span>
+      <span class="location">Location: QNC (0.5 km)</span>
+    </div>
+    <div class="button-container">
+      <button class="join-button" (click)="joinRoom()">Join Room</button>
+      <span class="count-container">
+        <i class="material-icons icon"> person </i>
+        <span class="count">4 chatting now</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
