@@ -48,3 +48,5 @@ Thumbs.db
 # SSL keys
 server.crt
 server.key
+
+.angular
