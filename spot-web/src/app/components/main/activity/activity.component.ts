@@ -133,7 +133,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
       this.commentActivityLoading = true;
 
-      let comments$ = this.commentService.getActivity( activityCommentRequest ).pipe(
+      const comments$ = this.commentService.getActivity( activityCommentRequest ).pipe(
         take(1),
         finalize(() => {
           this.commentActivityLoading = false;

@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
 
   private twitterLibrary(): void {
     window['twttr'] = (function (d, s, id) {
-      var js,
+      let js,
         fjs = d.getElementsByTagName(s)[0],
         t = window['twttr'] || {};
       if (d.getElementById(id)) return t;
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
     };
 
     (function (d, s, id) {
-      var js,
+      let js,
         fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) {
         return;
