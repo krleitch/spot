@@ -1,6 +1,6 @@
 // Mail Service
 
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 const aws = require('aws-sdk');
 const Email = require('email-templates');
 const path = require('path');
@@ -12,14 +12,14 @@ const awsconfig = require('@config/awskey.json');
 // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html?icmpid=docs_ses_console
 
 aws.config.update({
-    secretAccessKey: awsconfig.SecretAccessKey,
-    accessKeyId: awsconfig.AccessKeyID,
-    region: 'us-east-1'
+  secretAccessKey: awsconfig.SecretAccessKey,
+  accessKeyId: awsconfig.AccessKeyID,
+  region: 'us-east-1'
 });
 
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   SES: new aws.SES({
-      apiVersion: '2010-12-01'
+    apiVersion: '2010-12-01'
   })
 });
 
@@ -32,18 +32,20 @@ const email = new Email({
   preview: false,
   message: {
     // from: 'test@spot.com',
-    attachments: [{
-      filename: 'spot_logo.png',
-      path: imagePath,
-      cid: 'spotlogo'
-    }]
+    attachments: [
+      {
+        filename: 'spot_logo.png',
+        path: imagePath,
+        cid: 'spotlogo'
+      }
+    ]
   },
   views: {
     options: {
-      extension: 'pug',
+      extension: 'pug'
     },
-    root: rootPath,
-  },
+    root: rootPath
+  }
 });
 
-export { email }
+export { email };

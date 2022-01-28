@@ -1,6 +1,6 @@
 module.exports = {
-    owner: 'owner', // only 1
-    admin: 'admin', // advanced privileges
-    user: 'user', // normal account
-    guest: 'guest' // for viewing only
-}
+  owner: 'owner', // only 1
+  admin: 'admin', // advanced privileges
+  user: 'user', // normal account
+  guest: 'guest' // for viewing only
+};

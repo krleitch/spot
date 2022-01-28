@@ -4,16 +4,16 @@
   "description": "* Download node.js version 8.11.3 LTS\r * Download MySQL Community Server 8.0.11+ 32 bit\r * Download Python 2.7\r * Download MySQL python connector 32 bit\r * Open MySQL command line client and enter",
   "main": "main.js",
   "dependencies": {
-    "@tensorflow/tfjs-node": "^2.7.0",
+    "@tensorflow/tfjs-node": "^2.8.6",
     "@types/express": "^4.16.1",
     "@types/jsonwebtoken": "^8.3.3",
     "@types/mysql": "^2.15.5",
-    "aws-sdk": "^2.621.0",
-    "axios": "^0.21.0",
+    "aws-sdk": "^2.1065.0",
+    "axios": "^0.21.4",
     "badwords-filter": "^1.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "email-templates": "^7.1.1",
+    "email-templates": "^8.0.8",
     "express": "^4.16.4",
     "express-rate-limit": "^5.1.3",
     "google-auth-library": "^6.0.6",
@@ -22,17 +22,17 @@
     "mongodb": "^3.3.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
-    "multer-s3": "^2.9.0",
+    "multer-s3": "^2.10.0",
     "mysql": "^2.17.1",
-    "nodemailer": "^6.4.6",
-    "nsfwjs": "^2.3.0",
+    "nodemailer": "^6.7.2",
+    "nsfwjs": "^2.4.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "redis": "^3.1.2",
     "request": "^2.88.0",
     "rotating-file-stream": "^2.1.3",
-    "shortid": "^2.2.15",
+    "shortid": "^2.2.8",
     "typescript": "^4.3.2",
     "uuid": "^3.3.3"
   },
@@ -50,7 +50,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "dev": "concurrently \"tsc -w\" \"node-dev --respawn build/app/main.js\"",
-    "prod": "tsc && node ./build/main.js"
+    "prod": "tsc && node ./build/main.js",
+    "lint": "npx eslint 'src/**/*.{js,ts}' --quiet --fix",
+    "format": "npx prettier 'src/**/*.{js,ts}' --write"
   },
   "repository": {
     "type": "git",
@@ -63,7 +65,10 @@
   },
   "homepage": "https://github.com/krleitch/spot-server#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
     "concurrently": "^6.2.0",
+    "eslint": "^8.7.0",
     "node-dev": "^7.0.0"
   }
 }

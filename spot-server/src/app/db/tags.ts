@@ -1,29 +1,37 @@
-export { addTag, getTagsByCommentId, TaggedInCommentChain }
+export { addTag, getTagsByCommentId, TaggedInCommentChain };
 
 const uuid = require('uuid');
 
 const db = require('./mySql');
 
-function addTag(accountId: string, commentId: string, offset: number): Promise<any> {
-    const tagId = uuid.v4();
-    var sql = 'INSERT INTO tags (id, account_id, comment_id, creation_date, offset) VALUES (?, ?, ?, ?, ?)';
-    var values = [tagId, accountId, commentId, new Date(), offset ];
-    return db.query(sql, values);
+function addTag(
+  accountId: string,
+  commentId: string,
+  offset: number
+): Promise<any> {
+  const tagId = uuid.v4();
+  const sql =
+    'INSERT INTO tags (id, account_id, comment_id, creation_date, offset) VALUES (?, ?, ?, ?, ?)';
+  const values = [tagId, accountId, commentId, new Date(), offset];
+  return db.query(sql, values);
 }
 
 function getTagsByCommentId(commentId: string): Promise<any> {
-    var sql = 'SELECT * FROM tags WHERE comment_id = ? ORDER BY offset ASC';
-    var values = [commentId];
-    return db.query(sql, values);
+  const sql = 'SELECT * FROM tags WHERE comment_id = ? ORDER BY offset ASC';
+  const values = [commentId];
+  return db.query(sql, values);
 }
 
 // the commentId is the parent comment, not a reply
-function TaggedInCommentChain(commentId: string, accountId: string): Promise<boolean> {
-    var sql = `SELECT * FROM (SELECT id FROM comments WHERE comment_parent_id = ?) results 
+function TaggedInCommentChain(
+  commentId: string,
+  accountId: string
+): Promise<boolean> {
+  const sql = `SELECT * FROM (SELECT id FROM comments WHERE comment_parent_id = ?) results 
                 LEFT JOIN tags t ON t.comment_id = results.id 
                 WHERE t.account_id = ?`;
-    var values = [commentId, commentId, accountId];
-    return db.query(sql, values).then( (rows: any) => {
-        return rows.length > 0;
-    });
+  const values = [commentId, commentId, accountId];
+  return db.query(sql, values).then((rows: any) => {
+    return rows.length > 0;
+  });
 }
