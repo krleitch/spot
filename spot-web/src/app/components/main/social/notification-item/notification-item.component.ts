@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 // rxjs
@@ -13,7 +20,10 @@ import { SocialStoreNotificationsActions } from '@store/social-store';
 
 // assets
 import { Notification } from '@models/notifications';
-import { SetNotificationSeenRequest, DeleteNotificationRequest } from '@models/notifications';
+import {
+  DeleteNotificationRequest,
+  SetNotificationSeenRequest
+} from '@models/notifications';
 import { AccountMetadata } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
@@ -23,7 +33,6 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./notification-item.component.scss']
 })
 export class NotificationItemComponent implements OnInit, OnDestroy {
-
   private readonly onDestroy = new Subject<void>();
 
   @ViewChild('notificationImage') notificationImage: ElementRef;
@@ -37,30 +46,33 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   STRINGS = STRINGS.MAIN.NOTIFICATION_ITEM;
 
-  constructor(private router: Router, private store$: Store<RootStoreState.State>) { }
+  constructor(
+    private router: Router,
+    private store$: Store<RootStoreState.State>
+  ) {}
 
   ngOnInit(): void {
-
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
 
-    this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (accountMetadata: AccountMetadata) => {
-      this.accountMetadata = accountMetadata;
-    });
+    this.accountMetadata$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((accountMetadata: AccountMetadata) => {
+        this.accountMetadata = accountMetadata;
+      });
 
-    if ( this.notification.reply_image_src )
+    if (this.notification.reply_image_src)
       this.imageBlurred = this.notification.reply_image_nsfw;
-    else if ( this.notification.comment_image_src ) {
+    else if (this.notification.comment_image_src) {
       this.imageBlurred = this.notification.comment_image_nsfw;
-    } else if ( this.notification.image_src )  {
+    } else if (this.notification.image_src) {
       this.imageBlurred = this.notification.image_nsfw;
     } else {
       this.imageBlurred = false;
     }
 
     this.time = this.getTime();
-
   }
 
   ngOnDestroy(): void {
@@ -94,15 +106,16 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
   }
 
   goToPost(event: any): void {
-
     // if you click on image that is blurred then don't go to post, unblur it
-    if ( this.notificationImage.nativeElement.contains(event.target) && this.imageBlurred ) {
+    if (
+      this.notificationImage.nativeElement.contains(event.target) &&
+      this.imageBlurred
+    ) {
       this.imageBlurred = false;
       return;
     }
 
-    if ( !this.notification.seen ) {
-
+    if (!this.notification.seen) {
       const request: SetNotificationSeenRequest = {
         notificationId: this.notification.id
       };
@@ -111,21 +124,28 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
       this.store$.dispatch(
         new SocialStoreNotificationsActions.SetNotificationSeenAction(request)
       );
-
     }
 
-    if ( this.notification.reply_link ) {
-      this.router.navigateByUrl('/posts/' + this.notification.link + '/comments/' + this.notification.reply_link);
-    } else if ( this.notification.comment_link ) {
-      this.router.navigateByUrl('/posts/' + this.notification.link + '/comments/' + this.notification.comment_link);
+    if (this.notification.reply_link) {
+      this.router.navigateByUrl(
+        '/posts/' +
+          this.notification.link +
+          '/comments/' +
+          this.notification.reply_link
+      );
+    } else if (this.notification.comment_link) {
+      this.router.navigateByUrl(
+        '/posts/' +
+          this.notification.link +
+          '/comments/' +
+          this.notification.comment_link
+      );
     } else {
       this.router.navigateByUrl('/posts/' + this.notification.link);
     }
-
   }
 
   delete(): void {
-
     const request: DeleteNotificationRequest = {
       notificationId: this.notification.id
     };
@@ -134,7 +154,6 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new SocialStoreNotificationsActions.DeleteNotificationAction(request)
     );
-
   }
 
   getImagePreview(notification: Notification): string {
@@ -144,5 +163,4 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
   imageClicked(): void {
     this.imageBlurred = false;
   }
-
 }

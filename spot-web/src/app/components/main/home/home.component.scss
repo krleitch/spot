@@ -12,7 +12,6 @@ spot-main-nav {
 }
 
 .container {
-
   display: flex;
   justify-content: center;
   min-height: 100%;
@@ -27,7 +26,6 @@ spot-main-nav {
     min-width: 100%;
     max-width: 100%;
     height: 100%;
-
   }
 
   .content {
@@ -40,7 +38,6 @@ spot-main-nav {
     min-width: 450px;
     padding-top: 20px;
   }
-
 }
 
 // options
@@ -90,10 +87,14 @@ spot-main-nav {
   cursor: pointer;
   padding: 8px 8px;
   min-width: 66px;
-  background: linear-gradient(to left, $lighter-grey 50%, $button-highlight 50%);
+  background: linear-gradient(
+    to left,
+    $lighter-grey 50%,
+    $button-highlight 50%
+  );
   background-size: 200% 100%;
   background-position: right bottom;
-  transition:all 1s ease;
+  transition: all 1s ease;
   font-size: 16px;
 }
 
@@ -103,33 +104,37 @@ spot-main-nav {
   min-width: 66px;
   cursor: pointer;
   padding: 8px 8px;
-  background: linear-gradient(to right, $lighter-grey 50%, $button-highlight 50%);
+  background: linear-gradient(
+    to right,
+    $lighter-grey 50%,
+    $button-highlight 50%
+  );
   background-size: 200% 100%;
   background-position: left bottom;
-  transition:all 1s ease;
+  transition: all 1s ease;
   font-size: 16px;
 }
 
 .hot.selectedSort {
   color: white;
   background-position: right bottom;
-  transition:all 1s ease;
+  transition: all 1s ease;
 }
 
 .new.selectedSort {
   color: white;
   background-position: left bottom;
-  transition:all 1s ease;
+  transition: all 1s ease;
 }
 
 spot-create {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 
 .posts {
-    margin-top: 20px;
-    width: 100%;
+  margin-top: 20px;
+  width: 100%;
 }
 
 // no posts, no more posts, loading posts
@@ -139,7 +144,6 @@ spot-create {
 }
 
 .empty-container {
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -150,7 +154,6 @@ spot-create {
   }
 
   .empty-image {
-
     position: relative;
     margin-top: 10px;
 
@@ -191,7 +194,6 @@ spot-create {
       font-size: 50px;
       color: white;
     }
-
   }
 
   .empty-text {
@@ -220,13 +222,11 @@ spot-create {
     margin-bottom: 10px;
     margin-top: 5px;
   }
-
 }
 
 // location disabled, verified, no posts
 
 .info-container {
-
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -241,7 +241,6 @@ spot-create {
   }
 
   .text {
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -253,7 +252,6 @@ spot-create {
     .text-icon {
       margin: 0px 3px;
     }
-
   }
 
   .inline-icon {
@@ -267,7 +265,6 @@ spot-create {
   }
 
   .clickable {
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -284,7 +281,6 @@ spot-create {
       margin-left: 5px;
       margin-right: 5px;
     }
-
   }
 
   .small-text {
@@ -305,7 +301,6 @@ spot-create {
   }
 
   .enable-location-button {
-
     border: none;
     text-decoration: none;
     outline: none;
@@ -325,9 +320,7 @@ spot-create {
     &:hover {
       background-color: lighten($button-black, 10%);
     }
-
   }
-
 }
 
 // mobile dropdowns
@@ -359,41 +352,35 @@ spot-create {
 }
 
 .dropdown {
-
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 
   .dropdown-content-sort {
-
     display: none;
     position: absolute;
     background-color: white;
     width: 60px;
     top: 32px;
     left: -52px;
-    box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+    box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
     z-index: 1;
     font-size: 18px;
-
   }
 
   .dropdown-content-location {
-
     display: none;
     position: absolute;
     background-color: white;
     width: 60px;
     top: 32px;
     left: -47px;
-    box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+    box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
     z-index: 1;
-
   }
 
   .button {
-
     background-color: #efefef;
     color: black;
     height: 45px;
@@ -415,23 +402,20 @@ spot-create {
     .dropdown-icon {
       font-size: 21px;
     }
-
   }
 
   .show {
-    display:block;
+    display: block;
   }
 
   .selected-highlight {
     color: $button-highlight;
   }
-
 }
 
 spot-chat-room {
   width: 100%;
 }
-
 
 .mobile {
   display: none;
@@ -440,7 +424,6 @@ spot-chat-room {
 // mobile
 
 @media screen and (max-width: 540px) {
-
   .mobile {
     display: flex;
   }
@@ -455,5 +438,4 @@ spot-chat-room {
       min-width: 0;
     }
   }
-
 }

@@ -9,12 +9,9 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit {
-
   STRINGS = STRINGS.PRE_AUTH.ABOUT;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

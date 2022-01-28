@@ -1,20 +1,28 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
-import { takeUntil, skip } from 'rxjs/operators';
+import { skip, takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions, AccountsStoreSelectors } from '@store/accounts-store';
+import {
+  AccountsActions,
+  AccountsFacebookActions,
+  AccountsGoogleActions,
+  AccountsStoreSelectors
+} from '@store/accounts-store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
 import { ModalService } from '@services/modal.service';
 
 // Models
-import { FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
+import {
+  FacebookLoginRequest,
+  GoogleLoginRequest
+} from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 import { RegisterRequest } from '@models/authentication';
 
@@ -30,7 +38,6 @@ declare const gapi: any;
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
-
   private readonly onDestroy = new Subject<void>();
 
   STRINGS = STRINGS.PRE_AUTH.LANDING;
@@ -58,34 +65,39 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-
     // FAILURE
     this.authenticationError$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationError)
     );
 
-    this.authenticationError$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (authenticationError: SpotError) => {
-      if ( authenticationError ) {
-        if ( authenticationError.name === 'RateLimitError') {
-          this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', authenticationError.body.timeout);
-        } else {
-          this.errorMessage = authenticationError.message;
+    this.authenticationError$
+      .pipe(takeUntil(this.onDestroy), skip(1))
+      .subscribe((authenticationError: SpotError) => {
+        if (authenticationError) {
+          if (authenticationError.name === 'RateLimitError') {
+            this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
+              '%TIMEOUT%',
+              authenticationError.body.timeout
+            );
+          } else {
+            this.errorMessage = authenticationError.message;
+          }
         }
-      }
-      this.buttonsDisabled = false;
-    });
+        this.buttonsDisabled = false;
+      });
 
     // SUCCESS
     this.authenticationSuccess$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationSuccess)
     );
 
-    this.authenticationSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticationSuccess: boolean) => {
-      if ( authenticationSuccess ) {
-        this.buttonsDisabled = false;
-      }
-    });
-
+    this.authenticationSuccess$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((authenticationSuccess: boolean) => {
+        if (authenticationSuccess) {
+          this.buttonsDisabled = false;
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -93,47 +105,46 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
-      if ( service === 'google' ) {
-        gapi.signin2.render('my-signin2', {
+    this.authenticationService.socialServiceReady
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((service: string) => {
+        if (service === 'google') {
+          gapi.signin2.render('my-signin2', {
             scope: 'profile email',
             width: 240,
             height: 55,
             longtitle: true,
             theme: 'light',
-            onsuccess: param => this.googleLogin(param)
-        });
-      }
-      if ( service === 'FB' ) {
-        setTimeout(() => {
-          this.facebookLoaded = true;
-        });
-      }
-    });
+            onsuccess: (param) => this.googleLogin(param)
+          });
+        }
+        if (service === 'FB') {
+          setTimeout(() => {
+            this.facebookLoaded = true;
+          });
+        }
+      });
   }
 
   facebookLogin(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
-          window['FB'].login((loginResponse) => {
-            if (loginResponse.status === 'connected') {
+        window['FB'].login((loginResponse) => {
+          if (loginResponse.status === 'connected') {
+            const request: FacebookLoginRequest = {
+              accessToken: loginResponse.authResponse.accessToken
+            };
 
-                const request: FacebookLoginRequest = {
-                  accessToken: loginResponse.authResponse.accessToken
-                };
-
-                this.store$.dispatch(
-                  new AccountsFacebookActions.FacebookLoginRequestAction(request)
-                );
-                this.buttonsDisabled = true;
-
-            }
-          });
+            this.store$.dispatch(
+              new AccountsFacebookActions.FacebookLoginRequestAction(request)
+            );
+            this.buttonsDisabled = true;
+          }
+        });
       } else {
         // already logged in
         const request: FacebookLoginRequest = {
@@ -144,15 +155,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
           new AccountsFacebookActions.FacebookLoginRequestAction(request)
         );
         this.buttonsDisabled = true;
-
       }
     });
-
   }
 
   googleLogin(googleUser): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
@@ -170,28 +178,23 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     );
     this.buttonsDisabled = true;
 
-
     // sign out of the instance, so we don't auto login
     this.googleSignOut();
-
   }
 
   googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(() => {
-
-    });
+    auth2.signOut().then(() => {});
   }
 
   signUp(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
     const val = this.form.value;
 
-    if ( !val.terms ) {
+    if (!val.terms) {
       this.errorMessage = this.STRINGS.TERMS_ERROR;
       this.form.controls.terms.markAsDirty();
       return;
@@ -216,7 +219,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    const validUsername = this.authenticationService.validateUsername(val.username);
+    const validUsername = this.authenticationService.validateUsername(
+      val.username
+    );
     if (validUsername !== null) {
       this.errorMessage = validUsername;
       this.form.controls.username.markAsDirty();
@@ -229,7 +234,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    const validPassword = this.authenticationService.validatePassword(val.password);
+    const validPassword = this.authenticationService.validatePassword(
+      val.password
+    );
     if (validPassword !== null) {
       this.errorMessage = validPassword;
       this.form.controls.password.markAsDirty();
@@ -262,13 +269,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
     this.buttonsDisabled = true;
-
   }
 
   openTerms(): void {
-
     this.modalService.open('spot-terms-modal');
-
   }
-
 }

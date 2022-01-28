@@ -11,5 +11,5 @@ export {
   SocialStoreFriendsActions,
   SocialStoreActions,
   SocialStoreSelectors,
-  SocialStoreState,
+  SocialStoreState
 };

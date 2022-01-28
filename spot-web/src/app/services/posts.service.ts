@@ -9,30 +9,51 @@ import { environment } from 'src/environments/environment';
 import { AlertService } from '@services/alert.service';
 
 // assets
-import { DeletePostRequest, DeletePostSuccess, AddPostRequest, AddPostSuccess, LoadPostSuccess, LikePostSuccess,
-          LikePostRequest, DislikePostRequest, DislikePostSuccess, LoadPostRequest,
-          LoadSinglePostRequest, LoadSinglePostSuccess, ReportPostRequest, ReportPostSuccess,
-          ActivityPostRequest, ActivityPostSuccess, UnratedPostRequest, UnratedPostSuccess } from '@models/posts';
+import {
+  ActivityPostRequest,
+  ActivityPostSuccess,
+  AddPostRequest,
+  AddPostSuccess,
+  DeletePostRequest,
+  DeletePostSuccess,
+  DislikePostRequest,
+  DislikePostSuccess,
+  LikePostRequest,
+  LikePostSuccess,
+  LoadPostRequest,
+  LoadPostSuccess,
+  LoadSinglePostRequest,
+  LoadSinglePostSuccess,
+  ReportPostRequest,
+  ReportPostSuccess,
+  UnratedPostRequest,
+  UnratedPostSuccess
+} from '@models/posts';
 import { SpotError } from '@exceptions/error';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostsService {
-
   private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient, private alertService: AlertService) { }
+  constructor(private http: HttpClient, private alertService: AlertService) {}
 
   getPosts(request: LoadPostRequest): Observable<LoadPostSuccess> {
     let params = new HttpParams();
-    if ( request.location ) {
+    if (request.location) {
       params = params.append('latitude', request.location.latitude.toString());
-      params = params.append('longitude', request.location.longitude.toString());
+      params = params.append(
+        'longitude',
+        request.location.longitude.toString()
+      );
     }
     params = params.append('location', request.filter.location);
     params = params.append('sort', request.filter.sort);
-    params = params.append('offset', request.offset ? request.offset.toString() : null);
+    params = params.append(
+      'offset',
+      request.offset ? request.offset.toString() : null
+    );
     params = params.append('limit', request.limit.toString());
     params = params.append('date', request.date ? request.date : null);
     return this.http.get<LoadPostSuccess>(`${this.baseUrl}/posts`, { params });
@@ -40,64 +61,86 @@ export class PostsService {
 
   getPost(request: LoadSinglePostRequest): Observable<LoadSinglePostSuccess> {
     let params = new HttpParams();
-    if ( request.location ) {
+    if (request.location) {
       params = params.append('latitude', request.location.latitude.toString());
-      params = params.append('longitude', request.location.longitude.toString());
+      params = params.append(
+        'longitude',
+        request.location.longitude.toString()
+      );
     }
-    return this.http.get<LoadSinglePostSuccess>(`${this.baseUrl}/posts/${request.postLink}`, { params });
+    return this.http.get<LoadSinglePostSuccess>(
+      `${this.baseUrl}/posts/${request.postLink}`,
+      { params }
+    );
   }
 
   addPost(request: AddPostRequest): Observable<AddPostSuccess> {
-
     const formData = new FormData();
     formData.append('json', JSON.stringify(request));
 
-    if ( request.image ) {
+    if (request.image) {
       formData.append('image', request.image);
     }
     return this.http.post<AddPostSuccess>(`${this.baseUrl}/posts`, formData);
-
   }
 
   deletePost(request: DeletePostRequest): Observable<DeletePostSuccess> {
-    return this.http.delete<DeletePostSuccess>(`${this.baseUrl}/posts/${request.postId}`);
+    return this.http.delete<DeletePostSuccess>(
+      `${this.baseUrl}/posts/${request.postId}`
+    );
   }
 
   reportPost(request: ReportPostRequest): Observable<ReportPostSuccess> {
-    return this.http.put<ReportPostSuccess>(`${this.baseUrl}/posts/${request.postId}/report`, request);
+    return this.http.put<ReportPostSuccess>(
+      `${this.baseUrl}/posts/${request.postId}/report`,
+      request
+    );
   }
 
   unratedPost(request: UnratedPostRequest): Observable<UnratedPostSuccess> {
-    return this.http.put<UnratedPostSuccess>(`${this.baseUrl}/posts/${request.postId}/unrated`, request);
+    return this.http.put<UnratedPostSuccess>(
+      `${this.baseUrl}/posts/${request.postId}/unrated`,
+      request
+    );
   }
 
   getActivity(request: ActivityPostRequest): Observable<ActivityPostSuccess> {
     let params = new HttpParams();
-    if ( request.before ) {
+    if (request.before) {
       params = params.append('before', request.before);
     }
-    if ( request.after ) {
+    if (request.after) {
       params = params.append('after', request.after);
     }
     params = params.append('limit', request.limit.toString());
-    if ( request.location ) {
+    if (request.location) {
       params = params.append('latitude', request.location.latitude.toString());
-      params = params.append('longitude', request.location.longitude.toString());
+      params = params.append(
+        'longitude',
+        request.location.longitude.toString()
+      );
     }
-    return this.http.get<ActivityPostSuccess>(`${this.baseUrl}/posts/activity`, { params });
+    return this.http.get<ActivityPostSuccess>(
+      `${this.baseUrl}/posts/activity`,
+      { params }
+    );
   }
 
   dislikePost(request: DislikePostRequest): Observable<DislikePostSuccess> {
-    return this.http.put<DislikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/dislike`, request);
+    return this.http.put<DislikePostSuccess>(
+      `${this.baseUrl}/posts/${request.postId}/dislike`,
+      request
+    );
   }
 
-
   likePost(request: LikePostRequest): Observable<LikePostSuccess> {
-    return this.http.put<LikePostSuccess>(`${this.baseUrl}/posts/${request.postId}/like`, request);
+    return this.http.put<LikePostSuccess>(
+      `${this.baseUrl}/posts/${request.postId}/like`,
+      request
+    );
   }
 
   failureMessage(error: string): void {
     this.alertService.error(error);
   }
-
 }

@@ -1,11 +1,11 @@
-import { Actions, ActionTypes } from './actions';
-import { initialState, State } from './state';
+import { ActionTypes, Actions } from './actions';
+import { State, initialState } from './state';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
     case ActionTypes.RESET_STORE: {
       return {
-        ...initialState,
+        ...initialState
       };
     }
     case ActionTypes.LOAD_REQUEST: {
@@ -13,31 +13,31 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...state,
         posts: action.request.initialLoad ? [] : state.posts,
         loading: true,
-        noPosts: false,
+        noPosts: false
       };
     }
     case ActionTypes.LOAD_SUCCESS: {
-      if ( action.response.initialLoad ) {
+      if (action.response.initialLoad) {
         return {
           ...state,
-          posts:  action.response.posts,
+          posts: action.response.posts,
           loading: false,
-          noPosts: action.response.posts.length === 0,
+          noPosts: action.response.posts.length === 0
         };
       } else {
         // only need to concat if we have posts
-        if ( action.response.posts.length === 0 ) {
+        if (action.response.posts.length === 0) {
           return {
             ...state,
             loading: false,
-            noPosts: true,
+            noPosts: true
           };
         } else {
           return {
             ...state,
             posts: state.posts.concat(action.response.posts),
             loading: false,
-            noPosts: false,
+            noPosts: false
           };
         }
       }
@@ -45,9 +45,9 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.ADD_COMMENT: {
       // When you add a comment, add 1 to the post comments counter
       const newPosts = Array.from(state.posts);
-      state.posts.forEach( (post , i) => {
+      state.posts.forEach((post, i) => {
         if (post.id === action.request.postId) {
-          const newObj =  Object.assign({}, post);
+          const newObj = Object.assign({}, post);
           newObj.comments += 1;
           newPosts[i] = newObj;
         }
@@ -60,9 +60,9 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.DELETE_COMMENT: {
       // When you delete a comment, remove 1 to the post comments counter
       const newPosts = Array.from(state.posts);
-      state.posts.forEach( (post , i) => {
+      state.posts.forEach((post, i) => {
         if (post.id === action.request.postId) {
-          const newObj =  Object.assign({}, post);
+          const newObj = Object.assign({}, post);
           newObj.comments -= 1;
           newPosts[i] = newObj;
         }
@@ -79,7 +79,6 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     case ActionTypes.ADD_SUCCESS: {
-
       const newPosts = Array.from(state.posts);
 
       newPosts.unshift(action.response.post);
@@ -97,12 +96,11 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     case ActionTypes.LIKE_SUCCESS: {
-
       const newPosts = Array.from(state.posts);
 
-      state.posts.forEach( (post , i) => {
+      state.posts.forEach((post, i) => {
         if (post.id === action.response.postId) {
-          const newObj =  Object.assign({}, post);
+          const newObj = Object.assign({}, post);
           newObj.likes += 1;
           if (post.rated === 0) {
             newObj.dislikes -= 1;
@@ -113,16 +111,15 @@ export function featureReducer(state = initialState, action: Actions): State {
       });
       return {
         ...state,
-        posts: newPosts,
+        posts: newPosts
       };
     }
     case ActionTypes.DISLIKE_SUCCESS: {
-
       const newPosts = Array.from(state.posts);
 
-      state.posts.forEach( (post , i) => {
+      state.posts.forEach((post, i) => {
         if (post.id === action.response.postId) {
-          const newObj =  Object.assign({}, post);
+          const newObj = Object.assign({}, post);
           newObj.dislikes += 1;
           if (post.rated === 1) {
             newObj.likes -= 1;
@@ -133,19 +130,18 @@ export function featureReducer(state = initialState, action: Actions): State {
       });
       return {
         ...state,
-        posts: newPosts,
+        posts: newPosts
       };
     }
     case ActionTypes.UNRATED_SUCCESS: {
-
       const newPosts = Array.from(state.posts);
 
-      state.posts.forEach( (post , i) => {
+      state.posts.forEach((post, i) => {
         if (post.id === action.response.postId) {
-          const newObj =  Object.assign({}, post);
+          const newObj = Object.assign({}, post);
           if (post.rated === 1) {
             newObj.likes -= 1;
-          } else if ( post.rated === 0 ) {
+          } else if (post.rated === 0) {
             newObj.dislikes -= 1;
           }
           newObj.rated = -1;
@@ -154,14 +150,13 @@ export function featureReducer(state = initialState, action: Actions): State {
       });
       return {
         ...state,
-        posts: newPosts,
+        posts: newPosts
       };
     }
     case ActionTypes.DELETE_SUCCESS: {
-
       const newPosts = Array.from(state.posts);
 
-      state.posts.forEach( (post , i) => {
+      state.posts.forEach((post, i) => {
         if (post.id === action.response.postId) {
           newPosts.splice(i, 1);
         }

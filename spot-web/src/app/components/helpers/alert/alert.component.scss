@@ -1,42 +1,38 @@
 @import '../../../styles/colors';
 
 .container {
-    position: fixed;
-    top: 75px;
-    left: 50%;
-    width: 500px;
-    margin-left: -250px;
-    z-index: 9999999999;
+  position: fixed;
+  top: 75px;
+  left: 50%;
+  width: 500px;
+  margin-left: -250px;
+  z-index: 9999999999;
 }
 
 .close {
-
   color: $background-grey;
   cursor: pointer;
 
   &:hover {
     color: darken($background-grey, 30%);
   }
-
 }
 
 .alert {
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
 
-    box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+  opacity: 1;
+  -webkit-transition: opacity 500ms linear;
+  transition: opacity 500ms linear;
 
-    opacity: 1;
-    -webkit-transition: opacity 500ms linear;
-    transition: opacity 500ms linear;
-
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-    height: auto;
-    box-sizing: border-box;
-    border-radius: 15px;
-
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 15px;
 }
 
 .message {
@@ -50,21 +46,27 @@
 }
 
 .fade {
-    opacity: 0;
+  opacity: 0;
 }
 
 .alert-success {
-    background-image: linear-gradient(#37474f, lighten(#37474f, 3%));
+  background-image: linear-gradient(#37474f, lighten(#37474f, 3%));
 }
 
 .alert-danger {
-    background-image: linear-gradient($error-red-light, lighten($error-red-light, 3%));
+  background-image: linear-gradient(
+    $error-red-light,
+    lighten($error-red-light, 3%)
+  );
 }
 
 .alert-info {
-    background-image: linear-gradient($info-blue, lighten($info-blue, 3%));
+  background-image: linear-gradient($info-blue, lighten($info-blue, 3%));
 }
 
 .alert-warning {
-    background-image: linear-gradient($warning-yellow, lighten($warning-yellow, 3%));
+  background-image: linear-gradient(
+    $warning-yellow,
+    lighten($warning-yellow, 3%)
+  );
 }

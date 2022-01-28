@@ -2,9 +2,7 @@
 @import '../../../styles/sizes';
 
 .spot-auth-modal {
-
   .header {
-
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -24,20 +22,16 @@
         color: $error-red;
       }
     }
-
   }
 
   .content {
-
     padding: 10px 10px;
 
     .tab-container {
-
       display: flex;
       width: 100%;
 
       .tab {
-
         background-color: $lighter-grey;
         color: $subtle-grey;
         text-align: center;
@@ -46,29 +40,21 @@
         box-sizing: border-box;
         font-size: 20px;
         cursor: pointer;
-
       }
 
       .selected {
         background-color: $button-highlight;
         color: white;
       }
-
     }
 
     .login {
-
     }
 
     .register {
-
     }
-
-
   }
-
 }
-
 
 // Common form models
 
@@ -148,17 +134,14 @@ input.ng-dirty.ng-invalid {
 }
 
 a {
-
   text-decoration: none;
   color: $subtle-grey;
   &:hover {
     color: $button-highlight;
   }
-
 }
 
 button {
-
   background-color: $button-black;
   width: 100px;
   border: none;
@@ -174,14 +157,13 @@ button {
   cursor: pointer;
 
   &:hover {
-      background-color: lighten($button-black, 10%);
+    background-color: lighten($button-black, 10%);
   }
 
   button.disabled {
     background-color: $subtle-grey;
     cursor: not-allowed;
   }
-
 }
 
 .disabled {
@@ -199,7 +181,6 @@ input {
 }
 
 .terms-and-conditions {
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +203,6 @@ input {
       color: darken($subtle-grey, 5%);
     }
   }
-
 }
 
 // Checkbox stuff
@@ -269,7 +249,7 @@ input {
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }

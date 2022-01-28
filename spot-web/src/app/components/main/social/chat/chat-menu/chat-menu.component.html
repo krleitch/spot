@@ -25,15 +25,19 @@
             Friends
           </button>
         </div>
-        <div *ngIf="selectedChatOption === chatOptions.ROOMS" class="list-body">
-            
-        </div>
-        <div *ngIf="selectedChatOption === chatOptions.FRIENDS" class="list-body">
-            <div *ngIf="friends$ | async as friends">
-                <div *ngFor="let friend of friends">
-                    <span>{{friend.username}}</span>
-                </div>
+        <div
+          *ngIf="selectedChatOption === chatOptions.ROOMS"
+          class="list-body"
+        ></div>
+        <div
+          *ngIf="selectedChatOption === chatOptions.FRIENDS"
+          class="list-body"
+        >
+          <div *ngIf="friends$ | async as friends">
+            <div *ngFor="let friend of friends">
+              <span>{{ friend.username }}</span>
             </div>
+          </div>
         </div>
       </div>
     </div>

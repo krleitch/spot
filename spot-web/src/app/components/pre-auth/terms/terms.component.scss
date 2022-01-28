@@ -2,13 +2,11 @@
 @import '../../../styles/sizes';
 
 .terms {
-
   display: flex;
   flex-flow: column;
   position: relative;
 
   .header {
-
     position: fixed;
     top: 0;
     left: 0;
@@ -33,18 +31,15 @@
         color: $error-red;
       }
     }
-
   }
 
   .body {
-
     background-color: white;
     padding: 25px;
     margin-top: 35px;
     max-width: 1200px;
     max-height: 65vh;
     overflow-y: scroll;
-
   }
 
   .heading {
@@ -62,14 +57,11 @@
   }
 
   .text {
-
     color: $subtle-grey;
     margin-bottom: 10px;
-
   }
 
   button {
-
     border: none;
     text-decoration: none;
     outline: none;
@@ -88,9 +80,7 @@
     font-size: 14px;
 
     &:hover {
-        background-color: lighten($button-black, 10%);
+      background-color: lighten($button-black, 10%);
     }
-
   }
-
 }

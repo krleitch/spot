@@ -1,13 +1,11 @@
 <spot-nav></spot-nav>
 <div class="landing">
-
   <!-- Background Image set in css -->
-  <img class="image">
+  <img class="image" />
 
   <div class="signup-wrapper">
-
     <div class="showcase">
-      <img class="preview-image">
+      <img class="preview-image" />
     </div>
     <div class="mobile-showcase">
       <span> {{ STRINGS.SHOWCASE_MOBILE_1 }} </span>
@@ -16,16 +14,23 @@
     </div>
 
     <div class="signup">
-
       <div class="signup-text">
         {{ STRINGS.COMMUNITY }}
       </div>
 
       <form [formGroup]="form" (keyup.enter)="signUp()" autocomplete="off">
-
         <div class="login-options">
-          <div *ngIf="facebookLoaded" type="button" class="facebook" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="facebookLogin()">
-            <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+          <div
+            *ngIf="facebookLoaded"
+            type="button"
+            class="facebook"
+            [ngClass]="{ disabled: buttonsDisabled }"
+            (click)="facebookLogin()"
+          >
+            <img
+              src="../../../assets/images/facebook_logo_white.png"
+              class="facebook-logo"
+            />
             {{ STRINGS.FACEBOOK_LOGIN }}
           </div>
           <div id="my-signin2"></div>
@@ -36,29 +41,61 @@
         </div>
 
         <fieldset>
-            <div class="form-field">
-                <input name="email" formControlName="email" autocomplete="off" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
-            </div>
-            <div class="form-field">
-                <input name="username" formControlName="username" autocomplete="off" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
-            </div>
-            <div class="form-field">
-                <input name="password" formControlName="password" autocomplete="off" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
-            </div>
-            <div class="form-field">
-                <input name="phone" formControlName="phone" autocomplete="off" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
-            </div>
+          <div class="form-field">
+            <input
+              name="email"
+              formControlName="email"
+              autocomplete="off"
+              [placeholder]="STRINGS.EMAIL_PLACEHOLDER"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <input
+              name="username"
+              formControlName="username"
+              autocomplete="off"
+              [placeholder]="STRINGS.USERNAME_PLACEHOLDER"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <input
+              name="password"
+              formControlName="password"
+              autocomplete="off"
+              [placeholder]="STRINGS.PASSWORD_PLACEHOLDER"
+              type="password"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <input
+              name="phone"
+              formControlName="phone"
+              autocomplete="off"
+              [placeholder]="STRINGS.PHONE_PLACEHOLDER"
+              required
+            />
+          </div>
         </fieldset>
 
         <div class="terms-and-conditions">
           <div class="checkbox-text">
             <label class="checkbox-container">
-              <input name="terms" formControlName="terms" type="checkbox" required/>
+              <input
+                name="terms"
+                formControlName="terms"
+                type="checkbox"
+                required
+              />
               <span class="checkmark"></span>
             </label>
             <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
           </div>
-          <div class="text" (click)="openTerms()"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </div>
+          <div class="text" (click)="openTerms()">
+            {{ STRINGS.TERMS_AND_CONDITIONS_LINK }}
+          </div>
         </div>
 
         <div class="error-message">
@@ -66,9 +103,15 @@
         </div>
 
         <div class="form-buttons">
-          <button type="button" class="button" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="signUp()"> {{ STRINGS.SIGN_UP }} </button>
+          <button
+            type="button"
+            class="button"
+            [ngClass]="{ disabled: buttonsDisabled }"
+            (click)="signUp()"
+          >
+            {{ STRINGS.SIGN_UP }}
+          </button>
         </div>
-
       </form>
 
       <div class="bar"></div>
@@ -77,10 +120,8 @@
         <span> {{ STRINGS.EXISTING_ACCOUNT }} </span>
         <span class="sign-in-highlight"> {{ STRINGS.SIGN_IN }} </span>
       </a>
-
     </div>
   </div>
-
 </div>
 <div class="copyright">
   <span> &#169; {{ STRINGS.COPYRIGHT }} </span>

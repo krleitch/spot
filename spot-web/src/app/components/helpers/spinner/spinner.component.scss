@@ -34,8 +34,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 // dot  pulse
@@ -50,10 +54,11 @@
   color: $button-highlight;
   box-shadow: 9999px 0 0 -5px $button-highlight;
   animation: dotPulse 1.5s infinite linear;
-  animation-delay: .25s;
+  animation-delay: 0.25s;
 }
 
-.dot-pulse::before, .dot-pulse::after {
+.dot-pulse::before,
+.dot-pulse::after {
   content: '';
   display: inline-block;
   position: absolute;
@@ -74,7 +79,7 @@
 .dot-pulse::after {
   box-shadow: 10014px 0 0 -5px $button-highlight;
   animation: dotPulseAfter 1.5s infinite linear;
-  animation-delay: .5s;
+  animation-delay: 0.5s;
 }
 
 @keyframes dotPulseBefore {
@@ -92,14 +97,14 @@
 
 @keyframes dotPulse {
   0% {
-    box-shadow: 9999px 0 0 -5px $button-highlight
+    box-shadow: 9999px 0 0 -5px $button-highlight;
   }
   30% {
     box-shadow: 9999px 0 0 2px $button-highlight;
   }
   60%,
   100% {
-    box-shadow: 9999px 0 0 -5px $button-highlight
+    box-shadow: 9999px 0 0 -5px $button-highlight;
   }
 }
 

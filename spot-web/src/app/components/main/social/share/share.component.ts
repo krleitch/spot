@@ -1,12 +1,20 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 
 // rxjs
 import { Observable, Subject, throwError } from 'rxjs';
-import { map, takeUntil, catchError } from 'rxjs/operators';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
-import { RootStoreState, AccountsStoreSelectors } from '@store';
+import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
@@ -15,7 +23,10 @@ import { NotificationsService } from '@services/notifications.service';
 import { AlertService } from '@services/alert.service';
 
 // Models
-import { AddNotificationRequest, AddNotificationSuccess } from '@models/notifications';
+import {
+  AddNotificationRequest,
+  AddNotificationSuccess
+} from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
 
@@ -41,7 +52,6 @@ interface ShareModalData {
   styleUrls: ['./share.component.scss']
 })
 export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
-
   private readonly onDestroy = new Subject<void>();
   private observer: IntersectionObserver;
 
@@ -66,28 +76,31 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   link: string;
   twitterButtonCreated = false;
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private modalService: ModalService,
-              private notificationsService: NotificationsService,
-              private alertService: AlertService) { }
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private modalService: ModalService,
+    private notificationsService: NotificationsService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
-
     // Is the user authenticated
     this.authenticated$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
-    this.authenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticated: boolean) => {
-      this.authenticated = authenticated;
-    });
+    this.authenticated$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((authenticated: boolean) => {
+        this.authenticated = authenticated;
+      });
 
     this.data$ = this.modalService.getData(this.modalId);
 
-    this.data$.subscribe( (val) => {
+    this.data$.subscribe((val) => {
       this.data = val;
       this.link = window.location.origin + '/posts/' + this.data.postLink;
-      if ( this.data.commentLink ) {
+      if (this.data.commentLink) {
         this.link += '/comments/' + this.data.commentLink;
       }
       // reset send status
@@ -100,53 +113,52 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     // Add a sent property to the list of friends
-    this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriends),
-    ).pipe(
-      map( (friends: Friend[]) => {
-        return friends.map( (friend: Friend) => {
-          return {
-            ...friend,
-            sent: false,
-          };
-        });
-      }),
-    );
+    this.friends$ = this.store$
+      .pipe(select(SocialStoreSelectors.selectFriends))
+      .pipe(
+        map((friends: Friend[]) => {
+          return friends.map((friend: Friend) => {
+            return {
+              ...friend,
+              sent: false
+            };
+          });
+        })
+      );
 
-    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends: ShareFriend[]) => {
-      this.friends = friends;
-    });
-
+    this.friends$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((friends: ShareFriend[]) => {
+        this.friends = friends;
+      });
   }
 
   ngAfterViewInit(): void {
     // whenever the modal is opened and becomes visible
     this.observer = new IntersectionObserver(([entry]) => {
-
-      if ( entry.isIntersecting ) {
-
+      if (entry.isIntersecting) {
         // reset some state
         this.errorMessage = '';
         this.successMessage = '';
 
-        this.friends.forEach( (friend: ShareFriend) => {
+        this.friends.forEach((friend: ShareFriend) => {
           friend.sent = false;
         });
 
         // parse the links
-        if ( window['FB'] ) {
+        if (window['FB']) {
           window['FB'].XFBML.parse(this.social.nativeElement);
         }
-        if ( window['twttr'] ) {
-          if ( !this.twitterButtonCreated ) {
+        if (window['twttr']) {
+          if (!this.twitterButtonCreated) {
             window['twttr'].widgets.createShareButton(
               `https://twitter.com/share?url=${this.link}`,
               this.social.nativeElement,
               {
-                size: "large",
-                text: "Spotted",
-                hashtags: "spot",
-                via: "spot"
+                size: 'large',
+                text: 'Spotted',
+                hashtags: 'spot',
+                via: 'spot'
               }
             );
             this.twitterButtonCreated = true;
@@ -154,7 +166,6 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
           window['twttr'].widgets.load(this.social.nativeElement);
         }
       }
-
     });
     this.observer.observe(this.social.nativeElement);
   }
@@ -168,25 +179,28 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendNotification(): void {
-
     this.errorMessage = '';
     this.successMessage = '';
 
     // username is required
-    if ( !this.username ) {
+    if (!this.username) {
       this.errorMessage = this.STRINGS.USERNAME_ERROR;
       return;
     }
 
     // Check if they are your friend
-    if ( this.friends.find( (friend: Friend) =>  friend.username === this.username ) === undefined ) {
+    if (
+      this.friends.find(
+        (friend: Friend) => friend.username === this.username
+      ) === undefined
+    ) {
       this.errorMessage = this.STRINGS.FRIEND_ERROR;
       return;
     }
 
     let request: AddNotificationRequest;
 
-    if ( this.data.commentId ) {
+    if (this.data.commentId) {
       request = {
         receiver: this.username,
         postId: this.data.postId,
@@ -200,27 +214,31 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // send the request
-    this.notificationsService.addNotification(request).pipe(
-      takeUntil(this.onDestroy),
-      catchError( errorResponse => {
-        return throwError(errorResponse.error);
-      }),
-    ).subscribe( (response: AddNotificationSuccess ) => {
-      this.successMessage = this.STRINGS.SUCCESS + request.receiver;
-    }, ( error: SpotError ) => {
-      this.errorMessage = error.message;
-    });
-
+    this.notificationsService
+      .addNotification(request)
+      .pipe(
+        takeUntil(this.onDestroy),
+        catchError((errorResponse) => {
+          return throwError(errorResponse.error);
+        })
+      )
+      .subscribe(
+        (response: AddNotificationSuccess) => {
+          this.successMessage = this.STRINGS.SUCCESS + request.receiver;
+        },
+        (error: SpotError) => {
+          this.errorMessage = error.message;
+        }
+      );
   }
 
   sendNotificationToFriend(username: string): void {
-
     this.errorMessage = '';
     this.successMessage = '';
 
     let request: AddNotificationRequest;
 
-    if ( this.data.commentId ) {
+    if (this.data.commentId) {
       request = {
         receiver: username,
         postId: this.data.postId,
@@ -234,21 +252,25 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // send the request
-    this.notificationsService.addNotification(request).pipe(
-      takeUntil(this.onDestroy),
-      catchError( errorResponse => {
-        return throwError(errorResponse.error);
-      }),
-    ).subscribe( (response: AddNotificationSuccess ) => {
-      // none
-    }, ( error: SpotError ) => {
-      // none
-    });
-
+    this.notificationsService
+      .addNotification(request)
+      .pipe(
+        takeUntil(this.onDestroy),
+        catchError((errorResponse) => {
+          return throwError(errorResponse.error);
+        })
+      )
+      .subscribe(
+        (response: AddNotificationSuccess) => {
+          // none
+        },
+        (error: SpotError) => {
+          // none
+        }
+      );
   }
 
   copyLink(): void {
-
     // create an element to copy from
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -264,7 +286,5 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // message
     this.alertService.success(this.STRINGS.COPY_LINK_SUCCESS);
-
   }
-
 }

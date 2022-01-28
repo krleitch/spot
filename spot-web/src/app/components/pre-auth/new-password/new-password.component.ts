@@ -7,7 +7,12 @@ import { AuthenticationService } from '@services/authentication.service';
 
 // Assets
 import { STRINGS } from '@assets/strings/en';
-import { ValidateTokenRequest, ValidateTokenSuccess, NewPasswordRequest, NewPasswordSuccess } from '@models/authentication';
+import {
+  NewPasswordRequest,
+  NewPasswordSuccess,
+  ValidateTokenRequest,
+  ValidateTokenSuccess
+} from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 
 @Component({
@@ -16,7 +21,6 @@ import { SpotError } from '@exceptions/error';
   styleUrls: ['./new-password.component.scss']
 })
 export class NewPasswordComponent implements OnInit {
-
   STRINGS = STRINGS.PRE_AUTH.NEW_PASSWORD;
 
   formToken: FormGroup;
@@ -29,7 +33,11 @@ export class NewPasswordComponent implements OnInit {
   passwordLoading = false;
   buttonsDisabled = false;
 
-  constructor(private fb: FormBuilder, private authenticationService: AuthenticationService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authenticationService: AuthenticationService,
+    private router: Router
+  ) {
     this.formToken = this.fb.group({
       token: ['', Validators.required]
     });
@@ -40,18 +48,16 @@ export class NewPasswordComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   validateToken(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
     const val = this.formToken.value;
 
-    if ( !val.token ) {
+    if (!val.token) {
       this.errorMessage = this.STRINGS.TOKEN_NONE;
       this.formToken.controls.token.markAsDirty();
       return;
@@ -69,52 +75,56 @@ export class NewPasswordComponent implements OnInit {
       token: val.token
     };
 
-    this.authenticationService.validateToken(request).subscribe((response: ValidateTokenSuccess) => {
-      if ( response.valid ) {
-        this.token = response.token;
-      } else {
-        this.errorMessage = this.STRINGS.INVALID_TOKEN;
+    this.authenticationService.validateToken(request).subscribe(
+      (response: ValidateTokenSuccess) => {
+        if (response.valid) {
+          this.token = response.token;
+        } else {
+          this.errorMessage = this.STRINGS.INVALID_TOKEN;
+        }
+        this.buttonsDisabled = false;
+        this.tokenLoading = false;
+      },
+      (errorResponse: any) => {
+        if (errorResponse.error.name === 'RateLimitError') {
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
+            '%TIMEOUT%',
+            errorResponse.error.body.timeout
+          );
+        } else {
+          this.errorMessage = this.STRINGS.INVALID_TOKEN;
+        }
+        this.buttonsDisabled = false;
+        this.tokenLoading = false;
       }
-      this.buttonsDisabled = false;
-      this.tokenLoading = false;
-    }, ( errorResponse: any ) => {
-      if ( errorResponse.error.name === 'RateLimitError' ) {
-        this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', errorResponse.error.body.timeout);
-      } else {
-        this.errorMessage = this.STRINGS.INVALID_TOKEN;
-      }
-      this.buttonsDisabled = false;
-      this.tokenLoading = false;
-    });
-
+    );
   }
 
   resetPassword(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
     const val = this.formPassword.value;
 
-    if ( !val.password ) {
+    if (!val.password) {
       this.errorMessage = this.STRINGS.PASSWORD_NONE;
       this.formPassword.controls.password.markAsDirty();
       return;
     }
 
-    if ( !val.confirm ) {
+    if (!val.confirm) {
       this.errorMessage = this.STRINGS.CONFIRM_NONE;
       this.formPassword.controls.confirm.markAsDirty();
       return;
     }
 
-    if ( val.password !== val.confirm ) {
+    if (val.password !== val.confirm) {
       this.errorMessage = this.STRINGS.INVALID_MATCH;
       this.formPassword.controls.password.markAsDirty();
-      this.formPassword.controls.password.setErrors([{'incorrect': true}]);
+      this.formPassword.controls.password.setErrors([{ incorrect: true }]);
       this.formPassword.controls.confirm.markAsDirty();
-      this.formPassword.controls.confirm.setErrors([{'incorrect': true}]);
+      this.formPassword.controls.confirm.setErrors([{ incorrect: true }]);
       return;
     }
 
@@ -131,21 +141,25 @@ export class NewPasswordComponent implements OnInit {
       password: val.password
     };
 
-    this.authenticationService.newPassword(request).subscribe((response: NewPasswordSuccess) => {
-      this.passwordLoading = false;
-      this.buttonsDisabled = false;
-      this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
-    }, ( errorResponse: { error: SpotError } ) => {
-      if ( errorResponse.error.name === 'RateLimitError' ) {
-        this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', errorResponse.error.body.timeout);
-      } else {
-        this.errorMessage = errorResponse.error.message;
+    this.authenticationService.newPassword(request).subscribe(
+      (response: NewPasswordSuccess) => {
+        this.passwordLoading = false;
+        this.buttonsDisabled = false;
+        this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
+      },
+      (errorResponse: { error: SpotError }) => {
+        if (errorResponse.error.name === 'RateLimitError') {
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
+            '%TIMEOUT%',
+            errorResponse.error.body.timeout
+          );
+        } else {
+          this.errorMessage = errorResponse.error.message;
+        }
+        this.errorMessage = this.STRINGS.INVALID_TOKEN;
+        this.passwordLoading = false;
+        this.buttonsDisabled = false;
       }
-      this.errorMessage = this.STRINGS.INVALID_TOKEN;
-      this.passwordLoading = false;
-      this.buttonsDisabled = false;
-    });
-
+    );
   }
-
 }

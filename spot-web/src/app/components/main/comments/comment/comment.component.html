@@ -1,72 +1,129 @@
 <div class="container">
-  <div class="comment" [ngClass]="{ 'linked': post.startCommentLink == comment.link }">
-
+  <div
+    class="comment"
+    [ngClass]="{ linked: post.startCommentLink == comment.link }"
+  >
     <div class="left-bar">
       <div class="left-bar-alignment">
         <div class="column">
-          <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': comment.rated == 1}"> keyboard_arrow_up </i>
-          <div class="points"> {{ comment.likes - comment.dislikes }} </div>
-          <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': comment.rated == 0}"> keyboard_arrow_down </i>
+          <i
+            class="material-icons vote"
+            (click)="like()"
+            [ngClass]="{ highlight: comment.rated == 1 }"
+          >
+            keyboard_arrow_up
+          </i>
+          <div class="points">{{ comment.likes - comment.dislikes }}</div>
+          <i
+            class="material-icons vote"
+            (click)="dislike()"
+            [ngClass]="{ highlight: comment.rated == 0 }"
+          >
+            keyboard_arrow_down
+          </i>
         </div>
 
-        <div [class]="getProfilePictureClass(comment.profilePicture)" [ngClass]="{'profile-owned': comment.owned}">
-          <img [src]="'../../../../../assets/images/profile/' + comment.profilePictureSrc"/>
+        <div
+          [class]="getProfilePictureClass(comment.profilePicture)"
+          [ngClass]="{ 'profile-owned': comment.owned }"
+        >
+          <img
+            [src]="
+              '../../../../../assets/images/profile/' +
+              comment.profilePictureSrc
+            "
+          />
         </div>
-
       </div>
     </div>
 
     <div class="add-wrapper">
-
       <div class="content">
-
         <div class="tagger" *ngIf="comment.tag.tagged">
-            <span class="highlight"> {{ comment.tag.tagger }} </span> {{ STRINGS.TAGGER }}
+          <span class="highlight"> {{ comment.tag.tagger }} </span>
+          {{ STRINGS.TAGGER }}
         </div>
 
         <div class="text">
           <span #text class="text-content"></span>
           <span *ngIf="isExpandable">
             <span *ngIf="expanded; else notExpanded">
-              <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+              <span class="expand" (click)="setExpanded(false)">
+                {{ STRINGS.SEE_LESS }}
+              </span>
             </span>
             <ng-template #notExpanded>
-              <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+              <span class="expand" (click)="setExpanded(true)">
+                {{ STRINGS.SEE_MORE }}
+              </span>
             </ng-template>
           </span>
         </div>
 
         <div *ngIf="accountMetadata$ | async as accountMetadata">
-          <div *ngIf="comment.image_src != null" (click)="imageClicked()" class="image">
-            <img [src]="comment.image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }" />
-            <div *ngIf="imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+          <div
+            *ngIf="comment.image_src != null"
+            (click)="imageClicked()"
+            class="image"
+          >
+            <img
+              [src]="comment.image_src"
+              [ngClass]="{
+                'image-blur': imageBlurred && accountMetadata.mature_filter
+              }"
+            />
+            <div
+              *ngIf="imageBlurred && accountMetadata.mature_filter"
+              class="image-blur-text"
+            >
               <span class="material-icons icon"> error_outline </span>
               <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>
-              <span class="text highlight"> {{ STRINGS.MATURE_CONTENT_SHOW }} </span>
+              <span class="text highlight">
+                {{ STRINGS.MATURE_CONTENT_SHOW }}
+              </span>
             </div>
           </div>
         </div>
-
       </div>
 
       <div [hidden]="!showAddReply" class="add">
         <div class="editor">
-
-          <span #reply contenteditable="true" attr.ph="{{STRINGS.ADD_REPLY_PLACEHOLDER}}" class="reply-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></span>
-          <div *ngIf="imgSrc != null" class="image" >
+          <span
+            #reply
+            contenteditable="true"
+            attr.ph="{{ STRINGS.ADD_REPLY_PLACEHOLDER }}"
+            class="reply-content"
+            (input)="onTextInput($event)"
+            (keydown.enter)="onEnter()"
+          ></span>
+          <div *ngIf="imgSrc != null" class="image">
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
           <div class="file-options" *ngIf="imgSrc != null">
             <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
-            <span class="file-name"> {{ getDisplayFilename(imageFile.name) }} </span>
+            <span class="file-name">
+              {{ getDisplayFilename(imageFile.name) }}
+            </span>
             <span class="file-remove" (click)="removeFile()">
               <i class="material-icons"> delete </i>
             </span>
           </div>
           <div class="comment-options">
-            <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ MAX_COMMENT_LENGTH - currentLength }} </span>
-            <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
-            <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
+            <span
+              class="counter"
+              [ngClass]="{ 'counter-error': invalidLength() }"
+            >
+              {{ MAX_COMMENT_LENGTH - currentLength }}
+            </span>
+            <input
+              style="display: none"
+              type="file"
+              (change)="onFileChanged($event)"
+              #fileInput
+            />
+            <i class="material-icons photo" (click)="fileInput.click()">
+              insert_photo
+            </i>
             <span class="loading" *ngIf="addReplyLoading; else showsend">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
@@ -79,25 +136,47 @@
         </div>
       </div>
       <div class="error" *ngIf="addReplyError">
-        {{addReplyError}}
+        {{ addReplyError }}
       </div>
-
     </div>
 
     <div class="right-bar">
       <div #options>
-        <i class="material-icons icon-size" (click)="setOptions(true)"> more_horiz </i>
+        <i class="material-icons icon-size" (click)="setOptions(true)">
+          more_horiz
+        </i>
         <div class="dropdown align-bottom">
-          <div  class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
-            <div class="button" (click)="openReportModal(comment.post_id, comment.id)">
+          <div class="dropdown-content" [ngClass]="{ show: optionsEnabled }">
+            <div
+              class="button"
+              (click)="openReportModal(comment.post_id, comment.id)"
+            >
               <span class="material-icons icon"> outlined_flag </span>
               {{ STRINGS.REPORT }}
             </div>
-            <div class="button" (click)="openModal('spot-share-modal', { postId: post.id, postLink: post.link, commentId: comment.id, commentLink: comment.link })">
+            <div
+              class="button"
+              (click)="
+                openModal('spot-share-modal', {
+                  postId: post.id,
+                  postLink: post.link,
+                  commentId: comment.id,
+                  commentLink: comment.link
+                })
+              "
+            >
               <span class="material-icons icon"> share </span>
               {{ STRINGS.SHARE }}
             </div>
-            <div *ngIf="comment.owned || account.role === 'admin' || account.role === 'owner'" class="button" (click)="deleteComment()">
+            <div
+              *ngIf="
+                comment.owned ||
+                account.role === 'admin' ||
+                account.role === 'owner'
+              "
+              class="button"
+              (click)="deleteComment()"
+            >
               <span class="material-icons icon"> delete </span>
               {{ STRINGS.DELETE }}
             </div>
@@ -107,19 +186,39 @@
       <div class="time">
         {{ timeMessage }}
       </div>
-      <div class="reply" (click)="setShowAddReply(true)" [ngClass]="{ 'disabled': !(comment.tag.tagged || post.inRange && ((isAuthenticated$ | async) && (isVerified$ | async)) && location)}">
+      <div
+        class="reply"
+        (click)="setShowAddReply(true)"
+        [ngClass]="{
+          disabled: !(
+            comment.tag.tagged ||
+            (post.inRange &&
+              (isAuthenticated$ | async) &&
+              (isVerified$ | async) &&
+              location)
+          )
+        }"
+      >
         <i class="material-icons"> reply </i>
       </div>
     </div>
-
   </div>
 
   <span class="tag-relative" #tag>
-    <spot-tag #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
+    <spot-tag
+      #tagelem
+      *ngIf="showTag"
+      [name]="tagName"
+      [postLink]="post.link"
+      (tag)="addTag($event)"
+    ></spot-tag>
   </span>
 
   <div *ngIf="loadingReplies; else loadedReplies">
-    <div *ngIf="showLoadingRepliesIndicator$ | async" class="no-replies-loading">
+    <div
+      *ngIf="showLoadingRepliesIndicator$ | async"
+      class="no-replies-loading"
+    >
       <span> {{ STRINGS.LOADING_REPLIES }} </span>
       <div class="loading">
         <spot-spinner size="small" type="dot"></spot-spinner>
@@ -128,19 +227,27 @@
   </div>
   <ng-template #loadedReplies>
     <div *ngFor="let reply of replies">
-      <spot-reply [reply]="reply" [comment]="comment" [post]="post" [detailed]="detailed"></spot-reply>
+      <spot-reply
+        [reply]="reply"
+        [comment]="comment"
+        [post]="post"
+        [detailed]="detailed"
+      ></spot-reply>
     </div>
   </ng-template>
 
   <div *ngIf="totalRepliesAfter > 0" class="load-more-container">
-    <div class="load-more"  (click)="loadMoreReplies()">
+    <div class="load-more" (click)="loadMoreReplies()">
       {{ STRINGS.LOAD }}
       {{ loadMoreRepliesNum() }}
-      {{ loadMoreRepliesNum() > 1 ? STRINGS.MORE_REPLIES : STRINGS.MORE_REPLIES_SINGULAR }}
+      {{
+        loadMoreRepliesNum() > 1
+          ? STRINGS.MORE_REPLIES
+          : STRINGS.MORE_REPLIES_SINGULAR
+      }}
       <div *ngIf="loadingMoreReplies" class="load-more-replies">
         <spot-spinner size="small"></spot-spinner>
       </div>
     </div>
   </div>
-
 </div>

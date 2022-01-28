@@ -11,17 +11,17 @@
 }
 
 .image {
-    background-image: url('../../../../assets/images/landing_v7.png');
-    background-repeat: repeat-x;
-    background-size: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    min-height: 800px;
-    max-height: 2000px;
-    width: 100%;
-    min-width: 1100px;
+  background-image: url('../../../../assets/images/landing_v7.png');
+  background-repeat: repeat-x;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  min-height: 800px;
+  max-height: 2000px;
+  width: 100%;
+  min-width: 1100px;
 }
 
 // SIGNUP
@@ -40,7 +40,6 @@
 // showcase
 
 .showcase {
-
   display: flex;
   flex-flow: column;
   position: relative;
@@ -51,7 +50,7 @@
   width: 1050px;
   height: 1%;
   overflow: auto;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
 
   .preview-image {
     background-image: url('../../../../assets/images/preview_v2.png');
@@ -59,13 +58,11 @@
     background-repeat: no-repeat;
     margin: 5px;
     width: calc(100% - 10px);
-    padding-top: calc( 0.5 * (100% - 10px) );
+    padding-top: calc(0.5 * (100% - 10px));
   }
-
 }
 
 .mobile-showcase {
-
   font-family: 'Roboto Condensed', sans-serif;
   text-shadow: 1px 1px $subtle-grey;
   display: none;
@@ -77,74 +74,73 @@
     color: $button-highlight;
     text-shadow: 1px 1px black;
   }
-
 }
 
 // signup
 
 .signup {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-    padding: 80px 50px;
-    margin-left: 25px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 80px 50px;
+  margin-left: 25px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .signup-text {
-    font-size: 28px;
-    margin-bottom: 15px;
+  font-size: 28px;
+  margin-bottom: 15px;
 }
 
 form {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .login-options {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .facebook {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $facebook-blue;
-    color: white;
-    font-size: 14px;
-    padding: 12px 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    cursor: pointer;
-    width: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $facebook-blue;
+  color: white;
+  font-size: 14px;
+  padding: 12px 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 240px;
 }
 
 .facebook-logo {
-    width: 30px;
-    height: 30px;
-    margin-right: 18px;
+  width: 30px;
+  height: 30px;
+  margin-right: 18px;
 }
 
 fieldset {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    width: 100%;
-    padding: 0;
-    margin: 0 0 10px 0;
-    box-sizing: border-box;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 10px 0;
+  box-sizing: border-box;
 }
 
 input {
@@ -157,7 +153,7 @@ input {
 }
 
 input.ng-dirty.ng-invalid {
-    border: 1px solid $error-red;
+  border: 1px solid $error-red;
 }
 
 .error-message {
@@ -168,55 +164,50 @@ input.ng-dirty.ng-invalid {
 }
 
 .form-field {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-buttons {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+
+  button {
+    border: none;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
 
     display: flex;
-    flex-flow: column;
     justify-content: center;
     align-items: center;
+    background-color: $button-black;
+    color: $button-font-white;
+    padding: 12px 24px;
+    font-size: 14px;
 
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-
-    button {
-
-      border: none;
-      text-decoration: none;
-      outline: none;
-      cursor: pointer;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: $button-black;
-      color: $button-font-white;
-      padding: 12px 24px;
-      font-size: 14px;
-
-      &:hover {
-          background-color: lighten($button-black, 10%);
-      }
-
+    &:hover {
+      background-color: lighten($button-black, 10%);
     }
+  }
 
-    button.disabled {
-      background-color: $subtle-grey;
-      cursor: not-allowed;
-    }
-
+  button.disabled {
+    background-color: $subtle-grey;
+    cursor: not-allowed;
+  }
 }
 
 .terms-and-conditions {
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,7 +230,6 @@ input.ng-dirty.ng-invalid {
       color: $button-highlight;
     }
   }
-
 }
 
 .disabled {
@@ -291,7 +281,7 @@ input.ng-dirty.ng-invalid {
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
@@ -317,22 +307,20 @@ input.ng-dirty.ng-invalid {
 // EXISTING ACCOUNT
 
 .bar {
-    width: 100%;
-    border-bottom: 1px solid $button-black;
-    margin-bottom: 10px;
+  width: 100%;
+  border-bottom: 1px solid $button-black;
+  margin-bottom: 10px;
 }
 
 .existing-account {
+  text-decoration: none;
+  color: black;
+  text-align: center;
+  cursor: pointer;
 
-    text-decoration: none;
-    color: black;
-    text-align: center;
-    cursor: pointer;
-
-    .sign-in-highlight {
-      color: $button-highlight;
+  .sign-in-highlight {
+    color: $button-highlight;
   }
-
 }
 
 .existing-account:hover .sign-in-highlight {
@@ -342,44 +330,37 @@ input.ng-dirty.ng-invalid {
 // COPYRIGHT
 
 .copyright {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    font-size: 14px;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 14px;
 }
 
 // Special stylings, Landing only constants since landing is very special
 
 // give less padding on smaller screens
 @media screen and (max-height: 900px) {
-
   .signup {
     padding: 20px 20px;
   }
-
 }
 
 // allow vertical scroll when not enough height for singup-wrapper
 @media screen and (max-height: 760px) {
-
   .landing {
     overflow-y: auto;
   }
-
 }
 
 // Use the mobile showcase, enable vertical scroll
 @media screen and (max-width: 1500px) {
-
   .showcase {
     width: 850px;
   }
-
 }
 
 // Use the mobile showcase, enable vertical scroll
 @media screen and (max-width: 850px) {
-
   .signup-wrapper {
     flex-flow: column;
     align-items: center;
@@ -411,5 +392,4 @@ input.ng-dirty.ng-invalid {
     padding: 15px 10px;
     margin-left: 0px;
   }
-
 }

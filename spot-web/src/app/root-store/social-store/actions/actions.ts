@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
 export enum ActionTypes {
-  RESET_STORE = '[Social] Reset Store',
+  RESET_STORE = '[Social] Reset Store'
 }
 
 export class ResetStoreAction implements Action {

@@ -1,66 +1,132 @@
 <div class="spot-auth-modal">
-
   <div class="header">
     <span class="title"> {{ STRINGS.TITLE }} </span>
-    <span class="close" (click)="close()"> <span class="material-icons"> clear </span> </span>
+    <span class="close" (click)="close()">
+      <span class="material-icons"> clear </span>
+    </span>
   </div>
 
   <div class="content">
-
     <div class="tab-container">
-      <div class="tab" (click)="selectTab('login')" [ngClass]="{'selected': selectedTab == 'login'}"> {{ STRINGS.LOGIN }} </div>
-      <div class="tab" (click)="selectTab('register')" [ngClass]="{'selected': selectedTab == 'register'}"> {{ STRINGS.REGISTER }} </div>
+      <div
+        class="tab"
+        (click)="selectTab('login')"
+        [ngClass]="{ selected: selectedTab === 'login' }"
+      >
+        {{ STRINGS.LOGIN }}
+      </div>
+      <div
+        class="tab"
+        (click)="selectTab('register')"
+        [ngClass]="{ selected: selectedTab === 'register' }"
+      >
+        {{ STRINGS.REGISTER }}
+      </div>
     </div>
 
-    <div *ngIf="selectedTab == 'login'" class="login">
-
+    <div *ngIf="selectedTab === 'login'" class="login">
       <form [formGroup]="loginForm" (keyup.enter)="login()" autocomplete="on">
         <fieldset>
           <div class="form-field">
-              <input name="emailOrUsername" formControlName="emailOrUsername" autocomplete="username" [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER" required>
+            <input
+              name="emailOrUsername"
+              formControlName="emailOrUsername"
+              autocomplete="username"
+              [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER"
+              required
+            />
           </div>
           <div class="form-field">
-              <input name="password" formControlName="password" autocomplete="current-password" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+            <input
+              name="password"
+              formControlName="password"
+              autocomplete="current-password"
+              [placeholder]="STRINGS.PASSWORD_PLACEHOLDER"
+              type="password"
+              required
+            />
           </div>
         </fieldset>
         <div class="error-message">
           {{ loginErrorMessage }}
         </div>
         <div class="form-buttons">
-          <button type="button" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="login()"> {{ STRINGS.LOGIN_BUTTON }} </button>
+          <button
+            type="button"
+            [ngClass]="{ disabled: buttonsDisabled }"
+            (click)="login()"
+          >
+            {{ STRINGS.LOGIN_BUTTON }}
+          </button>
         </div>
-        <a (click)="close()" [routerLink]="'/password-reset'"> {{ STRINGS.FORGOT_PASSWORD }} </a>
+        <a (click)="close()" [routerLink]="'/password-reset'">
+          {{ STRINGS.FORGOT_PASSWORD }}
+        </a>
       </form>
-
     </div>
 
-    <div *ngIf="selectedTab == 'register'" class="register">
-
-      <form [formGroup]="registerForm" (keyup.enter)="register()" autocomplete="off">
+    <div *ngIf="selectedTab === 'register'" class="register">
+      <form
+        [formGroup]="registerForm"
+        (keyup.enter)="register()"
+        autocomplete="off"
+      >
         <fieldset>
           <div class="form-field">
-              <input name="email" formControlName="email" autocomplete="off" [placeholder]="STRINGS.EMAIL_PLACEHOLDER" required>
+            <input
+              name="email"
+              formControlName="email"
+              autocomplete="off"
+              [placeholder]="STRINGS.EMAIL_PLACEHOLDER"
+              required
+            />
           </div>
           <div class="form-field">
-              <input name="username" formControlName="username" autocomplete="off" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" required>
+            <input
+              name="username"
+              formControlName="username"
+              autocomplete="off"
+              [placeholder]="STRINGS.USERNAME_PLACEHOLDER"
+              required
+            />
           </div>
           <div class="form-field">
-              <input name="password" formControlName="password" autocomplete="off" [placeholder]="STRINGS.PASSWORD_PLACEHOLDER" type="password" required>
+            <input
+              name="password"
+              formControlName="password"
+              autocomplete="off"
+              [placeholder]="STRINGS.PASSWORD_PLACEHOLDER"
+              type="password"
+              required
+            />
           </div>
           <div class="form-field">
-              <input name="phone" formControlName="phone" autocomplete="off" [placeholder]="STRINGS.PHONE_PLACEHOLDER" required>
+            <input
+              name="phone"
+              formControlName="phone"
+              autocomplete="off"
+              [placeholder]="STRINGS.PHONE_PLACEHOLDER"
+              required
+            />
           </div>
         </fieldset>
 
         <div class="terms-and-conditions">
           <div class="checkbox-text">
             <label class="checkbox-container">
-              <input name="terms" formControlName="terms" type="checkbox" required/>
+              <input
+                name="terms"
+                formControlName="terms"
+                type="checkbox"
+                required
+              />
               <span class="checkmark"></span>
             </label>
             <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
           </div>
-          <div class="text" (click)="openTerms()"> {{ STRINGS.TERMS_AND_CONDITIONS_LINK }} </div>
+          <div class="text" (click)="openTerms()">
+            {{ STRINGS.TERMS_AND_CONDITIONS_LINK }}
+          </div>
         </div>
 
         <div class="error-message">
@@ -68,21 +134,33 @@
         </div>
 
         <div class="form-buttons">
-          <button type="button" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="register()"> {{ STRINGS.REGISTER_BUTTON }} </button>
+          <button
+            type="button"
+            [ngClass]="{ disabled: buttonsDisabled }"
+            (click)="register()"
+          >
+            {{ STRINGS.REGISTER_BUTTON }}
+          </button>
         </div>
       </form>
-
     </div>
 
     <div class="login-options">
-      <div *ngIf="facebookLoaded" type="button" class="facebook" [ngClass]="{ 'disabled': buttonsDisabled }" (click)="facebookLogin()">
-        <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+      <div
+        *ngIf="facebookLoaded"
+        type="button"
+        class="facebook"
+        [ngClass]="{ disabled: buttonsDisabled }"
+        (click)="facebookLogin()"
+      >
+        <img
+          src="../../../assets/images/facebook_logo_white.png"
+          class="facebook-logo"
+        />
         {{ STRINGS.FACEBOOK_LOGIN }}
       </div>
       <!-- GOOGLE -->
       <div id="my-signin2"></div>
     </div>
-
   </div>
-
 </div>

@@ -1,32 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Spot</title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="spoticon.ico">
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="spoticon.ico" />
     <!-- Theme -->
-    <link [href]="themeService.getTheme()" type="text/css" rel="stylesheet">
+    <link [href]="themeService.getTheme()" type="text/css" rel="stylesheet" />
     <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
     <!-- Google api -->
-    <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
+    <script
+      src="https://apis.google.com/js/platform.js?onload=onLoadCallback"
+      async
+      defer
+    ></script>
     <script type="text/javascript">
       function onLoadCallback() {
-        var interval = setInterval(function() {
-          if ((window).googleListenerAdded) {
-              window.dispatchEvent(new Event("gapi-loaded"));
-              clearInterval(interval);
+        var interval = setInterval(function () {
+          if (window.googleListenerAdded) {
+            window.dispatchEvent(new Event('gapi-loaded'));
+            clearInterval(interval);
           }
         }, 500);
       }
     </script>
-    <meta name="google-signin-client_id" content="773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com">
+    <meta
+      name="google-signin-client_id"
+      content="773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com"
+    />
   </head>
   <body>
     <!--  Facebook api -->
     <div id="fb-root"></div>
-    <app-root></app-root>
+    <spot-root></spot-root>
   </body>
 </html>

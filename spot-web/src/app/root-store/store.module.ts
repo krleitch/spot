@@ -16,7 +16,7 @@ import { SocialStoreModule } from './social-store/social-store.module';
     CommentsStoreModule,
     SocialStoreModule,
     StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([])
   ],
   declarations: []
 })

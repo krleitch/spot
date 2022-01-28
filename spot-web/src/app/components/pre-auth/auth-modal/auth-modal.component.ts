@@ -1,20 +1,36 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Subject, Observable } from 'rxjs';
-import { takeUntil, skip } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { skip, takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions, AccountsStoreSelectors } from '@store/accounts-store';
+import {
+  AccountsActions,
+  AccountsFacebookActions,
+  AccountsGoogleActions,
+  AccountsStoreSelectors
+} from '@store/accounts-store';
 
 // Services
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
 
 // Models
-import { LoginRequest, RegisterRequest, FacebookLoginRequest, GoogleLoginRequest } from '@models/authentication';
+import {
+  FacebookLoginRequest,
+  GoogleLoginRequest,
+  LoginRequest,
+  RegisterRequest
+} from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 
 // Assets
@@ -28,7 +44,6 @@ declare const gapi: any;
   styleUrls: ['./auth-modal.component.scss']
 })
 export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
-
   private readonly onDestroy = new Subject<void>();
 
   @Input() modalId: string;
@@ -46,58 +61,64 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   buttonsDisabled: boolean;
   facebookLoaded = false;
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private modalService: ModalService,
-              private authenticationService: AuthenticationService,
-              private fb: FormBuilder) {
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private modalService: ModalService,
+    private authenticationService: AuthenticationService,
+    private fb: FormBuilder
+  ) {
     this.loginForm = this.fb.group({
       emailOrUsername: ['', Validators.required],
-      password: ['', Validators.required],
+      password: ['', Validators.required]
     });
     this.registerForm = this.fb.group({
       email: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required],
       phone: ['', Validators.required],
-      terms: [false, Validators.required],
+      terms: [false, Validators.required]
     });
   }
 
   ngOnInit(): void {
-
     // SUCCESS
     this.authenticationSuccess$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationSuccess)
     );
 
-    this.authenticationSuccess$.pipe(takeUntil(this.onDestroy)).subscribe( (authenticationSuccess: boolean) => {
-      if ( authenticationSuccess ) {
-        this.buttonsDisabled = false;
-      }
-    });
+    this.authenticationSuccess$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((authenticationSuccess: boolean) => {
+        if (authenticationSuccess) {
+          this.buttonsDisabled = false;
+        }
+      });
 
     // FAILURE
     this.authenticationError$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAuthenticationError)
     );
 
-    this.authenticationError$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (authenticationError: SpotError) => {
-      if ( authenticationError ) {
-
-        if ( authenticationError.name === 'RateLimitError') {
-          this.loginErrorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
-                                                      .replace('%TIMEOUT%', authenticationError.body.timeout);
-          this.registerErrorMessage = this.STRINGS.RATE_LIMIT.replace('%LIMIT%', authenticationError.body.limit)
-                                                      .replace('%TIMEOUT%', authenticationError.body.timeout);
-        } else {
-          this.loginErrorMessage = authenticationError.message;
-          this.registerErrorMessage = authenticationError.message;
+    this.authenticationError$
+      .pipe(takeUntil(this.onDestroy), skip(1))
+      .subscribe((authenticationError: SpotError) => {
+        if (authenticationError) {
+          if (authenticationError.name === 'RateLimitError') {
+            this.loginErrorMessage = this.STRINGS.RATE_LIMIT.replace(
+              '%LIMIT%',
+              authenticationError.body.limit
+            ).replace('%TIMEOUT%', authenticationError.body.timeout);
+            this.registerErrorMessage = this.STRINGS.RATE_LIMIT.replace(
+              '%LIMIT%',
+              authenticationError.body.limit
+            ).replace('%TIMEOUT%', authenticationError.body.timeout);
+          } else {
+            this.loginErrorMessage = authenticationError.message;
+            this.registerErrorMessage = authenticationError.message;
+          }
+          this.buttonsDisabled = false;
         }
-        this.buttonsDisabled = false;
-
-      }
-    });
-
+      });
   }
 
   ngOnDestroy(): void {
@@ -105,23 +126,25 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
-      if ( service === 'google' ) {
-        gapi.signin2.render('my-signin2', {
+    this.authenticationService.socialServiceReady
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((service: string) => {
+        if (service === 'google') {
+          gapi.signin2.render('my-signin2', {
             scope: 'profile email',
             width: 240,
             height: 55,
             longtitle: true,
             theme: 'light',
-            onsuccess: param => this.googleLogin(param)
-        });
-      }
-      if ( service === 'FB' ) {
-        setTimeout(() => {
-          this.facebookLoaded = true;
-        });
-      }
-    });
+            onsuccess: (param) => this.googleLogin(param)
+          });
+        }
+        if (service === 'FB') {
+          setTimeout(() => {
+            this.facebookLoaded = true;
+          });
+        }
+      });
   }
 
   close(): void {
@@ -137,8 +160,7 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   login(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
@@ -160,24 +182,21 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const loginRequest: LoginRequest = {
       emailOrUsername: val.emailOrUsername,
-      password: val.password,
+      password: val.password
     };
 
-    this.store$.dispatch(
-      new AccountsActions.LoginRequestAction(loginRequest)
-    );
+    this.store$.dispatch(new AccountsActions.LoginRequestAction(loginRequest));
   }
 
   register(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
     const val = this.registerForm.value;
     let valid = true;
 
-    if ( !val.terms ) {
+    if (!val.terms) {
       this.registerErrorMessage = this.STRINGS.TERMS_ERROR;
       this.registerForm.controls.terms.markAsDirty();
       return;
@@ -234,31 +253,27 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
       new AccountsActions.RegisterRequestAction(registerRequest)
     );
     this.buttonsDisabled = true;
-
   }
 
   facebookLogin(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
-          window['FB'].login((loginResponse) => {
-            if (loginResponse.status === 'connected') {
+        window['FB'].login((loginResponse) => {
+          if (loginResponse.status === 'connected') {
+            const request: FacebookLoginRequest = {
+              accessToken: loginResponse.authResponse.accessToken
+            };
 
-                const request: FacebookLoginRequest = {
-                  accessToken: loginResponse.authResponse.accessToken
-                };
-
-                this.store$.dispatch(
-                  new AccountsFacebookActions.FacebookLoginRequestAction(request)
-                );
-                this.buttonsDisabled = true;
-
-            }
-          });
+            this.store$.dispatch(
+              new AccountsFacebookActions.FacebookLoginRequestAction(request)
+            );
+            this.buttonsDisabled = true;
+          }
+        });
       } else {
         // already logged in
         const request: FacebookLoginRequest = {
@@ -269,18 +284,15 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
           new AccountsFacebookActions.FacebookLoginRequestAction(request)
         );
         this.buttonsDisabled = true;
-
       }
     });
-
   }
 
   googleLogin(googleUser): void {
-
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
 
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
@@ -297,18 +309,14 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // sign out of the instance, so we don't auto login
     this.googleSignOut();
-
   }
 
   googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(() => {
-
-    });
+    auth2.signOut().then(() => {});
   }
 
   openTerms(): void {
     this.modalService.open('spot-terms-modal');
   }
-
 }

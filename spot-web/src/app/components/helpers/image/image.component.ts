@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ModalService } from '@services/modal.service';
@@ -9,23 +9,18 @@ import { ModalService } from '@services/modal.service';
   styleUrls: ['./image.component.scss']
 })
 export class ImageComponent implements OnInit {
-
   @Input() modalId;
 
   data$: Observable<any>;
   data: { imageSrc: string } = { imageSrc: null };
 
-  constructor(private modalService: ModalService) { }
+  constructor(private modalService: ModalService) {}
 
   ngOnInit() {
-
     this.data$ = this.modalService.getData(this.modalId);
 
-    this.data$.subscribe( (val) => {
+    this.data$.subscribe((val) => {
       this.data.imageSrc = val;
     });
-
-
   }
-
 }

@@ -1,14 +1,25 @@
-import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 // rxjs
 import { Observable, Subject, timer } from 'rxjs';
-import { takeUntil, mapTo, takeWhile, startWith } from 'rxjs/operators';
+import { mapTo, startWith, takeUntil, takeWhile } from 'rxjs/operators';
 
 // store
-import { select, Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { AccountsActions } from '@store/accounts-store';
-import { SocialStoreSelectors, SocialStoreNotificationsActions } from '@store/social-store';
+import {
+  SocialStoreNotificationsActions,
+  SocialStoreSelectors
+} from '@store/social-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 
 // services
@@ -25,7 +36,6 @@ import { GetNotificationsUnreadRequest } from '@models/notifications';
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent implements OnInit, OnDestroy {
-
   private readonly onDestroy = new Subject<void>();
 
   // on title click
@@ -52,15 +62,16 @@ export class NavComponent implements OnInit, OnDestroy {
   unreadNotifications = '0';
   showNotifications = false;
 
-  constructor(private router: Router,
-              private store$: Store<RootStoreState.State>,
-              private modalService: ModalService,
-              private ref: ChangeDetectorRef) {
+  constructor(
+    private router: Router,
+    private store$: Store<RootStoreState.State>,
+    private modalService: ModalService,
+    private ref: ChangeDetectorRef
+  ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
   ngOnInit(): void {
-
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
     );
@@ -77,39 +88,50 @@ export class NavComponent implements OnInit, OnDestroy {
       select(AccountsStoreSelectors.selectIsAuthenticated)
     );
 
-    this.isAuthenticated$.pipe(takeUntil(this.onDestroy)).subscribe( (isAuthenticated: boolean) => {
-      this.isAuthenticated  = isAuthenticated;
-      if (isAuthenticated) {
+    this.isAuthenticated$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((isAuthenticated: boolean) => {
+        this.isAuthenticated = isAuthenticated;
+        if (isAuthenticated) {
+          this.ref.markForCheck();
 
-        this.ref.markForCheck();
+          const request: GetNotificationsUnreadRequest = {};
 
-        const request: GetNotificationsUnreadRequest = {};
+          this.store$.dispatch(
+            new SocialStoreNotificationsActions.GetNotificationsUnreadAction(
+              request
+            )
+          );
+        }
+      });
 
-        this.store$.dispatch(
-          new SocialStoreNotificationsActions.GetNotificationsUnreadAction(request)
-        );
-      }
-    });
-
-    this.unread$.pipe(takeUntil(this.onDestroy)).subscribe( (numberUnread: number) => {
-      if (numberUnread >= 10) {
-        this.unreadNotifications = '+';
-      } else {
-        this.unreadNotifications = numberUnread.toString();
-      }
-    });
+    this.unread$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((numberUnread: number) => {
+        if (numberUnread >= 10) {
+          this.unreadNotifications = '+';
+        } else {
+          this.unreadNotifications = numberUnread.toString();
+        }
+      });
 
     this.accountLoading$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountLoading)
     );
 
-    this.accountLoading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
-      this.loading = loading;
-      if ( this.loading ) {
-        this.showAccountIndicator$ = timer(1000).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
-      }
-    });
-
+    this.accountLoading$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((loading: boolean) => {
+        this.loading = loading;
+        if (this.loading) {
+          this.showAccountIndicator$ = timer(1000)
+            .pipe(
+              mapTo(true),
+              takeWhile((_) => this.loading)
+            )
+            .pipe(startWith(false));
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -118,11 +140,17 @@ export class NavComponent implements OnInit, OnDestroy {
 
   offClickHandler(event: MouseEvent): void {
     // Hide the dropdown if you click outside
-    if (this.accountView && !this.accountView.nativeElement.contains(event.target)) {
+    if (
+      this.accountView &&
+      !this.accountView.nativeElement.contains(event.target)
+    ) {
       this.accountSetDropdown(false);
     }
 
-    if (this.notificationsView && !this.notificationsView.nativeElement.contains(event.target)) {
+    if (
+      this.notificationsView &&
+      !this.notificationsView.nativeElement.contains(event.target)
+    ) {
       this.showNotifications = false;
     }
   }
@@ -132,15 +160,12 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.store$.dispatch(
-      new AccountsActions.LogoutRequestAction()
-    );
+    this.store$.dispatch(new AccountsActions.LogoutRequestAction());
   }
 
   navigateHome(): void {
-
     // Bring to landing  if not logged in
-    if ( !this.isAuthenticated ) {
+    if (!this.isAuthenticated) {
       this.router.navigateByUrl('/');
       return;
     }
@@ -148,7 +173,7 @@ export class NavComponent implements OnInit, OnDestroy {
     // Bring back to home or scroll up in home
     if (this.router.url === '/home') {
       this.titleEvent.emit(true);
-      window.scrollTo({top: 0, behavior: 'smooth'});
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       this.router.navigateByUrl('/home');
     }
@@ -161,5 +186,4 @@ export class NavComponent implements OnInit, OnDestroy {
   toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
   }
-
 }

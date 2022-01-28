@@ -1,8 +1,19 @@
 import { Action } from '@ngrx/store';
 
-import { AddPostRequest, AddPostSuccess, LikePostRequest, DislikePostRequest, LikePostSuccess, DislikePostSuccess,
-          DeletePostRequest, DeletePostSuccess, LoadPostSuccess, LoadPostRequest, UnratedPostRequest,
-          UnratedPostSuccess } from '@models/posts';
+import {
+  AddPostRequest,
+  AddPostSuccess,
+  DeletePostRequest,
+  DeletePostSuccess,
+  DislikePostRequest,
+  DislikePostSuccess,
+  LikePostRequest,
+  LikePostSuccess,
+  LoadPostRequest,
+  LoadPostSuccess,
+  UnratedPostRequest,
+  UnratedPostSuccess
+} from '@models/posts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -92,7 +103,7 @@ export class AddFailureAction implements Action {
 
 export class LoadRequestAction implements Action {
   readonly type = ActionTypes.LOAD_REQUEST;
-  constructor(public request: LoadPostRequest ) {}
+  constructor(public request: LoadPostRequest) {}
 }
 
 export class LoadSuccessAction implements Action {
@@ -110,9 +121,21 @@ export class DeleteCommentAction implements Action {
   constructor(public request: { postId: string }) {}
 }
 
-export type Actions = GenericFailureAction | LoadRequestAction | LoadSuccessAction |
-                      AddRequestAction | AddSuccessAction | AddFailureAction |
-                      DeleteRequestAction | DeleteSuccessAction | LikeRequestAction |
-                      LikeSuccessAction | DislikeRequestAction | DislikeSuccessAction |
-                      UnratedRequestAction | UnratedSuccessAction | AddCommentAction |
-                      DeleteCommentAction | ResetStoreAction;
+export type Actions =
+  | GenericFailureAction
+  | LoadRequestAction
+  | LoadSuccessAction
+  | AddRequestAction
+  | AddSuccessAction
+  | AddFailureAction
+  | DeleteRequestAction
+  | DeleteSuccessAction
+  | LikeRequestAction
+  | LikeSuccessAction
+  | DislikeRequestAction
+  | DislikeSuccessAction
+  | UnratedRequestAction
+  | UnratedSuccessAction
+  | AddCommentAction
+  | DeleteCommentAction
+  | ResetStoreAction;

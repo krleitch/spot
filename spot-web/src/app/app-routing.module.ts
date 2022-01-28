@@ -29,16 +29,16 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent,
+    component: LoginComponent
   },
   {
     path: 'register',
-    component: RegisterComponent,
+    component: RegisterComponent
   },
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   },
   {
     path: 'account',
@@ -92,11 +92,12 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    onSameUrlNavigation: 'reload',
-    relativeLinkResolution: 'legacy'
-})],
+  imports: [
+    RouterModule.forRoot(routes, {
+      onSameUrlNavigation: 'reload',
+      relativeLinkResolution: 'legacy'
+    })
+  ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
-
+export class AppRoutingModule {}

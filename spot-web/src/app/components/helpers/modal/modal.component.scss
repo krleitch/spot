@@ -17,15 +17,13 @@
   overflow: auto;
 
   .spot-modal-body {
-
     background: #fff;
 
     position: fixed;
     top: 30%;
     left: 50%;
     transform: translate(-50%, -30%);
-    box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
-
+    box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -47,15 +45,11 @@
 
 // Mobile stylings
 @media screen and (max-width: $mobile-width) {
-
   .spot-modal {
-
     .spot-modal-body {
       max-width: 95%;
       top: 65px;
       transform: translateX(-50%);
     }
-
   }
-
 }

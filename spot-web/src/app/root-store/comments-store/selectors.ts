@@ -1,8 +1,17 @@
-import { createSelector, createFeatureSelector, MemoizedSelector, MemoizedSelectorWithProps } from '@ngrx/store';
+import {
+  MemoizedSelector,
+  MemoizedSelectorWithProps,
+  createFeatureSelector,
+  createSelector
+} from '@ngrx/store';
 
 import { State, StoreComment, StoreReply } from './state';
 
-export const selectTaggedFromStore = (state: State, postId: string, commentId: string): boolean => {
+export const selectTaggedFromStore = (
+  state: State,
+  postId: string,
+  commentId: string
+): boolean => {
   // Check existence first
   if (state.comments[postId] === undefined) {
     return false;
@@ -13,7 +22,10 @@ export const selectTaggedFromStore = (state: State, postId: string, commentId: s
   return state.comments[postId][commentId].tagged;
 };
 
-export const selectCommentsFromStore = (state: State, postId: string): StoreComment => {
+export const selectCommentsFromStore = (
+  state: State,
+  postId: string
+): StoreComment => {
   // Check existence first
   if (state.comments[postId] === undefined) {
     return {
@@ -25,13 +37,17 @@ export const selectCommentsFromStore = (state: State, postId: string): StoreComm
   return state.comments[postId];
 };
 
-export const selectRepliesFromStore = (state: State, postId: string, commentId): StoreReply => {
+export const selectRepliesFromStore = (
+  state: State,
+  postId: string,
+  commentId
+): StoreReply => {
   // Check existence first
   if (state.replies[postId] === undefined) {
     return {
       replies: [],
       tagged: false,
-      totalRepliesAfter: 0,
+      totalRepliesAfter: 0
     };
   }
   if (state.replies[postId][commentId] === undefined) {
@@ -44,19 +60,23 @@ export const selectRepliesFromStore = (state: State, postId: string, commentId):
   return state.replies[postId][commentId];
 };
 
-export const selectCommentsState: MemoizedSelector<object, State> = createFeatureSelector<State>('comments');
+export const selectCommentsState: MemoizedSelector<object, State> =
+  createFeatureSelector<State>('comments');
 
-export const selectTagged: MemoizedSelectorWithProps<object, any, boolean> = createSelector(
-  selectCommentsState,
-  (state, props) => selectTaggedFromStore(state, props.postId, props.commentId)
+export const selectTagged: MemoizedSelectorWithProps<object, any, boolean> =
+  createSelector(selectCommentsState, (state, props) =>
+    selectTaggedFromStore(state, props.postId, props.commentId)
+  );
+
+export const selectComments: MemoizedSelectorWithProps<
+  object,
+  any,
+  StoreComment
+> = createSelector(selectCommentsState, (state, props) =>
+  selectCommentsFromStore(state, props.postId)
 );
 
-export const selectComments: MemoizedSelectorWithProps<object, any, StoreComment> = createSelector(
-  selectCommentsState,
-  (state, props) => selectCommentsFromStore(state, props.postId)
-);
-
-export const selectReplies: MemoizedSelectorWithProps<object, any, StoreReply> = createSelector(
-  selectCommentsState,
-  (state, props) => selectRepliesFromStore(state, props.postId, props.commentId)
-);
+export const selectReplies: MemoizedSelectorWithProps<object, any, StoreReply> =
+  createSelector(selectCommentsState, (state, props) =>
+    selectRepliesFromStore(state, props.postId, props.commentId)
+  );

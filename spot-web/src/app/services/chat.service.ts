@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 export const WEBSOCKET_SERVER_URI = 'ws://localhost:4000/socket';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ChatService {
   private baseUrl = environment.baseUrl;
@@ -16,24 +16,23 @@ export class ChatService {
 
   constructor(private http: HttpClient) {
     this.phoenixSocket = new PhoenixSocket(WEBSOCKET_SERVER_URI, {
-      params: { token: localStorage.getItem('id_token') },
+      params: { token: localStorage.getItem('id_token') }
     });
     this.phoenixSocket.connect();
   }
 
   getChannel(name: string, token: string): any {
     const channel = this.phoenixSocket.channel(name, {
-      token: token,
+      token: token
     });
     return channel;
   }
 
   getProfilePictureClass(index): string {
     // if ( index === -1 ) {
-      return 'profile pop';
+    return 'profile pop';
     // }
     // the index should already be in the proper range, but this is just for safety
     // return 'profile p' + (index % (COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT + 1));
   }
-
 }

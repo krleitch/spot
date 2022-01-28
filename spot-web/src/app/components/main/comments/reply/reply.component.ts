@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Observable, Subject } from 'rxjs';
@@ -7,7 +15,10 @@ import { take, takeUntil } from 'rxjs/operators';
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { CommentsStoreActions, CommentsStoreSelectors } from '@store/comments-store';
+import {
+  CommentsStoreActions,
+  CommentsStoreSelectors
+} from '@store/comments-store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
 
@@ -18,13 +29,21 @@ import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
 
 // Models
-import { Comment, AddReplyRequest, AddReplyStoreRequest, DeleteReplyRequest, LikeReplyRequest,
-  DislikeReplyRequest, AddReplySuccess, UnratedReplyRequest } from '@models/comments';
+import {
+  AddReplyRequest,
+  AddReplyStoreRequest,
+  AddReplySuccess,
+  Comment,
+  DeleteReplyRequest,
+  DislikeReplyRequest,
+  LikeReplyRequest,
+  UnratedReplyRequest
+} from '@models/comments';
 import { Post } from '@models/posts';
 import { Tag } from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { AccountMetadata, Location, Account } from '@models/accounts';
+import { Account, AccountMetadata, Location } from '@models/accounts';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -39,7 +58,6 @@ import { COMMENTS_CONSTANTS } from '@constants/comments';
   styleUrls: ['./reply.component.scss']
 })
 export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
-
   private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
@@ -60,7 +78,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   tagged$: Observable<boolean>;
   tagged: boolean; // Was the user tagged in the comment chain
 
-  location$: Observable<Location>
+  location$: Observable<Location>;
   location: Location;
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
@@ -98,17 +116,18 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   currentOffset = 0;
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private commentService: CommentService,
-              public domSanitizer: DomSanitizer,
-              private modalService: ModalService,
-              private alertService: AlertService,
-              private authenticationService: AuthenticationService) {
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private commentService: CommentService,
+    public domSanitizer: DomSanitizer,
+    private modalService: ModalService,
+    private alertService: AlertService,
+    private authenticationService: AuthenticationService
+  ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
   ngOnInit(): void {
-
     this.getTime(this.reply.creation_date);
     this.imageBlurred = this.reply.image_nsfw;
 
@@ -124,7 +143,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       select(SocialStoreSelectors.selectFriends)
     );
 
-    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe ( friends => {
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe((friends) => {
       this.friendsList = friends;
     });
 
@@ -132,16 +151,18 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       select(AccountsStoreSelectors.selectLocation)
     );
 
-    this.location$.pipe(takeUntil(this.onDestroy)).subscribe ( (location: Location) => {
-      this.location = location;
-    });
+    this.location$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((location: Location) => {
+        this.location = location;
+      });
 
     // account
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
     );
 
-    this.account$.pipe(takeUntil(this.onDestroy)).subscribe ( account => {
+    this.account$.pipe(takeUntil(this.onDestroy)).subscribe((account) => {
       this.account = account;
     });
 
@@ -150,18 +171,25 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.tagged$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectTagged, { postId: this.comment.post_id, commentId: this.comment.id })
+      select(CommentsStoreSelectors.selectTagged, {
+        postId: this.comment.post_id,
+        commentId: this.comment.id
+      })
     );
 
-    this.tagged$.pipe(takeUntil(this.onDestroy)).subscribe( (tagged: boolean) => {
-      this.tagged = tagged;
-    });
+    this.tagged$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((tagged: boolean) => {
+        this.tagged = tagged;
+      });
 
-    if ( this.reply.content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
-         || this.reply.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+    if (
+      this.reply.content.split(/\r\n|\r|\n/).length >
+        COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
+      this.reply.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+    ) {
       this.isExpandable = true;
     }
-
   }
 
   ngAfterViewInit(): void {
@@ -193,14 +221,13 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onEnter(): boolean {
     // Add tag on enter
-    if ( this.showTag ) {
+    if (this.showTag) {
       this.tagelem.onEnter();
       return false;
     }
   }
 
   setContentHTML(): void {
-
     // Get the content strings
     const content = this.getContent();
     const div = document.createElement('div');
@@ -209,24 +236,25 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     // Important
     // Tags must be given in asc order of their offset
     // Server should do this for you
-    if ( this.reply.tag.tags.length > 0 ) {
-
-      this.reply.tag.tags.forEach( (tag: Tag) => {
-
+    if (this.reply.tag.tags.length > 0) {
+      this.reply.tag.tags.forEach((tag: Tag) => {
         // check if tag should even be shown
-        if ( tag.offset <= content.length || this.expanded ) {
-
+        if (tag.offset <= content.length || this.expanded) {
           // create the span that will hold the tag
           const span = document.createElement('span');
           // fill with text leading up to the tag
-          const textBefore = document.createTextNode(content.substring(lastOffset, Math.min(tag.offset, content.length)));
+          const textBefore = document.createTextNode(
+            content.substring(lastOffset, Math.min(tag.offset, content.length))
+          );
           // create the tag and give the username
           const inlineTag = document.createElement('span');
           inlineTag.className = 'tag-inline-comment';
 
           // <span class="material-icons"> person </span>
-          if ( tag.username ) {
-            const username = document.createTextNode(tag.username ? tag.username : '???');
+          if (tag.username) {
+            const username = document.createTextNode(
+              tag.username ? tag.username : '???'
+            );
             inlineTag.appendChild(username);
           } else {
             // we don't know the person
@@ -240,7 +268,6 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
             inlineTag.appendChild(inlineTagIcon);
             inlineTag.appendChild(username);
-
           }
 
           // Add them to the span
@@ -251,94 +278,102 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
           lastOffset = Math.min(tag.offset, content.length);
 
           div.appendChild(span);
-
         } else {
-
           // fill in the rest of the content from the last tag
-          const textContent = document.createTextNode(content.substring(lastOffset));
+          const textContent = document.createTextNode(
+            content.substring(lastOffset)
+          );
           div.appendChild(textContent);
           lastOffset = content.length;
-
         }
-
       });
-
     } else {
-
       // No tags, just add the text content
       const textContent = document.createTextNode(content);
       div.appendChild(textContent);
       lastOffset = content.length;
-
     }
 
     // if there is still content left
-    if ( lastOffset < content.length ) {
+    if (lastOffset < content.length) {
       const after = document.createTextNode(content.substring(lastOffset));
       div.appendChild(after);
     }
 
     // Add ellipsis if its expandable and isnt expanded
-    if ( this.isExpandable && ! this.expanded ) {
+    if (this.isExpandable && !this.expanded) {
       const ellipsis = document.createTextNode(' ...');
       div.appendChild(ellipsis);
     }
 
     // set the innerHTML
     this.text.nativeElement.innerHTML = div.innerHTML;
-
   }
 
   // Returns the content that will be shown and truncates if need be
   getContent(): string {
-
-    if ( this.expanded || !this.isExpandable ) {
+    if (this.expanded || !this.isExpandable) {
       return this.reply.content;
     }
 
     const textArrays = this.reply.content.split(/\r\n|\r|\n/);
     let truncatedContent = '';
 
-    for (let i = 0; i < textArrays.length && i < COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
-
-      if ( truncatedContent.length + textArrays[i].length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
-        truncatedContent = textArrays[i].substring(0, COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
+    for (
+      let i = 0;
+      i < textArrays.length && i < COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
+      i++
+    ) {
+      if (
+        truncatedContent.length + textArrays[i].length >
+        COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+      ) {
+        truncatedContent = textArrays[i].substring(
+          0,
+          COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
+        );
         break;
       } else {
         truncatedContent += textArrays[i];
         // Dont add newline for last line or last line before line length reached
-        if ( i !== textArrays.length - 1 && i !== COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
+        if (
+          i !== textArrays.length - 1 &&
+          i !== COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
+        ) {
           truncatedContent += '\n';
         }
       }
-
     }
 
     return truncatedContent;
-
   }
 
   onTextInput(event): void {
-
-    if ( event.target.textContent.length === 0 ) {
+    if (event.target.textContent.length === 0) {
       this.reply2.nativeElement.innerHTML = '';
     }
     // Need to count newlines as a character, -1 because the first line is free
-    this.currentLength = Math.max(event.target.textContent.length + event.target.childNodes.length - 1, 0);
+    this.currentLength = Math.max(
+      event.target.textContent.length + event.target.childNodes.length - 1,
+      0
+    );
     this.addReply2Error = null;
     // Check for tag
     this.getAndCheckWordOnCaret();
-
   }
 
   getAndCheckWordOnCaret(): void {
     const range = window.getSelection().getRangeAt(0);
     if (range.collapsed) {
-      if ( range.startContainer.parentElement.className === 'tag-inline' ) {
+      if (range.startContainer.parentElement.className === 'tag-inline') {
         range.setStart(range.startContainer.parentElement.nextSibling, 0);
         range.collapse(true);
       } else {
-        this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+        this.checkWord(
+          this.getCurrentWord(range.startContainer, range.startOffset),
+          range.startContainer,
+          range.startOffset
+        );
       }
     }
   }
@@ -362,8 +397,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private checkWord(word: string, element, position): void {
-
-    if ( word.length > 1 && word[0] === '@' ) {
+    if (word.length > 1 && word[0] === '@') {
       this.tagName = word.slice(1);
       this.showTag = true;
       this.tagElement = element;
@@ -374,35 +408,39 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tagElement = null;
       this.tagCaretPosition = null;
     }
-
   }
 
   addTag(username: string): void {
+    // check if they are your friend
+    if (
+      this.friendsList.find(
+        (friend: Friend) => friend.username === username
+      ) === undefined
+    ) {
+      this.alertService.error('Only friends can be tagged');
+      return;
+    }
 
-      // check if they are your friend
-      if ( this.friendsList.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
-        this.alertService.error('Only friends can be tagged');
-        return;
-      }
+    // remove the word
+    const tagElement = this.removeWord(
+      this.tagElement,
+      this.tagCaretPosition,
+      username
+    );
 
-      // remove the word
-      const tagElement = this.removeWord(this.tagElement, this.tagCaretPosition, username);
+    // Focus after the tag
+    const range = window.getSelection().getRangeAt(0);
+    range.setStart(tagElement.nextSibling, 0);
+    range.collapse(true);
 
-      // Focus after the tag
-      const range = window.getSelection().getRangeAt(0);
-      range.setStart(tagElement.nextSibling, 0);
-      range.collapse(true);
-
-      // hide tag menu
-      this.tagName = '';
-      this.showTag = false;
-      this.tagElement = null;
-      this.tagCaretPosition = null;
-
+    // hide tag menu
+    this.tagName = '';
+    this.showTag = false;
+    this.tagElement = null;
+    this.tagCaretPosition = null;
   }
 
   private removeWord(element, position, username): HTMLElement {
-
     const content = element.textContent;
 
     // Check if clicked at the end of word
@@ -418,7 +456,9 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     const parent = element.parentNode;
 
     const span = document.createElement('span');
-    const beforeText = document.createTextNode(content.substring(0, startPosition + 1));
+    const beforeText = document.createTextNode(
+      content.substring(0, startPosition + 1)
+    );
     const tag = document.createElement('span');
     tag.className = 'tag-inline';
     tag.contentEditable = 'false';
@@ -431,7 +471,6 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     parent.replaceChild(span, element);
     return tag;
-
   }
 
   setOptions(value): void {
@@ -469,15 +508,14 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteReply(): void {
-
     this.modalService.open('spot-confirm-modal');
 
-    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+    const result$ = this.modalService
+      .getResult('spot-confirm-modal')
+      .pipe(take(1));
 
-    result$.subscribe( (result: { status: string }) => {
-
-      if ( result.status === 'confirm' ) {
-
+    result$.subscribe((result: { status: string }) => {
+      if (result.status === 'confirm') {
         const request: DeleteReplyRequest = {
           postId: this.reply.post_id,
           parentId: this.reply.parent_id,
@@ -486,26 +524,22 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store$.dispatch(
           new CommentsStoreActions.DeleteReplyRequestAction(request)
         );
-
       }
-
     });
-
   }
 
   setShowAddReply(val: boolean): void {
     this.showAddReply = val;
-    setTimeout( () => {
-      if ( this.showAddReply === true && this.reply2 ) {
+    setTimeout(() => {
+      if (this.showAddReply === true && this.reply2) {
         this.reply2.nativeElement.focus({
-          preventScroll: true,
+          preventScroll: true
         });
       }
     }, 100);
   }
 
   addReply(): void {
-
     let content = this.reply2.nativeElement.innerHTML;
 
     // parse the innerhtml to return a string with newlines instead of innerhtml
@@ -522,12 +556,11 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     let stack = [];
     stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
 
-    while ( stack.length > 0 ) {
-
+    while (stack.length > 0) {
       const elem = stack.pop();
 
       // A tag
-      if ( elem.className === 'tag-inline' ) {
+      if (elem.className === 'tag-inline') {
         const tag: Tag = {
           username: elem.textContent,
           postLink: this.post.link,
@@ -540,21 +573,20 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
       // Push the children
       // In reverse because we want to parse the from left to right
-      if ( elem.childNodes ) {
+      if (elem.childNodes) {
         stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
       }
 
       // Don't add spaces to start
-      if ( elem.tagName === 'DIV' ) {
+      if (elem.tagName === 'DIV') {
         // A new Div
         text += '\n';
         offset += 1;
-      } else if ( elem.nodeType === 3 ) {
+      } else if (elem.nodeType === 3) {
         // Text Node
         text += elem.textContent;
         offset += elem.textContent.length;
       }
-
     }
 
     // TODO: cleanup whitespace here if decide to do it
@@ -565,23 +597,34 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Error checking
 
-    if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
-      this.addReply2Error = this.STRINGS.ERROR_LINE_LENGTH.replace('%LENGTH%', COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString());
+    if (
+      content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
+    ) {
+      this.addReply2Error = this.STRINGS.ERROR_LINE_LENGTH.replace(
+        '%LENGTH%',
+        COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString()
+      );
       return;
     }
 
-    if ( content.length === 0 && !this.imageFile && tags.length === 0 ) {
+    if (content.length === 0 && !this.imageFile && tags.length === 0) {
       this.addReply2Error = this.STRINGS.ERROR_NO_CONTENT;
       return;
     }
 
-    if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
-      this.addReply2Error = this.STRINGS.ERROR_MIN_CONTENT.replace('%MIN%', COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString());
+    if (content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH) {
+      this.addReply2Error = this.STRINGS.ERROR_MIN_CONTENT.replace(
+        '%MIN%',
+        COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString()
+      );
       return;
     }
 
     if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
-      this.addReply2Error = this.STRINGS.ERROR_MAX_CONTENT.replace('%MAX%', COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString());
+      this.addReply2Error = this.STRINGS.ERROR_MAX_CONTENT.replace(
+        '%MAX%',
+        COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString()
+      );
       return;
     }
 
@@ -589,12 +632,12 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     // So user knows what they need to change
     const regex = /^[^\x00-\x7F]*$/;
     const match = content.match(regex);
-    if ( match && match[0].length > 0 ) {
+    if (match && match[0].length > 0) {
       this.addReply2Error = this.STRINGS.ERROR_INVALID_CONTENT + match[0];
       return;
     }
 
-    if ( !location ) {
+    if (!location) {
       this.addReply2Error = this.STRINGS.ERROR_LOCATION;
       return;
     }
@@ -612,41 +655,48 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.addReply2Loading = true;
 
-    this.commentService.addReply(request).pipe(take(1)).subscribe( (r: AddReplySuccess) => {
+    this.commentService
+      .addReply(request)
+      .pipe(take(1))
+      .subscribe(
+        (r: AddReplySuccess) => {
+          const storeRequest: AddReplyStoreRequest = {
+            postId: r.postId,
+            commentId: r.commentId,
+            reply: r.reply
+          };
 
-      const storeRequest: AddReplyStoreRequest = {
-        postId: r.postId,
-        commentId: r.commentId,
-        reply: r.reply
-      };
+          this.store$.dispatch(
+            new CommentsStoreActions.AddReplyRequestAction(storeRequest)
+          );
 
-      this.store$.dispatch(
-        new CommentsStoreActions.AddReplyRequestAction(storeRequest)
+          this.addReply2Loading = false;
+          this.removeFile();
+          this.reply2.nativeElement.innerText = '';
+          this.reply2.nativeElement.innerHtml = '';
+          Array.from(this.reply2.nativeElement.children).forEach(
+            (c: HTMLElement) => (c.innerHTML = '')
+          );
+          this.reply2.nativeElement.innerHTML = '';
+          this.currentLength = 0;
+          this.showAddReply = false;
+        },
+        (createError: SpotError) => {
+          this.addReply2Loading = false;
+          if (createError.name === 'InvalidCommentProfanity') {
+            this.addReply2Error = this.STRINGS.ERROR_PROFANITY.replace(
+              '%PROFANITY%',
+              createError.body.word
+            );
+          } else {
+            this.addReply2Error = createError.message;
+          }
+        }
       );
-
-      this.addReply2Loading = false;
-      this.removeFile();
-      this.reply2.nativeElement.innerText = '';
-      this.reply2.nativeElement.innerHtml = '';
-      Array.from(this.reply2.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-      this.reply2.nativeElement.innerHTML = '';
-      this.currentLength = 0;
-      this.showAddReply = false;
-
-    }, (createError: SpotError) => {
-      this.addReply2Loading = false;
-      if ( createError.name === 'InvalidCommentProfanity' ) {
-        this.addReply2Error = this.STRINGS.ERROR_PROFANITY.replace('%PROFANITY%', createError.body.word);
-      } else {
-        this.addReply2Error = createError.message;
-      }
-    });
-
   }
 
   like(): void {
-
-    if ( !this.authenticationService.isAuthenticated() ) {
+    if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('spot-auth-modal');
       return;
     }
@@ -670,12 +720,10 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
         new CommentsStoreActions.LikeReplyRequestAction(request)
       );
     }
-
   }
 
   dislike(): void {
-
-    if ( !this.authenticationService.isAuthenticated() ) {
+    if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('spot-auth-modal');
       return;
     }
@@ -699,7 +747,6 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
         new CommentsStoreActions.DislikeReplyRequestAction(request)
       );
     }
-
   }
 
   getProfilePictureClass(index): string {
@@ -729,37 +776,33 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openModal(id: string, data?: any): void {
-
-    if ( data ) {
+    if (data) {
       this.modalService.open(id, data);
     } else {
       this.modalService.open(id);
     }
-
   }
   closeModal(id: string): void {
     this.modalService.close(id);
   }
 
   imageClicked(): void {
-
-    if ( !this.imageBlurred ) {
+    if (!this.imageBlurred) {
       this.openModal('spot-image-modal', this.reply.image_src);
     } else {
       this.imageBlurred = false;
     }
-
   }
 
   openReportModal(postId: string, commentId: string): void {
-
-    if ( !this.authenticationService.isAuthenticated() ) {
+    if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('spot-auth-modal');
       return;
     }
 
-    this.openModal('spot-report-modal', { postId: postId, commentId: commentId })
-
+    this.openModal('spot-report-modal', {
+      postId: postId,
+      commentId: commentId
+    });
   }
-
 }

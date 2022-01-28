@@ -1,5 +1,5 @@
-@import "../../../../../styles/colors";
-@import "../../../../../styles/profiles";
+@import '../../../../../styles/colors';
+@import '../../../../../styles/profiles';
 
 // JOIN
 
@@ -136,7 +136,6 @@
     color: $subtle-grey;
     font-size: 18px;
   }
-
 }
 
 .messages-container {
@@ -221,14 +220,14 @@
 }
 
 // include a placeholder for the chat
-[contenteditable="true"]:empty:not(:focus):before {
+[contenteditable='true']:empty:not(:focus):before {
   content: attr(ph);
   color: $subtle-grey;
   font-style: italic;
   cursor: text;
 }
 
-[contenteditable="true"]:empty:focus:before {
+[contenteditable='true']:empty:focus:before {
   content: attr(ph);
   color: lighten($subtle-grey, 20%);
   font-style: italic;

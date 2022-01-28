@@ -6,7 +6,10 @@ import { AuthenticationService } from '@services/authentication.service';
 
 // Assets
 import { STRINGS } from '@assets/strings/en';
-import { PasswordResetRequest, PasswordResetSuccess } from '@models/authentication';
+import {
+  PasswordResetRequest,
+  PasswordResetSuccess
+} from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 @Component({
   selector: 'spot-password-reset',
@@ -14,7 +17,6 @@ import { SpotError } from '@exceptions/error';
   styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent implements OnInit {
-
   STRINGS = STRINGS.PRE_AUTH.PASSWORD_RESET;
 
   form: FormGroup;
@@ -24,7 +26,10 @@ export class PasswordResetComponent implements OnInit {
 
   emailLoading = false;
 
-  constructor(private fb: FormBuilder, private authenticationService: AuthenticationService) {
+  constructor(
+    private fb: FormBuilder,
+    private authenticationService: AuthenticationService
+  ) {
     this.form = this.fb.group({
       email: ['', Validators.required]
     });
@@ -33,24 +38,23 @@ export class PasswordResetComponent implements OnInit {
   ngOnInit(): void {}
 
   requestReset(): void {
-
-    if ( this.buttonsDisabled ) {
+    if (this.buttonsDisabled) {
       return;
     }
 
     const val = this.form.value;
 
-    if ( !val.email ) {
+    if (!val.email) {
       this.errorMessage = this.STRINGS.EMAIL_NONE;
       this.form.controls.email.markAsDirty();
       return;
     }
 
     const validEmail = this.authenticationService.validateEmail(val.email);
-    if ( !validEmail ) {
+    if (!validEmail) {
       this.errorMessage = this.STRINGS.EMAIL_FORMAT;
       this.form.controls.email.markAsDirty();
-      this.form.controls.email.setErrors([{'incorrect': true}]);
+      this.form.controls.email.setErrors([{ incorrect: true }]);
       return;
     }
 
@@ -64,20 +68,24 @@ export class PasswordResetComponent implements OnInit {
 
     this.emailLoading = true;
     this.buttonsDisabled = true;
-    this.authenticationService.passwordReset(request).subscribe((response: PasswordResetSuccess) => {
-      this.buttonsDisabled = false;
-      this.successMessage = this.STRINGS.REQUEST_SUCCESS;
-      this.emailLoading = false;
-    }, (errorResponse: { error: SpotError }) => {
-      if ( errorResponse.error.name === 'RateLimitError' ) {
-        this.errorMessage = this.STRINGS.RATE_LIMIT.replace('%TIMEOUT%', errorResponse.error.body.timeout);
-      } else {
-        this.errorMessage = errorResponse.error.message;
+    this.authenticationService.passwordReset(request).subscribe(
+      (response: PasswordResetSuccess) => {
+        this.buttonsDisabled = false;
+        this.successMessage = this.STRINGS.REQUEST_SUCCESS;
+        this.emailLoading = false;
+      },
+      (errorResponse: { error: SpotError }) => {
+        if (errorResponse.error.name === 'RateLimitError') {
+          this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
+            '%TIMEOUT%',
+            errorResponse.error.body.timeout
+          );
+        } else {
+          this.errorMessage = errorResponse.error.message;
+        }
+        this.buttonsDisabled = false;
+        this.emailLoading = false;
       }
-      this.buttonsDisabled = false;
-      this.emailLoading = false;
-    });
-
+    );
   }
-
 }

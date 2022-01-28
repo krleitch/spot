@@ -1,21 +1,26 @@
 <div class="share">
-
   <div class="header">
     <span class="title"> {{ STRINGS.TITLE }} </span>
-    <span class="close" (click)="closeShare()"> <span class="material-icons"> clear </span> </span>
+    <span class="close" (click)="closeShare()">
+      <span class="material-icons"> clear </span>
+    </span>
   </div>
 
   <div class="links">
     <div #social id="social" class="social-media">
-      <div class="fb-share-button"
-            attr.data-href="{{ link }}"
-            data-layout="button_count"
-            data-size="large">
-            <a target="_blank"
-                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"
-                class="fb-xfbml-parse-ignore">
-                Share
-            </a>
+      <div
+        class="fb-share-button"
+        attr.data-href="{{ link }}"
+        data-layout="button_count"
+        data-size="large"
+      >
+        <a
+          target="_blank"
+          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"
+          class="fb-xfbml-parse-ignore"
+        >
+          Share
+        </a>
       </div>
       <!-- Twitter button generated here from the ts file -->
     </div>
@@ -23,10 +28,17 @@
   </div>
 
   <div *ngIf="authenticated; else auth">
-
     <div class="input-container">
-      <input #usernameinput [(ngModel)]="username" (keyup.enter)="sendNotification()" [placeholder]="STRINGS.USERNAME_PLACEHOLDER" type="text">
-      <span (click)="sendNotification()"> <i class="material-icons send"> send </i> </span>
+      <input
+        #usernameinput
+        [(ngModel)]="username"
+        (keyup.enter)="sendNotification()"
+        [placeholder]="STRINGS.USERNAME_PLACEHOLDER"
+        type="text"
+      />
+      <span (click)="sendNotification()">
+        <i class="material-icons send"> send </i>
+      </span>
     </div>
 
     <div class="success-message" *ngIf="successMessage">
@@ -37,13 +49,23 @@
       {{ errorMessage }}
     </div>
 
-    <div class="friends-title"> {{ STRINGS.FRIENDS }} </div>
-    <div class="share-friend-section" *ngIf="friends | filter: { filter: username, field: 'username' } as friends">
-
+    <div class="friends-title">{{ STRINGS.FRIENDS }}</div>
+    <div
+      class="share-friend-section"
+      *ngIf="
+        friends | filter: { filter: username, field: 'username' } as friends
+      "
+    >
       <div *ngIf="friends.length > 0; else noFriends">
         <div *ngFor="let friend of friends" class="share-friend-container">
           {{ friend.username }}
-          <div [hidden]="friend.sent" class="share-friend-send" (click)="sendNotificationToFriend(friend.username); friend.sent = true;">
+          <div
+            [hidden]="friend.sent"
+            class="share-friend-send"
+            (click)="
+              sendNotificationToFriend(friend.username); friend.sent = true
+            "
+          >
             {{ STRINGS.SEND }}
           </div>
           <div [hidden]="!friend.sent" class="share-friend-sent">
@@ -53,21 +75,16 @@
       </div>
 
       <ng-template #noFriends>
-
         <div *ngIf="username; else addFriends">
-          <div class="no-friends"> {{ STRINGS.NO_FRIENDS_FOUND }} </div>
+          <div class="no-friends">{{ STRINGS.NO_FRIENDS_FOUND }}</div>
         </div>
         <ng-template #addFriends>
-          <div class="no-friends"> {{ STRINGS.NO_FRIENDS }} </div>
+          <div class="no-friends">{{ STRINGS.NO_FRIENDS }}</div>
         </ng-template>
-
       </ng-template>
-
     </div>
-
   </div>
   <ng-template #auth>
     <span class="login"> {{ STRINGS.LOGIN }} </span>
   </ng-template>
-
 </div>

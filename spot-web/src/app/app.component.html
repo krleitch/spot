@@ -1,36 +1,39 @@
 <div class="main">
+  <spot-alert></spot-alert>
 
-    <spot-alert></spot-alert>
+  <router-outlet></router-outlet>
 
-    <router-outlet></router-outlet>
+  <spot-chat-menu></spot-chat-menu>
 
-    <spot-chat-menu></spot-chat-menu>
+  <!-- Global Modals-->
 
-    <!-- Global Modals-->
+  <!-- TODO -->
+  <!-- This should really be fixed, so we only have one modal dynamically switching content... -->
 
-    <!-- TODO -->
-    <!-- This should really be fixed, so we only have one modal dynamically switching content... -->
-
-    <spot-modal [id]="'spot-confirm-modal'" [width]="400" [height]="'auto'">
-      <spot-confirm [modalId]="'spot-confirm-modal'" ></spot-confirm>
-    </spot-modal>
-    <spot-modal [id]="'spot-report-modal'" [width]="400" [height]="'auto'">
-      <spot-report [modalId]="'spot-report-modal'"></spot-report>
-    </spot-modal>
-    <spot-modal [id]="'spot-share-modal'" [width]="400" [height]="'auto'">
-      <spot-share [modalId]="'spot-share-modal'"></spot-share>
-    </spot-modal>
-    <spot-modal [id]="'spot-image-modal'" [width]="'auto'" [height]="'auto'">
-      <spot-image [modalId]="'spot-image-modal'"></spot-image>
-    </spot-modal>
-    <spot-modal [id]="'spot-auth-modal'" [width]="'400'" [height]="'auto'">
-      <spot-auth-modal [modalId]="'spot-auth-modal'"></spot-auth-modal>
-    </spot-modal>
-    <spot-modal [id]="'spot-welcome-modal'" [width]="'600'" [height]="'auto'" [disableClose]="true">
-      <spot-welcome [modalId]="'spot-welcome-modal'"></spot-welcome>
-    </spot-modal>
-    <spot-modal [id]="'spot-terms-modal'" [width]="'500'" [height]="'auto'">
-      <spot-terms [modalId]="'spot-terms-modal'"></spot-terms>
-    </spot-modal>
-
+  <spot-modal [id]="'spot-confirm-modal'" [width]="400" [height]="'auto'">
+    <spot-confirm [modalId]="'spot-confirm-modal'"></spot-confirm>
+  </spot-modal>
+  <spot-modal [id]="'spot-report-modal'" [width]="400" [height]="'auto'">
+    <spot-report [modalId]="'spot-report-modal'"></spot-report>
+  </spot-modal>
+  <spot-modal [id]="'spot-share-modal'" [width]="400" [height]="'auto'">
+    <spot-share [modalId]="'spot-share-modal'"></spot-share>
+  </spot-modal>
+  <spot-modal [id]="'spot-image-modal'" [width]="'auto'" [height]="'auto'">
+    <spot-image [modalId]="'spot-image-modal'"></spot-image>
+  </spot-modal>
+  <spot-modal [id]="'spot-auth-modal'" [width]="'400'" [height]="'auto'">
+    <spot-auth-modal [modalId]="'spot-auth-modal'"></spot-auth-modal>
+  </spot-modal>
+  <spot-modal
+    [id]="'spot-welcome-modal'"
+    [width]="'600'"
+    [height]="'auto'"
+    [disableClose]="true"
+  >
+    <spot-welcome [modalId]="'spot-welcome-modal'"></spot-welcome>
+  </spot-modal>
+  <spot-modal [id]="'spot-terms-modal'" [width]="'500'" [height]="'auto'">
+    <spot-terms [modalId]="'spot-terms-modal'"></spot-terms>
+  </spot-modal>
 </div>

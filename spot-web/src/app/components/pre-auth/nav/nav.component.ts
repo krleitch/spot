@@ -9,12 +9,11 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent implements OnInit {
-
   STRINGS = STRINGS.PRE_AUTH.NAV;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   home() {
     this.router.navigateByUrl('/');
@@ -27,5 +26,4 @@ export class NavComponent implements OnInit {
   isSelected(name: string): boolean {
     return this.router.url === '/' + name;
   }
-
 }

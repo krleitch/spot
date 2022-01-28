@@ -4,8 +4,4 @@ import * as PostsStoreState from './state';
 
 export { PostsStoreModule } from './posts-store.module';
 
-export {
-  PostsStoreActions,
-  PostsStoreSelectors,
-  PostsStoreState,
-};
+export { PostsStoreActions, PostsStoreSelectors, PostsStoreState };

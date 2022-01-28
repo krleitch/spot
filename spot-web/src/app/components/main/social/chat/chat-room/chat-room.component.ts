@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { ChatService } from '@services/chat.service';
 
 // Assets
 import { STRINGS } from '@src/assets/strings/en';
-import { NewMessage, Message } from '@models/chat';
+import { Message, NewMessage } from '@models/chat';
 
 @Component({
   selector: 'spot-chat-room',
   templateUrl: './chat-room.component.html',
-  styleUrls: ['./chat-room.component.scss'],
+  styleUrls: ['./chat-room.component.scss']
 })
 export class ChatRoomComponent implements OnInit {
   STRINGS = STRINGS.MAIN.CHAT_ROOM;
@@ -26,16 +26,21 @@ export class ChatRoomComponent implements OnInit {
     this.channel.on('new_message', (payload: Message) => {
       this.messages.push(payload);
       // scroll to top
-    })
+    });
     this.joinRoom();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   formatTimestamp(timestamp): string {
     const time = new Date(timestamp);
-    return time.getHours().toString() + ':' + time.getMinutes().toString() + ':' + time.getSeconds().toString();
+    return (
+      time.getHours().toString() +
+      ':' +
+      time.getMinutes().toString() +
+      ':' +
+      time.getSeconds().toString()
+    );
   }
 
   getProfilePictureClass(index): string {
@@ -58,32 +63,32 @@ export class ChatRoomComponent implements OnInit {
     const content = this.chat.nativeElement.innerHTML;
     const newMessage: NewMessage = {
       content: content
-    }
-    this.channel.push("new_message", newMessage, 10000)
-      .receive("ok", (msg) => {
-        console.log("created message", msg) 
+    };
+    this.channel
+      .push('new_message', newMessage, 10000)
+      .receive('ok', (msg) => {
+        console.log('created message', msg);
       })
-      .receive("error", (reasons) => {
-        console.log("create failed", reasons) 
+      .receive('error', (reasons) => {
+        console.log('create failed', reasons);
       })
-      .receive("timeout", () => {
-        console.log("Networking issue...") 
-      })
+      .receive('timeout', () => {
+        console.log('Networking issue...');
+      });
   }
 
   joinRoom(): void {
     this.channel
-    .join()
-    .receive('ok', ({ messages }) => {
-      console.log('catching up', messages)
-      this.joined = true;
-    })
-    .receive('error', ({ reason }) => {
-      console.log('failed join', reason)
-    })
-    .receive('timeout', () => {
-      console.log('Networking issue. Still waiting...')
-    });
+      .join()
+      .receive('ok', ({ messages }) => {
+        console.log('catching up', messages);
+        this.joined = true;
+      })
+      .receive('error', ({ reason }) => {
+        console.log('failed join', reason);
+      })
+      .receive('timeout', () => {
+        console.log('Networking issue. Still waiting...');
+      });
   }
-
 }

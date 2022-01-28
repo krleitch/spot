@@ -6,12 +6,11 @@
 }
 
 .notifications {
-
   position: absolute;
   top: 35px;
   right: 0;
   background-color: white;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
   min-width: 400px;
   max-width: 400px;
   height: auto;
@@ -22,7 +21,6 @@
   }
 
   .header {
-
     cursor: default;
     display: flex;
     justify-content: space-between;
@@ -32,7 +30,6 @@
     border-bottom: 1px solid $lighter-grey;
 
     .see {
-
       display: flex;
       align-items: center;
       color: $subtle-grey;
@@ -42,12 +39,9 @@
       }
 
       .check {
-
         margin-left: 3px;
         font-size: 24px;
-
       }
-
     }
 
     .clear {
@@ -56,19 +50,16 @@
         @extend .highlight;
       }
     }
-
   }
 
   // honestly just change heights , make this the scrollable, and remove the fixed
   .notifications-content {
-
     max-height: 350px;
     min-height: 74px;
     overflow-y: auto;
     overflow-x: none;
 
     .loading {
-
       display: flex;
       justify-content: center;
       align-items: center;
@@ -85,13 +76,10 @@
         cursor: default;
         color: $subtle-grey;
       }
-
     }
-
   }
 
   .no-notifications {
-
     display: flex;
     align-items: center;
     flex-flow: column;
@@ -104,9 +92,7 @@
     .icon {
       color: $button-highlight;
     }
-
   }
-
 }
 
 // Mobile stylings

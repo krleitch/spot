@@ -11,7 +11,6 @@ spot-nav {
 }
 
 .contact {
-
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -21,13 +20,11 @@ spot-nav {
   box-sizing: border-box;
 
   .container {
-
     background-color: white;
     padding: 25px;
     margin: 25px;
     max-width: 900px;
     min-width: 50%;
-
   }
 
   .heading {
@@ -45,7 +42,6 @@ spot-nav {
     color: $subtle-grey;
     margin-bottom: 10px;
   }
-
 }
 
 .copyright {
@@ -57,9 +53,6 @@ spot-nav {
 
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
-
   .contact {
-
   }
-
 }

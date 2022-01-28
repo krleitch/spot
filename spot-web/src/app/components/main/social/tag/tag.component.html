@@ -1,11 +1,9 @@
 <div class="tag">
-
   <div class="header">
     {{ STRINGS.TAG }}
   </div>
 
   <div class="content">
-
     <div class="search" *ngIf="name">
       <span class="material-icons icon"> search </span>
       <div class="search-text">
@@ -14,15 +12,20 @@
       </div>
     </div>
 
-    <div class="friend-container" *ngIf="filteredFriendsList.length > 0; else noFriends">
-      <div class="name" (click)="sendTag(friend.username)" *ngFor="let friend of filteredFriendsList">
+    <div
+      class="friend-container"
+      *ngIf="filteredFriendsList.length > 0; else noFriends"
+    >
+      <div
+        class="name"
+        (click)="sendTag(friend.username)"
+        *ngFor="let friend of filteredFriendsList"
+      >
         {{ friend.username }}
       </div>
     </div>
     <ng-template #noFriends>
-      <div class="no-friends"> {{ STRINGS.NO_FRIENDS }} </div>
+      <div class="no-friends">{{ STRINGS.NO_FRIENDS }}</div>
     </ng-template>
-
   </div>
-
 </div>

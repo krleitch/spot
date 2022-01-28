@@ -1,12 +1,23 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 
 @Component({
   selector: 'spot-infinite-scroll',
   templateUrl: './infinite-scroll.component.html',
   styleUrls: ['./infinite-scroll.component.scss']
 })
-export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit {
-
+export class InfiniteScrollComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @Input() options = {};
   @Output() scrolled = new EventEmitter();
   @ViewChild('anchor') anchor: ElementRef<HTMLElement>;
@@ -16,7 +27,7 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
   timerDelay = 2000;
   timer: any;
 
-  constructor(private host: ElementRef) { }
+  constructor(private host: ElementRef) {}
 
   get element() {
     return this.host.nativeElement;
@@ -27,25 +38,20 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
     //   root: this.isHostScrollable() ? this.host.nativeElement : null,
     //   ...this.options
     // };
-
     // this.observer = new IntersectionObserver(([entry]) => {
     //   entry.isIntersecting && this.scrolled.emit();
     // }, options);
-
     // this.observer.observe(this.anchor.nativeElement);
   }
 
   ngAfterViewInit() {
-
     const options = {
       ...this.options,
-      root: this.isHostScrollable() ? this.host.nativeElement : null,
+      root: this.isHostScrollable() ? this.host.nativeElement : null
     };
 
     this.observer = new IntersectionObserver(([entry]) => {
-
-      if ( entry.isIntersecting ) {
-
+      if (entry.isIntersecting) {
         // start the timer
 
         this.scrolled.emit();
@@ -61,25 +67,19 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
         //     this.timer = false;
         //   }
         // }, this.timerDelay);
-
-        } else {
-
+      } else {
         // stop the timer
-
         // if ( this.timer ) {
         //   clearInterval(this.timer);
         // }
         // this.timer = false;
-
       }
-
     }, options);
 
     this.observer.observe(this.anchor.nativeElement);
   }
 
   ngOnDestroy() {
-
     // Timer implementation
     // if ( this.timer ) {
     //   clearInterval(this.timer);
@@ -92,16 +92,20 @@ export class InfiniteScrollComponent implements OnInit, OnDestroy, AfterViewInit
   private isHostScrollable() {
     const style = window.getComputedStyle(this.element);
 
-    return style.getPropertyValue('overflow') === 'auto' ||
-      style.getPropertyValue('overflow-y') === 'scroll';
+    return (
+      style.getPropertyValue('overflow') === 'auto' ||
+      style.getPropertyValue('overflow-y') === 'scroll'
+    );
   }
 
   inViewPort(bounding: any) {
     return (
-    bounding.top >= 0 &&
-    bounding.left >= 0 &&
-    bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    bounding.right <= (window.innerWidth || document.documentElement.clientWidth) );
+      bounding.top >= 0 &&
+      bounding.left >= 0 &&
+      bounding.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      bounding.right <=
+        (window.innerWidth || document.documentElement.clientWidth)
+    );
   }
-
 }

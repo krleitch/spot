@@ -8,14 +8,22 @@
       <span> {{ accountMetadata.score }} </span>
     </div>
     <div class="notifications" #notifications>
-      <i class="material-icons" (click)="toggleNotifications()"> notifications_none </i>
-      <div *ngIf="unreadNotifications != '0'" class="unread" (click)="toggleNotifications()"> {{ unreadNotifications }} </div>
+      <i class="material-icons" (click)="toggleNotifications()">
+        notifications_none
+      </i>
+      <div
+        *ngIf="unreadNotifications != '0'"
+        class="unread"
+        (click)="toggleNotifications()"
+      >
+        {{ unreadNotifications }}
+      </div>
       <spot-notifications *ngIf="showNotifications"></spot-notifications>
     </div>
     <div #account class="account" (click)="accountSetDropdown(true)">
       <i class="material-icons icon"> person_outline </i>
       <span class="username"> {{ myaccount.username }} </span>
-      <div class="dropdown-content" [ngClass]="{'show': accountShowDropdown }">
+      <div class="dropdown-content" [ngClass]="{ show: accountShowDropdown }">
         <a class="button" [routerLink]="'/activity'">
           <span class="material-icons icon"> show_chart </span>
           {{ STRINGS.ACTIVITY }}
@@ -37,7 +45,9 @@
   </div>
   <ng-template #noAccount>
     <div *ngIf="!loading || (showAccountIndicator$ | async)">
-      <div class="login" (click)="openAuthModal()"> {{ STRINGS.LOGIN_REGISTER }} </div>
+      <div class="login" (click)="openAuthModal()">
+        {{ STRINGS.LOGIN_REGISTER }}
+      </div>
     </div>
   </ng-template>
 </div>

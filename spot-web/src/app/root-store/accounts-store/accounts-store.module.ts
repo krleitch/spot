@@ -11,7 +11,11 @@ import { featureReducer } from './reducer';
   imports: [
     CommonModule,
     StoreModule.forFeature('accounts', featureReducer),
-    EffectsModule.forFeature([AccountsStoreEffects, FacebookStoreEffects, GoogleStoreEffects])
+    EffectsModule.forFeature([
+      AccountsStoreEffects,
+      FacebookStoreEffects,
+      GoogleStoreEffects
+    ])
   ],
   providers: [AccountsStoreEffects, FacebookStoreEffects, GoogleStoreEffects]
 })

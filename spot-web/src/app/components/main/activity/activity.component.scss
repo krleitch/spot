@@ -2,22 +2,22 @@
 @import '../../../styles/sizes';
 
 spot-main-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    z-index: 99;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 99;
+}
 
 .activity-container {
-    display: flex;
-    justify-content: center;
-    min-height: 100%;
-    width: 100%;
-    padding-top: 60px;
-    background-color: $background-grey;
-    box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  min-height: 100%;
+  width: 100%;
+  padding-top: 60px;
+  background-color: $background-grey;
+  box-sizing: border-box;
 }
 
 .activity-content {
@@ -27,7 +27,6 @@ spot-main-nav {
 }
 
 .loading {
-
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -36,8 +35,7 @@ spot-main-nav {
 
   spot-spinner {
     margin-top: 25px;
-  };
-
+  }
 }
 
 // Tabs
@@ -97,16 +95,15 @@ img {
 }
 
 .image-blur {
-  cursor:  pointer;
+  cursor: pointer;
   opacity: 0.4;
-  -webkit-transition: .3s ease-in-out;
-  transition: .2s ease-in-out;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.2s ease-in-out;
   filter: blur(3px);
   -webkit-filter: blur(3px);
 }
 
-.image-blur-text  {
-
+.image-blur-text {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -120,15 +117,16 @@ img {
   background-color: $background-grey;
   padding: 5px 5px;
 
-  -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-     -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-          box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 
   .icon {
     font-size: 42px;
     color: $button-highlight;
   }
-
 }
 
 .content-preview {
@@ -163,21 +161,17 @@ img {
     .icon {
       font-size: 16px;
     }
-
   }
-
 }
 
 // posts
 
 .activity-posts-container {
-
   .activity-post {
     margin-bottom: 15px;
   }
 
   .post-content {
-
     display: flex;
     margin: 10px 10px;
     padding: 10px 10px;
@@ -186,7 +180,6 @@ img {
     background-color: white;
 
     .post-info {
-
       display: flex;
       flex-flow: column;
       justify-content: center;
@@ -199,13 +192,10 @@ img {
       .info-bar-item {
         margin-right: 10px;
       }
-
     }
-
   }
 
   .no-post-activity {
-
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -227,21 +217,17 @@ img {
       font-size: 36px;
       color: $button-highlight;
     }
-
   }
-
 }
 
 // comments and replies
 
 .activity-comments-container {
-
   .activity-comment {
     margin-bottom: 15px;
   }
 
   .comment-content {
-
     display: flex;
     margin: 10px 10px;
     padding: 10px 10px;
@@ -262,11 +248,9 @@ img {
       justify-content: center;
       overflow: hidden;
     }
-
   }
 
   .no-comment-activity {
-
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -288,9 +272,7 @@ img {
       font-size: 36px;
       color: $button-highlight;
     }
-
   }
-
 }
 
 .comment-link {
@@ -308,12 +290,10 @@ img {
   .icon {
     font-size: 16px;
   }
-
 }
 
 // For Mobile
 @media screen and (max-width: $mobile-width) {
-
   .activity-content {
     width: 95%;
   }
@@ -326,5 +306,4 @@ img {
     display: flex;
     flex-flow: column;
   }
-
 }

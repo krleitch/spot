@@ -1,11 +1,28 @@
 import { Action } from '@ngrx/store';
 
-import { AddCommentStoreRequest, SetCommentsStoreRequest,
-          DeleteCommentRequest, DeleteCommentSuccess, AddReplyStoreRequest,
-          SetRepliesStoreRequest, DeleteReplyRequest, DeleteReplySuccess,
-          LikeCommentRequest, LikeCommentSuccess, DislikeCommentRequest, DislikeCommentSuccess,
-          LikeReplyRequest, LikeReplySuccess, DislikeReplyRequest, DislikeReplySuccess, UnratedCommentRequest,
-          UnratedCommentSuccess, UnratedReplyRequest, UnratedReplySuccess, ClearCommentsRequest } from '@models/comments';
+import {
+  AddCommentStoreRequest,
+  AddReplyStoreRequest,
+  ClearCommentsRequest,
+  DeleteCommentRequest,
+  DeleteCommentSuccess,
+  DeleteReplyRequest,
+  DeleteReplySuccess,
+  DislikeCommentRequest,
+  DislikeCommentSuccess,
+  DislikeReplyRequest,
+  DislikeReplySuccess,
+  LikeCommentRequest,
+  LikeCommentSuccess,
+  LikeReplyRequest,
+  LikeReplySuccess,
+  SetCommentsStoreRequest,
+  SetRepliesStoreRequest,
+  UnratedCommentRequest,
+  UnratedCommentSuccess,
+  UnratedReplyRequest,
+  UnratedReplySuccess
+} from '@models/comments';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -50,23 +67,23 @@ export class GenericFailureAction implements Action {
 }
 
 export class AddCommentRequestAction implements Action {
-    readonly type = ActionTypes.ADD_COMMENT_REQUEST;
-    constructor(public request: AddCommentStoreRequest) {}
+  readonly type = ActionTypes.ADD_COMMENT_REQUEST;
+  constructor(public request: AddCommentStoreRequest) {}
 }
 
 export class SetCommentsRequestAction implements Action {
-    readonly type = ActionTypes.SET_COMMENTS_REQUEST;
-    constructor(public request: SetCommentsStoreRequest) {}
+  readonly type = ActionTypes.SET_COMMENTS_REQUEST;
+  constructor(public request: SetCommentsStoreRequest) {}
 }
 
 export class DeleteRequestAction implements Action {
-    readonly type = ActionTypes.DELETE_REQUEST;
-    constructor(public request: DeleteCommentRequest) {}
+  readonly type = ActionTypes.DELETE_REQUEST;
+  constructor(public request: DeleteCommentRequest) {}
 }
 
 export class DeleteSuccessAction implements Action {
-    readonly type = ActionTypes.DELETE_SUCCESS;
-    constructor(public response: DeleteCommentSuccess) {}
+  readonly type = ActionTypes.DELETE_SUCCESS;
+  constructor(public response: DeleteCommentSuccess) {}
 }
 
 export class AddReplyRequestAction implements Action {
@@ -149,13 +166,27 @@ export class UnratedReplySuccessAction implements Action {
   constructor(public response: UnratedReplySuccess) {}
 }
 
-export type Actions = AddCommentRequestAction | ClearCommentsRequestAction | SetCommentsRequestAction |
-                      DeleteRequestAction | DeleteSuccessAction |
-                      SetRepliesRequestAction | AddReplyRequestAction |
-                      DeleteReplyRequestAction | DeleteReplySuccessAction |
-                      LikeRequestAction | LikeSuccessAction |
-                      DislikeRequestAction | DislikeSuccessAction |
-                      LikeReplyRequestAction | LikeReplySuccessAction |
-                      DislikeReplyRequestAction | DislikeReplySuccessAction |
-                      GenericFailureAction | UnratedRequestAction | UnratedSuccessAction |
-                      UnratedReplyRequestAction | UnratedReplySuccessAction | ResetStoreAction;
+export type Actions =
+  | AddCommentRequestAction
+  | ClearCommentsRequestAction
+  | SetCommentsRequestAction
+  | DeleteRequestAction
+  | DeleteSuccessAction
+  | SetRepliesRequestAction
+  | AddReplyRequestAction
+  | DeleteReplyRequestAction
+  | DeleteReplySuccessAction
+  | LikeRequestAction
+  | LikeSuccessAction
+  | DislikeRequestAction
+  | DislikeSuccessAction
+  | LikeReplyRequestAction
+  | LikeReplySuccessAction
+  | DislikeReplyRequestAction
+  | DislikeReplySuccessAction
+  | GenericFailureAction
+  | UnratedRequestAction
+  | UnratedSuccessAction
+  | UnratedReplyRequestAction
+  | UnratedReplySuccessAction
+  | ResetStoreAction;

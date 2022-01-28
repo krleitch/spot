@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 
 // services
 import { ModalService } from '@services/modal.service';
@@ -12,7 +12,6 @@ import { Subject } from 'rxjs';
   styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit, OnDestroy {
-
   @Input() id: string;
   @Input() width: number;
   @Input() height: number;
@@ -29,23 +28,21 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     const modal = this;
 
     if (!this.id) {
-        return;
+      return;
     }
 
     document.body.appendChild(this.element);
 
     this.element.addEventListener('click', (e: any) => {
-        if (e.target.className === 'spot-modal' && !this.disableClose ) {
-            modal.close();
-        }
+      if (e.target.className === 'spot-modal' && !this.disableClose) {
+        modal.close();
+      }
     });
 
     this.modalService.add(this);
-
   }
 
   ngOnDestroy(): void {
@@ -59,7 +56,6 @@ export class ModalComponent implements OnInit, OnDestroy {
 
     this.isOpen = true;
     this.result = new Subject<any>();
-
   }
 
   close(): void {
@@ -67,14 +63,12 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.body.classList.remove('spot-modal-open');
 
     this.isOpen = false;
-    if ( this.result ) {
+    if (this.result) {
       this.result.complete();
     }
-
   }
 
   setResult(result: any): void {
     this.result.next(result);
   }
-
 }

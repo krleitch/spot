@@ -1,9 +1,7 @@
 <spot-main-nav></spot-main-nav>
 <div class="account">
   <div class="account-content">
-
     <div *ngIf="account$ | async as account; else noAccount">
-
       <div class="title">
         <span class="material-icons title-icon"> settings </span>
         {{ STRINGS.MY_ACCOUNT }}
@@ -14,11 +12,18 @@
       </div>
 
       <!-- Verification -->
-      <div class="subheading" ngClass="{'mobile-column': account.verified_date == null}">
+      <div
+        class="subheading"
+        ngClass="{'mobile-column': account.verified_date == null}"
+      >
         <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
         <div *ngIf="account.verified_date == null; else verified">
           <div *ngIf="account.email">
-            <div *ngIf="verificationSent == false; else sent" class="verify-click verify-container" (click)="verifyAccount()">
+            <div
+              *ngIf="verificationSent == false; else sent"
+              class="verify-click verify-container"
+              (click)="verifyAccount()"
+            >
               <span class="verify-text"> {{ STRINGS.VERIFY }} </span>
               <span class="material-icons verify-icon"> email </span>
             </div>
@@ -32,24 +37,40 @@
         <ng-template #verified>
           <div class="verify-container">
             <span class="verify-text"> {{ STRINGS.VERIFY_CHECK }} </span>
-            <span class="material-icons verify-icon-highlight"> check_circle </span>
+            <span class="material-icons verify-icon-highlight">
+              check_circle
+            </span>
           </div>
         </ng-template>
       </div>
 
       <!-- Email -->
       <div class="value editable">
-        <span *ngIf="!email && !editEmailEnabled" class="no-email"> {{ STRINGS.NO_EMAIL }} </span>
-        <input #editEmail [disabled]="!editEmailEnabled" [(ngModel)]="email" type="text" spellcheck="false">
+        <span *ngIf="!email && !editEmailEnabled" class="no-email">
+          {{ STRINGS.NO_EMAIL }}
+        </span>
+        <input
+          #editEmail
+          [disabled]="!editEmailEnabled"
+          [(ngModel)]="email"
+          type="text"
+          spellcheck="false"
+        />
         <div *ngIf="editEmailEnabled; else elseEmailBlock">
-          <span class="link" (click)="submitEditEmail()"> {{ STRINGS.SUBMIT }} </span>
+          <span class="link" (click)="submitEditEmail()">
+            {{ STRINGS.SUBMIT }}
+          </span>
         </div>
         <ng-template #elseEmailBlock>
           <div *ngIf="email; else add">
-            <span class="material-icons edit-icon" (click)="enableEditEmail()"> edit </span>
+            <span class="material-icons edit-icon" (click)="enableEditEmail()">
+              edit
+            </span>
           </div>
           <ng-template #add>
-            <span class="link" (click)="enableEditEmail()"> {{ STRINGS.ADD }} </span>
+            <span class="link" (click)="enableEditEmail()">
+              {{ STRINGS.ADD }}
+            </span>
           </ng-template>
         </ng-template>
       </div>
@@ -66,14 +87,24 @@
       </div>
 
       <!-- Username -->
-      <div class="subheading"> {{ STRINGS.USERNAME }} </div>
+      <div class="subheading">{{ STRINGS.USERNAME }}</div>
       <div class="value editable">
-        <input #editUsername [disabled]="!editUsernameEnabled" [(ngModel)]="username" type="text" spellcheck="false">
+        <input
+          #editUsername
+          [disabled]="!editUsernameEnabled"
+          [(ngModel)]="username"
+          type="text"
+          spellcheck="false"
+        />
         <div *ngIf="editUsernameEnabled; else elseBlock">
-          <span class="link" (click)="submitEditUsername()"> {{ STRINGS.SUBMIT }} </span>
+          <span class="link" (click)="submitEditUsername()">
+            {{ STRINGS.SUBMIT }}
+          </span>
         </div>
         <ng-template #elseBlock>
-          <span class="material-icons edit-icon" (click)="enableEditUsername()"> edit </span>
+          <span class="material-icons edit-icon" (click)="enableEditUsername()">
+            edit
+          </span>
         </ng-template>
       </div>
       <div *ngIf="usernameErrorMessage" class="error">
@@ -84,19 +115,33 @@
       </div>
 
       <!-- Phone -->
-      <div class="subheading"> {{ STRINGS.PHONE }} </div>
+      <div class="subheading">{{ STRINGS.PHONE }}</div>
       <div class="value editable">
-        <span *ngIf="!phone && !editPhoneEnabled" class="no-phone"> {{ STRINGS.NO_PHONE }} </span>
-        <input #editPhone [disabled]="!editPhoneEnabled" [(ngModel)]="phone" type="text" spellcheck="false">
+        <span *ngIf="!phone && !editPhoneEnabled" class="no-phone">
+          {{ STRINGS.NO_PHONE }}
+        </span>
+        <input
+          #editPhone
+          [disabled]="!editPhoneEnabled"
+          [(ngModel)]="phone"
+          type="text"
+          spellcheck="false"
+        />
         <div *ngIf="editPhoneEnabled; else elsePhoneBlock">
-          <span class="link" (click)="submitEditPhone()"> {{ STRINGS.SUBMIT }} </span>
+          <span class="link" (click)="submitEditPhone()">
+            {{ STRINGS.SUBMIT }}
+          </span>
         </div>
         <ng-template #elsePhoneBlock>
           <div *ngIf="phone; else add">
-            <span class="material-icons edit-icon" (click)="enableEditPhone()"> edit </span>
+            <span class="material-icons edit-icon" (click)="enableEditPhone()">
+              edit
+            </span>
           </div>
           <ng-template #add>
-            <span class="link" (click)="enableEditPhone()"> {{ STRINGS.ADD }} </span>
+            <span class="link" (click)="enableEditPhone()">
+              {{ STRINGS.ADD }}
+            </span>
           </ng-template>
         </ng-template>
       </div>
@@ -109,26 +154,59 @@
 
       <!-- Metadata properties -->
       <div *ngIf="accountMetadata$ | async as accountMetadata">
-
         <!-- Score -->
-        <div class="subheading"> {{ STRINGS.SCORE }} </div>
-        <div class="value"> <i class="material-icons hot"> whatshot </i> {{ accountMetadata.score }} </div>
-        <div class="description"> {{ STRINGS.SCORE_DESCRIPTION }} </div>
+        <div class="subheading">{{ STRINGS.SCORE }}</div>
+        <div class="value">
+          <i class="material-icons hot"> whatshot </i>
+          {{ accountMetadata.score }}
+        </div>
+        <div class="description">{{ STRINGS.SCORE_DESCRIPTION }}</div>
 
         <!-- Unit -->
-        <div class="subheading"> {{ STRINGS.UNIT }} </div>
+        <div class="subheading">{{ STRINGS.UNIT }}</div>
         <div class="value">
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'imperial' }" (click)="setUnit('imperial')"> {{ STRINGS.IMPERIAL }} </div>
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.distance_unit == 'metric' }" (click)="setUnit('metric')"> {{ STRINGS.METRIC }} </div>
+          <div
+            class="distance-button"
+            [ngClass]="{
+              'distance-selected': accountMetadata.distance_unit === 'imperial'
+            }"
+            (click)="setUnit('imperial')"
+          >
+            {{ STRINGS.IMPERIAL }}
+          </div>
+          <div
+            class="distance-button"
+            [ngClass]="{
+              'distance-selected': accountMetadata.distance_unit === 'metric'
+            }"
+            (click)="setUnit('metric')"
+          >
+            {{ STRINGS.METRIC }}
+          </div>
         </div>
 
         <!-- Mature Content -->
-        <div class="subheading"> {{ STRINGS.MATURE }} </div>
+        <div class="subheading">{{ STRINGS.MATURE }}</div>
         <div class="value">
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.mature_filter == true }" (click)="setMature(true)"> {{ STRINGS.MATURE_TRUE }} </div>
-          <div class="distance-button" [ngClass]="{'distance-selected': accountMetadata.mature_filter == false }" (click)="setMature(false)"> {{ STRINGS.MATURE_FALSE }} </div>
+          <div
+            class="distance-button"
+            [ngClass]="{
+              'distance-selected': accountMetadata.mature_filter == true
+            }"
+            (click)="setMature(true)"
+          >
+            {{ STRINGS.MATURE_TRUE }}
+          </div>
+          <div
+            class="distance-button"
+            [ngClass]="{
+              'distance-selected': accountMetadata.mature_filter == false
+            }"
+            (click)="setMature(false)"
+          >
+            {{ STRINGS.MATURE_FALSE }}
+          </div>
         </div>
-
       </div>
 
       <div class="title">
@@ -137,32 +215,65 @@
       </div>
 
       <div class="social">
-        <div class="social-button" *ngIf="!(facebookConnected$ | async); else facebookconnected">
-          <button *ngIf="facebookLoaded" class="facebook" (click)="facebookConnect()">
-            <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+        <div
+          class="social-button"
+          *ngIf="!(facebookConnected$ | async); else facebookconnected"
+        >
+          <button
+            *ngIf="facebookLoaded"
+            class="facebook"
+            (click)="facebookConnect()"
+          >
+            <img
+              src="../../../assets/images/facebook_logo_white.png"
+              class="facebook-logo"
+            />
             {{ STRINGS.FACEBOOK_CONNECT }}
           </button>
         </div>
         <ng-template #facebookconnected>
           <div class="facebook-connected">
-            <img src="../../../assets/images/facebook_logo.png" class="facebook-logo">
+            <img
+              src="../../../assets/images/facebook_logo.png"
+              class="facebook-logo"
+            />
             <span class="text"> Logged in with Facebook </span>
-            <button *ngIf="facebookLoaded && account.local_account || account.google_id" (click)="facebookDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+            <button
+              *ngIf="
+                (facebookLoaded && account.local_account) || account.google_id
+              "
+              (click)="facebookDisconnect()"
+            >
+              {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }}
+            </button>
           </div>
         </ng-template>
-        <div class="social-button" *ngIf="!(googleConnected$ | async); else googleconnected">
+        <div
+          class="social-button"
+          *ngIf="!(googleConnected$ | async); else googleconnected"
+        >
           <!-- GOOGLE -->
           <div id="my-signin2"></div>
         </div>
         <ng-template #googleconnected>
           <div class="google-connected">
-            <img src="../../../assets/images/google_logo.png" class="google-logo">
+            <img
+              src="../../../assets/images/google_logo.png"
+              class="google-logo"
+            />
             <span class="text"> Logged in with Google </span>
-            <button *ngIf="account.local_account || account.facebook_id" (click)="googleDisconnect()"> {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }} </button>
+            <button
+              *ngIf="account.local_account || account.facebook_id"
+              (click)="googleDisconnect()"
+            >
+              {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }}
+            </button>
           </div>
         </ng-template>
       </div>
-      <div *ngIf="facebookLoaded" class="description"> {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }} </div>
+      <div *ngIf="facebookLoaded" class="description">
+        {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }}
+      </div>
 
       <div class="options">
         <div class="title">
@@ -171,12 +282,19 @@
         </div>
         <label class="checkbox-container">
           <span class="enable-text"> {{ STRINGS.ENABLE_OPTIONS }} </span>
-          <input type="checkbox" [(ngModel)]="accountOptionsEnabled">
-          <span class="checkmark"> <span class="checkmark-inner"> </span> </span>
+          <input type="checkbox" [(ngModel)]="accountOptionsEnabled" />
+          <span class="checkmark">
+            <span class="checkmark-inner"> </span>
+          </span>
         </label>
       </div>
-      <button class="delete" [ngClass]="{'disabled': !accountOptionsEnabled}" (click)="deleteUser()"> {{ STRINGS.DELETE }} </button>
-
+      <button
+        class="delete"
+        [ngClass]="{ disabled: !accountOptionsEnabled }"
+        (click)="deleteUser()"
+      >
+        {{ STRINGS.DELETE }}
+      </button>
     </div>
 
     <ng-template #noAccount>
@@ -185,6 +303,5 @@
         <span class="text"> {{ STRINGS.NO_ACCOUNT }} </span>
       </div>
     </ng-template>
-
   </div>
 </div>

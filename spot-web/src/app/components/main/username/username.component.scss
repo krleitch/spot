@@ -2,7 +2,6 @@
 @import '../../../styles/sizes';
 
 .nav {
-
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -13,11 +12,9 @@
   .title-image {
     height: 42px;
   }
-
 }
 
 .username {
-
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -32,7 +29,6 @@
   }
 
   .container {
-
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -43,8 +39,7 @@
     padding: 25px;
     margin: 25px;
     max-width: 900px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
-
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
   }
 
   .icon {
@@ -63,7 +58,6 @@
   }
 
   button {
-
     outline: none;
     border: none;
     cursor: pointer;
@@ -78,9 +72,8 @@
     font-size: 14px;
 
     &:hover {
-        background-color: lighten($button-black, 10%);
+      background-color: lighten($button-black, 10%);
     }
-
   }
 
   button.disabled {
@@ -89,7 +82,6 @@
   }
 
   .terms-and-conditions {
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -112,10 +104,7 @@
         color: $button-highlight;
       }
     }
-
   }
-
-
 
   .description {
     margin-top: 10px;
@@ -128,7 +117,6 @@
     margin-bottom: 10px;
     text-align: center;
   }
-
 }
 
 // Checkbox stuff
@@ -175,7 +163,7 @@
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
@@ -201,7 +189,6 @@
 // FOOTER
 
 .footer {
-
   height: 230px;
   width: 100%;
   display: table;
@@ -222,5 +209,4 @@
     bottom: -50px;
     left: 0px;
   }
-
 }

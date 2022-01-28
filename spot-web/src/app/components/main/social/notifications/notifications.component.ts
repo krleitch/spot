@@ -1,26 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 // Rxjs
 import { Observable, Subject, timer } from 'rxjs';
-import { takeUntil, mapTo, skip, takeWhile, startWith } from 'rxjs/operators';
+import { mapTo, skip, startWith, takeUntil, takeWhile } from 'rxjs/operators';
 
 // Store
 import { RootStoreState } from '@store';
-import { SocialStoreNotificationsActions, SocialStoreSelectors } from '@store/social-store';
-import { select, Store } from '@ngrx/store';
+import {
+  SocialStoreNotificationsActions,
+  SocialStoreSelectors
+} from '@store/social-store';
+import { Store, select } from '@ngrx/store';
 
 // Assets
 import { STRINGS } from '@assets/strings/en';
 import { NOTIFICATIONS_CONSTANTS } from '@constants/notifications';
-import { Notification, GetNotificationsRequest, DeleteAllNotificationsRequest,
-          SetAllNotificationsSeenRequest } from '@models/notifications';
+import {
+  DeleteAllNotificationsRequest,
+  GetNotificationsRequest,
+  Notification,
+  SetAllNotificationsSeenRequest
+} from '@models/notifications';
 @Component({
   selector: 'spot-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
-
   private readonly onDestroy = new Subject<void>();
 
   STRINGS = STRINGS.MAIN.NOTIFICATIONS;
@@ -34,21 +40,27 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   initialLoad = true;
   showNotificationsIndicator$: Observable<boolean>;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>) {}
 
   ngOnInit(): void {
-
     // Loading
     this.notificationsLoading$ = this.store$.pipe(
       select(SocialStoreSelectors.selectNotificationsLoading)
     );
 
-    this.notificationsLoading$.pipe(takeUntil(this.onDestroy)).subscribe( (loading: boolean) => {
-      this.loading = loading;
-      if ( this.loading ) {
-        this.showNotificationsIndicator$ = timer(500).pipe( mapTo(true), takeWhile( (_) => this.loading )).pipe( startWith(false) );
-      }
-    });
+    this.notificationsLoading$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((loading: boolean) => {
+        this.loading = loading;
+        if (this.loading) {
+          this.showNotificationsIndicator$ = timer(500)
+            .pipe(
+              mapTo(true),
+              takeWhile((_) => this.loading)
+            )
+            .pipe(startWith(false));
+        }
+      });
 
     this.notificationsSuccess$ = this.store$.pipe(
       select(SocialStoreSelectors.selectNotificationsSuccess)
@@ -59,17 +71,20 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     );
 
     // select notifications
-    this.notifications$.pipe(takeUntil(this.onDestroy)).subscribe( (notifications: Notification[]) => {
-      this.notifications = notifications;
-    });
+    this.notifications$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((notifications: Notification[]) => {
+        this.notifications = notifications;
+      });
 
     // on successful notifications
-    this.notificationsSuccess$.pipe(takeUntil(this.onDestroy), skip(1)).subscribe( (success: boolean) => {
-      if ( success ) {
-        this.initialLoad = false;
-      }
-    });
-
+    this.notificationsSuccess$
+      .pipe(takeUntil(this.onDestroy), skip(1))
+      .subscribe((success: boolean) => {
+        if (success) {
+          this.initialLoad = false;
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -77,44 +92,38 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   onScroll(): void {
-
-    if ( !this.loading ) {
-
+    if (!this.loading) {
       const request: GetNotificationsRequest = {
         initialLoad: this.notifications.length > 0 ? false : this.initialLoad,
-        after: this.initialLoad ? null :
-                this.notifications.length > 0 ? this.notifications[this.notifications.length - 1].creation_date : null,
-        limit: NOTIFICATIONS_CONSTANTS.LIMIT,
+        after: this.initialLoad
+          ? null
+          : this.notifications.length > 0
+          ? this.notifications[this.notifications.length - 1].creation_date
+          : null,
+        limit: NOTIFICATIONS_CONSTANTS.LIMIT
       };
 
       // load the notifications
       this.store$.dispatch(
         new SocialStoreNotificationsActions.GetNotificationsAction(request)
       );
-
     }
-
   }
 
   // Currently unused
   clearAll(): void {
-
     const request: DeleteAllNotificationsRequest = {};
 
     this.store$.dispatch(
       new SocialStoreNotificationsActions.DeleteAllNotificationsAction(request)
     );
-
   }
 
   seeAll(): void {
-
     const request: SetAllNotificationsSeenRequest = {};
 
     this.store$.dispatch(
       new SocialStoreNotificationsActions.SetAllNotificationsSeenAction(request)
     );
-
   }
-
 }

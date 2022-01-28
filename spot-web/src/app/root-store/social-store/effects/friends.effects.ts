@@ -10,16 +10,17 @@ import { DeleteFriendsSuccess, GetFriendsSuccess } from '@models/friends';
 
 @Injectable()
 export class FriendsEffects {
-  constructor(private actions$: Actions, private friendsService: FriendsService) { }
+  constructor(
+    private actions$: Actions,
+    private friendsService: FriendsService
+  ) {}
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
     ofType<friendsActions.GenericFailureAction>(
-        friendsActions.FriendsActionTypes.GENERIC_FAILURE
+      friendsActions.FriendsActionTypes.GENERIC_FAILURE
     ),
-    tap((action: friendsActions.GenericFailureAction) => {
-
-    })
+    tap((action: friendsActions.GenericFailureAction) => {})
   );
 
   @Effect()
@@ -27,17 +28,17 @@ export class FriendsEffects {
     ofType<friendsActions.GetFriendsRequestAction>(
       friendsActions.FriendsActionTypes.GET_FRIENDS_REQUEST
     ),
-    switchMap(action =>
-      this.friendsService
-        .getFriends(action.request)
-        .pipe(
-          map((response: GetFriendsSuccess) => {
-            return new friendsActions.GetFriendsSuccessAction( response );
-          }),
-          catchError(errorResponse =>
-            observableOf(new friendsActions.GetFriendsFailureAction( errorResponse.error ))
+    switchMap((action) =>
+      this.friendsService.getFriends(action.request).pipe(
+        map((response: GetFriendsSuccess) => {
+          return new friendsActions.GetFriendsSuccessAction(response);
+        }),
+        catchError((errorResponse) =>
+          observableOf(
+            new friendsActions.GetFriendsFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -46,18 +47,17 @@ export class FriendsEffects {
     ofType<friendsActions.DeleteFriendsRequestAction>(
       friendsActions.FriendsActionTypes.DELETE_FRIENDS_REQUEST
     ),
-    switchMap(action =>
-      this.friendsService
-        .deleteFriends(action.request)
-        .pipe(
-          map((response: DeleteFriendsSuccess) => {
-            return new friendsActions.DeleteFriendsSuccessAction( response );
-          }),
-          catchError(errorResponse =>
-            observableOf(new friendsActions.GenericFailureAction( errorResponse.error ))
+    switchMap((action) =>
+      this.friendsService.deleteFriends(action.request).pipe(
+        map((response: DeleteFriendsSuccess) => {
+          return new friendsActions.DeleteFriendsSuccessAction(response);
+        }),
+        catchError((errorResponse) =>
+          observableOf(
+            new friendsActions.GenericFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
-
 }

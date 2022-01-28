@@ -11,5 +11,5 @@ export {
   AccountsFacebookActions,
   AccountsGoogleActions,
   AccountsStoreSelectors,
-  AccountsStoreState,
+  AccountsStoreState
 };

@@ -1,5 +1,4 @@
 <div class="notifications">
-
   <div class="header">
     <span class="title"> {{ STRINGS.TITLE }} </span>
     <span class="see" (click)="seeAll()">
@@ -10,15 +9,23 @@
   </div>
 
   <div class="notifications-content">
-
     <spot-infinite-scroll (scrolled)="onScroll()">
       <div *ngIf="notifications.length > 0; else empty">
         <div *ngFor="let notification of notifications">
-          <spot-notification-item [notification]="notification"></spot-notification-item>
+          <spot-notification-item
+            [notification]="notification"
+          ></spot-notification-item>
         </div>
       </div>
       <!-- We only show loading when first loading notifications now -->
-      <div *ngIf="loading && (showNotificationsIndicator$ | async) && notifications.length === 0" class="loading">
+      <div
+        *ngIf="
+          loading &&
+          (showNotificationsIndicator$ | async) &&
+          notifications.length === 0
+        "
+        class="loading"
+      >
         <span class="text"> {{ STRINGS.LOADING }} </span>
         <spot-spinner size="small" type="dot"></spot-spinner>
       </div>
@@ -30,7 +37,5 @@
         {{ STRINGS.NO_NOTIFICATIONS }}
       </div>
     </ng-template>
-
   </div>
-
 </div>

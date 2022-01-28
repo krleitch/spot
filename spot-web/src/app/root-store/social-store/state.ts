@@ -14,16 +14,14 @@ export interface State {
   unreadNotifications: number;
 }
 
-export const initialState: State = (
-  {
-    friends: [],
-    friendsLoading: false,
-    friendsError: null,
-    friendsSuccess: false,
-    notifications: [],
-    notificationsLoading: false,
-    notificationsError: null,
-    notificationsSuccess: false,
-    unreadNotifications: 0
-  }
-);
+export const initialState: State = {
+  friends: [],
+  friendsLoading: false,
+  friendsError: null,
+  friendsSuccess: false,
+  notifications: [],
+  notificationsLoading: false,
+  notificationsError: null,
+  notificationsSuccess: false,
+  unreadNotifications: 0
+};

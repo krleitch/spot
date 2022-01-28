@@ -1,40 +1,54 @@
 <spot-main-nav></spot-main-nav>
 <div class="activity-container">
   <div class="activity-content">
-
     <div class="tab-container">
       <div class="tab" (click)="setTab('posts')">
         {{ STRINGS.POSTS }}
-        <div class="selected" [ngClass]="{'show': selectedTab == 'posts'}"></div>
+        <div
+          class="selected"
+          [ngClass]="{ show: selectedTab === 'posts' }"
+        ></div>
       </div>
       <div class="tab" (click)="setTab('commentsreplies')">
         {{ STRINGS.COMMENTS_REPLIES }}
-        <div class="selected" [ngClass]="{'show': selectedTab == 'commentsreplies'}"></div>
+        <div
+          class="selected"
+          [ngClass]="{ show: selectedTab === 'commentsreplies' }"
+        ></div>
       </div>
     </div>
 
     <!-- used to push the content down for now, visibility is always hidden -->
-    <div class="tab-container" style="visibility:hidden; position:static; width: 100%">
+    <div
+      class="tab-container"
+      style="visibility: hidden; position: static; width: 100%"
+    >
       <div class="tab">
         {{ STRINGS.POSTS }}
-        <div class="selected" [ngClass]="{'show': selectedTab == 'posts'}"></div>
+        <div
+          class="selected"
+          [ngClass]="{ show: selectedTab === 'posts' }"
+        ></div>
       </div>
       <div class="tab">
         {{ STRINGS.COMMENTS_REPLIES }}
-        <div class="selected" [ngClass]="{'show': selectedTab == 'commentsreplies'}"></div>
+        <div
+          class="selected"
+          [ngClass]="{ show: selectedTab === 'commentsreplies' }"
+        ></div>
       </div>
     </div>
 
     <div class="content-container">
-
-      <div class="activity-posts-container" *ngIf="selectedTab == 'posts'">
+      <div class="activity-posts-container" *ngIf="selectedTab === 'posts'">
         <spot-infinite-scroll (scrolled)="onScrollPost()">
           <div *ngIf="postActivity.length > 0; else noPostActivity">
             <div class="activity-post" *ngFor="let activity of postActivity">
-
               <div class="activity-header">
                 <div class="date">
-                  {{ STRINGS.DATE_POST_PROMPT }} {{ formatDate(activity.creation_date) }} {{ STRINGS.DATE_PROMPT_END }}
+                  {{ STRINGS.DATE_POST_PROMPT }}
+                  {{ formatDate(activity.creation_date) }}
+                  {{ STRINGS.DATE_PROMPT_END }}
                 </div>
                 <a class="post-link" [routerLink]="'/posts/' + activity.link">
                   {{ STRINGS.POSTS_OPEN }}
@@ -44,28 +58,54 @@
               <div class="horiz-bar"></div>
 
               <div class="post-content">
-                <div class="image" *ngIf="activity.image_src && accountMetadata" (click)="activityClicked(activity)">
-                  <img [src]="activity.image_src" [ngClass]="{'image-blur': activity.imageBlurred && accountMetadata.mature_filter }">
-                  <div *ngIf="activity.imageBlurred && accountMetadata.mature_filter" class="image-blur-text" >
+                <div
+                  class="image"
+                  *ngIf="activity.image_src && accountMetadata"
+                  (click)="activityClicked(activity)"
+                >
+                  <img
+                    [src]="activity.image_src"
+                    [ngClass]="{
+                      'image-blur':
+                        activity.imageBlurred && accountMetadata.mature_filter
+                    }"
+                  />
+                  <div
+                    *ngIf="
+                      activity.imageBlurred && accountMetadata.mature_filter
+                    "
+                    class="image-blur-text"
+                  >
                     <span class="material-icons icon"> error_outline </span>
                   </div>
                 </div>
                 <div class="post-info">
-                  <div class="content-preview"> {{ activity.content }} </div>
+                  <div class="content-preview">{{ activity.content }}</div>
                   <div class="info-bar">
-                    <span class="info-bar-item"> {{ STRINGS.POSTS_SCORE }} {{ activity.likes - activity.dislikes }} </span>
-                    <span class="info-bar-item"> {{ STRINGS.POSTS_COMMENTS }} {{ activity.comments }}  </span>
+                    <span class="info-bar-item">
+                      {{ STRINGS.POSTS_SCORE }}
+                      {{ activity.likes - activity.dislikes }}
+                    </span>
+                    <span class="info-bar-item">
+                      {{ STRINGS.POSTS_COMMENTS }} {{ activity.comments }}
+                    </span>
                     <span class="info-bar-item">
                       {{ STRINGS.POSTS_LOCATION }}
-                      <span *ngIf="activity.distance && accountMetadata"> {{ getDistance(activity.distance, accountMetadata.distance_unit) }} - </span>
+                      <span *ngIf="activity.distance && accountMetadata">
+                        {{
+                          getDistance(
+                            activity.distance,
+                            accountMetadata.distance_unit
+                          )
+                        }}
+                        -
+                      </span>
                       {{ activity.geolocation }}
                     </span>
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
           <ng-template #noPostActivity>
             <div *ngIf="postsLoadedOnce" class="no-post-activity">
@@ -75,24 +115,44 @@
             </div>
           </ng-template>
         </spot-infinite-scroll>
-        <div *ngIf="(showPostsIndicator$ | async) && postActivityLoading" class="loading">
+        <div
+          *ngIf="(showPostsIndicator$ | async) && postActivityLoading"
+          class="loading"
+        >
           <spot-spinner size="medium" type="dot"></spot-spinner>
         </div>
       </div>
 
-      <div class="activity-comments-container" *ngIf="selectedTab == 'commentsreplies'">
+      <div
+        class="activity-comments-container"
+        *ngIf="selectedTab === 'commentsreplies'"
+      >
         <spot-infinite-scroll (scrolled)="onScrollComments()">
           <div *ngIf="commentActivity.length > 0; else noCommentActivity">
-            <div class="activity-comment" *ngFor="let activity of commentActivity">
-
+            <div
+              class="activity-comment"
+              *ngFor="let activity of commentActivity"
+            >
               <div class="activity-header">
                 <div class="date">
-                  <span *ngIf="activity.parent_id == null; else replyDate"> {{ STRINGS.DATE_COMMENT_PROMPT }} </span>
-                  <ng-template #replyDate> {{ STRINGS.DATE_REPLY_PROMPT }} </ng-template>
+                  <span *ngIf="activity.parent_id == null; else replyDate">
+                    {{ STRINGS.DATE_COMMENT_PROMPT }}
+                  </span>
+                  <ng-template #replyDate>
+                    {{ STRINGS.DATE_REPLY_PROMPT }}
+                  </ng-template>
                   {{ formatDate(activity.creation_date) }}
                   {{ STRINGS.DATE_PROMPT_END }}
                 </div>
-                <a class="comment-link" [routerLink]="'/posts/' + activity.post_link + '/comments/' + activity.link">
+                <a
+                  class="comment-link"
+                  [routerLink]="
+                    '/posts/' +
+                    activity.post_link +
+                    '/comments/' +
+                    activity.link
+                  "
+                >
                   {{ STRINGS.COMMENTS_OPEN }}
                 </a>
               </div>
@@ -101,15 +161,15 @@
 
               <div class="comment-content">
                 <div class="image" *ngIf="activity.image_src">
-                  <img [src]="activity.image_src">
+                  <img [src]="activity.image_src" />
                 </div>
                 <div class="comment-info">
-                  <div class="content-preview-comment"> {{ activity.content }} </div>
+                  <div class="content-preview-comment">
+                    {{ activity.content }}
+                  </div>
                 </div>
               </div>
-
             </div>
-
           </div>
           <ng-template #noCommentActivity>
             <div *ngIf="commentsLoadedOnce" class="no-comment-activity">
@@ -119,11 +179,13 @@
             </div>
           </ng-template>
         </spot-infinite-scroll>
-        <div *ngIf="(showCommentsIndicator$ | async) && commentActivityLoading" class="loading">
+        <div
+          *ngIf="(showCommentsIndicator$ | async) && commentActivityLoading"
+          class="loading"
+        >
           <spot-spinner size="medium" type="dot"></spot-spinner>
         </div>
       </div>
-
     </div>
   </div>
 </div>

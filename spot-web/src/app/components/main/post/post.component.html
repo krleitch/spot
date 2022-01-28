@@ -1,62 +1,105 @@
 <div class="container">
   <div class="post">
-
     <div class="left-bar">
-      <i class="material-icons vote" (click)="like()" [ngClass]="{'highlight': post.rated == 1}"> keyboard_arrow_up </i>
-      <div class="points"> {{ post.likes - post.dislikes }} </div>
-      <i class="material-icons vote" (click)="dislike()" [ngClass]="{'highlight': post.rated == 0}"> keyboard_arrow_down </i>
+      <i
+        class="material-icons vote"
+        (click)="like()"
+        [ngClass]="{ highlight: post.rated == 1 }"
+      >
+        keyboard_arrow_up
+      </i>
+      <div class="points">{{ post.likes - post.dislikes }}</div>
+      <i
+        class="material-icons vote"
+        (click)="dislike()"
+        [ngClass]="{ highlight: post.rated == 0 }"
+      >
+        keyboard_arrow_down
+      </i>
       <a class="time" [routerLink]="'/posts/' + post.link">
-          {{ time }}
+        {{ time }}
       </a>
     </div>
 
     <div class="content-container">
-
       <!-- places beside to avoid extra space since style is whitespace: pre-wrap -->
-      <div class="text">{{getContent()}}
+      <div class="text">
+        {{ getContent() }}
         <span *ngIf="isExpandable">
           <span *ngIf="expanded; else notExpanded">
-            <span class="expand" (click)="setExpanded(false)"> {{ STRINGS.SEE_LESS }} </span>
+            <span class="expand" (click)="setExpanded(false)">
+              {{ STRINGS.SEE_LESS }}
+            </span>
           </span>
           <ng-template #notExpanded>
-            <span class="expand" (click)="setExpanded(true)"> {{ STRINGS.SEE_MORE }} </span>
+            <span class="expand" (click)="setExpanded(true)">
+              {{ STRINGS.SEE_MORE }}
+            </span>
           </ng-template>
         </span>
       </div>
 
       <!-- Image -->
-      <div *ngIf="post.image_src != null" (click)="imageClicked()" class="image">
-        <img #postimage [src]="post.image_src" [ngClass]="{'image-blur': (accountMetadata == null && imageBlurred) || (imageBlurred && accountMetadata.mature_filter) }" />
-        <div *ngIf="(accountMetadata == null && imageBlurred) || (imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
+      <div
+        *ngIf="post.image_src != null"
+        (click)="imageClicked()"
+        class="image"
+      >
+        <img
+          #postimage
+          [src]="post.image_src"
+          [ngClass]="{
+            'image-blur':
+              (accountMetadata == null && imageBlurred) ||
+              (imageBlurred && accountMetadata.mature_filter)
+          }"
+        />
+        <div
+          *ngIf="
+            (accountMetadata == null && imageBlurred) ||
+            (imageBlurred && accountMetadata.mature_filter)
+          "
+          class="image-blur-text"
+        >
           <span class="material-icons icon"> error_outline </span>
           <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>
-          <span class="text highlight"> {{ STRINGS.MATURE_CONTENT_SHOW }} </span>
+          <span class="text highlight">
+            {{ STRINGS.MATURE_CONTENT_SHOW }}
+          </span>
         </div>
       </div>
 
       <div class="options">
         <span class="comment-number">
           {{ post.comments }}
-          <span *ngIf="post.comments === 1; else plural"> {{ STRINGS.COMMENTS_SINGLE }} </span>
+          <span *ngIf="post.comments === 1; else plural">
+            {{ STRINGS.COMMENTS_SINGLE }}
+          </span>
           <ng-template #plural>
             {{ STRINGS.COMMENTS }}
           </ng-template>
         </span>
         <div class="distance">
-          <span *ngIf="post.distance"> {{ getDistance(post.distance) }} - </span>
+          <span *ngIf="post.distance">
+            {{ getDistance(post.distance) }} -
+          </span>
           {{ post.geolocation }}
         </div>
       </div>
-
     </div>
 
     <div class="right-bar">
-
       <div #options>
-        <i class="material-icons icon-size" (click)="setOptions(true)"> more_horiz </i>
-        <div class="dropdown align-bottom" >
-          <div class="dropdown-content" [ngClass]="{'show': optionsEnabled }">
-            <a *ngIf="!detailed" class="button" [routerLink]="'/posts/' + post.link">
+        <i class="material-icons icon-size" (click)="setOptions(true)">
+          more_horiz
+        </i>
+        <div class="dropdown align-bottom">
+          <div class="dropdown-content" [ngClass]="{ show: optionsEnabled }">
+            <a
+              *ngIf="!detailed"
+              class="button"
+              [routerLink]="'/posts/' + post.link"
+            >
               <span class="material-icons icon"> chevron_right </span>
               {{ STRINGS.OPEN_POST }}
             </a>
@@ -64,11 +107,27 @@
               <span class="material-icons icon"> outlined_flag </span>
               {{ STRINGS.REPORT }}
             </div>
-            <div class="button" (click)="openModal('spot-share-modal', { postId: post.id, postLink: post.link })">
+            <div
+              class="button"
+              (click)="
+                openModal('spot-share-modal', {
+                  postId: post.id,
+                  postLink: post.link
+                })
+              "
+            >
               <span class="material-icons icon"> share </span>
               {{ STRINGS.SHARE }}
             </div>
-            <div *ngIf="post.owned || account.role === 'admin' || account.role === 'owner'" class="button" (click)="deletePost()">
+            <div
+              *ngIf="
+                post.owned ||
+                account.role === 'admin' ||
+                account.role === 'owner'
+              "
+              class="button"
+              (click)="deletePost()"
+            >
               <span class="material-icons icon"> delete </span>
               {{ STRINGS.DELETE }}
             </div>
@@ -77,9 +136,18 @@
       </div>
 
       <div>
-        <i class="material-icons share" (click)="openModal('spot-share-modal', { postId: post.id, postLink: post.link })"> share </i>
+        <i
+          class="material-icons share"
+          (click)="
+            openModal('spot-share-modal', {
+              postId: post.id,
+              postLink: post.link
+            })
+          "
+        >
+          share
+        </i>
       </div>
-
     </div>
   </div>
 
@@ -87,6 +155,8 @@
     <div class="bar"></div>
   </div>
 
-  <spot-comments-container [post]="post" [detailed]="detailed"></spot-comments-container>
-
+  <spot-comments-container
+    [post]="post"
+    [detailed]="detailed"
+  ></spot-comments-container>
 </div>

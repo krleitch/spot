@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 // Rxjs
@@ -19,8 +26,14 @@ import { PostsStoreActions } from '@store/posts-store';
 // Assets
 import { POSTS_CONSTANTS } from '@constants/posts';
 import { LOCATIONS_CONSTANTS } from '@constants/locations';
-import { LikePostRequest, DislikePostRequest, DeletePostRequest, Post, UnratedPostRequest } from '@models/posts';
-import { Location, AccountMetadata, Account } from '@models/accounts';
+import {
+  DeletePostRequest,
+  DislikePostRequest,
+  LikePostRequest,
+  Post,
+  UnratedPostRequest
+} from '@models/posts';
+import { Account, AccountMetadata, Location } from '@models/accounts';
 import { STRINGS } from '@assets/strings/en';
 
 @Component({
@@ -29,7 +42,6 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./post.component.scss']
 })
 export class PostComponent implements OnInit, OnDestroy {
-
   private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
@@ -54,50 +66,59 @@ export class PostComponent implements OnInit, OnDestroy {
 
   optionsEnabled = false;
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private router: Router,
-              private modalService: ModalService,
-              private authenticationService: AuthenticationService) {
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private router: Router,
+    private modalService: ModalService,
+    private authenticationService: AuthenticationService
+  ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
   ngOnInit(): void {
-
     // Account
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
     );
 
-    this.account$.pipe(takeUntil(this.onDestroy)).subscribe( (account: Account) => {
-      this.account = account;
-    });
+    this.account$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((account: Account) => {
+        this.account = account;
+      });
 
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
 
-    this.accountMetadata$.pipe(takeUntil(this.onDestroy)).subscribe( (accountMetadata: AccountMetadata) => {
-      this.accountMetadata = accountMetadata;
-    });
+    this.accountMetadata$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((accountMetadata: AccountMetadata) => {
+        this.accountMetadata = accountMetadata;
+      });
 
     // Location
     this.location$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectLocation)
     );
 
-    this.location$.pipe(takeUntil(this.onDestroy)).subscribe( (location: Location) => {
-      this.location = location;
-    });
+    this.location$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((location: Location) => {
+        this.location = location;
+      });
 
     // Check if content needs to be truncated
-    if ( this.post.content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH
-         || this.post.content.length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
+    if (
+      this.post.content.split(/\r\n|\r|\n/).length >
+        POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
+      this.post.content.length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+    ) {
       this.isExpandable = true;
     }
 
     this.time = this.getTime();
     this.imageBlurred = this.post.image_nsfw;
-
   }
 
   ngOnDestroy(): void {
@@ -119,15 +140,14 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   deletePost(): void {
-
     this.modalService.open('spot-confirm-modal');
 
-    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+    const result$ = this.modalService
+      .getResult('spot-confirm-modal')
+      .pipe(take(1));
 
-    result$.subscribe( (result: { status: string }) => {
-
-      if ( result.status === 'confirm' ) {
-
+    result$.subscribe((result: { status: string }) => {
+      if (result.status === 'confirm') {
         const request: DeletePostRequest = {
           postId: this.post.id
         };
@@ -135,14 +155,11 @@ export class PostComponent implements OnInit, OnDestroy {
           new PostsStoreActions.DeleteRequestAction(request)
         );
         // go home
-        if ( this.detailed ) {
+        if (this.detailed) {
           this.router.navigateByUrl('/home');
         }
-
       }
-
     });
-
   }
 
   getTime(): string {
@@ -173,9 +190,8 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   getDistance(distance: number): string {
-
     let unit;
-    if ( this.accountMetadata ) {
+    if (this.accountMetadata) {
       unit = this.accountMetadata.distance_unit;
     } else {
       unit = 'imperial';
@@ -183,51 +199,58 @@ export class PostComponent implements OnInit, OnDestroy {
 
     let distanceString = '';
 
-    if ( distance <= LOCATIONS_CONSTANTS.MIN_DISTANCE ) {
+    if (distance <= LOCATIONS_CONSTANTS.MIN_DISTANCE) {
       distanceString += '< ';
     }
 
-    if ( unit === 'metric' ) {
+    if (unit === 'metric') {
       distanceString += (distance * 1.60934).toFixed(1) + ' km';
     } else {
       distanceString += distance.toFixed(1) + ' m';
     }
 
     return distanceString;
-
   }
 
   getContent(): string {
-
-    if ( this.expanded || !this.isExpandable ) {
+    if (this.expanded || !this.isExpandable) {
       return this.post.content;
     }
 
     const textArrays = this.post.content.split(/\r\n|\r|\n/);
     let truncatedContent = '';
 
-    for (let i = 0; i < textArrays.length && i < POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH; i++ ) {
-
-      if ( truncatedContent.length + textArrays[i].length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH ) {
-        truncatedContent = textArrays[i].substring(0, POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length);
+    for (
+      let i = 0;
+      i < textArrays.length && i < POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
+      i++
+    ) {
+      if (
+        truncatedContent.length + textArrays[i].length >
+        POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+      ) {
+        truncatedContent = textArrays[i].substring(
+          0,
+          POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
+        );
         break;
       } else {
         truncatedContent += textArrays[i];
         // Dont add newline for last line or last line before line length reached
-        if ( i !== textArrays.length - 1 && i !== POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1) {
+        if (
+          i !== textArrays.length - 1 &&
+          i !== POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
+        ) {
           truncatedContent += '\n';
         }
       }
-
     }
 
     return truncatedContent + ' ...';
-
   }
 
   like(): void {
-
-    if ( !this.authenticationService.isAuthenticated() ) {
+    if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('spot-auth-modal');
       return;
     }
@@ -236,10 +259,8 @@ export class PostComponent implements OnInit, OnDestroy {
       const request: UnratedPostRequest = {
         postId: this.post.id
       };
-      this.store$.dispatch(
-        new PostsStoreActions.UnratedRequestAction(request)
-      );
-      if ( this.detailed ) {
+      this.store$.dispatch(new PostsStoreActions.UnratedRequestAction(request));
+      if (this.detailed) {
         this.post.likes -= 1;
         this.post.rated = -1;
       }
@@ -247,20 +268,16 @@ export class PostComponent implements OnInit, OnDestroy {
       const request: LikePostRequest = {
         postId: this.post.id
       };
-      this.store$.dispatch(
-        new PostsStoreActions.LikeRequestAction(request)
-      );
-      if ( this.detailed ) {
+      this.store$.dispatch(new PostsStoreActions.LikeRequestAction(request));
+      if (this.detailed) {
         this.post.likes += 1;
         this.post.rated = 1;
       }
     }
-
   }
 
   dislike(): void {
-
-    if ( !this.authenticationService.isAuthenticated() ) {
+    if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('spot-auth-modal');
       return;
     }
@@ -269,10 +286,8 @@ export class PostComponent implements OnInit, OnDestroy {
       const request: UnratedPostRequest = {
         postId: this.post.id
       };
-      this.store$.dispatch(
-        new PostsStoreActions.UnratedRequestAction(request)
-      );
-      if ( this.detailed ) {
+      this.store$.dispatch(new PostsStoreActions.UnratedRequestAction(request));
+      if (this.detailed) {
         this.post.dislikes -= 1;
         this.post.rated = -1;
       }
@@ -280,15 +295,12 @@ export class PostComponent implements OnInit, OnDestroy {
       const request: DislikePostRequest = {
         postId: this.post.id
       };
-      this.store$.dispatch(
-        new PostsStoreActions.DislikeRequestAction(request)
-      );
-      if ( this.detailed ) {
+      this.store$.dispatch(new PostsStoreActions.DislikeRequestAction(request));
+      if (this.detailed) {
         this.post.dislikes += 1;
         this.post.rated = 0;
       }
     }
-
   }
 
   setExpanded(value: boolean): void {
@@ -296,7 +308,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   openModal(id: string, data?: any): void {
-    if ( data ) {
+    if (data) {
       this.modalService.open(id, data);
     } else {
       this.modalService.open(id);
@@ -308,24 +320,19 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   openReportModal(postId: string): void {
-
-    if ( !this.authenticationService.isAuthenticated() ) {
+    if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('spot-auth-modal');
       return;
     }
 
-    this.openModal('spot-report-modal', { postId: postId })
-
+    this.openModal('spot-report-modal', { postId: postId });
   }
 
   imageClicked(): void {
-
-    if ( !this.imageBlurred ) {
+    if (!this.imageBlurred) {
       this.openModal('spot-image-modal', this.post.image_src);
     } else {
       this.imageBlurred = false;
     }
-
   }
-
 }

@@ -2,8 +2,20 @@
 
 <!-- Location -->
 <div class="locationToggle desktop">
-  <div class="local" [ngClass]="{'selectedLocation': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons icon"> home </i> </div>
-  <div class="global" [ngClass]="{'selectedLocation': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons icon"> public </i> </div>
+  <div
+    class="local"
+    [ngClass]="{ selectedLocation: isSelectedLocation('local') }"
+    (click)="setLocal()"
+  >
+    <i class="material-icons icon"> home </i>
+  </div>
+  <div
+    class="global"
+    [ngClass]="{ selectedLocation: isSelectedLocation('global') }"
+    (click)="setGlobal()"
+  >
+    <i class="material-icons icon"> public </i>
+  </div>
 </div>
 <div #mobiledropdownlocation class="locationToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
@@ -12,73 +24,130 @@
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
-    <div class="dropdown-content-location" [ngClass]="{'show': dropdownLocationEnabled }">
-      <div class="button" [ngClass]="{'selected-highlight': isSelectedLocation('local') }" (click)="setLocal()"> <i class="material-icons dropdown-icon"> home </i> </div>
-      <div class="button" [ngClass]="{'selected-highlight': isSelectedLocation('global') }" (click)="setGlobal()"> <i class="material-icons dropdown-icon"> public </i> </div>
+    <div
+      class="dropdown-content-location"
+      [ngClass]="{ show: dropdownLocationEnabled }"
+    >
+      <div
+        class="button"
+        [ngClass]="{ 'selected-highlight': isSelectedLocation('local') }"
+        (click)="setLocal()"
+      >
+        <i class="material-icons dropdown-icon"> home </i>
+      </div>
+      <div
+        class="button"
+        [ngClass]="{ 'selected-highlight': isSelectedLocation('global') }"
+        (click)="setGlobal()"
+      >
+        <i class="material-icons dropdown-icon"> public </i>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Sort -->
 <div class="postFilterToggle desktop">
-  <div class="hot" [ngClass]="{'selectedSort': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
-  <div class="new" [ngClass]="{'selectedSort': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
+  <div
+    class="hot"
+    [ngClass]="{ selectedSort: isSelectedPostSort('hot') }"
+    (click)="setHot()"
+  >
+    {{ STRINGS.HOT }}
+  </div>
+  <div
+    class="new"
+    [ngClass]="{ selectedSort: isSelectedPostSort('new') }"
+    (click)="setNew()"
+  >
+    {{ STRINGS.NEW }}
+  </div>
 </div>
 <div #mobiledropdownsort class="postFilterToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownSort(true)">
-    <div *ngIf="isSelectedPostSort('hot')"> {{ STRINGS.HOT }} </div>
-    <div *ngIf="isSelectedPostSort('new')"> {{ STRINGS.NEW }} </div>
+    <div *ngIf="isSelectedPostSort('hot')">{{ STRINGS.HOT }}</div>
+    <div *ngIf="isSelectedPostSort('new')">{{ STRINGS.NEW }}</div>
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
-    <div class="dropdown-content-sort" [ngClass]="{'show': dropdownSortEnabled }">
-      <div class="button" [ngClass]="{'selected-highlight': isSelectedPostSort('hot') }" (click)="setHot()"> {{ STRINGS.HOT }} </div>
-      <div class="button" [ngClass]="{'selected-highlight': isSelectedPostSort('new') }" (click)="setNew()"> {{ STRINGS.NEW }} </div>
+    <div
+      class="dropdown-content-sort"
+      [ngClass]="{ show: dropdownSortEnabled }"
+    >
+      <div
+        class="button"
+        [ngClass]="{ 'selected-highlight': isSelectedPostSort('hot') }"
+        (click)="setHot()"
+      >
+        {{ STRINGS.HOT }}
+      </div>
+      <div
+        class="button"
+        [ngClass]="{ 'selected-highlight': isSelectedPostSort('new') }"
+        (click)="setNew()"
+      >
+        {{ STRINGS.NEW }}
+      </div>
     </div>
   </div>
 </div>
 
 <div class="container">
-
   <!-- If we need to prompt for location, show this first -->
-  <div *ngIf="locationFailure !== 'prompt' || bypassLocation;else prompt" class="fit-container">
-
+  <div
+    *ngIf="locationFailure !== 'prompt' || bypassLocation; else prompt"
+    class="fit-container"
+  >
     <!-- Don't show anything until we get the metadata -->
     <div *ngIf="postLocation && postSort" class="fit-container">
-
       <!-- Determine if we need location -->
-      <div *ngIf="location || postLocation == 'global';else noLocation" class="content">
-
+      <div
+        *ngIf="location || postLocation === 'global'; else noLocation"
+        class="content"
+      >
         <div *ngIf="account" class="fit-container">
-
           <!-- You still need location -->
           <div *ngIf="location; else createlocation" class="fit-container">
-
-            <div *ngIf="account.role !== 'guest';else guest" class="fit-container">
-
+            <div
+              *ngIf="account.role !== 'guest'; else guest"
+              class="fit-container"
+            >
               <!-- Need a verified account -->
-              <spot-create *ngIf="account.verified_date !== null;else verify"></spot-create>
+              <spot-create
+                *ngIf="account.verified_date !== null; else verify"
+              ></spot-create>
               <ng-template #verify>
                 <div class="info-container">
                   <span class="material-icons icon"> email </span>
                   <div *ngIf="account.email; else noEmail">
                     <span class="text"> {{ STRINGS.VERIFY }} </span>
-                    <div *ngIf="verificationSent === false; else sentverify" >
+                    <div *ngIf="verificationSent === false; else sentverify">
                       <div class="text clickable" (click)="verifyAccount()">
                         {{ STRINGS.VERIFY_SEND }}
                       </div>
                       <span class="small-text">
-                        {{ account.email }} ( <a class="clickable small-text" [routerLink]="'/account'"> Change Email </a> )
+                        {{ account.email }} (
+                        <a
+                          class="clickable small-text"
+                          [routerLink]="'/account'"
+                        >
+                          Change Email
+                        </a>
+                        )
                       </span>
                     </div>
                     <ng-template #sentverify>
-                      <span class="small-text"> {{ STRINGS.VERIFY_SENT }} {{ account.email }} </span>
+                      <span class="small-text">
+                        {{ STRINGS.VERIFY_SENT }} {{ account.email }}
+                      </span>
                     </ng-template>
                   </div>
                   <ng-template #noEmail>
                     <span class="text"> {{ STRINGS.NO_EMAIL }} </span>
                     <span class="small-text">
-                      <a class="clickable small-text" [routerLink]="'/account'"> {{ STRINGS.ADD_EMAIL }} </a>
+                      <a class="clickable small-text" [routerLink]="'/account'">
+                        {{ STRINGS.ADD_EMAIL }}
+                      </a>
                     </span>
                   </ng-template>
                 </div>
@@ -92,16 +161,24 @@
                 </div>
               </div>
             </ng-template>
-
           </div>
 
           <!-- You need Location -->
           <ng-template #createlocation>
             <!-- location is still loading -->
-            <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocationCreate" class="info-container">
+            <div
+              *ngIf="
+                loadingLocation && (showLocationIndicator$ | async);
+                else enableLocationCreate
+              "
+              class="info-container"
+            >
               <spot-spinner type="dot"></spot-spinner>
               <span class="text"> {{ STRINGS.LOADING_LOCATION }} </span>
-              <span *ngIf="bypassLocation === true; else loadglobalblock" class="text">
+              <span
+                *ngIf="bypassLocation === true; else loadglobalblock"
+                class="text"
+              >
                 {{ STRINGS.LOCATION_REQUIRED }}
               </span>
               <ng-template #loadglobalblock>
@@ -112,13 +189,19 @@
                 </span>
               </ng-template>
             </div>
-            <ng-template #enableLocationCreate >
+            <ng-template #enableLocationCreate>
               <!-- location is not enabled -->
               <div *ngIf="locationFailure === 'browser'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
                 <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
               </div>
-              <div *ngIf="locationFailure === 'permission' || locationFailure === 'prompt'" class="info-container">
+              <div
+                *ngIf="
+                  locationFailure === 'permission' ||
+                  locationFailure === 'prompt'
+                "
+                class="info-container"
+              >
                 <span class="material-icons icon"> location_off </span>
                 <span class="text">
                   {{ STRINGS.LOCATION_REQUIRED_CREATE_1 }}
@@ -130,7 +213,13 @@
                 <span class="text">
                   {{ STRINGS.LOCATION_ENABLE }}
                 </span>
-                <button *ngIf="locationFailure === 'prompt'" class="enable-location-button" (click)="askLocationPermission()"> Enable Location </button>
+                <button
+                  *ngIf="locationFailure === 'prompt'"
+                  class="enable-location-button"
+                  (click)="askLocationPermission()"
+                >
+                  Enable Location
+                </button>
               </div>
               <div *ngIf="locationFailure === 'general'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
@@ -139,7 +228,6 @@
               </div>
             </ng-template>
           </ng-template>
-
         </div>
 
         <!-- CHAT ROOM TEST -->
@@ -150,13 +238,16 @@
           <spot-infinite-scroll (scrolled)="onScroll()">
             <div *ngIf="posts.length > 0; else empty">
               <div *ngFor="let post of posts">
-                  <spot-post [post]="post" [detailed]="false"></spot-post>
+                <spot-post [post]="post" [detailed]="false"></spot-post>
               </div>
             </div>
             <div #bottom class="empty-placeholder">
               <ng-template #empty>
                 <!-- no spots in the area -->
-                <div *ngIf="noPosts && !loading && (showPostsIndicator$ | async)" class="empty-container">
+                <div
+                  *ngIf="noPosts && !loading && (showPostsIndicator$ | async)"
+                  class="empty-container"
+                >
                   <div class="empty-image">
                     <span class="c1"></span>
                     <span class="c2"></span>
@@ -170,24 +261,37 @@
                 </div>
               </ng-template>
               <!-- There are no more spots -->
-              <div *ngIf="noPosts && posts.length !== 0 && (showPostsIndicator$ | async)" class="empty-container">
+              <div
+                *ngIf="
+                  noPosts && posts.length !== 0 && (showPostsIndicator$ | async)
+                "
+                class="empty-container"
+              >
                 <span class="material-icons icon"> done_all </span>
                 <span class="text"> {{ STRINGS.NO_MORE_POSTS }} </span>
               </div>
               <!-- Loading spots -->
-              <div *ngIf="loading && (showPostsIndicator$ | async)" class="empty-container">
+              <div
+                *ngIf="loading && (showPostsIndicator$ | async)"
+                class="empty-container"
+              >
                 <spot-spinner type="dot"></spot-spinner>
               </div>
             </div>
           </spot-infinite-scroll>
         </div>
-
       </div>
 
       <ng-template #noLocation>
         <div class="content">
           <!-- Location is just loading -->
-          <div *ngIf="loadingLocation && (showLocationIndicator$ | async); else enableLocation" class="info-container">
+          <div
+            *ngIf="
+              loadingLocation && (showLocationIndicator$ | async);
+              else enableLocation
+            "
+            class="info-container"
+          >
             <spot-spinner type="dot"></spot-spinner>
             <span class="text"> {{ STRINGS.LOADING_LOCATION }} </span>
             <span class="text clickable" (click)="loadLocationBackground()">
@@ -202,7 +306,10 @@
               <span class="material-icons icon"> location_off </span>
               <span class="text"> {{ STRINGS.LOCATION_BROWSER }}</span>
             </div>
-            <div *ngIf="locationFailure === 'permission'" class="info-container">
+            <div
+              *ngIf="locationFailure === 'permission'"
+              class="info-container"
+            >
               <span class="material-icons icon"> location_off </span>
               <span class="text">
                 {{ STRINGS.LOCATION_REQUIRED_CREATE_1 }}
@@ -212,7 +319,7 @@
               <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
               <span class="line"></span>
               <span class="text">
-               {{ STRINGS.LOCATION_ENABLE }}
+                {{ STRINGS.LOCATION_ENABLE }}
               </span>
               <span class="text clickable" (click)="continueWithGlobal()">
                 {{ STRINGS.LOCATION_BACKGROUND_1 }}
@@ -228,9 +335,7 @@
           </ng-template>
         </div>
       </ng-template>
-
     </div>
-
   </div>
   <!-- User needs to be prompted for location -->
   <ng-template #prompt>
@@ -249,9 +354,13 @@
         </span>
         <span class="line"></span>
         <span class="text"> {{ STRINGS.LOCATION_SAFE }} </span>
-        <button class="enable-location-button" (click)="askLocationPermission()"> Enable Location </button>
+        <button
+          class="enable-location-button"
+          (click)="askLocationPermission()"
+        >
+          Enable Location
+        </button>
       </div>
     </div>
   </ng-template>
-
 </div>

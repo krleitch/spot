@@ -11,17 +11,17 @@ interface FilterProperties {
   name: 'filter'
 })
 export class FilterPipe implements PipeTransform {
-
   transform(list: any[], filterProperties: FilterProperties): any {
-
-    if ( filterProperties.filter ) {
-      return list.filter(item => {
-        return item[filterProperties.field].toUpperCase().indexOf(filterProperties.filter.toUpperCase()) !== -1;
+    if (filterProperties.filter) {
+      return list.filter((item) => {
+        return (
+          item[filterProperties.field]
+            .toUpperCase()
+            .indexOf(filterProperties.filter.toUpperCase()) !== -1
+        );
       });
     } else {
       return list;
     }
-
   }
-
 }

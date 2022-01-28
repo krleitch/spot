@@ -1,32 +1,41 @@
-
 <spot-main-nav></spot-main-nav>
 <div class="post-detailed">
   <div *ngIf="locationFailure === 'prompt'" class="loading">
     <span class="material-icons icon"> place </span>
-    <span class="text"> Spot uses your location to help find spots in your area and show location specefic details </span>
-    <span class="text clickable" (click)="getLocation()"> Reload Spot with Your Location </span>
+    <span class="text">
+      Spot uses your location to help find spots in your area and show location
+      specefic details
+    </span>
+    <span class="text clickable" (click)="getLocation()">
+      Reload Spot with Your Location
+    </span>
   </div>
   <div *ngIf="loadingLocation && !loadingPost" class="loading">
     <span class="text"> Loading Your Location </span>
-    <span class="text clickable" (click)="skipLocation()"> Skip waiting for location </span>
+    <span class="text clickable" (click)="skipLocation()">
+      Skip waiting for location
+    </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
-  <div class="loading" *ngIf="loadingPost && (showLoadingIndicator$ | async); else postloaded">
+  <div
+    class="loading"
+    *ngIf="loadingPost && (showLoadingIndicator$ | async); else postloaded"
+  >
     <span class="text"> {{ STRINGS.LOADING }} </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
   <ng-template #postloaded>
     <div class="content" *ngIf="post && !loadingLocation">
-      <meta property="og:url"           content="{{ getPostLink(post) }}" />
-      <meta property="og:type"          content="website" />
-      <meta property="og:title"         content="Spot" />
-      <meta property="og:description"   content="A friend has sent you a spot" />
-      <meta property="og:image"         content="{{ post.image_src }}" />
+      <meta property="og:url" content="{{ getPostLink(post) }}" />
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content="Spot" />
+      <meta property="og:description" content="A friend has sent you a spot" />
+      <meta property="og:image" content="{{ post.image_src }}" />
       <spot-post [post]="post" [detailed]="true"></spot-post>
     </div>
   </ng-template>
   <div class="error" *ngIf="error">
     <span class="material-icons icon"> error_outline </span>
     <span class="text"> {{ STRINGS.NO_POST }} </span>
-   </div>
+  </div>
 </div>

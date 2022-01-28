@@ -1,29 +1,67 @@
 <div class="notification-item">
-  <div class="content" (click)="goToPost($event)" [ngClass]="{'seen': !notification.seen}">
-
+  <div
+    class="content"
+    (click)="goToPost($event)"
+    [ngClass]="{ seen: !notification.seen }"
+  >
     <div #notificationImage class="image-preview" *ngIf="accountMetadata">
-      <div class="preview-content" *ngIf="notification.reply_image_src; else noImageReply">
-        <img [src]="notification.reply_image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }">
-        <div [hidden]="!(imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
+      <div
+        class="preview-content"
+        *ngIf="notification.reply_image_src; else noImageReply"
+      >
+        <img
+          [src]="notification.reply_image_src"
+          [ngClass]="{
+            'image-blur': imageBlurred && accountMetadata.mature_filter
+          }"
+        />
+        <div
+          [hidden]="!(imageBlurred && accountMetadata.mature_filter)"
+          class="image-blur-text"
+        >
           <span class="material-icons icon"> error_outline </span>
         </div>
       </div>
       <ng-template #noImageReply>
-        <div class="preview-content" *ngIf="notification.comment_image_src; else noImageComment">
-          <img [src]="notification.comment_image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }">
-          <div [hidden]="!(imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
+        <div
+          class="preview-content"
+          *ngIf="notification.comment_image_src; else noImageComment"
+        >
+          <img
+            [src]="notification.comment_image_src"
+            [ngClass]="{
+              'image-blur': imageBlurred && accountMetadata.mature_filter
+            }"
+          />
+          <div
+            [hidden]="!(imageBlurred && accountMetadata.mature_filter)"
+            class="image-blur-text"
+          >
             <span class="material-icons icon"> error_outline </span>
           </div>
         </div>
         <ng-template #noImageComment>
-          <div class="preview-content" *ngIf="notification.image_src; else noImage">
-            <img [src]="notification.image_src" [ngClass]="{'image-blur': imageBlurred && accountMetadata.mature_filter }">
-            <div [hidden]="!(imageBlurred && accountMetadata.mature_filter)" class="image-blur-text" >
+          <div
+            class="preview-content"
+            *ngIf="notification.image_src; else noImage"
+          >
+            <img
+              [src]="notification.image_src"
+              [ngClass]="{
+                'image-blur': imageBlurred && accountMetadata.mature_filter
+              }"
+            />
+            <div
+              [hidden]="!(imageBlurred && accountMetadata.mature_filter)"
+              class="image-blur-text"
+            >
               <span class="material-icons icon"> error_outline </span>
             </div>
           </div>
           <ng-template #noImage>
-            <span class="no-image-preview"> {{ getImagePreview(notification) }} </span>
+            <span class="no-image-preview">
+              {{ getImagePreview(notification) }}
+            </span>
           </ng-template>
         </ng-template>
       </ng-template>
@@ -35,25 +73,23 @@
           <div *ngIf="notification.reply_id; else commentLink">
             <span class="username"> {{ notification.username }} </span>
             <span> {{ STRINGS.REPLY_PROMPT }} </span>
-            <div class="text"> {{ notification.reply_content }} </div>
+            <div class="text">{{ notification.reply_content }}</div>
           </div>
           <ng-template #commentLink>
             <span class="username"> {{ notification.username }} </span>
             <span> {{ STRINGS.COMMENT_PROMPT }} </span>
-            <div class="text"> {{ notification.comment_content }} </div>
+            <div class="text">{{ notification.comment_content }}</div>
           </ng-template>
-
         </div>
         <ng-template #postLink>
           <span class="username"> {{ notification.username }} </span>
           <span> {{ STRINGS.PROMPT }} </span>
-          <div class="text"> {{ notification.content }} </div>
+          <div class="text">{{ notification.content }}</div>
         </ng-template>
       </div>
     </div>
 
-    <div class="date"> {{ time }} </div>
-
+    <div class="date">{{ time }}</div>
   </div>
   <span class="material-icons delete" (click)="delete()"> close </span>
 </div>

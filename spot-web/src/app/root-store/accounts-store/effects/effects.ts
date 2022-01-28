@@ -26,22 +26,23 @@ export class AccountsStoreEffects {
     private authenticationService: AuthenticationService,
     private accountsService: AccountsService,
     private actions$: Actions
-  ) { }
+  ) {}
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
     ofType<accountsActions.GenericFailureAction>(
       accountsActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: accountsActions.GenericFailureAction) => {
-      if ( action.error.name === 'LocationError ') {
-        this.accountsService.failureMessage('You are using an invalid location');
+      if (action.error.name === 'LocationError ') {
+        this.accountsService.failureMessage(
+          'You are using an invalid location'
+        );
       } else {
         this.accountsService.failureMessage('Oops... Somethings went wrong');
       }
     })
   );
-
 
   @Effect()
   registerAccountEffect$: Observable<Action> = this.actions$.pipe(
@@ -49,16 +50,14 @@ export class AccountsStoreEffects {
       accountsActions.ActionTypes.REGISTER_REQUEST
     ),
     switchMap((registerRequest: accountsActions.RegisterRequestAction) =>
-      this.authenticationService
-        .registerAccount(registerRequest.request)
-        .pipe(
-          map( (response) =>
-            new accountsActions.RegisterSuccessAction(response)
-          ),
-          catchError((errorResponse: any) =>
-            observableOf(new accountsActions.RegisterFailureAction(errorResponse.error))
+      this.authenticationService.registerAccount(registerRequest.request).pipe(
+        map((response) => new accountsActions.RegisterSuccessAction(response)),
+        catchError((errorResponse: any) =>
+          observableOf(
+            new accountsActions.RegisterFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -67,11 +66,14 @@ export class AccountsStoreEffects {
     ofType<accountsActions.RegisterSuccessAction>(
       accountsActions.ActionTypes.REGISTER_SUCCESS
     ),
-    tap( (action: accountsActions.RegisterSuccessAction) => {
+    tap((action: accountsActions.RegisterSuccessAction) => {
       this.authenticationService.registerAccountSuccess(action.response);
     }),
-    switchMap ( (action: accountsActions.RegisterSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
+    switchMap((action: accountsActions.RegisterSuccessAction) => [
+      new friendsActions.GetFriendsRequestAction({
+        date: new Date().toString(),
+        limit: null
+      }),
       new accountsActions.GetAccountMetadataRequestAction({})
     ])
   );
@@ -81,17 +83,15 @@ export class AccountsStoreEffects {
     ofType<accountsActions.LoginRequestAction>(
       accountsActions.ActionTypes.LOGIN_REQUEST
     ),
-    switchMap(authenticateRequest =>
-      this.authenticationService
-        .loginAccount(authenticateRequest.request)
-        .pipe(
-          map( (response) =>
-            new accountsActions.LoginSuccessAction(response)
-          ),
-          catchError(errorResponse =>
-            observableOf(new accountsActions.LoginFailureAction(errorResponse.error))
+    switchMap((authenticateRequest) =>
+      this.authenticationService.loginAccount(authenticateRequest.request).pipe(
+        map((response) => new accountsActions.LoginSuccessAction(response)),
+        catchError((errorResponse) =>
+          observableOf(
+            new accountsActions.LoginFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -103,8 +103,11 @@ export class AccountsStoreEffects {
     tap((action: accountsActions.LoginSuccessAction) => {
       this.authenticationService.loginAccountSuccess(action.response);
     }),
-    switchMap ( (action: accountsActions.LoginSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
+    switchMap((action: accountsActions.LoginSuccessAction) => [
+      new friendsActions.GetFriendsRequestAction({
+        date: new Date().toString(),
+        limit: null
+      }),
       new accountsActions.GetAccountMetadataRequestAction({})
     ])
   );
@@ -117,12 +120,12 @@ export class AccountsStoreEffects {
     tap((logoutRequest: accountsActions.LogoutRequestAction) => {
       this.authenticationService.logoutAccountSuccess();
     }),
-    switchMap( (action: accountsActions.LogoutRequestAction ) => [
+    switchMap((action: accountsActions.LogoutRequestAction) => [
       new accountsActions.ResetStoreAction(),
       new postsActions.ResetStoreAction(),
       new commentsActions.ResetStoreAction(),
-      new socialActions.ResetStoreAction(),
-    ]),
+      new socialActions.ResetStoreAction()
+    ])
   );
 
   @Effect()
@@ -130,26 +133,24 @@ export class AccountsStoreEffects {
     ofType<accountsActions.DeleteRequestAction>(
       accountsActions.ActionTypes.DELETE_REQUEST
     ),
-    switchMap(deleteRequest =>
-      this.accountsService
-        .deleteAccount()
-        .pipe(
-            map(response => {
-              return new accountsActions.DeleteSuccessAction();
-            }),
-            catchError(error =>
-              observableOf(new accountsActions.DeleteFailureAction(error))
-            )
-          )
+    switchMap((deleteRequest) =>
+      this.accountsService.deleteAccount().pipe(
+        map((response) => {
+          return new accountsActions.DeleteSuccessAction();
+        }),
+        catchError((error) =>
+          observableOf(new accountsActions.DeleteFailureAction(error))
+        )
+      )
     )
   );
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   deleteAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<accountsActions.DeleteSuccessAction>(
       accountsActions.ActionTypes.DELETE_SUCCESS
     ),
-    tap( deleteRequest => {
+    tap((deleteRequest) => {
       this.accountsService.onDeleteAccountSuccess();
     })
   );
@@ -159,20 +160,16 @@ export class AccountsStoreEffects {
     ofType<accountsActions.AccountRequestAction>(
       accountsActions.ActionTypes.ACCOUNT_REQUEST
     ),
-    switchMap(action =>
-      this.accountsService
-        .getAccount()
-        .pipe(
-            tap(response => {
-              this.accountsService.getAccountRedirect();
-            }),
-            map( (response) =>
-              new accountsActions.AccountSuccessAction(response)
-            ),
-            catchError(error =>
-              observableOf(new accountsActions.AccountFailureAction(error))
-            )
-          )
+    switchMap((action) =>
+      this.accountsService.getAccount().pipe(
+        tap((response) => {
+          this.accountsService.getAccountRedirect();
+        }),
+        map((response) => new accountsActions.AccountSuccessAction(response)),
+        catchError((error) =>
+          observableOf(new accountsActions.AccountFailureAction(error))
+        )
+      )
     )
   );
 
@@ -184,8 +181,11 @@ export class AccountsStoreEffects {
     tap((action: accountsActions.AccountSuccessAction) => {
       // none
     }),
-    switchMap ( (action: accountsActions.AccountSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({ date: new Date().toString(), limit: null }),
+    switchMap((action: accountsActions.AccountSuccessAction) => [
+      new friendsActions.GetFriendsRequestAction({
+        date: new Date().toString(),
+        limit: null
+      }),
       new accountsActions.GetAccountMetadataRequestAction({})
     ])
   );
@@ -195,17 +195,19 @@ export class AccountsStoreEffects {
     ofType<accountsActions.UpdateAccountMetadataRequestAction>(
       accountsActions.ActionTypes.UPDATE_METADATA_REQUEST
     ),
-    switchMap(action =>
-      this.accountsService
-        .updateAccountMetadata(action.request)
-        .pipe(
-            map(response => {
-              return new accountsActions.UpdateAccountMetadataRequestSuccess(response)
-            }),
-            catchError( errorResponse =>
-              observableOf(new accountsActions.GenericFailureAction(errorResponse.error))
-            )
+    switchMap((action) =>
+      this.accountsService.updateAccountMetadata(action.request).pipe(
+        map((response) => {
+          return new accountsActions.UpdateAccountMetadataRequestSuccess(
+            response
+          );
+        }),
+        catchError((errorResponse) =>
+          observableOf(
+            new accountsActions.GenericFailureAction(errorResponse.error)
           )
+        )
+      )
     )
   );
 
@@ -214,17 +216,19 @@ export class AccountsStoreEffects {
     ofType<accountsActions.GetAccountMetadataRequestAction>(
       accountsActions.ActionTypes.GET_METADATA_REQUEST
     ),
-    switchMap( (action: accountsActions.GetAccountMetadataRequestAction) =>
-      this.accountsService
-        .getAccountMetadata(action.request)
-        .pipe(
-            map( (response: GetAccountMetadataSuccess)  => {
-              return new accountsActions.GetAccountMetadataRequestSuccess(response);
-            }),
-            catchError( (errorResponse: { error: SpotError }) =>
-              observableOf(new accountsActions.GetAccountMetadataFailureAction(errorResponse.error))
+    switchMap((action: accountsActions.GetAccountMetadataRequestAction) =>
+      this.accountsService.getAccountMetadata(action.request).pipe(
+        map((response: GetAccountMetadataSuccess) => {
+          return new accountsActions.GetAccountMetadataRequestSuccess(response);
+        }),
+        catchError((errorResponse: { error: SpotError }) =>
+          observableOf(
+            new accountsActions.GetAccountMetadataFailureAction(
+              errorResponse.error
             )
           )
+        )
+      )
     )
   );
 
@@ -233,16 +237,18 @@ export class AccountsStoreEffects {
     ofType<accountsActions.VerifyRequestAction>(
       accountsActions.ActionTypes.VERIFY_REQUEST
     ),
-    switchMap(action =>
-      this.accountsService
-        .verifyAccount(action.request)
-        .pipe(
-            map( (response: VerifyResponse) => new accountsActions.VerifySuccessAction(response)),
-            catchError(errorResponse =>
-              observableOf(new accountsActions.GenericFailureAction(errorResponse.error))
-            )
+    switchMap((action) =>
+      this.accountsService.verifyAccount(action.request).pipe(
+        map(
+          (response: VerifyResponse) =>
+            new accountsActions.VerifySuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new accountsActions.GenericFailureAction(errorResponse.error)
           )
+        )
+      )
     )
   );
-
 }

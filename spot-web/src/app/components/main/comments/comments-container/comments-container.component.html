@@ -1,17 +1,28 @@
 <div class="container">
-
   <span class="tag-relative" #tag>
-    <spot-tag [ngClass]="{'tag-bottom': showTagBottom }" #tagelem *ngIf="showTag" [name]="tagName" [postLink]="post.link" (tag)="addTag($event)"></spot-tag>
+    <spot-tag
+      [ngClass]="{ 'tag-bottom': showTagBottom }"
+      #tagelem
+      *ngIf="showTag"
+      [name]="tagName"
+      [postLink]="post.link"
+      (tag)="addTag($event)"
+    ></spot-tag>
   </span>
 
   <!-- Add -->
   <div *ngIf="post.inRange && location">
-
-    <div *ngIf="(isAuthenticated$ | async); else auth">
-      <div class="add" *ngIf="(isVerified$ | async); else verify">
-
+    <div *ngIf="isAuthenticated$ | async; else auth">
+      <div class="add" *ngIf="isVerified$ | async; else verify">
         <div class="editor">
-          <span #comment contenteditable="true" attr.ph="{{STRINGS.ADD_COMMENT_PLACEHOLDER}}" class="comment-content" (input)="onTextInput($event)" (keydown.enter)="onEnter()"></span>
+          <span
+            #comment
+            contenteditable="true"
+            attr.ph="{{ STRINGS.ADD_COMMENT_PLACEHOLDER }}"
+            class="comment-content"
+            (input)="onTextInput($event)"
+            (keydown.enter)="onEnter()"
+          ></span>
           <div class="image" *ngIf="imgSrc != null">
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
@@ -25,9 +36,21 @@
           </div>
 
           <div class="comment-options">
-            <span class="counter" [ngClass]="{'counter-error': invalidLength() }"> {{ COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }} </span>
-            <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
-            <i class="material-icons photo" (click)="fileInput.click()"> insert_photo </i>
+            <span
+              class="counter"
+              [ngClass]="{ 'counter-error': invalidLength() }"
+            >
+              {{ COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
+            </span>
+            <input
+              style="display: none"
+              type="file"
+              (change)="onFileChanged($event)"
+              #fileInput
+            />
+            <i class="material-icons photo" (click)="fileInput.click()">
+              insert_photo
+            </i>
             <span class="loading" *ngIf="addCommentLoading; else showsend">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
@@ -38,16 +61,17 @@
             </ng-template>
           </div>
         </div>
-
       </div>
       <ng-template #verify>
         <div class="auth-message">
           <i style="visibility: hidden" class="material-icons icon"> send </i>
-          <span *ngIf="account.role !== 'guest'; else guest" class="text"> {{ STRINGS.VERIFY }} </span>
+          <span *ngIf="account.role !== 'guest'; else guest" class="text">
+            {{ STRINGS.VERIFY }}
+          </span>
           <ng-template #guest>
             <span class="text"> {{ STRINGS.GUEST }} </span>
           </ng-template>
-          <i class="material-icons  icon"> send </i>
+          <i class="material-icons icon"> send </i>
         </div>
       </ng-template>
     </div>
@@ -55,10 +79,9 @@
       <div class="auth-message">
         <i style="visibility: hidden" class="material-icons icon"> send </i>
         <span class="text"> {{ STRINGS.LOGIN }} </span>
-        <i class="material-icons  icon"> send </i>
+        <i class="material-icons icon"> send </i>
       </div>
     </ng-template>
-
   </div>
 
   <span *ngIf="addCommentError" class="add-comment-error">
@@ -67,13 +90,19 @@
 
   <!-- Comments -->
   <div class="comments-container">
-
-    <div  class="load-recent">
-      <div *ngIf="totalCommentsAfter > 0; else refresh" class="load-recent__position">
+    <div class="load-recent">
+      <div
+        *ngIf="totalCommentsAfter > 0; else refresh"
+        class="load-recent__position"
+      >
         <span (click)="loadRecentComments()" class="load-recent__recent">
           {{ STRINGS.LOAD }}
           {{ loadRecentCommentsNum() }}
-          {{ loadRecentCommentsNum() > 1 ? STRINGS.RECENT_COMMENTS : STRINGS.RECENT_COMMENTS_SINGULAR }}
+          {{
+            loadRecentCommentsNum() > 1
+              ? STRINGS.RECENT_COMMENTS
+              : STRINGS.RECENT_COMMENTS_SINGULAR
+          }}
         </span>
         <div *ngIf="loadingCommentsAfter" class="load-recent__loading">
           <spot-spinner size="small"></spot-spinner>
@@ -82,10 +111,22 @@
       <ng-template #refresh>
         <span class="load-recent__refresh load-recent__position">
           <!-- Dummy element to help position elements, is always visibilty: hidden -->
-          <span class="load-recent__dummy"> <i class="material-icons load-recent__icon"> refresh </i> </span>
-          <span class="load-recent__text" [ngClass]="{'load-recent__text--hide': refreshed }">  Comments are up to date </span>
-          <span (click)="loadRecentComments()"> <i class="material-icons load-recent__icon"> refresh </i> </span>
-          <div *ngIf="loadingCommentsAfter" class="load-recent__loading-refresh">
+          <span class="load-recent__dummy">
+            <i class="material-icons load-recent__icon"> refresh </i>
+          </span>
+          <span
+            class="load-recent__text"
+            [ngClass]="{ 'load-recent__text--hide': refreshed }"
+          >
+            Comments are up to date
+          </span>
+          <span (click)="loadRecentComments()">
+            <i class="material-icons load-recent__icon"> refresh </i>
+          </span>
+          <div
+            *ngIf="loadingCommentsAfter"
+            class="load-recent__loading-refresh"
+          >
             <spot-spinner size="small"></spot-spinner>
           </div>
         </span>
@@ -95,12 +136,16 @@
     <!-- Comments -->
     <div *ngIf="comments.length > 0; else noComments">
       <div *ngFor="let comment of comments">
-          <spot-comment [comment]="comment" [post]="post" [detailed]="detailed"></spot-comment>
+        <spot-comment
+          [comment]="comment"
+          [post]="post"
+          [detailed]="detailed"
+        ></spot-comment>
       </div>
     </div>
     <ng-template #noComments>
       <div *ngIf="loadingCommentsBefore; else none" class="no-comments-loading">
-        <div *ngIf="(showLoadingCommentsIndicator$ | async)">
+        <div *ngIf="showLoadingCommentsIndicator$ | async">
           <span> {{ STRINGS.LOADING_COMMENTS }} </span>
           <div *ngIf="loadingCommentsBefore" class="loading">
             <spot-spinner size="small" type="dot"></spot-spinner>
@@ -112,26 +157,37 @@
           <span class="material-icons icon"> chat </span>
           {{ STRINGS.NO_COMMENTS }}
         </div>
-        </ng-template>
+      </ng-template>
     </ng-template>
 
     <!-- Load More -->
     <div class="load-more-container" *ngIf="totalCommentsBefore > 0">
       <div class="load-more" (click)="loadMoreComments()">
-         {{ STRINGS.LOAD }}
-         {{ loadMoreCommentsNum() }}
-         {{ loadMoreCommentsNum() > 1 ? STRINGS.MORE_COMMENTS : STRINGS.MORE_COMMENTS_SINGULAR }}
+        {{ STRINGS.LOAD }}
+        {{ loadMoreCommentsNum() }}
+        {{
+          loadMoreCommentsNum() > 1
+            ? STRINGS.MORE_COMMENTS
+            : STRINGS.MORE_COMMENTS_SINGULAR
+        }}
       </div>
       <div *ngIf="loadingCommentsBefore" class="load-comments-before">
         <spot-spinner size="small"></spot-spinner>
       </div>
     </div>
-
   </div>
 
-  <div *ngIf="comments.length >= 5 && (isAuthenticated$ | async) &&  (isVerified$ | async) && post.inRange && location" class="comment-reminder" (click)="scrollToComment()">
+  <div
+    *ngIf="
+      comments.length >= 5 &&
+      (isAuthenticated$ | async) &&
+      (isVerified$ | async) &&
+      post.inRange &&
+      location
+    "
+    class="comment-reminder"
+    (click)="scrollToComment()"
+  >
     {{ STRINGS.MAKE_COMMENT }}
   </div>
-
-
 </div>

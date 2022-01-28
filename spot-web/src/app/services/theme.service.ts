@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Theme, LightTheme, DarkTheme, RegularSizeTheme} from '@src/app/styles/theme';
+import {
+  DarkTheme,
+  LightTheme,
+  RegularSizeTheme,
+  Theme
+} from '@src/app/styles/theme';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ThemeService {
   constructor() {}
@@ -18,7 +23,7 @@ export class ThemeService {
   }
 
   setRegularSizeTheme(): void {
-      this.setActiveTheme(RegularSizeTheme);
+    this.setActiveTheme(RegularSizeTheme);
   }
 
   setActiveTheme(theme: Theme): void {

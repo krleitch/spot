@@ -17,19 +17,17 @@ export interface StoreReply {
 }
 
 export interface State {
-    comments: {
-      [postId: string]: StoreComment,
+  comments: {
+    [postId: string]: StoreComment;
+  };
+  replies: {
+    [postId: string]: {
+      [commentId: string]: StoreReply;
     };
-    replies: {
-      [postId: string]: {
-          [commentId: string]: StoreReply,
-      };
-    };
+  };
 }
 
-export const initialState: State = (
-  {
-    comments: {},
-    replies: {},
-  }
-);
+export const initialState: State = {
+  comments: {},
+  replies: {}
+};

@@ -1,22 +1,31 @@
 <div class="nav">
-
   <div class="left">
-
     <a class="title-link" [routerLink]="'/'">
       <div class="title-image"></div>
     </a>
 
-    <a class="skew section start" [routerLink]="'/about'" [ngClass]="{ selected: isSelected('about') }">
+    <a
+      class="skew section start"
+      [routerLink]="'/about'"
+      [ngClass]="{ selected: isSelected('about') }"
+    >
       <span class="skew-fix"> {{ STRINGS.ABOUT }} </span>
     </a>
-    <a class="skew section end" [routerLink]="'/contact'" [ngClass]="{ selected: isSelected('contact') }">
+    <a
+      class="skew section end"
+      [routerLink]="'/contact'"
+      [ngClass]="{ selected: isSelected('contact') }"
+    >
       <span class="skew-fix"> {{ STRINGS.CONTACT }} </span>
     </a>
-
   </div>
 
   <div class="right">
-    <a *ngIf="routeIsLogin(); else mylogin" class="auth-link" [routerLink]="'/register'">
+    <a
+      *ngIf="routeIsLogin(); else mylogin"
+      class="auth-link"
+      [routerLink]="'/register'"
+    >
       {{ STRINGS.REGISTER }}
     </a>
     <ng-template #mylogin>
@@ -25,5 +34,4 @@
       </a>
     </ng-template>
   </div>
-
 </div>

@@ -9,12 +9,10 @@ export interface State {
   noPosts: boolean; // Were any posts loaded flag
 }
 
-export const initialState: State = (
-  {
-    posts: [],
-    loading: false,
-    createError: null,
-    createSuccess: false,
-    noPosts: false
-  }
-);
+export const initialState: State = {
+  posts: [],
+  loading: false,
+  createError: null,
+  createSuccess: false,
+  noPosts: false
+};

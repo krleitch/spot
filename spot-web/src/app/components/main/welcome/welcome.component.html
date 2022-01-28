@@ -1,20 +1,22 @@
 <div class="welcome">
-
   <div class="header">
-    <img class="image" src="../../../../assets/images/wave.png">
+    <img class="image" src="../../../../assets/images/wave.png" />
     <span class="title"> {{ STRINGS.TITLE }} </span>
   </div>
 
   <div class="body">
-
     <div class="heading">
       {{ STRINGS.ANONYMOUS_TITLE }}
-      <img class="image" src="../../../../assets/images/logo_plain.png">
+      <img class="image" src="../../../../assets/images/logo_plain.png" />
     </div>
     <div class="text-block">
       <ul>
-        <li> <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_1 }} </span> </li>
-        <li> <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_2 }} </span> </li>
+        <li>
+          <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_1 }} </span>
+        </li>
+        <li>
+          <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_2 }} </span>
+        </li>
       </ul>
     </div>
 
@@ -24,23 +26,39 @@
     </div>
     <div class="text-block">
       <ul>
-        <li> <span class="text"> {{ STRINGS.FRIENDS_TEXT_1_1 }} <span class="material-icons icon facebook"> facebook </span> {{ STRINGS.FRIENDS_TEXT_1_2 }} </span> </li>
-        <li> <span class="text"> {{ STRINGS.FRIENDS_TEXT_2 }} </span> </li>
-        <li> <span class="text"> {{ STRINGS.FRIENDS_TEXT_3 }} </span> </li>
+        <li>
+          <span class="text">
+            {{ STRINGS.FRIENDS_TEXT_1_1 }}
+            <span class="material-icons icon facebook"> facebook </span>
+            {{ STRINGS.FRIENDS_TEXT_1_2 }}
+          </span>
+        </li>
+        <li>
+          <span class="text"> {{ STRINGS.FRIENDS_TEXT_2 }} </span>
+        </li>
+        <li>
+          <span class="text"> {{ STRINGS.FRIENDS_TEXT_3 }} </span>
+        </li>
       </ul>
     </div>
 
-    <div class="heading"> {{ STRINGS.LOCATION_TITLE }} </div>
+    <div class="heading">{{ STRINGS.LOCATION_TITLE }}</div>
     <div class="text-block">
       <ul>
-        <li> <span class="text"> {{ STRINGS.LOCATION_TEXT_1_1 }} <span class="material-icons icon"> home </span> {{ STRINGS.LOCATION_TEXT_1_2 }} </span> </li>
+        <li>
+          <span class="text">
+            {{ STRINGS.LOCATION_TEXT_1_1 }}
+            <span class="material-icons icon"> home </span>
+            {{ STRINGS.LOCATION_TEXT_1_2 }}
+          </span>
+        </li>
       </ul>
     </div>
 
     <div class="button-container">
-      <button class="continue" (click)="closeWelcome()"> {{ STRINGS.CONTINUE }} </button>
+      <button class="continue" (click)="closeWelcome()">
+        {{ STRINGS.CONTINUE }}
+      </button>
     </div>
-
   </div>
-
 </div>

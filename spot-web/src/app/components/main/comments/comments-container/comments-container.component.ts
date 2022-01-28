@@ -1,14 +1,26 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef, OnChanges, AfterViewInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
 import { Observable, Subject, timer } from 'rxjs';
-import { takeUntil, take, mapTo, takeWhile, startWith } from 'rxjs/operators';
+import { mapTo, startWith, take, takeUntil, takeWhile } from 'rxjs/operators';
 
 // Store
-import { select, Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { CommentsStoreSelectors, CommentsStoreActions } from '@store/comments-store';
+import {
+  CommentsStoreActions,
+  CommentsStoreSelectors
+} from '@store/comments-store';
 import { StoreComment } from '@store/comments-store/state';
 import { AccountsStoreSelectors } from '@store/accounts-store';
 import { SocialStoreSelectors } from '@store/social-store';
@@ -18,8 +30,14 @@ import { CommentService } from '@services/comments.service';
 import { AlertService } from '@services/alert.service';
 
 // Models
-import { GetCommentsRequest, AddCommentRequest, GetCommentsSuccess, SetCommentsStoreRequest,
-          AddCommentStoreRequest, AddCommentSuccess } from '@models/comments';
+import {
+  AddCommentRequest,
+  AddCommentStoreRequest,
+  AddCommentSuccess,
+  GetCommentsRequest,
+  GetCommentsSuccess,
+  SetCommentsStoreRequest
+} from '@models/comments';
 import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 import { Friend } from '@models/friends';
@@ -38,8 +56,9 @@ import { COMMENTS_CONSTANTS } from '@constants/comments';
   templateUrl: './comments-container.component.html',
   styleUrls: ['./comments-container.component.scss']
 })
-export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
-
+export class CommentsContainerComponent
+  implements OnInit, OnDestroy, OnChanges, AfterViewInit
+{
   private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
@@ -85,85 +104,98 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
   STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private alertService: AlertService,
-              public domSanitizer: DomSanitizer,
-              public commentService: CommentService) {
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private alertService: AlertService,
+    public domSanitizer: DomSanitizer,
+    public commentService: CommentService
+  ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
-
   ngOnInit(): void {
-
     // Comments
     this.comments$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectComments, { postId: this.post.id }),
+      select(CommentsStoreSelectors.selectComments, { postId: this.post.id })
     );
 
-    this.comments$.pipe(takeUntil(this.onDestroy)).subscribe( (storeComments: StoreComment) => {
+    this.comments$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((storeComments: StoreComment) => {
+        // comments were reset
 
-      // comments were reset
+        this.comments = storeComments.comments;
+        this.totalCommentsAfter = storeComments.totalCommentsAfter;
+        this.totalCommentsBefore = storeComments.totalCommentsBefore;
 
-      this.comments = storeComments.comments;
-      this.totalCommentsAfter = storeComments.totalCommentsAfter;
-      this.totalCommentsBefore = storeComments.totalCommentsBefore;
+        // only load comments if we havent already
+        if (this.comments.length === 0 && this.initialLoad) {
+          // if detailed load more comments
+          const initialLimit = this.detailed
+            ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT
+            : COMMENTS_CONSTANTS.INITIAL_LIMIT;
 
-      // only load comments if we havent already
-      if ( this.comments.length === 0 && this.initialLoad ) {
-        // if detailed load more comments
-        const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
+          // Get the latest initialLimit of comments
+          const request: GetCommentsRequest = {
+            postId: this.post.id,
+            date: new Date().toString(),
+            type: 'before',
+            limit: initialLimit,
+            commentLink: this.post.startCommentLink || null
+          };
 
-        // Get the latest initialLimit of comments
-        const request: GetCommentsRequest = {
-          postId: this.post.id,
-          date: new Date().toString(),
-          type: 'before',
-          limit: initialLimit,
-          commentLink: this.post.startCommentLink || null,
-        };
+          this.loadingCommentsBefore = true;
+          this.showLoadingCommentsIndicator$ = timer(500)
+            .pipe(
+              mapTo(true),
+              takeWhile((_) => this.loadingCommentsBefore)
+            )
+            .pipe(startWith(false));
 
-        this.loadingCommentsBefore = true;
-        this.showLoadingCommentsIndicator$ = timer(500).pipe(
-          mapTo(true),
-          takeWhile( (_) => this.loadingCommentsBefore )).pipe( startWith(false) );
-
-        this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
-          this.loadingCommentsBefore = false;
-          if  ( comments.comments ) {
-            const storeRequest: SetCommentsStoreRequest = {
-              postId: this.post.id,
-              type: 'before',
-              initialLoad: true,
-              comments: comments.comments,
-              totalCommentsBefore: comments.totalCommentsBefore,
-              totalCommentsAfter: comments.totalCommentsAfter
-            };
-            this.initialLoad = false;
-            this.store$.dispatch(
-              new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
+          this.commentService
+            .getComments(request)
+            .pipe(take(1))
+            .subscribe(
+              (comments: GetCommentsSuccess) => {
+                this.loadingCommentsBefore = false;
+                if (comments.comments) {
+                  const storeRequest: SetCommentsStoreRequest = {
+                    postId: this.post.id,
+                    type: 'before',
+                    initialLoad: true,
+                    comments: comments.comments,
+                    totalCommentsBefore: comments.totalCommentsBefore,
+                    totalCommentsAfter: comments.totalCommentsAfter
+                  };
+                  this.initialLoad = false;
+                  this.store$.dispatch(
+                    new CommentsStoreActions.SetCommentsRequestAction(
+                      storeRequest
+                    )
+                  );
+                  this.totalCommentsBefore = comments.totalCommentsBefore;
+                  this.totalCommentsAfter = comments.totalCommentsAfter;
+                }
+              },
+              (err: SpotError) => {
+                // Ignore error case for now
+                this.loadingCommentsBefore = false;
+              }
             );
-            this.totalCommentsBefore = comments.totalCommentsBefore;
-            this.totalCommentsAfter = comments.totalCommentsAfter;
-
-          }
-        }, (err: SpotError) => {
-          // Ignore error case for now
-          this.loadingCommentsBefore = false;
-        });
-
-      } else {
-        this.initialLoad = false;
-      }
-
-    });
+        } else {
+          this.initialLoad = false;
+        }
+      });
 
     this.account$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccount)
     );
 
-    this.account$.pipe(takeUntil(this.onDestroy)).subscribe ( (account: Account) => {
-      this.account = account;
-    });
+    this.account$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((account: Account) => {
+        this.account = account;
+      });
 
     // Authentication
     this.isAuthenticated$ = this.store$.pipe(
@@ -179,31 +211,32 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
       select(AccountsStoreSelectors.selectLocation)
     );
 
-    this.location$.pipe(takeUntil(this.onDestroy)).subscribe ( (location: Location) => {
-      this.location = location;
-    });
+    this.location$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((location: Location) => {
+        this.location = location;
+      });
 
     // Friends
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
 
-    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe( (friends: Friend[]) => {
-      this.friends = friends;
-    });
-
+    this.friends$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((friends: Friend[]) => {
+        this.friends = friends;
+      });
   }
 
   ngAfterViewInit(): void {
-
-    if ( this.comment ) {
+    if (this.comment) {
       this.comment.nativeElement.addEventListener('paste', (event: any) => {
         event.preventDefault();
         const text = event.clipboardData.getData('text/plain');
         document.execCommand('insertText', false, text);
       });
     }
-
   }
 
   ngOnDestroy(): void {
@@ -211,10 +244,11 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   ngOnChanges(changes: any): void {
-
-    if ( !this.initialLoad ) {
+    if (!this.initialLoad) {
       // if detailed load more comments
-      const initialLimit = this.detailed ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT : COMMENTS_CONSTANTS.INITIAL_LIMIT;
+      const initialLimit = this.detailed
+        ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT
+        : COMMENTS_CONSTANTS.INITIAL_LIMIT;
 
       // Get the latest initialLimit of comments
       const request: GetCommentsRequest = {
@@ -222,40 +256,46 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
         date: new Date().toString(),
         type: 'before',
         limit: initialLimit,
-        commentLink: this.post.startCommentLink || null,
+        commentLink: this.post.startCommentLink || null
       };
 
       this.loadingCommentsBefore = true;
-      this.showLoadingCommentsIndicator$ = timer(500).pipe(
-        mapTo(true),
-        takeWhile( (_) => this.loadingCommentsBefore )).pipe( startWith(false) );
+      this.showLoadingCommentsIndicator$ = timer(500)
+        .pipe(
+          mapTo(true),
+          takeWhile((_) => this.loadingCommentsBefore)
+        )
+        .pipe(startWith(false));
 
-      this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
-        this.loadingCommentsBefore = false;
-        if  ( comments.comments ) {
-          const storeRequest: SetCommentsStoreRequest = {
-            postId: this.post.id,
-            type: 'before',
-            initialLoad: true,
-            comments: comments.comments,
-            totalCommentsBefore: comments.totalCommentsBefore,
-            totalCommentsAfter: comments.totalCommentsAfter
-          };
-          this.initialLoad = false;
-          this.store$.dispatch(
-            new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
-          );
-          this.totalCommentsBefore = comments.totalCommentsBefore;
-          this.totalCommentsAfter = comments.totalCommentsAfter;
-
-        }
-      }, (err: SpotError) => {
-        // Ignore error case for now
-        this.loadingCommentsBefore = false;
-      });
-
+      this.commentService
+        .getComments(request)
+        .pipe(take(1))
+        .subscribe(
+          (comments: GetCommentsSuccess) => {
+            this.loadingCommentsBefore = false;
+            if (comments.comments) {
+              const storeRequest: SetCommentsStoreRequest = {
+                postId: this.post.id,
+                type: 'before',
+                initialLoad: true,
+                comments: comments.comments,
+                totalCommentsBefore: comments.totalCommentsBefore,
+                totalCommentsAfter: comments.totalCommentsAfter
+              };
+              this.initialLoad = false;
+              this.store$.dispatch(
+                new CommentsStoreActions.SetCommentsRequestAction(storeRequest)
+              );
+              this.totalCommentsBefore = comments.totalCommentsBefore;
+              this.totalCommentsAfter = comments.totalCommentsAfter;
+            }
+          },
+          (err: SpotError) => {
+            // Ignore error case for now
+            this.loadingCommentsBefore = false;
+          }
+        );
     }
-
   }
 
   offClickHandler(event: MouseEvent): void {
@@ -269,26 +309,31 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   onTextInput(event): void {
-
-    if ( event.target.textContent.length === 0 ) {
+    if (event.target.textContent.length === 0) {
       this.comment.nativeElement.innerHTML = '';
     }
     // Need to count newlines as a character, -1 because the first line is free
-    this.currentLength = Math.max(event.target.textContent.length + event.target.childNodes.length - 1, 0);
+    this.currentLength = Math.max(
+      event.target.textContent.length + event.target.childNodes.length - 1,
+      0
+    );
     this.addCommentError = null;
     // Check for tag
     this.getAndCheckWordOnCaret();
-
   }
 
   getAndCheckWordOnCaret(): void {
     const range = window.getSelection().getRangeAt(0);
     if (range.collapsed) {
-      if ( range.startContainer.parentElement.className === 'tag-inline' ) {
+      if (range.startContainer.parentElement.className === 'tag-inline') {
         range.setStart(range.startContainer.parentElement.nextSibling, 0);
         range.collapse(true);
       } else {
-        this.checkWord(this.getCurrentWord(range.startContainer, range.startOffset), range.startContainer, range.startOffset);
+        this.checkWord(
+          this.getCurrentWord(range.startContainer, range.startOffset),
+          range.startContainer,
+          range.startOffset
+        );
       }
     }
   }
@@ -312,9 +357,8 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   private checkWord(word: string, element: Node, position: number): void {
-
     // Check if starts with '@', if it does then show tag
-    if ( word.length > 1 && word[0] === '@' ) {
+    if (word.length > 1 && word[0] === '@') {
       this.tagName = word.slice(1);
       this.showTagTrue();
       this.tagElement = element;
@@ -324,12 +368,14 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
       this.tagElement = null;
       this.tagCaretPosition = null;
     }
-
   }
 
   // Creates the inline tag and removes the word
-  private removeWord(element: Node, position: number, username: string): HTMLElement {
-
+  private removeWord(
+    element: Node,
+    position: number,
+    username: string
+  ): HTMLElement {
     const content = element.textContent;
 
     // Check if clicked at the end of word
@@ -345,7 +391,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
     const parent = element.parentNode;
 
     const span = document.createElement('span');
-    const beforeText = document.createTextNode(content.substring(0, startPosition + 1));
+    const beforeText = document.createTextNode(
+      content.substring(0, startPosition + 1)
+    );
     const tag = document.createElement('span');
     tag.className = 'tag-inline';
     tag.contentEditable = 'false';
@@ -358,27 +406,32 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
 
     parent.replaceChild(span, element);
     return tag;
-
   }
 
   onEnter(): boolean {
     // Add tag on enter
-    if ( this.showTag ) {
+    if (this.showTag) {
       this.tagelem.onEnter();
       return false;
     }
   }
 
   addTag(username: string): void {
-
     // Check if they are your friend
-    if ( this.friends.find( (friend: Friend) =>  friend.username === username ) === undefined ) {
+    if (
+      this.friends.find((friend: Friend) => friend.username === username) ===
+      undefined
+    ) {
       this.alertService.error('Only friends can be tagged');
       return;
     }
 
     // remove the word, and add the inline tag
-    const tagElement = this.removeWord(this.tagElement, this.tagCaretPosition, username);
+    const tagElement = this.removeWord(
+      this.tagElement,
+      this.tagCaretPosition,
+      username
+    );
 
     // Focus after the tag
     const range = window.getSelection().getRangeAt(0);
@@ -389,11 +442,9 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
     this.hideTag();
     this.tagElement = null;
     this.tagCaretPosition = null;
-
   }
 
   addComment(): void {
-
     let content = this.comment.nativeElement.innerHTML;
 
     // parse the innerhtml to return a string with newlines instead of innerhtml
@@ -410,12 +461,11 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
     let stack = [];
     stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
 
-    while ( stack.length > 0 ) {
-
+    while (stack.length > 0) {
       const elem = stack.pop();
 
       // A tag
-      if ( elem.className === 'tag-inline' ) {
+      if (elem.className === 'tag-inline') {
         const tag: Tag = {
           username: elem.textContent,
           postLink: this.post.link,
@@ -428,21 +478,20 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
 
       // Push the children
       // In reverse because we want to parse the from left to right
-      if ( elem.childNodes ) {
+      if (elem.childNodes) {
         stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
       }
 
       // Don't add spaces to start
-      if ( elem.tagName === 'DIV' ) {
+      if (elem.tagName === 'DIV') {
         // A new Div
         text += '\n';
         offset += 1;
-      } else if ( elem.nodeType === 3 ) {
+      } else if (elem.nodeType === 3) {
         // Text Node
         text += elem.textContent;
         offset += elem.textContent.length;
       }
-
     }
 
     // TODO: cleanup whitespace here if decide to do it
@@ -453,23 +502,34 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
 
     // Error checking
 
-    if ( content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH ) {
-      this.addCommentError = this.STRINGS.ERROR_LINE_LENGTH.replace('%LENGTH%', COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString());
+    if (
+      content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
+    ) {
+      this.addCommentError = this.STRINGS.ERROR_LINE_LENGTH.replace(
+        '%LENGTH%',
+        COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString()
+      );
       return;
     }
 
-    if ( content.length === 0 && !this.imageFile && tags.length === 0 ) {
+    if (content.length === 0 && !this.imageFile && tags.length === 0) {
       this.addCommentError = this.STRINGS.ERROR_NO_CONTENT;
       return;
     }
 
-    if ( content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ) {
-      this.addCommentError = this.STRINGS.ERROR_MIN_CONTENT.replace('%MIN%', COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString());
+    if (content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH) {
+      this.addCommentError = this.STRINGS.ERROR_MIN_CONTENT.replace(
+        '%MIN%',
+        COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString()
+      );
       return;
     }
 
     if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
-      this.addCommentError = this.STRINGS.ERROR_MAX_CONTENT.replace('%MAX%', COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString());
+      this.addCommentError = this.STRINGS.ERROR_MAX_CONTENT.replace(
+        '%MAX%',
+        COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString()
+      );
       return;
     }
 
@@ -477,12 +537,12 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
     // So user knows what they need to change
     const regex = /^[^\x00-\x7F]*$/;
     const match = content.match(regex);
-    if ( match && match[0].length > 0 ) {
+    if (match && match[0].length > 0) {
       this.addCommentError = this.STRINGS.ERROR_INVALID_CONTENT + match[0];
       return;
     }
 
-    if ( !location ) {
+    if (!location) {
       this.addCommentError = this.STRINGS.ERROR_LOCATION;
       return;
     }
@@ -498,43 +558,54 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
 
     this.addCommentLoading = true;
 
-    this.commentService.addComment(request).pipe(take(1)).subscribe( (comment: AddCommentSuccess) => {
+    this.commentService
+      .addComment(request)
+      .pipe(take(1))
+      .subscribe(
+        (comment: AddCommentSuccess) => {
+          const storeRequest: AddCommentStoreRequest = {
+            postId: comment.postId,
+            comment: comment.comment
+          };
 
-      const storeRequest: AddCommentStoreRequest = {
-        postId: comment.postId,
-        comment: comment.comment
-      };
+          this.store$.dispatch(
+            new CommentsStoreActions.AddCommentRequestAction(storeRequest)
+          );
 
-      this.store$.dispatch(
-        new CommentsStoreActions.AddCommentRequestAction(storeRequest)
+          this.addCommentLoading = false;
+          this.removeFile();
+          this.comment.nativeElement.innerText = '';
+          this.comment.nativeElement.innerHtml = '';
+          Array.from(this.comment.nativeElement.children).forEach(
+            (c: HTMLElement) => (c.innerHTML = '')
+          );
+          this.currentLength = 0;
+        },
+        (createError: SpotError) => {
+          this.addCommentLoading = false;
+          if (createError.name === 'InvalidCommentProfanity') {
+            this.addCommentError = this.STRINGS.ERROR_PROFANITY.replace(
+              '%PROFANITY%',
+              createError.body.word
+            );
+          } else {
+            this.addCommentError = createError.message;
+          }
+        }
       );
-
-      this.addCommentLoading = false;
-      this.removeFile();
-      this.comment.nativeElement.innerText = '';
-      this.comment.nativeElement.innerHtml = '';
-      Array.from(this.comment.nativeElement.children).forEach((c: HTMLElement) => c.innerHTML = '');
-      this.currentLength = 0;
-
-    }, (createError: SpotError) => {
-      this.addCommentLoading = false;
-      if ( createError.name === 'InvalidCommentProfanity' ) {
-        this.addCommentError = this.STRINGS.ERROR_PROFANITY.replace('%PROFANITY%', createError.body.word);
-      } else {
-        this.addCommentError = createError.message;
-      }
-    });
-
   }
 
   loadRecentCommentsNum(): number {
-    return Math.min(this.totalCommentsAfter,
-      this.detailed ? this.COMMENTS_CONSTANTS.RECENT_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.RECENT_LIMIT);
+    return Math.min(
+      this.totalCommentsAfter,
+      this.detailed
+        ? this.COMMENTS_CONSTANTS.RECENT_LIMIT_DETAILED
+        : this.COMMENTS_CONSTANTS.RECENT_LIMIT
+    );
   }
 
   loadRecentComments(): void {
-
-    if ( this.loadingCommentsAfter ) {
+    if (this.loadingCommentsAfter) {
       return;
     }
 
@@ -550,76 +621,93 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
     this.loadingCommentsAfter = true;
     this.refreshed = false;
 
-    this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
-      this.loadingCommentsAfter = false;
-      if  ( comments.comments ) {
-        const storeRequest: SetCommentsStoreRequest = {
-          postId: this.post.id,
-          type: 'after',
-          initialLoad: this.initialLoad,
-          comments: comments.comments,
-          totalCommentsAfter: comments.totalCommentsAfter
-        };
-        this.store$.dispatch(
-          new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
-        );
+    this.commentService
+      .getComments(request)
+      .pipe(take(1))
+      .subscribe(
+        (comments: GetCommentsSuccess) => {
+          this.loadingCommentsAfter = false;
+          if (comments.comments) {
+            const storeRequest: SetCommentsStoreRequest = {
+              postId: this.post.id,
+              type: 'after',
+              initialLoad: this.initialLoad,
+              comments: comments.comments,
+              totalCommentsAfter: comments.totalCommentsAfter
+            };
+            this.store$.dispatch(
+              new CommentsStoreActions.SetCommentsRequestAction(storeRequest)
+            );
 
-        // Nothing new was found
-        // this has to go before totalCommentsAfter is updated
-        if ( comments.totalCommentsAfter === 0) {
-          this.refreshed = true;
+            // Nothing new was found
+            // this has to go before totalCommentsAfter is updated
+            if (comments.totalCommentsAfter === 0) {
+              this.refreshed = true;
+            }
+
+            this.totalCommentsAfter = comments.totalCommentsAfter;
+          }
+        },
+        (err: SpotError) => {
+          // Error case
+          this.loadingCommentsAfter = false;
         }
-
-        this.totalCommentsAfter = comments.totalCommentsAfter;
-
-      }
-    }, (err: SpotError) => {
-      // Error case
-      this.loadingCommentsAfter = false;
-    });
-
+      );
   }
 
   loadMoreCommentsNum(): number {
-    return Math.min(this.totalCommentsBefore,
-      this.detailed ? this.COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED : this.COMMENTS_CONSTANTS.MORE_LIMIT);
+    return Math.min(
+      this.totalCommentsBefore,
+      this.detailed
+        ? this.COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED
+        : this.COMMENTS_CONSTANTS.MORE_LIMIT
+    );
   }
 
   loadMoreComments(): void {
-
-    if ( this.loadingCommentsBefore ){
+    if (this.loadingCommentsBefore) {
       return;
     }
 
     const request: GetCommentsRequest = {
       postId: this.post.id,
-      date: this.comments.length > 0 ? this.comments.slice(-1).pop().creation_date : new Date().toString(),
+      date:
+        this.comments.length > 0
+          ? this.comments.slice(-1).pop().creation_date
+          : new Date().toString(),
       type: 'before',
-      limit: this.detailed ? COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED : COMMENTS_CONSTANTS.MORE_LIMIT,
+      limit: this.detailed
+        ? COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED
+        : COMMENTS_CONSTANTS.MORE_LIMIT
     };
 
     this.loadingCommentsBefore = true;
 
-    this.commentService.getComments(request).pipe(take(1)).subscribe( (comments: GetCommentsSuccess) => {
-      this.loadingCommentsBefore = false;
-      if  ( comments.comments ) {
-        const storeRequest: SetCommentsStoreRequest = {
-          postId: this.post.id,
-          type: 'before',
-          initialLoad: this.initialLoad,
-          comments: comments.comments,
-          totalCommentsBefore: comments.totalCommentsBefore
-        };
-        this.store$.dispatch(
-          new CommentsStoreActions.SetCommentsRequestAction(storeRequest),
-        );
-        this.totalCommentsBefore = comments.totalCommentsBefore;
-      }
-    }, (err: SpotError) => {
-      // Error case
-      this.loadingCommentsBefore = false;
-    });
-
+    this.commentService
+      .getComments(request)
+      .pipe(take(1))
+      .subscribe(
+        (comments: GetCommentsSuccess) => {
+          this.loadingCommentsBefore = false;
+          if (comments.comments) {
+            const storeRequest: SetCommentsStoreRequest = {
+              postId: this.post.id,
+              type: 'before',
+              initialLoad: this.initialLoad,
+              comments: comments.comments,
+              totalCommentsBefore: comments.totalCommentsBefore
+            };
+            this.store$.dispatch(
+              new CommentsStoreActions.SetCommentsRequestAction(storeRequest)
+            );
+            this.totalCommentsBefore = comments.totalCommentsBefore;
+          }
+        },
+        (err: SpotError) => {
+          // Error case
+          this.loadingCommentsBefore = false;
+        }
+      );
   }
 
   invalidLength(): boolean {
@@ -627,7 +715,7 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   onFileChanged(event): void {
-    if ( event.target.files.length > 0 ) {
+    if (event.target.files.length > 0) {
       this.imageFile = event.target.files[0];
       this.imgSrc = window.URL.createObjectURL(this.imageFile);
     }
@@ -640,31 +728,31 @@ export class CommentsContainerComponent implements OnInit, OnDestroy, OnChanges,
 
   scrollToComment(): void {
     const yOffset = -100;
-    const y = this.comment.nativeElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({top: y, behavior: 'smooth'});
+    const y =
+      this.comment.nativeElement.getBoundingClientRect().top +
+      window.pageYOffset +
+      yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
     this.comment.nativeElement.focus({
-      preventScroll: true,
+      preventScroll: true
     });
   }
 
   showTagTrue(): void {
-
     const distanceToTop = this.tag.nativeElement.getBoundingClientRect().top;
 
-    if ( distanceToTop < 200 ) {
+    if (distanceToTop < 200) {
       this.showTagBottom = true;
     } else {
       this.showTagBottom = false;
     }
 
     this.showTag = true;
-
   }
 
-  hideTag():  void {
+  hideTag(): void {
     this.showTag = false;
     this.showTagBottom = false;
     this.tagName = '';
   }
-
 }

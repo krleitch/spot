@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 // rxjs
 import { Subscription } from 'rxjs';
@@ -15,17 +15,17 @@ import { Alert, AlertType } from '@models/alert';
   styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent implements OnInit, OnDestroy {
-
   @Input() id: string;
 
   alerts: Alert[] = [];
   subscription: Subscription;
 
-  constructor(private alertService: AlertService) { }
+  constructor(private alertService: AlertService) {}
 
   ngOnInit(): void {
-    this.subscription = this.alertService.onAlert(this.id)
-      .subscribe( (alert: Alert) => {
+    this.subscription = this.alertService
+      .onAlert(this.id)
+      .subscribe((alert: Alert) => {
         if (!alert.message) {
           // clear alerts when an empty alert is received
           this.alerts = [];
@@ -41,36 +41,33 @@ export class AlertComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.closeAlert(alert);
         }, 4500);
-
       });
   }
 
   closeAlert(alert: Alert): void {
     // remove specified alert from array
-    this.alerts = this.alerts.filter(x => x !== alert);
+    this.alerts = this.alerts.filter((x) => x !== alert);
   }
 
   ngOnDestroy(): void {
-      this.subscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   cssClass(alert: Alert): string {
+    if (!alert) {
+      return;
+    }
 
-      if (!alert) {
-          return;
-      }
-
-      // return css class based on alert type
-      switch (alert.type) {
-          case AlertType.Success:
-              return 'alert alert-success';
-          case AlertType.Error:
-              return 'alert alert-danger';
-          case AlertType.Info:
-              return 'alert alert-info';
-          case AlertType.Warning:
-              return 'alert alert-warning';
-      }
+    // return css class based on alert type
+    switch (alert.type) {
+      case AlertType.Success:
+        return 'alert alert-success';
+      case AlertType.Error:
+        return 'alert alert-danger';
+      case AlertType.Info:
+        return 'alert alert-info';
+      case AlertType.Warning:
+        return 'alert alert-warning';
+    }
   }
-
 }

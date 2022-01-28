@@ -12,17 +12,13 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./about.component.scss']
 })
 export class AboutComponent implements OnInit {
-
   STRINGS = STRINGS.PRE_AUTH.ABOUT;
 
-  constructor(private modalService: ModalService) { }
+  constructor(private modalService: ModalService) {}
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   openTerms(): void {
     this.modalService.open('spot-terms-modal');
   }
-
 }

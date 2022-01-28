@@ -10,7 +10,6 @@ spot-main-nav {
 }
 
 .account {
-
   display: flex;
   justify-content: center;
   min-height: 100%;
@@ -30,7 +29,6 @@ spot-main-nav {
   }
 
   .no-account {
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,14 +43,12 @@ spot-main-nav {
     .text {
       font-size: 18px;
     }
-
   }
 
   .guest {
     color: $error-red;
     margin-bottom: 10px;
   }
-
 }
 
 .title {
@@ -142,7 +138,6 @@ spot-main-nav {
 }
 
 .facebook-connected {
-
   display: flex;
   align-items: center;
   margin: 5px;
@@ -167,13 +162,10 @@ spot-main-nav {
     &:hover {
       cursor: pointer;
     }
-
   }
-
 }
 
 .google-connected {
-
   display: flex;
   align-items: center;
   margin: 5px;
@@ -200,9 +192,7 @@ spot-main-nav {
     &:hover {
       cursor: pointer;
     }
-
   }
-
 }
 
 .subheading {
@@ -214,7 +204,6 @@ spot-main-nav {
   .subheading-text {
     margin-right: 5px;
   }
-
 }
 
 .value {
@@ -287,13 +276,12 @@ input {
 }
 
 .delete {
-
   background: none;
-	color: inherit;
-	border: none;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+  color: inherit;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
 
   background-color: $button-black;
   border: none;
@@ -307,9 +295,8 @@ input {
   width: 200px;
 
   &:hover {
-      background-color: lighten($button-black, 10%);
+    background-color: lighten($button-black, 10%);
   }
-
 }
 
 .distance-button {
@@ -388,7 +375,7 @@ input {
 }
 
 .checkmark:after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
@@ -417,14 +404,11 @@ input {
 
 // For Mobile
 @media screen and (max-width: $mobile-width) {
-
   .account {
-
     .account-content {
       width: 95%;
       min-width: 0;
     }
-
   }
 
   .description {
@@ -441,16 +425,13 @@ input {
     align-items: flex-start;
   }
 
-
   .delete {
     margin-left: auto;
     margin-right: auto;
   }
-
 }
 
 @media screen and (max-width: 800px) {
-
   .social {
     flex-flow: column;
   }
@@ -458,5 +439,4 @@ input {
   .social-button {
     margin: 5px 5px;
   }
-
 }

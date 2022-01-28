@@ -26,11 +26,9 @@
       color: $error-red;
     }
   }
-
 }
 
 .report-body {
-
   padding: 8px;
 
   select {
@@ -56,7 +54,6 @@
   }
 
   .counter-send-container {
-
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -79,7 +76,5 @@
         background-color: lighten($button-highlight, 3%);
       }
     }
-
   }
-
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 // services
@@ -13,7 +13,6 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./confirm.component.scss']
 })
 export class ConfirmComponent implements OnInit {
-
   STRINGS = STRINGS.MAIN.CONFIRM;
 
   @Input() modalId: string;
@@ -21,16 +20,14 @@ export class ConfirmComponent implements OnInit {
   data$: Observable<any>;
   data: { message: string } = null;
 
-  constructor(private modalService: ModalService) { }
+  constructor(private modalService: ModalService) {}
 
   ngOnInit(): void {
-
     this.data$ = this.modalService.getData(this.modalId);
 
-    this.data$.subscribe( (val) => {
+    this.data$.subscribe((val) => {
       this.data = val;
     });
-
   }
 
   cancel(): void {
@@ -42,5 +39,4 @@ export class ConfirmComponent implements OnInit {
     this.modalService.setResult(this.modalId, { status: 'confirm' });
     this.modalService.close(this.modalId);
   }
-
 }

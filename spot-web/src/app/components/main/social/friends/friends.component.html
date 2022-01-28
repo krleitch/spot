@@ -1,27 +1,42 @@
 <spot-main-nav></spot-main-nav>
 <div class="friends-container">
   <div class="friends-content">
-
     <div class="title-wrapper">
       <div class="friends-title">
         <span class="material-icons people"> people_alt </span>
         {{ STRINGS.TITLE }}
       </div>
-      <div *ngIf="facebookLoaded && !(facebookConnected$ | async)" type="button" class="facebook" (click)="facebookConnect()">
-        <img src="../../../assets/images/facebook_logo_white.png" class="facebook-logo">
+      <div
+        *ngIf="facebookLoaded && !(facebookConnected$ | async)"
+        type="button"
+        class="facebook"
+        (click)="facebookConnect()"
+      >
+        <img
+          src="../../../assets/images/facebook_logo_white.png"
+          class="facebook-logo"
+        />
         <span class="facebook-text"> {{ STRINGS.FACEBOOK_CONNECT }} </span>
       </div>
     </div>
 
     <div *ngIf="pendingFriendRequests.length > 0">
-      <div class="friends-subtitle"> {{ STRINGS.PENDING }} </div>
+      <div class="friends-subtitle">{{ STRINGS.PENDING }}</div>
       <div class="friend-content-section">
-        <div class="friend-request-container" *ngFor="let pendingFriendRequest of pendingFriendRequests">
+        <div
+          class="friend-request-container"
+          *ngFor="let pendingFriendRequest of pendingFriendRequests"
+        >
           <div>
-            <span class="friend-name"> {{ pendingFriendRequest.username }} </span>
+            <span class="friend-name">
+              {{ pendingFriendRequest.username }}
+            </span>
           </div>
           <div class="friend-request-options">
-            <button class="decline friend-button" (click)="deletePendingFriendRequest(pendingFriendRequest.id)">
+            <button
+              class="decline friend-button"
+              (click)="deletePendingFriendRequest(pendingFriendRequest.id)"
+            >
               {{ STRINGS.CANCEL }}
             </button>
           </div>
@@ -30,17 +45,26 @@
     </div>
 
     <div *ngIf="friendRequests.length > 0">
-      <div class="friends-subtitle"> {{ STRINGS.REQUESTS }} </div>
+      <div class="friends-subtitle">{{ STRINGS.REQUESTS }}</div>
       <div class="friend-content-section">
-        <div class="friend-request-container" *ngFor="let friendRequest of friendRequests">
+        <div
+          class="friend-request-container"
+          *ngFor="let friendRequest of friendRequests"
+        >
           <div>
             <span class="friend-name"> {{ friendRequest.username }} </span>
           </div>
           <div class="friend-request-options">
-            <button class="accept friend-button" (click)="acceptFriendRequest(friendRequest.id)">
+            <button
+              class="accept friend-button"
+              (click)="acceptFriendRequest(friendRequest.id)"
+            >
               {{ STRINGS.FRIEND_REQUEST_ACCEPT }}
             </button>
-            <button class="decline friend-button" (click)="declineFriendRequest(friendRequest.id)">
+            <button
+              class="decline friend-button"
+              (click)="declineFriendRequest(friendRequest.id)"
+            >
               {{ STRINGS.FRIEND_REQUEST_DECLINE }}
             </button>
           </div>
@@ -48,11 +72,18 @@
       </div>
     </div>
 
-    <div class="friends-subtitle"> {{ STRINGS.ADD }} </div>
+    <div class="friends-subtitle">{{ STRINGS.ADD }}</div>
     <div class="friend-content-section">
       <div class="friend-request-input-container">
-        <input [(ngModel)]="friendRequestUsername" [placeholder]="STRINGS.FRIEND_REQUEST_PLACEHOLDER" type="text" (keyup.enter)="addFriendRequest()">
-        <span class="send-container" (click)="addFriendRequest()"> <i class="material-icons send"> send </i> </span>
+        <input
+          [(ngModel)]="friendRequestUsername"
+          [placeholder]="STRINGS.FRIEND_REQUEST_PLACEHOLDER"
+          type="text"
+          (keyup.enter)="addFriendRequest()"
+        />
+        <span class="send-container" (click)="addFriendRequest()">
+          <i class="material-icons send"> send </i>
+        </span>
       </div>
     </div>
     <div *ngIf="friendRequestsError" class="add-friends-error">
@@ -63,27 +94,38 @@
     </div>
 
     <div class="friends-search">
-      <div class="subtitle"> {{ STRINGS.FRIENDS_LIST }} </div>
+      <div class="subtitle">{{ STRINGS.FRIENDS_LIST }}</div>
       <div class="search">
         <span class="material-icons icon"> search </span>
-        <input [(ngModel)]="friendSearch" [placeholder]="STRINGS.FRIEND_SEARCH_PLACEHOLDER" type="text" >
+        <input
+          [(ngModel)]="friendSearch"
+          [placeholder]="STRINGS.FRIEND_SEARCH_PLACEHOLDER"
+          type="text"
+        />
       </div>
     </div>
 
     <div class="friend-content-section min">
-      <div *ngIf="friends$ | async | filter: { filter: friendSearch, field: 'username' } as friends">
-
+      <div
+        *ngIf="
+          friends$
+            | async
+            | filter: { filter: friendSearch, field: 'username' } as friends
+        "
+      >
         <div *ngIf="friends.length > 0; else noFriends">
           <div class="friend-list-container" *ngFor="let friend of friends">
             <span class="friend-name"> {{ friend.username }} </span>
-            <button class="remove friend-button" (click)="deleteFriend(friend.id)">
+            <button
+              class="remove friend-button"
+              (click)="deleteFriend(friend.id)"
+            >
               {{ STRINGS.REMOVE }}
             </button>
           </div>
         </div>
 
         <ng-template #noFriends>
-
           <div *ngIf="friendSearch; else addFriends">
             <span class="no-friends">
               <span class="material-icons icon"> search_off </span>
@@ -96,13 +138,8 @@
               {{ STRINGS.NO_FRIENDS }}
             </span>
           </ng-template>
-
         </ng-template>
-
-
       </div>
-
     </div>
-
   </div>
 </div>

@@ -11,18 +11,18 @@ import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
-  SetLocationRequest,
   GetAccountRequest,
   LoadLocationRequest,
   LocationFailure,
+  SetLocationRequest
 } from '@models/accounts';
 
 declare const gapi: any;
 
 @Component({
-  selector: 'app-root',
+  selector: 'spot-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   title = 'spot';
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
         appId: '767513270350482',
         cookie: true,
         xfbml: true,
-        version: 'v4.0',
+        version: 'v4.0'
       });
       window['FB'].AppEvents.logPageView();
       this.authenticationService.sendSocialServiceReady('FB');
@@ -153,8 +153,8 @@ export class AppComponent implements OnInit {
                 const setLocationRequest: SetLocationRequest = {
                   location: {
                     longitude: position.coords.longitude,
-                    latitude: position.coords.latitude,
-                  },
+                    latitude: position.coords.latitude
+                  }
                 };
                 this.store$.dispatch(
                   new AccountsActions.SetLocationAction(setLocationRequest)
@@ -163,7 +163,7 @@ export class AppComponent implements OnInit {
             } else {
               // geolocation not available in this browser
               const locationFailure: LocationFailure = {
-                error: 'browser',
+                error: 'browser'
               };
               this.store$.dispatch(
                 new AccountsActions.LocationFailureAction(locationFailure)
@@ -171,14 +171,14 @@ export class AppComponent implements OnInit {
             }
           } else if (permission.state === 'denied') {
             const locationFailure: LocationFailure = {
-              error: 'permission',
+              error: 'permission'
             };
             this.store$.dispatch(
               new AccountsActions.LocationFailureAction(locationFailure)
             );
           } else {
             const locationFailure: LocationFailure = {
-              error: 'prompt',
+              error: 'prompt'
             };
             this.store$.dispatch(
               new AccountsActions.LocationFailureAction(locationFailure)
@@ -188,7 +188,7 @@ export class AppComponent implements OnInit {
     } else {
       // the permissions api isnt implemented in this browser so setup to prompt again
       const locationFailure: LocationFailure = {
-        error: 'prompt',
+        error: 'prompt'
       };
       this.store$.dispatch(
         new AccountsActions.LocationFailureAction(locationFailure)
@@ -198,7 +198,7 @@ export class AppComponent implements OnInit {
 
   private locationError(error: { message: string; code: number }): void {
     const locationFailure: LocationFailure = {
-      error: error.code === 1 ? 'permission' : 'general',
+      error: error.code === 1 ? 'permission' : 'general'
     };
     this.store$.dispatch(
       new AccountsActions.LocationFailureAction(locationFailure)

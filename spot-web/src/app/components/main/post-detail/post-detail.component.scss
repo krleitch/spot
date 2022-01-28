@@ -11,7 +11,6 @@ spot-main-nav {
 }
 
 .post-detailed {
-
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -32,7 +31,6 @@ spot-main-nav {
   }
 
   .loading {
-
     display: flex;
     align-items: center;
     flex-flow: column;
@@ -67,11 +65,9 @@ spot-main-nav {
     spot-spinner {
       margin-top: 20px;
     }
-
   }
 
   .error {
-
     display: flex;
     align-items: center;
     flex-flow: column;
@@ -86,9 +82,7 @@ spot-main-nav {
       color: $button-highlight;
       font-size: 52px;
     }
-
   }
-
 }
 
 spot-post {
@@ -97,9 +91,7 @@ spot-post {
 
 // Mobile stylings
 @media screen and (max-width: $mobile-width) {
-
   .post-detailed {
-
     .loading {
       width: 95%;
     }
@@ -107,7 +99,5 @@ spot-post {
     .content {
       width: 95%;
     }
-
   }
-
 }

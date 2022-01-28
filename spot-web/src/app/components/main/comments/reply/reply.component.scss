@@ -37,22 +37,17 @@ spot-tag {
 }
 
 :host ::ng-deep .tag-inline-comment {
-
   line-height: 1.2em;
   font-weight: 700;
-
 }
 
 :host ::ng-deep .tag-inline-comment-icon {
-
   line-height: 1.2em;
   font-size: 1.2em;
   vertical-align: bottom;
-
 }
 
 .content {
-
   margin-top: 10px;
   margin-bottom: 3px;
 
@@ -62,7 +57,6 @@ spot-tag {
     word-break: break-word;
     white-space: pre-wrap;
   }
-
 }
 
 .image {
@@ -77,13 +71,12 @@ spot-tag {
 .image-blur {
   opacity: 0.4;
   filter: blur(10px);
-  -webkit-transition: .3s ease-in-out;
-  transition: .2s ease-in-out;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.2s ease-in-out;
   -webkit-filter: blur(10px);
 }
 
-.image-blur-text  {
-
+.image-blur-text {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -96,9 +89,11 @@ spot-tag {
   background-color: $background-grey;
   padding: 10px 5px;
 
-  -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-     -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-          box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 
   .icon {
     font-size: 42px;
@@ -115,10 +110,9 @@ spot-tag {
   .text.highlight {
     color: $subtle-grey;
   }
-
 }
 
-.image:hover .image-blur-text .text.highlight  {
+.image:hover .image-blur-text .text.highlight {
   color: $button-highlight;
 }
 
@@ -132,7 +126,7 @@ spot-tag {
   color: $subtle-grey;
   cursor: pointer;
   &:hover {
-      @extend .highlight;
+    @extend .highlight;
   }
 }
 
@@ -156,11 +150,11 @@ spot-tag {
 }
 
 .vote {
-    cursor: pointer;
-    font-size: 16px;
-    &:hover {
-      @extend .highlight;
-    }
+  cursor: pointer;
+  font-size: 16px;
+  &:hover {
+    @extend .highlight;
+  }
 }
 
 // right-bar
@@ -206,12 +200,11 @@ spot-tag {
   width: 100px;
   top: 5px;
   right: 0;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
   z-index: 1;
 }
 
 .dropdown-content .button {
-
   background-color: #efefef;
   color: black;
   padding: 12px 8px;
@@ -231,13 +224,14 @@ spot-tag {
   .icon {
     margin-right: 6px;
   }
-
 }
 
-.dropdown-content .button:hover {background-color: #ddd}
+.dropdown-content .button:hover {
+  background-color: #ddd;
+}
 
 .show {
-  display:block;
+  display: block;
 }
 
 .icon-size {
@@ -297,7 +291,6 @@ spot-tag {
 }
 
 .editor {
-
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -313,28 +306,27 @@ spot-tag {
     padding: 6px 6px;
     border: 0;
     outline: 0;
-    white-space: pre-wrap;       /* css-3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
   }
 
   // include a placeholder
-  [contenteditable=true]:empty:not(:focus):before{
+  [contenteditable='true']:empty:not(:focus):before {
     content: attr(ph);
     color: $subtle-grey;
     font-style: italic;
     cursor: text;
   }
 
-  [contenteditable=true]:empty:focus:before{
+  [contenteditable='true']:empty:focus:before {
     content: attr(ph);
     color: lighten($subtle-grey, 20%);
     font-style: italic;
     cursor: text;
   }
-
 }
 
 .image {
@@ -390,7 +382,6 @@ img {
 
 // For Mobile
 @media screen and (max-width: $mobile-width) {
-
   .reply .reply-icon {
     visibility: visible;
   }
@@ -399,8 +390,7 @@ img {
     visibility: visible;
   }
 
-  .image-blur-text  {
+  .image-blur-text {
     width: 150px;
   }
-
 }

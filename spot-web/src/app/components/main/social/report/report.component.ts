@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 // rxjs
 import { Observable, Subject, throwError } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 // store
 import { RootStoreState } from '@store';
@@ -28,13 +28,15 @@ import { REPORT_CONSTANTS } from '@constants/report';
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit, OnDestroy {
-
   private readonly onDestroy = new Subject<void>();
 
   @Input() modalId: string;
 
   data$: Observable<any>;
-  data: { postId: string, commentId?: string } = { postId: null, commentId: null };
+  data: { postId: string; commentId?: string } = {
+    postId: null,
+    commentId: null
+  };
 
   STRINGS = STRINGS.MAIN.REPORT;
   REPORT_CONSTANTS = REPORT_CONSTANTS;
@@ -43,31 +45,29 @@ export class ReportComponent implements OnInit, OnDestroy {
   category = ReportCategory.OFFENSIVE;
   errorMessage = '';
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private modalService: ModalService,
-              private postsService: PostsService,
-              private commentService: CommentService,
-              private alertService: AlertService) { }
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private modalService: ModalService,
+    private postsService: PostsService,
+    private commentService: CommentService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
-
     this.data$ = this.modalService.getData(this.modalId);
 
     // data type is
     // { commentId: reply.id, postId: reply.post_id }
-    this.data$.subscribe( (val) => {
-
+    this.data$.subscribe((val) => {
       // commentId may not exist
-      if ( val.commentId ) {
+      if (val.commentId) {
         this.data.commentId = val.commentId;
       }
 
       this.data.postId = val.postId;
       this.content = '';
       this.category = ReportCategory.OFFENSIVE;
-
     });
-
   }
 
   ngOnDestroy(): void {
@@ -83,9 +83,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   sendReport(): void {
-
-    if ( this.data.postId && this.data.commentId ) {
-
+    if (this.data.postId && this.data.commentId) {
       const request: ReportCommentRequest = {
         postId: this.data.postId,
         commentId: this.data.commentId,
@@ -93,42 +91,49 @@ export class ReportComponent implements OnInit, OnDestroy {
         category: this.category
       };
 
-      this.commentService.reportComment(request).pipe(
-        takeUntil(this.onDestroy),
-        catchError( errorResponse => {
-          return throwError(errorResponse.error);
-        })
-      ).subscribe( (response: ReportPostSuccess ) => {
-        this.content = '';
-        this.modalService.close(this.modalId);
-        this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
-      }, ( error: SpotError ) => {
-        this.errorMessage = error.message;
-      });
-
-    } else if ( this.data.postId ) {
-
+      this.commentService
+        .reportComment(request)
+        .pipe(
+          takeUntil(this.onDestroy),
+          catchError((errorResponse) => {
+            return throwError(errorResponse.error);
+          })
+        )
+        .subscribe(
+          (response: ReportPostSuccess) => {
+            this.content = '';
+            this.modalService.close(this.modalId);
+            this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
+          },
+          (error: SpotError) => {
+            this.errorMessage = error.message;
+          }
+        );
+    } else if (this.data.postId) {
       const request: ReportPostRequest = {
         postId: this.data.postId,
         content: this.content || '',
         category: this.category
       };
 
-      this.postsService.reportPost(request).pipe(
-        takeUntil(this.onDestroy),
-        catchError( errorResponse => {
-          return throwError(errorResponse.error);
-        })
-      ).subscribe( (response: ReportPostSuccess ) => {
-        this.content = '';
-        this.modalService.close(this.modalId);
-        this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
-      }, ( error: SpotError ) => {
-        this.errorMessage = error.message;
-      });
-
+      this.postsService
+        .reportPost(request)
+        .pipe(
+          takeUntil(this.onDestroy),
+          catchError((errorResponse) => {
+            return throwError(errorResponse.error);
+          })
+        )
+        .subscribe(
+          (response: ReportPostSuccess) => {
+            this.content = '';
+            this.modalService.close(this.modalId);
+            this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
+          },
+          (error: SpotError) => {
+            this.errorMessage = error.message;
+          }
+        );
     }
-
   }
-
 }

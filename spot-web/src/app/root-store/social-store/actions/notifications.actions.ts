@@ -1,10 +1,20 @@
 import { Action } from '@ngrx/store';
 
 // Models
-import { GetNotificationsRequest, GetNotificationsSuccess, GetNotificationsUnreadSuccess,
-          DeleteNotificationRequest, DeleteNotificationSuccess, SetNotificationSeenRequest,
-          SetNotificationSeenSuccess, DeleteAllNotificationsRequest, DeleteAllNotificationsSuccess,
-          SetAllNotificationsSeenRequest, SetAllNotificationsSeenSuccess, GetNotificationsUnreadRequest } from '@models/notifications';
+import {
+  DeleteAllNotificationsRequest,
+  DeleteAllNotificationsSuccess,
+  DeleteNotificationRequest,
+  DeleteNotificationSuccess,
+  GetNotificationsRequest,
+  GetNotificationsSuccess,
+  GetNotificationsUnreadRequest,
+  GetNotificationsUnreadSuccess,
+  SetAllNotificationsSeenRequest,
+  SetAllNotificationsSeenSuccess,
+  SetNotificationSeenRequest,
+  SetNotificationSeenSuccess
+} from '@models/notifications';
 import { SpotError } from '@exceptions/error';
 
 export enum NotificationsActionTypes {
@@ -21,7 +31,7 @@ export enum NotificationsActionTypes {
   SET_NOTIFICATION_SEEN_SUCCESS = '[Social] Set Notification Seen Success',
   SET_ALL_NOTIFICATIONS_SEEN_REQUEST = '[Social] Set All Notifications Seen Request',
   SET_ALL_NOTIFICATIONS_SEEN_SUCCESS = '[Social] Set All Notifications Seen Success',
-  GENERIC_FAILURE = '[Social] Generic Failure',
+  GENERIC_FAILURE = '[Social] Generic Failure'
 }
 
 export class GenericFailureAction implements Action {
@@ -94,8 +104,18 @@ export class GetNotificationsUnreadSuccessAction implements Action {
   constructor(public response: GetNotificationsUnreadSuccess) {}
 }
 
-export type NotificationsActions = GenericFailureAction | GetNotificationsAction | GetNotificationsSuccessAction |
-                      DeleteNotificationAction | GetNotificationsUnreadSuccessAction | GetNotificationsFailureAction |
-                      SetNotificationSeenAction | SetNotificationSeenSuccessAction | DeleteNotificationSuccessAction |
-                      DeleteAllNotificationsAction | DeleteAllNotificationsSuccessAction | SetAllNotificationsSeenAction |
-                      SetAllNotificationsSeenSuccessAction | GetNotificationsUnreadAction;
+export type NotificationsActions =
+  | GenericFailureAction
+  | GetNotificationsAction
+  | GetNotificationsSuccessAction
+  | DeleteNotificationAction
+  | GetNotificationsUnreadSuccessAction
+  | GetNotificationsFailureAction
+  | SetNotificationSeenAction
+  | SetNotificationSeenSuccessAction
+  | DeleteNotificationSuccessAction
+  | DeleteAllNotificationsAction
+  | DeleteAllNotificationsSuccessAction
+  | SetAllNotificationsSeenAction
+  | SetAllNotificationsSeenSuccessAction
+  | GetNotificationsUnreadAction;

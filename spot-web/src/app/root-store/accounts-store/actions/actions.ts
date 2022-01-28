@@ -1,11 +1,29 @@
 import { Action } from '@ngrx/store';
 
 // Models
-import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '@models/authentication';
-import { SetLocationRequest, UpdateUsernameRequest, GetAccountRequest, GetAccountSuccess,
-         UpdateAccountMetadataRequest, UpdateAccountMetadataSuccess, GetAccountMetadataRequest, GetAccountMetadataSuccess,
-         LoadLocationRequest, VerifyConfirmResponse, VerifyRequest, VerifyResponse, LocationFailure,
-         UpdateEmailRequest, UpdatePhoneRequest } from '@models/accounts';
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse
+} from '@models/authentication';
+import {
+  GetAccountMetadataRequest,
+  GetAccountMetadataSuccess,
+  GetAccountRequest,
+  GetAccountSuccess,
+  LoadLocationRequest,
+  LocationFailure,
+  SetLocationRequest,
+  UpdateAccountMetadataRequest,
+  UpdateAccountMetadataSuccess,
+  UpdateEmailRequest,
+  UpdatePhoneRequest,
+  UpdateUsernameRequest,
+  VerifyConfirmResponse,
+  VerifyRequest,
+  VerifyResponse
+} from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
@@ -54,65 +72,65 @@ export class GenericFailureAction implements Action {
 }
 
 export class RegisterRequestAction implements Action {
-    readonly type = ActionTypes.REGISTER_REQUEST;
-    constructor(public request: RegisterRequest) {}
+  readonly type = ActionTypes.REGISTER_REQUEST;
+  constructor(public request: RegisterRequest) {}
 }
 
 export class RegisterSuccessAction implements Action {
-    readonly type = ActionTypes.REGISTER_SUCCESS;
-    constructor(public response: RegisterResponse) {}
+  readonly type = ActionTypes.REGISTER_SUCCESS;
+  constructor(public response: RegisterResponse) {}
 }
 
 export class RegisterFailureAction implements Action {
-    readonly type = ActionTypes.REGISTER_FAILURE;
-    constructor(public error: SpotError) {}
+  readonly type = ActionTypes.REGISTER_FAILURE;
+  constructor(public error: SpotError) {}
 }
 
 export class LoginRequestAction implements Action {
-    readonly type = ActionTypes.LOGIN_REQUEST;
-    constructor(public request: LoginRequest) {}
+  readonly type = ActionTypes.LOGIN_REQUEST;
+  constructor(public request: LoginRequest) {}
 }
 
 export class LoginSuccessAction implements Action {
-    readonly type = ActionTypes.LOGIN_SUCCESS;
-    constructor(public response: LoginResponse) {}
+  readonly type = ActionTypes.LOGIN_SUCCESS;
+  constructor(public response: LoginResponse) {}
 }
 
 export class LoginFailureAction implements Action {
-    readonly type = ActionTypes.LOGIN_FAILURE;
-    constructor(public error: any) {}
+  readonly type = ActionTypes.LOGIN_FAILURE;
+  constructor(public error: any) {}
 }
 
 export class LogoutRequestAction implements Action {
-    readonly type = ActionTypes.LOGOUT_REQUEST;
+  readonly type = ActionTypes.LOGOUT_REQUEST;
 }
 
 export class DeleteRequestAction implements Action {
-    readonly type = ActionTypes.DELETE_REQUEST;
+  readonly type = ActionTypes.DELETE_REQUEST;
 }
 
 export class DeleteSuccessAction implements Action {
-    readonly type = ActionTypes.DELETE_SUCCESS;
+  readonly type = ActionTypes.DELETE_SUCCESS;
 }
 
 export class DeleteFailureAction implements Action {
-    readonly type = ActionTypes.DELETE_FAILURE;
-    constructor(public error: string) {}
+  readonly type = ActionTypes.DELETE_FAILURE;
+  constructor(public error: string) {}
 }
 
 export class AccountRequestAction implements Action {
-    readonly type = ActionTypes.ACCOUNT_REQUEST;
-    constructor(public request: GetAccountRequest) {}
+  readonly type = ActionTypes.ACCOUNT_REQUEST;
+  constructor(public request: GetAccountRequest) {}
 }
 
 export class AccountSuccessAction implements Action {
-    readonly type = ActionTypes.ACCOUNT_SUCCESS;
-    constructor(public response: GetAccountSuccess) {}
+  readonly type = ActionTypes.ACCOUNT_SUCCESS;
+  constructor(public response: GetAccountSuccess) {}
 }
 
 export class AccountFailureAction implements Action {
-    readonly type = ActionTypes.ACCOUNT_FAILURE;
-    constructor(public error: string) {}
+  readonly type = ActionTypes.ACCOUNT_FAILURE;
+  constructor(public error: string) {}
 }
 
 export class LoadLocationAction implements Action {
@@ -191,17 +209,33 @@ export class UpdatePhoneAction implements Action {
   constructor(public request: UpdatePhoneRequest) {}
 }
 
-export type Actions = LoginRequestAction | LoginSuccessAction |
-                      LoginFailureAction | RegisterRequestAction |
-                      RegisterSuccessAction | RegisterFailureAction |
-                      LogoutRequestAction | DeleteRequestAction |
-                      DeleteSuccessAction | DeleteFailureAction |
-                      AccountRequestAction | AccountSuccessAction |
-                      SetLocationAction | AccountFailureAction |
-                      UpdateUsernameAction |  UpdatePhoneAction|
-                      GenericFailureAction | UpdateAccountMetadataRequestAction |
-                      UpdateAccountMetadataRequestSuccess | GetAccountMetadataRequestAction |
-                      GetAccountMetadataRequestSuccess | GetAccountMetadataFailureAction |
-                      LoadLocationAction | UpdateEmailAction |
-                      VerifyRequestAction | VerifySuccessAction | VerifyConfirmRequestAction |
-                      LocationFailureAction | ResetStoreAction;
+export type Actions =
+  | LoginRequestAction
+  | LoginSuccessAction
+  | LoginFailureAction
+  | RegisterRequestAction
+  | RegisterSuccessAction
+  | RegisterFailureAction
+  | LogoutRequestAction
+  | DeleteRequestAction
+  | DeleteSuccessAction
+  | DeleteFailureAction
+  | AccountRequestAction
+  | AccountSuccessAction
+  | SetLocationAction
+  | AccountFailureAction
+  | UpdateUsernameAction
+  | UpdatePhoneAction
+  | GenericFailureAction
+  | UpdateAccountMetadataRequestAction
+  | UpdateAccountMetadataRequestSuccess
+  | GetAccountMetadataRequestAction
+  | GetAccountMetadataRequestSuccess
+  | GetAccountMetadataFailureAction
+  | LoadLocationAction
+  | UpdateEmailAction
+  | VerifyRequestAction
+  | VerifySuccessAction
+  | VerifyConfirmRequestAction
+  | LocationFailureAction
+  | ResetStoreAction;

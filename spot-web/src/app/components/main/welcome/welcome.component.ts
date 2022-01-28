@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 // services
 import { ModalService } from '@services/modal.service';
@@ -11,18 +11,15 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent implements OnInit {
-
   @Input() modalId: string;
 
   STRINGS = STRINGS.MAIN.WELCOME;
 
-  constructor(private modalService: ModalService) { }
+  constructor(private modalService: ModalService) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   closeWelcome(): void {
     this.modalService.close(this.modalId);
   }
-
 }

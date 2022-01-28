@@ -1,9 +1,15 @@
-import { Actions, ActionTypes } from './actions/actions';
-import { FacebookActions, FacebookActionTypes } from './actions/facebook.actions';
-import { GoogleActions, GoogleActionTypes } from './actions/google.actions';
-import { initialState, State } from './state';
+import { ActionTypes, Actions } from './actions/actions';
+import {
+  FacebookActionTypes,
+  FacebookActions
+} from './actions/facebook.actions';
+import { GoogleActionTypes, GoogleActions } from './actions/google.actions';
+import { State, initialState } from './state';
 
-export function featureReducer(state = initialState, action: Actions | FacebookActions | GoogleActions): State {
+export function featureReducer(
+  state = initialState,
+  action: Actions | FacebookActions | GoogleActions
+): State {
   switch (action.type) {
     case ActionTypes.RESET_STORE: {
       return {
@@ -15,7 +21,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: action.response.account,
         authenticationError: null,
-        authenticationSuccess: true,
+        authenticationSuccess: true
       };
     }
     case ActionTypes.REGISTER_FAILURE: {
@@ -23,7 +29,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: null,
         authenticationError: action.error,
-        authenticationSuccess: false,
+        authenticationSuccess: false
       };
     }
     case ActionTypes.LOGIN_SUCCESS: {
@@ -31,7 +37,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: action.response.account,
         authenticationError: null,
-        authenticationSuccess: true,
+        authenticationSuccess: true
       };
     }
     case ActionTypes.LOGIN_FAILURE: {
@@ -39,19 +45,19 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
         ...state,
         account: null,
         authenticationError: action.error,
-        authenticationSuccess: false,
+        authenticationSuccess: false
       };
     }
     case ActionTypes.LOGOUT_REQUEST: {
       return {
         ...state,
-        account: null,
+        account: null
       };
     }
     case ActionTypes.DELETE_SUCCESS: {
       return {
         ...state,
-        account: null,
+        account: null
       };
     }
     case ActionTypes.LOAD_LOCATION: {
@@ -84,7 +90,7 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.ACCOUNT_REQUEST: {
       return {
         ...state,
-        accountLoading: true,
+        accountLoading: true
       };
     }
     case ActionTypes.ACCOUNT_SUCCESS: {
@@ -103,7 +109,11 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.UPDATE_EMAIL_REQUEST: {
       return {
         ...state,
-        account: { ...state.account, email: action.request.email, verified_date: null }
+        account: {
+          ...state.account,
+          email: action.request.email,
+          verified_date: null
+        }
       };
     }
     case ActionTypes.UPDATE_PHONE_REQUEST: {
@@ -127,7 +137,10 @@ export function featureReducer(state = initialState, action: Actions | FacebookA
     case ActionTypes.VERIFY_CONFIRM_REQUEST: {
       return {
         ...state,
-        account: { ...state.account, verified_date: action.request.verified_date }
+        account: {
+          ...state.account,
+          verified_date: action.request.verified_date
+        }
       };
     }
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {

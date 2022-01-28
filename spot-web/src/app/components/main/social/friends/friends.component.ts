@@ -1,13 +1,19 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Observable, Subject, timer } from 'rxjs';
-import { take, mapTo, startWith, takeUntil } from 'rxjs/operators';
+import { mapTo, startWith, take, takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { SocialStoreFriendsActions, SocialStoreSelectors } from '@store/social-store';
-import { AccountsFacebookActions, AccountsStoreSelectors } from '@store/accounts-store';
+import {
+  SocialStoreFriendsActions,
+  SocialStoreSelectors
+} from '@store/social-store';
+import {
+  AccountsFacebookActions,
+  AccountsStoreSelectors
+} from '@store/accounts-store';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -15,10 +21,24 @@ import { FriendsService } from '@services/friends.service';
 import { AuthenticationService } from '@services/authentication.service';
 
 // Models
-import { GetFriendRequests, Friend, GetFriendRequestsSuccess, AddFriendRequest, AddFriendRequestSuccess,
-          GetFriendsRequest, DeleteFriendsRequest, AddFriendToStore, AcceptFriendRequest,
-          AcceptFriendRequestSuccess, DeclineFriendRequest, DeclineFriendRequestSuccess,
-          GetPendingFriendRequests, GetPendingFriendRequestsSuccess, DeletePendingFriendRequest, DeletePendingFriendSuccess } from '@models/friends';
+import {
+  AcceptFriendRequest,
+  AcceptFriendRequestSuccess,
+  AddFriendRequest,
+  AddFriendRequestSuccess,
+  AddFriendToStore,
+  DeclineFriendRequest,
+  DeclineFriendRequestSuccess,
+  DeleteFriendsRequest,
+  DeletePendingFriendRequest,
+  DeletePendingFriendSuccess,
+  Friend,
+  GetFriendRequests,
+  GetFriendRequestsSuccess,
+  GetFriendsRequest,
+  GetPendingFriendRequests,
+  GetPendingFriendRequestsSuccess
+} from '@models/friends';
 import { FacebookConnectRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
@@ -31,7 +51,6 @@ import { STRINGS } from '@assets/strings/en';
   styleUrls: ['./friends.component.scss']
 })
 export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
-
   private readonly onDestroy = new Subject<void>();
 
   STRINGS = STRINGS.MAIN.FRIENDS;
@@ -56,61 +75,73 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
   friendRequestUsername: string;
   friendSearch: string;
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private friendsService: FriendsService,
-              private authenticationService: AuthenticationService,
-              private modalService: ModalService) { }
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private friendsService: FriendsService,
+    private authenticationService: AuthenticationService,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit(): void {
-
-    this.showNoFriendsIndicator$ = timer(1000).pipe( mapTo(true), take(1)).pipe( startWith(false) );
+    this.showNoFriendsIndicator$ = timer(1000)
+      .pipe(mapTo(true), take(1))
+      .pipe(startWith(false));
 
     this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriends),
+      select(SocialStoreSelectors.selectFriends)
     );
 
     this.facebookConnected$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectFacebookConnected),
+      select(AccountsStoreSelectors.selectFacebookConnected)
     );
 
     // Get all friend requests
     const getFriendRequests: GetFriendRequests = {};
 
-    this.friendsService.getFriendRequests(getFriendRequests).pipe(take(1)).subscribe( (response: GetFriendRequestsSuccess) => {
-      this.friendRequests = response.friendRequests;
-    }, (error: SpotError) => {
-
-    });
+    this.friendsService
+      .getFriendRequests(getFriendRequests)
+      .pipe(take(1))
+      .subscribe(
+        (response: GetFriendRequestsSuccess) => {
+          this.friendRequests = response.friendRequests;
+        },
+        (error: SpotError) => {}
+      );
 
     // Get pending requests
     const getPendingFriendRequests: GetPendingFriendRequests = {};
 
-    this.friendsService.getPendingFriendRequests(getPendingFriendRequests).pipe(take(1)).subscribe( (response: GetPendingFriendRequestsSuccess) => {
-      this.pendingFriendRequests = response.friendRequests;
-    }, (error: SpotError) => {
-
-    });
+    this.friendsService
+      .getPendingFriendRequests(getPendingFriendRequests)
+      .pipe(take(1))
+      .subscribe(
+        (response: GetPendingFriendRequestsSuccess) => {
+          this.pendingFriendRequests = response.friendRequests;
+        },
+        (error: SpotError) => {}
+      );
 
     // Get all friends
     const getFriends: GetFriendsRequest = {
       date: new Date().toString(),
-      limit: null,
+      limit: null
     };
 
     this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendsRequestAction(getFriends),
+      new SocialStoreFriendsActions.GetFriendsRequestAction(getFriends)
     );
-
   }
 
   ngAfterViewInit(): void {
-    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
-      if ( service === 'FB' ) {
-        setTimeout(() => {
-          this.facebookLoaded = true;
-        });
-      }
-    });
+    this.authenticationService.socialServiceReady
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((service: string) => {
+        if (service === 'FB') {
+          setTimeout(() => {
+            this.facebookLoaded = true;
+          });
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -118,185 +149,180 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addFriendRequest(): void {
-
     // Reset messages
     this.friendRequestsError = '';
     this.friendRequestsSuccess = '';
 
-    if ( typeof(this.friendRequestUsername) === 'undefined' || this.friendRequestUsername.length === 0 ) {
+    if (
+      typeof this.friendRequestUsername === 'undefined' ||
+      this.friendRequestUsername.length === 0
+    ) {
       this.friendRequestsError = this.STRINGS.USERNAME_REQUIRED;
       return;
     }
 
     // Send the friend request
     const request: AddFriendRequest = {
-      username: this.friendRequestUsername,
+      username: this.friendRequestUsername
     };
 
-    this.friendsService.addFriendRequest(request).pipe(take(1)).subscribe( (response: AddFriendRequestSuccess) => {
-      if ( response.friend.confirmed_date ) {
-        this.friendRequests.forEach( (friend , i) => {
-          if (friend.id === response.friend.id) {
-            this.friendRequests.splice(i, 1);
+    this.friendsService
+      .addFriendRequest(request)
+      .pipe(take(1))
+      .subscribe(
+        (response: AddFriendRequestSuccess) => {
+          if (response.friend.confirmed_date) {
+            this.friendRequests.forEach((friend, i) => {
+              if (friend.id === response.friend.id) {
+                this.friendRequests.splice(i, 1);
+              }
+            });
+            // friend was added
+            const addFriendRequest: AddFriendToStore = {
+              friend: response.friend
+            };
+            // accept
+            this.store$.dispatch(
+              new SocialStoreFriendsActions.AddFriendAction(addFriendRequest)
+            );
+          } else {
+            this.pendingFriendRequests.push(response.friend);
           }
-        });
-        // friend was added
-        const addFriendRequest: AddFriendToStore = {
-          friend: response.friend,
-        };
-        // accept
-        this.store$.dispatch(
-          new SocialStoreFriendsActions.AddFriendAction(addFriendRequest),
-        );
-      } else {
-        this.pendingFriendRequests.push(response.friend);
-      }
-      this.friendRequestUsername = '';
-    }, (response: {  error: SpotError }) => {
-      this.friendRequestsError = response.error.message;
-    });
-
+          this.friendRequestUsername = '';
+        },
+        (response: { error: SpotError }) => {
+          this.friendRequestsError = response.error.message;
+        }
+      );
   }
 
   acceptFriendRequest(id: string): void {
-
     const request: AcceptFriendRequest = {
-      friendRequestId: id,
+      friendRequestId: id
     };
 
-    this.friendsService.acceptFriendRequests(request).pipe(take(1)).subscribe( (response: AcceptFriendRequestSuccess) => {
+    this.friendsService
+      .acceptFriendRequests(request)
+      .pipe(take(1))
+      .subscribe(
+        (response: AcceptFriendRequestSuccess) => {
+          this.friendRequests.forEach((friend, i) => {
+            if (friend.id === response.friend.id) {
+              this.friendRequests.splice(i, 1);
+            }
+          });
 
-      this.friendRequests.forEach( (friend , i) => {
-        if (friend.id === response.friend.id) {
-          this.friendRequests.splice(i, 1);
+          const addFriendRequest: AddFriendToStore = {
+            friend: response.friend
+          };
+
+          // accept
+          this.store$.dispatch(
+            new SocialStoreFriendsActions.AddFriendAction(addFriendRequest)
+          );
+        },
+        (response: { error: SpotError }) => {
+          this.friendRequestsError = response.error.message;
         }
-      });
-
-      const addFriendRequest: AddFriendToStore = {
-        friend: response.friend,
-      };
-
-      // accept
-      this.store$.dispatch(
-        new SocialStoreFriendsActions.AddFriendAction(addFriendRequest),
       );
-
-
-    }, (response: {  error: SpotError }) => {
-      this.friendRequestsError = response.error.message;
-    });
-
-
-
   }
 
   declineFriendRequest(id: string): void {
-
     const request: DeclineFriendRequest = {
-      friendRequestId: id,
+      friendRequestId: id
     };
 
-    this.friendsService.declineFriendRequests(request).pipe(take(1)).subscribe( (response: DeclineFriendRequestSuccess) => {
-
-      this.friendRequests.forEach( (friend , i) => {
-        if (friend.id === id) {
-          this.friendRequests.splice(i, 1);
-        }
-      });
-
-    }, (response: { error: SpotError }) => {
-
-    });
-
+    this.friendsService
+      .declineFriendRequests(request)
+      .pipe(take(1))
+      .subscribe(
+        (response: DeclineFriendRequestSuccess) => {
+          this.friendRequests.forEach((friend, i) => {
+            if (friend.id === id) {
+              this.friendRequests.splice(i, 1);
+            }
+          });
+        },
+        (response: { error: SpotError }) => {}
+      );
   }
 
   deleteFriend(id: string): void {
-
     this.modalService.open('spot-confirm-modal');
 
-    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+    const result$ = this.modalService
+      .getResult('spot-confirm-modal')
+      .pipe(take(1));
 
-    result$.subscribe( (result: { status: string }) => {
-
-      if ( result.status === 'confirm' ) {
-
+    result$.subscribe((result: { status: string }) => {
+      if (result.status === 'confirm') {
         // Delete the friend
         const request: DeleteFriendsRequest = {
-          friendId: id,
+          friendId: id
         };
 
         this.store$.dispatch(
-          new SocialStoreFriendsActions.DeleteFriendsRequestAction(request),
+          new SocialStoreFriendsActions.DeleteFriendsRequestAction(request)
         );
-
       }
-
     });
-
   }
 
   deletePendingFriendRequest(id: string) {
-
     this.modalService.open('spot-confirm-modal');
 
-    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+    const result$ = this.modalService
+      .getResult('spot-confirm-modal')
+      .pipe(take(1));
 
-    result$.subscribe( (result: { status: string }) => {
-
-      if ( result.status === 'confirm' ) {
-
+    result$.subscribe((result: { status: string }) => {
+      if (result.status === 'confirm') {
         // Delete the friend
         const request: DeletePendingFriendRequest = {
-          friendRequestId: id,
+          friendRequestId: id
         };
 
-        this.friendsService.deletePendingFriendRequest(request).pipe(take(1)).subscribe( (response: DeletePendingFriendSuccess) => {
-
-          this.pendingFriendRequests.forEach( (friend , i) => {
-            if (friend.id === response.friendRequestId) {
-              this.pendingFriendRequests.splice(i, 1);
-            }
-          });
-
-        }, (response: { error: SpotError }) => {
-
-        });
-
+        this.friendsService
+          .deletePendingFriendRequest(request)
+          .pipe(take(1))
+          .subscribe(
+            (response: DeletePendingFriendSuccess) => {
+              this.pendingFriendRequests.forEach((friend, i) => {
+                if (friend.id === response.friendRequestId) {
+                  this.pendingFriendRequests.splice(i, 1);
+                }
+              });
+            },
+            (response: { error: SpotError }) => {}
+          );
       }
-
     });
-
   }
 
   facebookConnect(): void {
-
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
-          window['FB'].login((loginResponse) => {
-            if (loginResponse.status === 'connected') {
+        window['FB'].login((loginResponse) => {
+          if (loginResponse.status === 'connected') {
+            const request: FacebookConnectRequest = {
+              accessToken: loginResponse.authResponse.accessToken
+            };
 
-              const request: FacebookConnectRequest = {
-                accessToken: loginResponse.authResponse.accessToken,
-              };
-
-              this.store$.dispatch(
-                new AccountsFacebookActions.FacebookConnectRequestAction(request),
-              );
-
-            }
-          });
+            this.store$.dispatch(
+              new AccountsFacebookActions.FacebookConnectRequestAction(request)
+            );
+          }
+        });
       } else {
         // Already logged in to facebook
         const request: FacebookConnectRequest = {
-          accessToken: statusResponse.authResponse.accessToken,
+          accessToken: statusResponse.authResponse.accessToken
         };
 
         this.store$.dispatch(
-          new AccountsFacebookActions.FacebookConnectRequestAction(request),
+          new AccountsFacebookActions.FacebookConnectRequestAction(request)
         );
       }
     });
-
   }
-
 }

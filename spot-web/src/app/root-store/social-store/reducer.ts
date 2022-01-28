@@ -1,20 +1,26 @@
-import { NotificationsActions, NotificationsActionTypes } from './actions/notifications.actions';
-import { FriendsActions, FriendsActionTypes } from './actions/friends.actions';
-import { Actions, ActionTypes } from './actions/actions';
-import { initialState, State } from './state';
+import {
+  NotificationsActionTypes,
+  NotificationsActions
+} from './actions/notifications.actions';
+import { FriendsActionTypes, FriendsActions } from './actions/friends.actions';
+import { ActionTypes, Actions } from './actions/actions';
+import { State, initialState } from './state';
 
-export function featureReducer(state = initialState, action: NotificationsActions | FriendsActions | Actions): State {
+export function featureReducer(
+  state = initialState,
+  action: NotificationsActions | FriendsActions | Actions
+): State {
   switch (action.type) {
     case ActionTypes.RESET_STORE: {
       return {
-        ...initialState,
+        ...initialState
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_REQUEST: {
       return {
         ...state,
         notificationsSuccess: false,
-        notificationsLoading: true,
+        notificationsLoading: true
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_SUCCESS: {
@@ -22,8 +28,9 @@ export function featureReducer(state = initialState, action: NotificationsAction
         ...state,
         notificationsSuccess: true,
         notificationsLoading: false,
-        notifications: !action.response.initialLoad ? action.response.notifications :
-                           state.notifications.concat(action.response.notifications)
+        notifications: !action.response.initialLoad
+          ? action.response.notifications
+          : state.notifications.concat(action.response.notifications)
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE: {
@@ -49,16 +56,20 @@ export function featureReducer(state = initialState, action: NotificationsAction
     case NotificationsActionTypes.DELETE_NOTIFICATION_SUCCESS: {
       return {
         ...state,
-        unreadNotifications: state.notifications.filter( item => item.id === action.response.notificationId )[0].seen ?
-                              state.unreadNotifications : state.unreadNotifications - 1,
-        notifications: state.notifications.filter( item => item.id !== action.response.notificationId )
+        unreadNotifications: state.notifications.filter(
+          (item) => item.id === action.response.notificationId
+        )[0].seen
+          ? state.unreadNotifications
+          : state.unreadNotifications - 1,
+        notifications: state.notifications.filter(
+          (item) => item.id !== action.response.notificationId
+        )
       };
     }
     case NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS: {
-
       const newNotifications = Array.from(state.notifications);
 
-      state.notifications.forEach( (notif, i) => {
+      state.notifications.forEach((notif, i) => {
         const newObj = Object.assign({}, notif);
         newObj.seen = 1;
         newNotifications[i] = newObj;
@@ -71,12 +82,11 @@ export function featureReducer(state = initialState, action: NotificationsAction
       };
     }
     case NotificationsActionTypes.SET_NOTIFICATION_SEEN_SUCCESS: {
-
       const newNotifications = Array.from(state.notifications);
 
-      state.notifications.forEach( (notif, i) => {
+      state.notifications.forEach((notif, i) => {
         const newObj = Object.assign({}, notif);
-        if ( notif.id === action.response.notificationId ) {
+        if (notif.id === action.response.notificationId) {
           newObj.seen = 1;
           newNotifications[i] = newObj;
         }
@@ -102,10 +112,9 @@ export function featureReducer(state = initialState, action: NotificationsAction
       };
     }
     case FriendsActionTypes.DELETE_FRIENDS_SUCCESS: {
-
       const newFriends = Array.from(state.friends);
 
-      newFriends.forEach( (friend , i) => {
+      newFriends.forEach((friend, i) => {
         if (friend.id === action.response.friendId) {
           newFriends.splice(i, 1);
         }

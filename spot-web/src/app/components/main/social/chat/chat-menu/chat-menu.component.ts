@@ -7,7 +7,7 @@ import { RootStoreState } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Models
-import {Friend} from '@models/friends';
+import { Friend } from '@models/friends';
 
 @Component({
   selector: 'spot-chat-menu',
@@ -15,11 +15,10 @@ import {Friend} from '@models/friends';
   styleUrls: ['./chat-menu.component.scss']
 })
 export class ChatMenuComponent implements OnInit {
-
   chatOptions = {
     FRIENDS: 'FRIENDS',
     ROOMS: 'ROOMS'
-  }
+  };
 
   chatExpanded = true;
   selectedChatOption = this.chatOptions.FRIENDS;
@@ -27,14 +26,12 @@ export class ChatMenuComponent implements OnInit {
   // Friends
   friends$: Observable<Friend[]>;
 
-  constructor(private store$: Store<RootStoreState.State>) { }
+  constructor(private store$: Store<RootStoreState.State>) {}
 
   ngOnInit(): void {
-
     this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriends),
+      select(SocialStoreSelectors.selectFriends)
     );
-
   }
 
   toggleMenu() {

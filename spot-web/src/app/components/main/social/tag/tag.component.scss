@@ -1,25 +1,20 @@
 @import '../../../../styles/colors';
 
 .tag {
-
   background-color: white;
   width: 235px;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1);
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
 
   .header {
-
     font-size: 20px;
     padding: 5px 10px;
     border-bottom: 1px solid $lighter-grey;
-
   }
 
   .content {
-
     padding: 5px 10px;
 
     .search {
-
       display: flex;
       align-items: center;
       margin-bottom: 5px;
@@ -29,7 +24,6 @@
       }
 
       .search-text {
-
         display: flex;
         flex-flow: column;
         width: calc(100% - 24px);
@@ -46,18 +40,14 @@
           width: 100%;
           background-color: $lighter-grey;
         }
-
       }
-
     }
 
     .friend-container {
-
       max-height: 156px;
       overflow-y: auto;
 
       .name {
-
         cursor: pointer;
         box-sizing: border-box;
         width: 100%;
@@ -68,16 +58,12 @@
           color: white;
           background-color: $button-highlight;
         }
-
       }
-
     }
 
     .no-friends {
       margin: 3px 0px;
       text-align: center;
     }
-
   }
-
 }

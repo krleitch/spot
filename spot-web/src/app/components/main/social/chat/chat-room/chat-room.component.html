@@ -15,11 +15,11 @@
         [class]="getProfilePictureClass(message.profilePicture)"
         [ngClass]="{
           'profile-owned': message.owned,
-          'profile-info': message.type == 'INFO'
+          'profile-info': message.type === 'INFO'
         }"
       >
         <img
-          [ngClass]="{ 'image-info': message.type == 'INFO' }"
+          [ngClass]="{ 'image-info': message.type === 'INFO' }"
           [src]="
             '../../../../../assets/images/profile/' + message.profilePictureSrc
           "
@@ -27,7 +27,7 @@
       </div>
       <span
         class="content"
-        [ngClass]="{ 'content-info': message.type == 'INFO' }"
+        [ngClass]="{ 'content-info': message.type === 'INFO' }"
         >{{ message.content }}</span
       >
       <span class="time">{{ formatTimestamp(message.timestamp) }}</span>

@@ -11,7 +11,6 @@ spot-nav {
 }
 
 .about {
-
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -21,13 +20,11 @@ spot-nav {
   box-sizing: border-box;
 
   .container {
-
     background-color: white;
     padding: 25px;
     margin: 25px;
     max-width: 900px;
     min-width: 50%;
-
   }
 
   .logo {
@@ -61,17 +58,14 @@ spot-nav {
   }
 
   .text {
-
     display: flex;
     justify-content: center;
     color: $subtle-grey;
     margin-bottom: 10px;
     text-align: center;
-
   }
 
   button {
-
     border: none;
     text-decoration: none;
     outline: none;
@@ -90,11 +84,9 @@ spot-nav {
     margin-top: 20px;
 
     &:hover {
-        background-color: lighten($button-black, 10%);
+      background-color: lighten($button-black, 10%);
     }
-
   }
-
 }
 
 .copyright {
@@ -107,9 +99,6 @@ spot-nav {
 
 // Mobile Stylings
 @media screen and (max-width: $mobile-width) {
-
   .about {
-
   }
-
 }

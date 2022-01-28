@@ -2,12 +2,12 @@
 @import '../../../styles/sizes';
 
 .nav {
-    height: 50px;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 10px 5px 10px;
+  height: 50px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px 5px 10px;
 }
 
 .highlight {
@@ -47,34 +47,34 @@
 // FEATURES
 
 .features {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .score {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    margin-right: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-right: 15px;
 }
 
 .hot {
-    color: $error-red-light;
-    margin-right: 3px;
+  color: $error-red-light;
+  margin-right: 3px;
 }
 
 .notifications {
   position: relative;
-    display: flex;
-    font-size: 18px;
-    color: $subtle-grey;
-    margin-right: 15px;
-    cursor: pointer;
-    &:hover {
-      @extend .highlight;
-    }
+  display: flex;
+  font-size: 18px;
+  color: $subtle-grey;
+  margin-right: 15px;
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
 }
 
 .unread {
@@ -93,16 +93,16 @@
 }
 
 .account {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    font-size: 18px;
-    color: $subtle-grey;
-    cursor: pointer;
-    &:hover {
-      @extend .highlight;
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 18px;
+  color: $subtle-grey;
+  cursor: pointer;
+  &:hover {
+    @extend .highlight;
+  }
 }
 
 .icon {
@@ -120,69 +120,61 @@
 // DROPDOWN
 
 .dropdown-content {
-    display: none;
-    position: absolute;
-    width: 120px;
-    top: 35px;
-    right: 0;
-    box-shadow: 0 2px 26px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .1);
+  display: none;
+  position: absolute;
+  width: 120px;
+  top: 35px;
+  right: 0;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-content .button {
+  background-color: #efefef;
+  color: black;
+  padding: 12px 8px;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid $lighter-grey;
 
-    background-color: #efefef;
-    color: black;
-    padding: 12px 8px;
-    font-size: 14px;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid $lighter-grey;
+  &:hover {
+    background: $lighter-grey;
+    color: $button-highlight;
+  }
 
-    &:hover {
-      background: $lighter-grey;
-      color: $button-highlight;
-    }
-
-    .icon {
-      margin-right: 6px;
-    }
-
+  .icon {
+    margin-right: 6px;
+  }
 }
 
 .show {
-    display: block;
+  display: block;
 }
 
 // Mobile stylings
 
 // Special nav only
 @media screen and (max-width: 950px) {
-
   .username {
     max-width: 60px;
     text-overflow: ellipsis;
     overflow: hidden;
   }
-
 }
 
 @media screen and (max-width: 700px) {
-
   .score {
-    display: none
+    display: none;
   }
-
 }
 
 @media screen and (max-width: $mobile-width) {
-
   .score {
     display: none;
   }
   .username {
     display: none;
   }
-
 }

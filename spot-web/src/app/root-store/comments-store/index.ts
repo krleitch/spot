@@ -4,8 +4,4 @@ import * as CommentsStoreState from './state';
 
 export { CommentsStoreModule } from './comments-store.module';
 
-export {
-  CommentsStoreActions,
-  CommentsStoreSelectors,
-  CommentsStoreState
-};
+export { CommentsStoreActions, CommentsStoreSelectors, CommentsStoreState };

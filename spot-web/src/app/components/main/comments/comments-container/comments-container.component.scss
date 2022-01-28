@@ -12,7 +12,6 @@
   background-color: white;
 
   .no-comments {
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,9 +23,7 @@
       margin-right: 5px;
       padding-top: 3px;
     }
-
   }
-
 }
 
 .highlight {
@@ -34,7 +31,6 @@
 }
 
 .load-recent {
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,7 +93,6 @@
     right: 23px;
     top: 3px;
   }
-
 }
 
 .load-more-container {
@@ -108,7 +103,6 @@
 }
 
 .load-more {
-
   display: flex;
   justify-content: center;
   position: relative;
@@ -124,11 +118,9 @@
     top: 0px;
     right: -20px;
   }
-
 }
 
 .no-comments-loading {
-
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -137,7 +129,6 @@
   .loading {
     margin: 10px 0px;
   }
-
 }
 
 // Add a comment
@@ -189,14 +180,11 @@
 // the content
 
 :host ::ng-deep .tag-inline {
-
   background-color: $item-highlight;
   font-weight: bold;
-
 }
 
 .editor {
-
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -213,29 +201,27 @@
     padding: 6px 6px;
     border: 0;
     outline: 0;
-    white-space: pre-wrap;       /* css-3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
-
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
   }
 
   // include a placeholder
-  [contentEditable=true]:empty:not(:focus):before{
-    content:attr(ph);
+  [contentEditable='true']:empty:not(:focus):before {
+    content: attr(ph);
     color: $subtle-grey;
     font-style: italic;
     cursor: text;
   }
 
-  [contenteditable=true]:empty:focus:before{
+  [contenteditable='true']:empty:focus:before {
     content: attr(ph);
     color: lighten($subtle-grey, 20%);
     font-style: italic;
     cursor: text;
   }
-
 }
 
 .tag-relative {
@@ -268,7 +254,6 @@ img {
 }
 
 .comment-options {
-
   min-height: 30px;
   box-sizing: border-box;
   margin-left: auto;
@@ -276,7 +261,6 @@ img {
   display: flex;
   align-items: center;
   padding: 0px 6px;
-
 }
 
 .file-options {
@@ -299,7 +283,6 @@ img {
 }
 
 .auth-message {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -327,7 +310,6 @@ img {
       cursor: not-allowed;
     }
   }
-
 }
 
 .comment-reminder {
@@ -348,4 +330,3 @@ img {
   color: $error-red;
   background-color: white;
 }
-

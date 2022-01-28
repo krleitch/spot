@@ -16,20 +16,31 @@ import * as postsActions from '@store/posts-store/actions';
 import { CommentService } from '../../services/comments.service';
 
 // assets
-import { DeleteCommentSuccess, DislikeCommentSuccess, LikeCommentSuccess, DeleteReplySuccess,
-          DislikeReplySuccess, LikeReplySuccess, UnratedCommentSuccess, UnratedReplySuccess } from '@models/comments';
+import {
+  DeleteCommentSuccess,
+  DeleteReplySuccess,
+  DislikeCommentSuccess,
+  DislikeReplySuccess,
+  LikeCommentSuccess,
+  LikeReplySuccess,
+  UnratedCommentSuccess,
+  UnratedReplySuccess
+} from '@models/comments';
 
 @Injectable()
 export class CommentsStoreEffects {
-  constructor(private commentService: CommentService, private actions$: Actions) { }
+  constructor(
+    private commentService: CommentService,
+    private actions$: Actions
+  ) {}
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   GenericFailureEffect$: Observable<Action> = this.actions$.pipe(
     ofType<featureActions.GenericFailureAction>(
       featureActions.ActionTypes.GENERIC_FAILURE
     ),
     tap((action: featureActions.GenericFailureAction) => {
-      if ( action.error.name === 'LocationError ') {
+      if (action.error.name === 'LocationError ') {
         this.commentService.failureMessage('You are using an invalid location');
       } else {
         this.commentService.failureMessage('Oops... Somethings went wrong');
@@ -42,15 +53,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.DeleteRequestAction>(
       featureActions.ActionTypes.DELETE_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .deleteComment(action.request)
-        .pipe(
-            map( (response: DeleteCommentSuccess) => new featureActions.DeleteSuccessAction(response)),
-            catchError( errorResponse =>
-              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
-            )
+    switchMap((action) =>
+      this.commentService.deleteComment(action.request).pipe(
+        map(
+          (response: DeleteCommentSuccess) =>
+            new featureActions.DeleteSuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
+        )
+      )
     )
   );
 
@@ -59,15 +73,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.DeleteReplyRequestAction>(
       featureActions.ActionTypes.DELETE_REPLY_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .deleteReply(action.request)
-        .pipe(
-            map( (response: DeleteReplySuccess) => new featureActions.DeleteReplySuccessAction(response)),
-            catchError( errorResponse =>
-              observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
-            )
+    switchMap((action) =>
+      this.commentService.deleteReply(action.request).pipe(
+        map(
+          (response: DeleteReplySuccess) =>
+            new featureActions.DeleteReplySuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
+        )
+      )
     )
   );
 
@@ -76,15 +93,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.DislikeRequestAction>(
       featureActions.ActionTypes.DISLIKE_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .dislikeComment(action.request)
-        .pipe(
-          map( (response: DislikeCommentSuccess) => new featureActions.DislikeSuccessAction(response)),
-          catchError( errorResponse =>
-            observableOf(new featureActions.GenericFailureAction(errorResponse.error))
+    switchMap((action) =>
+      this.commentService.dislikeComment(action.request).pipe(
+        map(
+          (response: DislikeCommentSuccess) =>
+            new featureActions.DislikeSuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -93,15 +113,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.LikeRequestAction>(
       featureActions.ActionTypes.LIKE_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .likeComment(action.request)
-        .pipe(
-          map( (response: LikeCommentSuccess) => new featureActions.LikeSuccessAction(response)),
-          catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+    switchMap((action) =>
+      this.commentService.likeComment(action.request).pipe(
+        map(
+          (response: LikeCommentSuccess) =>
+            new featureActions.LikeSuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -110,15 +133,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.UnratedRequestAction>(
       featureActions.ActionTypes.UNRATED_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .unratedComment(action.request)
-        .pipe(
-          map( (response: UnratedCommentSuccess) => new featureActions.UnratedSuccessAction(response)),
-          catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+    switchMap((action) =>
+      this.commentService.unratedComment(action.request).pipe(
+        map(
+          (response: UnratedCommentSuccess) =>
+            new featureActions.UnratedSuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -127,15 +153,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.DislikeReplyRequestAction>(
       featureActions.ActionTypes.DISLIKE_REPLY_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .dislikeReply(action.request)
-        .pipe(
-          map( (response: DislikeReplySuccess) => new featureActions.DislikeReplySuccessAction(response)),
-          catchError( errorResponse =>
-            observableOf(new featureActions.GenericFailureAction(errorResponse.error))
+    switchMap((action) =>
+      this.commentService.dislikeReply(action.request).pipe(
+        map(
+          (response: DislikeReplySuccess) =>
+            new featureActions.DislikeReplySuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -144,15 +173,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.LikeReplyRequestAction>(
       featureActions.ActionTypes.LIKE_REPLY_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .likeReply(action.request)
-        .pipe(
-          map( (response: LikeReplySuccess) => new featureActions.LikeReplySuccessAction(response)),
-          catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+    switchMap((action) =>
+      this.commentService.likeReply(action.request).pipe(
+        map(
+          (response: LikeReplySuccess) =>
+            new featureActions.LikeReplySuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -161,15 +193,18 @@ export class CommentsStoreEffects {
     ofType<featureActions.UnratedReplyRequestAction>(
       featureActions.ActionTypes.UNRATED_REPLY_REQUEST
     ),
-    switchMap(action =>
-      this.commentService
-        .unratedReply(action.request)
-        .pipe(
-          map( (response: UnratedReplySuccess) => new featureActions.UnratedReplySuccessAction(response)),
-          catchError(errorResponse =>
-            observableOf(new featureActions.GenericFailureAction( errorResponse.error ))
+    switchMap((action) =>
+      this.commentService.unratedReply(action.request).pipe(
+        map(
+          (response: UnratedReplySuccess) =>
+            new featureActions.UnratedReplySuccessAction(response)
+        ),
+        catchError((errorResponse) =>
+          observableOf(
+            new featureActions.GenericFailureAction(errorResponse.error)
           )
         )
+      )
     )
   );
 
@@ -181,9 +216,9 @@ export class CommentsStoreEffects {
     tap((request: featureActions.AddCommentRequestAction) => {
       // none
     }),
-    switchMap( (action: featureActions.AddCommentRequestAction ) => [
+    switchMap((action: featureActions.AddCommentRequestAction) => [
       new postsActions.AddCommentAction({ postId: action.request.postId })
-    ]),
+    ])
   );
 
   @Effect()
@@ -194,9 +229,9 @@ export class CommentsStoreEffects {
     tap((request: featureActions.AddReplyRequestAction) => {
       // none
     }),
-    switchMap( (action: featureActions.AddReplyRequestAction ) => [
+    switchMap((action: featureActions.AddReplyRequestAction) => [
       new postsActions.AddCommentAction({ postId: action.request.postId })
-    ]),
+    ])
   );
 
   @Effect()
@@ -207,9 +242,9 @@ export class CommentsStoreEffects {
     tap((request: featureActions.DeleteSuccessAction) => {
       // none
     }),
-    switchMap( (action: featureActions.DeleteSuccessAction ) => [
+    switchMap((action: featureActions.DeleteSuccessAction) => [
       new postsActions.DeleteCommentAction({ postId: action.response.postId })
-    ]),
+    ])
   );
 
   @Effect()
@@ -220,9 +255,8 @@ export class CommentsStoreEffects {
     tap((request: featureActions.DeleteReplySuccessAction) => {
       // none
     }),
-    switchMap( (action: featureActions.DeleteReplySuccessAction ) => [
+    switchMap((action: featureActions.DeleteReplySuccessAction) => [
       new postsActions.DeleteCommentAction({ postId: action.response.postId })
-    ]),
+    ])
   );
-
 }

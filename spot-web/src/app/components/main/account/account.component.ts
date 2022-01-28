@@ -1,12 +1,23 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 
 // rxjs
-import { Observable, Subject, timer, merge } from 'rxjs';
-import { takeUntil, take, mapTo } from 'rxjs/operators';
+import { Observable, Subject, merge, timer } from 'rxjs';
+import { mapTo, take, takeUntil } from 'rxjs/operators';
 
 // Store
-import { select, Store } from '@ngrx/store';
-import { AccountsActions, AccountsFacebookActions, AccountsGoogleActions } from '@store/accounts-store';
+import { Store, select } from '@ngrx/store';
+import {
+  AccountsActions,
+  AccountsFacebookActions,
+  AccountsGoogleActions
+} from '@store/accounts-store';
 import { AccountsStoreSelectors, RootStoreState } from '@store';
 
 // Services
@@ -15,9 +26,22 @@ import { AccountsService } from '@services/accounts.service';
 import { ModalService } from '@services/modal.service';
 
 // Models
-import { Account, UpdateUsernameRequest, FacebookConnectRequest, FacebookDisconnectRequest, AccountMetadata,
-  UpdateAccountMetadataRequest, VerifyRequest, UpdateEmailRequest, UpdatePhoneRequest, UpdateEmailResponse,
-  UpdatePhoneResponse, UpdateUsernameResponse, GoogleDisconnectRequest, GoogleConnectRequest } from '@models/accounts';
+import {
+  Account,
+  AccountMetadata,
+  FacebookConnectRequest,
+  FacebookDisconnectRequest,
+  GoogleConnectRequest,
+  GoogleDisconnectRequest,
+  UpdateAccountMetadataRequest,
+  UpdateEmailRequest,
+  UpdateEmailResponse,
+  UpdatePhoneRequest,
+  UpdatePhoneResponse,
+  UpdateUsernameRequest,
+  UpdateUsernameResponse,
+  VerifyRequest
+} from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 // Assets
@@ -31,7 +55,6 @@ declare const gapi: any;
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
-
   private readonly onDestroy = new Subject<void>();
 
   @ViewChild('editUsername') editUsernameInput: ElementRef;
@@ -67,13 +90,14 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   accountOptionsEnabled: boolean;
   facebookLoaded = false;
 
-  constructor(private store$: Store<RootStoreState.State>,
-              private modalService: ModalService,
-              private accountsService: AccountsService,
-              private authenticationService: AuthenticationService) { }
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private modalService: ModalService,
+    private accountsService: AccountsService,
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
-
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
@@ -91,18 +115,19 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.showAccountIndicator$ = merge(
-      timer(1000).pipe( mapTo(true), takeUntil(this.account$) ),
-      this.account$.pipe( mapTo(false) ),
+      timer(1000).pipe(mapTo(true), takeUntil(this.account$)),
+      this.account$.pipe(mapTo(false))
     );
 
-    this.account$.pipe(takeUntil(this.onDestroy)).subscribe( ( account: Account ) => {
-      if (account) {
-        this.username = account.username;
-        this.email = account.email;
-        this.phone = account.phone;
-      }
-    });
-
+    this.account$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((account: Account) => {
+        if (account) {
+          this.username = account.username;
+          this.email = account.email;
+          this.phone = account.phone;
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -110,34 +135,38 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.authenticationService.socialServiceReady.pipe(takeUntil(this.onDestroy)).subscribe((service: string) => {
-      if ( service === 'google' ) {
-        gapi.signin2.render('my-signin2', {
+    this.authenticationService.socialServiceReady
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((service: string) => {
+        if (service === 'google') {
+          gapi.signin2.render('my-signin2', {
             scope: 'profile email',
             width: 240,
             height: 55,
             longtitle: true,
             theme: 'light',
-            onsuccess: param => this.googleConnect(param)
-        });
-      }
-      if ( service === 'FB' ) {
-        setTimeout(() => {
-          this.facebookLoaded = true;
-        });
-      }
-    });
+            onsuccess: (param) => this.googleConnect(param)
+          });
+        }
+        if (service === 'FB') {
+          setTimeout(() => {
+            this.facebookLoaded = true;
+          });
+        }
+      });
   }
 
   enableEditUsername(): void {
+    this.modalService.open('spot-confirm-modal', {
+      message: this.STRINGS.USERNAME_CONFIRM
+    });
 
-    this.modalService.open('spot-confirm-modal', { message: this.STRINGS.USERNAME_CONFIRM });
+    const result$ = this.modalService
+      .getResult('spot-confirm-modal')
+      .pipe(take(1));
 
-    const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
-
-    result$.subscribe( (result: { status: string }) => {
-
-      if ( result.status === 'confirm' ) {
+    result$.subscribe((result: { status: string }) => {
+      if (result.status === 'confirm') {
         this.editEmailEnabled = true;
         this.editUsernameEnabled = true;
         this.usernameErrorMessage = '';
@@ -147,22 +176,21 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           this.editUsernameInput.nativeElement.focus();
         }, 0);
       }
-
     });
-
   }
 
   enableEditEmail(): void {
+    if (this.email) {
+      this.modalService.open('spot-confirm-modal', {
+        message: this.STRINGS.EMAIL_CONFIRM
+      });
 
-    if ( this.email ) {
+      const result$ = this.modalService
+        .getResult('spot-confirm-modal')
+        .pipe(take(1));
 
-      this.modalService.open('spot-confirm-modal', { message: this.STRINGS.EMAIL_CONFIRM });
-
-      const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
-
-      result$.subscribe( (result: { status: string }) => {
-
-        if ( result.status === 'confirm' ) {
+      result$.subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
           this.editEmailEnabled = true;
           this.emailErrorMessage = '';
           this.emailSuccessMessage = '';
@@ -170,33 +198,29 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
             this.editEmailInput.nativeElement.focus();
           }, 0);
         }
-
       });
-
     } else {
-
       this.editEmailEnabled = true;
       this.emailErrorMessage = '';
       this.emailSuccessMessage = '';
       setTimeout(() => {
         this.editEmailInput.nativeElement.focus();
       }, 0);
-
     }
-
   }
 
   enableEditPhone(): void {
+    if (this.phone) {
+      this.modalService.open('spot-confirm-modal', {
+        message: this.STRINGS.PHONE_CONFIRM
+      });
 
-    if ( this.phone ) {
+      const result$ = this.modalService
+        .getResult('spot-confirm-modal')
+        .pipe(take(1));
 
-      this.modalService.open('spot-confirm-modal', { message: this.STRINGS.PHONE_CONFIRM });
-
-      const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
-
-      result$.subscribe( (result: { status: string }) => {
-
-        if ( result.status === 'confirm' ) {
+      result$.subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
           this.editPhoneEnabled = true;
           this.phoneErrorMessage = '';
           this.phoneSuccessMessage = '';
@@ -204,22 +228,16 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
             this.editPhoneInput.nativeElement.focus();
           }, 0);
         }
-
       });
-
     } else {
-
       this.editPhoneEnabled = true;
       setTimeout(() => {
         this.editPhoneInput.nativeElement.focus();
       }, 0);
-
     }
-
   }
 
   submitEditUsername(): void {
-
     this.usernameSuccessMessage = '';
     this.usernameErrorMessage = '';
 
@@ -228,7 +246,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    const validUsername = this.authenticationService.validateUsername(this.username);
+    const validUsername = this.authenticationService.validateUsername(
+      this.username
+    );
     if (validUsername !== null) {
       this.usernameErrorMessage = validUsername;
       return;
@@ -238,30 +258,31 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       username: this.username
     };
 
-    this.accountsService.updateUsername(request).pipe(take(1)).subscribe( (response: UpdateUsernameResponse ) => {
+    this.accountsService
+      .updateUsername(request)
+      .pipe(take(1))
+      .subscribe(
+        (response: UpdateUsernameResponse) => {
+          this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
+          this.editUsernameEnabled = false;
 
-      this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
-      this.editUsernameEnabled  = false;
-
-      // Update the store
-      this.store$.dispatch(
-        new AccountsActions.UpdateUsernameAction(request)
+          // Update the store
+          this.store$.dispatch(
+            new AccountsActions.UpdateUsernameAction(request)
+          );
+        },
+        (err: { error: SpotError }) => {
+          if (err.error.name === 'RateLimitError') {
+            this.usernameErrorMessage =
+              'You can only change your username once every 24 hours';
+          } else {
+            this.usernameErrorMessage = err.error.message;
+          }
+        }
       );
-
-    }, (err: { error: SpotError }) => {
-
-      if ( err.error.name === 'RateLimitError' ) {
-        this.usernameErrorMessage = 'You can only change your username once every 24 hours';
-      } else {
-        this.usernameErrorMessage = err.error.message;
-      }
-
-    });
-
   }
 
   submitEditEmail(): void {
-
     this.emailSuccessMessage = '';
     this.emailErrorMessage = '';
 
@@ -280,25 +301,23 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       email: this.email
     };
 
-    this.accountsService.updateEmail(request).pipe(take(1)).subscribe( (response: UpdateEmailResponse ) => {
+    this.accountsService
+      .updateEmail(request)
+      .pipe(take(1))
+      .subscribe(
+        (response: UpdateEmailResponse) => {
+          this.emailSuccessMessage = this.STRINGS.EMAIL_SUCCESS;
+          this.editEmailEnabled = false;
 
-      this.emailSuccessMessage = this.STRINGS.EMAIL_SUCCESS;
-      this.editEmailEnabled  = false;
-
-      this.store$.dispatch(
-        new AccountsActions.UpdateEmailAction(request)
+          this.store$.dispatch(new AccountsActions.UpdateEmailAction(request));
+        },
+        (err: { error: SpotError }) => {
+          this.emailErrorMessage = err.error.message;
+        }
       );
-
-    }, (err: { error: SpotError }) => {
-
-      this.emailErrorMessage = err.error.message;
-
-    });
-
   }
 
   submitEditPhone(): void {
-
     this.phoneSuccessMessage = '';
     this.phoneErrorMessage = '';
 
@@ -317,84 +336,70 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       phone: this.phone
     };
 
-    this.accountsService.updatePhone(request).pipe(take(1)).subscribe( (response: UpdatePhoneResponse ) => {
+    this.accountsService
+      .updatePhone(request)
+      .pipe(take(1))
+      .subscribe(
+        (response: UpdatePhoneResponse) => {
+          this.phoneSuccessMessage = this.STRINGS.PHONE_SUCCESS;
+          this.editPhoneEnabled = false;
 
-      this.phoneSuccessMessage = this.STRINGS.PHONE_SUCCESS;
-      this.editPhoneEnabled  = false;
-
-      this.store$.dispatch(
-        new AccountsActions.UpdatePhoneAction(request)
+          this.store$.dispatch(new AccountsActions.UpdatePhoneAction(request));
+        },
+        (err: { error: SpotError }) => {
+          this.phoneErrorMessage = err.error.message;
+        }
       );
-
-    }, (err: { error: SpotError }) => {
-
-      this.phoneErrorMessage = err.error.message;
-
-    });
-
   }
 
   deleteUser(): void {
-
-    if ( this.accountOptionsEnabled ) {
-
+    if (this.accountOptionsEnabled) {
       this.modalService.open('spot-confirm-modal');
 
-      const result$ = this.modalService.getResult('spot-confirm-modal').pipe(take(1));
+      const result$ = this.modalService
+        .getResult('spot-confirm-modal')
+        .pipe(take(1));
 
-      result$.subscribe( (result: { status: string }) => {
-
-        if ( result.status === 'confirm' ) {
-
-          this.store$.dispatch(
-            new AccountsActions.DeleteRequestAction()
-          );
-
+      result$.subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
+          this.store$.dispatch(new AccountsActions.DeleteRequestAction());
         }
-
       });
-
     }
   }
 
   verifyAccount(): void {
-
-    if ( this.email === '' ) {
+    if (this.email === '') {
       // give a warning probably
       // just should show maybe
       return;
     } else {
       const request: VerifyRequest = {};
-      this.store$.dispatch(
-        new AccountsActions.VerifyRequestAction(request)
-      );
+      this.store$.dispatch(new AccountsActions.VerifyRequestAction(request));
       this.verificationSent = true;
     }
   }
 
   facebookConnect(): void {
-
     window['FB'].getLoginStatus((statusResponse) => {
       if (statusResponse.status !== 'connected') {
-          window['FB'].login((loginResponse) => {
-            if (loginResponse.status === 'connected') {
+        window['FB'].login((loginResponse) => {
+          if (loginResponse.status === 'connected') {
+            // localStorage.removeItem('fb_access_token');
+            // localStorage.removeItem('fb_expires_in');
 
-                // localStorage.removeItem('fb_access_token');
-                // localStorage.removeItem('fb_expires_in');
+            const request: FacebookConnectRequest = {
+              accessToken: loginResponse.authResponse.accessToken
+            };
 
-                const request: FacebookConnectRequest = {
-                  accessToken: loginResponse.authResponse.accessToken
-                };
-
-                this.store$.dispatch(
-                  new AccountsFacebookActions.FacebookConnectRequestAction(request)
-                );
-
-            } else {
-              // could not login
-              // TODO some error msg
-            }
-          });
+            this.store$.dispatch(
+              new AccountsFacebookActions.FacebookConnectRequestAction(request)
+            );
+          } else {
+            // could not login
+            // TODO some error msg
+          }
+        });
       } else {
         const request: FacebookConnectRequest = {
           accessToken: statusResponse.authResponse.accessToken
@@ -405,23 +410,17 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         );
       }
     });
-
   }
 
   facebookDisconnect(): void {
-
-    const request: FacebookDisconnectRequest = {
-
-    };
+    const request: FacebookDisconnectRequest = {};
 
     this.store$.dispatch(
       new AccountsFacebookActions.FacebookDisconnectRequestAction(request)
     );
-
   }
 
   googleConnect(googleUser): void {
-
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
 
@@ -437,26 +436,19 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // sign out of the instance, so we don't auto login
     this.googleSignOut();
-
   }
 
   googleSignOut(): void {
     const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(() => {
-
-    });
+    auth2.signOut().then(() => {});
   }
 
   googleDisconnect(): void {
-
-    const request: GoogleDisconnectRequest = {
-
-    };
+    const request: GoogleDisconnectRequest = {};
 
     this.store$.dispatch(
       new AccountsGoogleActions.GoogleDisconnectRequestAction(request)
     );
-
   }
 
   public setUnit(unit: string): void {
@@ -478,5 +470,4 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       new AccountsActions.UpdateAccountMetadataRequestAction(request)
     );
   }
-
 }
