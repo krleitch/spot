@@ -25,7 +25,6 @@ import {
   SetNotificationSeenRequest
 } from '@models/notifications';
 import { AccountMetadata } from '@models/accounts';
-import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-notification-item',
@@ -43,8 +42,6 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   accountMetadata$: Observable<AccountMetadata>;
   accountMetadata: AccountMetadata;
-
-  STRINGS = STRINGS.MAIN.NOTIFICATION_ITEM;
 
   constructor(
     private router: Router,

@@ -25,8 +25,6 @@ import { AccountsStoreSelectors, RootStoreState } from '@store';
 // services
 import { ModalService } from '@services/modal.service';
 
-// assets
-import { STRINGS } from '@assets/strings/en';
 import { Account, AccountMetadata } from '@models/accounts';
 import { GetNotificationsUnreadRequest } from '@models/notifications';
 
@@ -40,8 +38,6 @@ export class NavComponent implements OnInit, OnDestroy {
 
   // on title click
   @Output() titleEvent = new EventEmitter<boolean>();
-
-  STRINGS = STRINGS.MAIN.NAV;
 
   // account
   @ViewChild('account') accountView;

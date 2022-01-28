@@ -35,7 +35,6 @@ import {
   SetLocationRequest
 } from '@models/accounts';
 import { ClearCommentsRequest } from '@models/comments';
-import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-post-detail',
@@ -51,8 +50,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private store$: Store<RootStoreState.State>
   ) {}
-
-  STRINGS = STRINGS.MAIN.POST_DETAILED;
 
   commentLink: string;
   postLink: string;

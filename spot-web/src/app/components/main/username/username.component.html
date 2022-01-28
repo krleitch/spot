@@ -4,10 +4,10 @@
 <div class="username">
   <div class="container">
     <span class="material-icons icon"> account_circle </span>
-    <div class="heading">{{ STRINGS.HEADING }}</div>
+    <div class="heading">{{ 'PRE_AUTH.USERNAME.HEADING' | translate }}</div>
     <input
       type="text"
-      [placeholder]="STRINGS.USERNAME_PLACEHOLDER"
+      placeholder="{{ 'PRE_AUTH.USERNAME.USERNAME_PLACEHOLDER' | translate }}"
       [(ngModel)]="username"
     />
 
@@ -18,11 +18,11 @@
             <input name="terms" [(ngModel)]="terms" type="checkbox" required />
             <span class="checkmark"></span>
           </label>
-          <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
+          <span> {{ 'PRE_AUTH.USERNAME.TERMS_AND_CONDITIONS' | translate }} </span>
         </div>
       </div>
       <div class="text" (click)="openTerms()">
-        {{ STRINGS.TERMS_AND_CONDITIONS_LINK }}
+        {{ 'PRE_AUTH.USERNAME.TERMS_AND_CONDITIONS_LINK' | translate }}
       </div>
     </div>
 
@@ -35,9 +35,9 @@
       [ngClass]="{ disabled: buttonsDisabled }"
       (click)="continueToSpot()"
     >
-      {{ STRINGS.CONTINUE }}
+      {{ 'PRE_AUTH.USERNAME.CONTINUE' | translate }}
     </button>
-    <div class="description">{{ STRINGS.DESCRIPTION }}</div>
+    <div class="description">{{ 'PRE_AUTH.USERNAME.DESCRIPTION' | translate }}</div>
   </div>
 </div>
 <div class="footer">

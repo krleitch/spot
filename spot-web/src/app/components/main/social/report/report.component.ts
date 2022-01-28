@@ -13,13 +13,13 @@ import { ModalService } from '@services/modal.service';
 import { PostsService } from '@services/posts.service';
 import { AlertService } from '@services/alert.service';
 import { CommentService } from '@services/comments.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // assets
 import { ReportPostRequest, ReportPostSuccess } from '@models/posts';
 import { ReportCommentRequest } from '@models/comments';
 import { ReportCategory } from '@models/report';
 import { SpotError } from '@exceptions/error';
-import { STRINGS } from '@assets/strings/en';
 import { REPORT_CONSTANTS } from '@constants/report';
 
 @Component({
@@ -38,7 +38,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     commentId: null
   };
 
-  STRINGS = STRINGS.MAIN.REPORT;
+  STRINGS;
   REPORT_CONSTANTS = REPORT_CONSTANTS;
 
   content = '';
@@ -50,8 +50,13 @@ export class ReportComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private postsService: PostsService,
     private commentService: CommentService,
-    private alertService: AlertService
-  ) {}
+    private alertService: AlertService,
+    private translateService: TranslateService
+  ) {
+    this.translateService.get('MAIN.REPORT').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
+  }
 
   ngOnInit(): void {
     this.data$ = this.modalService.getData(this.modalId);

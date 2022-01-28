@@ -5,7 +5,7 @@
       <span class="material-icons icon"> done </span>
       <span class="text"> {{ successMessage }} </span>
       <a class="link" [routerLink]="'/home'">
-        <button>{{ STRINGS.CONTINUE }}</button>
+        <button>{{ 'MAIN.VERIFY.CONTINUE' | translate }}</button>
       </a>
     </div>
 
@@ -14,7 +14,7 @@
       <span class="text"> {{ errorMessage }} </span>
       <div *ngIf="verificationSent === false; else sentverify">
         <div class="text clickable" (click)="sendVerification()">
-          {{ STRINGS.VERIFY_SEND }}
+          {{ 'MAIN.VERIFY.VERIFY_SEND' | translate }}
         </div>
         <span class="small-text">
           {{ account.email }} (
@@ -26,7 +26,7 @@
       </div>
       <ng-template #sentverify>
         <span class="small-text">
-          {{ STRINGS.VERIFY_SENT }} {{ account.email }}
+          {{ 'MAIN.VERIFY.VERIFY_SENT' | translate }} {{ account.email }}
         </span>
       </ng-template>
     </div>

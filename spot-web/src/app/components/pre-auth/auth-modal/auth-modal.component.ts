@@ -23,6 +23,7 @@ import {
 // Services
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -32,9 +33,6 @@ import {
   RegisterRequest
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
-
-// Assets
-import { STRINGS } from '@assets/strings/en';
 
 declare const gapi: any;
 
@@ -48,7 +46,7 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() modalId: string;
 
-  STRINGS = STRINGS.PRE_AUTH.AUTH_MODAL;
+  STRINGS;
 
   selectedTab = 'login';
 
@@ -65,7 +63,8 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
     private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
     private authenticationService: AuthenticationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translateService: TranslateService
   ) {
     this.loginForm = this.fb.group({
       emailOrUsername: ['', Validators.required],
@@ -77,6 +76,9 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
       password: ['', Validators.required],
       phone: ['', Validators.required],
       terms: [false, Validators.required]
+    });
+    this.translateService.get('PRE_AUTH.AUTH_MODAL').subscribe((res: any) => {
+      this.STRINGS = res;
     });
   }
 

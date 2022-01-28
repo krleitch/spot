@@ -4,17 +4,12 @@ import { Observable } from 'rxjs';
 // services
 import { ModalService } from '@services/modal.service';
 
-// assets
-import { STRINGS } from '@assets/strings/en';
-
 @Component({
   selector: 'spot-confirm',
   templateUrl: './confirm.component.html',
   styleUrls: ['./confirm.component.scss']
 })
 export class ConfirmComponent implements OnInit {
-  STRINGS = STRINGS.MAIN.CONFIRM;
-
   @Input() modalId: string;
 
   data$: Observable<any>;

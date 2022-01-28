@@ -14,9 +14,8 @@ import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { ModalService } from '@services/modal.service';
+import { TranslateService } from '@ngx-translate/core';
 
-// assets
-import { STRINGS } from '@assets/strings/en';
 import {
   Account,
   UpdateUsernameRequest,
@@ -32,7 +31,7 @@ import { SpotError } from '@exceptions/error';
 export class UsernameComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS = STRINGS.PRE_AUTH.USERNAME;
+  STRINGS;
 
   account$: Observable<Account>;
   username: string;
@@ -45,8 +44,13 @@ export class UsernameComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private accountsService: AccountsService,
     private modalService: ModalService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private translateService: TranslateService
+  ) {
+    this.translateService.get('PRE_AUTH.USERNAME').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
+  }
 
   ngOnInit(): void {
     this.account$ = this.store$.pipe(

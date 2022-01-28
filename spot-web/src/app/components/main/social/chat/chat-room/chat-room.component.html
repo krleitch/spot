@@ -4,7 +4,7 @@
       <i class="material-icons icon"> person </i>
       <span class="count">4 -</span>
     </span>
-    <span class="title">{{ 'MAIN.CHAT.TEST' | translate }}</span>
+    <span class="title">{{ 'MAIN.CHAT_ROOM.TEST' | translate }}</span>
     <span class="location">QNC (0.5km)</span>
     <i class="material-icons settings-icon"> settings </i>
     <i class="material-icons close-icon"> close </i>
@@ -37,12 +37,12 @@
     <span
       #chat
       contenteditable="true"
-      attr.ph="{{ STRINGS.CHAT_PLACEHOLDER }}"
+      attr.ph="{{ 'MAIN.CHAT_ROOM.CHAT_PLACEHOLDER' | translate }}"
       class="chat"
       (input)="onTextInput($event)"
     ></span>
     <button class="submit" (click)="submit()">
-      {{ STRINGS.SUBMIT }}
+      {{ 'MAIN.CHAT_ROOM.SUBMIT' | translate }}
     </button>
   </div>
 </div>

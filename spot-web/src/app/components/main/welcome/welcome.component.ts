@@ -3,8 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 // services
 import { ModalService } from '@services/modal.service';
 
-// assets
-import { STRINGS } from '@assets/strings/en';
 @Component({
   selector: 'spot-welcome',
   templateUrl: './welcome.component.html',
@@ -12,9 +10,6 @@ import { STRINGS } from '@assets/strings/en';
 })
 export class WelcomeComponent implements OnInit {
   @Input() modalId: string;
-
-  STRINGS = STRINGS.MAIN.WELCOME;
-
   constructor(private modalService: ModalService) {}
 
   ngOnInit(): void {}

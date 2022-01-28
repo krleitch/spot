@@ -11,6 +11,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
 
+// Services
+import { TranslateService } from '@ngx-translate/core';
+
 // Store
 import { Store, select } from '@ngrx/store';
 import { AccountsStoreSelectors } from '@store/accounts-store';
@@ -23,7 +26,6 @@ import { Location } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import { POSTS_CONSTANTS } from '@constants/posts';
 
 @Component({
@@ -36,7 +38,7 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('create') create: ElementRef;
 
-  STRINGS = STRINGS.MAIN.CREATE;
+  STRINGS;
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   // Location
@@ -58,8 +60,13 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private store$: Store<RootStoreState.State>,
-    public domSanitizer: DomSanitizer
-  ) {}
+    public domSanitizer: DomSanitizer,
+    private translateService: TranslateService
+  ) {
+    this.translateService.get('MAIN.CREATE').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
+  }
 
   ngOnInit(): void {
     // Success

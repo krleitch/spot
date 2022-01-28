@@ -21,7 +21,7 @@
     class="loading"
     *ngIf="loadingPost && (showLoadingIndicator$ | async); else postloaded"
   >
-    <span class="text"> {{ STRINGS.LOADING }} </span>
+    <span class="text"> {{ 'MAIN.POST_DETAILED.LOADING' | translate }} </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
   <ng-template #postloaded>
@@ -36,6 +36,6 @@
   </ng-template>
   <div class="error" *ngIf="error">
     <span class="material-icons icon"> error_outline </span>
-    <span class="text"> {{ STRINGS.NO_POST }} </span>
+    <span class="text"> {{ 'MAIN.POST_DETAILED.NO_POST' | translate }} </span>
   </div>
 </div>

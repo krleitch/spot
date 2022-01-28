@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -26,9 +27,6 @@ import {
 import { SpotError } from '@exceptions/error';
 import { RegisterRequest } from '@models/authentication';
 
-// Assets
-import { STRINGS } from '@assets/strings/en';
-
 // google api
 declare const gapi: any;
 
@@ -40,7 +38,7 @@ declare const gapi: any;
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS = STRINGS.PRE_AUTH.LANDING;
+  STRINGS;
 
   form: FormGroup;
   authenticationError$: Observable<SpotError>;
@@ -53,7 +51,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private modalService: ModalService,
-    private store$: Store<RootStoreState.State>
+    private store$: Store<RootStoreState.State>,
+    private translateService: TranslateService
   ) {
     this.form = this.fb.group({
       email: ['', Validators.required],
@@ -61,6 +60,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       password: ['', Validators.required],
       phone: ['', Validators.required],
       terms: [false, Validators.required]
+    });
+    this.translateService.get('PRE_AUTH.LANDING').subscribe((res: any) => {
+      this.STRINGS = res;
     });
   }
 

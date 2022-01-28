@@ -18,7 +18,7 @@
           <span
             #comment
             contenteditable="true"
-            attr.ph="{{ STRINGS.ADD_COMMENT_PLACEHOLDER }}"
+            attr.ph="{{ 'MAIN.COMMENTS_CONTAINER.ADD_COMMENT_PLACEHOLDER' | translate }}"
             class="comment-content"
             (input)="onTextInput($event)"
             (keydown.enter)="onEnter()"
@@ -28,7 +28,7 @@
           </div>
 
           <div class="file-options" *ngIf="imgSrc !== null">
-            <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
+            <span class="file-title"> {{ 'MAIN.COMMENTS_CONTAINER.FILE_TITLE' | translate }} </span>
             <span class="file-name"> {{ imageFile.name }} </span>
             <span class="file-remove" (click)="removeFile()">
               <i class="material-icons"> delete </i>
@@ -66,10 +66,10 @@
         <div class="auth-message">
           <i style="visibility: hidden" class="material-icons icon"> send </i>
           <span *ngIf="account.role !== 'guest'; else guest" class="text">
-            {{ STRINGS.VERIFY }}
+            {{ 'MAIN.COMMENTS_CONTAINER.VERIFY' | translate }}
           </span>
           <ng-template #guest>
-            <span class="text"> {{ STRINGS.GUEST }} </span>
+            <span class="text"> {{ 'MAIN.COMMENTS_CONTAINER.GUEST' | translate }} </span>
           </ng-template>
           <i class="material-icons icon"> send </i>
         </div>
@@ -78,7 +78,7 @@
     <ng-template #auth>
       <div class="auth-message">
         <i style="visibility: hidden" class="material-icons icon"> send </i>
-        <span class="text"> {{ STRINGS.LOGIN }} </span>
+        <span class="text"> {{ 'MAIN.COMMENTS_CONTAINER.LOGIN' | translate }} </span>
         <i class="material-icons icon"> send </i>
       </div>
     </ng-template>
@@ -96,7 +96,7 @@
         class="load-recent__position"
       >
         <span (click)="loadRecentComments()" class="load-recent__recent">
-          {{ STRINGS.LOAD }}
+          {{ 'MAIN.COMMENTS_CONTAINER.LOAD' | translate }}
           {{ loadRecentCommentsNum() }}
           {{
             loadRecentCommentsNum() > 1
@@ -146,7 +146,7 @@
     <ng-template #noComments>
       <div *ngIf="loadingCommentsBefore; else none" class="no-comments-loading">
         <div *ngIf="showLoadingCommentsIndicator$ | async">
-          <span> {{ STRINGS.LOADING_COMMENTS }} </span>
+          <span> {{ 'MAIN.COMMENTS_CONTAINER.LOADING_COMMENTS' | translate }} </span>
           <div *ngIf="loadingCommentsBefore" class="loading">
             <spot-spinner size="small" type="dot"></spot-spinner>
           </div>
@@ -155,7 +155,7 @@
       <ng-template #none>
         <div class="no-comments">
           <span class="material-icons icon"> chat </span>
-          {{ STRINGS.NO_COMMENTS }}
+          {{ 'MAIN.COMMENTS_CONTAINER.NO_COMMENTS' | translate }}
         </div>
       </ng-template>
     </ng-template>
@@ -163,7 +163,7 @@
     <!-- Load More -->
     <div class="load-more-container" *ngIf="totalCommentsBefore > 0">
       <div class="load-more" (click)="loadMoreComments()">
-        {{ STRINGS.LOAD }}
+        {{ 'MAIN.COMMENTS_CONTAINER.LOAD' | translate }}
         {{ loadMoreCommentsNum() }}
         {{
           loadMoreCommentsNum() > 1
@@ -188,6 +188,6 @@
     class="comment-reminder"
     (click)="scrollToComment()"
   >
-    {{ STRINGS.MAKE_COMMENT }}
+    {{ 'MAIN.COMMENTS_CONTAINER.MAKE_COMMENT' | translate }}
   </div>
 </div>

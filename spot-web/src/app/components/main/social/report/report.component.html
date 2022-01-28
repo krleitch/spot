@@ -1,6 +1,6 @@
 <div class="report">
   <div class="report-header">
-    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="title"> {{ 'MAIN.REPORT.TITLE' | translate }} </span>
     <span class="close" (click)="closeReport()">
       <span class="material-icons"> clear </span>
     </span>
@@ -8,15 +8,15 @@
 
   <div class="report-body">
     <select [(ngModel)]="category" name="category">
-      <option value="1">{{ STRINGS.OFFENSIVE }}</option>
-      <option value="2">{{ STRINGS.HATE }}</option>
-      <option value="3">{{ STRINGS.MATURE }}</option>
-      <option value="4">{{ STRINGS.OTHER }}</option>
+      <option value="1">{{ 'MAIN.REPORT.OFFENSIVE' | translate }}</option>
+      <option value="2">{{ 'MAIN.REPORT.HATE' | translate }}</option>
+      <option value="3">{{ 'MAIN.REPORT.MATURE' | translate }}</option>
+      <option value="4">{{ 'MAIN.REPORT.OTHER' | translate }}</option>
     </select>
 
     <textarea
       [(ngModel)]="content"
-      [placeholder]="STRINGS.REPORT_PLACEHOLDER"
+      placeholder=" {{ 'MAIN.REPORT.REPORT_PLACEHOLDER' | translate }}"
       rows="10"
     ></textarea>
     <span *ngIf="errorMessage" class="error-message"> {{ errorMessage }} </span>
@@ -25,7 +25,7 @@
         {{ REPORT_CONSTANTS.MAX_CONTENT_LENGTH - content.length }}
       </span>
       <div class="send-report" (click)="sendReport()">
-        {{ STRINGS.REPORT_BUTTON }}
+        {{ 'MAIN.REPORT.REPORT_BUTTON' | translate }}
       </div>
     </div>
   </div>

@@ -13,7 +13,6 @@ import {
 import { Store, select } from '@ngrx/store';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import { NOTIFICATIONS_CONSTANTS } from '@constants/notifications';
 import {
   DeleteAllNotificationsRequest,
@@ -28,8 +27,6 @@ import {
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
-
-  STRINGS = STRINGS.MAIN.NOTIFICATIONS;
 
   // Notifications state variables
   notifications$: Observable<Notification[]>;

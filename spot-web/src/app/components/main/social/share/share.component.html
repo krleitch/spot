@@ -1,6 +1,6 @@
 <div class="share">
   <div class="header">
-    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="title"> {{ 'MAIN.SHARE.TITLE' | translate }} </span>
     <span class="close" (click)="closeShare()">
       <span class="material-icons"> clear </span>
     </span>
@@ -24,7 +24,7 @@
       </div>
       <!-- Twitter button generated here from the ts file -->
     </div>
-    <span class="copy" (click)="copyLink()"> {{ STRINGS.COPY_LINK }} </span>
+    <span class="copy" (click)="copyLink()"> {{ 'MAIN.SHARE.COPY_LINK' | translate }} </span>
   </div>
 
   <div *ngIf="authenticated; else auth">
@@ -33,7 +33,7 @@
         #usernameinput
         [(ngModel)]="username"
         (keyup.enter)="sendNotification()"
-        [placeholder]="STRINGS.USERNAME_PLACEHOLDER"
+        placeholder="{{ 'MAIN.SHARE.USERNAME_PLACEHOLDER' | translate }}"
         type="text"
       />
       <span (click)="sendNotification()">
@@ -49,7 +49,7 @@
       {{ errorMessage }}
     </div>
 
-    <div class="friends-title">{{ STRINGS.FRIENDS }}</div>
+    <div class="friends-title">{{ 'MAIN.SHARE.FRIENDS' | translate }}</div>
     <div
       class="share-friend-section"
       *ngIf="
@@ -66,25 +66,25 @@
               sendNotificationToFriend(friend.username); friend.sent = true
             "
           >
-            {{ STRINGS.SEND }}
+            {{ 'MAIN.SHARE.SEND' | translate }}
           </div>
           <div [hidden]="!friend.sent" class="share-friend-sent">
-            {{ STRINGS.SENT }}
+            {{ 'MAIN.SHARE.SENT' | translate }}
           </div>
         </div>
       </div>
 
       <ng-template #noFriends>
         <div *ngIf="username; else addFriends">
-          <div class="no-friends">{{ STRINGS.NO_FRIENDS_FOUND }}</div>
+          <div class="no-friends">{{ 'MAIN.SHARE.NO_FRIENDS_FOUND' | translate }}</div>
         </div>
         <ng-template #addFriends>
-          <div class="no-friends">{{ STRINGS.NO_FRIENDS }}</div>
+          <div class="no-friends">{{ 'MAIN.SHARE.NO_FRIENDS' | translate }}</div>
         </ng-template>
       </ng-template>
     </div>
   </div>
   <ng-template #auth>
-    <span class="login"> {{ STRINGS.LOGIN }} </span>
+    <span class="login"> {{ 'MAIN.SHARE.LOGIN' | translate }} </span>
   </ng-template>
 </div>

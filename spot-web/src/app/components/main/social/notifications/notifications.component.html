@@ -1,11 +1,11 @@
 <div class="notifications">
   <div class="header">
-    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="title"> {{ 'MAIN.NOTIFICATIONS.TITLE' | translate }} </span>
     <span class="see" (click)="seeAll()">
-      {{ STRINGS.MARK_ALL_AS_SEEN }}
+      {{ 'MAIN.NOTIFICATIONS.MARK_ALL_AS_SEEN' | translate }}
       <span class="material-icons check"> check </span>
     </span>
-    <!-- <span class="clear" (click)="clearAll()"> {{ STRINGS.CLEAR }} </span> -->
+    <!-- <span class="clear" (click)="clearAll()"> {{ 'MAIN.NOTIFICATIONS.CLEAR' | translate }} </span> -->
   </div>
 
   <div class="notifications-content">
@@ -26,7 +26,7 @@
         "
         class="loading"
       >
-        <span class="text"> {{ STRINGS.LOADING }} </span>
+        <span class="text"> {{ 'MAIN.NOTIFICATIONS.LOADING' | translate }} </span>
         <spot-spinner size="small" type="dot"></spot-spinner>
       </div>
     </spot-infinite-scroll>
@@ -34,7 +34,7 @@
     <ng-template #empty>
       <div *ngIf="!loading" class="no-notifications">
         <span class="material-icons icon"> done_all </span>
-        {{ STRINGS.NO_NOTIFICATIONS }}
+        {{ 'MAIN.NOTIFICATIONS.NO_NOTIFICATIONS' | translate }}
       </div>
     </ng-template>
   </div>

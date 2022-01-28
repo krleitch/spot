@@ -21,6 +21,7 @@ import { SocialStoreSelectors } from '@store/social-store';
 import { ModalService } from '@services/modal.service';
 import { NotificationsService } from '@services/notifications.service';
 import { AlertService } from '@services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -29,9 +30,6 @@ import {
 } from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-
-// Assets
-import { STRINGS } from '@assets/strings/en';
 
 // has the friend been sent a notification
 interface ShareFriend extends Friend {
@@ -60,7 +58,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('usernameinput') usernameinput: ElementRef;
   @ViewChild('social') social: ElementRef;
 
-  STRINGS = STRINGS.MAIN.SHARE;
+  STRINGS;
 
   data$: Observable<ShareModalData>;
   data: ShareModalData = { postId: null, postLink: null };
@@ -80,8 +78,13 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
     private notificationsService: NotificationsService,
-    private alertService: AlertService
-  ) {}
+    private alertService: AlertService,
+    private TranslateService: TranslateService
+  ) {
+    this.TranslateService.get('MAIN.SHARE').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
+  }
 
   ngOnInit(): void {
     // Is the user authenticated

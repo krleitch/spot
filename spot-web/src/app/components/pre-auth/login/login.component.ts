@@ -17,10 +17,10 @@ import {
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Assets
 import { SpotError } from '@exceptions/error';
-import { STRINGS } from '@assets/strings/en';
 import {
   FacebookLoginRequest,
   GoogleLoginRequest,
@@ -37,7 +37,7 @@ declare const gapi: any;
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS = STRINGS.PRE_AUTH.LOGIN;
+  STRINGS;
 
   form: FormGroup;
   authenticationError$: Observable<SpotError>;
@@ -49,11 +49,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
-    private store$: Store<RootStoreState.State>
+    private store$: Store<RootStoreState.State>,
+    private translateService: TranslateService
   ) {
     this.form = this.fb.group({
       emailOrUsername: ['', Validators.required],
       password: ['', Validators.required]
+    });
+    this.translateService.get('PRE_AUTH.LOGIN').subscribe((res: any) => {
+      this.STRINGS = res;
     });
   }
 

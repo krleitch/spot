@@ -28,6 +28,7 @@ import { SocialStoreSelectors } from '@store/social-store';
 // Services
 import { CommentService } from '@services/comments.service';
 import { AlertService } from '@services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -48,7 +49,6 @@ import { Account, Location } from '@models/accounts';
 import { TagComponent } from '../../social/tag/tag.component';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
@@ -101,16 +101,22 @@ export class CommentsContainerComponent
   imageFile: File;
   imgSrc: string = null;
 
-  STRINGS = STRINGS.MAIN.COMMENTS_CONTAINER;
+  STRINGS;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
   constructor(
     private store$: Store<RootStoreState.State>,
     private alertService: AlertService,
     public domSanitizer: DomSanitizer,
-    public commentService: CommentService
+    public commentService: CommentService,
+    private translateService: TranslateService
   ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
+    this.translateService
+      .get('MAIN.COMMENTS_CONTAINER')
+      .subscribe((res: any) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnInit(): void {

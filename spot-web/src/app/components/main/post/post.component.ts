@@ -34,7 +34,6 @@ import {
   UnratedPostRequest
 } from '@models/posts';
 import { Account, AccountMetadata, Location } from '@models/accounts';
-import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-post',
@@ -49,7 +48,6 @@ export class PostComponent implements OnInit, OnDestroy {
   @ViewChild('options') options: ElementRef;
   @ViewChild('postimage') postImage: ElementRef;
 
-  STRINGS = STRINGS.MAIN.POST;
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   location$: Observable<Location>;

@@ -27,6 +27,7 @@ import { AlertService } from '@services/alert.service';
 import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -49,7 +50,6 @@ import { Account, AccountMetadata, Location } from '@models/accounts';
 import { TagComponent } from '../../social/tag/tag.component';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
@@ -83,7 +83,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
-  STRINGS = STRINGS.MAIN.REPLY;
+  STRINGS;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
   isAuthenticated$: Observable<boolean>;
@@ -122,9 +122,13 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     public domSanitizer: DomSanitizer,
     private modalService: ModalService,
     private alertService: AlertService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private TranslateService: TranslateService
   ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
+    this.TranslateService.get('MAIN.REPLY').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
   }
 
   ngOnInit(): void {

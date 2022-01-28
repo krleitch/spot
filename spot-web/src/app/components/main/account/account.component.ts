@@ -24,6 +24,7 @@ import { AccountsStoreSelectors, RootStoreState } from '@store';
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { ModalService } from '@services/modal.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -44,9 +45,6 @@ import {
 } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
-// Assets
-import { STRINGS } from '@assets/strings/en';
-
 declare const gapi: any;
 
 @Component({
@@ -60,8 +58,6 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('editUsername') editUsernameInput: ElementRef;
   @ViewChild('editEmail') editEmailInput: ElementRef;
   @ViewChild('editPhone') editPhoneInput: ElementRef;
-
-  STRINGS = STRINGS.MAIN.ACCOUNT;
 
   account$: Observable<Account>;
   showAccountIndicator$: Observable<boolean>;
@@ -90,12 +86,19 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   accountOptionsEnabled: boolean;
   facebookLoaded = false;
 
+  STRINGS;
+
   constructor(
     private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
     private accountsService: AccountsService,
-    private authenticationService: AuthenticationService
-  ) {}
+    private authenticationService: AuthenticationService,
+    private translateService: TranslateService
+  ) {
+    translateService.get('MAIN.ACCOUNT').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
+  }
 
   ngOnInit(): void {
     this.accountMetadata$ = this.store$.pipe(

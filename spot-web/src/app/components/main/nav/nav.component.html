@@ -26,19 +26,19 @@
       <div class="dropdown-content" [ngClass]="{ show: accountShowDropdown }">
         <a class="button" [routerLink]="'/activity'">
           <span class="material-icons icon"> show_chart </span>
-          {{ STRINGS.ACTIVITY }}
+          {{ 'MAIN.NAV.ACTIVITY' | translate }}
         </a>
         <a class="button" [routerLink]="'/friends'">
           <span class="material-icons icon"> people_alt </span>
-          {{ STRINGS.FRIENDS }}
+          {{ 'MAIN.NAV.FRIENDS' | translate }}
         </a>
         <a class="button" [routerLink]="'/account'">
           <span class="material-icons icon"> settings </span>
-          {{ STRINGS.ACCOUNT }}
+          {{ 'MAIN.NAV.ACCOUNT' | translate }}
         </a>
         <div class="button" (click)="logout()">
           <span class="material-icons icon"> directions_run </span>
-          {{ STRINGS.LOGOUT }}
+          {{ 'MAIN.NAV.LOGOUT' | translate }}
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
   <ng-template #noAccount>
     <div *ngIf="!loading || (showAccountIndicator$ | async)">
       <div class="login" (click)="openAuthModal()">
-        {{ STRINGS.LOGIN_REGISTER }}
+        {{ 'MAIN.NAV.LOGIN_REGISTER' | translate }}
       </div>
     </div>
   </ng-template>

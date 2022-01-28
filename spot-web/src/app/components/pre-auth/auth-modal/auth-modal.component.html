@@ -1,6 +1,6 @@
 <div class="spot-auth-modal">
   <div class="header">
-    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="title"> {{ 'PRE_AUTH.AUTH_MODAL.TITLE' | translate }} </span>
     <span class="close" (click)="close()">
       <span class="material-icons"> clear </span>
     </span>
@@ -13,14 +13,14 @@
         (click)="selectTab('login')"
         [ngClass]="{ selected: selectedTab === 'login' }"
       >
-        {{ STRINGS.LOGIN }}
+        {{ 'PRE_AUTH.AUTH_MODAL.LOGIN' | translate }}
       </div>
       <div
         class="tab"
         (click)="selectTab('register')"
         [ngClass]="{ selected: selectedTab === 'register' }"
       >
-        {{ STRINGS.REGISTER }}
+        {{ 'PRE_AUTH.AUTH_MODAL.REGISTER' | translate }}
       </div>
     </div>
 
@@ -32,7 +32,7 @@
               name="emailOrUsername"
               formControlName="emailOrUsername"
               autocomplete="username"
-              [placeholder]="STRINGS.EMAIL_OR_USERNAME_PLACEHOLDER"
+              placeholder="{{ 'PRE_AUTH.AUTH_MODAL.EMAIL_OR_USERNAME_PLACEHOLDER' | translate }}"
               required
             />
           </div>
@@ -41,7 +41,7 @@
               name="password"
               formControlName="password"
               autocomplete="current-password"
-              [placeholder]="STRINGS.PASSWORD_PLACEHOLDER"
+              placeholder="{{ 'PRE_AUTH.AUTH_MODAL.PASSWORD_PLACEHOLDER' | translate }}"
               type="password"
               required
             />
@@ -56,11 +56,11 @@
             [ngClass]="{ disabled: buttonsDisabled }"
             (click)="login()"
           >
-            {{ STRINGS.LOGIN_BUTTON }}
+            {{ 'PRE_AUTH.AUTH_MODAL.LOGIN_BUTTON' | translate }}
           </button>
         </div>
         <a (click)="close()" [routerLink]="'/password-reset'">
-          {{ STRINGS.FORGOT_PASSWORD }}
+          {{ 'PRE_AUTH.AUTH_MODAL.FORGOT_PASSWORD' | translate }}
         </a>
       </form>
     </div>
@@ -77,7 +77,7 @@
               name="email"
               formControlName="email"
               autocomplete="off"
-              [placeholder]="STRINGS.EMAIL_PLACEHOLDER"
+              placeholder="{{ 'PRE_AUTH.AUTH_MODAL.EMAIL_PLACEHOLDER' | translate }}"
               required
             />
           </div>
@@ -86,7 +86,7 @@
               name="username"
               formControlName="username"
               autocomplete="off"
-              [placeholder]="STRINGS.USERNAME_PLACEHOLDER"
+              placeholder="{{ 'PRE_AUTH.AUTH_MODAL.USERNAME_PLACEHOLDER' | translate }}"
               required
             />
           </div>
@@ -95,7 +95,7 @@
               name="password"
               formControlName="password"
               autocomplete="off"
-              [placeholder]="STRINGS.PASSWORD_PLACEHOLDER"
+              placeholder="{{ 'PRE_AUTH.AUTH_MODAL.PASSWORD_PLACEHOLDER' | translate }}"
               type="password"
               required
             />
@@ -105,7 +105,7 @@
               name="phone"
               formControlName="phone"
               autocomplete="off"
-              [placeholder]="STRINGS.PHONE_PLACEHOLDER"
+              placeholder="{{ 'PRE_AUTH.AUTH_MODAL.PHONE_PLACEHOLDER' | translate }}"
               required
             />
           </div>
@@ -122,10 +122,10 @@
               />
               <span class="checkmark"></span>
             </label>
-            <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
+            <span> {{ 'PRE_AUTH.AUTH_MODAL.TERMS_AND_CONDITIONS' | translate }} </span>
           </div>
           <div class="text" (click)="openTerms()">
-            {{ STRINGS.TERMS_AND_CONDITIONS_LINK }}
+            {{ 'PRE_AUTH.AUTH_MODAL.TERMS_AND_CONDITIONS_LINK' | translate }}
           </div>
         </div>
 
@@ -139,7 +139,7 @@
             [ngClass]="{ disabled: buttonsDisabled }"
             (click)="register()"
           >
-            {{ STRINGS.REGISTER_BUTTON }}
+            {{ 'PRE_AUTH.AUTH_MODAL.REGISTER_BUTTON' | translate }}
           </button>
         </div>
       </form>
@@ -157,7 +157,7 @@
           src="../../../assets/images/facebook_logo_white.png"
           class="facebook-logo"
         />
-        {{ STRINGS.FACEBOOK_LOGIN }}
+        {{ 'PRE_AUTH.AUTH_MODAL.FACEBOOK_LOGIN' | translate }}
       </div>
       <!-- GOOGLE -->
       <div id="my-signin2"></div>

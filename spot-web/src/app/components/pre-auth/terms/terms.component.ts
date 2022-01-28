@@ -4,17 +4,12 @@ import { Observable } from 'rxjs';
 // Services
 import { ModalService } from '@services/modal.service';
 
-// Assets
-import { STRINGS } from '@assets/strings/en';
-
 @Component({
   selector: 'spot-terms',
   templateUrl: './terms.component.html',
   styleUrls: ['./terms.component.scss']
 })
 export class TermsComponent implements OnInit {
-  STRINGS = STRINGS.PRE_AUTH.TERMS;
-
   @Input() modalId: string;
   data$: Observable<any>;
   data: { message: string } = null;

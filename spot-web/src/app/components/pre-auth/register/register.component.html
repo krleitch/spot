@@ -2,7 +2,7 @@
 <div class="register">
   <div class="container">
     <div class="register-text">
-      {{ STRINGS.TITLE }}
+      {{ 'PRE_AUTH.REGISTER.TITLE' | translate }}
     </div>
 
     <form [formGroup]="form" (keyup.enter)="signUp()" autocomplete="off">
@@ -12,7 +12,7 @@
             name="email"
             formControlName="email"
             autocomplete="off"
-            [placeholder]="STRINGS.EMAIL_PLACEHOLDER"
+            placeholder="{{ 'PRE_AUTH.REGISTER.STRINGS.EMAIL_PLACEHOLDER' | translate }}"
             required
           />
         </div>
@@ -21,7 +21,7 @@
             name="username"
             formControlName="username"
             autocomplete="off"
-            [placeholder]="STRINGS.USERNAME_PLACEHOLDER"
+            placeholder="{{ 'PRE_AUTH.REGISTER.STRINGS.USERNAME_PLACEHOLDER' | translate }}"
             required
           />
         </div>
@@ -30,7 +30,7 @@
             name="password"
             formControlName="password"
             autocomplete="off"
-            [placeholder]="STRINGS.PASSWORD_PLACEHOLDER"
+            placeholder="{{ 'PRE_AUTH.REGISTER.STRINGS.PASSWORD_PLACEHOLDER' | translate }}"
             type="password"
             required
           />
@@ -40,7 +40,7 @@
             name="phone"
             formControlName="phone"
             autocomplete="off"
-            [placeholder]="STRINGS.PHONE_PLACEHOLDER"
+            placeholder="{{ 'PRE_AUTH.REGISTER.STRINGS.PHONE_PLACEHOLDER' | translate }}"
             required
           />
         </div>
@@ -57,10 +57,10 @@
             />
             <span class="checkmark"></span>
           </label>
-          <span> {{ STRINGS.TERMS_AND_CONDITIONS }} </span>
+          <span> {{ 'PRE_AUTH.REGISTER.TERMS_AND_CONDITIONS' | translate }} </span>
         </div>
         <div class="text" (click)="openTerms()">
-          {{ STRINGS.TERMS_AND_CONDITIONS_LINK }}
+          {{ 'PRE_AUTH.REGISTER.TERMS_AND_CONDITIONS_LINK' | translate }}
         </div>
       </div>
 
@@ -74,11 +74,11 @@
           (click)="signUp()"
           [ngClass]="{ disabled: buttonsDisabled }"
         >
-          {{ STRINGS.SIGN_UP }}
+          {{ 'PRE_AUTH.REGISTER.SIGN_UP' | translate }}
         </button>
       </div>
       <div class="sign-up-alternate">
-        <span> {{ STRINGS.SIGN_UP_ALTERNATE }} </span>
+        <span> {{ 'PRE_AUTH.REGISTER.SIGN_UP_ALTERNATE' | translate }} </span>
       </div>
 
       <div class="login-options">
@@ -93,7 +93,7 @@
             src="../../../assets/images/facebook_logo_white.png"
             class="facebook-logo"
           />
-          {{ STRINGS.FACEBOOK_LOGIN }}
+          {{ 'PRE_AUTH.REGISTER.FACEBOOK_LOGIN' | translate }}
         </div>
         <!-- GOOGLE -->
         <div id="my-signin2"></div>
@@ -103,8 +103,8 @@
     <div class="bar"></div>
 
     <a class="existing-account" [routerLink]="'/login'">
-      <span> {{ STRINGS.EXISTING_ACCOUNT }} </span>
-      <span class="sign-in-highlight"> {{ STRINGS.SIGN_IN }} </span>
+      <span> {{ 'PRE_AUTH.REGISTER.EXISTING_ACCOUNT' | translate }} </span>
+      <span class="sign-in-highlight"> {{ 'PRE_AUTH.REGISTER.SIGN_IN' | translate }} </span>
     </a>
   </div>
 </div>
@@ -130,6 +130,6 @@
   </svg>
 
   <div class="copyright">
-    <span> &#169; {{ STRINGS.COPYRIGHT }} </span>
+    <span> &#169; {{ 'PRE_AUTH.REGISTER.COPYRIGHT' | translate }} </span>
   </div>
 </div>

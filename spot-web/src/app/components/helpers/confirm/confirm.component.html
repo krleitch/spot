@@ -1,6 +1,6 @@
 <div class="spot-confirm">
   <div class="header">
-    {{ STRINGS.TITLE }}
+    {{ 'MAIN.CONFIRM.TITLE' | translate }}
   </div>
 
   <div *ngIf="data; else default">
@@ -10,12 +10,12 @@
   </div>
   <ng-template #default>
     <div class="message">
-      {{ STRINGS.MESSAGE }}
+      {{ 'MAIN.CONFIRM.MESSAGE' | translate }}
     </div>
   </ng-template>
 
   <div class="buttons-container">
-    <div class="button confirm" (click)="confirm()">{{ STRINGS.CONFIRM }}</div>
-    <div class="button cancel" (click)="cancel()">{{ STRINGS.CANCEL }}</div>
+    <div class="button confirm" (click)="confirm()">{{ 'MAIN.CONFIRM.CONFIRM' | translate }}</div>
+    <div class="button cancel" (click)="cancel()">{{ 'MAIN.CONFIRM.CANCEL' | translate }}</div>
   </div>
 </div>

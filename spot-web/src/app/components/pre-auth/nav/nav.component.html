@@ -9,14 +9,14 @@
       [routerLink]="'/about'"
       [ngClass]="{ selected: isSelected('about') }"
     >
-      <span class="skew-fix"> {{ STRINGS.ABOUT }} </span>
+      <span class="skew-fix"> {{ 'PRE_AUTH.NAV.ABOUT' | translate }} </span>
     </a>
     <a
       class="skew section end"
       [routerLink]="'/contact'"
       [ngClass]="{ selected: isSelected('contact') }"
     >
-      <span class="skew-fix"> {{ STRINGS.CONTACT }} </span>
+      <span class="skew-fix"> {{ 'PRE_AUTH.NAV.CONTACT' | translate }} </span>
     </a>
   </div>
 
@@ -26,11 +26,11 @@
       class="auth-link"
       [routerLink]="'/register'"
     >
-      {{ STRINGS.REGISTER }}
+      {{ 'PRE_AUTH.NAV.REGISTER' | translate }}
     </a>
     <ng-template #mylogin>
       <a class="auth-link" [routerLink]="'/login'">
-        {{ STRINGS.LOGIN }}
+        {{ 'PRE_AUTH.NAV.LOGIN' | translate }}
       </a>
     </ng-template>
   </div>

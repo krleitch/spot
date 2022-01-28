@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import {
   PasswordResetRequest,
   PasswordResetSuccess
@@ -17,8 +17,6 @@ import { SpotError } from '@exceptions/error';
   styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent implements OnInit {
-  STRINGS = STRINGS.PRE_AUTH.PASSWORD_RESET;
-
   form: FormGroup;
   errorMessage = '';
   successMessage = '';
@@ -26,13 +24,21 @@ export class PasswordResetComponent implements OnInit {
 
   emailLoading = false;
 
+  STRINGS;
+
   constructor(
     private fb: FormBuilder,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private translateService: TranslateService
   ) {
     this.form = this.fb.group({
       email: ['', Validators.required]
     });
+    this.translateService
+      .get('PRE_AUTH.PASSWORD_RESET')
+      .subscribe((res: any) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnInit(): void {}

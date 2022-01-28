@@ -25,11 +25,12 @@ import {
   ValidateTokenSuccess
 } from '@models/authentication';
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
-import { STRINGS } from '@assets/strings/en';
 
 // Services
 import { AlertService } from '@services/alert.service';
 import { ModalService } from '@services/modal.service';
+
+// TODO: FIX THE TRANSLATIONS HERE
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -126,13 +127,15 @@ export class AuthenticationService {
       username.length < AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH ||
       username.length > AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH
     ) {
-      return STRINGS.PRE_AUTH.REGISTER.USERNAME_INVALID_LENGTH.replace(
-        '%MIN%',
-        AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH.toString()
-      ).replace(
-        '%MAX%',
-        AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH.toString()
-      );
+      return 'Username must be between %MIN% and %MAX% characters'
+        .replace(
+          '%MIN%',
+          AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH.toString()
+        )
+        .replace(
+          '%MAX%',
+          AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH.toString()
+        );
     }
 
     // start with alphanumeric_ word with . - ' singular no repetition and not at end
@@ -140,7 +143,7 @@ export class AuthenticationService {
 
     // Check characters
     if (username.match(PATTERN) == null) {
-      return STRINGS.PRE_AUTH.REGISTER.USERNAME_INVALID_CHARACTERS;
+      return "Username must be alpha-numeric with non-repeated .-'";
     }
 
     return null;
@@ -152,13 +155,15 @@ export class AuthenticationService {
       password.length < AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH ||
       password.length > AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH
     ) {
-      return STRINGS.PRE_AUTH.REGISTER.PASSWORD_INVALID_LENGTH.replace(
-        '%MIN%',
-        AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH.toString()
-      ).replace(
-        '%MAX%',
-        AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH.toString()
-      );
+      return 'Password must be between %MIN% and %MAX% characters'
+        .replace(
+          '%MIN%',
+          AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH.toString()
+        )
+        .replace(
+          '%MAX%',
+          AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH.toString()
+        );
     }
 
     return null;

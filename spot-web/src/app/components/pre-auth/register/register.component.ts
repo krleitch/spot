@@ -17,6 +17,7 @@ import {
 // Services
 import { AuthenticationService } from '@services/authentication.service';
 import { ModalService } from '@services/modal.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -25,9 +26,6 @@ import {
   RegisterRequest
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
-
-// Assets
-import { STRINGS } from '@assets/strings/en';
 
 declare const gapi: any;
 
@@ -39,8 +37,6 @@ declare const gapi: any;
 export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS = STRINGS.PRE_AUTH.REGISTER;
-
   form: FormGroup;
   authenticationError$: Observable<SpotError>;
   authenticationSuccess$: Observable<boolean>;
@@ -48,11 +44,14 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   buttonsDisabled = false;
   facebookLoaded = false;
 
+  STRINGS;
+
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private modalService: ModalService,
-    private store$: Store<RootStoreState.State>
+    private store$: Store<RootStoreState.State>,
+    private translateService: TranslateService
   ) {
     this.form = this.fb.group({
       email: ['', Validators.required],
@@ -60,6 +59,9 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       password: ['', Validators.required],
       phone: ['', Validators.required],
       terms: [false, Validators.required]
+    });
+    this.translateService.get('PRE_AUTH.REGISTER').subscribe((res: any) => {
+      this.STRINGS = res;
     });
   }
 

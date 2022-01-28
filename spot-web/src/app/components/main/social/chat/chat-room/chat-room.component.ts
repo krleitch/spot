@@ -3,7 +3,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from '@services/chat.service';
 
 // Assets
-import { STRINGS } from '@src/assets/strings/en';
 import { Message, NewMessage } from '@models/chat';
 
 @Component({
@@ -12,8 +11,6 @@ import { Message, NewMessage } from '@models/chat';
   styleUrls: ['./chat-room.component.scss']
 })
 export class ChatRoomComponent implements OnInit {
-  STRINGS = STRINGS.MAIN.CHAT_ROOM;
-
   // Chat Text Content
   @ViewChild('chat') chat: ElementRef;
   joined = false;

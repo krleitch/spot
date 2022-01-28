@@ -30,6 +30,7 @@ import { CommentService } from '@services/comments.service';
 import { ModalService } from '@services/modal.service';
 import { AlertService } from '@services/alert.service';
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import { Friend } from '@models/friends';
@@ -55,7 +56,6 @@ import { Tag } from '@models/notifications';
 import { TagComponent } from '../../social/tag/tag.component';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 @Component({
@@ -76,7 +76,7 @@ export class CommentComponent
   @ViewChild('text') text;
   @ViewChild('reply') reply;
 
-  STRINGS = STRINGS.MAIN.COMMENTS;
+  STRINGS;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
   // For large comments
@@ -134,9 +134,13 @@ export class CommentComponent
     public domSanitizer: DomSanitizer,
     private modalService: ModalService,
     private alertService: AlertService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private translateService: TranslateService
   ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
+    this.translateService.get('MAIN.COMMENTS').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
   }
 
   ngOnInit(): void {

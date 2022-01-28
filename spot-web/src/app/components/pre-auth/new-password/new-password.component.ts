@@ -4,9 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import {
   NewPasswordRequest,
   NewPasswordSuccess,
@@ -21,7 +21,7 @@ import { SpotError } from '@exceptions/error';
   styleUrls: ['./new-password.component.scss']
 })
 export class NewPasswordComponent implements OnInit {
-  STRINGS = STRINGS.PRE_AUTH.NEW_PASSWORD;
+  STRINGS;
 
   formToken: FormGroup;
   formPassword: FormGroup;
@@ -36,7 +36,8 @@ export class NewPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {
     this.formToken = this.fb.group({
       token: ['', Validators.required]
@@ -45,6 +46,9 @@ export class NewPasswordComponent implements OnInit {
     this.formPassword = this.fb.group({
       password: ['', Validators.required],
       confirm: ['', Validators.required]
+    });
+    this.translateService.get('PRE_AUTH.NEW_PASSWORD').subscribe((res: any) => {
+      this.STRINGS = res;
     });
   }
 

@@ -4,11 +4,11 @@
     <div *ngIf="account$ | async as account; else noAccount">
       <div class="title">
         <span class="material-icons title-icon"> settings </span>
-        {{ STRINGS.MY_ACCOUNT }}
+        {{ 'MAIN.ACCOUNT.MY_ACCOUNT' | translate }}
       </div>
 
       <div *ngIf="account.role === 'guest'" class="guest">
-        {{ STRINGS.GUEST }}
+        {{ 'MAIN.ACCOUNT.GUEST' | translate }}
       </div>
 
       <!-- Verification -->
@@ -16,7 +16,9 @@
         class="subheading"
         ngClass="{'mobile-column': account.verified_date == null}"
       >
-        <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
+        <span class="subheading-text">
+          {{ 'MAIN.ACCOUNT.EMAIL' | translate }}
+        </span>
         <div *ngIf="account.verified_date === null; else verified">
           <div *ngIf="account.email">
             <div
@@ -24,19 +26,25 @@
               class="verify-click verify-container"
               (click)="verifyAccount()"
             >
-              <span class="verify-text"> {{ STRINGS.VERIFY }} </span>
+              <span class="verify-text">
+                {{ 'MAIN.ACCOUNT.VERIFY' | translate }}
+              </span>
               <span class="material-icons verify-icon"> email </span>
             </div>
             <ng-template #sent>
               <div class="verify-container">
-                <span class="verify-text"> {{ STRINGS.VERIFY_SENT }} </span>
+                <span class="verify-text">
+                  {{ 'MAIN.ACCOUNT.VERIFY_SENT' | translate }}
+                </span>
               </div>
             </ng-template>
           </div>
         </div>
         <ng-template #verified>
           <div class="verify-container">
-            <span class="verify-text"> {{ STRINGS.VERIFY_CHECK }} </span>
+            <span class="verify-text">
+              {{ 'MAIN.ACCOUNT.VERIFY_CHECK' | translate }}
+            </span>
             <span class="material-icons verify-icon-highlight">
               check_circle
             </span>
@@ -47,7 +55,7 @@
       <!-- Email -->
       <div class="value editable">
         <span *ngIf="!email && !editEmailEnabled" class="no-email">
-          {{ STRINGS.NO_EMAIL }}
+          {{ 'MAIN.ACCOUNT.NO_EMAIL' | translate }}
         </span>
         <input
           #editEmail
@@ -58,7 +66,7 @@
         />
         <div *ngIf="editEmailEnabled; else elseEmailBlock">
           <span class="link" (click)="submitEditEmail()">
-            {{ STRINGS.SUBMIT }}
+            {{ 'MAIN.ACCOUNT.SUBMIT' | translate }}
           </span>
         </div>
         <ng-template #elseEmailBlock>
@@ -69,7 +77,7 @@
           </div>
           <ng-template #add>
             <span class="link" (click)="enableEditEmail()">
-              {{ STRINGS.ADD }}
+              {{ 'MAIN.ACCOUNT.ADD' | translate }}
             </span>
           </ng-template>
         </ng-template>
@@ -82,12 +90,12 @@
       </div>
       <div *ngIf="account.verified_date === null">
         <div class="description">
-          {{ STRINGS.EMAIL_VERIFY_DESCRIPTION }}
+          {{ 'MAIN.ACCOUNT.EMAIL_VERIFY_DESCRIPTION' | translate }}
         </div>
       </div>
 
       <!-- Username -->
-      <div class="subheading">{{ STRINGS.USERNAME }}</div>
+      <div class="subheading">{{ 'MAIN.ACCOUNT.USERNAME' | translate }}</div>
       <div class="value editable">
         <input
           #editUsername
@@ -98,7 +106,7 @@
         />
         <div *ngIf="editUsernameEnabled; else elseBlock">
           <span class="link" (click)="submitEditUsername()">
-            {{ STRINGS.SUBMIT }}
+            {{ 'MAIN.ACCOUNT.SUBMIT' | translate }}
           </span>
         </div>
         <ng-template #elseBlock>
@@ -115,10 +123,10 @@
       </div>
 
       <!-- Phone -->
-      <div class="subheading">{{ STRINGS.PHONE }}</div>
+      <div class="subheading">{{ 'MAIN.ACCOUNT.PHONE' | translate }}</div>
       <div class="value editable">
         <span *ngIf="!phone && !editPhoneEnabled" class="no-phone">
-          {{ STRINGS.NO_PHONE }}
+          {{ 'MAIN.ACCOUNT.NO_PHONE' | translate }}
         </span>
         <input
           #editPhone
@@ -129,7 +137,7 @@
         />
         <div *ngIf="editPhoneEnabled; else elsePhoneBlock">
           <span class="link" (click)="submitEditPhone()">
-            {{ STRINGS.SUBMIT }}
+            {{ 'MAIN.ACCOUNT.SUBMIT' | translate }}
           </span>
         </div>
         <ng-template #elsePhoneBlock>
@@ -140,7 +148,7 @@
           </div>
           <ng-template #add>
             <span class="link" (click)="enableEditPhone()">
-              {{ STRINGS.ADD }}
+              {{ 'MAIN.ACCOUNT.ADD' | translate }}
             </span>
           </ng-template>
         </ng-template>
@@ -155,15 +163,17 @@
       <!-- Metadata properties -->
       <div *ngIf="accountMetadata$ | async as accountMetadata">
         <!-- Score -->
-        <div class="subheading">{{ STRINGS.SCORE }}</div>
+        <div class="subheading">{{ 'MAIN.ACCOUNT.SCORE' | translate }}</div>
         <div class="value">
           <i class="material-icons hot"> whatshot </i>
           {{ accountMetadata.score }}
         </div>
-        <div class="description">{{ STRINGS.SCORE_DESCRIPTION }}</div>
+        <div class="description">
+          {{ 'MAIN.ACCOUNT.SCORE_DESCRIPTION' | translate }}
+        </div>
 
         <!-- Unit -->
-        <div class="subheading">{{ STRINGS.UNIT }}</div>
+        <div class="subheading">{{ 'MAIN.ACCOUNT.UNIT' | translate }}</div>
         <div class="value">
           <div
             class="distance-button"
@@ -172,7 +182,7 @@
             }"
             (click)="setUnit('imperial')"
           >
-            {{ STRINGS.IMPERIAL }}
+            {{ 'MAIN.ACCOUNT.IMPERIAL' | translate }}
           </div>
           <div
             class="distance-button"
@@ -181,12 +191,12 @@
             }"
             (click)="setUnit('metric')"
           >
-            {{ STRINGS.METRIC }}
+            {{ 'MAIN.ACCOUNT.METRIC' | translate }}
           </div>
         </div>
 
         <!-- Mature Content -->
-        <div class="subheading">{{ STRINGS.MATURE }}</div>
+        <div class="subheading">{{ 'MAIN.ACCOUNT.MATURE' | translate }}</div>
         <div class="value">
           <div
             class="distance-button"
@@ -195,7 +205,7 @@
             }"
             (click)="setMature(true)"
           >
-            {{ STRINGS.MATURE_TRUE }}
+            {{ 'MAIN.ACCOUNT.MATURE_TRUE' | translate }}
           </div>
           <div
             class="distance-button"
@@ -204,20 +214,20 @@
             }"
             (click)="setMature(false)"
           >
-            {{ STRINGS.MATURE_FALSE }}
+            {{ 'MAIN.ACCOUNT.MATURE_FALSE' | translate }}
           </div>
         </div>
       </div>
 
       <div class="title">
         <span class="material-icons title-icon"> people_alt </span>
-        {{ STRINGS.SOCIAL }}
+        {{ 'MAIN.ACCOUNT.SOCIAL' | translate }}
       </div>
 
       <div class="social">
         <div
           class="social-button"
-          *ngIf="(facebookConnected$ | async) === null; else facebookconnected"
+          *ngIf="(facebookConnected$ | async) === false; else facebookconnected"
         >
           <button
             *ngIf="facebookLoaded"
@@ -228,7 +238,7 @@
               src="../../../assets/images/facebook_logo_white.png"
               class="facebook-logo"
             />
-            {{ STRINGS.FACEBOOK_CONNECT }}
+            {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT' | translate }}
           </button>
         </div>
         <ng-template #facebookconnected>
@@ -244,13 +254,13 @@
               "
               (click)="facebookDisconnect()"
             >
-              {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }}
+              {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}
             </button>
           </div>
         </ng-template>
         <div
           class="social-button"
-          *ngIf="(googleConnected$ | async) === null; else googleconnected"
+          *ngIf="(googleConnected$ | async) === false; else googleconnected"
         >
           <!-- GOOGLE -->
           <div id="my-signin2"></div>
@@ -266,22 +276,24 @@
               *ngIf="account.local_account || account.facebook_id"
               (click)="googleDisconnect()"
             >
-              {{ STRINGS.FACEBOOK_CONNECT_SUCCESS }}
+              {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}
             </button>
           </div>
         </ng-template>
       </div>
       <div *ngIf="facebookLoaded" class="description">
-        {{ STRINGS.FACEBOOK_CONNECT_DESCRIPTION }}
+        {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_DESCRIPTION' | translate }}
       </div>
 
       <div class="options">
         <div class="title">
           <span class="material-icons title-icon"> security </span>
-          {{ STRINGS.ACCOUNT_OPTIONS }}
+          {{ 'MAIN.ACCOUNT.ACCOUNT_OPTIONS' | translate }}
         </div>
         <label class="checkbox-container">
-          <span class="enable-text"> {{ STRINGS.ENABLE_OPTIONS }} </span>
+          <span class="enable-text">
+            {{ 'MAIN.ACCOUNT.ENABLE_OPTIONS' | translate }}
+          </span>
           <input type="checkbox" [(ngModel)]="accountOptionsEnabled" />
           <span class="checkmark">
             <span class="checkmark-inner"> </span>
@@ -293,14 +305,14 @@
         [ngClass]="{ disabled: !accountOptionsEnabled }"
         (click)="deleteUser()"
       >
-        {{ STRINGS.DELETE }}
+        {{ 'MAIN.ACCOUNT.DELETE' | translate }}
       </button>
     </div>
 
     <ng-template #noAccount>
       <div *ngIf="showAccountIndicator$ | async" class="no-account">
         <span class="material-icons icon"> person </span>
-        <span class="text"> {{ STRINGS.NO_ACCOUNT }} </span>
+        <span class="text"> {{ 'MAIN.ACCOUNT.NO_ACCOUNT' | translate }} </span>
       </div>
     </ng-template>
   </div>

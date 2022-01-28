@@ -4,7 +4,7 @@
     <span
       #create
       contenteditable="true"
-      attr.ph="{{ STRINGS.CREATE_PLACEHOLDER }}"
+      attr.ph="{{ 'MAIN.CREATE.CREATE_PLACEHOLDER' | translate }}"
       class="content"
       (input)="onTextInput($event)"
     ></span>
@@ -18,11 +18,11 @@
 
   <div class="option-bar">
     <div class="file-options" *ngIf="imgSrc !== null">
-      <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
+      <span class="file-title"> {{ 'MAIN.CREATE.FILE_TITLE' | translate }} </span>
       <span class="file-name"> {{ imageFile.name }} </span>
       <span class="file-remove" (click)="removeFile()">
         <i class="material-icons"> delete </i>
-        {{ STRINGS.FILE_DELETE }}
+        {{ 'MAIN.CREATE.FILE_DELETE' | translate }}
       </span>
     </div>
     <input
@@ -42,7 +42,7 @@
     </span>
     <ng-template #showsubmit>
       <span class="submit" (click)="submit()">
-        {{ STRINGS.SUBMIT }}
+        {{ 'MAIN.CREATE.SUBMIT' | translate }}
       </span>
     </ng-template>
   </div>

@@ -19,6 +19,7 @@ import {
 import { ModalService } from '@services/modal.service';
 import { FriendsService } from '@services/friends.service';
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -42,9 +43,6 @@ import {
 import { FacebookConnectRequest } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
 
-// Assets
-import { STRINGS } from '@assets/strings/en';
-
 @Component({
   selector: 'spot-friends',
   templateUrl: './friends.component.html',
@@ -53,7 +51,7 @@ import { STRINGS } from '@assets/strings/en';
 export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS = STRINGS.MAIN.FRIENDS;
+  STRINGS;
 
   // Pending
   pendingFriendRequests: Friend[] = [];
@@ -79,8 +77,13 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
     private store$: Store<RootStoreState.State>,
     private friendsService: FriendsService,
     private authenticationService: AuthenticationService,
-    private modalService: ModalService
-  ) {}
+    private modalService: ModalService,
+    private translateService: TranslateService
+  ) {
+    this.translateService.get('MAIN.FRIENDS').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
+  }
 
   ngOnInit(): void {
     this.showNoFriendsIndicator$ = timer(1000)

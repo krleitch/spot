@@ -1,55 +1,55 @@
 <div class="welcome">
   <div class="header">
     <img class="image" src="../../../../assets/images/wave.png" />
-    <span class="title"> {{ STRINGS.TITLE }} </span>
+    <span class="title"> {{ 'MAIN.WELCOME.TITLE' | translate }} </span>
   </div>
 
   <div class="body">
     <div class="heading">
-      {{ STRINGS.ANONYMOUS_TITLE }}
+      {{ 'MAIN.WELCOME.ANONYMOUS_TITLE' | translate }}
       <img class="image" src="../../../../assets/images/logo_plain.png" />
     </div>
     <div class="text-block">
       <ul>
         <li>
-          <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_1 }} </span>
+          <span class="text"> {{ 'MAIN.WELCOME.ANONYMOUS_TEXT_1' | translate }} </span>
         </li>
         <li>
-          <span class="text"> {{ STRINGS.ANONYMOUS_TEXT_2 }} </span>
+          <span class="text"> {{ 'MAIN.WELCOME.ANONYMOUS_TEXT_2' | translate }} </span>
         </li>
       </ul>
     </div>
 
     <div class="heading">
-      {{ STRINGS.FRIENDS_TITLE }}
+      {{ 'MAIN.WELCOME.FRIENDS_TITLE' | translate }}
       <span class="material-icons title-icon"> people </span>
     </div>
     <div class="text-block">
       <ul>
         <li>
           <span class="text">
-            {{ STRINGS.FRIENDS_TEXT_1_1 }}
+            {{ 'MAIN.WELCOME.FRIENDS_TEXT_1_1' | translate }}
             <span class="material-icons icon facebook"> facebook </span>
-            {{ STRINGS.FRIENDS_TEXT_1_2 }}
+            {{ 'MAIN.WELCOME.FRIENDS_TEXT_1_2' | translate }}
           </span>
         </li>
         <li>
-          <span class="text"> {{ STRINGS.FRIENDS_TEXT_2 }} </span>
+          <span class="text"> {{ 'MAIN.WELCOME.FRIENDS_TEXT_2' | translate }} </span>
         </li>
         <li>
-          <span class="text"> {{ STRINGS.FRIENDS_TEXT_3 }} </span>
+          <span class="text"> {{ 'MAIN.WELCOME.FRIENDS_TEXT_3' | translate }} </span>
         </li>
       </ul>
     </div>
 
-    <div class="heading">{{ STRINGS.LOCATION_TITLE }}</div>
+    <div class="heading">{{ 'MAIN.WELCOME.LOCATION_TITLE' | translate }}</div>
     <div class="text-block">
       <ul>
         <li>
           <span class="text">
-            {{ STRINGS.LOCATION_TEXT_1_1 }}
+            {{ 'MAIN.WELCOME.LOCATION_TEXT_1_1' | translate }}
             <span class="material-icons icon"> home </span>
-            {{ STRINGS.LOCATION_TEXT_1_2 }}
+            {{ 'MAIN.WELCOME.LOCATION_TEXT_1_2' | translate }}
           </span>
         </li>
       </ul>
@@ -57,7 +57,7 @@
 
     <div class="button-container">
       <button class="continue" (click)="closeWelcome()">
-        {{ STRINGS.CONTINUE }}
+        {{ 'MAIN.WELCOME.CONTINUE' | translate }}
       </button>
     </div>
   </div>

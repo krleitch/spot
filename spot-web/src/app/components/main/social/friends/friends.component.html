@@ -4,10 +4,10 @@
     <div class="title-wrapper">
       <div class="friends-title">
         <span class="material-icons people"> people_alt </span>
-        {{ STRINGS.TITLE }}
+        {{ 'MAIN.FRIENDS.TITLE' | translate }}
       </div>
       <div
-        *ngIf="facebookLoaded && (facebookConnected$ | async) === null"
+        *ngIf="facebookLoaded && (facebookConnected$ | async) === false"
         type="button"
         class="facebook"
         (click)="facebookConnect()"
@@ -16,12 +16,12 @@
           src="../../../assets/images/facebook_logo_white.png"
           class="facebook-logo"
         />
-        <span class="facebook-text"> {{ STRINGS.FACEBOOK_CONNECT }} </span>
+        <span class="facebook-text"> {{ 'MAIN.FRIENDS.FACEBOOK_CONNECT' | translate }} </span>
       </div>
     </div>
 
     <div *ngIf="pendingFriendRequests.length > 0">
-      <div class="friends-subtitle">{{ STRINGS.PENDING }}</div>
+      <div class="friends-subtitle">{{ 'MAIN.FRIENDS.PENDING' | translate }}</div>
       <div class="friend-content-section">
         <div
           class="friend-request-container"
@@ -37,7 +37,7 @@
               class="decline friend-button"
               (click)="deletePendingFriendRequest(pendingFriendRequest.id)"
             >
-              {{ STRINGS.CANCEL }}
+              {{ 'MAIN.FRIENDS.CANCEL' | translate }}
             </button>
           </div>
         </div>
@@ -45,7 +45,7 @@
     </div>
 
     <div *ngIf="friendRequests.length > 0">
-      <div class="friends-subtitle">{{ STRINGS.REQUESTS }}</div>
+      <div class="friends-subtitle">{{ 'MAIN.FRIENDS.REQUESTS' | translate }}</div>
       <div class="friend-content-section">
         <div
           class="friend-request-container"
@@ -59,25 +59,25 @@
               class="accept friend-button"
               (click)="acceptFriendRequest(friendRequest.id)"
             >
-              {{ STRINGS.FRIEND_REQUEST_ACCEPT }}
+              {{ 'MAIN.FRIENDS.FRIEND_REQUEST_ACCEPT' | translate }}
             </button>
             <button
               class="decline friend-button"
               (click)="declineFriendRequest(friendRequest.id)"
             >
-              {{ STRINGS.FRIEND_REQUEST_DECLINE }}
+              {{ 'MAIN.FRIENDS.FRIEND_REQUEST_DECLINE' | translate }}
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="friends-subtitle">{{ STRINGS.ADD }}</div>
+    <div class="friends-subtitle">{{ 'MAIN.FRIENDS.ADD' | translate }}</div>
     <div class="friend-content-section">
       <div class="friend-request-input-container">
         <input
           [(ngModel)]="friendRequestUsername"
-          [placeholder]="STRINGS.FRIEND_REQUEST_PLACEHOLDER"
+          placeholder="{{ 'MAIN.FRIENDS.FRIEND_REQUEST_PLACEHOLDER' | translate }}"
           type="text"
           (keyup.enter)="addFriendRequest()"
         />
@@ -94,12 +94,12 @@
     </div>
 
     <div class="friends-search">
-      <div class="subtitle">{{ STRINGS.FRIENDS_LIST }}</div>
+      <div class="subtitle">{{ 'MAIN.FRIENDS.FRIENDS_LIST' | translate }}</div>
       <div class="search">
         <span class="material-icons icon"> search </span>
         <input
           [(ngModel)]="friendSearch"
-          [placeholder]="STRINGS.FRIEND_SEARCH_PLACEHOLDER"
+          placeholder="{{ 'MAIN.FRIENDS.FRIEND_SEARCH_PLACEHOLDER' | translate }}"
           type="text"
         />
       </div>
@@ -120,7 +120,7 @@
               class="remove friend-button"
               (click)="deleteFriend(friend.id)"
             >
-              {{ STRINGS.REMOVE }}
+              {{ 'MAIN.FRIENDS.REMOVE' | translate }}
             </button>
           </div>
         </div>
@@ -129,13 +129,13 @@
           <div *ngIf="friendSearch; else addFriends">
             <span class="no-friends">
               <span class="material-icons icon"> search_off </span>
-              {{ STRINGS.NO_FRIENDS_FOUND }}
+              {{ 'MAIN.FRIENDS.NO_FRIENDS_FOUND' | translate }}
             </span>
           </div>
           <ng-template #addFriends>
             <span *ngIf="showNoFriendsIndicator$ | async" class="no-friends">
               <span class="material-icons icon"> person_add </span>
-              {{ STRINGS.NO_FRIENDS }}
+              {{ 'MAIN.FRIENDS.NO_FRIENDS' | translate }}
             </span>
           </ng-template>
         </ng-template>

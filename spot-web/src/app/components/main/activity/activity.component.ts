@@ -28,7 +28,6 @@ import {
   CommentActivity
 } from '@models/comments';
 import { AccountMetadata, Location } from '@models/accounts';
-import { STRINGS } from '@assets/strings/en';
 
 // Extend Post and Comment to include acitivty specefic properties
 interface PostActivity extends Post {
@@ -46,8 +45,6 @@ interface CommentActivityActivity extends CommentActivity {
 })
 export class ActivityComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
-
-  STRINGS = STRINGS.MAIN.ACTIVITY;
 
   location$: Observable<Location>;
   location: Location;

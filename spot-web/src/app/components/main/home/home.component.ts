@@ -40,7 +40,6 @@ import {
 } from '@models/accounts';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import { LOCATIONS_CONSTANTS } from '@constants/locations';
 import { POSTS_CONSTANTS } from '@constants/posts';
 
@@ -53,7 +52,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
   private readonly stop$ = new Subject<void>(); // Used to cancel loading posts
 
-  STRINGS = STRINGS.MAIN.HOME;
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   // Posts

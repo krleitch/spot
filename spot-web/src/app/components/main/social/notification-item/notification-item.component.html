@@ -72,18 +72,18 @@
         <div *ngIf="notification.comment_id; else postLink">
           <div *ngIf="notification.reply_id; else commentLink">
             <span class="username"> {{ notification.username }} </span>
-            <span> {{ STRINGS.REPLY_PROMPT }} </span>
+            <span> {{ 'MAIN.NOTIFICATION_ITEM.REPLY_PROMPT' | translate }} </span>
             <div class="text">{{ notification.reply_content }}</div>
           </div>
           <ng-template #commentLink>
             <span class="username"> {{ notification.username }} </span>
-            <span> {{ STRINGS.COMMENT_PROMPT }} </span>
+            <span> {{ 'MAIN.NOTIFICATION_ITEM.COMMENT_PROMPT' | translate }} </span>
             <div class="text">{{ notification.comment_content }}</div>
           </ng-template>
         </div>
         <ng-template #postLink>
           <span class="username"> {{ notification.username }} </span>
-          <span> {{ STRINGS.PROMPT }} </span>
+          <span> {{ 'MAIN.NOTIFICATION_ITEM.PROMPT' | translate }} </span>
           <div class="text">{{ notification.content }}</div>
         </ng-template>
       </div>

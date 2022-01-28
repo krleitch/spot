@@ -12,10 +12,10 @@ import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
 
 // Services
 import { AccountsService } from '@services/accounts.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Assets
 import { Account, VerifyConfirmRequest, VerifyRequest } from '@models/accounts';
-import { STRINGS } from '@assets/strings/en';
 
 @Component({
   selector: 'spot-verify',
@@ -25,7 +25,7 @@ import { STRINGS } from '@assets/strings/en';
 export class VerifyComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS = STRINGS.MAIN.VERIFY;
+  STRINGS;
 
   successMessage = '';
   errorMessage = '';
@@ -35,8 +35,13 @@ export class VerifyComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private accountsService: AccountsService,
-    private store$: Store<RootStoreState.State>
-  ) {}
+    private store$: Store<RootStoreState.State>,
+    private translateService: TranslateService
+  ) {
+    this.translateService.get('MAIN.VERIFY').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
+  }
 
   ngOnInit(): void {
     // Account

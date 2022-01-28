@@ -41,7 +41,7 @@
       <div class="content">
         <div class="tagger" *ngIf="comment.tag.tagged">
           <span class="highlight"> {{ comment.tag.tagger }} </span>
-          {{ STRINGS.TAGGER }}
+          {{ 'MAIN.COMMENTS.TAGGER' | translate }}
         </div>
 
         <div class="text">
@@ -49,12 +49,12 @@
           <span *ngIf="isExpandable">
             <span *ngIf="expanded; else notExpanded">
               <span class="expand" (click)="setExpanded(false)">
-                {{ STRINGS.SEE_LESS }}
+                {{ 'MAIN.COMMENTS.SEE_LESS' | translate }}
               </span>
             </span>
             <ng-template #notExpanded>
               <span class="expand" (click)="setExpanded(true)">
-                {{ STRINGS.SEE_MORE }}
+                {{ 'MAIN.COMMENTS.SEE_MORE' | translate }}
               </span>
             </ng-template>
           </span>
@@ -77,9 +77,9 @@
               class="image-blur-text"
             >
               <span class="material-icons icon"> error_outline </span>
-              <span class="text"> {{ STRINGS.MATURE_CONTENT }} </span>
+              <span class="text"> {{ 'MAIN.COMMENTS.MATURE_CONTENT' | translate }} </span>
               <span class="text highlight">
-                {{ STRINGS.MATURE_CONTENT_SHOW }}
+                {{ 'MAIN.COMMENTS.MATURE_CONTENT_SHOW' | translate }}
               </span>
             </div>
           </div>
@@ -91,7 +91,7 @@
           <span
             #reply
             contenteditable="true"
-            attr.ph="{{ STRINGS.ADD_REPLY_PLACEHOLDER }}"
+            attr.ph="{{ 'MAIN.COMMENTS.ADD_REPLY_PLACEHOLDER' | translate }}"
             class="reply-content"
             (input)="onTextInput($event)"
             (keydown.enter)="onEnter()"
@@ -100,7 +100,7 @@
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
           <div class="file-options" *ngIf="imgSrc !== null">
-            <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
+            <span class="file-title"> {{ 'MAIN.COMMENTS.FILE_TITLE' | translate }} </span>
             <span class="file-name">
               {{ getDisplayFilename(imageFile.name) }}
             </span>
@@ -152,7 +152,7 @@
               (click)="openReportModal(comment.post_id, comment.id)"
             >
               <span class="material-icons icon"> outlined_flag </span>
-              {{ STRINGS.REPORT }}
+              {{ 'MAIN.COMMENTS.REPORT' | translate }}
             </div>
             <div
               class="button"
@@ -166,7 +166,7 @@
               "
             >
               <span class="material-icons icon"> share </span>
-              {{ STRINGS.SHARE }}
+              {{ 'MAIN.COMMENTS.SHARE' | translate }}
             </div>
             <div
               *ngIf="
@@ -178,7 +178,7 @@
               (click)="deleteComment()"
             >
               <span class="material-icons icon"> delete </span>
-              {{ STRINGS.DELETE }}
+              {{ 'MAIN.COMMENTS.DELETE' | translate }}
             </div>
           </div>
         </div>
@@ -219,7 +219,7 @@
       *ngIf="showLoadingRepliesIndicator$ | async"
       class="no-replies-loading"
     >
-      <span> {{ STRINGS.LOADING_REPLIES }} </span>
+      <span> {{ 'MAIN.COMMENTS.LOADING_REPLIES' | translate }} </span>
       <div class="loading">
         <spot-spinner size="small" type="dot"></spot-spinner>
       </div>
@@ -238,7 +238,7 @@
 
   <div *ngIf="totalRepliesAfter > 0" class="load-more-container">
     <div class="load-more" (click)="loadMoreReplies()">
-      {{ STRINGS.LOAD }}
+      {{ 'MAIN.COMMENTS.LOAD' | translate }}
       {{ loadMoreRepliesNum() }}
       {{
         loadMoreRepliesNum() > 1

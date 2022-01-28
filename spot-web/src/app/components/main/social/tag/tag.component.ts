@@ -20,7 +20,6 @@ import {
 } from '@store/social-store';
 
 // Assets
-import { STRINGS } from '@assets/strings/en';
 import { Friend, GetFriendsRequest } from '@models/friends';
 import { Tag } from '@models/notifications';
 
@@ -35,8 +34,6 @@ export class TagComponent implements OnInit, OnChanges {
   @Output() tag = new EventEmitter<string>();
 
   constructor(private store$: Store<RootStoreState.State>) {}
-
-  STRINGS = STRINGS.MAIN.TAG;
 
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
