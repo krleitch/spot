@@ -207,6 +207,7 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Only allow ascii characters currently, so check anything but ascii
     // So user knows what they need to change
+    // eslint-disable-next-line no-control-regex
     const regex = /^[^\x00-\x7F]*$/;
     const match = content.match(regex);
     if (match && match[0].length > 0) {

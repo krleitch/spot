@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -15,9 +14,7 @@ import {
   templateUrl: './infinite-scroll.component.html',
   styleUrls: ['./infinite-scroll.component.scss']
 })
-export class InfiniteScrollComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class InfiniteScrollComponent implements OnDestroy, AfterViewInit {
   @Input() options = {};
   @Output() scrolled = new EventEmitter();
   @ViewChild('anchor') anchor: ElementRef<HTMLElement>;
@@ -33,16 +30,16 @@ export class InfiniteScrollComponent
     return this.host.nativeElement;
   }
 
-  ngOnInit() {
-    // const options = {
-    //   root: this.isHostScrollable() ? this.host.nativeElement : null,
-    //   ...this.options
-    // };
-    // this.observer = new IntersectionObserver(([entry]) => {
-    //   entry.isIntersecting && this.scrolled.emit();
-    // }, options);
-    // this.observer.observe(this.anchor.nativeElement);
-  }
+  // ngOnInit() {
+  // const options = {
+  //   root: this.isHostScrollable() ? this.host.nativeElement : null,
+  //   ...this.options
+  // };
+  // this.observer = new IntersectionObserver(([entry]) => {
+  //   entry.isIntersecting && this.scrolled.emit();
+  // }, options);
+  // this.observer.observe(this.anchor.nativeElement);
+  // }
 
   ngAfterViewInit() {
     const options = {

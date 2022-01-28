@@ -1,7 +1,7 @@
 <div class="container">
   <div
     class="comment"
-    [ngClass]="{ linked: post.startCommentLink == comment.link }"
+    [ngClass]="{ linked: post.startCommentLink === comment.link }"
   >
     <div class="left-bar">
       <div class="left-bar-alignment">
@@ -9,7 +9,7 @@
           <i
             class="material-icons vote"
             (click)="like()"
-            [ngClass]="{ highlight: comment.rated == 1 }"
+            [ngClass]="{ highlight: comment.rated === 1 }"
           >
             keyboard_arrow_up
           </i>
@@ -17,7 +17,7 @@
           <i
             class="material-icons vote"
             (click)="dislike()"
-            [ngClass]="{ highlight: comment.rated == 0 }"
+            [ngClass]="{ highlight: comment.rated === 0 }"
           >
             keyboard_arrow_down
           </i>
@@ -62,7 +62,7 @@
 
         <div *ngIf="accountMetadata$ | async as accountMetadata">
           <div
-            *ngIf="comment.image_src != null"
+            *ngIf="comment.image_src !== null"
             (click)="imageClicked()"
             class="image"
           >
@@ -96,10 +96,10 @@
             (input)="onTextInput($event)"
             (keydown.enter)="onEnter()"
           ></span>
-          <div *ngIf="imgSrc != null" class="image">
+          <div *ngIf="imgSrc !== null" class="image">
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
-          <div class="file-options" *ngIf="imgSrc != null">
+          <div class="file-options" *ngIf="imgSrc !== null">
             <span class="file-title"> {{ STRINGS.FILE_TITLE }} </span>
             <span class="file-name">
               {{ getDisplayFilename(imageFile.name) }}

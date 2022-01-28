@@ -135,7 +135,7 @@
             >
               <div class="activity-header">
                 <div class="date">
-                  <span *ngIf="activity.parent_id == null; else replyDate">
+                  <span *ngIf="activity.parent_id === null; else replyDate">
                     {{ STRINGS.DATE_COMMENT_PROMPT }}
                   </span>
                   <ng-template #replyDate>

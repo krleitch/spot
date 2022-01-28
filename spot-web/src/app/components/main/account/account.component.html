@@ -17,10 +17,10 @@
         ngClass="{'mobile-column': account.verified_date == null}"
       >
         <span class="subheading-text"> {{ STRINGS.EMAIL }} </span>
-        <div *ngIf="account.verified_date == null; else verified">
+        <div *ngIf="account.verified_date === null; else verified">
           <div *ngIf="account.email">
             <div
-              *ngIf="verificationSent == false; else sent"
+              *ngIf="verificationSent === false; else sent"
               class="verify-click verify-container"
               (click)="verifyAccount()"
             >
@@ -80,7 +80,7 @@
       <div *ngIf="emailSuccessMessage" class="success">
         {{ emailSuccessMessage }}
       </div>
-      <div *ngIf="account.verified_date == null">
+      <div *ngIf="account.verified_date === null">
         <div class="description">
           {{ STRINGS.EMAIL_VERIFY_DESCRIPTION }}
         </div>
@@ -191,7 +191,7 @@
           <div
             class="distance-button"
             [ngClass]="{
-              'distance-selected': accountMetadata.mature_filter == true
+              'distance-selected': accountMetadata.mature_filter === true
             }"
             (click)="setMature(true)"
           >
@@ -200,7 +200,7 @@
           <div
             class="distance-button"
             [ngClass]="{
-              'distance-selected': accountMetadata.mature_filter == false
+              'distance-selected': accountMetadata.mature_filter === false
             }"
             (click)="setMature(false)"
           >
@@ -217,7 +217,7 @@
       <div class="social">
         <div
           class="social-button"
-          *ngIf="!(facebookConnected$ | async); else facebookconnected"
+          *ngIf="(facebookConnected$ | async) === null; else facebookconnected"
         >
           <button
             *ngIf="facebookLoaded"
@@ -250,7 +250,7 @@
         </ng-template>
         <div
           class="social-button"
-          *ngIf="!(googleConnected$ | async); else googleconnected"
+          *ngIf="(googleConnected$ | async) === null; else googleconnected"
         >
           <!-- GOOGLE -->
           <div id="my-signin2"></div>

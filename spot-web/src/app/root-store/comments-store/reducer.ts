@@ -88,12 +88,14 @@ export function featureReducer(state = initialState, action: Actions): State {
         };
       }
 
-      const newTotalCommentsAfter = action.request.hasOwnProperty(
+      const newTotalCommentsAfter = Object.prototype.hasOwnProperty.call(
+        action.request,
         'totalCommentsAfter'
       )
         ? action.request.totalCommentsAfter
         : newComments[action.request.postId].totalCommentsAfter;
-      const newTotalCommentsBefore = action.request.hasOwnProperty(
+      const newTotalCommentsBefore = Object.prototype.hasOwnProperty.call(
+        action.request,
         'totalCommentsBefore'
       )
         ? action.request.totalCommentsBefore

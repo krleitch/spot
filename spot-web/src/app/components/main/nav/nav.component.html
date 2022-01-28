@@ -12,7 +12,7 @@
         notifications_none
       </i>
       <div
-        *ngIf="unreadNotifications != '0'"
+        *ngIf="unreadNotifications !== '0'"
         class="unread"
         (click)="toggleNotifications()"
       >

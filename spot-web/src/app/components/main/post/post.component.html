@@ -4,7 +4,7 @@
       <i
         class="material-icons vote"
         (click)="like()"
-        [ngClass]="{ highlight: post.rated == 1 }"
+        [ngClass]="{ highlight: post.rated === 1 }"
       >
         keyboard_arrow_up
       </i>
@@ -12,7 +12,7 @@
       <i
         class="material-icons vote"
         (click)="dislike()"
-        [ngClass]="{ highlight: post.rated == 0 }"
+        [ngClass]="{ highlight: post.rated === 0 }"
       >
         keyboard_arrow_down
       </i>
@@ -41,7 +41,7 @@
 
       <!-- Image -->
       <div
-        *ngIf="post.image_src != null"
+        *ngIf="post.image_src !== null"
         (click)="imageClicked()"
         class="image"
       >
@@ -50,13 +50,13 @@
           [src]="post.image_src"
           [ngClass]="{
             'image-blur':
-              (accountMetadata == null && imageBlurred) ||
+              (accountMetadata === null && imageBlurred) ||
               (imageBlurred && accountMetadata.mature_filter)
           }"
         />
         <div
           *ngIf="
-            (accountMetadata == null && imageBlurred) ||
+            (accountMetadata === null && imageBlurred) ||
             (imageBlurred && accountMetadata.mature_filter)
           "
           class="image-blur-text"

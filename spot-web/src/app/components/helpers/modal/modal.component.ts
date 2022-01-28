@@ -28,8 +28,6 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const modal = this;
-
     if (!this.id) {
       return;
     }
@@ -38,7 +36,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
     this.element.addEventListener('click', (e: any) => {
       if (e.target.className === 'spot-modal' && !this.disableClose) {
-        modal.close();
+        this.close();
       }
     });
 

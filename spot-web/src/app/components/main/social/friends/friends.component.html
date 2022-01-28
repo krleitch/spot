@@ -7,7 +7,7 @@
         {{ STRINGS.TITLE }}
       </div>
       <div
-        *ngIf="facebookLoaded && !(facebookConnected$ | async)"
+        *ngIf="facebookLoaded && (facebookConnected$ | async) === null"
         type="button"
         class="facebook"
         (click)="facebookConnect()"
