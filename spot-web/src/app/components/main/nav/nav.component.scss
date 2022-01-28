@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 
 .nav {
@@ -11,7 +10,7 @@
 }
 
 .highlight {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .title-link {
@@ -61,7 +60,7 @@
 }
 
 .hot {
-  color: $error-red-light;
+  color: var(--error-light);
   margin-right: 3px;
 }
 
@@ -69,7 +68,7 @@
   position: relative;
   display: flex;
   font-size: 18px;
-  color: $subtle-grey;
+  color: var(--icon-secondary);
   margin-right: 15px;
   cursor: pointer;
   &:hover {
@@ -86,7 +85,7 @@
   right: -5px;
   font-size: 9px;
   color: white;
-  background-color: $error-red-light;
+  background-color: var(--error-light);
   width: 14px;
   height: 14px;
   border-radius: 7px;
@@ -98,7 +97,7 @@
   align-items: center;
   position: relative;
   font-size: 18px;
-  color: $subtle-grey;
+  color: var(--icon-secondary);
   cursor: pointer;
   &:hover {
     @extend .highlight;
@@ -137,11 +136,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid $lighter-grey;
+  border-bottom: 1px solid var(--background-primary);
 
   &:hover {
-    background: $lighter-grey;
-    color: $button-highlight;
+    background: var(--background-primary);
+    color: var(--primary);
   }
 
   .icon {

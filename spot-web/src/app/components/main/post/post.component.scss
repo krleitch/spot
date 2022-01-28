@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 
 .container {
@@ -13,7 +12,7 @@
 
     .bar {
       width: 90%;
-      border-bottom: 1px solid $lighter-grey;
+      border-bottom: 1px solid var(--background-primary);
     }
   }
 }
@@ -32,7 +31,7 @@
 }
 
 .highlight {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .vote {
@@ -44,7 +43,7 @@
 
 .time {
   font-size: 12px;
-  color: $subtle-grey;
+  color: var(--text-secondary);
   text-decoration: none;
   &:hover {
     text-decoration: underline;
@@ -53,7 +52,7 @@
 }
 
 .distance {
-  color: $subtle-grey;
+  color: var(--text-secondary);
 }
 
 .content-container {
@@ -104,7 +103,7 @@ img {
   flex-flow: column;
   justify-content: center;
   align-items: center;
-  background-color: $background-grey;
+  background-color: var(--background-page);
   padding: 10px 5px;
 
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
@@ -116,7 +115,7 @@ img {
   .icon {
     font-size: 42px;
     margin-bottom: 5px;
-    color: $button-highlight;
+    color: var(--primary);
   }
 
   .text {
@@ -126,12 +125,12 @@ img {
   }
 
   .text.highlight {
-    color: $subtle-grey;
+    color: var(--text-secondary);
   }
 }
 
 .image:hover .image-blur-text .text.highlight {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .options {
@@ -143,18 +142,18 @@ img {
 }
 
 .comment-number {
-  color: $subtle-grey;
+  color: var(--text-secondary);
   text-align: left;
 }
 
 .highlight {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .expand {
   flex: 1;
   text-align: center;
-  color: $subtle-grey;
+  color: var(--text-secondary);
   cursor: pointer;
   &:hover {
     @extend .highlight;
@@ -205,12 +204,12 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid $lighter-grey;
+  border-bottom: 1px solid var(--background-primary);
   cursor: pointer;
 
   &:hover {
-    background: $lighter-grey;
-    color: $button-highlight;
+    background: var(--background-primary);
+    color: var(--primary);
   }
 
   .icon {

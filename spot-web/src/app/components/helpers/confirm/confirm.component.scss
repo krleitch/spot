@@ -1,14 +1,12 @@
-@import '../../../styles/colors';
-
 .spot-confirm {
   display: flex;
   flex-flow: column;
 
   .header {
     padding: 5px 10px;
-    background-color: $lighter-grey;
+    background-color: var(--background-primary);
     width: 100%;
-    border-bottom: 1px solid $subtle-grey;
+    border-bottom: 1px solid var(--background-secondary);
     box-sizing: border-box;
     margin-bottom: 15px;
   }
@@ -24,7 +22,12 @@
     justify-content: flex-end;
     padding: 10px;
 
-    .button {
+    button {
+      border: none;
+      text-decoration: none;
+      outline: none;
+      cursor: pointer;
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -33,22 +36,21 @@
       height: 25px;
       padding: 5px;
       margin: 0px 2px;
-      cursor: pointer;
     }
 
     .confirm {
-      background-color: $button-highlight;
+      background-color: var(--primary);
 
       &:hover {
-        background-color: lighten($button-highlight, 3%);
+        background-color: var(--primary-highlight);
       }
     }
 
     .cancel {
-      background-color: $error-red-light;
+      background-color: var(--error-light);
 
       &:hover {
-        background-color: lighten($error-red-light, 5%);
+        background-color: var(--error-light-highlight);
       }
     }
   }

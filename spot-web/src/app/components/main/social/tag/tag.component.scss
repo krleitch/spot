@@ -1,5 +1,3 @@
-@import '../../../../styles/colors';
-
 .tag {
   background-color: white;
   width: 235px;
@@ -8,7 +6,7 @@
   .header {
     font-size: 20px;
     padding: 5px 10px;
-    border-bottom: 1px solid $lighter-grey;
+    border-bottom: 1px solid var(--background-primary);
   }
 
   .content {
@@ -38,7 +36,7 @@
         .bar {
           height: 1px;
           width: 100%;
-          background-color: $lighter-grey;
+          background-color: var(--background-primary);
         }
       }
     }
@@ -52,11 +50,11 @@
         box-sizing: border-box;
         width: 100%;
         padding: 3px 5px;
-        background-color: $lighter-grey;
+        background-color: var(--background-primary);
 
         &:hover {
           color: white;
-          background-color: $button-highlight;
+          background-color: var(--primary);
         }
       }
     }

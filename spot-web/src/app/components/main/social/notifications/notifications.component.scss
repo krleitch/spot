@@ -1,8 +1,7 @@
-@import '../../../../styles/colors';
 @import '../../../../styles/sizes';
 
 .highlight {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .notifications {
@@ -17,7 +16,7 @@
 
   &:hover {
     cursor: default;
-    color: $subtle-grey;
+    color: var(--text-secondary);
   }
 
   .header {
@@ -27,12 +26,12 @@
     color: black;
     font-size: 16px;
     padding: 7px 10px;
-    border-bottom: 1px solid $lighter-grey;
+    border-bottom: 1px solid var(--background-primary);
 
     .see {
       display: flex;
       align-items: center;
-      color: $subtle-grey;
+      color: var(--text-secondary);
       cursor: pointer;
       &:hover {
         @extend .highlight;
@@ -67,14 +66,14 @@
       min-height: 70px;
 
       .text {
-        color: $subtle-grey;
+        color: var(--text-secondary);
         font-size: 14px;
         margin-bottom: 12px;
       }
 
       &:hover {
         cursor: default;
-        color: $subtle-grey;
+        color: var(--text-secondary);
       }
     }
   }
@@ -90,7 +89,7 @@
     padding: 15px;
 
     .icon {
-      color: $button-highlight;
+      color: var(--primary);
     }
   }
 }

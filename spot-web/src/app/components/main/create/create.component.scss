@@ -1,5 +1,3 @@
-@import '../../../styles/colors';
-
 .create {
   height: auto;
 }
@@ -26,14 +24,14 @@
   // include a placeholder
   [contenteditable='true']:empty:not(:focus):before {
     content: attr(ph);
-    color: $subtle-grey;
+    color: var(--input-text-ph);
     font-style: italic;
     cursor: text;
   }
 
   [contenteditable='true']:empty:focus:before {
     content: attr(ph);
-    color: lighten($subtle-grey, 20%);
+    color: var(--input-text-ph-light);
     font-style: italic;
     cursor: text;
   }
@@ -43,7 +41,7 @@
   display: flex;
   box-sizing: border-box;
   padding: 0px 12px;
-  color: $error-red;
+  color: var(--error);
   background-color: white;
 }
 
@@ -62,7 +60,7 @@ img {
 // OPTION BAR
 
 .highlight {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .option-bar {
@@ -88,34 +86,34 @@ img {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: $info-blue;
+    color: var(--info);
     flex: 1;
   }
 
   .file-remove {
-    color: $subtle-grey;
+    color: var(--icon-secondary);
     display: flex;
     align-items: center;
     cursor: pointer;
     margin-right: 10px;
     &:hover {
-      color: $error-red;
+      color: var(--error);
     }
   }
 }
 
 .counter {
-  color: $subtle-grey;
+  color: var(--text-secondary);
   margin-right: 7px;
 }
 
 .counter-error {
-  color: $error-red;
+  color: var(--error);
 }
 
 .photo {
   cursor: pointer;
-  color: $subtle-grey;
+  color: var(--icon-secondary);
   margin-right: 7px;
   &:hover {
     @extend .highlight;
@@ -124,7 +122,7 @@ img {
 
 .submit {
   font-size: 14px;
-  color: $subtle-grey;
+  color: var(--text-secondary);
   cursor: pointer;
   min-width: 50px;
   &:hover {

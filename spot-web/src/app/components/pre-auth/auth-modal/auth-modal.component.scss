@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 
 .spot-auth-modal {
@@ -7,7 +6,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 5px 10px;
-    background-color: $lighter-grey;
+    background-color: var(--background-primary);
 
     .title {
       color: black;
@@ -16,10 +15,10 @@
     .close {
       display: flex;
       align-items: center;
-      color: $subtle-grey;
+      color: var(--icon-secondary);
       &:hover {
         cursor: pointer;
-        color: $error-red;
+        color: var(--error);
       }
     }
   }
@@ -32,8 +31,8 @@
       width: 100%;
 
       .tab {
-        background-color: $lighter-grey;
-        color: $subtle-grey;
+        background-color: var(--background-primary);
+        color: var(--text-secondary);
         text-align: center;
         width: 50%;
         padding: 10px;
@@ -43,7 +42,7 @@
       }
 
       .selected {
-        background-color: $button-highlight;
+        background-color: var(--primary);
         color: white;
       }
     }
@@ -79,7 +78,7 @@ form {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $facebook-blue;
+  background-color: var(--facebook);
   color: white;
   font-size: 14px;
   padding: 12px 8px;
@@ -107,11 +106,11 @@ fieldset {
 
 .error-message {
   text-align: center;
-  color: $error-red;
+  color: var(--error);
 }
 
 input.ng-dirty.ng-invalid {
-  border: 1px solid $error-red;
+  border: 1px solid var(--error);
 }
 
 .form-field {
@@ -135,17 +134,17 @@ input.ng-dirty.ng-invalid {
 
 a {
   text-decoration: none;
-  color: $subtle-grey;
+  color: var(--text-secondary);
   &:hover {
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 
 button {
-  background-color: $button-black;
+  background-color: var(--button-background);
   width: 100px;
   border: none;
-  color: $button-font-white;
+  color: var(--button-text);
   padding: 12px 12px;
   text-decoration: none;
   margin: 4px 2px;
@@ -157,17 +156,17 @@ button {
   cursor: pointer;
 
   &:hover {
-    background-color: lighten($button-black, 10%);
+    background-color: var(--button-background-highlight);
   }
 
   button.disabled {
-    background-color: $subtle-grey;
+    background-color: var(--button-disabled);
     cursor: not-allowed;
   }
 }
 
 .disabled {
-  background-color: $subtle-grey;
+  background-color: var(--background-secondary);
   cursor: not-allowed;
 }
 
@@ -176,7 +175,7 @@ input {
   padding: 8px 12px;
   margin: 6px 0px;
   box-sizing: border-box;
-  border: 1px solid $subtle-grey;
+  border: 1px solid var(--input-border);
   outline: none;
 }
 
@@ -198,9 +197,9 @@ input {
 
   .text {
     cursor: pointer;
-    color: $subtle-grey;
+    color: var(--text-secondary);
     &:hover {
-      color: darken($subtle-grey, 5%);
+      color: var(--primary);
     }
   }
 }
@@ -234,7 +233,7 @@ input {
   left: 0;
   height: 15px;
   width: 15px;
-  border: 1px solid $subtle-grey;
+  border: 1px solid var(--input-border);
 }
 
 .checkbox-container:hover input ~ .checkmark {
@@ -243,8 +242,8 @@ input {
 
 /* When the checkbox is checked, add a blue background */
 .checkbox-container input:checked ~ .checkmark {
-  border: 1px solid $button-highlight;
-  background-color: $button-highlight;
+  border: 1px solid var(--primary);
+  background-color: var(--primary);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */

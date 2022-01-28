@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 
 spot-main-nav {
@@ -16,7 +15,7 @@ spot-main-nav {
   min-height: 100%;
   width: 100%;
   padding-top: 60px;
-  background-color: $background-grey;
+  background-color: var(--background-page);
   box-sizing: border-box;
 }
 
@@ -42,7 +41,7 @@ spot-main-nav {
 
 .tab-container {
   position: fixed;
-  background-color: $background-grey;
+  background-color: var(--background-page);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,7 +60,7 @@ spot-main-nav {
 
 .selected {
   height: 3px;
-  background-color: $button-highlight;
+  background-color: var(--primary);
   display: none;
 }
 
@@ -72,13 +71,13 @@ spot-main-nav {
 // common
 
 .date {
-  color: $subtle-grey;
+  color: var(--text-secondary);
   font-size: 16px;
 }
 
 .horiz-bar {
   width: 100%;
-  border-bottom: 1px solid $lighter-grey;
+  border-bottom: 1px solid var(--background-primary);
 }
 
 .image {
@@ -114,7 +113,7 @@ img {
   flex-flow: column;
   justify-content: center;
   align-items: center;
-  background-color: $background-grey;
+  background-color: var(--background-page);
   padding: 5px 5px;
 
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
@@ -125,7 +124,7 @@ img {
 
   .icon {
     font-size: 42px;
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 
@@ -152,10 +151,10 @@ img {
     display: flex;
     align-items: center;
     font-size: 16px;
-    color: $subtle-grey;
+    color: var(--text-secondary);
     margin-left: 10px;
     &:hover {
-      color: $button-highlight;
+      color: var(--primary);
     }
 
     .icon {
@@ -186,7 +185,7 @@ img {
       overflow: hidden;
 
       .info-bar {
-        color: $subtle-grey;
+        color: var(--background-secondary);
       }
 
       .info-bar-item {
@@ -210,12 +209,12 @@ img {
     .time {
       text-align: center;
       font-size: 14px;
-      color: $subtle-grey;
+      color: var(--text-secondary);
     }
 
     .icon {
       font-size: 36px;
-      color: $button-highlight;
+      color: var(--primary);
     }
   }
 }
@@ -265,12 +264,12 @@ img {
     .time {
       text-align: center;
       font-size: 14px;
-      color: $subtle-grey;
+      color: var(--text-secondary);
     }
 
     .icon {
       font-size: 36px;
-      color: $button-highlight;
+      color: var(--primary);
     }
   }
 }
@@ -281,10 +280,10 @@ img {
   display: flex;
   align-items: center;
   font-size: 16px;
-  color: $subtle-grey;
+  color: var(--text-secondary);
   margin-left: 10px;
   &:hover {
-    color: $button-highlight;
+    color: var(--primary);
   }
 
   .icon {

@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500&display=swap');
 
@@ -17,7 +16,7 @@ spot-main-nav {
   min-height: 100%;
   width: 100%;
   padding-top: 60px;
-  background-color: $background-grey;
+  background-color: var(--background-page);
   box-sizing: border-box;
 
   .fit-container {
@@ -66,7 +65,7 @@ spot-main-nav {
 }
 
 .selectedLocation {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .postFilterToggle {
@@ -89,8 +88,8 @@ spot-main-nav {
   min-width: 66px;
   background: linear-gradient(
     to left,
-    $lighter-grey 50%,
-    $button-highlight 50%
+    var(--background-primary) 50%,
+    var(--primary) 50%
   );
   background-size: 200% 100%;
   background-position: right bottom;
@@ -106,8 +105,8 @@ spot-main-nav {
   padding: 8px 8px;
   background: linear-gradient(
     to right,
-    $lighter-grey 50%,
-    $button-highlight 50%
+    var(--background-primary) 50%,
+    var(--primary) 50%
   );
   background-size: 200% 100%;
   background-position: left bottom;
@@ -164,7 +163,7 @@ spot-create {
       width: 65px;
       height: 65px;
       border-radius: 50%;
-      background-color: lighten($button-highlight, 3%);
+      background-color: #08C7AD;
     }
 
     .c2 {
@@ -174,7 +173,7 @@ spot-create {
       width: 65px;
       height: 65px;
       border-radius: 50%;
-      background-color: darken($button-highlight, 3%);
+      background-color: #00B79D;
     }
 
     .c3 {
@@ -184,7 +183,7 @@ spot-create {
       width: 65px;
       height: 65px;
       border-radius: 50%;
-      background-color: $button-highlight;
+      background-color: #00BFA5;
     }
 
     .icon {
@@ -204,7 +203,7 @@ spot-create {
     color: lighten(#212121, 10%);
     .highlight {
       font-size: 26px;
-      color: $button-highlight;
+      color: var(--primary);
     }
   }
 
@@ -215,7 +214,7 @@ spot-create {
 
   .icon {
     font-size: 42px;
-    color: $button-highlight;
+    color: var(--primary);
   }
 
   spot-spinner {
@@ -261,18 +260,18 @@ spot-create {
   .icon {
     margin: 5px 0px;
     font-size: 42px;
-    color: $button-highlight;
+    color: var(--primary);
   }
 
   .clickable {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $subtle-grey;
+    color: var(--text-secondary);
     font-size: 18px;
 
     &:hover {
-      color: $button-highlight;
+      color: var(--primary);
       cursor: pointer;
     }
 
@@ -297,7 +296,7 @@ spot-create {
   .line {
     width: 100%;
     margin: 25px 10px;
-    border-bottom: 1px solid $subtle-grey;
+    border-bottom: 1px solid var(--background-secondary);
   }
 
   .enable-location-button {
@@ -309,8 +308,8 @@ spot-create {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $button-black;
-    color: $button-font-white;
+    background-color: var(--button-background);
+    color: var(--button-text);
     padding: 12px 24px;
     margin-top: 10px;
     font-size: 14px;
@@ -318,7 +317,7 @@ spot-create {
     border-radius: 5px;
 
     &:hover {
-      background-color: lighten($button-black, 10%);
+      background-color: var(--button-background-highlight);
     }
   }
 }
@@ -390,13 +389,13 @@ spot-create {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid $lighter-grey;
+    border-bottom: 1px solid var(--background-primary);
     box-sizing: border-box;
     cursor: pointer;
 
     &:hover {
-      background: $lighter-grey;
-      color: $button-highlight;
+      background: var(--background-primary);
+      color: var(--primary);
     }
 
     .dropdown-icon {
@@ -409,7 +408,7 @@ spot-create {
   }
 
   .selected-highlight {
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 

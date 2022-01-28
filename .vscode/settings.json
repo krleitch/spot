@@ -1,5 +1,5 @@
 {
 	"angular.enable-strict-mode-prompt": false,
-	"scss.validate": false,
-	"css.validate": false,
+	// "scss.validate": false,
+	// "css.validate": false,
 }

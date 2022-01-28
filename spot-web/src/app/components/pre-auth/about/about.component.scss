@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 
 spot-nav {
@@ -14,7 +13,7 @@ spot-nav {
   display: flex;
   flex-flow: column;
   align-items: center;
-  background-color: $background-grey;
+  background-color: var(--background-page);
   padding-top: 84px;
   min-height: calc(100vh);
   box-sizing: border-box;
@@ -52,7 +51,7 @@ spot-nav {
 
   .heading.main {
     font-size: 50px;
-    color: $button-highlight;
+    color: var(--primary);
     font-weight: 600;
     margin-right: 15px;
   }
@@ -60,7 +59,7 @@ spot-nav {
   .text {
     display: flex;
     justify-content: center;
-    color: $subtle-grey;
+    color: var(--text-secondary);
     margin-bottom: 10px;
     text-align: center;
   }
@@ -75,8 +74,8 @@ spot-nav {
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    background-color: $button-black;
-    color: $button-font-white;
+    background-color: var(--button-background);
+    color: var(--button-text);
     padding: 12px 24px;
     font-size: 14px;
     margin-left: auto;
@@ -84,13 +83,13 @@ spot-nav {
     margin-top: 20px;
 
     &:hover {
-      background-color: lighten($button-black, 10%);
+      background-color: var(--button-background-highlight);
     }
   }
 }
 
 .copyright {
-  background-color: $background-grey;
+  background-color: var(--background-page);
   position: fixed;
   right: 5px;
   bottom: 5px;

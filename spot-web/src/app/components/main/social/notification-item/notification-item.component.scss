@@ -1,22 +1,20 @@
-@import '../../../../styles/colors';
-
 .highlight {
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .notification-item {
   position: relative;
   width: 100%;
-  border-bottom: 1px solid $lighter-grey;
+  border-bottom: 1px solid var(--background-primary);
 
-  color: $subtle-grey;
+  color: var(--text-secondary);
 
   &:hover .text-preview .prompt {
-    color: $button-highlight;
+    color: var(--primary);
   }
 
   .seen {
-    background-color: $item-highlight;
+    background-color: var(--item-highlight);
   }
 
   .content {
@@ -68,18 +66,18 @@
         flex-flow: column;
         justify-content: center;
         align-items: center;
-        background-color: $background-grey;
+        background-color: var(--background-page);
         border-radius: 12.5px;
 
         .icon {
           font-size: 32px;
-          color: $button-highlight;
+          color: var(--primary);
         }
       }
 
       .no-image-preview {
         font-size: 20px;
-        color: $subtle-grey;
+        color: var(--text-secondary);
       }
     }
 
@@ -104,7 +102,7 @@
 
       .text {
         font-size: 14px;
-        color: $subtle-grey;
+        color: var(--text-secondary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -116,7 +114,7 @@
       display: flex;
       align-items: center;
       font-size: 10px;
-      color: $subtle-grey;
+      color: var(--text-secondary);
     }
   }
 }
@@ -126,9 +124,9 @@
   top: 7px;
   right: 7px;
   font-size: 14px;
-  color: $subtle-grey;
+  color: var(--icon-secondary);
   cursor: pointer;
   &:hover {
-    color: $error-red;
+    color: var(--error);
   }
 }

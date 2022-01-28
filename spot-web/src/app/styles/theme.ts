@@ -20,8 +20,15 @@ export const LightTheme: Theme = {
 
     '--button-background': '#212121',
     '--button-background-highlight': '#484848',
+    '--button-disabled': '#9E9E9E',
     '--button-text': '#FFFFFF',
     '--item-highlight': '#E0FFFB',
+
+    '--input-background': '#EEEEEE',
+    '--input-border': '#9E9E9E',
+    '--input-text': '#000000',
+    '--input-text-ph': '#9E9E9E',
+    '--input-text-ph-light': '#D1D1D1',
 
     '--background-primary': '#E0E0E0',
     '--background-secondary': '#9E9E9E',
@@ -31,11 +38,15 @@ export const LightTheme: Theme = {
     '--text-primary': '#000000',
     '--text-secondary': '#9E9E9E',
 
+    '--icon-primary': '#000000',
+    '--icon-secondary': '#9E9E9E',
+
     '--facebook': '#5890FF',
     '--google': '#FFFFFF',
 
     '--error': '#b71c1c',
     '--error-light': '#f05545',
+    '--error-light-highlight': '#FF6F5F',
     '--info': '#4FC3F7',
     '--warning': '#f9a825',
     '--success': '#1b5e20'
@@ -50,8 +61,15 @@ export const DarkTheme: Theme = {
 
     '--button-background': '#212121',
     '--button-background-highlight': '#484848',
+    '--button-disabled': '#9E9E9E',
     '--button-text': '#FFFFFF',
     '--item-highlight': '#E0FFFB',
+
+    '--input-background': '#EEEEEE',
+    '--input-border': '#9E9E9E',
+    '--input-text': '#000000',
+    '--input-text-ph': '#9E9E9E',
+    '--input-text-ph-light': '#D1D1D1',
 
     '--background-primary': '#E0E0E0',
     '--background-secondary': '#9E9E9E',
@@ -61,11 +79,15 @@ export const DarkTheme: Theme = {
     '--text-primary': '#000000',
     '--text-secondary': '#9E9E9E',
 
+    '--icon-primary': '#000000',
+    '--icon-secondary': '#9E9E9E',
+
     '--facebook': '#5890FF',
     '--google': '#FFFFFF',
 
     '--error': '#b71c1c',
     '--error-light': '#f05545',
+    '--error-light-highlight': '#FF6F5F',
     '--info': '#4FC3F7',
     '--warning': '#f9a825',
     '--success': '#1b5e20'
@@ -75,11 +97,15 @@ export const DarkTheme: Theme = {
 export const RegularSizeTheme: Theme = {
   name: SizeThemes.REGULAR,
   properties: {
-    '--tiny-text': '8px',
-    '--regular-text': '12px',
-    '--large-text': '16px',
-    '--huge-text': '20px',
+    '--text-tiny': '8px',
+    '--text-regular': '12px',
+    '--text-large': '16px',
+    '--text-huge': '20px',
 
-    '--heading': '20px'
+    '--heading-regular': '20px',
+
+    '--icon-tiny': '12px',
+    '--icon-regular': '16px',
+    '--icon-large': '20px'
   }
 };

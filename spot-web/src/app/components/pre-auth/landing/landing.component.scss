@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 
@@ -64,14 +63,14 @@
 
 .mobile-showcase {
   font-family: 'Roboto Condensed', sans-serif;
-  text-shadow: 1px 1px $subtle-grey;
+  text-shadow: 1px 1px var(--text-secondary);
   display: none;
   font-size: 32px;
   padding: 20px;
   color: white;
 
   .highlight {
-    color: $button-highlight;
+    color: var(--primary);
     text-shadow: 1px 1px black;
   }
 }
@@ -115,7 +114,7 @@ form {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $facebook-blue;
+  background-color: var(--facebook);
   color: white;
   font-size: 14px;
   padding: 12px 8px;
@@ -148,17 +147,17 @@ input {
   padding: 8px 12px;
   margin: 6px 0px;
   box-sizing: border-box;
-  border: 1px solid $subtle-grey;
+  border: 1px solid var(--input-border);
   outline: none;
 }
 
 input.ng-dirty.ng-invalid {
-  border: 1px solid $error-red;
+  border: 1px solid var(--error);
 }
 
 .error-message {
   text-align: center;
-  color: $error-red;
+  color: var(--error);
   margin-bottom: 10px;
   max-width: 300px;
 }
@@ -191,18 +190,18 @@ input.ng-dirty.ng-invalid {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $button-black;
-    color: $button-font-white;
+    background-color: var(--button-background);
+    color: var(--button-text);
     padding: 12px 24px;
     font-size: 14px;
 
     &:hover {
-      background-color: lighten($button-black, 10%);
+      background-color: var(--button-background-highlight);
     }
   }
 
   button.disabled {
-    background-color: $subtle-grey;
+    background-color: var(--button-disabled);
     cursor: not-allowed;
   }
 }
@@ -225,15 +224,15 @@ input.ng-dirty.ng-invalid {
 
   .text {
     cursor: pointer;
-    color: $subtle-grey;
+    color: var(--text-secondary);
     &:hover {
-      color: $button-highlight;
+      color: var(--primary);
     }
   }
 }
 
 .disabled {
-  background-color: $subtle-grey;
+  background-color: var(--text-secondary);
   cursor: not-allowed;
 }
 
@@ -266,7 +265,7 @@ input.ng-dirty.ng-invalid {
   left: 0;
   height: 15px;
   width: 15px;
-  border: 1px solid $subtle-grey;
+  border: 1px solid var(--input-border);
 }
 
 .checkbox-container:hover input ~ .checkmark {
@@ -275,8 +274,8 @@ input.ng-dirty.ng-invalid {
 
 /* When the checkbox is checked, add a blue background */
 .checkbox-container input:checked ~ .checkmark {
-  border: 1px solid $button-highlight;
-  background-color: $button-highlight;
+  border: 1px solid var(--primary);
+  background-color: var(--primary);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -308,7 +307,7 @@ input.ng-dirty.ng-invalid {
 
 .bar {
   width: 100%;
-  border-bottom: 1px solid $button-black;
+  border-bottom: 1px solid var(--button-background);
   margin-bottom: 10px;
 }
 
@@ -319,12 +318,12 @@ input.ng-dirty.ng-invalid {
   cursor: pointer;
 
   .sign-in-highlight {
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 
 .existing-account:hover .sign-in-highlight {
-  color: darken($button-highlight, 5%);
+  color: var(--primary-highlight);
 }
 
 // COPYRIGHT

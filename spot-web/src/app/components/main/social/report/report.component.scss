@@ -1,5 +1,3 @@
-@import '../../../../styles/colors';
-
 .report {
   width: 100%;
   height: auto;
@@ -13,9 +11,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 5px 10px;
-  background-color: $lighter-grey;
+  background-color: var(--background-primary);
   width: 100%;
-  border-bottom: 1px solid $subtle-grey;
+  border-bottom: 1px solid var(--background-secondary);
   box-sizing: border-box;
 
   .close {
@@ -23,7 +21,7 @@
     cursor: pointer;
     float: right;
     &:hover {
-      color: $error-red;
+      color: var(--error);
     }
   }
 }
@@ -44,13 +42,13 @@
     font-size: 14px;
     outline: none;
     margin-bottom: 5px;
-    border: 1px solid $subtle-grey;
+    border: 1px solid var(--baackground-secondary);
     font-family: inherit;
   }
 
   .error-message {
     padding: 3px;
-    color: $error-red;
+    color: var(--error);
   }
 
   .counter-send-container {
@@ -59,21 +57,21 @@
     align-items: center;
 
     .counter {
-      color: $subtle-grey;
+      color: var(--text-secondary);
       margin-right: 7px;
     }
 
     .counter-error {
-      color: $error-red;
+      color: var(--error);
     }
 
     .send-report {
       cursor: pointer;
       padding: 7px 10px;
-      background-color: $button-highlight;
+      background-color: var(--primary);
       color: white;
       &:hover {
-        background-color: lighten($button-highlight, 3%);
+        background-color: var(--primary-highlight);
       }
     }
   }

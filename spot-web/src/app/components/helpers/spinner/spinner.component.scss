@@ -1,26 +1,24 @@
-@import '../../../styles/colors';
-
 // default
 
 .small {
   width: 12px;
   height: 12px;
-  border: 2px solid $lighter-grey;
-  border-top: 2px solid $button-highlight;
+  border: 2px solid var(--background-primary);
+  border-top: 2px solid var(--primary);
 }
 
 .medium {
   width: 30px;
   height: 30px;
-  border: 5px solid $lighter-grey;
-  border-top: 5px solid $button-highlight;
+  border: 5px solid var(--background-primary);
+  border-top: 5px solid var(--primary);
 }
 
 .large {
   width: 50px;
   height: 50px;
-  border: 7px solid $lighter-grey;
-  border-top: 7px solid $button-highlight;
+  border: 7px solid var(--background-primary);
+  border-top: 7px solid var(--primary);
 }
 
 .spinner {
@@ -29,8 +27,8 @@
 }
 
 .light {
-  border-color: $background-grey;
-  border-top-color: $button-highlight;
+  border-color: var(--background-page);
+  border-top-color: var(--primary);
 }
 
 @keyframes spin {
@@ -50,9 +48,9 @@
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: $button-highlight;
-  color: $button-highlight;
-  box-shadow: 9999px 0 0 -5px $button-highlight;
+  background-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 9999px 0 0 -5px var(--primary);
   animation: dotPulse 1.5s infinite linear;
   animation-delay: 0.25s;
 }
@@ -66,57 +64,57 @@
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: $button-highlight;
-  color: $button-highlight;
+  background-color: var(--primary);
+  color: var(--primary);
 }
 
 .dot-pulse::before {
-  box-shadow: 9984px 0 0 -5px $button-highlight;
+  box-shadow: 9984px 0 0 -5px var(--primary);
   animation: dotPulseBefore 1.5s infinite linear;
   animation-delay: 0s;
 }
 
 .dot-pulse::after {
-  box-shadow: 10014px 0 0 -5px $button-highlight;
+  box-shadow: 10014px 0 0 -5px var(--primary);
   animation: dotPulseAfter 1.5s infinite linear;
   animation-delay: 0.5s;
 }
 
 @keyframes dotPulseBefore {
   0% {
-    box-shadow: 9984px 0 0 -5px $button-highlight;
+    box-shadow: 9984px 0 0 -5px var(--primary);
   }
   30% {
-    box-shadow: 9984px 0 0 2px $button-highlight;
+    box-shadow: 9984px 0 0 2px var(--primary);
   }
   60%,
   100% {
-    box-shadow: 9984px 0 0 -5px $button-highlight;
+    box-shadow: 9984px 0 0 -5px var(--primary);
   }
 }
 
 @keyframes dotPulse {
   0% {
-    box-shadow: 9999px 0 0 -5px $button-highlight;
+    box-shadow: 9999px 0 0 -5px var(--primary);
   }
   30% {
-    box-shadow: 9999px 0 0 2px $button-highlight;
+    box-shadow: 9999px 0 0 2px var(--primary);
   }
   60%,
   100% {
-    box-shadow: 9999px 0 0 -5px $button-highlight;
+    box-shadow: 9999px 0 0 -5px var(--primary);
   }
 }
 
 @keyframes dotPulseAfter {
   0% {
-    box-shadow: 10014px 0 0 -5px $button-highlight;
+    box-shadow: 10014px 0 0 -5px var(--primary);
   }
   30% {
-    box-shadow: 10014px 0 0 2px $button-highlight;
+    box-shadow: 10014px 0 0 2px var(--primary);
   }
   60%,
   100% {
-    box-shadow: 10014px 0 0 -5px $button-highlight;
+    box-shadow: 10014px 0 0 -5px var(--primary);
   }
 }

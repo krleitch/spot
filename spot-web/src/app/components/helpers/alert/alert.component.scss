@@ -1,5 +1,3 @@
-@import '../../../styles/colors';
-
 .container {
   position: fixed;
   top: 75px;
@@ -10,11 +8,11 @@
 }
 
 .close {
-  color: $background-grey;
+  color: var(--background-page);
   cursor: pointer;
 
   &:hover {
-    color: darken($background-grey, 30%);
+    color: var(--background-secondary);
   }
 }
 
@@ -42,7 +40,7 @@
   align-items: center;
   font-size: 16px;
   text-align: center;
-  color: $background-grey;
+  color: var(--button-text);
 }
 
 .fade {
@@ -50,23 +48,17 @@
 }
 
 .alert-success {
-  background-image: linear-gradient(#37474f, lighten(#37474f, 3%));
+  background-color: #37474f;
 }
 
 .alert-danger {
-  background-image: linear-gradient(
-    $error-red-light,
-    lighten($error-red-light, 3%)
-  );
+  background-color: var(--error-light)
 }
 
 .alert-info {
-  background-image: linear-gradient($info-blue, lighten($info-blue, 3%));
+  background-color: var(--info);
 }
 
 .alert-warning {
-  background-image: linear-gradient(
-    $warning-yellow,
-    lighten($warning-yellow, 3%)
-  );
+  background-color: var(--warning)
 }

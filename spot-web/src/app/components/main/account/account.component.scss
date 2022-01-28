@@ -1,4 +1,3 @@
-@import '../../../styles/colors';
 @import '../../../styles/sizes';
 
 spot-main-nav {
@@ -15,7 +14,7 @@ spot-main-nav {
   min-height: 100%;
   width: 100%;
   padding-top: 80px;
-  background-color: $background-grey;
+  background-color: var(--background-page);
   box-sizing: border-box;
 
   .account-content {
@@ -37,7 +36,7 @@ spot-main-nav {
 
     .icon {
       font-size: 42px;
-      color: $button-highlight;
+      color: var(--primary);
     }
 
     .text {
@@ -46,7 +45,7 @@ spot-main-nav {
   }
 
   .guest {
-    color: $error-red;
+    color: var(--error);
     margin-bottom: 10px;
   }
 }
@@ -73,7 +72,7 @@ spot-main-nav {
 
 .verify-container {
   font-size: 16px;
-  color: $subtle-grey;
+  color: var(--background-secondary);
   display: flex;
   align-items: center;
 }
@@ -90,7 +89,7 @@ spot-main-nav {
 .verify-icon-highlight {
   padding-top: 3px;
   font-size: 16px;
-  color: $button-highlight;
+  color: var(--primary);
 }
 
 .verify-click {
@@ -98,7 +97,7 @@ spot-main-nav {
   align-items: center;
   cursor: pointer;
   &:hover {
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 
@@ -121,7 +120,7 @@ spot-main-nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $facebook-blue;
+  background-color: var(--facebook);
   color: white;
   font-size: 14px;
   padding: 12px 8px;
@@ -155,7 +154,7 @@ spot-main-nav {
   button {
     outline: none;
     border: none;
-    background-color: $facebook-blue;
+    background-color: var(--facebook);
     color: white;
     padding: 10px 15px;
 
@@ -185,7 +184,7 @@ spot-main-nav {
   button {
     outline: none;
     border: none;
-    background-color: $background-grey;
+    background-color: var(--background-page);
     color: black;
     padding: 10px 15px;
 
@@ -216,21 +215,21 @@ spot-main-nav {
 
 .edit-icon {
   font-size: 18px;
-  color: $subtle-grey;
+  color: var(--text-secondary);
   margin-right: 5px;
   cursor: pointer;
   &:hover {
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 
 .link {
   font-size: 14px;
-  color: $subtle-grey;
+  color: var(--text-secondary);
   margin-right: 5px;
   cursor: pointer;
   &:hover {
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 
@@ -239,19 +238,19 @@ spot-main-nav {
 }
 
 .error {
-  color: $error-red;
+  color: var(--error);
 }
 
 .success {
-  color: $success-green;
+  color: var(--success);
 }
 
 .no-phone {
-  color: $subtle-grey;
+  color: var(--text-secondary);
 }
 
 .no-email {
-  color: $subtle-grey;
+  color: var(--text-secondary);
 }
 
 input {
@@ -266,12 +265,12 @@ input {
 }
 
 .description {
-  color: $subtle-grey;
+  color: var(--text-secondary);
   margin-bottom: 5px;
 }
 
 .hot {
-  color: $error-red-light;
+  color: var(--error-light);
   margin-right: 5px;
 }
 
@@ -283,9 +282,9 @@ input {
   cursor: pointer;
   outline: inherit;
 
-  background-color: $button-black;
+  background-color: var(--button-background);
   border: none;
-  color: $button-font-white;
+  color: var(--button-text);
   padding: 12px 12px;
   text-decoration: none;
   font-size: 14px;
@@ -295,27 +294,27 @@ input {
   width: 200px;
 
   &:hover {
-    background-color: lighten($button-black, 10%);
+    background-color: var(--button-background-highlight);
   }
 }
 
 .distance-button {
   color: black;
-  background-color: $lighter-grey;
+  background-color: var(--background-primary);
   padding: 8px 10px;
   cursor: pointer;
 }
 
 .distance-selected {
   color: white;
-  background-color: $button-highlight;
+  background-color: var(--primary);
 }
 
 .disabled {
-  background-color: $subtle-grey;
+  background-color: var(--background-secondary);
   cursor: not-allowed;
   &:hover {
-    background-color: $subtle-grey;
+    background-color: var(--background-secondary);
   }
 }
 
@@ -350,7 +349,7 @@ input {
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: $subtle-grey;
+  background-color: var(--background-secondary);
 }
 
 .checkmark-inner {
@@ -359,15 +358,15 @@ input {
   left: 5px;
   height: 15px;
   width: 15px;
-  background-color: $background-grey;
+  background-color: var(--background-page);
 }
 
 .checkbox-container:hover input ~ .checkmark {
-  background-color: $subtle-grey;
+  background-color: var(--background-secondary);
 }
 
 .checkbox-container input:checked ~ .checkmark {
-  background-color: $error-red-light;
+  background-color: var(--error-light);
 }
 
 .checkbox-container input:checked ~ .checkmark .checkmark-inner {
@@ -398,7 +397,7 @@ input {
 
 .enable-text {
   &:hover {
-    color: $button-highlight;
+    color: var(--primary);
   }
 }
 
