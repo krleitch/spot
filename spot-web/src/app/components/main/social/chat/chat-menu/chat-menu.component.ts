@@ -20,7 +20,7 @@ export class ChatMenuComponent implements OnInit {
     ROOMS: 'ROOMS'
   };
 
-  chatExpanded = true;
+  menuExpanded = false;
   selectedChatOption = this.chatOptions.FRIENDS;
 
   // Friends
@@ -35,7 +35,7 @@ export class ChatMenuComponent implements OnInit {
   }
 
   toggleMenu() {
-    this.chatExpanded = !this.chatExpanded;
+    this.menuExpanded = !this.menuExpanded;
   }
 
   selectRooms() {
