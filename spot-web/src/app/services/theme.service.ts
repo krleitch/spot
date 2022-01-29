@@ -12,26 +12,29 @@ import {
 export class ThemeService {
   constructor() {}
 
-  active: Theme;
+  activeColorTheme: Theme;
+  activeSizeTheme: Theme;
 
   setLightTheme(): void {
+    this.activeColorTheme = LightTheme;
     this.setActiveTheme(LightTheme);
   }
 
   setDarkTheme(): void {
+    this.activeColorTheme = DarkTheme;
     this.setActiveTheme(DarkTheme);
   }
 
   setRegularSizeTheme(): void {
+    this.activeSizeTheme = RegularSizeTheme;
     this.setActiveTheme(RegularSizeTheme);
   }
 
   setActiveTheme(theme: Theme): void {
-    this.active = theme;
-    Object.keys(this.active.properties).forEach((property) => {
+    Object.keys(theme.properties).forEach((property) => {
       document.documentElement.style.setProperty(
         property,
-        this.active.properties[property]
+        theme.properties[property]
       );
     });
   }
