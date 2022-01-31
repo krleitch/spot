@@ -1,22 +1,25 @@
+.container {
+  position: fixed;
+  top: 150px;
+  right: 0;
+  bottom: 0;
+}
+
 // MENU
 
 .menu.show {
   opacity: 1;
-  height: 600px;
-  width: 200px;
+  width: 230px;
 }
 
 .menu {
-  position: fixed;
-  top: 150px;
-  right: 0;
   display: flex;
   flex-direction: column;
   background-color: white;
   width: 1px;
-  height: 600px;
+  height: 100%;
   opacity: 0;
-  transition: all .75s ease;
+  transition: all 0.75s ease;
   border: 1px solid var(--background-primary);
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -50,48 +53,39 @@
 
   .body {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
-    .chat {
-      flex: 1;
+    .list-header {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        text-decoration: none;
+        outline: none;
+        cursor: pointer;
+        background-color: white;
+        margin: 0;
+        padding: 15px 10px;
+        flex: 1;
+        font-size: var(--text-large)
+
+        &hover {
+          color: darken(white, 10%);
+        }
+      }
+
+      button.selected {
+        color: var(--primary);
+      }
     }
 
-    .list {
-      display: flex;
-      flex-direction: column;
-      width: 175px;
-      border-left: 1px solid var(--background-primary);
-
-      .list-header {
-        display: flex;
-        flex-direction: row;
-
-        button {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border: none;
-          text-decoration: none;
-          outline: none;
-          cursor: pointer;
-          background-color: white;
-          margin: 0;
-          padding: 10px 10px;
-          flex: 1;
-
-          &hover {
-            color: darken(white, 10%);
-          }
-        }
-
-        button.selected {
-          color: var(--primary);
-        }
-      }
-
-      .list-body {
-        flex: 1;
-      }
+    .list-body {
+      flex: 1;
     }
   }
 }

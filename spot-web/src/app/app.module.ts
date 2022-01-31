@@ -56,6 +56,8 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { TermsComponent } from './components/pre-auth/terms/terms.component';
 import { ChatRoomComponent } from './components/main/social/chat/chat-room/chat-room.component';
 import { ChatMenuComponent } from './components/main/social/chat/chat-menu/chat-menu.component';
+import { ChatTabComponent } from './components/main/social/chat/chat-tab/chat-tab.component';
+import { ChatFriendComponent } from './components/main/social/chat/chat-friend/chat-friend.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -107,7 +109,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     FilterPipe,
     TermsComponent,
     ChatRoomComponent,
-    ChatMenuComponent
+    ChatMenuComponent,
+    ChatTabComponent,
+    ChatFriendComponent
   ],
   imports: [
     BrowserModule,

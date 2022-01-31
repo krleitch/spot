@@ -1,13 +1,12 @@
-<div class="menu" [class.show]="menuExpanded">
-  <div class="header">
-    <span>Spot Chat</span>
-    <button class="close" (click)="toggleMenu()">
-      <i class="material-icons icon">close</i>
-    </button>
-  </div>
-  <div class="body">
-    <div class="chat"></div>
-    <div class="list">
+<div class="container">
+  <div class="menu" [class.show]="menuExpanded">
+    <div class="header">
+      <span>Spot Chat</span>
+      <button class="close" (click)="toggleMenu()">
+        <i class="material-icons icon">close</i>
+      </button>
+    </div>
+    <div class="body">
       <div class="list-header">
         <button
           class="rooms"
@@ -31,13 +30,13 @@
       <div *ngIf="selectedChatOption === chatOptions.FRIENDS" class="list-body">
         <div *ngIf="friends$ | async as friends">
           <div *ngFor="let friend of friends">
-            <span>{{ friend.username }}</span>
+            <span (click)="openTab(friend.username)">{{ friend.username }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <button *ngIf="!menuExpanded" class="toggle" (click)="toggleMenu()">
+    <i class="material-icons icon">comment</i>
+  </button>
 </div>
-<button *ngIf="!menuExpanded" class="toggle" (click)="toggleMenu()">
-  <i class="material-icons icon">comment</i>
-</button>

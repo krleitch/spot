@@ -20,11 +20,14 @@ export class ChatMenuComponent implements OnInit {
     ROOMS: 'ROOMS'
   };
 
-  menuExpanded = false;
+  menuExpanded = true;
   selectedChatOption = this.chatOptions.FRIENDS;
 
   // Friends
   friends$: Observable<Friend[]>;
+
+  // Tabs
+  tabs = [];
 
   constructor(private store$: Store<RootStoreState.State>) {}
 
@@ -45,4 +48,9 @@ export class ChatMenuComponent implements OnInit {
   selectFriends() {
     this.selectedChatOption = this.chatOptions.FRIENDS;
   }
+
+  openTab(name: string) {
+    this.tabs.push(name);
+  }
+
 }
