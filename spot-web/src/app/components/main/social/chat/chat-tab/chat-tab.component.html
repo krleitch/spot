@@ -1,3 +1,16 @@
 <div class="tab">
+  <div class="header">
+    <span class="title">{{tab.name}}</span>
+    <div class="icons">
+      <button (click)="minimizeTab()">
+        <i class="material-icons">remove</i>
+      </button>
+      <button (click)="closeTab()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+  </div>
+  <div class="body">
     <ng-content></ng-content>
+  </div>
 </div>

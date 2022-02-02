@@ -1,0 +1,45 @@
+.tab {
+  border: 1px solid var(--background-primary);
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 25px;
+    background-color: var(--background-primary);
+    padding: 3px 3px;
+    box-sizing: border-box;
+
+    .title {
+    }
+
+    .icons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      button {
+        cursor: pointer;
+        outline: none;
+        text-decoration: none;
+        border: none;
+        margin-left: 3px;
+        padding: 0;
+
+        &:hover {
+          color: var(--error);
+          cursor: pointer;
+        }
+
+        i {
+          font-size: var(--icon-regular);
+          color: var(--icon-secondary);
+        }
+      }
+    }
+  }
+
+  .body {
+  }
+}

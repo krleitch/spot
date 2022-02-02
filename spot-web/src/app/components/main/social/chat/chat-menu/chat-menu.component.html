@@ -10,27 +10,29 @@
       <div class="list-header">
         <button
           class="rooms"
-          [ngClass]="{ selected: selectedChatOption === chatOptions.ROOMS }"
+          [ngClass]="{ selected: selectedChatOption === eChatType.ROOM }"
           (click)="selectRooms()"
         >
           Rooms
         </button>
         <button
           class="friends"
-          [ngClass]="{ selected: selectedChatOption === chatOptions.FRIENDS }"
+          [ngClass]="{ selected: selectedChatOption === eChatType.FRIEND }"
           (click)="selectFriends()"
         >
           Friends
         </button>
       </div>
       <div
-        *ngIf="selectedChatOption === chatOptions.ROOMS"
+        *ngIf="selectedChatOption === eChatType.ROOM"
         class="list-body"
       ></div>
-      <div *ngIf="selectedChatOption === chatOptions.FRIENDS" class="list-body">
+      <div *ngIf="selectedChatOption === eChatType.FRIEND" class="list-body">
         <div *ngIf="friends$ | async as friends">
-          <div *ngFor="let friend of friends">
-            <span (click)="openTab(friend.username)">{{ friend.username }}</span>
+          <div class="friend" *ngFor="let friend of friends">
+            <span (click)="createTab(eChatType.FRIEND, friend.username)">{{
+              friend.username
+            }}</span>
           </div>
         </div>
       </div>
@@ -39,4 +41,25 @@
   <button *ngIf="!menuExpanded" class="toggle" (click)="toggleMenu()">
     <i class="material-icons icon">comment</i>
   </button>
+  <div class="mini-tabs" [class.show]="menuExpanded">
+    <div
+      class="mini-tab"
+      *ngFor="let mtab of minimizedTabs"
+      (click)="openTab(mtab.id)"
+    >
+      <div class="mtab">
+        <span>{{ getMinimizedName(mtab.name) }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="tabs" [class.show]="menuExpanded">
+    <div class="tab" *ngFor="let tab of tabs">
+      <spot-chat-tab [tab]="tab" [close]="closeTab" [minimize]="minimizeTab">
+        <spot-chat-room *ngIf="tab.type === eChatType.ROOM"></spot-chat-room>
+        <spot-chat-friend
+          *ngIf="tab.type === eChatType.FRIEND"
+        ></spot-chat-friend>
+      </spot-chat-tab>
+    </div>
+  </div>
 </div>
