@@ -20,6 +20,7 @@ export interface AccountMetadata {
     search_type: string;
     search_distance: string;
     score: number;
+    theme_web: string;
     mature_filter: boolean;
 }
 
@@ -106,6 +107,7 @@ export interface UpdateAccountMetadataRequest {
     search_type?: string;
     search_distance?: string;
     mature_filter?: boolean;
+    theme_web?: string;
 }
 
 export interface UpdateAccountMetadataSuccess {

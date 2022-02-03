@@ -24,6 +24,7 @@ export {
   connectGoogleAccount,
   disconnectGoogleAccount,
   updateAccountsMetadataMatureFilter,
+  updateAccountsMetadataThemeWeb,
   getAccountByEmailWithPass,
   getAccountByUsernameWithPass
 };
@@ -38,14 +39,14 @@ const db = require('./mySql');
 // Metadata
 
 function addAccountMetadata(accountId: string): Promise<any> {
-  const sql = `INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score, mature_filter) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  const values = [uuid.v4(), accountId, 'imperial', 'hot', 'global', 0, true];
+  const sql = `INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score, mature_filter, theme_web) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  const values = [uuid.v4(), accountId, 'imperial', 'hot', 'global', 0, true, 'light'];
   return db.query(sql, values);
 }
 
 function getAccountMetadata(accountId: string): Promise<any> {
   const sql =
-    'SELECT mature_filter, distance_unit, search_type, search_distance, score FROM accounts_metadata WHERE account_id = ?';
+    'SELECT mature_filter, distance_unit, search_type, search_distance, theme_web, score FROM accounts_metadata WHERE account_id = ?';
   const values = [accountId];
   return db.query(sql, values);
 }
@@ -87,6 +88,16 @@ function updateAccountsMetadataMatureFilter(
   const sql =
     'UPDATE accounts_metadata SET mature_filter = ? WHERE account_id = ?';
   const values = [matureFilter, accountId];
+  return db.query(sql, values);
+}
+
+function updateAccountsMetadataThemeWeb(
+  accountId: string,
+  themeWeb: boolean
+): Promise<any> {
+  const sql =
+    'UPDATE accounts_metadata SET theme_web = ? WHERE account_id = ?';
+  const values = [themeWeb, accountId];
   return db.query(sql, values);
 }
 

@@ -399,8 +399,13 @@ router.put(
       return next(new AccountsError.GetMetadata(500));
     }
 
-    const { distance_unit, search_type, search_distance, mature_filter } =
-      req.body;
+    const {
+      distance_unit,
+      search_type,
+      search_distance,
+      mature_filter,
+      theme_web
+    } = req.body;
 
     // TODO, really dont like the await strategy here
     // We only ever change metadata 1 property at a time right now
@@ -448,6 +453,15 @@ router.put(
             return next(new AccountsError.MetadataMatureFilter(500));
           }
         );
+    }
+
+    if (theme_web) {
+      await accounts.updateAccountsMetadataThemeWeb(accountId, theme_web).then(
+        (rows: any) => {},
+        (err: any) => {
+          return next(new AccountsError.MetadataThemeWeb(500));
+        }
+      );
     }
 
     // Get account metadata

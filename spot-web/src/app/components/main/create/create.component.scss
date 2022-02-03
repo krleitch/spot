@@ -5,7 +5,7 @@
 // EDITOR
 
 .editor {
-  background: white;
+  background-color: var(--background-container);
   max-height: 500px;
   overflow: auto;
 
@@ -42,7 +42,7 @@
   box-sizing: border-box;
   padding: 0px 12px;
   color: var(--error);
-  background-color: white;
+  background-color: var(--background-container);
 }
 
 .image {
@@ -68,7 +68,7 @@ img {
   justify-content: flex-end;
   align-items: center;
   padding: 12px 12px;
-  background-color: white;
+  background-color: var(--background-container);
 }
 
 .file-options {

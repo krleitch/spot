@@ -10,7 +10,7 @@
   padding: 0px 15px;
   box-sizing: border-box;
   overflow: hidden;
-  background-color: white;
+  background-color: var(--background-container);
 
   .title-image {
     height: 50px;
@@ -79,7 +79,7 @@
       transform: translateY(-50%);
       width: 150px;
       height: 65px;
-      background-image: url('../../../../assets/images/logo_v7.png');
+      background-image: url('../../../../assets/images/logo_v7_transparent.png');
       background-size: cover;
     }
   }
@@ -138,12 +138,12 @@
       height: auto;
 
       &:hover {
-        background-color: white;
+        background-color: var(--background-container);
       }
     }
 
     .selected {
-      background-color: white;
+      background-color: var(--background-container);
     }
 
     .auth-link {

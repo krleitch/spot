@@ -14,6 +14,7 @@ import * as socialActions from '@store/social-store/actions/actions';
 // Services
 import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
+import { ThemeService } from '@services/theme.service';
 
 // Models
 import { VerifyResponse } from '@models/accounts';
@@ -25,6 +26,7 @@ export class AccountsStoreEffects {
   constructor(
     private authenticationService: AuthenticationService,
     private accountsService: AccountsService,
+    private themeService: ThemeService,
     private actions$: Actions
   ) {}
 
@@ -219,6 +221,11 @@ export class AccountsStoreEffects {
     switchMap((action: accountsActions.GetAccountMetadataRequestAction) =>
       this.accountsService.getAccountMetadata(action.request).pipe(
         map((response: GetAccountMetadataSuccess) => {
+          if (response.metadata.theme_web === 'dark') {
+            this.themeService.setDarkTheme();
+          } else {
+            this.themeService.setLightTheme();
+          }
           return new accountsActions.GetAccountMetadataRequestSuccess(response);
         }),
         catchError((errorResponse: { error: SpotError }) =>

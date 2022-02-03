@@ -15,7 +15,7 @@
 .menu {
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: var(--background-container);
   width: 1px;
   height: 100%;
   opacity: 0;
@@ -69,15 +69,15 @@
         text-decoration: none;
         outline: none;
         cursor: pointer;
-        background-color: white;
+        background-color: var(--background-container);
         margin: 0;
         padding: 15px 10px;
         flex: 1;
         font-size: var(--text-large);
 
-        &hover {
-          background-color: darken(white, 10%);
-        }
+        // &:hover {
+        //   background-color: darken(white, 10%);
+        // }
       }
 
       button.selected {
@@ -153,14 +153,14 @@
   text-decoration: none;
   outline: none;
   cursor: pointer;
-  background-color: white;
+  background-color: var(--background-container);
   padding: 10px 5px;
   border: 1px solid var(--background-primary);
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  &:hover {
-    background-color: darken(white, 10%);
-  }
+  // &:hover {
+  //   background-color: darken(white, 10%);
+  // }
   .icon {
   }
 }

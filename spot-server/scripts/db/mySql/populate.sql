@@ -36,8 +36,8 @@ set @account = uuid_v4();
 INSERT INTO accounts (id, email, username, pass, phone, salt, creation_date, verified_date)
 VALUES(@account, 'email@email.com', 'test', '123', '123456789', '1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, score)
-VALUES(uuid_v4(), @account, 'metric', 'hot', 'global', 0);
+INSERT INTO accounts_metadata (id, account_id, distance_unit, search_type, search_distance, mature_filter, theme_web, score)
+VALUES(uuid_v4(), @account, 'metric', 'hot', 'global', false, 'light', 0);
 
 delimiter //
 create procedure populate (in num int)

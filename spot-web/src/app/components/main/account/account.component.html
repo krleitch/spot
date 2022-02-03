@@ -201,7 +201,7 @@
           <div
             class="distance-button"
             [ngClass]="{
-              'distance-selected': accountMetadata.mature_filter === true
+              'distance-selected': accountMetadata.mature_filter === 1
             }"
             (click)="setMature(true)"
           >
@@ -210,11 +210,34 @@
           <div
             class="distance-button"
             [ngClass]="{
-              'distance-selected': accountMetadata.mature_filter === false
+              'distance-selected': accountMetadata.mature_filter === 0
             }"
             (click)="setMature(false)"
           >
             {{ 'MAIN.ACCOUNT.MATURE_FALSE' | translate }}
+          </div>
+        </div>
+
+        <!-- Theming -->
+        <div class="subheading">{{ 'MAIN.ACCOUNT.THEME' | translate }}</div>
+        <div class="value">
+          <div
+            class="distance-button"
+            [ngClass]="{
+              'distance-selected': accountMetadata.theme_web === 'light'
+            }"
+            (click)="setTheme('light')"
+          >
+            {{ 'MAIN.ACCOUNT.LIGHT' | translate }}
+          </div>
+          <div
+            class="distance-button"
+            [ngClass]="{
+              'distance-selected': accountMetadata.theme_web === 'dark'
+            }"
+            (click)="setTheme('dark')"
+          >
+            {{ 'MAIN.ACCOUNT.DARK' | translate }}
           </div>
         </div>
       </div>

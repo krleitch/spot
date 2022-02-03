@@ -128,6 +128,12 @@ export class MetadataMatureFilter extends SpotError {
     this.name = "MetadataMatureFilter";
   }
 }
+export class MetadataThemeWeb extends SpotError {
+  constructor(statusCode: number) {
+    super(ACCOUNTS_ERROR_MESSAGES.METADATA_THEME_WEB, statusCode);
+    this.name = "MetadataThemeWeb";
+  }
+}
 
 export class SendVerify extends SpotError {
     constructor(statusCode: number) {

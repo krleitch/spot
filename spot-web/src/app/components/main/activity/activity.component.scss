@@ -176,7 +176,7 @@ img {
     padding: 10px 10px;
     width: calc(100% - 20px);
     box-sizing: border-box;
-    background-color: white;
+    background-color: var(--background-container);
 
     .post-info {
       display: flex;
@@ -232,7 +232,7 @@ img {
     padding: 10px 10px;
     width: calc(100% - 20px);
     box-sizing: border-box;
-    background-color: white;
+    background-color: var(--background-container);
 
     .content-preview-comment {
       white-space: nowrap;

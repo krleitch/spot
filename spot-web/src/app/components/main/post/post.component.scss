@@ -3,7 +3,7 @@
 .container {
   display: flex;
   flex-flow: column;
-  background-color: white;
+  background-color: var(--background-container);
   margin-bottom: 20px;
 
   .bar-container {

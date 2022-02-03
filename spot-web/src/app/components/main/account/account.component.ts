@@ -25,6 +25,7 @@ import { AuthenticationService } from '@services/authentication.service';
 import { AccountsService } from '@services/accounts.service';
 import { ModalService } from '@services/modal.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ThemeService } from '@services/theme.service';
 
 // Models
 import {
@@ -93,7 +94,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     private modalService: ModalService,
     private accountsService: AccountsService,
     private authenticationService: AuthenticationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private themeService: ThemeService
   ) {
     translateService.get('MAIN.ACCOUNT').subscribe((res: any) => {
       this.STRINGS = res;
@@ -467,6 +469,23 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   public setMature(value: boolean): void {
     const request: UpdateAccountMetadataRequest = {
       mature_filter: value
+    };
+
+    this.store$.dispatch(
+      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+    );
+  }
+
+  public setTheme(theme: string) {
+    if (theme === 'light') {
+      this.themeService.setLightTheme();
+    } else if (theme === 'dark') {
+      this.themeService.setDarkTheme();
+    } else {
+      return;
+    }
+    const request: UpdateAccountMetadataRequest = {
+      theme_web: theme
     };
 
     this.store$.dispatch(

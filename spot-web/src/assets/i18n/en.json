@@ -93,6 +93,10 @@
       "MATURE_TRUE": "On",
       "MATURE_FALSE": "Off",
 
+      "THEME": "Theme",
+      "LIGHT": "Light",
+      "DARK": "Dark",
+
       "ACCOUNT_OPTIONS": "Options",
       "ENABLE_OPTIONS": "Enable Options",
       "DELETE": "Delete Account",

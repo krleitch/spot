@@ -36,8 +36,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    // set the default theme and sizings
-    this.themeService.setLightTheme();
+    // set the default sizings
     this.themeService.setRegularSizeTheme();
     // load translations
     this.translateService.setDefaultLang('en');

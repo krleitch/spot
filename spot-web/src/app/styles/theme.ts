@@ -65,22 +65,22 @@ export const DarkTheme: Theme = {
     '--button-text': '#FFFFFF',
     '--item-highlight': '#E0FFFB',
 
-    '--input-background': '#EEEEEE',
-    '--input-border': '#9E9E9E',
-    '--input-text': '#000000',
-    '--input-text-ph': '#9E9E9E',
-    '--input-text-ph-light': '#D1D1D1',
+    '--input-background': '#546e7a',
+    '--input-border': '#FFFFFF',
+    '--input-text': '#FFFFFF',
+    '--input-text-ph': '#aaa',
+    '--input-text-ph-light': '#6d6d6d',
 
-    '--background-primary': '#E0E0E0',
-    '--background-secondary': '#9E9E9E',
-    '--background-container': '#FFFFFF',
-    '--background-page': '#EEEEEE',
+    '--background-primary': 'hsl(0, 0%, 7%)',
+    '--background-secondary': '#FFFFFF',
+    '--background-container': '#212121',
+    '--background-page': '#282828',
 
-    '--text-primary': '#000000',
-    '--text-secondary': '#9E9E9E',
+    '--text-primary': '#FFFFFF',
+    '--text-secondary': '#aaa',
 
-    '--icon-primary': '#000000',
-    '--icon-secondary': '#9E9E9E',
+    '--icon-primary': '#FFFFFF',
+    '--icon-secondary': '#aaa',
 
     '--facebook': '#5890FF',
     '--google': '#FFFFFF',
@@ -97,10 +97,10 @@ export const DarkTheme: Theme = {
 export const RegularSizeTheme: Theme = {
   name: SizeThemes.REGULAR,
   properties: {
-    '--text-tiny': '8px',
-    '--text-regular': '12px',
-    '--text-large': '16px',
-    '--text-huge': '20px',
+    '--text-tiny': '10px',
+    '--text-regular': '14px',
+    '--text-large': '18px',
+    '--text-huge': '22px',
 
     '--heading-regular': '20px',
 

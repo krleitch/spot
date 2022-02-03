@@ -232,7 +232,7 @@ spot-create {
   margin-bottom: auto;
   padding: 20px;
   width: 100%;
-  background-color: white;
+  background-color: var(--background-container);
   box-sizing: border-box;
 
   spot-spinner {
@@ -359,7 +359,7 @@ spot-create {
   .dropdown-content-sort {
     display: none;
     position: absolute;
-    background-color: white;
+    background-color: var(--background-container);
     width: 60px;
     top: 32px;
     left: -52px;
@@ -371,7 +371,7 @@ spot-create {
   .dropdown-content-location {
     display: none;
     position: absolute;
-    background-color: white;
+    background-color: var(--background-container);
     width: 60px;
     top: 32px;
     left: -47px;

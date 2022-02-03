@@ -106,7 +106,7 @@ spot-main-nav {
   align-items: center;
   justify-content: center;
   padding: 10px 10px;
-  background-color: white;
+  background-color: var(--background-container);
   margin-bottom: 5px;
 }
 
@@ -209,7 +209,7 @@ spot-main-nav {
   display: flex;
   align-items: center;
   padding: 10px 10px;
-  background-color: white;
+  background-color: var(--background-container);
   margin-bottom: 5px;
 }
 
@@ -256,10 +256,10 @@ spot-main-nav {
 input {
   border: none;
   outline: none;
-  color: black;
+  color: var(--input-text);
   padding: 0px 0px;
   font-size: 14px;
-  background-color: white;
+  background-color: var(--background-input);
   flex: 1;
   margin-right: 10px;
 }

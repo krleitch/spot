@@ -10,6 +10,7 @@ const request = require('request');
 
 // config
 const googleconfig = require('@config/googlekey.json');
+const config = require('@config/config');
 
 // db
 const locations = require('@db/locations');
@@ -217,6 +218,13 @@ function getGeolocation(latitude: string, longitude: string): Promise<string> {
     'locality',
     'country'
   ];
+
+  // for testing purposes
+  if (config.useTestLocation) {
+    return new Promise((resolve, reject) => {
+      resolve('TEST');
+    });
+  }
 
   const baseUrl = 'https://maps.googleapis.com/maps/api/geocode/json?';
   const latlng = 'latlng=' + parseFloat(latitude) + ',' + parseFloat(longitude);

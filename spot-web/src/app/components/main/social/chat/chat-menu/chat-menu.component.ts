@@ -18,7 +18,7 @@ import { ChatType, Tab } from '@models/chat';
 export class ChatMenuComponent implements OnInit {
   eChatType = ChatType;
 
-  menuExpanded = true;
+  menuExpanded = false;
   selectedChatOption = this.eChatType.FRIEND;
 
   // Friends
@@ -49,7 +49,7 @@ export class ChatMenuComponent implements OnInit {
   }
 
   checkMinimizeTabs() {
-    // if we add a new tab minimize the lru 
+    // if we add a new tab minimize the lru
   }
 
   createTab(type: ChatType, name: string) {

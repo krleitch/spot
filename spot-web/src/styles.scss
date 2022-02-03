@@ -16,7 +16,8 @@ body {
   height: 100%;
   width: 100%;
   font-family: 'Noto Sans JP', sans-serif;
-  font-size: 14px;
+  font-size: var(--text-regular);
+  color: var(--text-primary)
 }
 
 // Modal styles

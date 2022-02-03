@@ -3,7 +3,8 @@
 const config = {
   production: false,
   testNsfwLocal: false,
-  testNsfwLambda: true,
+  testNsfwLambda: false,
+  useTestLocation: true,
   nsfwModelDir: '',
   logFileDir: ''
 };

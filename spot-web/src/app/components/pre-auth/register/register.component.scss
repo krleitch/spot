@@ -5,7 +5,7 @@ spot-nav {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: white;
+  background-color: var(--background-container);
   z-index: 99;
 }
 
@@ -22,7 +22,7 @@ spot-nav {
 .container {
   padding: 25px;
   margin: 25px;
-  background-color: white;
+  background-color: var(--background-container);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 9;
