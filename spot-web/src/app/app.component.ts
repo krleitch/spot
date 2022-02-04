@@ -28,6 +28,9 @@ declare const gapi: any;
 export class AppComponent implements OnInit {
   title = 'spot';
 
+  // TODO: this is wrong, subscribe to the $auth observable
+  isAuth = this.authenticationService.isAuthenticated();
+
   constructor(
     private store$: Store<RootStoreState.State>,
     private authenticationService: AuthenticationService,
@@ -36,8 +39,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    // set the default sizings
+    // set the default sizings and theme
     this.themeService.setRegularSizeTheme();
+    this.themeService.setLightTheme();
     // load translations
     this.translateService.setDefaultLang('en');
     this.translateService.use('en');

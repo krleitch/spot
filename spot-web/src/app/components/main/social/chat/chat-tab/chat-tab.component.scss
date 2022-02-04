@@ -7,11 +7,12 @@
     justify-content: space-between;
     width: 100%;
     height: 25px;
-    background-color: var(--background-primary);
-    padding: 3px 3px;
+    background-color: var(--primary);
+    padding: 5px 5px;
     box-sizing: border-box;
 
     .title {
+      color: white;
     }
 
     .icons {
@@ -23,18 +24,19 @@
         cursor: pointer;
         outline: none;
         text-decoration: none;
+        background-color: var(--primary);
         border: none;
         margin-left: 3px;
         padding: 0;
+        color: white;
 
         &:hover {
-          color: var(--error);
+          color: darken(white, 20%);
           cursor: pointer;
         }
 
         i {
           font-size: var(--icon-regular);
-          color: var(--icon-secondary);
         }
       }
     }

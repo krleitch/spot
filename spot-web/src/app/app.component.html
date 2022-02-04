@@ -3,7 +3,7 @@
 
   <router-outlet></router-outlet>
 
-  <spot-chat-menu></spot-chat-menu>
+  <spot-chat-menu *ngIf="isAuth"></spot-chat-menu>
 
   <!-- Global Modals-->
 

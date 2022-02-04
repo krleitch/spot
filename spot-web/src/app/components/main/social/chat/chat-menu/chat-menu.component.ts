@@ -10,15 +10,23 @@ import { SocialStoreSelectors } from '@store/social-store';
 // Models
 import { Friend } from '@models/friends';
 import { ChatType, Tab } from '@models/chat';
+
+enum MenuStatus {
+  HIDDEN = 'HIDDEN',
+  EXPANDED_SEMI = 'EXPANDED_SEMI',
+  EXPANDED_FULL = 'EXPANDED_FULL'
+}
+
 @Component({
   selector: 'spot-chat-menu',
   templateUrl: './chat-menu.component.html',
   styleUrls: ['./chat-menu.component.scss']
 })
 export class ChatMenuComponent implements OnInit {
+  eMenuStatus = MenuStatus;
   eChatType = ChatType;
 
-  menuExpanded = false;
+  menuStatus = this.eMenuStatus.EXPANDED_FULL;
   selectedChatOption = this.eChatType.FRIEND;
 
   // Friends
@@ -27,6 +35,7 @@ export class ChatMenuComponent implements OnInit {
   // Tabs
   tabs: Tab[] = [];
   minimizedTabs: Tab[] = [];
+  rooms = [];
 
   constructor(private store$: Store<RootStoreState.State>) {}
 
@@ -36,8 +45,18 @@ export class ChatMenuComponent implements OnInit {
     );
   }
 
+  setMenuStatus(menuStatus: MenuStatus) {
+    this.menuStatus = menuStatus;
+  }
+
   toggleMenu() {
-    this.menuExpanded = !this.menuExpanded;
+    if (this.menuStatus === MenuStatus.HIDDEN) {
+      this.menuStatus = MenuStatus.EXPANDED_FULL;
+    } else if (this.menuStatus === MenuStatus.EXPANDED_SEMI) {
+      this.menuStatus = MenuStatus.HIDDEN;
+    } else if (this.menuStatus === MenuStatus.EXPANDED_FULL) {
+      this.menuStatus = MenuStatus.EXPANDED_SEMI;
+    }
   }
 
   selectRooms() {
