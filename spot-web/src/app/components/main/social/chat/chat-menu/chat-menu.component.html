@@ -37,10 +37,47 @@
           }}</span>
         </button>
       </div>
+      <div *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL" class="search">
+        <span class="material-icons icon"> search </span>
+        <input
+          [(ngModel)]="search"
+          placeholder="{{ 'MAIN.CHAT_MENU.SEARCH_PLACEHOLDER' | translate }}"
+          type="text"
+        />
+      </div>
       <div *ngIf="selectedChatOption === eChatType.ROOM" class="list-body">
+        <div class="button-container">
+          <button (click)="searchRooms()">
+            <span
+              *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+              class="text"
+              >{{ 'MAIN.CHAT_MENU.DISCOVER_ROOMS' | translate }}</span
+            >
+            <i class="material-icons">travel_explore</i>
+          </button>
+          <button (click)="createRoom()">
+            <span
+              *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+              class="text"
+              >{{ 'MAIN.CHAT_MENU.CREATE_ROOM' | translate }}</span
+            >
+            <i class="material-icons">add_circle_outline</i>
+          </button>
+        </div>
         <div *ngIf="rooms.length > 0; else norooms">
-          <div class="room" *ngFor="let room of rooms">
-            <span>test</span>
+          <div
+            class="room"
+            *ngFor="let room of rooms"
+            (click)="createRoomTab(eChatType.ROOM, room.name, room.topic)"
+          >
+            <span class="image">{{ getMinimizedName(room.name) }}</span>
+            <span
+              *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+              class="text-container"
+            >
+              <span class="name">{{ room.name }}</span>
+              <span class="last-message">testing</span>
+            </span>
           </div>
         </div>
         <ng-template #norooms>
@@ -56,10 +93,15 @@
             <div
               class="friend"
               *ngFor="let friend of friends"
-              (click)="createTab(eChatType.FRIEND, friend.username)"
+              (click)="createFriendTab(eChatType.FRIEND, friend.username)"
             >
-              <span class="profile">{{getMinimizedName(friend.username)}}</span>
-              <span *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL" class="text-container">
+              <span class="profile">{{
+                getMinimizedName(friend.username)
+              }}</span>
+              <span
+                *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+                class="text-container"
+              >
                 <span class="username">{{ friend.username }}</span>
                 <span class="last-message">testing</span>
               </span>
@@ -97,7 +139,7 @@
   >
     <div class="tab" *ngFor="let tab of tabs">
       <spot-chat-tab [tab]="tab" [close]="closeTab" [minimize]="minimizeTab">
-        <spot-chat-room *ngIf="tab.type === eChatType.ROOM"></spot-chat-room>
+        <spot-chat-room *ngIf="tab.type === eChatType.ROOM" [topic]="tab.topic"></spot-chat-room>
         <spot-chat-friend
           *ngIf="tab.type === eChatType.FRIEND"
         ></spot-chat-friend>

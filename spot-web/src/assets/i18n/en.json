@@ -307,7 +307,10 @@
       "ROOMS": "Rooms",
       "FRIENDS": "Friends",
       "ADD_FRIENDS": "Add friends to chat with them",
-      "ADD_ROOMS": "Join rooms to chat with those around you"
+      "ADD_ROOMS": "Join rooms to chat with those around you",
+      "SEARCH_PLACEHOLDER": "Search",
+      "DISCOVER_ROOMS": "Discover Rooms",
+      "CREATE_ROOM": "Create Room"
     },
 
     "ACTIVITY": {

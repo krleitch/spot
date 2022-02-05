@@ -11,6 +11,7 @@ export interface Tab {
   id: string;
   type: ChatType;
   name: string;
+  topic? : string; // topic is on ChatType Room
 }
 export interface Message {
     content: string;
@@ -23,4 +24,9 @@ export interface Message {
 
 export interface NewMessage {
     content: string;
+}
+
+export interface ChatRoom {
+  topic: string;
+  name: string;
 }

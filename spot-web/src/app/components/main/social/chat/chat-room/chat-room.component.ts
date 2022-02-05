@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 
 import { ChatService } from '@services/chat.service';
 
@@ -13,21 +13,25 @@ import { Message, NewMessage } from '@models/chat';
 export class ChatRoomComponent implements OnInit {
   // Chat Text Content
   @ViewChild('chat') chat: ElementRef;
-  joined = false;
+  @Input() topic: string;
+
   currentLength = 0;
   channel: any;
   messages: Message[] = [];
 
-  constructor(private chatService: ChatService) {
-    this.channel = chatService.getChannel('chat_room:lobby', 'token');
+  constructor(private chatService: ChatService) {}
+
+  ngOnInit(): void {
+    this.channel = this.chatService.getChannel(
+      'chat_room:' + this.topic,
+      'token'
+    );
     this.channel.on('new_message', (payload: Message) => {
       this.messages.push(payload);
       // scroll to top
     });
     this.joinRoom();
   }
-
-  ngOnInit(): void {}
 
   formatTimestamp(timestamp): string {
     const time = new Date(timestamp);
@@ -79,7 +83,6 @@ export class ChatRoomComponent implements OnInit {
       .join()
       .receive('ok', ({ messages }) => {
         console.log('catching up', messages);
-        this.joined = true;
       })
       .receive('error', ({ reason }) => {
         console.log('failed join', reason);

@@ -101,6 +101,25 @@
     }
   }
 
+  .search {
+    display: flex;
+    align-items: center;
+    padding: 5px 5px;
+
+    .icon {
+      margin-right: 3px;
+    }
+
+    input {
+      padding: 5px;
+      width: 100%;
+      border: none;
+      outline: none;
+      background-color: avr(--input-background);
+      border-bottom: 1px solid var(--input-border);
+    }
+  }
+
   .list-body {
     flex: 1;
 
@@ -119,7 +138,6 @@
 // FRIENDS
 
 .friend {
-
   display: flex;
   flex-direction: row;
   padding: 5px 5px;
@@ -138,27 +156,93 @@
   .text-container {
     flex: 1;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     margin-left: 5px;
 
-    .username{
-
+    .username {
     }
 
     .last-message {
       color: var(--text-secondary);
     }
-
   }
 
   &:hover .text-container .username {
     color: var(--primary);
   }
-
-
 }
 
 // ROOMS
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    margin: 5px;
+    padding: 10px;
+    color: var(--button-text);
+    background-color: var(--button-background);
+
+    &:hover {
+      background-color: var(--button-background-highlight);
+    }
+
+    .text {
+      margin-right: 3px;
+    }
+
+    i {
+      color: var(--buton-text);
+    }
+  }
+}
+
+.room {
+  display: flex;
+  flex-direction: row;
+  padding: 5px 5px;
+  cursor: pointer;
+
+  .image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--background-primary);
+  }
+
+  .text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+
+    .name {
+    }
+
+    .last-message {
+      color: var(--text-secondary);
+    }
+  }
+
+  &:hover .text-container .name {
+    color: var(--primary);
+  }
+}
 
 // TABS
 
@@ -198,6 +282,7 @@
   transition: all 0.75s ease;
   display: flex;
   justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .tabs.expanded-full {

@@ -9,7 +9,7 @@ import { SocialStoreSelectors } from '@store/social-store';
 
 // Models
 import { Friend } from '@models/friends';
-import { ChatType, Tab } from '@models/chat';
+import { ChatType, Tab, ChatRoom } from '@models/chat';
 
 enum MenuStatus {
   HIDDEN = 'HIDDEN',
@@ -27,7 +27,10 @@ export class ChatMenuComponent implements OnInit {
   eChatType = ChatType;
 
   menuStatus = this.eMenuStatus.EXPANDED_FULL;
-  selectedChatOption = this.eChatType.FRIEND;
+  selectedChatOption = this.eChatType.ROOM;
+
+  // Search
+  search = '';
 
   // Friends
   friends$: Observable<Friend[]>;
@@ -35,7 +38,7 @@ export class ChatMenuComponent implements OnInit {
   // Tabs
   tabs: Tab[] = [];
   minimizedTabs: Tab[] = [];
-  rooms = [];
+  rooms: ChatRoom[] = [{ topic: 'lobby', name: 'Test Chat' }];
 
   constructor(private store$: Store<RootStoreState.State>) {}
 
@@ -71,12 +74,23 @@ export class ChatMenuComponent implements OnInit {
     // if we add a new tab minimize the lru
   }
 
-  createTab(type: ChatType, name: string) {
+  createFriendTab(type: ChatType, name: string) {
     // check if the tab exists already
     const newTab: Tab = {
       id: uuidv4(),
       name: name,
       type: type
+    };
+    this.tabs.push(newTab);
+  }
+
+  createRoomTab(type: ChatType, name: string, topic: string) {
+    // check if the tab exists already
+    const newTab: Tab = {
+      id: uuidv4(),
+      name: name,
+      type: type,
+      topic: topic
     };
     this.tabs.push(newTab);
   }
@@ -120,4 +134,8 @@ export class ChatMenuComponent implements OnInit {
       return name.substring(0, 1).toUpperCase();
     }
   }
+
+  searchRooms() {}
+
+  createRoom() {}
 }
