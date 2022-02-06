@@ -33,6 +33,7 @@ export const LightTheme: Theme = {
     '--background-primary': '#E0E0E0',
     '--background-secondary': '#9E9E9E',
     '--background-container': '#FFFFFF',
+    '--background-header': '#B2DFDB',
     '--background-page': '#EEEEEE',
 
     '--text-primary': '#000000',
@@ -74,6 +75,7 @@ export const DarkTheme: Theme = {
     '--background-primary': 'hsl(0, 0%, 7%)',
     '--background-secondary': '#FFFFFF',
     '--background-container': '#212121',
+    '--background-header': '#B2DFDB',
     '--background-page': '#282828',
 
     '--text-primary': '#FFFFFF',

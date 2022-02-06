@@ -13,7 +13,7 @@ spot-main-nav {
   justify-content: center;
   min-height: 100%;
   width: 100%;
-  padding-top: 80px;
+  padding-top: 60px;
   background-color: var(--background-page);
   box-sizing: border-box;
 
@@ -50,25 +50,169 @@ spot-main-nav {
   }
 }
 
-.title {
+.section {
   display: flex;
-  align-items: center;
-  font-size: 30px;
-  margin-bottom: 15px;
+  flex-direction: column;
+  margin-top: 20px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    background-color: var(--background-header);
+    padding: 5px;
+
+    .title {
+      font-size: var(--text-huge);
+    }
+
+    .title-icon {
+      font-size: 32px;
+      margin-right: 8px;
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: var(--background-container);
+
+    .social-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 10px;
+      background-color: var(--background-container);
+      margin-bottom: 5px;
+
+      .social-button {
+        margin: 0px 15px;
+      }
+    }
+
+    .info-container {
+      display: flex;
+      align-items: center;
+      margin: 3px 0px;
+
+      .subheader {
+        font-size: var(--text-regular);
+      }
+
+      input {
+        border: none;
+        outline: none;
+        color: var(--input-text);
+        padding: 0px 0px;
+        font-size: 14px;
+        background-color: var(--background-input);
+        flex: 1;
+        margin-right: 10px;
+      }
+
+      button {
+        border: none;
+        outline: none;
+        text-decoration: none;
+        color: var(--input-text);
+        background-color: var(--background-primary);
+        padding: 8px 10px;
+        cursor: pointer;
+        transition: all 1s ease;
+      }
+
+      button.left {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        background: linear-gradient(
+          to right,
+          var(--background-primary) 50%,
+          var(--primary) 50%
+        );
+        background-size: 200% 100%;
+        background-position: left bottom;
+      }
+
+      button.right {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background: linear-gradient(
+          to left,
+          var(--background-primary) 50%,
+          var(--primary) 50%
+        );
+        background-size: 200% 100%;
+        background-position: right bottom;
+      }
+
+      .button-selected {
+        color: white;
+        background-color: var(--primary);
+      }
+
+      .button-selected.left {
+        background-position: right bottom;
+      }
+
+      .button-selected.right {
+        background-position: left bottom;
+      }
+
+      .value {
+        display: flex;
+        flex: 1;
+        margin-top: 3px;
+        align-items: center;
+        padding: 10px 10px;
+        background-color: var(--background-container);
+        .no-value {
+          color: var(--text-secondary);
+        }
+        .hot {
+          color: var(--error-light);
+          margin-right: 5px;
+        }
+      }
+
+      .editable {
+        justify-content: space-between;
+      }
+
+      .edit-icon {
+        font-size: 18px;
+        color: var(--text-secondary);
+        margin-right: 5px;
+        cursor: pointer;
+        &:hover {
+          color: var(--primary);
+        }
+      }
+
+      .link {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-right: 5px;
+        cursor: pointer;
+        &:hover {
+          color: var(--primary);
+        }
+      }
+    }
+    .error {
+      color: var(--error);
+    }
+
+    .success {
+      color: var(--success);
+    }
+    .description {
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+  }
 }
 
-.options {
-  display: flex;
-  align-items: center;
-  font-size: 30px;
-  justify-content: space-between;
-}
-
-.title-icon {
-  font-size: 32px;
-  margin-right: 8px;
-  padding-top: 5px;
-}
+// Verification
 
 .verify-container {
   font-size: 16px;
@@ -101,18 +245,7 @@ spot-main-nav {
   }
 }
 
-.social {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 10px;
-  background-color: var(--background-container);
-  margin-bottom: 5px;
-}
-
-.social-button {
-  margin: 0px 15px;
-}
+// Facebook
 
 .facebook {
   border: none;
@@ -164,6 +297,8 @@ spot-main-nav {
   }
 }
 
+// Google
+
 .google-connected {
   display: flex;
   align-items: center;
@@ -194,84 +329,15 @@ spot-main-nav {
   }
 }
 
-.subheading {
-  display: flex;
-  align-items: center;
-  font-size: 20px;
-  margin-bottom: 5px;
+// Options
 
-  .subheading-text {
-    margin-right: 5px;
-  }
-}
-
-.value {
-  display: flex;
-  align-items: center;
-  padding: 10px 10px;
-  background-color: var(--background-container);
-  margin-bottom: 5px;
-}
-
-.edit-icon {
-  font-size: 18px;
-  color: var(--text-secondary);
-  margin-right: 5px;
-  cursor: pointer;
-  &:hover {
-    color: var(--primary);
-  }
-}
-
-.link {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-right: 5px;
-  cursor: pointer;
-  &:hover {
-    color: var(--primary);
-  }
-}
-
-.editable {
+.options {
   justify-content: space-between;
-}
 
-.error {
-  color: var(--error);
-}
-
-.success {
-  color: var(--success);
-}
-
-.no-phone {
-  color: var(--text-secondary);
-}
-
-.no-email {
-  color: var(--text-secondary);
-}
-
-input {
-  border: none;
-  outline: none;
-  color: var(--input-text);
-  padding: 0px 0px;
-  font-size: 14px;
-  background-color: var(--background-input);
-  flex: 1;
-  margin-right: 10px;
-}
-
-.description {
-  color: var(--text-secondary);
-  margin-bottom: 5px;
-}
-
-.hot {
-  color: var(--error-light);
-  margin-right: 5px;
+  .options-title-container {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .delete {
@@ -298,18 +364,6 @@ input {
   }
 }
 
-.distance-button {
-  color: black;
-  background-color: var(--background-primary);
-  padding: 8px 10px;
-  cursor: pointer;
-}
-
-.distance-selected {
-  color: white;
-  background-color: var(--primary);
-}
-
 .disabled {
   background-color: var(--background-secondary);
   cursor: not-allowed;
@@ -318,14 +372,13 @@ input {
   }
 }
 
-// Checkbox stuff
+// Checkbox
 
 .checkbox-container {
   display: flex;
   align-items: center;
   position: relative;
   padding-left: 35px;
-  margin-bottom: 10px;
   height: 25px;
   cursor: pointer;
   font-size: 14px;
@@ -349,7 +402,7 @@ input {
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: var(--background-secondary);
+  background-color: var(--primary);
 }
 
 .checkmark-inner {
@@ -358,15 +411,15 @@ input {
   left: 5px;
   height: 15px;
   width: 15px;
-  background-color: var(--background-page);
+  background-color: var(--background-header);
 }
 
 .checkbox-container:hover input ~ .checkmark {
-  background-color: var(--background-secondary);
+  background-color: var(--primary);
 }
 
 .checkbox-container input:checked ~ .checkmark {
-  background-color: var(--error-light);
+  background-color: var(--primary);
 }
 
 .checkbox-container input:checked ~ .checkmark .checkmark-inner {

@@ -47,7 +47,6 @@
 
     "ACCOUNT": {
       "NO_ACCOUNT": "No account. Please login to continue",
-
       "GUEST": "You are logged in on a guest account. You will not be able to update any account information.",
 
       "MY_ACCOUNT": "My Account",
@@ -70,11 +69,13 @@
       "USERNAME_SUCCESS": "Username was succesfully changed",
 
       "NO_PHONE": "None",
-      "PHONE": "Phone number",
+      "PHONE": "Phone",
       "PHONE_ERROR": "Phone is required",
       "PHONE_INVALID": "Invalid phone number",
       "PHONE_CONFIRM": "You can only change your phone once every 24 hours. Are you sure you would like to continue?",
       "PHONE_SUCCESS": "Phone was succesfully changed",
+
+      "SETTINGS": "Settings",
 
       "SCORE": "Spot Score",
 
