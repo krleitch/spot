@@ -7,13 +7,24 @@
       </div>
 
       <div class="section">
-        <div class="header">
-          <span class="material-icons title-icon"> person </span>
-          <span class="title">
-            {{ 'MAIN.ACCOUNT.MY_ACCOUNT' | translate }}
+        <div class="header profile">
+          <span class="title-container">
+            <span class="material-icons title-icon"> person </span>
+            <span class="title">
+              {{ 'MAIN.ACCOUNT.MY_ACCOUNT' | translate }}
+            </span>
           </span>
-        </div>
-        <div class="body">
+          <!-- Photo -->
+          <div class="photo">
+            <img src="../../../../assets/images/op_large.png" />
+          </div>
+          <!-- Age -->
+          <div class="age">
+            <span class="material-icons icon"> cake </span>
+            <span class="text">
+              {{ formatBirthday(account.creation_date) }}
+            </span>  
+          </div>
           <!-- Verification -->
           <div *ngIf="account.verified_date === null; else verified">
             <div *ngIf="account.email">
@@ -38,15 +49,16 @@
           </div>
           <ng-template #verified>
             <div class="verify-container">
-              <span class="verify-text">
-                {{ 'MAIN.ACCOUNT.VERIFY_CHECK' | translate }}
-              </span>
               <span class="material-icons verify-icon-highlight">
                 check_circle
               </span>
+              <span class="verify-text">
+                {{ 'MAIN.ACCOUNT.VERIFY_CHECK' | translate }}
+              </span>
             </div>
           </ng-template>
-
+        </div>
+        <div class="body">
           <!-- Email -->
           <div class="info-container">
             <span class="subheader">

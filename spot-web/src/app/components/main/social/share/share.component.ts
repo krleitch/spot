@@ -98,7 +98,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         this.authenticated = authenticated;
       });
 
-    this.data$ = this.modalService.getData(this.modalId);
+    this.data$ = this.modalService.getData('global');
 
     this.data$.subscribe((val) => {
       this.data = val;
@@ -178,7 +178,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeShare(): void {
-    this.modalService.close(this.modalId);
+    this.modalService.close('global');
   }
 
   sendNotification(): void {

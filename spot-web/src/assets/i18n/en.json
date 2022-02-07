@@ -56,7 +56,7 @@
       "VERIFY": "Send verification email",
       "VERIFY_SENT": "Verification email sent",
       "VERIFY_RESEND": "Resend",
-      "VERIFY_CHECK": "Verified",
+      "VERIFY_CHECK": "Your account has been verified",
       "EMAIL_VERIFY_DESCRIPTION": "You will need to verify your email to start making spots.",
       "EMAIL_ERROR": "Email is required",
       "EMAIL_INVALID": "Invalid email",

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -18,8 +18,9 @@ export class ModalService {
     this.modals = this.modals.filter((x) => x.id !== id);
   }
 
-  open(id: string, data?: any) {
+  open(id: string, componentName?: string, data?: any) {
     const modal: any = this.modals.filter((x) => x.id === id)[0];
+    modal.setComponent(componentName);
     modal.open();
 
     if (data) {
@@ -35,6 +36,7 @@ export class ModalService {
 
   close(id: string) {
     const modal: any = this.modals.filter((x) => x.id === id)[0];
+    modal.removeComponent();
     modal.close();
   }
 

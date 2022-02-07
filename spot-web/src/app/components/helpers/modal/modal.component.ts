@@ -1,4 +1,16 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ComponentRef,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
+
+// Components
+import { ShareComponent } from '@src/app/components/main/social/share/share.component';
 
 // services
 import { ModalService } from '@services/modal.service';
@@ -16,7 +28,19 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() width: number;
   @Input() height: number;
   @Input() disableClose: boolean;
+
+  @Input() componentName: string;
+  componentRef: ComponentRef<unknown>;
+
   private element: any;
+
+  // The container to dynamically add content to
+  @ViewChild('container', { read: ViewContainerRef, static: true })
+  container: ViewContainerRef;
+
+  componentsMapping = {
+    share: ShareComponent
+  };
 
   isOpen: boolean;
 
@@ -41,6 +65,15 @@ export class ModalComponent implements OnInit, OnDestroy {
     });
 
     this.modalService.add(this);
+  }
+
+  setComponent(componentName: string): void {
+    const component = this.componentsMapping[componentName];
+    this.componentRef = this.container.createComponent(component);
+  }
+
+  removeComponent(): void {
+    this.container.clear();
   }
 
   ngOnDestroy(): void {

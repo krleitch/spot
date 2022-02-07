@@ -63,6 +63,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   account$: Observable<Account>;
   showAccountIndicator$: Observable<boolean>;
   accountMetadata$: Observable<AccountMetadata>;
+  accountMetadata: AccountMetadata;
 
   verificationSent = false;
 
@@ -106,6 +107,12 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     this.accountMetadata$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectAccountMetadata)
     );
+
+    this.accountMetadata$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((metadata: AccountMetadata) => {
+        this.accountMetadata = metadata;
+      });
 
     this.facebookConnected$ = this.store$.pipe(
       select(AccountsStoreSelectors.selectFacebookConnected)
@@ -161,8 +168,13 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  formatBirthday(date: string) {
+    const d = new Date(date);
+    return d.toDateString();
+  }
+
   enableEditUsername(): void {
-    this.modalService.open('spot-confirm-modal', {
+    this.modalService.open('spot-confirm-modal', 'confirm', {
       message: this.STRINGS.USERNAME_CONFIRM
     });
 
@@ -186,7 +198,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditEmail(): void {
     if (this.email) {
-      this.modalService.open('spot-confirm-modal', {
+      this.modalService.open('spot-confirm-modal', 'confirm', {
         message: this.STRINGS.EMAIL_CONFIRM
       });
 
@@ -216,7 +228,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditPhone(): void {
     if (this.phone) {
-      this.modalService.open('spot-confirm-modal', {
+      this.modalService.open('spot-confirm-modal', 'confirm', {
         message: this.STRINGS.PHONE_CONFIRM
       });
 
@@ -359,7 +371,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   deleteUser(): void {
     if (this.accountOptionsEnabled) {
-      this.modalService.open('spot-confirm-modal');
+      this.modalService.open('spot-confirm-modal', 'confirm');
 
       const result$ = this.modalService
         .getResult('spot-confirm-modal')

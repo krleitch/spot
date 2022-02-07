@@ -109,12 +109,7 @@
             </div>
             <div
               class="button"
-              (click)="
-                openModal('spot-share-modal', {
-                  postId: post.id,
-                  postLink: post.link
-                })
-              "
+              (click)="openShareModal(post.id, post.link)"
             >
               <span class="material-icons icon"> share </span>
               {{ 'MAIN.POST.SHARE' | translate }}
@@ -138,12 +133,7 @@
       <div>
         <i
           class="material-icons share"
-          (click)="
-            openModal('spot-share-modal', {
-              postId: post.id,
-              postLink: post.link
-            })
-          "
+          (click)="openShareModal(post.id, post.link)"
         >
           share
         </i>

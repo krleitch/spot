@@ -326,6 +326,13 @@ export class PostComponent implements OnInit, OnDestroy {
     this.openModal('spot-report-modal', { postId: postId });
   }
 
+  openShareModal(postId: string, postLink: string) {
+    this.modalService.open('global', 'share', {
+      postId: postId,
+      postLink: postLink
+    });
+  }
+
   imageClicked(): void {
     if (!this.imageBlurred) {
       this.openModal('spot-image-modal', this.post.image_src);
