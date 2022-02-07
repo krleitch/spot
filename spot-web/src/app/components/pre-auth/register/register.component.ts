@@ -276,6 +276,6 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openTerms(): void {
-    this.modalService.open('spot-terms-modal');
+    this.modalService.open('global', 'terms');
   }
 }

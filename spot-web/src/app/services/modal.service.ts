@@ -18,16 +18,19 @@ export class ModalService {
     this.modals = this.modals.filter((x) => x.id !== id);
   }
 
-  open(id: string, componentName?: string, data?: any) {
+  open(id: string, componentName: string, data?: any, options?: any) {
     const modal: any = this.modals.filter((x) => x.id === id)[0];
     modal.setComponent(componentName);
-    modal.open();
-
     if (data) {
-      modal.data.next(data);
-    } else {
-      modal.data.next(null);
+      modal.componentRef.instance.data = data;
     }
+    if (options) {
+
+      // TODO; Options for welcome, disable close
+      // Will need to reset since using same global modal
+
+    }
+    modal.open();
   }
 
   isOpen(id: string): boolean {
@@ -36,7 +39,6 @@ export class ModalService {
 
   close(id: string) {
     const modal: any = this.modals.filter((x) => x.id === id)[0];
-    modal.removeComponent();
     modal.close();
   }
 
@@ -44,11 +46,6 @@ export class ModalService {
     this.modals.forEach((modal) => {
       modal.close();
     });
-  }
-
-  getData(id: string): Observable<any> {
-    const modal: any = this.modals.filter((x) => x.id === id)[0];
-    return modal.data.asObservable();
   }
 
   setResult(id: string, result: any) {

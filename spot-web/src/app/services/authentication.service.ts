@@ -183,7 +183,7 @@ export class AuthenticationService {
         this.router.navigateByUrl('/home');
       });
     }
-    this.modalService.open('spot-welcome-modal');
+    this.modalService.open('global', 'welcome');
   }
 
   // login / logout

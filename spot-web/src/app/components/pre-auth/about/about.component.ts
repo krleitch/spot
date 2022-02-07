@@ -14,6 +14,6 @@ export class AboutComponent implements OnInit {
   ngOnInit(): void {}
 
   openTerms(): void {
-    this.modalService.open('spot-terms-modal');
+    this.modalService.open('global', 'terms');
   }
 }

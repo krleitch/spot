@@ -685,10 +685,10 @@ export class CommentComponent
   }
 
   deleteComment(): void {
-    this.modalService.open('spot-confirm-modal');
+    this.modalService.open('global', 'confirm');
 
     const result$ = this.modalService
-      .getResult('spot-confirm-modal')
+      .getResult('global')
       .pipe(take(1));
 
     result$.subscribe((result: { status: string }) => {
@@ -874,7 +874,7 @@ export class CommentComponent
 
   like(): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
@@ -897,7 +897,7 @@ export class CommentComponent
 
   dislike(): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
@@ -946,21 +946,13 @@ export class CommentComponent
     }
   }
 
-  openModal(id: string, data?: any): void {
-    if (data) {
-      this.modalService.open(id, data);
-    } else {
-      this.modalService.open(id);
-    }
-  }
-
   closeModal(id: string): void {
     this.modalService.close(id);
   }
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      this.openModal('spot-image-modal', this.comment.image_src);
+      this.modalService.open('global', 'image', this.comment.image_src);
     } else {
       this.imageBlurred = false;
     }
@@ -968,13 +960,29 @@ export class CommentComponent
 
   openReportModal(postId: string, commentId: string): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
-    this.openModal('spot-report-modal', {
+    this.modalService.open('global', 'report', {
       postId: postId,
       commentId: commentId
     });
   }
+
+  openShareModal(postId: string, postLink: string, commentId: string, commentLink: string) {
+    if (!this.authenticationService.isAuthenticated()) {
+      this.modalService.open('global', 'auth');
+      return;
+    }
+
+    this.modalService.open('global', 'share', {
+      postId: postId,
+      commentId: commentId,
+      postLink: postLink,
+      commentLink: commentLink
+    });
+
+  }
+
 }

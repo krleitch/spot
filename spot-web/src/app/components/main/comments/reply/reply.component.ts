@@ -512,10 +512,10 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteReply(): void {
-    this.modalService.open('spot-confirm-modal');
+    this.modalService.open('global', 'confirm');
 
     const result$ = this.modalService
-      .getResult('spot-confirm-modal')
+      .getResult('global')
       .pipe(take(1));
 
     result$.subscribe((result: { status: string }) => {
@@ -702,7 +702,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   like(): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
@@ -729,7 +729,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dislike(): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
@@ -780,20 +780,13 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  openModal(id: string, data?: any): void {
-    if (data) {
-      this.modalService.open(id, data);
-    } else {
-      this.modalService.open(id);
-    }
-  }
   closeModal(id: string): void {
     this.modalService.close(id);
   }
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      this.openModal('spot-image-modal', this.reply.image_src);
+      this.modalService.open('global', 'image', this.reply.image_src);
     } else {
       this.imageBlurred = false;
     }
@@ -801,13 +794,26 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openReportModal(postId: string, commentId: string): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
-    this.openModal('spot-report-modal', {
+    this.modalService.open('global', 'report', {
       postId: postId,
       commentId: commentId
+    });
+  }
+  openShareModal(postId: string, postLink: string, replyId: string, replyLink: string): void {
+    if (!this.authenticationService.isAuthenticated()) {
+      this.modalService.open('global', 'auth');
+      return;
+    }
+
+    this.modalService.open('global', 'share', {
+      postId: postId,
+      postLinl: postLink,
+      commentId: replyId,
+      commentLink: replyLink
     });
   }
 }

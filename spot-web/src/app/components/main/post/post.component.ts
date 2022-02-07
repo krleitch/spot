@@ -138,10 +138,10 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   deletePost(): void {
-    this.modalService.open('spot-confirm-modal');
+    this.modalService.open('global', 'confirm');
 
     const result$ = this.modalService
-      .getResult('spot-confirm-modal')
+      .getResult('global')
       .pipe(take(1));
 
     result$.subscribe((result: { status: string }) => {
@@ -249,7 +249,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   like(): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
@@ -276,7 +276,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   dislike(): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
@@ -305,25 +305,17 @@ export class PostComponent implements OnInit, OnDestroy {
     this.expanded = value;
   }
 
-  openModal(id: string, data?: any): void {
-    if (data) {
-      this.modalService.open(id, data);
-    } else {
-      this.modalService.open(id);
-    }
-  }
-
   closeModal(id: string): void {
     this.modalService.close(id);
   }
 
   openReportModal(postId: string): void {
     if (!this.authenticationService.isAuthenticated()) {
-      this.modalService.open('spot-auth-modal');
+      this.modalService.open('global', 'auth');
       return;
     }
 
-    this.openModal('spot-report-modal', { postId: postId });
+    this.modalService.open('global', 'report', { postId: postId });
   }
 
   openShareModal(postId: string, postLink: string) {
@@ -335,7 +327,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      this.openModal('spot-image-modal', this.post.image_src);
+      this.modalService.open('global', 'image', this.post.image_src);
     } else {
       this.imageBlurred = false;
     }

@@ -74,7 +74,9 @@
               class="image-blur-text"
             >
               <span class="material-icons icon"> error_outline </span>
-              <span class="text"> {{ 'MAIN.REPLY.MATURE_CONTENT' | translate }} </span>
+              <span class="text">
+                {{ 'MAIN.REPLY.MATURE_CONTENT' | translate }}
+              </span>
               <span class="text highlight">
                 {{ 'MAIN.REPLY.MATURE_CONTENT_SHOW' | translate }}
               </span>
@@ -97,7 +99,9 @@
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
           <div class="file-options" *ngIf="imgSrc !== null">
-            <span class="file-title"> {{ 'MAIN.REPLY.FILE_TITLE' | translate }} </span>
+            <span class="file-title">
+              {{ 'MAIN.REPLY.FILE_TITLE' | translate }}
+            </span>
             <span class="file-name">
               {{ getDisplayFilename(imageFile.name) }}
             </span>
@@ -152,14 +156,7 @@
             </div>
             <div
               class="button"
-              (click)="
-                openModal('spot-share-modal', {
-                  postLink: post.link,
-                  postId: post.id,
-                  commentLink: reply.link,
-                  commentId: reply.id
-                })
-              "
+              (click)="openShareModal(post.id, post.link, reply.id, reply.link)"
             >
               <span class="material-icons icon"> share </span>
               {{ 'MAIN.REPLY.SHARE' | translate }}

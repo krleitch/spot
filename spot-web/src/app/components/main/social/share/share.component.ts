@@ -60,7 +60,6 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   STRINGS;
 
-  data$: Observable<ShareModalData>;
   data: ShareModalData = { postId: null, postLink: null };
   authenticated$: Observable<boolean>;
   authenticated: boolean;
@@ -98,23 +97,6 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         this.authenticated = authenticated;
       });
 
-    this.data$ = this.modalService.getData('global');
-
-    this.data$.subscribe((val) => {
-      this.data = val;
-      this.link = window.location.origin + '/posts/' + this.data.postLink;
-      if (this.data.commentLink) {
-        this.link += '/comments/' + this.data.commentLink;
-      }
-      // reset send status
-      this.friends.forEach((friend: ShareFriend) => {
-        friend.sent = false;
-      });
-      this.username = '';
-      this.errorMessage = null;
-      this.successMessage = null;
-    });
-
     // Add a sent property to the list of friends
     this.friends$ = this.store$
       .pipe(select(SocialStoreSelectors.selectFriends))
@@ -134,6 +116,11 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((friends: ShareFriend[]) => {
         this.friends = friends;
       });
+
+    this.link = window.location.origin + '/posts/' + this.data.postLink;
+    if (this.data.commentLink) {
+      this.link += '/comments/' + this.data.commentLink;
+    }
   }
 
   ngAfterViewInit(): void {

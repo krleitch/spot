@@ -9,8 +9,16 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
+// TODO: Can lazy load components here
+
 // Components
 import { ShareComponent } from '@src/app/components/main/social/share/share.component';
+import { ReportComponent } from '@src/app/components/main/social/report/report.component';
+import { ConfirmComponent } from '@src/app/components/helpers/confirm/confirm.component';
+import { ImageComponent } from '@src/app/components/helpers/image/image.component';
+import { TermsComponent } from '@src/app/components/pre-auth/terms/terms.component';
+import { AuthModalComponent } from '@src/app/components/pre-auth/auth-modal/auth-modal.component';
+import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.component';
 
 // services
 import { ModalService } from '@services/modal.service';
@@ -39,12 +47,16 @@ export class ModalComponent implements OnInit, OnDestroy {
   container: ViewContainerRef;
 
   componentsMapping = {
-    share: ShareComponent
+    share: ShareComponent,
+    report: ReportComponent,
+    confirm: ConfirmComponent,
+    image: ImageComponent,
+    terms: TermsComponent,
+    auth: AuthModalComponent,
+    welcome: WelcomeComponent
   };
 
   isOpen: boolean;
-
-  data = new Subject<any>();
   result: Subject<any>;
 
   constructor(private modalService: ModalService, private el: ElementRef) {
@@ -97,6 +109,8 @@ export class ModalComponent implements OnInit, OnDestroy {
     if (this.result) {
       this.result.complete();
     }
+
+    this.removeComponent();
   }
 
   setResult(result: any): void {

@@ -251,10 +251,10 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   deleteFriend(id: string): void {
-    this.modalService.open('spot-confirm-modal');
+    this.modalService.open('global', 'confirm');
 
     const result$ = this.modalService
-      .getResult('spot-confirm-modal')
+      .getResult('global')
       .pipe(take(1));
 
     result$.subscribe((result: { status: string }) => {
@@ -272,10 +272,10 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   deletePendingFriendRequest(id: string) {
-    this.modalService.open('spot-confirm-modal');
+    this.modalService.open('global', 'confirm');
 
     const result$ = this.modalService
-      .getResult('spot-confirm-modal')
+      .getResult('global')
       .pipe(take(1));
 
     result$.subscribe((result: { status: string }) => {

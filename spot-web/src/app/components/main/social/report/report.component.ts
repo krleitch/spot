@@ -32,7 +32,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   @Input() modalId: string;
 
-  data$: Observable<any>;
   data: { postId: string; commentId?: string } = {
     postId: null,
     commentId: null
@@ -58,22 +57,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-    this.data$ = this.modalService.getData(this.modalId);
-
-    // data type is
-    // { commentId: reply.id, postId: reply.post_id }
-    this.data$.subscribe((val) => {
-      // commentId may not exist
-      if (val.commentId) {
-        this.data.commentId = val.commentId;
-      }
-
-      this.data.postId = val.postId;
-      this.content = '';
-      this.category = ReportCategory.OFFENSIVE;
-    });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.onDestroy.next();

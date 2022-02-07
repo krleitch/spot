@@ -176,7 +176,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   openAuthModal(): void {
-    this.modalService.open('spot-auth-modal');
+    this.modalService.open('global', 'auth');
   }
 
   toggleNotifications(): void {

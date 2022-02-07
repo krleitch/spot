@@ -12,18 +12,11 @@ import { ModalService } from '@services/modal.service';
 export class ConfirmComponent implements OnInit {
   @Input() modalId: string;
 
-  data$: Observable<any>;
   data: { message: string } = null;
 
   constructor(private modalService: ModalService) {}
 
-  ngOnInit(): void {
-    this.data$ = this.modalService.getData(this.modalId);
-
-    this.data$.subscribe((val) => {
-      this.data = val;
-    });
-  }
+  ngOnInit(): void {}
 
   cancel(): void {
     this.modalService.setResult(this.modalId, { status: 'cancel' });

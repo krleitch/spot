@@ -11,21 +11,13 @@ import { ModalService } from '@services/modal.service';
 })
 export class TermsComponent implements OnInit {
   @Input() modalId: string;
-  data$: Observable<any>;
   data: { message: string } = null;
 
   @ViewChild('body') body: ElementRef;
 
   constructor(private modalService: ModalService) {}
 
-  ngOnInit(): void {
-    this.data$ = this.modalService.getData(this.modalId);
-
-    // scroll to top on every open
-    this.data$.subscribe((val) => {
-      this.scrollToTop();
-    });
-  }
+  ngOnInit(): void {}
 
   scrollToTop(): void {
     if (this.body) {

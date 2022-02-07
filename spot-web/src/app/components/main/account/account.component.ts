@@ -174,12 +174,12 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   enableEditUsername(): void {
-    this.modalService.open('spot-confirm-modal', 'confirm', {
+    this.modalService.open('global', 'confirm', {
       message: this.STRINGS.USERNAME_CONFIRM
     });
 
     const result$ = this.modalService
-      .getResult('spot-confirm-modal')
+      .getResult('global')
       .pipe(take(1));
 
     result$.subscribe((result: { status: string }) => {
@@ -198,12 +198,12 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditEmail(): void {
     if (this.email) {
-      this.modalService.open('spot-confirm-modal', 'confirm', {
+      this.modalService.open('global', 'confirm', {
         message: this.STRINGS.EMAIL_CONFIRM
       });
 
       const result$ = this.modalService
-        .getResult('spot-confirm-modal')
+        .getResult('global')
         .pipe(take(1));
 
       result$.subscribe((result: { status: string }) => {
@@ -228,12 +228,12 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditPhone(): void {
     if (this.phone) {
-      this.modalService.open('spot-confirm-modal', 'confirm', {
+      this.modalService.open('global', 'confirm', {
         message: this.STRINGS.PHONE_CONFIRM
       });
 
       const result$ = this.modalService
-        .getResult('spot-confirm-modal')
+        .getResult('global')
         .pipe(take(1));
 
       result$.subscribe((result: { status: string }) => {
@@ -371,10 +371,10 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   deleteUser(): void {
     if (this.accountOptionsEnabled) {
-      this.modalService.open('spot-confirm-modal', 'confirm');
+      this.modalService.open('global', 'confirm');
 
       const result$ = this.modalService
-        .getResult('spot-confirm-modal')
+        .getResult('global')
         .pipe(take(1));
 
       result$.subscribe((result: { status: string }) => {
