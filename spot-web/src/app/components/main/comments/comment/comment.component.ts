@@ -51,7 +51,12 @@ import {
 } from '@models/comments';
 import { Post } from '@models/posts';
 import { Tag } from '@models/notifications';
-import { ModalImageData, ModalOptions } from '@models/modal';
+import {
+  ModalImageData,
+  ModalOptions,
+  ModalConfirmResult,
+  ModalConfirmResultTypes
+} from '@models/modal';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -689,8 +694,8 @@ export class CommentComponent
     this.modalService
       .open('global', 'confirm')
       .pipe(take(1))
-      .subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
+      .subscribe((result: ModalConfirmResult) => {
+        if (result.status === ModalConfirmResultTypes.CONFIRM) {
           const request: DeleteCommentRequest = {
             postId: this.comment.post_id,
             commentId: this.comment.id

@@ -1,10 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 // services
 import { ModalService } from '@services/modal.service';
 
 // models
-import { ModalConfirmData } from '@models/modal';
+import {
+  ModalConfirmData,
+  ModalConfirmResult,
+  ModalConfirmResultTypes
+} from '@models/modal';
 
 @Component({
   selector: 'spot-confirm',
@@ -12,7 +16,7 @@ import { ModalConfirmData } from '@models/modal';
   styleUrls: ['./confirm.component.scss']
 })
 export class ConfirmComponent implements OnInit {
-  
+  // MODAL
   modalId: string;
   data: ModalConfirmData = { message: '' };
 
@@ -21,12 +25,18 @@ export class ConfirmComponent implements OnInit {
   ngOnInit(): void {}
 
   cancel(): void {
-    this.modalService.setResult(this.modalId, { status: 'cancel' });
+    const result: ModalConfirmResult = {
+      status: ModalConfirmResultTypes.CANCEL
+    };
+    this.modalService.setResult(this.modalId, result);
     this.modalService.close(this.modalId);
   }
 
   confirm(): void {
-    this.modalService.setResult(this.modalId, { status: 'confirm' });
+    const result: ModalConfirmResult = {
+      status: ModalConfirmResultTypes.CONFIRM
+    };
+    this.modalService.setResult(this.modalId, result);
     this.modalService.close(this.modalId);
   }
 }

@@ -26,3 +26,13 @@ export interface ModalReportData {
 export interface ModalImageData {
   imageSrc: string;
 }
+
+export type ModalResult = ModalConfirmResult;
+
+export enum ModalConfirmResultTypes {
+  CONFIRM = 'CONFIRM',
+  CANCEL = 'CANCEL',
+}
+export interface ModalConfirmResult {
+  status: ModalConfirmResultTypes;
+}

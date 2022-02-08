@@ -26,6 +26,9 @@ import { ModalService } from '@services/modal.service';
 // rxjs
 import { Subject, Observable } from 'rxjs';
 
+// assets
+import { ModalResult } from '@models/modal';
+
 @Component({
   selector: 'spot-modal',
   templateUrl: './modal.component.html',
@@ -57,7 +60,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   };
 
   isOpen: boolean;
-  result: Subject<any>;
+  result: Subject<ModalResult>;
 
   constructor(private modalService: ModalService, private el: ElementRef) {
     this.element = el.nativeElement;
@@ -79,6 +82,11 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.modalService.add(this);
   }
 
+  ngOnDestroy(): void {
+    this.modalService.remove(this.id);
+    this.element.remove();
+  }
+
   setComponent(componentName: string): void {
     const component = this.componentsMapping[componentName];
     this.componentRef = this.container.createComponent(component);
@@ -88,17 +96,12 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.container.clear();
   }
 
-  ngOnDestroy(): void {
-    this.modalService.remove(this.id);
-    this.element.remove();
-  }
-
-  open(): Observable<any> {
+  open(): Observable<ModalResult> {
     this.element.style.display = 'block';
     document.body.classList.add('spot-modal-open');
 
     this.isOpen = true;
-    this.result = new Subject<any>();
+    this.result = new Subject<ModalResult>();
     return this.result.asObservable();
   }
 
@@ -114,7 +117,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.removeComponent();
   }
 
-  setResult(result: any): void {
+  setResult(result: ModalResult): void {
     this.result.next(result);
   }
 }

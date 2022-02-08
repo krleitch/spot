@@ -34,7 +34,12 @@ import {
   UnratedPostRequest
 } from '@models/posts';
 import { Account, AccountMetadata, Location } from '@models/accounts';
-import { ModalImageData, ModalOptions } from '@models/modal';
+import {
+  ModalImageData,
+  ModalOptions,
+  ModalConfirmResult,
+  ModalConfirmResultTypes
+} from '@models/modal';
 
 @Component({
   selector: 'spot-post',
@@ -142,8 +147,8 @@ export class PostComponent implements OnInit, OnDestroy {
     this.modalService
       .open('global', 'confirm')
       .pipe(take(1))
-      .subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
+      .subscribe((result: ModalConfirmResult) => {
+        if (result.status === ModalConfirmResultTypes.CONFIRM) {
           const request: DeletePostRequest = {
             postId: this.post.id
           };

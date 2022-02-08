@@ -45,6 +45,7 @@ import {
   VerifyRequest
 } from '@models/accounts';
 import { SpotError } from '@exceptions/error';
+import { ModalConfirmResult, ModalConfirmResultTypes } from '@models/modal';
 
 declare const gapi: any;
 
@@ -179,8 +180,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         message: this.STRINGS.USERNAME_CONFIRM
       })
       .pipe(take(1))
-      .subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
+      .subscribe((result: ModalConfirmResult) => {
+        if (result.status === ModalConfirmResultTypes.CONFIRM) {
           this.editEmailEnabled = true;
           this.editUsernameEnabled = true;
           this.usernameErrorMessage = '';
@@ -200,8 +201,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           message: this.STRINGS.EMAIL_CONFIRM
         })
         .pipe(take(1))
-        .subscribe((result: { status: string }) => {
-          if (result.status === 'confirm') {
+        .subscribe((result: ModalConfirmResult) => {
+          if (result.status === ModalConfirmResultTypes.CONFIRM) {
             this.editEmailEnabled = true;
             this.emailErrorMessage = '';
             this.emailSuccessMessage = '';
@@ -227,8 +228,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           message: this.STRINGS.PHONE_CONFIRM
         })
         .pipe(take(1))
-        .subscribe((result: { status: string }) => {
-          if (result.status === 'confirm') {
+        .subscribe((result: ModalConfirmResult) => {
+          if (result.status === ModalConfirmResultTypes.CONFIRM) {
             this.editPhoneEnabled = true;
             this.phoneErrorMessage = '';
             this.phoneSuccessMessage = '';
@@ -365,8 +366,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.modalService
         .open('global', 'confirm')
         .pipe(take(1))
-        .subscribe((result: { status: string }) => {
-          if (result.status === 'confirm') {
+        .subscribe((result: ModalConfirmResult) => {
+          if (result.status === ModalConfirmResultTypes.CONFIRM) {
             this.store$.dispatch(new AccountsActions.DeleteRequestAction());
           }
         });
