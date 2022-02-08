@@ -21,6 +21,7 @@ import { ReportCommentRequest } from '@models/comments';
 import { ReportCategory } from '@models/report';
 import { SpotError } from '@exceptions/error';
 import { REPORT_CONSTANTS } from '@constants/report';
+import { ModalReportData } from '@models/modal';
 
 @Component({
   selector: 'spot-report',
@@ -30,9 +31,9 @@ import { REPORT_CONSTANTS } from '@constants/report';
 export class ReportComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
-  @Input() modalId: string;
-
-  data: { postId: string; commentId?: string } = {
+  // MODAL
+  modalId: string;
+  data: ModalReportData = {
     postId: null,
     commentId: null
   };

@@ -34,6 +34,7 @@ import {
   UnratedPostRequest
 } from '@models/posts';
 import { Account, AccountMetadata, Location } from '@models/accounts';
+import { ModalImageData, ModalOptions } from '@models/modal';
 
 @Component({
   selector: 'spot-post',
@@ -138,26 +139,23 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   deletePost(): void {
-    this.modalService.open('global', 'confirm');
-
-    const result$ = this.modalService
-      .getResult('global')
-      .pipe(take(1));
-
-    result$.subscribe((result: { status: string }) => {
-      if (result.status === 'confirm') {
-        const request: DeletePostRequest = {
-          postId: this.post.id
-        };
-        this.store$.dispatch(
-          new PostsStoreActions.DeleteRequestAction(request)
-        );
-        // go home
-        if (this.detailed) {
-          this.router.navigateByUrl('/home');
+    this.modalService
+      .open('global', 'confirm')
+      .pipe(take(1))
+      .subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
+          const request: DeletePostRequest = {
+            postId: this.post.id
+          };
+          this.store$.dispatch(
+            new PostsStoreActions.DeleteRequestAction(request)
+          );
+          // go home
+          if (this.detailed) {
+            this.router.navigateByUrl('/home');
+          }
         }
-      }
-    });
+      });
   }
 
   getTime(): string {
@@ -327,7 +325,9 @@ export class PostComponent implements OnInit, OnDestroy {
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      this.modalService.open('global', 'image', this.post.image_src);
+      const modalData: ModalImageData = { imageSrc: this.post.image_src };
+      const modalOptions: ModalOptions = { width: 'auto' };
+      this.modalService.open('global', 'image', modalData, modalOptions);
     } else {
       this.imageBlurred = false;
     }

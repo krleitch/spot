@@ -9,7 +9,11 @@ import { ModalService } from '@services/modal.service';
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent implements OnInit {
-  @Input() modalId: string;
+  
+  // MODAL
+  modalId: string;
+  data; // unused
+
   constructor(private modalService: ModalService) {}
 
   ngOnInit(): void {}

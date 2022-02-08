@@ -30,18 +30,11 @@ import {
 } from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
+import { ModalShareData } from '@models/modal';
 
 // has the friend been sent a notification
 interface ShareFriend extends Friend {
   sent: boolean;
-}
-
-// THe data we expect to receive from modal service
-interface ShareModalData {
-  postId: string;
-  postLink: string;
-  commentId?: string;
-  commentLink?: string;
 }
 
 @Component({
@@ -53,14 +46,15 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
   private observer: IntersectionObserver;
 
-  @Input() modalId;
+  // MODAL
+  modalId: string;
+  data: ModalShareData = { postId: null, postLink: null };
 
   @ViewChild('usernameinput') usernameinput: ElementRef;
   @ViewChild('social') social: ElementRef;
 
   STRINGS;
 
-  data: ShareModalData = { postId: null, postLink: null };
   authenticated$: Observable<boolean>;
   authenticated: boolean;
   friends$: Observable<ShareFriend[]>;

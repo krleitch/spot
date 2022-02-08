@@ -174,48 +174,42 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   enableEditUsername(): void {
-    this.modalService.open('global', 'confirm', {
-      message: this.STRINGS.USERNAME_CONFIRM
-    });
+    this.modalService
+      .open('global', 'confirm', {
+        message: this.STRINGS.USERNAME_CONFIRM
+      })
+      .pipe(take(1))
+      .subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
+          this.editEmailEnabled = true;
+          this.editUsernameEnabled = true;
+          this.usernameErrorMessage = '';
+          this.usernameSuccessMessage = '';
 
-    const result$ = this.modalService
-      .getResult('global')
-      .pipe(take(1));
-
-    result$.subscribe((result: { status: string }) => {
-      if (result.status === 'confirm') {
-        this.editEmailEnabled = true;
-        this.editUsernameEnabled = true;
-        this.usernameErrorMessage = '';
-        this.usernameSuccessMessage = '';
-
-        setTimeout(() => {
-          this.editUsernameInput.nativeElement.focus();
-        }, 0);
-      }
-    });
+          setTimeout(() => {
+            this.editUsernameInput.nativeElement.focus();
+          }, 0);
+        }
+      });
   }
 
   enableEditEmail(): void {
     if (this.email) {
-      this.modalService.open('global', 'confirm', {
-        message: this.STRINGS.EMAIL_CONFIRM
-      });
-
-      const result$ = this.modalService
-        .getResult('global')
-        .pipe(take(1));
-
-      result$.subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
-          this.editEmailEnabled = true;
-          this.emailErrorMessage = '';
-          this.emailSuccessMessage = '';
-          setTimeout(() => {
-            this.editEmailInput.nativeElement.focus();
-          }, 0);
-        }
-      });
+      this.modalService
+        .open('global', 'confirm', {
+          message: this.STRINGS.EMAIL_CONFIRM
+        })
+        .pipe(take(1))
+        .subscribe((result: { status: string }) => {
+          if (result.status === 'confirm') {
+            this.editEmailEnabled = true;
+            this.emailErrorMessage = '';
+            this.emailSuccessMessage = '';
+            setTimeout(() => {
+              this.editEmailInput.nativeElement.focus();
+            }, 0);
+          }
+        });
     } else {
       this.editEmailEnabled = true;
       this.emailErrorMessage = '';
@@ -228,24 +222,21 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   enableEditPhone(): void {
     if (this.phone) {
-      this.modalService.open('global', 'confirm', {
-        message: this.STRINGS.PHONE_CONFIRM
-      });
-
-      const result$ = this.modalService
-        .getResult('global')
-        .pipe(take(1));
-
-      result$.subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
-          this.editPhoneEnabled = true;
-          this.phoneErrorMessage = '';
-          this.phoneSuccessMessage = '';
-          setTimeout(() => {
-            this.editPhoneInput.nativeElement.focus();
-          }, 0);
-        }
-      });
+      this.modalService
+        .open('global', 'confirm', {
+          message: this.STRINGS.PHONE_CONFIRM
+        })
+        .pipe(take(1))
+        .subscribe((result: { status: string }) => {
+          if (result.status === 'confirm') {
+            this.editPhoneEnabled = true;
+            this.phoneErrorMessage = '';
+            this.phoneSuccessMessage = '';
+            setTimeout(() => {
+              this.editPhoneInput.nativeElement.focus();
+            }, 0);
+          }
+        });
     } else {
       this.editPhoneEnabled = true;
       setTimeout(() => {
@@ -371,17 +362,14 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   deleteUser(): void {
     if (this.accountOptionsEnabled) {
-      this.modalService.open('global', 'confirm');
-
-      const result$ = this.modalService
-        .getResult('global')
-        .pipe(take(1));
-
-      result$.subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
-          this.store$.dispatch(new AccountsActions.DeleteRequestAction());
-        }
-      });
+      this.modalService
+        .open('global', 'confirm')
+        .pipe(take(1))
+        .subscribe((result: { status: string }) => {
+          if (result.status === 'confirm') {
+            this.store$.dispatch(new AccountsActions.DeleteRequestAction());
+          }
+        });
     }
   }
 

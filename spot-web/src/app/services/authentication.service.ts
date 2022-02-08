@@ -25,6 +25,7 @@ import {
   ValidateTokenSuccess
 } from '@models/authentication';
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
+import { ModalOptions } from '@models/modal';
 
 // Services
 import { AlertService } from '@services/alert.service';
@@ -183,7 +184,8 @@ export class AuthenticationService {
         this.router.navigateByUrl('/home');
       });
     }
-    this.modalService.open('global', 'welcome');
+    const modalOptions: ModalOptions = { width: 600, disableClose: true };
+    this.modalService.open('global', 'welcome', undefined, modalOptions);
   }
 
   // login / logout

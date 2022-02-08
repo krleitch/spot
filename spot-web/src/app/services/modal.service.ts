@@ -1,6 +1,9 @@
-import { Component, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
+
+// Models
+import { ModalOptions, ModalData } from '@models/modal';
 
 @Injectable({
   providedIn: 'root'
@@ -18,19 +21,29 @@ export class ModalService {
     this.modals = this.modals.filter((x) => x.id !== id);
   }
 
-  open(id: string, componentName: string, data?: any, options?: any) {
+  open(
+    id: string,
+    componentName: string,
+    data?: ModalData,
+    options?: ModalOptions
+  ): Observable<any> {
     const modal: any = this.modals.filter((x) => x.id === id)[0];
     modal.setComponent(componentName);
     if (data) {
       modal.componentRef.instance.data = data;
     }
+    modal.componentRef.instance.modalId = id;
     if (options) {
-
-      // TODO; Options for welcome, disable close
-      // Will need to reset since using same global modal
-
+      modal.width = options.width ? options.width : 400;
+      modal.height = options.height ? options.height : 'auto';
+      modal.disabledClose = options.disableClose ? options.disableClose : false;
+    } else {
+      // reset
+      modal.width = 400;
+      modal.height = 'auto';
+      modal.disableClose = false;
     }
-    modal.open();
+    return modal.open();
   }
 
   isOpen(id: string): boolean {
@@ -53,8 +66,4 @@ export class ModalService {
     modal.setResult(result);
   }
 
-  getResult(id: string): Observable<any> {
-    const modal: any = this.modals.filter((x) => x.id === id)[0];
-    return modal.result.asObservable();
-  }
 }

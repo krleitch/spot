@@ -51,6 +51,7 @@ import {
 } from '@models/comments';
 import { Post } from '@models/posts';
 import { Tag } from '@models/notifications';
+import { ModalImageData, ModalOptions } from '@models/modal';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -685,23 +686,20 @@ export class CommentComponent
   }
 
   deleteComment(): void {
-    this.modalService.open('global', 'confirm');
-
-    const result$ = this.modalService
-      .getResult('global')
-      .pipe(take(1));
-
-    result$.subscribe((result: { status: string }) => {
-      if (result.status === 'confirm') {
-        const request: DeleteCommentRequest = {
-          postId: this.comment.post_id,
-          commentId: this.comment.id
-        };
-        this.store$.dispatch(
-          new CommentsStoreActions.DeleteRequestAction(request)
-        );
-      }
-    });
+    this.modalService
+      .open('global', 'confirm')
+      .pipe(take(1))
+      .subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
+          const request: DeleteCommentRequest = {
+            postId: this.comment.post_id,
+            commentId: this.comment.id
+          };
+          this.store$.dispatch(
+            new CommentsStoreActions.DeleteRequestAction(request)
+          );
+        }
+      });
   }
 
   addReply(): void {
@@ -952,7 +950,9 @@ export class CommentComponent
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      this.modalService.open('global', 'image', this.comment.image_src);
+      const modalData: ModalImageData = { imageSrc: this.comment.image_src };
+      const modalOptions: ModalOptions = { width: 'auto' };
+      this.modalService.open('global', 'image', modalData, modalOptions);
     } else {
       this.imageBlurred = false;
     }
@@ -970,7 +970,12 @@ export class CommentComponent
     });
   }
 
-  openShareModal(postId: string, postLink: string, commentId: string, commentLink: string) {
+  openShareModal(
+    postId: string,
+    postLink: string,
+    commentId: string,
+    commentLink: string
+  ) {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');
       return;
@@ -982,7 +987,5 @@ export class CommentComponent
       postLink: postLink,
       commentLink: commentLink
     });
-
   }
-
 }

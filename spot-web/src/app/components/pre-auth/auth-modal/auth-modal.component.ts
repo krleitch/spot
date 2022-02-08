@@ -44,7 +44,9 @@ declare const gapi: any;
 export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  @Input() modalId: string;
+  // MODAL
+  modalId: string;
+  data; // unused
 
   STRINGS;
 

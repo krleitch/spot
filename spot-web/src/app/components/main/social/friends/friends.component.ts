@@ -251,55 +251,49 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   deleteFriend(id: string): void {
-    this.modalService.open('global', 'confirm');
+    this.modalService
+      .open('global', 'confirm')
+      .pipe(take(1))
+      .subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
+          // Delete the friend
+          const request: DeleteFriendsRequest = {
+            friendId: id
+          };
 
-    const result$ = this.modalService
-      .getResult('global')
-      .pipe(take(1));
-
-    result$.subscribe((result: { status: string }) => {
-      if (result.status === 'confirm') {
-        // Delete the friend
-        const request: DeleteFriendsRequest = {
-          friendId: id
-        };
-
-        this.store$.dispatch(
-          new SocialStoreFriendsActions.DeleteFriendsRequestAction(request)
-        );
-      }
-    });
+          this.store$.dispatch(
+            new SocialStoreFriendsActions.DeleteFriendsRequestAction(request)
+          );
+        }
+      });
   }
 
   deletePendingFriendRequest(id: string) {
-    this.modalService.open('global', 'confirm');
+    this.modalService
+      .open('global', 'confirm')
+      .pipe(take(1))
+      .subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
+          // Delete the friend
+          const request: DeletePendingFriendRequest = {
+            friendRequestId: id
+          };
 
-    const result$ = this.modalService
-      .getResult('global')
-      .pipe(take(1));
-
-    result$.subscribe((result: { status: string }) => {
-      if (result.status === 'confirm') {
-        // Delete the friend
-        const request: DeletePendingFriendRequest = {
-          friendRequestId: id
-        };
-
-        this.friendsService
-          .deletePendingFriendRequest(request)
-          .pipe(take(1))
-          .subscribe(
-            (response: DeletePendingFriendSuccess) => {
-              this.pendingFriendRequests.forEach((friend, i) => {
-                if (friend.id === response.friendRequestId) {
-                  this.pendingFriendRequests.splice(i, 1);
-                }
-              });
-            },
-            (response: { error: SpotError }) => {}
-          );
-      }
-    });
+          this.friendsService
+            .deletePendingFriendRequest(request)
+            .pipe(take(1))
+            .subscribe(
+              (response: DeletePendingFriendSuccess) => {
+                this.pendingFriendRequests.forEach((friend, i) => {
+                  if (friend.id === response.friendRequestId) {
+                    this.pendingFriendRequests.splice(i, 1);
+                  }
+                });
+              },
+              (response: { error: SpotError }) => {}
+            );
+        }
+      });
   }
 
   facebookConnect(): void {

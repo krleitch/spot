@@ -24,7 +24,7 @@ import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.compo
 import { ModalService } from '@services/modal.service';
 
 // rxjs
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
   selector: 'spot-modal',
@@ -93,12 +93,13 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.element.remove();
   }
 
-  open(): void {
+  open(): Observable<any> {
     this.element.style.display = 'block';
     document.body.classList.add('spot-modal-open');
 
     this.isOpen = true;
     this.result = new Subject<any>();
+    return this.result.asObservable();
   }
 
   close(): void {

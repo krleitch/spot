@@ -45,6 +45,7 @@ import { Tag } from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
 import { Account, AccountMetadata, Location } from '@models/accounts';
+import { ModalImageData, ModalOptions } from '@models/modal';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -512,24 +513,21 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteReply(): void {
-    this.modalService.open('global', 'confirm');
-
-    const result$ = this.modalService
-      .getResult('global')
-      .pipe(take(1));
-
-    result$.subscribe((result: { status: string }) => {
-      if (result.status === 'confirm') {
-        const request: DeleteReplyRequest = {
-          postId: this.reply.post_id,
-          parentId: this.reply.parent_id,
-          commentId: this.reply.id
-        };
-        this.store$.dispatch(
-          new CommentsStoreActions.DeleteReplyRequestAction(request)
-        );
-      }
-    });
+    this.modalService
+      .open('global', 'confirm')
+      .pipe(take(1))
+      .subscribe((result: { status: string }) => {
+        if (result.status === 'confirm') {
+          const request: DeleteReplyRequest = {
+            postId: this.reply.post_id,
+            parentId: this.reply.parent_id,
+            commentId: this.reply.id
+          };
+          this.store$.dispatch(
+            new CommentsStoreActions.DeleteReplyRequestAction(request)
+          );
+        }
+      });
   }
 
   setShowAddReply(val: boolean): void {
@@ -786,7 +784,9 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      this.modalService.open('global', 'image', this.reply.image_src);
+      const modalData: ModalImageData = { imageSrc: this.reply.image_src };
+      const modalOptions: ModalOptions = { width: 'auto' };
+      this.modalService.open('global', 'image', modalData, modalOptions);
     } else {
       this.imageBlurred = false;
     }
@@ -803,7 +803,12 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       commentId: commentId
     });
   }
-  openShareModal(postId: string, postLink: string, replyId: string, replyLink: string): void {
+  openShareModal(
+    postId: string,
+    postLink: string,
+    replyId: string,
+    replyLink: string
+  ): void {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');
       return;
@@ -811,7 +816,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.modalService.open('global', 'share', {
       postId: postId,
-      postLinl: postLink,
+      postLink: postLink,
       commentId: replyId,
       commentLink: replyLink
     });

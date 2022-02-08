@@ -10,8 +10,10 @@ import { ModalService } from '@services/modal.service';
   styleUrls: ['./terms.component.scss']
 })
 export class TermsComponent implements OnInit {
-  @Input() modalId: string;
-  data: { message: string } = null;
+
+  // MODAL
+  modalId: string;
+  data; // unused
 
   @ViewChild('body') body: ElementRef;
 

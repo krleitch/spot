@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 
 // services
 import { ModalService } from '@services/modal.service';
+
+// models
+import { ModalConfirmData } from '@models/modal';
 
 @Component({
   selector: 'spot-confirm',
@@ -10,9 +12,9 @@ import { ModalService } from '@services/modal.service';
   styleUrls: ['./confirm.component.scss']
 })
 export class ConfirmComponent implements OnInit {
-  @Input() modalId: string;
-
-  data: { message: string } = null;
+  
+  modalId: string;
+  data: ModalConfirmData = { message: '' };
 
   constructor(private modalService: ModalService) {}
 
