@@ -68,7 +68,7 @@
   position: relative;
   display: flex;
   font-size: 18px;
-  color: var(--icon-secondary);
+  color: var(--icon-primary);
   margin-right: 15px;
   cursor: pointer;
   &:hover {
@@ -97,7 +97,7 @@
   align-items: center;
   position: relative;
   font-size: 18px;
-  color: var(--icon-secondary);
+  color: var(--icon-primary);
   cursor: pointer;
   &:hover {
     @extend .highlight;
@@ -112,10 +112,6 @@
   font-size: 14px;
 }
 
-.account:hover .username {
-  text-decoration: underline;
-}
-
 // DROPDOWN
 
 .dropdown-content {
@@ -128,8 +124,8 @@
 }
 
 .dropdown-content .button {
-  background-color: #efefef;
-  color: black;
+  background-color: var(--background-container);
+  color: var(--text-primary);
   padding: 12px 8px;
   font-size: 14px;
   text-decoration: none;

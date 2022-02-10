@@ -22,7 +22,7 @@
           (click)="selectRooms()"
         >
           <i class="material-icons">groups</i>
-          <span *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
+          <span class="text" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
             'MAIN.CHAT_MENU.ROOMS' | translate
           }}</span>
         </button>
@@ -32,7 +32,7 @@
           (click)="selectFriends()"
         >
           <i class="material-icons">forum</i>
-          <span *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
+          <span class="text" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
             'MAIN.CHAT_MENU.FRIENDS' | translate
           }}</span>
         </button>

@@ -34,15 +34,19 @@
   width: 0px;
   height: 55px;
   border-right: 25px solid var(--background-container);
-  border-bottom: 15px solid transparent;
+  border-bottom: 15px solid var(--background-page);
+  background-color: var(--background-page);
   .icon {
+    color: var(--icon-primary);
     position: absolute;
     left: 15px;
     top: 19px;
     font-size: 18px;
   }
   &:hover {
-    color: var(--primary);
+    .icon {
+      color: var(--primary);
+    }
   }
 }
 
@@ -88,11 +92,24 @@
       padding: 15px 10px;
       flex: 1;
       font-size: var(--text-regular);
-      i {
+
+      &:hover {
+        .text {
+          color: var(--primary);
+        }
+        i {
+          color: var(--primary);
+        }
+      }
+
+      .text {
+        color: var(--text-primary);
         margin-right: 3px;
       }
-      &:hover {
-        color: var(--primary);
+
+      i {
+        margin-right: 3px;
+        color: var(--icon-primary);
       }
     }
 
@@ -115,7 +132,8 @@
       width: 100%;
       border: none;
       outline: none;
-      background-color: avr(--input-background);
+      color: var(--button-text);
+      background-color: var(--background-container);
       border-bottom: 1px solid var(--input-border);
     }
   }
@@ -139,6 +157,7 @@
 
 .friend {
   display: flex;
+  justify-content: center;
   flex-direction: row;
   padding: 5px 5px;
   cursor: pointer;
@@ -192,7 +211,6 @@
     width: 100%;
     margin: 5px;
     padding: 10px;
-    color: var(--button-text);
     background-color: var(--button-background);
 
     &:hover {
@@ -200,17 +218,19 @@
     }
 
     .text {
+      color: var(--button-text);
       margin-right: 3px;
     }
 
     i {
-      color: var(--buton-text);
+      color: var(--button-text);
     }
   }
 }
 
 .room {
   display: flex;
+  justify-content: center;
   flex-direction: row;
   padding: 5px 5px;
   cursor: pointer;

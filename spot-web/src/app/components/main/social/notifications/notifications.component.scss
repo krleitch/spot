@@ -23,10 +23,10 @@
     cursor: default;
     display: flex;
     justify-content: space-between;
-    color: black;
+    color: var(--text-primary);
     font-size: 16px;
     padding: 7px 10px;
-    border-bottom: 1px solid var(--background-primary);
+    background-color: var(--background-header);
 
     .see {
       display: flex;
@@ -83,7 +83,7 @@
     align-items: center;
     flex-flow: column;
     justify-content: center;
-    color: black;
+    color: var(--text-primary);
     cursor: default;
     font-size: 14px;
     padding: 15px;

@@ -1,5 +1,5 @@
 @import '../../../styles/sizes';
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mada&display=swap');
 
 spot-main-nav {
   position: fixed;
@@ -76,8 +76,11 @@ spot-main-nav {
   top: 12px;
   left: calc(50% - 33px);
   z-index: 999999999;
-  font-family: 'Heebo', sans-serif;
-  font-weight: 500;
+  font-family: 'Mada', sans-serif;
+}
+
+.icon {
+  margin-right: 3px;
 }
 
 .new {
@@ -94,7 +97,9 @@ spot-main-nav {
   background-size: 200% 100%;
   background-position: right bottom;
   transition: all 1s ease;
-  font-size: 16px;
+  font-size: 18px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .hot {
@@ -111,7 +116,9 @@ spot-main-nav {
   background-size: 200% 100%;
   background-position: left bottom;
   transition: all 1s ease;
-  font-size: 16px;
+  font-size: 18px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 .hot.selectedSort {

@@ -293,7 +293,7 @@
       "USERNAME_REQUIRED": "A username is required",
 
       "NO_FRIENDS": "Add friends to share spots quickly",
-      "NO_FRIENDS_FOUND": "No friends found with this name",
+      "NO_FRIENDS_FOUND": "No friends found with name",
 
       "FACEBOOK_CONNECT": "Connect With Facebook"
     },

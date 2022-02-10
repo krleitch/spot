@@ -60,9 +60,9 @@ export const DarkTheme: Theme = {
     '--primary': '#00BFA5',
     '--primary-highlight': '#1AD9BF',
 
-    '--button-background': '#212121',
+    '--button-background': '#000000',
     '--button-background-highlight': '#484848',
-    '--button-disabled': '#455a64',
+    '--button-disabled': '#37474f',
     '--button-text': '#FFFFFF',
     '--item-highlight': '#E0FFFB',
 
@@ -75,7 +75,7 @@ export const DarkTheme: Theme = {
     '--background-primary': 'hsl(0, 0%, 7%)',
     '--background-secondary': '#FFFFFF',
     '--background-container': '#212121',
-    '--background-header': '#37474f',
+    '--background-header': '#263238',
     '--background-page': '#282828',
 
     '--text-primary': '#FFFFFF',

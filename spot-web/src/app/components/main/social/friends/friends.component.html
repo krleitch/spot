@@ -129,7 +129,7 @@
           <div *ngIf="friendSearch; else addFriends">
             <span class="no-friends">
               <span class="material-icons icon"> search_off </span>
-              {{ 'MAIN.FRIENDS.NO_FRIENDS_FOUND' | translate }}
+              {{ 'MAIN.FRIENDS.NO_FRIENDS_FOUND' | translate }} {{ friendSearch }}
             </span>
           </div>
           <ng-template #addFriends>

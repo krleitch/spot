@@ -75,11 +75,6 @@ spot-main-nav {
   font-size: 16px;
 }
 
-.horiz-bar {
-  width: 100%;
-  border-bottom: 1px solid var(--background-primary);
-}
-
 .image {
   display: flex;
   align-items: center;
@@ -143,7 +138,8 @@ img {
 .activity-header {
   display: flex;
   justify-content: space-between;
-  margin: 0px 10px 5px 10px;
+  padding: 5px;
+  background-color: var(--background-header);
 
   .post-link {
     text-decoration: none;
@@ -172,9 +168,8 @@ img {
 
   .post-content {
     display: flex;
-    margin: 10px 10px;
     padding: 10px 10px;
-    width: calc(100% - 20px);
+    width: 100%;
     box-sizing: border-box;
     background-color: var(--background-container);
 
@@ -228,9 +223,8 @@ img {
 
   .comment-content {
     display: flex;
-    margin: 10px 10px;
     padding: 10px 10px;
-    width: calc(100% - 20px);
+    width: 100%;
     box-sizing: border-box;
     background-color: var(--background-container);
 

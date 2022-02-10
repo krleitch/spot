@@ -53,6 +53,7 @@
     [ngClass]="{ selectedSort: isSelectedPostSort('hot') }"
     (click)="setHot()"
   >
+    <span class="material-icons icon"> rocket_launch </span>
     {{ 'MAIN.HOME.HOT' | translate }}
   </div>
   <div
@@ -60,13 +61,18 @@
     [ngClass]="{ selectedSort: isSelectedPostSort('new') }"
     (click)="setNew()"
   >
+    <span class="material-icons icon"> local_florist </span>
     {{ 'MAIN.HOME.NEW' | translate }}
   </div>
 </div>
 <div #mobiledropdownsort class="postFilterToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownSort(true)">
-    <div *ngIf="isSelectedPostSort('hot')">{{ 'MAIN.HOME.HOT' | translate }}</div>
-    <div *ngIf="isSelectedPostSort('new')">{{ 'MAIN.HOME.NEW' | translate }}</div>
+    <div *ngIf="isSelectedPostSort('hot')">
+      {{ 'MAIN.HOME.HOT' | translate }}
+    </div>
+    <div *ngIf="isSelectedPostSort('new')">
+      {{ 'MAIN.HOME.NEW' | translate }}
+    </div>
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
@@ -120,7 +126,9 @@
                 <div class="info-container">
                   <span class="material-icons icon"> email </span>
                   <div *ngIf="account.email; else noEmail">
-                    <span class="text"> {{ 'MAIN.HOME.VERIFY' | translate }} </span>
+                    <span class="text">
+                      {{ 'MAIN.HOME.VERIFY' | translate }}
+                    </span>
                     <div *ngIf="verificationSent === false; else sentverify">
                       <div class="text clickable" (click)="verifyAccount()">
                         {{ 'MAIN.HOME.VERIFY_SEND' | translate }}
@@ -138,12 +146,15 @@
                     </div>
                     <ng-template #sentverify>
                       <span class="small-text">
-                        {{ 'MAIN.HOME.VERIFY_SENT' | translate }} {{ account.email }}
+                        {{ 'MAIN.HOME.VERIFY_SENT' | translate }}
+                        {{ account.email }}
                       </span>
                     </ng-template>
                   </div>
                   <ng-template #noEmail>
-                    <span class="text"> {{ 'MAIN.HOME.NO_EMAIL' | translate }} </span>
+                    <span class="text">
+                      {{ 'MAIN.HOME.NO_EMAIL' | translate }}
+                    </span>
                     <span class="small-text">
                       <a class="clickable small-text" [routerLink]="'/account'">
                         {{ 'MAIN.HOME.ADD_EMAIL' | translate }}
@@ -174,7 +185,9 @@
               class="info-container"
             >
               <spot-spinner type="dot"></spot-spinner>
-              <span class="text"> {{ 'MAIN.HOME.LOADING_LOCATION' | translate }} </span>
+              <span class="text">
+                {{ 'MAIN.HOME.LOADING_LOCATION' | translate }}
+              </span>
               <span
                 *ngIf="bypassLocation === true; else loadglobalblock"
                 class="text"
@@ -193,7 +206,9 @@
               <!-- location is not enabled -->
               <div *ngIf="locationFailure === 'browser'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
-                <span class="text"> {{ 'MAIN.HOME.LOCATION_BROWSER' | translate }}</span>
+                <span class="text">
+                  {{ 'MAIN.HOME.LOCATION_BROWSER' | translate }}</span
+                >
               </div>
               <div
                 *ngIf="
@@ -208,7 +223,9 @@
                   <i class="material-icons inline-icon"> home </i>
                   {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_2' | translate }}
                 </span>
-                <span class="text"> {{ 'MAIN.HOME.LOCATION_SAFE' | translate }} </span>
+                <span class="text">
+                  {{ 'MAIN.HOME.LOCATION_SAFE' | translate }}
+                </span>
                 <span class="line"></span>
                 <span class="text">
                   {{ 'MAIN.HOME.LOCATION_ENABLE' | translate }}
@@ -223,8 +240,12 @@
               </div>
               <div *ngIf="locationFailure === 'general'" class="info-container">
                 <span class="material-icons icon"> location_off </span>
-                <span class="text"> {{ 'MAIN.HOME.LOCATION_ERROR' | translate }} </span>
-                <span class="text"> {{ 'MAIN.HOME.LOCATION_REFRESH' | translate }} </span>
+                <span class="text">
+                  {{ 'MAIN.HOME.LOCATION_ERROR' | translate }}
+                </span>
+                <span class="text">
+                  {{ 'MAIN.HOME.LOCATION_REFRESH' | translate }}
+                </span>
               </div>
             </ng-template>
           </ng-template>
@@ -255,7 +276,9 @@
                     <span class="material-icons icon"> travel_explore </span>
                   </div>
                   <span class="empty-text">
-                    <span class="highlight"> {{ 'MAIN.HOME.FIRST_POST_1' | translate }} </span>
+                    <span class="highlight">
+                      {{ 'MAIN.HOME.FIRST_POST_1' | translate }}
+                    </span>
                     {{ 'MAIN.HOME.FIRST_POST_2' | translate }}
                   </span>
                 </div>
@@ -268,7 +291,9 @@
                 class="empty-container"
               >
                 <span class="material-icons icon"> done_all </span>
-                <span class="text"> {{ 'MAIN.HOME.NO_MORE_POSTS' | translate }} </span>
+                <span class="text">
+                  {{ 'MAIN.HOME.NO_MORE_POSTS' | translate }}
+                </span>
               </div>
               <!-- Loading spots -->
               <div
@@ -293,7 +318,9 @@
             class="info-container"
           >
             <spot-spinner type="dot"></spot-spinner>
-            <span class="text"> {{ 'MAIN.HOME.LOADING_LOCATION' | translate }} </span>
+            <span class="text">
+              {{ 'MAIN.HOME.LOADING_LOCATION' | translate }}
+            </span>
             <span class="text clickable" (click)="loadLocationBackground()">
               {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
               <i class="material-icons inline-icon"> public </i>
@@ -304,7 +331,9 @@
           <ng-template #enableLocation>
             <div *ngIf="locationFailure === 'browser'" class="info-container">
               <span class="material-icons icon"> location_off </span>
-              <span class="text"> {{ 'MAIN.HOME.LOCATION_BROWSER' | translate }}</span>
+              <span class="text">
+                {{ 'MAIN.HOME.LOCATION_BROWSER' | translate }}</span
+              >
             </div>
             <div
               *ngIf="locationFailure === 'permission'"
@@ -316,7 +345,9 @@
                 <i class="material-icons inline-icon"> home </i>
                 {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_2' | translate }}
               </span>
-              <span class="text"> {{ 'MAIN.HOME.LOCATION_SAFE' | translate }} </span>
+              <span class="text">
+                {{ 'MAIN.HOME.LOCATION_SAFE' | translate }}
+              </span>
               <span class="line"></span>
               <span class="text">
                 {{ 'MAIN.HOME.LOCATION_ENABLE' | translate }}
@@ -329,8 +360,12 @@
             </div>
             <div *ngIf="locationFailure === 'general'" class="info-container">
               <span class="material-icons icon"> location_off </span>
-              <span class="text"> {{ 'MAIN.HOME.LOCATION_ERROR' | translate }} </span>
-              <span class="text"> {{ 'MAIN.HOME.LOCATION_REFRESH' | translate }} </span>
+              <span class="text">
+                {{ 'MAIN.HOME.LOCATION_ERROR' | translate }}
+              </span>
+              <span class="text">
+                {{ 'MAIN.HOME.LOCATION_REFRESH' | translate }}
+              </span>
             </div>
           </ng-template>
         </div>

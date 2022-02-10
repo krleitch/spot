@@ -31,6 +31,7 @@ spot-main-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 
   .friends-title {
     display: flex;
@@ -68,7 +69,9 @@ spot-main-nav {
 
 .friends-subtitle {
   font-size: 20px;
-  margin-bottom: 5px;
+  background-color: var(--background-header);
+  box-sizing: border-box;
+  padding: 5px;
 }
 
 .friend-content-section {
@@ -161,6 +164,11 @@ input {
   width: 100%;
   border: none;
   outline: none;
+  background-color: var(--background-container);
+}
+
+.send {
+  color: var(--icon-primary);
 }
 
 .send:hover {
@@ -184,7 +192,8 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  background-color: var(--background-header);
+  padding: 5px;
 
   .subtitle {
     font-size: 20px;
@@ -199,7 +208,7 @@ input {
     }
 
     input {
-      background-color: var(--input-background);
+      background-color: var(--background-header);
       border-bottom: 1px solid var(--input-border);
     }
   }

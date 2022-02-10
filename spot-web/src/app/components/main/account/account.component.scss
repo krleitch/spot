@@ -313,7 +313,7 @@ spot-main-nav {
   position: absolute;
   top: 0;
   right: 0;
-  margin: 5px;
+  margin: 5px 25px 5px 5px;
   height: 125px;
   width: 125px;
   display: flex;
@@ -407,10 +407,10 @@ img {
 }
 
 .disabled {
-  background-color: var(--background-secondary);
+  background-color: var(--button-disabled);
   cursor: not-allowed;
   &:hover {
-    background-color: var(--background-secondary);
+    background-color: var(--button-disabled);
   }
 }
 
