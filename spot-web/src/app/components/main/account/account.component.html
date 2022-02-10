@@ -23,24 +23,24 @@
             <span class="material-icons icon"> cake </span>
             <span class="text">
               {{ formatBirthday(account.creation_date) }}
-            </span>  
+            </span>
           </div>
           <!-- Verification -->
           <div *ngIf="account.verified_date === null; else verified">
             <div *ngIf="account.email">
               <div
                 *ngIf="verificationSent === false; else sent"
-                class="verify-click verify-container"
+                class="verify-container clickable"
                 (click)="verifyAccount()"
               >
-                <span class="verify-text">
+                <span class="material-icons icon"> email </span>
+                <span class="text">
                   {{ 'MAIN.ACCOUNT.VERIFY' | translate }}
                 </span>
-                <span class="material-icons verify-icon"> email </span>
               </div>
               <ng-template #sent>
                 <div class="verify-container">
-                  <span class="verify-text">
+                  <span class="text">
                     {{ 'MAIN.ACCOUNT.VERIFY_SENT' | translate }}
                   </span>
                 </div>
@@ -49,10 +49,8 @@
           </div>
           <ng-template #verified>
             <div class="verify-container">
-              <span class="material-icons verify-icon-highlight">
-                check_circle
-              </span>
-              <span class="verify-text">
+              <span class="material-icons icon"> check_circle </span>
+              <span class="text">
                 {{ 'MAIN.ACCOUNT.VERIFY_CHECK' | translate }}
               </span>
             </div>
@@ -185,18 +183,7 @@
           <div *ngIf="phoneSuccessMessage" class="success">
             {{ phoneSuccessMessage }}
           </div>
-        </div>
-      </div>
 
-      <!-- Settings -->
-      <div *ngIf="accountMetadata$ | async as accountMetadata" class="section">
-        <div class="header">
-          <span class="material-icons title-icon"> settings </span>
-          <span class="title">
-            {{ 'MAIN.ACCOUNT.SETTINGS' | translate }}
-          </span>
-        </div>
-        <div class="body">
           <!-- Score -->
           <div class="info-container">
             <div class="subheader">{{ 'MAIN.ACCOUNT.SCORE' | translate }}:</div>
@@ -208,7 +195,18 @@
           <div class="description">
             {{ 'MAIN.ACCOUNT.SCORE_DESCRIPTION' | translate }}
           </div>
+        </div>
+      </div>
 
+      <!-- Settings -->
+      <div class="section">
+        <div class="header">
+          <span class="material-icons title-icon"> settings </span>
+          <span class="title">
+            {{ 'MAIN.ACCOUNT.SETTINGS' | translate }}
+          </span>
+        </div>
+        <div class="body">
           <!-- Distance Unit -->
           <div class="info-container">
             <div class="subheader">{{ 'MAIN.ACCOUNT.UNIT' | translate }}:</div>

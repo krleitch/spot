@@ -165,7 +165,7 @@ spot-main-nav {
         flex: 1;
         margin-top: 3px;
         align-items: center;
-        padding: 5px;
+        padding: 5px 0px 5px 5px;
         background-color: var(--background-container);
         .no-value {
           color: var(--text-secondary);
@@ -183,7 +183,6 @@ spot-main-nav {
       .edit-icon {
         font-size: 18px;
         color: var(--text-secondary);
-        margin-right: 5px;
         cursor: pointer;
         &:hover {
           color: var(--primary);
@@ -211,37 +210,6 @@ spot-main-nav {
       color: var(--text-secondary);
       margin-bottom: 5px;
     }
-  }
-}
-
-// Verification
-
-.verify-container {
-  display: flex;
-  align-items: center;
-  padding: 5px 3px;
-}
-
-.verify-text {
-  margin-left: 5px;
-}
-
-.verify-icon {
-  padding-top: 3px;
-  font-size: 20px;
-}
-
-.verify-icon-highlight {
-  font-size: 20px;
-  color: var(--primary);
-}
-
-.verify-click {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  &:hover {
-    color: var(--primary);
   }
 }
 
@@ -361,14 +329,45 @@ img {
 }
 
 .age {
-
   display: flex;
   align-items: center;
   padding: 5px 3px;
 
   .icon {
+    font-size: 20px;
     color: var(--primary);
-    margin-right: 3px;
+  }
+
+  .text {
+    margin-left: 5px;
+  }
+
+}
+
+// Verification
+
+.verify-container {
+  display: flex;
+  align-items: center;
+  padding: 5px 3px;
+
+  .text {
+    margin-left: 5px;
+  }
+
+  .icon {
+    font-size: 20px;
+    color: var(--primary);
+  }
+}
+
+.verify-container.clickable {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  &:hover {
+    color: var(--primary);
   }
 }
 
