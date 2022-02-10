@@ -186,7 +186,7 @@
           </div>
 
           <!-- Score -->
-          <div class="info-container">
+          <div *ngIf="accountMetadata" class="info-container">
             <div class="subheader">{{ 'MAIN.ACCOUNT.SCORE' | translate }}:</div>
             <div class="value">
               <i class="material-icons hot"> whatshot </i>
@@ -200,7 +200,7 @@
       </div>
 
       <!-- Settings -->
-      <div class="section">
+      <div *ngIf="accountMetadata" class="section">
         <div class="header">
           <span class="material-icons title-icon"> settings </span>
           <span class="title">

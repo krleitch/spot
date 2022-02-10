@@ -9,3 +9,6 @@ src/app/log/
 src/config/secret.json
 src/config/awskey.json
 src/config/googlekey.json
+
+# Prisma
+.env

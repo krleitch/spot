@@ -1,0 +1,256 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  GUEST
+  MODERATOR
+  ADMIN
+  OWNER
+}
+
+model User {
+  userId               String          @id @default(uuid())
+  email                String          @unique @db.VarChar(255)
+  emailUpdatedAt       DateTime        @default(now())
+  username             String          @unique @db.VarChar(255)
+  usernameUpdatedAt    DateTime        @default(now())
+  phone                String          @unique @db.VarChar(255)
+  phoneUpdatedAt       DateTime        @default(now())
+  password             String          @db.VarChar(1024)
+  salt                 String          @db.VarChar(256)
+  role                 UserRole
+  profilePictureSrc    String?         @db.VarChar(255)
+  facebookId           String?         @unique @db.VarChar(36)
+  googleId             String?         @unique @db.VarChar(36)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  verifiedAt           DateTime?
+  deletedAt            DateTime?
+  UserMetadata         UserMetadata?
+  Spot                 Spot[]
+  SpotRating           SpotRating[]
+  Comment              Comment[]
+  CommentRating        CommentRating[]
+  NotificationSender   Notification[]  @relation("NotificationSender")
+  NotificationReceiver Notification[]  @relation("NotificationReceiver")
+  Report               Report[]
+  Friend               Friend[]
+  FriendUser           Friend[]        @relation("FriendUser")
+  PasswordReset        PasswordReset[]
+  VerifyUser           VerifyUser[]
+  UserLocation         UserLocation[]
+  CommentTag           CommentTag[]
+  CommentTagger        CommentTag[]    @relation("Tagger")
+}
+
+enum UnitSystem {
+  IMPERIAL
+  METRIC
+}
+
+enum LocationType {
+  GLOBAL
+  LOCAL
+}
+
+enum SearchType {
+  HOT
+  NEW
+}
+
+enum ThemeWeb {
+  LIGHT
+  DARK
+}
+
+model UserMetadata {
+  userMetadataId String       @id @default(uuid())
+  unitSystem     UnitSystem   @default(IMPERIAL)
+  locationType   LocationType @default(GLOBAL)
+  searchType     SearchType   @default(HOT)
+  themeWeb       ThemeWeb     @default(LIGHT)
+  matureFilter   Boolean      @default(true)
+  score          Int          @default(0)
+  user           User         @relation(fields: [userId], references: [userId])
+  userId         String       @unique
+}
+
+model Spot {
+  spotId           String         @id @default(uuid())
+  longitude        Decimal        @db.Decimal(9, 6)
+  latitude         Decimal        @db.Decimal(9, 6)
+  geolocation      String         @db.VarChar(255)
+  content          String         @db.VarChar(3000)
+  link             String         @unique @db.VarChar(14)
+  imageSrc         String         @db.VarChar(255)
+  imageNsfw        Boolean        @default(false)
+  likes            Int            @default(0)
+  dislikes         Int            @default(0)
+  totalComments    Int            @default(0)
+  createdAt        DateTime       @default(now())
+  deletedAt        DateTime?
+  user             User           @relation(fields: [userId], references: [userId])
+  userId           String
+  SpotRating       SpotRating[]   @relation("SpotRating")
+  SpotNotification Notification[] @relation("NotificationSpot")
+  Report           Report[]       @relation("ReportSpot")
+  CommentTag       CommentTag[]   @relation("TagSpot")
+}
+
+model Comment {
+  commentId           String          @id @default(uuid())
+  content             String          @db.VarChar(400)
+  link                String          @unique @db.VarChar(14)
+  imageSrc            String          @db.VarChar(255)
+  imageNsfw           Boolean         @default(false)
+  likes               Int             @default(0)
+  dislikes            Int             @default(0)
+  createdAt           DateTime        @default(now())
+  deletedAt           DateTime?
+  user                User            @relation(fields: [userId], references: [userId])
+  userId              String
+  parentComment       Comment         @relation("CommentParent", fields: [parentCommentId], references: [commentId])
+  parentCommentId     String
+  ChildComment        Comment[]       @relation("CommentParent")
+  CommentRating       CommentRating[] @relation("CommentRating")
+  CommentNotification Notification[]  @relation("NotificationComment")
+  ReplyNotification   Notification[]  @relation("NotificationReply")
+  Report              Report[]        @relation("ReportComment")
+  CommentTag          CommentTag[]    @relation("TagComment")
+  CommentParentTag    CommentTag[]    @relation("TagCommentParent")
+}
+
+enum SpotRatingType {
+  NONE
+  LIKE
+  DISLIKE
+}
+
+model SpotRating {
+  spotRatingId String         @id @default(uuid())
+  rating       SpotRatingType @default(NONE)
+  spot         Spot           @relation("SpotRating", fields: [spotId], references: [spotId])
+  spotId       String
+  user         User           @relation(fields: [userId], references: [userId])
+  userId       String
+}
+
+enum CommentRatingType {
+  NONE
+  LIKE
+  DISLIKE
+}
+
+model CommentRating {
+  commentRatingId String            @id @default(uuid())
+  rating          CommentRatingType @default(NONE)
+  comment         Comment           @relation("CommentRating", fields: [commentId], references: [commentId])
+  commentId       String
+  user            User              @relation(fields: [userId], references: [userId])
+  userId          String
+}
+
+enum NotificationType {
+  INFO
+  TAG
+  ALERT
+}
+
+model Notification {
+  notificationId String           @id @default(uuid())
+  type           NotificationType @default(INFO)
+  content        String?          @db.VarChar(255)
+  seen           Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  sender         User             @relation("NotificationSender", fields: [senderId], references: [userId])
+  senderId       String
+  receiver       User             @relation("NotificationReceiver", fields: [receiverId], references: [userId])
+  receiverId     String
+  spot           Spot?            @relation("NotificationSpot", fields: [spotId], references: [spotId])
+  spotId         String?
+  comment        Comment?         @relation("NotificationComment", fields: [commentId], references: [commentId])
+  commentId      String?
+  reply          Comment?         @relation("NotificationReply", fields: [replyId], references: [commentId])
+  replyId        String?
+}
+
+enum ReportCategory {
+  OFFENSIVE
+  HATE
+  MATURE
+  OTHER
+}
+
+model Report {
+  reportId   String         @id @default(uuid())
+  content    String         @db.VarChar(300)
+  category   ReportCategory @default(OFFENSIVE)
+  createdAt  DateTime       @default(now())
+  reporter   User           @relation(fields: [reporterId], references: [userId])
+  reporterId String
+  spot       Spot?          @relation("ReportSpot", fields: [spotId], references: [spotId])
+  spotId     String?
+  comment    Comment?       @relation("ReportComment", fields: [commentId], references: [commentId])
+  commentId  String?
+}
+
+model Friend {
+  friendId     String    @id @default(uuid())
+  createdAt    DateTime  @default(now())
+  confirmedAt  DateTime?
+  user         User      @relation(fields: [userId], references: [userId])
+  userId       String
+  friendUser   User      @relation("FriendUser", fields: [friendUserId], references: [userId])
+  friendUserId String
+}
+
+model PasswordReset {
+  passwordResetId String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  token           String   @unique @db.VarChar(36)
+  user            User     @relation(fields: [userId], references: [userId])
+  userId          String
+}
+
+model VerifyUser {
+  verifyUserId String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  token        String   @unique @db.VarChar(36)
+  user         User     @relation(fields: [userId], references: [userId])
+  userId       String
+}
+
+model UserLocation {
+  userLocationId String   @id @default(uuid())
+  longitude      Decimal  @db.Decimal(9, 6)
+  latitude       Decimal  @db.Decimal(9, 6)
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [userId])
+  userId         String
+}
+
+model CommentTag {
+  tagId           String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  offset          Int
+  user            User     @relation(fields: [userId], references: [userId])
+  userId          String
+  tagger          User     @relation("Tagger", fields: [taggerId], references: [userId])
+  taggerId        String
+  spot            Spot     @relation("TagSpot", fields: [spotId], references: [spotId])
+  spotId          String
+  comment         Comment  @relation("TagComment", fields: [commentId], references: [commentId])
+  commentId       String
+  commentParent   Comment  @relation("TagCommentParent", fields: [commentParentId], references: [commentId])
+  commentParentId String
+}
