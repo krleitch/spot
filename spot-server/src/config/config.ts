@@ -9,4 +9,4 @@ const config = {
   logFileDir: ''
 };
 
-module.exports = config;
+export default config;

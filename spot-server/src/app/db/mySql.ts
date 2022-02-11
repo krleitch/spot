@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+import mysql from 'mysql';
 
 const db = mysql.createPool({
   host: 'localhost',
@@ -49,7 +49,7 @@ function getDb() {
   return db;
 }
 
-module.exports = {
+export default {
   initDb,
   closeDb,
   getDb,

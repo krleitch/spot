@@ -76,4 +76,4 @@ const urls = [
   'icons8-yogurt-48.png'
 ];
 
-module.exports = urls;
+export default urls;

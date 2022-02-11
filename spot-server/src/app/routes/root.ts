@@ -9,4 +9,4 @@ router.use(function timeLog(req: any, res: any, next: any) {
 //     res.send('Spot');
 // });
 
-export = router;
+export default router;

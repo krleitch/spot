@@ -318,7 +318,7 @@ router.post(
     }
 
     try {
-      const ticket = authentication.verifyGoogleIdToken(accessToken);
+      const ticket = authenticationService.verifyGoogleIdToken(accessToken);
 
       const payload = ticket.getPayload();
       const userid = payload['sub'];
@@ -577,4 +577,4 @@ router.post('/verify/confirm', function (req: any, res: any, next: any) {
   );
 });
 
-export = router;
+export default router;

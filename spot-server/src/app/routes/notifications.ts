@@ -244,4 +244,4 @@ router.delete(
   }
 );
 
-export = router;
+export default router;

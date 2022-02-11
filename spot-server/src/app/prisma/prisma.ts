@@ -14,7 +14,7 @@ function getPrismaClient(): PrismaClient {
   return prisma;
 }
 
-module.exports = {
+export default {
   initPrismaClient,
   disconnectPrismaClient,
   getPrismaClient

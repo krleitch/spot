@@ -100,3 +100,5 @@ app.listen(port, (err: any) => {
   }
   console.log(`Server is listening on ${port}`);
 });
+
+export {}
