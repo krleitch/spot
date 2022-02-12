@@ -33,7 +33,7 @@ router.get(
     const date = req.query.date;
     const limit = Number(req.query.limit);
 
-    friends.getFriends(accountId, date, limit.toString()).then(
+    friends.getFriends(accountId, date, limit).then(
       (rows: any) => {
         const response = { friends: rows };
         res.status(200).json(response);

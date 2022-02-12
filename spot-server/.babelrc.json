@@ -8,9 +8,9 @@
       "module-resolver",
       {
         "alias": {
-          "@models": "../spot-commons/build/models",
-          "@exceptions": "../spot-commons/build/exceptions",
-          "@constants": "../spot-commons/build/constants",
+          "@models": "../spot-commons/dist/models",
+          "@exceptions": "../spot-commons/dist/exceptions",
+          "@constants": "../spot-commons/dist/constants",
           "@db": "./dist/app/db",
           "@routes": "./dist/app/routes",
           "@services": "./dist/app/services",

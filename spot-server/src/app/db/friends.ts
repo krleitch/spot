@@ -14,7 +14,7 @@ import uuid from 'uuid';
 import { query } from '@db/mySql.js';
 
 // use a union because friends are a 1 row mutual relationship
-function getFriends(accountId: string, date: string, limit: string) {
+function getFriends(accountId: string, date: string, limit: number) {
   const selectSql = `SELECT id, creation_date, username, confirmed_date FROM
                 (SELECT friends.id, friends.creation_date, friends.confirmed_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.friend_id = accounts.id WHERE account_id = ? AND friends.confirmed_date IS NOT NULL
@@ -26,7 +26,7 @@ function getFriends(accountId: string, date: string, limit: string) {
   let limitSql = '';
   if (limit) {
     limitSql = ` LIMIT ?`;
-    values = [accountId, accountId, new Date(date), limit];
+    values = [accountId, accountId, new Date(date), limit.toString()];
   }
   const sql = selectSql + limitSql;
 
