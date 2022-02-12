@@ -1,7 +1,7 @@
 export default { addTag, getTagsByCommentId, TaggedInCommentChain };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 function addTag(
   accountId: string,

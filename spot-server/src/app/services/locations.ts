@@ -3,22 +3,22 @@
 import axios from 'axios';
 
 // config
-import googleconfig from '@config/googlekey';
-import config from '@config/config';
+import googleconfig from '@config/googlekey.js';
+import config from '@config/config.js';
 
 // db
-import locations from '@db/locations';
-import redisClient from '@db/redis';
+import locations from '@db/locations.js';
+import redisClient from '@db/redis.js';
 
 // error
-import * as LocationsError from '@exceptions/locations';
+import * as LocationsError from '@exceptions/locations.js';
 
 // services
-import authorization from '@services/authorization/authorization';
+import authorization from '@services/authorization/authorization.js';
 
 // constants
-import { LOCATIONS_CONSTANTS } from '@constants/locations';
-import roles from '@services/authorization/roles';
+import { LOCATIONS_CONSTANTS } from '@constants/locations.js';
+import roles from '@services/authorization/roles.js';
 
 // Middleware to call verifyLocation
 const checkLocation = async (req: any, res: any, next: any) => {

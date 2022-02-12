@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 // See for handler details
 // https://www.npmjs.com/package/express-rate-limit
 
-import { RateLimitError } from '@exceptions/rateLimit';
+import { RateLimitError } from '@exceptions/rateLimit.js';
 
 
 // The RateLimitError constructor is (code, limit, timeout)

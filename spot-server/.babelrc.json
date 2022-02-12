@@ -3,6 +3,23 @@
     ["@babel/preset-env", { "modules": false, "targets": { "node": true } }],
     ["@babel/preset-typescript"]
   ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@models": "../spot-commons/build/models",
+          "@exceptions": "../spot-commons/build/exceptions",
+          "@constants": "../spot-commons/build/constants",
+          "@db": "./dist/app/db",
+          "@routes": "./dist/app/routes",
+          "@services": "./dist/app/services",
+          "@helpers": "./dist/app/helpers",
+          "@config": "./dist/config"
+        }
+      }
+    ]
+  ],
   "ignore": ["node_modules"],
   "comments": false,
   "minified": true

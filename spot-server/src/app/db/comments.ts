@@ -27,10 +27,10 @@ export default {
 import uuid from 'uuid';
 
 // db
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 // constants
-import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { COMMENTS_CONSTANTS } from '@constants/comments.js';
 
 // Used for getting a comment or reply
 function getCommentById(commentId: string, accountId: string): Promise<any> {

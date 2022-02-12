@@ -2,23 +2,23 @@ import express from 'express';
 const router = express.Router();
 
 // db
-import notifications from '@db/notifications';
-import accounts from '@db/accounts';
-import friends from '@db/friends';
+import notifications from '@db/notifications.js';
+import accounts from '@db/accounts.js';
+import friends from '@db/friends.js';
 
 // services
-import commentsService from '@services/comments';
-import authorization from '@services/authorization/authorization';
+import commentsService from '@services/comments.js';
+import authorization from '@services/authorization/authorization.js';
 
 // ratelimiter
-import rateLimiter from '@helpers/rateLimiter';
+import rateLimiter from '@helpers/rateLimiter.js';
 
 // errors
-import * as NotificationsError from '@exceptions/notifications';
-import ErrorHandler from '@helpers/errorHandler';
+import * as NotificationsError from '@exceptions/notifications.js';
+import ErrorHandler from '@helpers/errorHandler.js';
 
 // constants
-import roles from '@services/authorization/roles';
+import roles from '@services/authorization/roles.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();

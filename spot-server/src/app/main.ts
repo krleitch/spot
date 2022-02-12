@@ -1,19 +1,8 @@
-// import 'module-alias/register.js';
 
-// import moduleAlias from 'module-alias';
-
-// console.log(__dirname + "./build/app/routes");
-
-// moduleAlias.addAliases({
-//   "@models": __dirname + "../../../spot-commons/build/models",
-//   "@exceptions": __dirname + "../../../spot-commons/build/exceptions",
-//   "@constants": __dirname + "../../../spot-commons/build/constants",
-//   "@db": __dirname + "/db",
-//   "@routes": __dirname + "/routes",
-//   "@services": __dirname + "/services",
-//   "@helpers": __dirname + "/helpers",
-//   "@config": __dirname + "../config"
-// });
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 import express from 'express';
 const app = express();
@@ -22,29 +11,28 @@ import bodyParser from 'body-parser';
 import Cors from 'cors';
 import rfs from 'rotating-file-stream';
 import morgan from 'morgan';
-import path from 'path';
 
 // Routes
-import posts from '@routes/posts';
-import root from '@routes/root';
-import accounts from '@routes/accounts';
-import comments from '@routes/comments';
-import notifications from '@routes/notifications';
-import friends from '@routes/friends';
-import auth from '@routes/authentication';
-import admin from '@routes/admin';
+import posts from '@routes/posts.js';
+import root from '@routes/root.js';
+import accounts from '@routes/accounts.js';
+import comments from '@routes/comments.js';
+import notifications from '@routes/notifications.js';
+import friends from '@routes/friends.js';
+import auth from '@routes/authentication.js';
+import admin from '@routes/admin.js';
 
 // Db
-import * as mySql from '@db/mySql';
-// import mongo from '@db/mongo';
+import * as mySql from '@db/mySql.js';
+// import mongo from '@db/mongo.js';
 
 // Utils
-import errorHandler from '@helpers/errorHandler';
-import passport from '@services/authentication/passport';
-import authentication from '@services/authentication/authentication';
-import locationService from '@services/locations';
-import authorization from '@services/authorization/authorization';
-import roles from '@services/authorization/roles';
+import errorHandler from '@helpers/errorHandler.js';
+import passport from '@services/authentication/passport.js';
+import authentication from '@services/authentication/authentication.js';
+import locationService from '@services/locations.js';
+import authorization from '@services/authorization/authorization.js';
+import roles from '@services/authorization/roles.js';
 
 const port = process.env.PORT || 3000;
 
@@ -99,7 +87,7 @@ app.use(
   admin
 );
 
-// Error middleware
+// // Error middleware
 app.use(errorHandler.errorMiddleware);
 
 app.listen(port, () => {

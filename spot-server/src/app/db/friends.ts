@@ -11,7 +11,7 @@ export default {
 };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 // use a union because friends are a 1 row mutual relationship
 function getFriends(accountId: string, date: string, limit: string) {

@@ -1,43 +1,40 @@
-
-
-const { randomBytes, pbkdf2Sync } = require('crypto');
-const jwt = require('jsonwebtoken');
-const request = require('request');
+import { randomBytes, pbkdf2Sync } from 'crypto';
+import jwt from 'jsonwebtoken';
+import axios from 'axios';
 
 // config
-const secret = require('@config/secret.json');
+import secret from '@config/secret.js';
 
 // Google auth
-const { OAuth2Client } = require('google-auth-library');
+import { OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client(
   '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com'
 );
 
 // services
-const passport = require('@services/authentication/passport');
+import passport from '@services/authentication/passport.js';
 
 // db
-const accounts = require('@db/accounts');
+import accounts from '@db/accounts.js';
 
 // exceptions
-const AuthenticationError = require('@exceptions/authentication');
+import * as AuthenticationError from '@exceptions/authentication.js';
 
 // constants
-const AUTH_CONSTANTS = require('@constants/authentication');
-const AUTHENTICATION_CONSTANTS = AUTH_CONSTANTS.AUTHENTICATION_CONSTANTS;
+import { AUTHENTICATION_CONSTANTS } from '@constants/authentication.js';
 
 // Registration Validation
 
 function validUsername(username: string): Error | null {
   // Check length
   if (
-    username.length < AUTHENTICATION_CONSTANTS.MIN_USERNAME_LENGTH ||
-    username.length > AUTHENTICATION_CONSTANTS.MAX_USERNAME_LENGTH
+    username.length < AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH ||
+    username.length > AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH
   ) {
     return new AuthenticationError.UsernameLengthError(
       400,
-      AUTHENTICATION_CONSTANTS.MIN_USERNAME_LENGTH,
-      AUTHENTICATION_CONSTANTS.MAX_USERNAME_LENGTH
+      AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH,
+      AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH
     );
   }
 
@@ -55,13 +52,13 @@ function validUsername(username: string): Error | null {
 function validPassword(password: string): Error | null {
   // Check length
   if (
-    password.length < AUTHENTICATION_CONSTANTS.MIN_PASSWORD_LENGTH ||
-    password.length > AUTHENTICATION_CONSTANTS.MAX_PASSWORD_LENGTH
+    password.length < AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH ||
+    password.length > AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH
   ) {
     return new AuthenticationError.PasswordLengthError(
       400,
-      AUTHENTICATION_CONSTANTS.MIN_PASSWORD_LENGTH,
-      AUTHENTICATION_CONSTANTS.MAX_PASSWORD_LENGTH
+      AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH,
+      AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH
     );
   }
 
@@ -225,12 +222,14 @@ function getFacebookDetails(accessToken: string): Promise<any> {
     'https://graph.facebook.com/me?fields=id,email&access_token=' + accessToken;
 
   return new Promise((resolve, reject) => {
-    request(url, function (error: any, response: any, body: any) {
-      if (error) {
+    axios
+      .get(url)
+      .then((response: any) => {
+        resolve({ response: response, body: JSON.parse(response) });
+      })
+      .catch((error) => {
         return reject(error);
-      }
-      resolve({ response: response, body: JSON.parse(body) });
-    });
+      });
   });
 }
 
@@ -239,12 +238,14 @@ function getFacebookId(accessToken: string): Promise<any> {
     'https://graph.facebook.com/me?fields=id&access_token=' + accessToken;
 
   return new Promise((resolve, reject) => {
-    request(url, function (error: any, response: any, body: any) {
-      if (error) {
+    axios
+      .get(url)
+      .then((response: any) => {
+        resolve({ response: response, body: JSON.parse(response) });
+      })
+      .catch((error) => {
         return reject(error);
-      }
-      resolve({ response: response, body: JSON.parse(body) });
-    });
+      });
   });
 }
 

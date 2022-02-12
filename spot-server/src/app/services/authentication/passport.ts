@@ -1,17 +1,17 @@
 // passport
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-const LocalStrategy = require('passport-local').Strategy;
-const passport = require('passport');
+import JwtStrategy from 'passport-jwt'; //.Strategy;
+import ExtractJwt from 'passport-jwt';//.ExtractJwt;
+import LocalStrategy from 'passport-local';//.Strategy;
+import passport from 'passport';
 
 // config
-const secret = require('@config/secret.json');
+import secret from '@config/secret.js';
 
 // services
-const auth = require('@services/authentication/authentication');
+import auth from '@services/authentication/authentication.js';
 
 // db
-const accounts = require('@db/accounts');
+import accounts from '@db/accounts.js';
 
 // Login Local
 const localOptions = {
@@ -20,7 +20,7 @@ const localOptions = {
 };
 
 passport.use(
-  new LocalStrategy(localOptions, function (
+  new LocalStrategy.Strategy(localOptions, function (
     emailOrUsername: any,
     password: any,
     done: any
@@ -87,12 +87,12 @@ passport.deserializeUser(function (id: any, done: any) {
 
 // Login with JWT token
 const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: secret.secret
 };
 
 passport.use(
-  new JwtStrategy(jwtOptions, function (payload: any, done: any) {
+  new JwtStrategy.Strategy(jwtOptions, function (payload: any, done: any) {
     // NEW
     // TODO: Can we just refresh the token, so that way we dont need to do db lookup
     // concerning verified / facebook / google updates

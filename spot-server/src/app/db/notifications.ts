@@ -12,7 +12,7 @@ export default {
 };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 function getNotificationByReceiverId(
   receiverId: string,

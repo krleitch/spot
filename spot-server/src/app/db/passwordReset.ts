@@ -1,7 +1,7 @@
 export default { addPasswordReset, getByToken };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 function addPasswordReset(account_id: string, token: string): Promise<any> {
   const sql =

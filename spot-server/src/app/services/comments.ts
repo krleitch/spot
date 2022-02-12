@@ -10,24 +10,24 @@ export default {
 import shortid from 'shortid';
 
 // services
-import badwords from '@services/badwords';
-import locations from '@services/locations';
-import aws from '@services/aws';
+import badwords from '@services/badwords.js';
+import locations from '@services/locations.js';
+import aws from '@services/aws.js';
 
 // db
-import posts from '@db/posts';
-import comments from '@db/comments';
-import accounts from '@db/accounts';
-import tags from '@db/tags';
+import posts from '@db/posts.js';
+import comments from '@db/comments.js';
+import accounts from '@db/accounts.js';
+import tags from '@db/tags.js';
 
 // error
-import * as CommentsError from '@exceptions/comments';
+import * as CommentsError from '@exceptions/comments.js';
 
 // constants
-import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { COMMENTS_CONSTANTS } from '@constants/comments.js';
 
 // sources
-import profileImages from '@helpers/profileImages';
+import profileImages from '@helpers/profileImages.js';
 
 function validContent(content: string): Error | null {
   if (

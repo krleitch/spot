@@ -1,7 +1,7 @@
 export default { addVerifyAccount, getByToken };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 function addVerifyAccount(accountId: string, token: string): Promise<any> {
   const sql =

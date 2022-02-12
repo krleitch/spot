@@ -4,32 +4,32 @@ const router = express.Router();
 import uuid from 'uuid';
 
 // db
-import posts from '@db/posts';
-import reports from '@db/reports';
+import posts from '@db/posts.js';
+import reports from '@db/reports.js';
 
 // services
-import postsService from '@services/posts';
-import locationsService from '@services/locations';
-import imageService from '@services/image';
-import authorization from '@services/authorization/authorization';
+import postsService from '@services/posts.js';
+import locationsService from '@services/locations.js';
+import imageService from '@services/image.js';
+import authorization from '@services/authorization/authorization.js';
 const singleUpload = imageService.upload.single('image');
 
 // errors
-import * as PostsError from '@exceptions/posts';
-import * as ReportError from '@exceptions/report';
-import * as AuthenticationError from '@exceptions/authentication';
-import ErrorHandler from '@helpers/errorHandler';
+import * as PostsError from '@exceptions/posts.js';
+import * as ReportError from '@exceptions/report.js';
+import * as AuthenticationError from '@exceptions/authentication.js';
+import ErrorHandler from '@helpers/errorHandler.js';
 
 // ratelimiter
-import rateLimiter from '@helpers/rateLimiter';
+import rateLimiter from '@helpers/rateLimiter.js';
 
 // constants
-import { POSTS_CONSTANTS } from '@constants/posts';
-import { REPORT_CONSTANTS } from '@constants/report';
-import roles from '@services/authorization/roles';
+import { POSTS_CONSTANTS } from '@constants/posts.js';
+import { REPORT_CONSTANTS } from '@constants/report.js';
+import roles from '@services/authorization/roles.js';
 
 // config
-import config from '@config/config';
+import config from '@config/config.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();

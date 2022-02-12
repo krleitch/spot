@@ -1,7 +1,7 @@
 import aws from 'aws-sdk';
 
 // config
-import awsconfig from '@config/awskey';
+import awsconfig from '@config/awskey.js';
 
 aws.config.update({
   secretAccessKey: awsconfig.SecretAccessKey,

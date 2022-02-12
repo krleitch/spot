@@ -4,22 +4,22 @@ const router = express.Router();
 import { pbkdf2Sync } from 'crypto';
 
 // db
-import accounts from '@db/accounts';
-import verifyAccount from '@db/verifyAccount';
+import accounts from '@db/accounts.js';
+import verifyAccount from '@db/verifyAccount.js';
 
 // services
-import authenticationService from '@services/authentication/authentication';
-import authorization from '@services/authorization/authorization';
-import friendsService from '@services/friends';
-import mail from '@services/mail';
+import authenticationService from '@services/authentication/authentication.js';
+import authorization from '@services/authorization/authorization.js';
+import friendsService from '@services/friends.js';
+import mail from '@services/mail.js';
 
 // exceptions
-import * as AuthenticationError from '@exceptions/authentication';
-import * as AccountsError from '@exceptions/accounts';
-import ErrorHandler from '@helpers/errorHandler';
+import * as AuthenticationError from '@exceptions/authentication.js';
+import * as AccountsError from '@exceptions/accounts.js';
+import ErrorHandler from '@helpers/errorHandler.js';
 
 // constants
-import roles from '@services/authorization/roles';
+import roles from '@services/authorization/roles.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();

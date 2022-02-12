@@ -1,6 +1,6 @@
 
 
-import aws from '@services/aws';
+import aws from '@services/aws.js';
 import axios from 'axios';
 
 // s3 upload
@@ -11,7 +11,7 @@ import multerS3 from 'multer-s3';
 // import tf from '@tensorflow/tfjs-node';
 
 // config
-import config from '@config/config';
+import config from '@config/config.js';
 
 // TODO: check env
 // if  ( config.production ) {

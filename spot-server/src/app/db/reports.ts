@@ -1,7 +1,7 @@
 export default { addPostReport, addCommentReport };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 function addPostReport(
   postId: string,

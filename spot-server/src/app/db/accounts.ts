@@ -32,9 +32,9 @@ export default {
 import uuid from 'uuid';
 
 // Services
-import roles from '@services/authorization/roles';
+import roles from '@services/authorization/roles.js';
 
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 // Metadata
 

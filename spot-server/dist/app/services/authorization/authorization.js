@@ -1,2 +1,0 @@
-const checkRoleMiddleware=roles=>(req,res,next)=>{if(!req.user){return res.status(400).send("not authorized")}const hasRole=roles.find(role=>req.user.role===role);if(!hasRole){return res.status(400).send("not authorized")}return next()};function checkRole(user,roles){return roles.find(role=>user.role===role)}export default{checkRoleMiddleware,checkRole};
-//# sourceMappingURL=authorization.js.map

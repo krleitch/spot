@@ -1,7 +1,7 @@
 export default { addLocation, getLatestLocation, updateLocation };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
 function addLocation(
   account_id: string,

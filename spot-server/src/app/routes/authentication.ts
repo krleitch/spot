@@ -4,24 +4,24 @@ const router = express.Router();
 import shortid from 'shortid';
 
 // exceptions
-import * as AuthError from '@exceptions/authentication';
-import ErrorHandler from '@helpers/errorHandler';
+import * as AuthError from '@exceptions/authentication.js';
+import ErrorHandler from '@helpers/errorHandler.js';
 
 // db
-import accounts from '@db/accounts';
-import passwordReset from '@db/passwordReset';
+import accounts from '@db/accounts.js';
+import passwordReset from '@db/passwordReset.js';
 
 // services
-import authentication from '@services/authentication/authentication';
-import authorization from '@services/authorization/authorization';
-import friendsService from '@services/friends';
-import mail from '@services/mail';
+import authentication from '@services/authentication/authentication.js';
+import authorization from '@services/authorization/authorization.js';
+import friendsService from '@services/friends.js';
+import mail from '@services/mail.js';
 
 // ratelimiter
-import rateLimiter from '@helpers/rateLimiter';
+import rateLimiter from '@helpers/rateLimiter.js';
 
 // constants
-import roles from '@services/authorization/roles';
+import roles from '@services/authorization/roles.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();

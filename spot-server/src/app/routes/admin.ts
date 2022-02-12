@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 
 // ratelimiter
-import rateLimiter from '@helpers/rateLimiter';
+import rateLimiter from '@helpers/rateLimiter.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();

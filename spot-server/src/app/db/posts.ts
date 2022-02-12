@@ -16,9 +16,9 @@ export default {
 };
 
 import uuid from 'uuid';
-import { query } from '@db/mySql';
+import { query } from '@db/mySql.js';
 
-import { POSTS_CONSTANTS } from '@constants/posts';
+import { POSTS_CONSTANTS } from '@constants/posts.js';
 
 function getPosts(
   accountId: string,

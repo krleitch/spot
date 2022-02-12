@@ -3,6 +3,7 @@
 # Ignore directories
 node_modules/
 build/
+dist/
 src/app/log/
 
 # Ignore config files

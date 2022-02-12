@@ -4,9 +4,12 @@ import nodemailer from 'nodemailer';
 import aws from 'aws-sdk';
 import Email from 'email-templates';
 import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // config
-import awsconfig from '@config/awskey';
+import awsconfig from '@config/awskey.js';
 
 // TODO: move out of sandbox
 // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html?icmpid=docs_ses_console

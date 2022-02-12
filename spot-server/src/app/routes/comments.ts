@@ -4,33 +4,33 @@ const router = express.Router();
 import uuid from 'uuid';
 
 // db
-import posts from '@db/posts';
-import reports from '@db/reports';
-import comments from '@db/comments';
-import accounts from '@db/accounts';
-import tags from '@db/tags';
-import notifications from '@db/notifications';
+import posts from '@db/posts.js';
+import reports from '@db/reports.js';
+import comments from '@db/comments.js';
+import accounts from '@db/accounts.js';
+import tags from '@db/tags.js';
+import notifications from '@db/notifications.js';
 
 // services
-import commentsService from '@services/comments';
-import imageService from '@services/image';
-import authorization from '@services/authorization/authorization';
+import commentsService from '@services/comments.js';
+import imageService from '@services/image.js';
+import authorization from '@services/authorization/authorization.js';
 const singleUpload = imageService.upload.single('image');
 
 // ratelimiter
-import rateLimiter from '@helpers/rateLimiter';
+import rateLimiter from '@helpers/rateLimiter.js';
 
 // errors
-import * as CommentsError from '@exceptions/comments';
-import * as AuthenticationError from '@exceptions/authentication';
-import ErrorHandler from '@helpers/errorHandler';
+import * as CommentsError from '@exceptions/comments.js';
+import * as AuthenticationError from '@exceptions/authentication.js';
+import ErrorHandler from '@helpers/errorHandler.js';
 
 // constants
-import { COMMENTS_CONSTANTS } from '@constants/comments';
-import roles from '@services/authorization/roles';
+import { COMMENTS_CONSTANTS } from '@constants/comments.js';
+import roles from '@services/authorization/roles.js';
 
 // config
-import config from '@config/config';
+import config from '@config/config.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();

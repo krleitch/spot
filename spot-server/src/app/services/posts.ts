@@ -3,16 +3,16 @@ export default { calcDistance, generateLink, validContent };
 import shortid from 'shortid';
 
 // services
-import badwords from '@services/badwords';
+import badwords from '@services/badwords.js';
 
 // db
-import posts from '@db/posts';
+import posts from '@db/posts.js';
 
 // error
-import * as PostsError from '@exceptions/posts';
+import * as PostsError from '@exceptions/posts.js';
 
 // constants
-import { POSTS_CONSTANTS } from '@constants/posts';
+import { POSTS_CONSTANTS } from '@constants/posts.js';
 
 async function generateLink(): Promise<string> {
   // Need to make sure the link isnt already taken
