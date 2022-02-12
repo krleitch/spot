@@ -6,9 +6,9 @@ build/
 src/app/log/
 
 # Ignore config files
-src/config/secret.json
-src/config/awskey.json
-src/config/googlekey.json
+src/config/secret.ts
+src/config/awskey.ts
+src/config/googlekey.ts
 
 # Prisma
 .env
