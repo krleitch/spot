@@ -1,0 +1,11 @@
+export { getNotificationByReceiverId, getNotificationById, addNotification, deleteNotificationById, addCommentNotification, setAllNotificationsSeen, setNotificationSeen, deleteAllNotificationsForAccount, getNotificationUnreadByReceiverId, addReplyNotification };
+declare function getNotificationByReceiverId(receiverId: string, before: Date, after: Date, limit: number): any;
+declare function getNotificationById(id: string): any;
+declare function addNotification(senderId: string, receiverId: string, postId: string): any;
+declare function addCommentNotification(senderId: string, receiverId: string, postId: string, commentId: string): any;
+declare function addReplyNotification(senderId: string, receiverId: string, postId: string, commentId: string, replyId: string): any;
+declare function setNotificationSeen(notificationId: string, accountId: string): any;
+declare function setAllNotificationsSeen(accountId: string): any;
+declare function deleteNotificationById(id: string, accountId: string): any;
+declare function deleteAllNotificationsForAccount(accountId: string): any;
+declare function getNotificationUnreadByReceiverId(accountId: string): any;

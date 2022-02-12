@@ -1,0 +1,18 @@
+export { generateSalt, hashPassword, validatePassword, generateToken, getFacebookDetails, getFacebookId, validUsername, validPassword, optionalAuth, requiredAuth, localAuth, validEmail, validPhone, isValidToken, createUsernameFromEmail, verifyGoogleIdToken, isValidAccountUpdateTime };
+declare function validUsername(username: string): Error | null;
+declare function validPassword(password: string): Error | null;
+declare function validEmail(email: string): Error | null;
+declare function validPhone(phone: string): Error | null;
+declare const optionalAuth: (req: any, res: any, next: any) => void;
+declare const requiredAuth: (req: any, res: any, next: any) => void;
+declare const localAuth: (req: any, res: any, next: any) => void;
+declare function generateSalt(): string;
+declare function hashPassword(password: string, salt: string): string;
+declare function validatePassword(user: any, password: string): boolean;
+declare function generateToken(user: any): any;
+declare function isValidToken(token: any): boolean;
+declare function createUsernameFromEmail(email: string): Promise<string>;
+declare function isValidAccountUpdateTime(time: string): boolean;
+declare function getFacebookDetails(accessToken: string): Promise<any>;
+declare function getFacebookId(accessToken: string): Promise<any>;
+declare function verifyGoogleIdToken(accessToken: string): Promise<any>;

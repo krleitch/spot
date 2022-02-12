@@ -1,0 +1,12 @@
+export { adminLimiter, genericPostLimiter, createCommentLimiter, genericCommentLimiter, createPostLimiter, authenticationLimiter, passwordResetLimiter, tokenLimiter, newPasswordLimiter, genericFriendLimiter, genericNotificationLimiter };
+declare const adminLimiter: any;
+declare const genericNotificationLimiter: any;
+declare const genericFriendLimiter: any;
+declare const createPostLimiter: any;
+declare const genericPostLimiter: any;
+declare const createCommentLimiter: any;
+declare const genericCommentLimiter: any;
+declare const authenticationLimiter: any;
+declare const passwordResetLimiter: any;
+declare const tokenLimiter: any;
+declare const newPasswordLimiter: any;

@@ -1,0 +1,15 @@
+export { getPosts, getPostById, addPost, likePost, dislikePost, deletePost, getPostCreator, getPostByLink, getPostsActivity, getPostByIdNoAccount, linkExists, unratedPost, checkOwned, updateNsfw };
+declare function getPosts(accountId: string, sort: string, location: string, latitude: string, longitude: string, offset: number, limit: number, date: string): Promise<any>;
+declare function getPostById(postId: string, accountId: string): Promise<any>;
+declare function getPostByIdNoAccount(postId: string): Promise<any>;
+declare function addPost(postId: string, content: string, location: any, imageSrc: string, imageNsfw: boolean, link: string, accountId: string, geolocation: string): Promise<any>;
+declare function likePost(postId: string, accountId: string): Promise<any>;
+declare function dislikePost(postId: string, accountId: string): Promise<any>;
+declare function unratedPost(postId: string, accountId: string): Promise<any>;
+declare function deletePost(id: string): Promise<any>;
+declare function getPostCreator(postId: string): any;
+declare function getPostByLink(link: string, accountId?: string): any;
+declare function getPostsActivity(accountId: string, before: Date, after: Date, limit: number): any;
+declare function linkExists(link: string): any;
+declare function checkOwned(postId: string, accountId: string): any;
+declare function updateNsfw(postId: string, nsfw: boolean): any;

@@ -29,12 +29,15 @@ export {
   getAccountByUsernameWithPass
 };
 
-const uuid = require('uuid');
+import uuid from 'uuid';
 
 // services
 const roles = require('@services/authorization/roles');
 
+// import roles from '@services/authorization/roles/roles.js';
+
 const db = require('./mySql');
+// import db from '@db/mySql.js';
 
 // Metadata
 

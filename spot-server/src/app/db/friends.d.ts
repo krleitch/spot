@@ -1,0 +1,10 @@
+export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest, deleteFriendById, friendRequestExists, getFriendsExist, getPendingFriendRequests };
+declare function getFriends(accountId: string, date: string, limit: string): any;
+declare function getFriendsExist(firstId: string, secondId: string): any;
+declare function deleteFriendById(id: string, accountId: string): any;
+declare function getFriendRequests(accountId: string): any;
+declare function getPendingFriendRequests(accountId: string): any;
+declare function friendRequestExists(friendId: string, accountId: string): any;
+declare function addFriendRequest(senderId: string, receiverId: string): any;
+declare function acceptFriendRequest(id: string, accountId: string): any;
+declare function declineFriendRequest(id: string, accountId: string): any;
