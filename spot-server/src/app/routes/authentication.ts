@@ -1,27 +1,27 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const shortid = require('shortid');
+import shortid from 'shortid';
 
 // exceptions
-const AuthError = require('@exceptions/authentication');
-const ErrorHandler = require('@helpers/errorHandler');
+import * as AuthError from '@exceptions/authentication';
+import ErrorHandler from '@helpers/errorHandler';
 
 // db
-const accounts = require('@db/accounts');
-const passwordReset = require('@db/passwordReset');
+import accounts from '@db/accounts';
+import passwordReset from '@db/passwordReset';
 
 // services
-const authentication = require('@services/authentication/authentication');
-const authorization = require('@services/authorization/authorization');
-const friendsService = require('@services/friends');
-const mail = require('@services/mail');
+import authentication from '@services/authentication/authentication';
+import authorization from '@services/authorization/authorization';
+import friendsService from '@services/friends';
+import mail from '@services/mail';
 
 // ratelimiter
-const rateLimiter = require('@helpers/rateLimiter');
+import rateLimiter from '@helpers/rateLimiter';
 
 // constants
-const roles = require('@services/authorization/roles');
+import roles from '@services/authorization/roles';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -128,80 +128,78 @@ router.post(
     authentication.getFacebookDetails(accessToken).then(
       (facebookDetails: any) => {
         accounts.getFacebookAccount(facebookDetails.body.id).then(
-          ErrorHandler.catchAsync(
-            async (user: any) => {
-              if (user.length == 0) {
-                const username = await authentication.createUsernameFromEmail(
-                  facebookDetails.body.email
-                );
-                let email = facebookDetails.body.email;
+          async (user: any) => {
+            if (user.length == 0) {
+              const username = await authentication.createUsernameFromEmail(
+                facebookDetails.body.email
+              );
+              let email = facebookDetails.body.email;
 
-                // if email is used
-                // do not assign automatically because of errors if email isnt verified by facebook
-                await accounts.getAccountByEmail(email).then(
-                  (rows: any) => {
-                    if (rows.length > 0) {
-                      email = null;
-                    }
+              // if email is used
+              // do not assign automatically because of errors if email isnt verified by facebook
+              await accounts.getAccountByEmail(email).then(
+                (rows: any) => {
+                  if (rows.length > 0) {
+                    email = null;
+                  }
+                },
+                (err: any) => {}
+              );
+
+              // create the account
+              accounts
+                .addFacebookAccount(facebookDetails.body.id, email, username)
+                .then(
+                  (user2: any) => {
+                    accounts.addAccountMetadata(user2[0].id).then(
+                      (rows: any) => {
+                        user2 = user2[0];
+                        const token = authentication.generateToken(user2);
+
+                        // add facebook friends
+                        friendsService
+                          .addFacebookFriends(accessToken, user2.id)
+                          .then(
+                            (friends: any) => {
+                              res.status(200).json({
+                                created: true,
+                                jwt: { token: token, expiresIn: 7 },
+                                account: user2
+                              });
+                            },
+                            (err: any) => {
+                              // couldnt add your friends
+                              res.status(200).json({
+                                created: true,
+                                jwt: { token: token, expiresIn: 7 },
+                                account: user2
+                              });
+                            }
+                          );
+                      },
+                      (err: any) => {
+                        return next(new AuthError.FacebookSignUpError(500));
+                      }
+                    );
                   },
-                  (err: any) => {}
+                  (err: any) => {
+                    return next(new AuthError.FacebookSignUpError(500));
+                  }
                 );
-
-                // create the account
-                accounts
-                  .addFacebookAccount(facebookDetails.body.id, email, username)
-                  .then(
-                    (user2: any) => {
-                      accounts.addAccountMetadata(user2[0].id).then(
-                        (rows: any) => {
-                          user2 = user2[0];
-                          const token = authentication.generateToken(user2);
-
-                          // add facebook friends
-                          friendsService
-                            .addFacebookFriends(accessToken, user2.id)
-                            .then(
-                              (friends: any) => {
-                                res.status(200).json({
-                                  created: true,
-                                  jwt: { token: token, expiresIn: 7 },
-                                  account: user2
-                                });
-                              },
-                              (err: any) => {
-                                // couldnt add your friends
-                                res.status(200).json({
-                                  created: true,
-                                  jwt: { token: token, expiresIn: 7 },
-                                  account: user2
-                                });
-                              }
-                            );
-                        },
-                        (err: any) => {
-                          return next(new AuthError.FacebookSignUpError(500));
-                        }
-                      );
-                    },
-                    (err: any) => {
-                      return next(new AuthError.FacebookSignUpError(500));
-                    }
-                  );
-              } else {
-                // account already exists
-                user = user[0];
-                const token = authentication.generateToken(user);
-                res.status(200).json({
-                  created: false,
-                  jwt: { token: token, expiresIn: 7 },
-                  account: user
-                });
-              }
-            },
-            (err: any) => {
-              return next(new AuthError.FacebookSignUpError(500));
+            } else {
+              // account already exists
+              user = user[0];
+              const token = authentication.generateToken(user);
+              res.status(200).json({
+                created: false,
+                jwt: { token: token, expiresIn: 7 },
+                account: user
+              });
             }
-          )
+          },
+          (err: any) => {
+            return next(new AuthError.FacebookSignUpError(500));
+          }
         );
       },
       (err: any) => {
@@ -238,51 +236,49 @@ router.post(
 
       // make or retrieve account
       accounts.getGoogleAccount(userid).then(
-        ErrorHandler.catchAsync(
-          async (user: any) => {
-            if (user.length == 0) {
-              const username = await authentication.createUsernameFromEmail(
-                email
-              );
+        async (user: any) => {
+          if (user.length == 0) {
+            const username = await authentication.createUsernameFromEmail(
+              email
+            );
 
-              // create the account
-              accounts.addGoogleAccount(userid, email, username).then(
-                (user2: any) => {
-                  accounts.addAccountMetadata(user2[0].id).then(
-                    (rows: any) => {
-                      user2 = user2[0];
-                      const token = authentication.generateToken(user2);
+            // create the account
+            accounts.addGoogleAccount(userid, email, username).then(
+              (user2: any) => {
+                accounts.addAccountMetadata(user2[0].id).then(
+                  (rows: any) => {
+                    user2 = user2[0];
+                    const token = authentication.generateToken(user2);
 
-                      res.status(200).json({
-                        created: true,
-                        jwt: { token: token, expiresIn: 7 },
-                        account: user2
-                      });
-                    },
-                    (err: any) => {
-                      return next(new AuthError.GoogleSignUpError(500));
-                    }
-                  );
-                },
-                (err: any) => {
-                  return next(new AuthError.GoogleSignUpError(500));
-                }
-              );
-            } else {
-              // account already exists
-              user = user[0];
-              const token = authentication.generateToken(user);
-              res.status(200).json({
-                created: false,
-                jwt: { token: token, expiresIn: 7 },
-                account: user
-              });
-            }
-          },
-          (err: any) => {
-            return next(new AuthError.GoogleSignUpError(500));
+                    res.status(200).json({
+                      created: true,
+                      jwt: { token: token, expiresIn: 7 },
+                      account: user2
+                    });
+                  },
+                  (err: any) => {
+                    return next(new AuthError.GoogleSignUpError(500));
+                  }
+                );
+              },
+              (err: any) => {
+                return next(new AuthError.GoogleSignUpError(500));
+              }
+            );
+          } else {
+            // account already exists
+            user = user[0];
+            const token = authentication.generateToken(user);
+            res.status(200).json({
+              created: false,
+              jwt: { token: token, expiresIn: 7 },
+              account: user
+            });
           }
-        )
+        },
+        (err: any) => {
+          return next(new AuthError.GoogleSignUpError(500));
+        }
       );
     } catch (err) {
       return next(new AuthError.GoogleSignUpError(500));
@@ -298,52 +294,44 @@ router.post(
     const { email } = req.body;
 
     accounts.getAccountByEmail(email).then(
-      ErrorHandler.catchAsync(
-        async (rows: any) => {
-          if (rows.length > 0) {
-            // generate the token
-            const token = shortid.generate();
+      async (rows: any) => {
+        if (rows.length > 0) {
+          // generate the token
+          const token = shortid.generate();
 
-            // Send email with nodemailer and aws ses transport
-            await mail.email.send(
-              {
-                template: 'password',
-                message: {
-                  from: 'spottables.app@gmail.com',
-                  to: rows[0].email
-                },
-                locals: {
-                  link: 'https://spottables.com/new-password',
-                  token: token.toString(),
-                  username: rows[0].username
-                }
+          // Send email with nodemailer and aws ses transport
+          await mail.email.send(
+            {
+              template: 'password',
+              message: {
+                from: 'spottables.app@gmail.com',
+                to: rows[0].email
               },
-              (err: any, info: any) => {
-                if (err) {
-                  // error sending the email
-                  return next(new AuthError.PasswordReset(500));
-                }
+              locals: {
+                link: 'https://spottables.com/new-password',
+                token: token.toString(),
+                username: rows[0].username
               }
-            );
+            }
+          );
 
-            console.log('meex2');
-            passwordReset.addPasswordReset(rows[0].id, token).then(
-              (r: any) => {
-                res.status(200).send({});
-              },
-              (err: any) => {
-                return next(new AuthError.PasswordReset(500));
-              }
-            );
-          } else {
-            // No account
-            res.status(200).send({});
-          }
-        },
-        (err: any) => {
-          return next(new AuthError.PasswordReset(500));
+          console.log('meex2');
+          passwordReset.addPasswordReset(rows[0].id, token).then(
+            (r: any) => {
+              res.status(200).send({});
+            },
+            (err: any) => {
+              return next(new AuthError.PasswordReset(500));
+            }
+          );
+        } else {
+          // No account
+          res.status(200).send({});
         }
-      )
+      },
+      (err: any) => {
+        return next(new AuthError.PasswordReset(500));
+      }
     );
   }
 );

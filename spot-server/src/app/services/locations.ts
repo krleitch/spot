@@ -1,31 +1,24 @@
-export {
-  checkLocation,
-  verifyLocation,
-  distanceBetween,
-  getGeolocation,
-  addDistanceToRows
-};
 
-const request = require('request');
+
+import axios from 'axios';
 
 // config
-const googleconfig = require('@config/googlekey.json');
-const config = require('@config/config');
+import googleconfig from '@config/googlekey';
+import config from '@config/config';
 
 // db
-const locations = require('@db/locations');
-const redisClient = require('@db/redis');
+import locations from '@db/locations';
+import redisClient from '@db/redis';
 
 // error
-const LocationsError = require('@exceptions/locations');
+import * as LocationsError from '@exceptions/locations';
 
 // services
-const authorization = require('@services/authorization/authorization');
+import authorization from '@services/authorization/authorization';
 
 // constants
-const locations_constants = require('@constants/locations');
-const LOCATIONS_CONSTANTS = locations_constants.LOCATIONS_CONSTANTS;
-const roles = require('@services/authorization/roles');
+import { LOCATIONS_CONSTANTS } from '@constants/locations';
+import roles from '@services/authorization/roles';
 
 // Middleware to call verifyLocation
 const checkLocation = async (req: any, res: any, next: any) => {
@@ -65,7 +58,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
   // If there is a location attached to the request, compare to last location
   if (latitude && longitude) {
     await verifyLocation(accountId, latitude, longitude).then(
-      (valid: boolean) => {
+      (valid: boolean | void) => {
         if (!valid) {
           return next(new LocationsError.LocationError(500));
         } else {
@@ -92,7 +85,7 @@ function verifyLocation(
   account_id: string,
   myLatitude: number,
   myLongitude: number
-): Promise<boolean> {
+): Promise<boolean | void> {
   return locations.getLatestLocation(account_id).then(
     (location: any) => {
       // No previous info, so add it and return true
@@ -101,7 +94,9 @@ function verifyLocation(
           (rows: any) => {
             return true;
           },
-          (err: any) => {}
+          (err: any) => {
+            return true;
+          }
         );
       } else {
         const { latitude, longitude, creation_date } = location[0];
@@ -241,84 +236,97 @@ function getGeolocation(latitude: string, longitude: string): Promise<string> {
 
   const url = baseUrl + latlng + filter + key;
 
+  return new Promise((resolve, reject) => {
+    resolve('TEST');
+  })
+
   // TODO: FIX THIS!!!!
+
   // eslint-disable-next-line no-async-promise-executor
-  return new Promise(async (resolve, reject) => {
-    // check redis cache first
-    await redisClient.georadius(
-      'geocodes',
-      longitude,
-      latitude,
-      '25',
-      'm',
-      'WITHCOORD',
-      'WITHDIST',
-      'ASC',
-      async (err: any, results: any[]) => {
-        if (results.length > 0) {
-          // check if the entry needs to be removed from cache due to time expires
-          const locationName = results[0][0];
-          await redisClient.zscore(
-            'geocodes_expires',
-            locationName,
-            async (err: any, expiresTimestamp: any) => {
-              if (expiresTimestamp >= new Date().getTime()) {
-                await redisClient.zrem('geocodes_expires', locationName);
-                await redisClient.zrem('geocodes', locationName);
-              } else {
-                return resolve(locationName);
-              }
-            }
-          );
-        }
-      }
-    );
+  // return new Promise(async (resolve, reject) => {
+  //   // check redis cache first
+  //   await redisClient.GEOSEARCH(
+  //     'geocodes',
+  //     longitude,
+  //     latitude,
+  //     '25',
+  //     'm',
+  //     'WITHCOORD',
+  //     'WITHDIST',
+  //     'ASC',
+  //     async (err: any, results: any[]) => {
+  //       if (results.length > 0) {
+  //         // check if the entry needs to be removed from cache due to time expires
+  //         const locationName = results[0][0];
+  //         await redisClient.zScore(
+  //           'geocodes_expires',
+  //           locationName,
+  //           async (err: any, expiresTimestamp: any) => {
+  //             if (expiresTimestamp >= new Date().getTime()) {
+  //               await redisClient.zem('geocodes_expires', locationName);
+  //               await redisClient.zrem('geocodes', locationName);
+  //             } else {
+  //               return resolve(locationName);
+  //             }
+  //           }
+  //         );
+  //       }
+  //     }
+  //   );
 
-    request(url, (error: any, response: any, body: any) => {
-      if (error) {
-        return reject(error);
-      }
+  //   axios(url, (error: any, response: any, body: any) => {
+  //     if (error) {
+  //       return reject(error);
+  //     }
 
-      const res = JSON.parse(body);
+  //     const res = JSON.parse(body);
 
-      // No place
-      if (res.results.length === 0) {
-        return resolve('');
-      }
+  //     // No place
+  //     if (res.results.length === 0) {
+  //       return resolve('');
+  //     }
 
-      // expire time of the address
-      const date = new Date();
-      const geocodeExpiresIn = 7; // days
-      date.setDate(date.getDate() + geocodeExpiresIn);
-      const expireTimestamp = date.getTime();
+  //     // expire time of the address
+  //     const date = new Date();
+  //     const geocodeExpiresIn = 7; // days
+  //     date.setDate(date.getDate() + geocodeExpiresIn);
+  //     const expireTimestamp = date.getTime();
 
-      // possible address
-      const possibleAddresses: any[] = [];
+  //     // possible address
+  //     const possibleAddresses: any[] = [];
 
-      res.results.forEach((place: any) => {
-        place.address_components.forEach((address: any) => {
-          typeRanks.forEach((typeAddress: string) => {
-            if (address.types.includes(typeAddress)) {
-              possibleAddresses.push([address.long_name, typeAddress]);
-            }
-          });
-        });
-      });
+  //     res.results.forEach((place: any) => {
+  //       place.address_components.forEach((address: any) => {
+  //         typeRanks.forEach((typeAddress: string) => {
+  //           if (address.types.includes(typeAddress)) {
+  //             possibleAddresses.push([address.long_name, typeAddress]);
+  //           }
+  //         });
+  //       });
+  //     });
 
-      // take the first highest of possible
-      typeRanks.forEach((typeAddress: string) => {
-        possibleAddresses.forEach((possible: any) => {
-          if (possible[1] === typeAddress) {
-            // add to redis and resolve
-            redisClient.zadd('geocodes_expires', expireTimestamp, possible[0]);
-            redisClient.geoadd('geocodes', longitude, latitude, possible[0]);
-            return resolve(possible[0]);
-          }
-        });
-      });
+  //     // take the first highest of possible
+  //     typeRanks.forEach((typeAddress: string) => {
+  //       possibleAddresses.forEach((possible: any) => {
+  //         if (possible[1] === typeAddress) {
+  //           // add to redis and resolve
+  //           redisClient.zAdd('geocodes_expires', expireTimestamp, possible[0]);
+  //           redisClient.geoAdd('geocodes', longitude, latitude, possible[0]);
+  //           return resolve(possible[0]);
+  //         }
+  //       });
+  //     });
 
-      // nothing
-      return resolve('');
-    });
-  });
+  //     // nothing
+  //     return resolve('');
+  //   });
+  // });
 }
+
+export default {
+  checkLocation,
+  verifyLocation,
+  distanceBetween,
+  getGeolocation,
+  addDistanceToRows
+};

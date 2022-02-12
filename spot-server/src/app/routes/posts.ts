@@ -1,37 +1,35 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const uuid = require('uuid');
+import uuid from 'uuid';
 
 // db
-const posts = require('@db/posts');
-const reports = require('@db/reports');
+import posts from '@db/posts';
+import reports from '@db/reports';
 
 // services
-const postsService = require('@services/posts');
-const locationsService = require('@services/locations');
-const imageService = require('@services/image');
-const authorization = require('@services/authorization/authorization');
+import postsService from '@services/posts';
+import locationsService from '@services/locations';
+import imageService from '@services/image';
+import authorization from '@services/authorization/authorization';
 const singleUpload = imageService.upload.single('image');
 
 // errors
-const PostsError = require('@exceptions/posts');
-const ReportError = require('@exceptions/report');
-const AuthenticationError = require('@exceptions/authentication');
-const ErrorHandler = require('@helpers/errorHandler');
+import * as PostsError from '@exceptions/posts';
+import * as ReportError from '@exceptions/report';
+import * as AuthenticationError from '@exceptions/authentication';
+import ErrorHandler from '@helpers/errorHandler';
 
 // ratelimiter
-const rateLimiter = require('@helpers/rateLimiter');
+import rateLimiter from '@helpers/rateLimiter';
 
 // constants
-const posts_constants = require('@constants/posts');
-const POSTS_CONSTANTS = posts_constants.POSTS_CONSTANTS;
-const report_constants = require('@constants/report');
-const REPORT_CONSTANTS = report_constants.REPORT_CONSTANTS;
-const roles = require('@services/authorization/roles');
+import { POSTS_CONSTANTS } from '@constants/posts';
+import { REPORT_CONSTANTS } from '@constants/report';
+import roles from '@services/authorization/roles';
 
 // config
-const config = require('@config/config');
+import config from '@config/config';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -115,125 +113,121 @@ router.post(
     // set the filename for aws s3 bucket
     req.filename = postId;
 
-    singleUpload(
-      req,
-      res,
-      ErrorHandler.catchAsync(async function (err: any) {
-        // error uploading image
-        if (err) {
-          return next(new PostsError.PostImage(422));
+    singleUpload(req, res, async function (err: any) {
+      // error uploading image
+      if (err) {
+        return next(new PostsError.PostImage(422));
+      }
+
+      const json = JSON.parse(req.body.json);
+      let content = json.content;
+      const location = json.location;
+      const image = req.file ? req.file.location : null;
+
+      // remove leading and trailing whitespaces
+      content = content.trim();
+
+      // check if line length matches
+      if (
+        content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_LENGTH
+      ) {
+        return next(
+          new PostsError.InvalidPostLineLength(
+            400,
+            POSTS_CONSTANTS.MAX_LINE_LENGTH
+          )
+        );
+      }
+
+      // You must either have some text or an image
+      if (content.length == 0 && !image) {
+        return next(new PostsError.NoPostContent(400));
+      }
+
+      const contentError = postsService.validContent(content);
+      if (contentError) {
+        return next(contentError);
+      }
+
+      const link = await postsService.generateLink();
+
+      let imageNsfw = false;
+      if (config.testNsfwLocal && image) {
+        try {
+          imageNsfw = await imageService.predictNsfw(image);
+        } catch (err) {
+          // err
         }
+      }
 
-        const json = JSON.parse(req.body.json);
-        let content = json.content;
-        const location = json.location;
-        const image = req.file ? req.file.location : null;
-
-        // remove leading and trailing whitespaces
-        content = content.trim();
-
-        // check if line length matches
-        if (
-          content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_LENGTH
-        ) {
-          return next(
-            new PostsError.InvalidPostLineLength(
-              400,
-              POSTS_CONSTANTS.MAX_LINE_LENGTH
-            )
-          );
-        }
-
-        // You must either have some text or an image
-        if (content.length == 0 && !image) {
-          return next(new PostsError.NoPostContent(400));
-        }
-
-        const contentError = postsService.validContent(content);
-        if (contentError) {
-          return next(contentError);
-        }
-
-        const link = await postsService.generateLink();
-
-        let imageNsfw = false;
-        if (config.testNsfwLocal && image) {
-          try {
-            imageNsfw = await imageService.predictNsfw(image);
-          } catch (err) {
-            // err
-          }
-        }
-
-        locationsService
-          .getGeolocation(location.latitude, location.longitude)
-          .then(
-            (geolocation: string) => {
-              posts
-                .addPost(
-                  postId,
-                  content,
-                  location,
-                  image,
-                  imageNsfw,
-                  link,
-                  accountId,
-                  geolocation
-                )
-                .then(
-                  (rows: any) => {
-                    // async test nsfw
-                    if (config.testNsfwLambda && image) {
-                      imageService.predictNsfwLambda(image).then(
-                        (result: any) => {
-                          if (
-                            Object.prototype.hasOwnProperty.call(
-                              result,
-                              'StatusCode'
-                            ) &&
-                            result.StatusCode === 200
-                          ) {
-                            const payload = JSON.parse(result.Payload);
-                            if (payload.statusCode === 200) {
-                              const predict = JSON.parse(payload.body);
-                              if (
-                                Object.prototype.hasOwnProperty.call(
-                                  predict,
-                                  'className'
-                                )
-                              ) {
-                                const isNsfw =
-                                  predict.className === 'Porn' ||
-                                  predict.className === 'Hentai';
-                                posts.updateNsfw(postId, isNsfw);
-                              }
+      locationsService
+        .getGeolocation(location.latitude, location.longitude)
+        .then(
+          (geolocation: string) => {
+            posts
+              .addPost(
+                postId,
+                content,
+                location,
+                image,
+                imageNsfw,
+                link,
+                accountId,
+                geolocation
+              )
+              .then(
+                (rows: any) => {
+                  // async test nsfw
+                  if (config.testNsfwLambda && image) {
+                    imageService.predictNsfwLambda(image).then(
+                      (result: any) => {
+                        if (
+                          Object.prototype.hasOwnProperty.call(
+                            result,
+                            'StatusCode'
+                          ) &&
+                          result.StatusCode === 200
+                        ) {
+                          const payload = JSON.parse(result.Payload);
+                          if (payload.statusCode === 200) {
+                            const predict = JSON.parse(payload.body);
+                            if (
+                              Object.prototype.hasOwnProperty.call(
+                                predict,
+                                'className'
+                              )
+                            ) {
+                              const isNsfw =
+                                predict.className === 'Porn' ||
+                                predict.className === 'Hentai';
+                              posts.updateNsfw(postId, isNsfw);
                             }
                           }
-                        },
-                        (err: any) => {}
-                      );
-                    }
-
-                    rows = locationsService.addDistanceToRows(
-                      rows,
-                      location.latitude,
-                      location.longitude,
-                      true
+                        }
+                      },
+                      (err: any) => {}
                     );
-                    const response = { post: rows[0] };
-                    res.status(200).json(response);
-                  },
-                  (err: any) => {
-                    return next(new PostsError.PostError(500));
                   }
-                );
-            },
-            (err: any) => {
-              return next(new PostsError.PostError(500));
-            }
-          );
-      })
-    );
+
+                  rows = locationsService.addDistanceToRows(
+                    rows,
+                    location.latitude,
+                    location.longitude,
+                    true
+                  );
+                  const response = { post: rows[0] };
+                  res.status(200).json(response);
+                },
+                (err: any) => {
+                  return next(new PostsError.PostError(500));
+                }
+              );
+          },
+          (err: any) => {
+            return next(new PostsError.PostError(500));
+          }
+        );
+    });
   })
 );
 

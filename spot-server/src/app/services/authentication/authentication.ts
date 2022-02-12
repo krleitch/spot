@@ -1,22 +1,4 @@
-export {
-  generateSalt,
-  hashPassword,
-  validatePassword,
-  generateToken,
-  getFacebookDetails,
-  getFacebookId,
-  validUsername,
-  validPassword,
-  optionalAuth,
-  requiredAuth,
-  localAuth,
-  validEmail,
-  validPhone,
-  isValidToken,
-  createUsernameFromEmail,
-  verifyGoogleIdToken,
-  isValidAccountUpdateTime
-};
+
 
 const { randomBytes, pbkdf2Sync } = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -279,3 +261,23 @@ async function verifyGoogleIdToken(accessToken: string): Promise<any> {
   });
   return ticket;
 }
+
+export default {
+  generateSalt,
+  hashPassword,
+  validatePassword,
+  generateToken,
+  getFacebookDetails,
+  getFacebookId,
+  validUsername,
+  validPassword,
+  optionalAuth,
+  requiredAuth,
+  localAuth,
+  validEmail,
+  validPhone,
+  isValidToken,
+  createUsernameFromEmail,
+  verifyGoogleIdToken,
+  isValidAccountUpdateTime
+};

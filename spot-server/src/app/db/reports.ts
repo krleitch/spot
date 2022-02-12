@@ -1,8 +1,7 @@
-export { addPostReport, addCommentReport };
+export default { addPostReport, addCommentReport };
 
-const uuid = require('uuid');
-
-const db = require('./mySql');
+import uuid from 'uuid';
+import { query } from '@db/mySql';
 
 function addPostReport(
   postId: string,
@@ -14,7 +13,7 @@ function addPostReport(
   const sql =
     'INSERT INTO reports (id, reporter_id, post_id, content, category, creation_date) VALUES (?, ?, ?, ?, ?, ?)';
   const values = [reportId, accountId, postId, content, category, new Date()];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function addCommentReport(
@@ -36,5 +35,5 @@ function addCommentReport(
     category,
     new Date()
   ];
-  return db.query(sql, values);
+  return query(sql, values);
 }

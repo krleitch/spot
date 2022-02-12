@@ -1,0 +1,2 @@
+const catchAsync=fn=>{return(req,res,next)=>{fn(req,res,next).catch(next)}};const errorMiddleware=(err,req,res,next)=>{err.statusCode=err.statusCode||500;err.status=err.status||"error";res.status(err.statusCode).json({name:err.name,body:err.body,status:err.status,message:err.message})};export default{catchAsync,errorMiddleware};
+//# sourceMappingURL=errorHandler.js.map

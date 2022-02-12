@@ -1,6 +1,4 @@
-export { addFacebookFriends };
-
-const request = require('request');
+export default { addFacebookFriends };
 
 // Converts all friends of the user to SPOT friends
 // Performs this once facebook account is connected

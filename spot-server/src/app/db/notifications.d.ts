@@ -1,5 +1,17 @@
-export { getNotificationByReceiverId, getNotificationById, addNotification, deleteNotificationById, addCommentNotification, setAllNotificationsSeen, setNotificationSeen, deleteAllNotificationsForAccount, getNotificationUnreadByReceiverId, addReplyNotification };
-declare function getNotificationByReceiverId(receiverId: string, before: Date, after: Date, limit: number): any;
+declare const _default: {
+    getNotificationByReceiverId: typeof getNotificationByReceiverId;
+    getNotificationById: typeof getNotificationById;
+    addNotification: typeof addNotification;
+    deleteNotificationById: typeof deleteNotificationById;
+    addCommentNotification: typeof addCommentNotification;
+    setAllNotificationsSeen: typeof setAllNotificationsSeen;
+    setNotificationSeen: typeof setNotificationSeen;
+    deleteAllNotificationsForAccount: typeof deleteAllNotificationsForAccount;
+    getNotificationUnreadByReceiverId: typeof getNotificationUnreadByReceiverId;
+    addReplyNotification: typeof addReplyNotification;
+};
+export default _default;
+declare function getNotificationByReceiverId(receiverId: string, before: Date | null, after: Date | null, limit: number): any;
 declare function getNotificationById(id: string): any;
 declare function addNotification(senderId: string, receiverId: string, postId: string): any;
 declare function addCommentNotification(senderId: string, receiverId: string, postId: string, commentId: string): any;

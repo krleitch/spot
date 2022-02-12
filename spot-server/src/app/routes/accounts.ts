@@ -1,25 +1,25 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const { pbkdf2Sync } = require('crypto');
+import { pbkdf2Sync } from 'crypto';
 
 // db
-const accounts = require('@db/accounts');
-const verifyAccount = require('@db/verifyAccount');
+import accounts from '@db/accounts';
+import verifyAccount from '@db/verifyAccount';
 
 // services
-const authenticationService = require('@services/authentication/authentication');
-const authorization = require('@services/authorization/authorization');
-const friendsService = require('@services/friends');
-const mail = require('@services/mail');
+import authenticationService from '@services/authentication/authentication';
+import authorization from '@services/authorization/authorization';
+import friendsService from '@services/friends';
+import mail from '@services/mail';
 
 // exceptions
-const AuthenticationError = require('@exceptions/authentication');
-const AccountsError = require('@exceptions/accounts');
-const ErrorHandler = require('@helpers/errorHandler');
+import * as AuthenticationError from '@exceptions/authentication';
+import * as AccountsError from '@exceptions/accounts';
+import ErrorHandler from '@helpers/errorHandler';
 
 // constants
-const roles = require('@services/authorization/roles');
+import roles from '@services/authorization/roles';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -318,7 +318,7 @@ router.post(
     }
 
     try {
-      const ticket = authenticationService.verifyGoogleIdToken(accessToken);
+      const ticket = await authenticationService.verifyGoogleIdToken(accessToken);
 
       const payload = ticket.getPayload();
       const userid = payload['sub'];
@@ -508,6 +508,7 @@ router.post(
     }
 
     // send email with nodemailerm using aws ses transport
+    // TODO, ERROR HANDLE THIS AND OTHER MAIL
 
     await mail.email.send(
       {
@@ -519,11 +520,6 @@ router.post(
         locals: {
           link: 'https://spottables.com/verify/' + token,
           username: req.user.username
-        }
-      },
-      (err: any, info: any) => {
-        if (err) {
-          return next(new AccountsError.SendVerify(500));
         }
       }
     );

@@ -1,4 +1,4 @@
-export {
+export default {
   addComment,
   deleteCommentById,
   deleteReplyByParentId,
@@ -24,14 +24,13 @@ export {
   updateNsfw
 };
 
-const uuid = require('uuid');
+import uuid from 'uuid';
 
 // db
-const db = require('./mySql');
+import { query } from '@db/mySql';
 
 // constants
-const commentsConstants = require('@constants/comments');
-const COMMENTS_CONSTANTS = commentsConstants.COMMENTS_CONSTANTS;
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 // Used for getting a comment or reply
 function getCommentById(commentId: string, accountId: string): Promise<any> {
@@ -44,7 +43,7 @@ function getCommentById(commentId: string, accountId: string): Promise<any> {
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
         WHERE comments.id = ? AND comments.deletion_date IS NULL GROUP BY comments.id`;
   const values = [accountId, accountId, accountId, commentId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getCommentByIdNoAccount(commentId: string): Promise<any> {
@@ -53,7 +52,7 @@ function getCommentByIdNoAccount(commentId: string): Promise<any> {
         FROM comments LEFT JOIN comments_rating ON comments.id = comments_rating.comment_id 
         WHERE comments.id = ? AND comments.deletion_date IS NULL GROUP BY comments.id`;
   const values = [commentId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // postId, accountId, date, limit, type
@@ -90,7 +89,7 @@ function getCommentByPostId(
 
   const sql = selectSql + accountSql + joinSql + orderSql;
   const values = accountValues.concat([postId, new Date(date), limit]);
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getCommentByPostIdNoAccount(
@@ -113,7 +112,7 @@ function getCommentByPostIdNoAccount(
 
   const sql = selectSql + orderSql;
   const values = [postId, new Date(date), limit];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function addComment(
@@ -142,7 +141,7 @@ function addComment(
     0,
     0
   ];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getCommentById(commentId, accountId);
   });
 }
@@ -150,13 +149,13 @@ function addComment(
 function deleteCommentById(commentId: string): Promise<any> {
   const sql = 'UPDATE comments SET deletion_date = ? WHERE id = ?';
   const values = [new Date(), commentId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function deleteReplyByParentId(parentId: string): Promise<any> {
   const sql = 'UPDATE comments SET deletion_date = ? WHERE parent_id = ?';
   const values = [new Date(), parentId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // Add a reply
@@ -187,7 +186,7 @@ function addReply(
     0,
     0
   ];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getCommentById(replyId, accountId);
   });
 }
@@ -226,7 +225,7 @@ function getRepliesByCommentId(
   const orderSql = `GROUP BY comments.id ORDER BY comments.creation_date ASC LIMIT ?`;
   const sql = selectSql + accountSql + joinSql + dateSql + orderSql;
   replyValues = replyValues.concat([limit]);
-  return db.query(sql, replyValues);
+  return query(sql, replyValues);
 }
 
 // Used for getting just the comments of a post
@@ -258,7 +257,7 @@ function getRepliesUpToDate(
 
   const orderSql = `GROUP BY comments.id ORDER BY comments.creation_date ASC`;
   const sql = selectSql + accountSql + joinSql + dateSql + orderSql;
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // Return the number of comments
@@ -266,7 +265,7 @@ function getNumberOfCommentsForPost(postId: string): Promise<any> {
   const sql =
     'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL';
   const values = [postId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // Return the number of comments before a date
@@ -277,7 +276,7 @@ function getNumberOfCommentsForPostBeforeDate(
   const sql =
     'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL AND creation_date < ?';
   const values = [postId, new Date(date)];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getNumberOfCommentsForPostAfterDate(
@@ -287,7 +286,7 @@ function getNumberOfCommentsForPostAfterDate(
   const sql =
     'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND deletion_date IS NULL AND parent_id IS NULL AND creation_date > ?';
   const values = [postId, new Date(date)];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getNumberOfRepliesForCommentAfterDate(
@@ -298,7 +297,7 @@ function getNumberOfRepliesForCommentAfterDate(
   const sql =
     'SELECT COUNT(*) as total FROM comments WHERE post_id = ? and parent_id = ? AND deletion_date IS NULL AND creation_date > ?';
   const values = [postId, commentId, new Date(date)];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // Return the number of replies for comment for post
@@ -309,34 +308,34 @@ function getNumberOfRepliesForComment(
   const sql =
     'SELECT COUNT(*) as total FROM comments WHERE post_id = ? AND parent_id = ? AND deletion_date IS NULL';
   const values = [postId, commentId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function likeComment(commentId: string, accountId: string): Promise<any> {
   const sql =
     'INSERT INTO comments_rating (id, comment_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 1';
   const values = [uuid.v4(), commentId, accountId, 1];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function dislikeComment(commentId: string, accountId: string): Promise<any> {
   const sql =
     'INSERT INTO comments_rating (id, comment_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 0';
   const values = [uuid.v4(), commentId, accountId, 0];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function unratedComment(commentId: string, accountId: string): Promise<any> {
   const sql =
     'DELETE FROM comments_rating WHERE comment_id = ? AND account_id = ?';
   const values = [commentId, accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getCommentsActivity(
   accountId: string,
-  before: Date,
-  after: Date,
+  before: Date | null,
+  after: Date | null,
   limit: number
 ) {
   const activityDate = new Date();
@@ -360,18 +359,18 @@ function getCommentsActivity(
   }
   sql += ' ORDER BY c1.creation_date DESC LIMIT ?';
   values.push(limit);
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getCommentByLink(link: string, accountId?: string) {
   const sql = 'SELECT id FROM comments WHERE link = ?';
   const values = [link];
   if (accountId) {
-    return db.query(sql, values).then((rows: any) => {
+    return query(sql, values).then((rows: any) => {
       return getCommentById(rows[0].id, accountId);
     });
   } else {
-    return db.query(sql, values).then((rows: any) => {
+    return query(sql, values).then((rows: any) => {
       return getCommentByIdNoAccount(rows[0].id);
     });
   }
@@ -381,7 +380,7 @@ function linkExists(link: string) {
   const sql = 'SELECT link FROM comments WHERE link = ?';
   const values = [link];
 
-  return db.query(sql, values).then((link: any) => {
+  return query(sql, values).then((link: any) => {
     return link.length > 0;
   });
 }
@@ -390,7 +389,7 @@ function checkOwned(postId: string, accountId: string) {
   const sql = 'SELECT count(*) FROM comments WHERE id = ? AND account_id = ?';
   const values = [postId, accountId];
 
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return rows.length > 0;
   });
 }
@@ -399,5 +398,5 @@ function updateNsfw(commentId: string, nsfw: boolean) {
   const sql = 'UPDATE comments SET image_nsfw = ? WHERE id = ?';
   const values = [nsfw, commentId];
 
-  return db.query(sql, values);
+  return query(sql, values);
 }

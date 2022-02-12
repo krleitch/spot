@@ -64,3 +64,25 @@ export class NoAccountError extends SpotError {
     this.name = "NoAccountError";
   }
 }
+
+// 
+export class DeleteFriend extends SpotError {
+  constructor(statusCode: number) {
+    super(FRIENDS_ERROR_MESSAGES.DELETE_FRIEND, statusCode);
+    this.name = "DeleteFriend";
+  }
+}
+
+export class AcceptFriendRequest extends SpotError {
+  constructor(statusCode: number) {
+    super(FRIENDS_ERROR_MESSAGES.ACCEPT_FRIEND_REQUEST, statusCode);
+    this.name = "AcceptFriendRequest";
+  }
+}
+
+export class DeclineFriendRequest extends SpotError {
+  constructor(statusCode: number) {
+    super(FRIENDS_ERROR_MESSAGES.DECLINE_FRIEND_REQUEST, statusCode);
+    this.name = "DeclineFriendRequest";
+  }
+}

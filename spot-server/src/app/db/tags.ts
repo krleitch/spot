@@ -1,8 +1,7 @@
-export { addTag, getTagsByCommentId, TaggedInCommentChain };
+export default { addTag, getTagsByCommentId, TaggedInCommentChain };
 
-const uuid = require('uuid');
-
-const db = require('./mySql');
+import uuid from 'uuid';
+import { query } from '@db/mySql';
 
 function addTag(
   accountId: string,
@@ -13,13 +12,13 @@ function addTag(
   const sql =
     'INSERT INTO tags (id, account_id, comment_id, creation_date, offset) VALUES (?, ?, ?, ?, ?)';
   const values = [tagId, accountId, commentId, new Date(), offset];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getTagsByCommentId(commentId: string): Promise<any> {
   const sql = 'SELECT * FROM tags WHERE comment_id = ? ORDER BY offset ASC';
   const values = [commentId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // the commentId is the parent comment, not a reply
@@ -31,7 +30,7 @@ function TaggedInCommentChain(
                 LEFT JOIN tags t ON t.comment_id = results.id 
                 WHERE t.account_id = ?`;
   const values = [commentId, commentId, accountId];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return rows.length > 0;
   });
 }

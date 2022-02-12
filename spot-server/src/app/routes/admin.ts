@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
 // ratelimiter
-const rateLimiter = require('@helpers/rateLimiter');
+import rateLimiter from '@helpers/rateLimiter';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();

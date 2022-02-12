@@ -1,23 +1,10 @@
-const rateLimit = require('express-rate-limit');
+import rateLimit from 'express-rate-limit';
 
 // See for handler details
 // https://www.npmjs.com/package/express-rate-limit
 
-const RateLimitError = require('@exceptions/rateLimit');
+import { RateLimitError } from '@exceptions/rateLimit';
 
-export {
-  adminLimiter,
-  genericPostLimiter,
-  createCommentLimiter,
-  genericCommentLimiter,
-  createPostLimiter,
-  authenticationLimiter,
-  passwordResetLimiter,
-  tokenLimiter,
-  newPasswordLimiter,
-  genericFriendLimiter,
-  genericNotificationLimiter
-};
 
 // The RateLimitError constructor is (code, limit, timeout)
 
@@ -29,7 +16,7 @@ const adminLimiter = rateLimit({
   max: adminLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(429, adminLimit, adminTimeout)
+      new RateLimitError(429, adminLimit, adminTimeout)
     );
   }
 });
@@ -42,7 +29,7 @@ const genericNotificationLimiter = rateLimit({
   max: genericNotificationLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         genericNotificationLimit,
         genericNotificationTimeout
@@ -59,7 +46,7 @@ const genericFriendLimiter = rateLimit({
   max: genericFriendLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         genericFriendLimit,
         genericFriendTimeout
@@ -76,7 +63,7 @@ const createPostLimiter = rateLimit({
   max: createPostLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(429, createPostLimit, createPostTimeout)
+      new RateLimitError(429, createPostLimit, createPostTimeout)
     );
   },
   skipFailedRequests: true
@@ -89,7 +76,7 @@ const genericPostLimiter = rateLimit({
   max: genericPostLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         genericPostLimit,
         genericPostTimeout
@@ -106,7 +93,7 @@ const createCommentLimiter = rateLimit({
   max: createCommentLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         createCommentLimit,
         createCommentTimeout
@@ -123,7 +110,7 @@ const genericCommentLimiter = rateLimit({
   max: genericCommentLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         genericCommentLimit,
         genericCommentTimeout
@@ -140,7 +127,7 @@ const authenticationLimiter = rateLimit({
   max: authenticationLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         authenticationLimit,
         authenticationTimeout
@@ -157,7 +144,7 @@ const passwordResetLimiter = rateLimit({
   max: passwordResetLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         passwordResetLimit,
         passwordResetTimeout
@@ -174,7 +161,7 @@ const tokenLimiter = rateLimit({
   max: tokenLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(429, tokenLimit, tokenTimeout)
+      new RateLimitError(429, tokenLimit, tokenTimeout)
     );
   },
   skipSuccessfulRequests: true
@@ -187,7 +174,7 @@ const newPasswordLimiter = rateLimit({
   max: newPasswordLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError.RateLimitError(
+      new RateLimitError(
         429,
         newPasswordLimit,
         newPasswordTimeout
@@ -196,3 +183,17 @@ const newPasswordLimiter = rateLimit({
   },
   skipSuccessfulRequests: true
 });
+
+export default {
+  adminLimiter,
+  genericPostLimiter,
+  createCommentLimiter,
+  genericCommentLimiter,
+  createPostLimiter,
+  authenticationLimiter,
+  passwordResetLimiter,
+  tokenLimiter,
+  newPasswordLimiter,
+  genericFriendLimiter,
+  genericNotificationLimiter
+};

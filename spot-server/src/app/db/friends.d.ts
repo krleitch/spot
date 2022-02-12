@@ -1,4 +1,15 @@
-export { getFriends, getFriendRequests, addFriendRequest, acceptFriendRequest, declineFriendRequest, deleteFriendById, friendRequestExists, getFriendsExist, getPendingFriendRequests };
+declare const _default: {
+    getFriends: typeof getFriends;
+    getFriendRequests: typeof getFriendRequests;
+    addFriendRequest: typeof addFriendRequest;
+    acceptFriendRequest: typeof acceptFriendRequest;
+    declineFriendRequest: typeof declineFriendRequest;
+    deleteFriendById: typeof deleteFriendById;
+    friendRequestExists: typeof friendRequestExists;
+    getFriendsExist: typeof getFriendsExist;
+    getPendingFriendRequests: typeof getPendingFriendRequests;
+};
+export default _default;
 declare function getFriends(accountId: string, date: string, limit: string): any;
 declare function getFriendsExist(firstId: string, secondId: string): any;
 declare function deleteFriendById(id: string, accountId: string): any;

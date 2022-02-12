@@ -1,6 +1,6 @@
-export { checkProfanity, checkProfanityIndex };
+export default { checkProfanity, checkProfanityIndex };
 
-const Filter = require('badwords-filter');
+import Filter from 'badwords-filter';
 
 // TODO: languages
 

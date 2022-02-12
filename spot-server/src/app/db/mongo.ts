@@ -1,4 +1,4 @@
-export { initDb };
+export default { initDb };
 
 const mongo = require('mongodb').MongoClient;
 

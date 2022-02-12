@@ -1,7 +1,7 @@
-const aws = require('aws-sdk');
+import aws from 'aws-sdk';
 
 // config
-const awsconfig = require('@config/awskey.json');
+import awsconfig from '@config/awskey';
 
 aws.config.update({
   secretAccessKey: awsconfig.SecretAccessKey,
@@ -16,4 +16,4 @@ const getUrlFromBucket = (fileName: string): string => {
   return 'https://spottables.s3.amazonaws.com/' + fileName;
 };
 
-export { s3, lambda, getUrlFromBucket };
+export default { s3, lambda, getUrlFromBucket };

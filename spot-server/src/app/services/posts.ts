@@ -1,19 +1,18 @@
-export { calcDistance, generateLink, validContent };
+export default { calcDistance, generateLink, validContent };
 
-const shortid = require('shortid');
+import shortid from 'shortid';
 
 // services
-const badwords = require('@services/badwords');
+import badwords from '@services/badwords';
 
 // db
-const posts = require('@db/posts');
+import posts from '@db/posts';
 
 // error
-const PostsError = require('@exceptions/posts');
+import * as PostsError from '@exceptions/posts';
 
 // constants
-const posts_constants = require('@constants/posts');
-const POSTS_CONSTANTS = posts_constants.POSTS_CONSTANTS;
+import { POSTS_CONSTANTS } from '@constants/posts';
 
 async function generateLink(): Promise<string> {
   // Need to make sure the link isnt already taken
@@ -33,7 +32,11 @@ function validContent(content: string): Error | null {
     content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH ||
     content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH
   ) {
-    return new PostsError.InvalidPostLength(400);
+    return new PostsError.InvalidPostLength(
+      400,
+      POSTS_CONSTANTS.MIN_CONTENT_LENGTH,
+      POSTS_CONSTANTS.MAX_CONTENT_LENGTH
+    );
   }
 
   // Only ASCII characters allowed currently

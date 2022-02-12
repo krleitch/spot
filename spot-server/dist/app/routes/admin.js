@@ -1,0 +1,2 @@
+import express from"express";const router=express.Router();import rateLimiter from"@helpers/rateLimiter";router.use(function timeLog(req,res,next){next()});router.get("/",rateLimiter.adminLimiter,function(req,res,next){const accountId=req.user.id;res.status(200).json("Admin")});export default router;
+//# sourceMappingURL=admin.js.map

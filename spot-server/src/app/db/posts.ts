@@ -1,4 +1,4 @@
-export {
+export default {
   getPosts,
   getPostById,
   addPost,
@@ -15,21 +15,17 @@ export {
   updateNsfw
 };
 
-const uuid = require('uuid');
+import uuid from 'uuid';
+import { query } from '@db/mySql';
 
-// db
-const db = require('./mySql');
-
-// constants
-const postConstants = require('@constants/posts');
-const POST_CONSTANTS = postConstants.POSTS_CONSTANTS;
+import { POSTS_CONSTANTS } from '@constants/posts';
 
 function getPosts(
   accountId: string,
   sort: string,
   location: string,
-  latitude: string,
-  longitude: string,
+  latitude: number,
+  longitude: number,
   offset: number,
   limit: number,
   date: string
@@ -93,7 +89,7 @@ function getPosts(
   const sql =
     selectSql + locationSql + dateSql + groupSql + sortSql + limitOffsetSql;
 
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getPostById(postId: string, accountId: string): Promise<any> {
@@ -105,7 +101,7 @@ function getPostById(postId: string, accountId: string): Promise<any> {
                 (CASE WHEN posts.account_id = ? THEN 1 ELSE 0 END) AS owned
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? AND posts.deletion_date IS NULL GROUP BY posts.id ORDER BY posts.creation_date DESC`;
   const values = [accountId, accountId, accountId, postId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getPostByIdNoAccount(postId: string): Promise<any> {
@@ -113,7 +109,7 @@ function getPostByIdNoAccount(postId: string): Promise<any> {
                     posts.image_nsfw, posts.likes, posts.dislikes, posts.comments, posts.geolocation
                 FROM posts LEFT JOIN posts_rating ON posts.id = posts_rating.post_id WHERE posts.id = ? AND posts.deletion_date IS NULL GROUP BY posts.id ORDER BY posts.creation_date DESC`;
   const values = [postId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function addPost(
@@ -143,7 +139,7 @@ function addPost(
     0,
     geolocation
   ];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getPostById(postId, accountId);
   });
 }
@@ -152,32 +148,32 @@ function likePost(postId: string, accountId: string): Promise<any> {
   const sql =
     'INSERT INTO posts_rating (id, post_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 1';
   const values = [uuid.v4(), postId, accountId, 1];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function dislikePost(postId: string, accountId: string): Promise<any> {
   const sql =
     'INSERT INTO posts_rating (id, post_id, account_id, rating) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = 0';
   const values = [uuid.v4(), postId, accountId, 0];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function unratedPost(postId: string, accountId: string): Promise<any> {
   const sql = 'DELETE FROM posts_rating WHERE post_id = ? AND account_id = ?';
   const values = [postId, accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function deletePost(id: string): Promise<any> {
   const sql = 'UPDATE posts SET deletion_date = ? WHERE id = ?';
   const values = [new Date(), id];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getPostCreator(postId: string) {
   const sql = 'SELECT account_id from posts WHERE id = ?';
   const values = [postId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getPostByLink(link: string, accountId?: string) {
@@ -185,11 +181,11 @@ function getPostByLink(link: string, accountId?: string) {
   const values = [link];
 
   if (accountId) {
-    return db.query(sql, values).then((rows: any) => {
+    return query(sql, values).then((rows: any) => {
       return getPostById(rows[0].id, accountId);
     });
   } else {
-    return db.query(sql, values).then((rows: any) => {
+    return query(sql, values).then((rows: any) => {
       return getPostByIdNoAccount(rows[0].id);
     });
   }
@@ -198,12 +194,12 @@ function getPostByLink(link: string, accountId?: string) {
 // Activity
 function getPostsActivity(
   accountId: string,
-  before: Date,
-  after: Date,
+  before: Date | null,
+  after: Date | null,
   limit: number
 ) {
   const activityDate = new Date();
-  activityDate.setDate(activityDate.getDate() - POST_CONSTANTS.ACTIVITY_DAYS);
+  activityDate.setDate(activityDate.getDate() - POSTS_CONSTANTS.ACTIVITY_DAYS);
   let sql = `SELECT id, creation_date, longitude, latitude, geolocation, content,
                 link, image_src, image_nsfw, likes, dislikes, comments FROM posts
                 WHERE account_id = ? AND creation_date > ? AND deletion_date IS NULL`;
@@ -218,7 +214,7 @@ function getPostsActivity(
   }
   sql += ` ORDER BY creation_date DESC LIMIT ?`;
   values.push(limit);
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // Check existance
@@ -226,7 +222,7 @@ function linkExists(link: string) {
   const sql = 'SELECT link FROM posts WHERE link = ?';
   const values = [link];
 
-  return db.query(sql, values).then((link: any) => {
+  return query(sql, values).then((link: any) => {
     return link.length > 0;
   });
 }
@@ -235,7 +231,7 @@ function checkOwned(postId: string, accountId: string) {
   const sql = 'SELECT count(*) FROM posts WHERE id = ? AND account_id = ?';
   const values = [postId, accountId];
 
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return rows.length > 0;
   });
 }
@@ -244,5 +240,5 @@ function updateNsfw(postId: string, nsfw: boolean) {
   const sql = 'UPDATE posts SET image_nsfw = ? WHERE id = ?';
   const values = [nsfw, postId];
 
-  return db.query(sql, values);
+  return query(sql, values);
 }

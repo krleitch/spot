@@ -1,4 +1,4 @@
-export {
+export default {
   getFriends,
   getFriendRequests,
   addFriendRequest,
@@ -10,9 +10,8 @@ export {
   getPendingFriendRequests
 };
 
-const uuid = require('uuid');
-
-const db = require('./mySql');
+import uuid from 'uuid';
+import { query } from '@db/mySql';
 
 // use a union because friends are a 1 row mutual relationship
 function getFriends(accountId: string, date: string, limit: string) {
@@ -31,7 +30,7 @@ function getFriends(accountId: string, date: string, limit: string) {
   }
   const sql = selectSql + limitSql;
 
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getFriendsExist(firstId: string, secondId: string) {
@@ -40,14 +39,14 @@ function getFriendsExist(firstId: string, secondId: string) {
                   UNION
                   SELECT * FROM friends WHERE account_id = ? and friend_id = ? AND confirmed_date IS NOT NULL) results LIMIT 1`;
   const values = [firstId, secondId, secondId, firstId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // delete friend
 function deleteFriendById(id: string, accountId: string) {
   const sql = `DELETE FROM friends WHERE id = ? AND (account_id = ? OR friend_id = ?)`;
   const values = [id, accountId, accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // friend requests, account_id is the one who sent the request
@@ -55,7 +54,7 @@ function getFriendRequests(accountId: string) {
   const sql = `SELECT friends.id, friends.creation_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.account_id = accounts.id WHERE friend_id = ? AND friends.confirmed_date IS NULL`;
   const values = [accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // return sent but not yet accepted
@@ -63,7 +62,7 @@ function getPendingFriendRequests(accountId: string) {
   const sql = `SELECT friends.id, friends.creation_date, accounts.username FROM friends
                 LEFT JOIN accounts ON friends.friend_id = accounts.id WHERE account_id = ? AND friends.confirmed_date IS NULL`;
   const values = [accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getFriendsById(id: string) {
@@ -71,7 +70,7 @@ function getFriendsById(id: string) {
                 LEFT JOIN accounts a1 ON friends.friend_id = a1.id
                 LEFT JOIN accounts a2 ON friends.account_id = a2.id WHERE friends.id = ?`;
   const values = [id];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 // Check if you have a friend request from account friendId
@@ -81,14 +80,14 @@ function friendRequestExists(friendId: string, accountId: string) {
                 UNION
                 SELECT * FROM friends WHERE account_id = ? and friend_id = ? AND confirmed_date IS NULL) results LIMIT 1`;
   const values = [friendId, accountId, accountId, friendId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function addFriendRequest(senderId: string, receiverId: string) {
   const friendRequestId = uuid.v4();
   const sql = `Insert INTO friends (id, account_id, friend_id, creation_date, confirmed_date) VALUES (?, ?, ?, ?, ?)`;
   const values = [friendRequestId, senderId, receiverId, new Date(), null];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getFriendsById(friendRequestId);
   });
 }
@@ -96,13 +95,13 @@ function addFriendRequest(senderId: string, receiverId: string) {
 // function deleteFriendRequestsByReceiverId(id: string, accountId: string) {
 //     var sql = `DELETE FROM friend_requests WHERE id = ? AND receiver_id = ?`;
 //     var values = [id, accountId];
-//     return db.query(sql, values);
+//     return query(sql, values);
 // }
 
 function acceptFriendRequest(id: string, accountId: string) {
   const sql = `UPDATE friends SET confirmed_date = ? WHERE id = ? AND friend_id = ? AND confirmed_date IS NULL`;
   const values = [new Date(), id, accountId];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getFriendsById(id);
   });
 }
@@ -110,5 +109,5 @@ function acceptFriendRequest(id: string, accountId: string) {
 function declineFriendRequest(id: string, accountId: string) {
   const sql = `DELETE FROM friends WHERE id = ? AND friend_id = ? AND confirmed_date IS NULL`;
   const values = [id, accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }

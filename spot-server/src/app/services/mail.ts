@@ -1,12 +1,12 @@
 // Mail Service
 
-const nodemailer = require('nodemailer');
-const aws = require('aws-sdk');
-const Email = require('email-templates');
-const path = require('path');
+import nodemailer from 'nodemailer';
+import aws from 'aws-sdk';
+import Email from 'email-templates';
+import path from 'path';
 
 // config
-const awsconfig = require('@config/awskey.json');
+import awsconfig from '@config/awskey';
 
 // TODO: move out of sandbox
 // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html?icmpid=docs_ses_console
@@ -48,4 +48,4 @@ const email = new Email({
   }
 });
 
-export { email };
+export default { email };

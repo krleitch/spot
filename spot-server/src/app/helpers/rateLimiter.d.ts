@@ -1,12 +1,14 @@
-export { adminLimiter, genericPostLimiter, createCommentLimiter, genericCommentLimiter, createPostLimiter, authenticationLimiter, passwordResetLimiter, tokenLimiter, newPasswordLimiter, genericFriendLimiter, genericNotificationLimiter };
-declare const adminLimiter: any;
-declare const genericNotificationLimiter: any;
-declare const genericFriendLimiter: any;
-declare const createPostLimiter: any;
-declare const genericPostLimiter: any;
-declare const createCommentLimiter: any;
-declare const genericCommentLimiter: any;
-declare const authenticationLimiter: any;
-declare const passwordResetLimiter: any;
-declare const tokenLimiter: any;
-declare const newPasswordLimiter: any;
+declare const _default: {
+    adminLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    genericPostLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    createCommentLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    genericCommentLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    createPostLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    authenticationLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    passwordResetLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    tokenLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    newPasswordLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    genericFriendLimiter: import("express-rate-limit").RateLimitRequestHandler;
+    genericNotificationLimiter: import("express-rate-limit").RateLimitRequestHandler;
+};
+export default _default;

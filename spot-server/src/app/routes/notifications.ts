@@ -1,24 +1,24 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
 // db
-const notifications = require('@db/notifications');
-const accounts = require('@db/accounts');
-const friends = require('@db/friends');
+import notifications from '@db/notifications';
+import accounts from '@db/accounts';
+import friends from '@db/friends';
 
 // services
-const commentsService = require('@services/comments');
-const authorization = require('@services/authorization/authorization');
+import commentsService from '@services/comments';
+import authorization from '@services/authorization/authorization';
 
 // ratelimiter
-const rateLimiter = require('@helpers/rateLimiter');
+import rateLimiter from '@helpers/rateLimiter';
 
 // errors
-const NotificationsError = require('@exceptions/notifications');
-const ErrorHandler = require('@helpers/errorHandler');
+import * as NotificationsError from '@exceptions/notifications';
+import ErrorHandler from '@helpers/errorHandler';
 
 // constants
-const roles = require('@services/authorization/roles');
+import roles from '@services/authorization/roles';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -37,47 +37,44 @@ router.get(
     notifications
       .getNotificationByReceiverId(accountId, before, after, limit)
       .then(
-        ErrorHandler.catchAsync(
-          async (rows: any) => {
-            // Add tags to comments and replies
-            for (let i = 0; i < rows.length; i++) {
-              try {
-                if (typeof rows[i].reply_content === 'string') {
-                  rows[i].reply_content =
-                    await commentsService.addTagsToContent(
-                      rows[i].reply_id,
-                      accountId,
-                      rows[i].account_id,
-                      rows[i].reply_content
-                    );
-                } else if (typeof rows[i].comment_content === 'string') {
-                  rows[i].comment_content =
-                    await commentsService.addTagsToContent(
-                      rows[i].comment_id,
-                      accountId,
-                      rows[i].account_id,
-                      rows[i].comment_content
-                    );
-                }
-              } catch (err) {
-                return next(new NotificationsError.GetNotifications(500));
+        async (rows: any) => {
+          // Add tags to comments and replies
+          for (let i = 0; i < rows.length; i++) {
+            try {
+              if (typeof rows[i].reply_content === 'string') {
+                rows[i].reply_content = await commentsService.addTagsToContent(
+                  rows[i].reply_id,
+                  accountId,
+                  rows[i].account_id,
+                  rows[i].reply_content
+                );
+              } else if (typeof rows[i].comment_content === 'string') {
+                rows[i].comment_content =
+                  await commentsService.addTagsToContent(
+                    rows[i].comment_id,
+                    accountId,
+                    rows[i].account_id,
+                    rows[i].comment_content
+                  );
               }
+            } catch (err) {
+              return next(new NotificationsError.GetNotifications(500));
             }
-
-            const response = {
-              notifications: rows,
-              cursor: {
-                before: rows.length > 0 ? rows[0].creation_date : null,
-                after:
-                  rows.length > 0 ? rows[rows.length - 1].creation_date : null
-              }
-            };
-            res.status(200).json(response);
-          },
-          (err: any) => {
-            return next(new NotificationsError.GetNotifications(500));
           }
-        )
+
+          const response = {
+            notifications: rows,
+            cursor: {
+              before: rows.length > 0 ? rows[0].creation_date : null,
+              after:
+                rows.length > 0 ? rows[rows.length - 1].creation_date : null
+            }
+          };
+          res.status(200).json(response);
+        },
+        (err: any) => {
+          return next(new NotificationsError.GetNotifications(500));
+        }
       );
   })
 );
@@ -114,40 +111,29 @@ router.post(
     }
 
     accounts.getAccountByUsername(receiver).then(
-      ErrorHandler.catchAsync(
-        async (receiver: any) => {
-          // The receiving account doesnt exist
-          if (!receiver[0]) {
-            return next(new NotificationsError.SendNotification(500));
-          }
-          receiver = receiver[0];
+      async (receiver: any) => {
+        // The receiving account doesnt exist
+        if (!receiver[0]) {
+          return next(new NotificationsError.SendNotification(500));
+        }
+        receiver = receiver[0];
 
-          // Make sure they are friends
-          await friends.getFriendsExist(accountId, receiver.id).then(
-            (friendExists: any) => {
-              if (!friendExists[0]) {
-                return next(new NotificationsError.SendNotification(500));
-              }
-            },
-            (err: any) => {
+        // Make sure they are friends
+        await friends.getFriendsExist(accountId, receiver.id).then(
+          (friendExists: any) => {
+            if (!friendExists[0]) {
               return next(new NotificationsError.SendNotification(500));
             }
-          );
+          },
+          (err: any) => {
+            return next(new NotificationsError.SendNotification(500));
+          }
+        );
 
-          if (commentId) {
-            notifications
-              .addCommentNotification(accountId, receiver.id, postId, commentId)
-              .then(
-                (rows: any) => {
-                  const response = { notification: rows[0] };
-                  res.status(200).json(response);
-                },
-                (err: any) => {
-                  return next(new NotificationsError.SendNotification(500));
-                }
-              );
-          } else {
-            notifications.addNotification(accountId, receiver.id, postId).then(
+        if (commentId) {
+          notifications
+            .addCommentNotification(accountId, receiver.id, postId, commentId)
+            .then(
               (rows: any) => {
                 const response = { notification: rows[0] };
                 res.status(200).json(response);
@@ -156,12 +142,21 @@ router.post(
                 return next(new NotificationsError.SendNotification(500));
               }
             );
-          }
-        },
-        (err: any) => {
-          return next(new NotificationsError.SendNotification(500));
+        } else {
+          notifications.addNotification(accountId, receiver.id, postId).then(
+            (rows: any) => {
+              const response = { notification: rows[0] };
+              res.status(200).json(response);
+            },
+            (err: any) => {
+              return next(new NotificationsError.SendNotification(500));
+            }
+          );
         }
-      )
+      },
+      (err: any) => {
+        return next(new NotificationsError.SendNotification(500));
+      }
     );
   }
 );

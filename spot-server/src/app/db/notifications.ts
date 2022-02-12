@@ -1,4 +1,4 @@
-export {
+export default {
   getNotificationByReceiverId,
   getNotificationById,
   addNotification,
@@ -11,14 +11,13 @@ export {
   addReplyNotification
 };
 
-const uuid = require('uuid');
-
-const db = require('./mySql');
+import uuid from 'uuid';
+import { query } from '@db/mySql';
 
 function getNotificationByReceiverId(
   receiverId: string,
-  before: Date,
-  after: Date,
+  before: Date | null,
+  after: Date | null,
   limit: number
 ) {
   let sql = `SELECT n.id, n.post_id, n.comment_id, n.reply_id, n.creation_date, n.seen, a.username,
@@ -43,13 +42,13 @@ function getNotificationByReceiverId(
 
   sql += ` ORDER BY n.creation_date DESC LIMIT ?`;
   values.push(limit);
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getNotificationById(id: string) {
   const sql = `SELECT * FROM notifications WHERE id = ?`;
   const values = [id];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function addNotification(senderId: string, receiverId: string, postId: string) {
@@ -63,7 +62,7 @@ function addNotification(senderId: string, receiverId: string, postId: string) {
     postId,
     false
   ];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getNotificationById(notificationId);
   });
 }
@@ -85,7 +84,7 @@ function addCommentNotification(
     commentId,
     false
   ];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getNotificationById(notificationId);
   });
 }
@@ -109,7 +108,7 @@ function addReplyNotification(
     replyId,
     false
   ];
-  return db.query(sql, values).then((rows: any) => {
+  return query(sql, values).then((rows: any) => {
     return getNotificationById(notificationId);
   });
 }
@@ -117,25 +116,25 @@ function addReplyNotification(
 function setNotificationSeen(notificationId: string, accountId: string) {
   const sql = `UPDATE notifications SET seen = true WHERE id = ? AND receiver_id = ?`;
   const values = [notificationId, accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function setAllNotificationsSeen(accountId: string) {
   const sql = `UPDATE notifications SET seen = true WHERE receiver_id = ?`;
   const values = [accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function deleteNotificationById(id: string, accountId: string) {
   const sql = `DELETE FROM notifications WHERE id = ? AND receiver_id = ?`;
   const values = [id, accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function deleteAllNotificationsForAccount(accountId: string) {
   const sql = `DELETE FROM notifications WHERE receiver_id = ?`;
   const values = [accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }
 
 function getNotificationUnreadByReceiverId(accountId: string) {
@@ -148,5 +147,5 @@ function getNotificationUnreadByReceiverId(accountId: string) {
                 WHERE receiver_id = ? AND seen = false AND 
                 c.deletion_date IS NULL AND r.deletion_date IS NULL AND p.deletion_date IS NULL `;
   const values = [accountId];
-  return db.query(sql, values);
+  return query(sql, values);
 }

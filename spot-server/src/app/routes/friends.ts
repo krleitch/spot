@@ -1,24 +1,24 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
 // db
-const friends = require('@db/friends');
-const accounts = require('@db/accounts');
+import friends from '@db/friends';
+import accounts from '@db/accounts';
 
 // ratelimiter
-const rateLimiter = require('@helpers/rateLimiter');
+import rateLimiter from '@helpers/rateLimiter';
 
 // errors
-const FriendsError = require('@exceptions/friends');
-const ErrorHandler = require('@helpers/errorHandler');
-const ERROR_MESSAGES = require('@exceptions/messages');
-const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.ERROR_MESSAGES.MAIN.FRIENDS;
+import * as FriendsError from '@exceptions/friends';
+import ErrorHandler from '@helpers/errorHandler';
+import { ERROR_MESSAGES } from '@exceptions/messages';
+const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.FRIENDS;
 
 // services
-const authorization = require('@services/authorization/authorization');
+import authorization from '@services/authorization/authorization';
 
 // constants
-const roles = require('@services/authorization/roles');
+import roles from '@services/authorization/roles';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -33,7 +33,7 @@ router.get(
     const date = req.query.date;
     const limit = Number(req.query.limit);
 
-    friends.getFriends(accountId, date, limit).then(
+    friends.getFriends(accountId, date, limit.toString()).then(
       (rows: any) => {
         const response = { friends: rows };
         res.status(200).json(response);
@@ -136,7 +136,6 @@ router.post(
     }
 
     accounts.getAccountByUsername(username).then(
-      ErrorHandler.catchAsync(
         async (receiverId: any) => {
           // No account with this username
           if (receiverId[0] === undefined) {
@@ -227,7 +226,6 @@ router.post(
             new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500)
           );
         }
-      )
     );
   })
 );

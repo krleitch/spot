@@ -9,7 +9,7 @@ const db = mysql.createPool({
 });
 
 // Initialize the db
-function initDb() {
+export function initDb() {
   // db.connect((err: any) => {
   db.getConnection((err: any) => {
     if (err) {
@@ -21,11 +21,11 @@ function initDb() {
 }
 
 // Query the db with the sql string
-function query(sql: string, args: Array<any>) {
+export function query(sql: string, args: Array<any>): Promise<Array<any>> {
   return new Promise((resolve, reject) => {
     db.query(sql, args, (err: any, results: any) => {
       if (err) {
-        return reject(err);
+        return reject([err]);
       }
       resolve(results);
     });
@@ -33,7 +33,7 @@ function query(sql: string, args: Array<any>) {
 }
 
 // Close the db
-function closeDb() {
+export function closeDb() {
   return new Promise((resolve, reject) => {
     db.end((err: any) => {
       if (err) {
@@ -45,13 +45,13 @@ function closeDb() {
 }
 
 // return the db object
-function getDb() {
+export function getDb() {
   return db;
 }
 
-export default {
-  initDb,
-  closeDb,
-  getDb,
-  query
-};
+// export default {
+  // initDb,
+  // closeDb,
+  // getDb,
+  // query
+// };

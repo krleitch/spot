@@ -1,37 +1,36 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const uuid = require('uuid');
+import uuid from 'uuid';
 
 // db
-const posts = require('@db/posts');
-const reports = require('@db/reports');
-const comments = require('@db/comments');
-const accounts = require('@db/accounts');
-const tags = require('@db/tags');
-const notifications = require('@db/notifications');
+import posts from '@db/posts';
+import reports from '@db/reports';
+import comments from '@db/comments';
+import accounts from '@db/accounts';
+import tags from '@db/tags';
+import notifications from '@db/notifications';
 
 // services
-const commentsService = require('@services/comments');
-const imageService = require('@services/image');
-const authorization = require('@services/authorization/authorization');
+import commentsService from '@services/comments';
+import imageService from '@services/image';
+import authorization from '@services/authorization/authorization';
 const singleUpload = imageService.upload.single('image');
 
 // ratelimiter
-const rateLimiter = require('@helpers/rateLimiter');
+import rateLimiter from '@helpers/rateLimiter';
 
 // errors
-const CommentsError = require('@exceptions/comments');
-const AuthenticationError = require('@exceptions/authentication');
-const ErrorHandler = require('@helpers/errorHandler');
+import * as CommentsError from '@exceptions/comments';
+import * as AuthenticationError from '@exceptions/authentication';
+import ErrorHandler from '@helpers/errorHandler';
 
 // constants
-const comments_constants = require('@constants/comments');
-const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
-const roles = require('@services/authorization/roles');
+import { COMMENTS_CONSTANTS } from '@constants/comments';
+import roles from '@services/authorization/roles';
 
 // config
-const config = require('@config/config');
+import config from '@config/config';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -53,38 +52,35 @@ router.get(
     const limit = Number(req.query.limit);
 
     comments.getCommentsActivity(accountId, before, after, limit).then(
-      ErrorHandler.catchAsync(
-        async (activities: any) => {
-          for (let i = 0; i < activities.length; i++) {
-            try {
-              activities[i].content = await commentsService.addTagsToContent(
-                activities[i].id,
-                accountId,
-                activities[i].account_id,
-                activities[i].content
-              );
-            } catch (err) {
-              return next(new CommentsError.CommentActivity(500));
-            }
+      async (activities: any) => {
+        for (let i = 0; i < activities.length; i++) {
+          try {
+            activities[i].content = await commentsService.addTagsToContent(
+              activities[i].id,
+              accountId,
+              activities[i].account_id,
+              activities[i].content
+            );
+          } catch (err) {
+            return next(new CommentsError.CommentActivity(500));
           }
-          const response = {
-            activity: activities,
-            size: activities.length,
-            cursor: {
-              before:
-                activities.length > 0 ? activities[0].creation_date : null,
-              after:
-                activities.length > 0
-                  ? activities[activities.length - 1].creation_date
-                  : null
-            }
-          };
-          res.status(200).json(response);
-        },
-        (err: any) => {
-          return next(new CommentsError.CommentActivity(500));
         }
-      )
+        const response = {
+          activity: activities,
+          size: activities.length,
+          cursor: {
+            before: activities.length > 0 ? activities[0].creation_date : null,
+            after:
+              activities.length > 0
+                ? activities[activities.length - 1].creation_date
+                : null
+          }
+        };
+        res.status(200).json(response);
+      },
+      (err: any) => {
+        return next(new CommentsError.CommentActivity(500));
+      }
     );
   }
 );
@@ -295,24 +291,22 @@ router.get(
       .then(
         (num: any) => {
           posts.getPostCreator(postId).then(
-            ErrorHandler.catchAsync(
-              async (postCreator: any) => {
-                await commentsService.addProfilePicture(
-                  replies,
-                  postCreator[0].account_id
-                );
-                const response = {
-                  postId: postId,
-                  commentId: commentId,
-                  replies: replies,
-                  totalRepliesAfter: num[0].total
-                };
-                res.status(200).json(response);
-              },
-              (err: any) => {
-                return next(new CommentsError.GetReplies(500));
-              }
-            )
+            async (postCreator: any) => {
+              await commentsService.addProfilePicture(
+                replies,
+                postCreator[0].account_id
+              );
+              const response = {
+                postId: postId,
+                commentId: commentId,
+                replies: replies,
+                totalRepliesAfter: num[0].total
+              };
+              res.status(200).json(response);
+            },
+            (err: any) => {
+              return next(new CommentsError.GetReplies(500));
+            }
           );
         },
         (err: any) => {
@@ -345,165 +339,154 @@ router.post(
     const commentId = uuid.v4();
     req.filename = commentId;
 
-    singleUpload(
-      req,
-      res,
-      ErrorHandler.catchAsync(async function (error: any) {
-        // There was an error uploading the image
-        if (error) {
-          return next(new CommentsError.CommentImage(422));
-        }
+    singleUpload(req, res, async function (error: any) {
+      // There was an error uploading the image
+      if (error) {
+        return next(new CommentsError.CommentImage(422));
+      }
 
-        const { content, tagsList, location } = JSON.parse(req.body.json);
-        const image = req.file ? req.file.location : null;
-        const postId = req.params.postId;
+      const { content, tagsList, location } = JSON.parse(req.body.json);
+      const image = req.file ? req.file.location : null;
+      const postId = req.params.postId;
 
-        // Check you are in range of the post
-        const inRange = await commentsService.inRange(
-          postId,
-          location.latitude,
-          location.longitude
-        );
-        if (!inRange) {
-          return next(new CommentsError.NotInRange(400));
-        }
+      // Check you are in range of the post
+      const inRange = await commentsService.inRange(
+        postId,
+        location.latitude,
+        location.longitude
+      );
+      if (!inRange) {
+        return next(new CommentsError.NotInRange(400));
+      }
 
-        // check if line length matches
-        if (
-          content.split(/\r\n|\r|\n/).length >
-          COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-        ) {
-          return next(
-            new CommentsError.InvalidCommentLineLength(
-              400,
-              COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-            )
-          );
-        }
-
-        // You must either have some text or an image
-        if (content.length === 0 && !image && tagsList.length === 0) {
-          return next(new CommentsError.NoCommentContent(400));
-        }
-
-        const contentError = commentsService.validContent(content);
-        if (contentError) {
-          return next(contentError);
-        }
-
-        const link = await commentsService.generateLink();
-        let imageNsfw = false;
-        if (config.testNsfwLocal && image) {
-          try {
-            imageNsfw = await imageService.predictNsfw(image);
-          } catch (err) {
-            // err
-          }
-        }
-
-        comments
-          .addComment(
-            commentId,
-            postId,
-            accountId,
-            content,
-            image,
-            imageNsfw,
-            link,
-            commentId
+      // check if line length matches
+      if (
+        content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
+      ) {
+        return next(
+          new CommentsError.InvalidCommentLineLength(
+            400,
+            COMMENTS_CONSTANTS.MAX_LINE_LENGTH
           )
-          .then(
-            ErrorHandler.catchAsync(
-              async (comment: any) => {
-                // async test nsfw
-                if (config.testNsfwLambda && image) {
-                  imageService.predictNsfwLambda(image).then(
-                    (result: any) => {
+        );
+      }
+
+      // You must either have some text or an image
+      if (content.length === 0 && !image && tagsList.length === 0) {
+        return next(new CommentsError.NoCommentContent(400));
+      }
+
+      const contentError = commentsService.validContent(content);
+      if (contentError) {
+        return next(contentError);
+      }
+
+      const link = await commentsService.generateLink();
+      let imageNsfw = false;
+      if (config.testNsfwLocal && image) {
+        try {
+          imageNsfw = await imageService.predictNsfw(image);
+        } catch (err) {
+          // err
+        }
+      }
+
+      comments
+        .addComment(
+          commentId,
+          postId,
+          accountId,
+          content,
+          image,
+          imageNsfw,
+          link,
+          commentId
+        )
+        .then(
+          async (comment: any) => {
+            // async test nsfw
+            if (config.testNsfwLambda && image) {
+              imageService.predictNsfwLambda(image).then(
+                (result: any) => {
+                  if (
+                    Object.prototype.hasOwnProperty.call(
+                      result,
+                      'StatusCode'
+                    ) &&
+                    result.StatusCode === 200
+                  ) {
+                    const payload = JSON.parse(result.Payload);
+                    if (payload.statusCode === 200) {
+                      const predict = JSON.parse(payload.body);
                       if (
                         Object.prototype.hasOwnProperty.call(
-                          result,
-                          'StatusCode'
-                        ) &&
-                        result.StatusCode === 200
+                          predict,
+                          'className'
+                        )
                       ) {
-                        const payload = JSON.parse(result.Payload);
-                        if (payload.statusCode === 200) {
-                          const predict = JSON.parse(payload.body);
-                          if (
-                            Object.prototype.hasOwnProperty.call(
-                              predict,
-                              'className'
-                            )
-                          ) {
-                            const isNsfw =
-                              predict.className === 'Porn' ||
-                              predict.className === 'Hentai';
-                            comments.updateNsfw(commentId, isNsfw);
-                          }
-                        }
+                        const isNsfw =
+                          predict.className === 'Porn' ||
+                          predict.className === 'Hentai';
+                        comments.updateNsfw(commentId, isNsfw);
                       }
-                    },
-                    (err: any) => {}
-                  );
-                }
-
-                // Add tags and send notifications
-                for (let index = 0; index < tagsList.length; index++) {
-                  try {
-                    const account = await accounts.getAccountByUsername(
-                      tagsList[index].username
-                    );
-                    await tags.addTag(
-                      account[0].id,
-                      comment[0].id,
-                      Math.min(tagsList[index].offset, content.length)
-                    );
-                    await notifications.addCommentNotification(
-                      accountId,
-                      account[0].id,
-                      comment[0].post_id,
-                      comment[0].id
-                    );
-                  } catch (err) {
-                    return next(new CommentsError.AddComment(500));
-                  }
-                }
-
-                // Add tags to our comment
-                await commentsService.getTags(comment, accountId).then(
-                  (taggedComments: any) => {
-                    comment = taggedComments;
-                  },
-                  (err: any) => {
-                    return next(new CommentsError.AddComment(500));
-                  }
-                );
-
-                // Add profile picture and send
-                posts.getPostCreator(postId).then(
-                  ErrorHandler.catchAsync(
-                    async (postCreator: any) => {
-                      await commentsService.addProfilePicture(
-                        comment,
-                        postCreator[0].account_id
-                      );
-                      res
-                        .status(200)
-                        .json({ postId: postId, comment: comment[0] });
-                    },
-                    (err: any) => {
-                      return next(new CommentsError.AddComment(500));
                     }
-                  )
+                  }
+                },
+                (err: any) => {}
+              );
+            }
+
+            // Add tags and send notifications
+            for (let index = 0; index < tagsList.length; index++) {
+              try {
+                const account = await accounts.getAccountByUsername(
+                  tagsList[index].username
                 );
+                await tags.addTag(
+                  account[0].id,
+                  comment[0].id,
+                  Math.min(tagsList[index].offset, content.length)
+                );
+                await notifications.addCommentNotification(
+                  accountId,
+                  account[0].id,
+                  comment[0].post_id,
+                  comment[0].id
+                );
+              } catch (err) {
+                return next(new CommentsError.AddComment(500));
+              }
+            }
+
+            // Add tags to our comment
+            await commentsService.getTags(comment, accountId).then(
+              (taggedComments: any) => {
+                comment = taggedComments;
               },
               (err: any) => {
                 return next(new CommentsError.AddComment(500));
               }
-            )
-          );
-      })
-    );
+            );
+
+            // Add profile picture and send
+            posts.getPostCreator(postId).then(
+              async (postCreator: any) => {
+                await commentsService.addProfilePicture(
+                  comment,
+                  postCreator[0].account_id
+                );
+                res.status(200).json({ postId: postId, comment: comment[0] });
+              },
+              (err: any) => {
+                return next(new CommentsError.AddComment(500));
+              }
+            );
+          },
+          (err: any) => {
+            return next(new CommentsError.AddComment(500));
+          }
+        );
+    });
   })
 );
 
@@ -529,175 +512,166 @@ router.post(
     const replyId = uuid.v4();
     req.filename = replyId;
 
-    singleUpload(
-      req,
-      res,
-      ErrorHandler.catchAsync(async function (err: any) {
-        if (err) {
-          return next(new CommentsError.CommentImage(422));
-        }
+    singleUpload(req, res, async function (err: any) {
+      if (err) {
+        return next(new CommentsError.CommentImage(422));
+      }
 
-        const { content, tagsList, commentParentId, location } = JSON.parse(
-          req.body.json
-        );
-        const image = req.file ? req.file.location : null;
+      const { content, tagsList, commentParentId, location } = JSON.parse(
+        req.body.json
+      );
+      const image = req.file ? req.file.location : null;
 
-        const postId = req.params.postId;
-        const commentId = req.params.commentId;
+      const postId = req.params.postId;
+      const commentId = req.params.commentId;
 
-        // Check you are either in range, or were tagged in the comment chain
-        const inRange = await commentsService.inRange(
-          postId,
-          location.latitude,
-          location.longitude
-        );
-        const isTagged = await tags.TaggedInCommentChain(
-          commentParentId,
-          accountId
-        );
-        if (!inRange && !isTagged) {
-          return next(new CommentsError.NotTagged(400));
-        } else if (!inRange) {
-          return next(new CommentsError.NotInRange(400));
-        }
+      // Check you are either in range, or were tagged in the comment chain
+      const inRange = await commentsService.inRange(
+        postId,
+        location.latitude,
+        location.longitude
+      );
+      const isTagged = await tags.TaggedInCommentChain(
+        commentParentId,
+        accountId
+      );
+      if (!inRange && !isTagged) {
+        return next(new CommentsError.NotTagged(400));
+      } else if (!inRange) {
+        return next(new CommentsError.NotInRange(400));
+      }
 
-        // check if line length matches
-        if (
-          content.split(/\r\n|\r|\n/).length >
-          COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-        ) {
-          return next(
-            new CommentsError.InvalidCommentLineLength(
-              400,
-              COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-            )
-          );
-        }
-
-        // You must either have some text or an image
-        if (content.length === 0 && !image && tagsList.length === 0) {
-          return next(new CommentsError.NoCommentContent(400));
-        }
-
-        const contentError = commentsService.validContent(content);
-        if (contentError) {
-          return next(contentError);
-        }
-
-        const link = await commentsService.generateLink();
-        let imageNsfw = false;
-        if (config.testNsfwLocal && image) {
-          try {
-            imageNsfw = await imageService.predictNsfw(image);
-          } catch (err) {
-            // err
-          }
-        }
-
-        comments
-          .addReply(
-            replyId,
-            postId,
-            commentId,
-            commentParentId,
-            accountId,
-            content,
-            image,
-            imageNsfw,
-            link
+      // check if line length matches
+      if (
+        content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
+      ) {
+        return next(
+          new CommentsError.InvalidCommentLineLength(
+            400,
+            COMMENTS_CONSTANTS.MAX_LINE_LENGTH
           )
-          .then(
-            ErrorHandler.catchAsync(
-              async (reply: any) => {
-                // async test nsfw
-                if (config.testNsfwLambda && image) {
-                  imageService.predictNsfwLambda(image).then(
-                    (result: any) => {
+        );
+      }
+
+      // You must either have some text or an image
+      if (content.length === 0 && !image && tagsList.length === 0) {
+        return next(new CommentsError.NoCommentContent(400));
+      }
+
+      const contentError = commentsService.validContent(content);
+      if (contentError) {
+        return next(contentError);
+      }
+
+      const link = await commentsService.generateLink();
+      let imageNsfw = false;
+      if (config.testNsfwLocal && image) {
+        try {
+          imageNsfw = await imageService.predictNsfw(image);
+        } catch (err) {
+          // err
+        }
+      }
+
+      comments
+        .addReply(
+          replyId,
+          postId,
+          commentId,
+          commentParentId,
+          accountId,
+          content,
+          image,
+          imageNsfw,
+          link
+        )
+        .then(
+          async (reply: any) => {
+            // async test nsfw
+            if (config.testNsfwLambda && image) {
+              imageService.predictNsfwLambda(image).then(
+                (result: any) => {
+                  if (
+                    Object.prototype.hasOwnProperty.call(
+                      result,
+                      'StatusCode'
+                    ) &&
+                    result.StatusCode === 200
+                  ) {
+                    const payload = JSON.parse(result.Payload);
+                    if (payload.statusCode === 200) {
+                      const predict = JSON.parse(payload.body);
                       if (
                         Object.prototype.hasOwnProperty.call(
-                          result,
-                          'StatusCode'
-                        ) &&
-                        result.StatusCode === 200
+                          predict,
+                          'className'
+                        )
                       ) {
-                        const payload = JSON.parse(result.Payload);
-                        if (payload.statusCode === 200) {
-                          const predict = JSON.parse(payload.body);
-                          if (
-                            Object.prototype.hasOwnProperty.call(
-                              predict,
-                              'className'
-                            )
-                          ) {
-                            const isNsfw =
-                              predict.className === 'Porn' ||
-                              predict.className === 'Hentai';
-                            comments.updateNsfw(replyId, isNsfw);
-                          }
-                        }
+                        const isNsfw =
+                          predict.className === 'Porn' ||
+                          predict.className === 'Hentai';
+                        comments.updateNsfw(replyId, isNsfw);
                       }
-                    },
-                    (err: any) => {}
-                  );
-                }
-
-                // Add tags
-                for (let index = 0; index < tagsList.length; index++) {
-                  try {
-                    const account = await accounts.getAccountByUsername(
-                      tagsList[index].username
-                    );
-                    await tags.addTag(
-                      account[0].id,
-                      reply[0].id,
-                      Math.min(tagsList[index].offset, content.length)
-                    );
-                    await notifications.addReplyNotification(
-                      accountId,
-                      account[0].id,
-                      reply[0].post_id,
-                      reply[0].parent_id,
-                      reply[0].id
-                    );
-                  } catch (err) {
-                    return next(new CommentsError.AddComment(500));
-                  }
-                }
-
-                // add tags to content
-                await commentsService
-                  .getTags(reply, accountId)
-                  .then((taggedComments: any) => {
-                    reply = taggedComments;
-                  });
-
-                posts.getPostCreator(postId).then(
-                  ErrorHandler.catchAsync(
-                    async (postCreator: any) => {
-                      await commentsService.addProfilePicture(
-                        reply,
-                        postCreator[0].account_id
-                      );
-                      const response = {
-                        postId: postId,
-                        commentId: commentId,
-                        reply: reply[0]
-                      };
-                      res.status(200).json(response);
-                    },
-                    (err: any) => {
-                      return next(new CommentsError.AddComment(500));
                     }
-                  )
+                  }
+                },
+                (err: any) => {}
+              );
+            }
+
+            // Add tags
+            for (let index = 0; index < tagsList.length; index++) {
+              try {
+                const account = await accounts.getAccountByUsername(
+                  tagsList[index].username
                 );
+                await tags.addTag(
+                  account[0].id,
+                  reply[0].id,
+                  Math.min(tagsList[index].offset, content.length)
+                );
+                await notifications.addReplyNotification(
+                  accountId,
+                  account[0].id,
+                  reply[0].post_id,
+                  reply[0].parent_id,
+                  reply[0].id
+                );
+              } catch (err) {
+                return next(new CommentsError.AddComment(500));
+              }
+            }
+
+            // add tags to content
+            await commentsService
+              .getTags(reply, accountId)
+              .then((taggedComments: any) => {
+                reply = taggedComments;
+              });
+
+            posts.getPostCreator(postId).then(
+              async (postCreator: any) => {
+                await commentsService.addProfilePicture(
+                  reply,
+                  postCreator[0].account_id
+                );
+                const response = {
+                  postId: postId,
+                  commentId: commentId,
+                  reply: reply[0]
+                };
+                res.status(200).json(response);
               },
               (err: any) => {
                 return next(new CommentsError.AddComment(500));
               }
-            )
-          );
-      })
-    );
+            );
+          },
+          (err: any) => {
+            return next(new CommentsError.AddComment(500));
+          }
+        );
+    });
   })
 );
 
@@ -724,7 +698,7 @@ router.delete(
           owned ||
           authorization.checkRole(req.user, [roles.owner, roles.admin])
         ) {
-          comments.deleteCommentById(commentId, accountId).then(
+          comments.deleteCommentById(commentId).then(
             (rows: any) => {
               comments.deleteReplyByParentId(commentId).then(
                 (rows: any) => {
@@ -775,7 +749,7 @@ router.delete(
           owned ||
           authorization.checkRole(req.user, [roles.owner, roles.admin])
         ) {
-          comments.deleteCommentById(commentId, accountId).then(
+          comments.deleteCommentById(commentId).then(
             (rows: any) => {
               const response = {
                 postId: postId,

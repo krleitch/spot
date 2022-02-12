@@ -1,4 +1,7 @@
-declare const s3: any;
-declare const lambda: any;
-declare const getUrlFromBucket: (fileName: string) => string;
-export { s3, lambda, getUrlFromBucket };
+import aws from 'aws-sdk';
+declare const _default: {
+    s3: aws.S3;
+    lambda: aws.Lambda;
+    getUrlFromBucket: (fileName: string) => string;
+};
+export default _default;

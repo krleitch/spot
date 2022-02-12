@@ -1,4 +1,4 @@
-export {
+export default {
   addProfilePicture,
   getTags,
   addTagsToContent,
@@ -7,35 +7,38 @@ export {
   inRange
 };
 
-const shortid = require('shortid');
+import shortid from 'shortid';
 
 // services
-const badwords = require('@services/badwords');
-const locations = require('@services/locations');
-const aws = require('@services/aws');
+import badwords from '@services/badwords';
+import locations from '@services/locations';
+import aws from '@services/aws';
 
 // db
-const posts = require('@db/posts');
-const comments = require('@db/comments');
-const accounts = require('@db/accounts');
-const tags = require('@db/tags');
+import posts from '@db/posts';
+import comments from '@db/comments';
+import accounts from '@db/accounts';
+import tags from '@db/tags';
 
 // error
-const CommentsError = require('@exceptions/comments');
+import * as CommentsError from '@exceptions/comments';
 
 // constants
-const comments_constants = require('@constants/comments');
-const COMMENTS_CONSTANTS = comments_constants.COMMENTS_CONSTANTS;
+import { COMMENTS_CONSTANTS } from '@constants/comments';
 
 // sources
-const profileImages = require('@helpers/profileImages');
+import profileImages from '@helpers/profileImages';
 
 function validContent(content: string): Error | null {
   if (
     content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ||
     content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH
   ) {
-    return new CommentsError.InvalidCommentLength(400);
+    return new CommentsError.InvalidCommentLength(
+      400,
+      COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH,
+      COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH
+    );
   }
 
   // Only ASCII characters allowed currently

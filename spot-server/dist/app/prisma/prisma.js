@@ -1,0 +1,2 @@
+import{PrismaClient}from"@prisma/client";let prisma;function initPrismaClient(){prisma=new PrismaClient}function disconnectPrismaClient(){prisma.$disconnect()}function getPrismaClient(){return prisma}export default{initPrismaClient,disconnectPrismaClient,getPrismaClient};
+//# sourceMappingURL=prisma.js.map

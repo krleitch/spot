@@ -1,34 +1,50 @@
-require('module-alias/register');
-const express = require('express');
+// import 'module-alias/register.js';
+
+// import moduleAlias from 'module-alias';
+
+// console.log(__dirname + "./build/app/routes");
+
+// moduleAlias.addAliases({
+//   "@models": __dirname + "../../../spot-commons/build/models",
+//   "@exceptions": __dirname + "../../../spot-commons/build/exceptions",
+//   "@constants": __dirname + "../../../spot-commons/build/constants",
+//   "@db": __dirname + "/db",
+//   "@routes": __dirname + "/routes",
+//   "@services": __dirname + "/services",
+//   "@helpers": __dirname + "/helpers",
+//   "@config": __dirname + "../config"
+// });
+
+import express from 'express';
 const app = express();
 
-const bodyParser = require('body-parser');
-const Cors = require('cors');
-const rfs = require('rotating-file-stream');
-const morgan = require('morgan');
-const path = require('path');
+import bodyParser from 'body-parser';
+import Cors from 'cors';
+import rfs from 'rotating-file-stream';
+import morgan from 'morgan';
+import path from 'path';
 
 // Routes
-const posts = require('@routes/posts');
-const root = require('@routes/root');
-const accounts = require('@routes/accounts');
-const comments = require('@routes/comments');
-const notifications = require('@routes/notifications');
-const friends = require('@routes/friends');
-const auth = require('@routes/authentication');
-const admin = require('@routes/admin');
+import posts from '@routes/posts';
+import root from '@routes/root';
+import accounts from '@routes/accounts';
+import comments from '@routes/comments';
+import notifications from '@routes/notifications';
+import friends from '@routes/friends';
+import auth from '@routes/authentication';
+import admin from '@routes/admin';
 
 // Db
-const mySql = require('@db/mySql');
-// const mongo = require('@db/mongo');
+import * as mySql from '@db/mySql';
+// import mongo from '@db/mongo';
 
 // Utils
-const errorHandler = require('@helpers/errorHandler');
-const passport = require('@services/authentication/passport');
-const authentication = require('@services/authentication/authentication');
-const locationService = require('@services/locations');
-const authorization = require('@services/authorization/authorization');
-const roles = require('@services/authorization/roles');
+import errorHandler from '@helpers/errorHandler';
+import passport from '@services/authentication/passport';
+import authentication from '@services/authentication/authentication';
+import locationService from '@services/locations';
+import authorization from '@services/authorization/authorization';
+import roles from '@services/authorization/roles';
 
 const port = process.env.PORT || 3000;
 
@@ -86,18 +102,18 @@ app.use(
 // Error middleware
 app.use(errorHandler.errorMiddleware);
 
-app.listen(port, (err: any) => {
-  if (err) {
-    console.log('Error listening: ', err);
-    mySql.closeDb().then(
-      () => {
-        console.log('Terminated connection to Db');
-      },
-      (err: any) => {
-        console.log('Error terminating connection to Db', err);
-      }
-    );
-  }
+app.listen(port, () => {
+  // if (err) {
+  //   console.log('Error listening: ', err);
+  //   mySql.closeDb().then(
+  //     () => {
+  //       console.log('Terminated connection to Db');
+  //     },
+  //     (err: any) => {
+  //       console.log('Error terminating connection to Db', err);
+  //     }
+  //   );
+  // }
   console.log(`Server is listening on ${port}`);
 });
 

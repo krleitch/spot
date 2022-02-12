@@ -1,23 +1,23 @@
-export { upload, predictNsfw, predictNsfwLambda };
 
-const aws = require('@services/aws');
-const axios = require('axios');
+
+import aws from '@services/aws';
+import axios from 'axios';
 
 // s3 upload
-const multer = require('multer');
-const multerS3 = require('multer-s3');
+import multer from 'multer';
+import multerS3 from 'multer-s3';
 
 // nsfwjs
-// const tf = require('@tensorflow/tfjs-node');
+// import tf from '@tensorflow/tfjs-node';
 
 // config
-const config = require('@config/config');
+import config from '@config/config';
 
 // TODO: check env
 // if  ( config.production ) {
 // tf.enableProdMode();
 // }
-// const nsfw = require('nsfwjs');
+// import nsfw from 'nsfwjs';
 let model: any;
 // nsfw.load().then((m: any) => {
 // console.log('Nsfwjs Model Loaded');
@@ -108,3 +108,5 @@ async function predictNsfwLambda(imgUrl: string): Promise<any> {
 
   return aws.lambda.invoke(params).promise();
 }
+
+export default { upload, predictNsfw, predictNsfwLambda };

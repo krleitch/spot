@@ -38,7 +38,7 @@ export class SeenAllNotification extends SpotError {
     }
 }
 
-export class DeletelNotification extends SpotError {
+export class DeleteNotification extends SpotError {
     constructor(statusCode: number) {
         super(NOTIFICATIONS_ERROR_MESSAGES.DELETE_NOTIFICATION, statusCode);
         this.name = "DeletelNotification";

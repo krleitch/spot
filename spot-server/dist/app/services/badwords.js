@@ -1,0 +1,2 @@
+export default{checkProfanity,checkProfanityIndex};import Filter from"badwords-filter";const badwordsList=["n1gger","n1gg3r","n1ggers","n1gg3rs","nigger","niggers","chink","chinks","faggot","fag","fags","spick","spicks"];const config={list:badwordsList,cleanWith:"*",useRegex:false};const filter=new Filter(config);function checkProfanity(text){return filter.isUnclean(text)}function checkProfanityIndex(text){const index=filter.getUncleanWordIndexes(text);if(index.length<0){return null}return text.split(/\b\s+/)[index[0]]}
+//# sourceMappingURL=badwords.js.map
