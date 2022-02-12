@@ -176,8 +176,9 @@ export class AuthenticationService {
 
   registerAccountSuccess(response: LoginResponse): void {
     this.addIdToken(response.jwt);
-    if (this.modalService.isOpen('spot-auth-modal')) {
-      this.modalService.close('spot-auth-modal');
+    // TODO, this just chgecks global modal, should check auth modal
+    if (this.modalService.isOpen('global')) {
+      this.modalService.close('global');
       // TODO: refresh the page so u get the updated content form being logged in
     } else {
       this.zone.run(() => {
@@ -192,8 +193,8 @@ export class AuthenticationService {
 
   loginAccountSuccess(response: LoginResponse): void {
     this.addIdToken(response.jwt);
-    if (this.modalService.isOpen('spot-auth-modal')) {
-      this.modalService.close('spot-auth-modal');
+    if (this.modalService.isOpen('global')) {
+      this.modalService.close('global');
     } else {
       this.zone.run(() => {
         this.router.navigateByUrl('/home');
@@ -203,8 +204,8 @@ export class AuthenticationService {
 
   loginFacebookAccountSuccess(response: FacebookLoginResponse): void {
     this.addIdToken(response.jwt);
-    if (this.modalService.isOpen('spot-auth-modal')) {
-      this.modalService.close('spot-auth-modal');
+    if (this.modalService.isOpen('global')) {
+      this.modalService.close('global');
     }
     if (response.created) {
       this.zone.run(() => {
@@ -219,8 +220,8 @@ export class AuthenticationService {
 
   loginGoogleAccountSuccess(response: GoogleLoginResponse): void {
     this.addIdToken(response.jwt);
-    if (this.modalService.isOpen('spot-auth-modal')) {
-      this.modalService.close('spot-auth-modal');
+    if (this.modalService.isOpen('global')) {
+      this.modalService.close('global');
     }
     if (response.created) {
       this.zone.run(() => {
