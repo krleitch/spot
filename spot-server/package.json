@@ -59,7 +59,7 @@
     "typecheck": "tsc --p .",
     "build-typecheck": "npm run typecheck && npm run build",
     "start": "npm run build-typecheck && node ./dist/app/main.js",
-    "dev": "concurrently \"npm run watch\" \"nodemon dist/app/main.js\"",
+    "dev": "concurrently \"tsc -w --p .\" \"npm run watch\" \"nodemon dist/app/main.js\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "lint": "npx eslint 'src/**/*.{js,ts}' --quiet --fix",
