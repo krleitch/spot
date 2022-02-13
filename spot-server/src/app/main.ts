@@ -24,7 +24,9 @@ import admin from '@routes/admin.js';
 
 // Db
 import * as mySql from '@db/mySql.js';
+// import DBClient from '@db/../prisma/prismaClient';
 // import mongo from '@db/mongo.js';
+import testPrisma from '@db/../prisma/user.js';
 
 // Utils
 import errorHandler from '@helpers/errorHandler.js';
@@ -102,6 +104,7 @@ app.listen(port, () => {
   //     }
   //   );
   // }
+  console.log(testPrisma.findUserByUsername('test'));
   console.log(`Server is listening on ${port}`);
 });
 
