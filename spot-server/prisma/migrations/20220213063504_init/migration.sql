@@ -27,7 +27,7 @@ CREATE TYPE "ReportCategory" AS ENUM ('OFFENSIVE', 'HATE', 'MATURE', 'OTHER');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "emailUpdatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "username" VARCHAR(255) NOT NULL,
@@ -50,21 +50,21 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "UserMetadata" (
-    "userMetadataId" TEXT NOT NULL,
+    "userMetadataId" UUID NOT NULL,
     "unitSystem" "UnitSystem" NOT NULL DEFAULT E'IMPERIAL',
     "locationType" "LocationType" NOT NULL DEFAULT E'GLOBAL',
     "searchType" "SearchType" NOT NULL DEFAULT E'HOT',
     "themeWeb" "ThemeWeb" NOT NULL DEFAULT E'LIGHT',
     "matureFilter" BOOLEAN NOT NULL DEFAULT true,
     "score" INTEGER NOT NULL DEFAULT 0,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "UserMetadata_pkey" PRIMARY KEY ("userMetadataId")
 );
 
 -- CreateTable
 CREATE TABLE "Spot" (
-    "spotId" TEXT NOT NULL,
+    "spotId" UUID NOT NULL,
     "longitude" DECIMAL(9,6) NOT NULL,
     "latitude" DECIMAL(9,6) NOT NULL,
     "geolocation" VARCHAR(255) NOT NULL,
@@ -77,14 +77,14 @@ CREATE TABLE "Spot" (
     "totalComments" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" TIMESTAMP(3),
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "Spot_pkey" PRIMARY KEY ("spotId")
 );
 
 -- CreateTable
 CREATE TABLE "Comment" (
-    "commentId" TEXT NOT NULL,
+    "commentId" UUID NOT NULL,
     "content" VARCHAR(400) NOT NULL,
     "link" VARCHAR(14) NOT NULL,
     "imageSrc" VARCHAR(255) NOT NULL,
@@ -93,113 +93,113 @@ CREATE TABLE "Comment" (
     "dislikes" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" TIMESTAMP(3),
-    "userId" TEXT NOT NULL,
-    "parentCommentId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
+    "parentCommentId" UUID NOT NULL,
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("commentId")
 );
 
 -- CreateTable
 CREATE TABLE "SpotRating" (
-    "spotRatingId" TEXT NOT NULL,
+    "spotRatingId" UUID NOT NULL,
     "rating" "SpotRatingType" NOT NULL DEFAULT E'NONE',
-    "spotId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "spotId" UUID NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "SpotRating_pkey" PRIMARY KEY ("spotRatingId")
 );
 
 -- CreateTable
 CREATE TABLE "CommentRating" (
-    "commentRatingId" TEXT NOT NULL,
+    "commentRatingId" UUID NOT NULL,
     "rating" "CommentRatingType" NOT NULL DEFAULT E'NONE',
-    "commentId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "commentId" UUID NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "CommentRating_pkey" PRIMARY KEY ("commentRatingId")
 );
 
 -- CreateTable
 CREATE TABLE "Notification" (
-    "notificationId" TEXT NOT NULL,
+    "notificationId" UUID NOT NULL,
     "type" "NotificationType" NOT NULL DEFAULT E'INFO',
     "content" VARCHAR(255),
     "seen" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "senderId" TEXT NOT NULL,
-    "receiverId" TEXT NOT NULL,
-    "spotId" TEXT,
-    "commentId" TEXT,
-    "replyId" TEXT,
+    "senderId" UUID NOT NULL,
+    "receiverId" UUID NOT NULL,
+    "spotId" UUID,
+    "commentId" UUID,
+    "replyId" UUID,
 
     CONSTRAINT "Notification_pkey" PRIMARY KEY ("notificationId")
 );
 
 -- CreateTable
 CREATE TABLE "Report" (
-    "reportId" TEXT NOT NULL,
+    "reportId" UUID NOT NULL,
     "content" VARCHAR(300) NOT NULL,
     "category" "ReportCategory" NOT NULL DEFAULT E'OFFENSIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "reporterId" TEXT NOT NULL,
-    "spotId" TEXT,
-    "commentId" TEXT,
+    "reporterId" UUID NOT NULL,
+    "spotId" UUID,
+    "commentId" UUID,
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("reportId")
 );
 
 -- CreateTable
 CREATE TABLE "Friend" (
-    "friendId" TEXT NOT NULL,
+    "friendId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "confirmedAt" TIMESTAMP(3),
-    "userId" TEXT NOT NULL,
-    "friendUserId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
+    "friendUserId" UUID NOT NULL,
 
     CONSTRAINT "Friend_pkey" PRIMARY KEY ("friendId")
 );
 
 -- CreateTable
 CREATE TABLE "PasswordReset" (
-    "passwordResetId" TEXT NOT NULL,
+    "passwordResetId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "token" VARCHAR(36) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "PasswordReset_pkey" PRIMARY KEY ("passwordResetId")
 );
 
 -- CreateTable
 CREATE TABLE "VerifyUser" (
-    "verifyUserId" TEXT NOT NULL,
+    "verifyUserId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "token" VARCHAR(36) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "VerifyUser_pkey" PRIMARY KEY ("verifyUserId")
 );
 
 -- CreateTable
 CREATE TABLE "UserLocation" (
-    "userLocationId" TEXT NOT NULL,
+    "userLocationId" UUID NOT NULL,
     "longitude" DECIMAL(9,6) NOT NULL,
     "latitude" DECIMAL(9,6) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "UserLocation_pkey" PRIMARY KEY ("userLocationId")
 );
 
 -- CreateTable
 CREATE TABLE "CommentTag" (
-    "tagId" TEXT NOT NULL,
+    "tagId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "offset" INTEGER NOT NULL,
-    "userId" TEXT NOT NULL,
-    "taggerId" TEXT NOT NULL,
-    "spotId" TEXT NOT NULL,
-    "commentId" TEXT NOT NULL,
-    "commentParentId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
+    "taggerId" UUID NOT NULL,
+    "spotId" UUID NOT NULL,
+    "commentId" UUID NOT NULL,
+    "commentParentId" UUID NOT NULL,
 
     CONSTRAINT "CommentTag_pkey" PRIMARY KEY ("tagId")
 );

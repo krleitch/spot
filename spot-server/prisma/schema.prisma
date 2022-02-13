@@ -19,7 +19,7 @@ enum UserRole {
 }
 
 model User {
-  userId               String          @id @default(uuid())
+  userId               String          @id @default(uuid()) @db.Uuid
   email                String          @unique @db.VarChar(255)
   emailUpdatedAt       DateTime        @default(now())
   username             String          @unique @db.VarChar(255)
@@ -74,7 +74,7 @@ enum ThemeWeb {
 }
 
 model UserMetadata {
-  userMetadataId String       @id @default(uuid())
+  userMetadataId String       @id @default(uuid()) @db.Uuid
   unitSystem     UnitSystem   @default(IMPERIAL)
   locationType   LocationType @default(GLOBAL)
   searchType     SearchType   @default(HOT)
@@ -82,11 +82,11 @@ model UserMetadata {
   matureFilter   Boolean      @default(true)
   score          Int          @default(0)
   user           User         @relation(fields: [userId], references: [userId])
-  userId         String       @unique
+  userId         String       @unique @db.Uuid
 }
 
 model Spot {
-  spotId           String         @id @default(uuid())
+  spotId           String         @id @default(uuid()) @db.Uuid
   longitude        Decimal        @db.Decimal(9, 6)
   latitude         Decimal        @db.Decimal(9, 6)
   geolocation      String         @db.VarChar(255)
@@ -100,7 +100,7 @@ model Spot {
   createdAt        DateTime       @default(now())
   deletedAt        DateTime?
   user             User           @relation(fields: [userId], references: [userId])
-  userId           String
+  userId           String         @db.Uuid
   SpotRating       SpotRating[]   @relation("SpotRating")
   SpotNotification Notification[] @relation("NotificationSpot")
   Report           Report[]       @relation("ReportSpot")
@@ -108,7 +108,7 @@ model Spot {
 }
 
 model Comment {
-  commentId           String          @id @default(uuid())
+  commentId           String          @id @default(uuid()) @db.Uuid
   content             String          @db.VarChar(400)
   link                String          @unique @db.VarChar(14)
   imageSrc            String          @db.VarChar(255)
@@ -118,9 +118,9 @@ model Comment {
   createdAt           DateTime        @default(now())
   deletedAt           DateTime?
   user                User            @relation(fields: [userId], references: [userId])
-  userId              String
+  userId              String          @db.Uuid
   parentComment       Comment         @relation("CommentParent", fields: [parentCommentId], references: [commentId])
-  parentCommentId     String
+  parentCommentId     String          @db.Uuid
   ChildComment        Comment[]       @relation("CommentParent")
   CommentRating       CommentRating[] @relation("CommentRating")
   CommentNotification Notification[]  @relation("NotificationComment")
@@ -137,12 +137,12 @@ enum SpotRatingType {
 }
 
 model SpotRating {
-  spotRatingId String         @id @default(uuid())
+  spotRatingId String         @id @default(uuid()) @db.Uuid
   rating       SpotRatingType @default(NONE)
   spot         Spot           @relation("SpotRating", fields: [spotId], references: [spotId])
-  spotId       String
+  spotId       String         @db.Uuid
   user         User           @relation(fields: [userId], references: [userId])
-  userId       String
+  userId       String         @db.Uuid
 }
 
 enum CommentRatingType {
@@ -152,12 +152,12 @@ enum CommentRatingType {
 }
 
 model CommentRating {
-  commentRatingId String            @id @default(uuid())
+  commentRatingId String            @id @default(uuid()) @db.Uuid
   rating          CommentRatingType @default(NONE)
   comment         Comment           @relation("CommentRating", fields: [commentId], references: [commentId])
-  commentId       String
+  commentId       String            @db.Uuid
   user            User              @relation(fields: [userId], references: [userId])
-  userId          String
+  userId          String            @db.Uuid
 }
 
 enum NotificationType {
@@ -167,21 +167,21 @@ enum NotificationType {
 }
 
 model Notification {
-  notificationId String           @id @default(uuid())
+  notificationId String           @id @default(uuid()) @db.Uuid
   type           NotificationType @default(INFO)
   content        String?          @db.VarChar(255)
   seen           Boolean          @default(false)
   createdAt      DateTime         @default(now())
   sender         User             @relation("NotificationSender", fields: [senderId], references: [userId])
-  senderId       String
+  senderId       String           @db.Uuid
   receiver       User             @relation("NotificationReceiver", fields: [receiverId], references: [userId])
-  receiverId     String
+  receiverId     String           @db.Uuid
   spot           Spot?            @relation("NotificationSpot", fields: [spotId], references: [spotId])
-  spotId         String?
+  spotId         String?          @db.Uuid
   comment        Comment?         @relation("NotificationComment", fields: [commentId], references: [commentId])
-  commentId      String?
+  commentId      String?          @db.Uuid
   reply          Comment?         @relation("NotificationReply", fields: [replyId], references: [commentId])
-  replyId        String?
+  replyId        String?          @db.Uuid
 }
 
 enum ReportCategory {
@@ -192,65 +192,65 @@ enum ReportCategory {
 }
 
 model Report {
-  reportId   String         @id @default(uuid())
+  reportId   String         @id @default(uuid()) @db.Uuid
   content    String         @db.VarChar(300)
   category   ReportCategory @default(OFFENSIVE)
   createdAt  DateTime       @default(now())
   reporter   User           @relation(fields: [reporterId], references: [userId])
-  reporterId String
+  reporterId String         @db.Uuid
   spot       Spot?          @relation("ReportSpot", fields: [spotId], references: [spotId])
-  spotId     String?
+  spotId     String?        @db.Uuid
   comment    Comment?       @relation("ReportComment", fields: [commentId], references: [commentId])
-  commentId  String?
+  commentId  String?        @db.Uuid
 }
 
 model Friend {
-  friendId     String    @id @default(uuid())
-  createdAt    DateTime  @default(now())
+  friendId     String     @id @default(uuid()) @db.Uuid
+  createdAt    DateTime   @default(now())
   confirmedAt  DateTime?
-  user         User      @relation(fields: [userId], references: [userId])
-  userId       String
-  friendUser   User      @relation("FriendUser", fields: [friendUserId], references: [userId])
-  friendUserId String
+  user         User       @relation(fields: [userId], references: [userId])
+  userId       String     @db.Uuid
+  friendUser   User       @relation("FriendUser", fields: [friendUserId], references: [userId])
+  friendUserId String     @db.Uuid
 }
 
 model PasswordReset {
-  passwordResetId String   @id @default(uuid())
+  passwordResetId String   @id @default(uuid()) @db.Uuid
   createdAt       DateTime @default(now())
   token           String   @unique @db.VarChar(36)
   user            User     @relation(fields: [userId], references: [userId])
-  userId          String
+  userId          String   @db.Uuid
 }
 
 model VerifyUser {
-  verifyUserId String   @id @default(uuid())
+  verifyUserId String   @id @default(uuid()) @db.Uuid
   createdAt    DateTime @default(now())
   token        String   @unique @db.VarChar(36)
   user         User     @relation(fields: [userId], references: [userId])
-  userId       String
+  userId       String   @db.Uuid
 }
 
 model UserLocation {
-  userLocationId String   @id @default(uuid())
+  userLocationId String   @id @default(uuid()) @db.Uuid
   longitude      Decimal  @db.Decimal(9, 6)
   latitude       Decimal  @db.Decimal(9, 6)
   createdAt      DateTime @default(now())
   user           User     @relation(fields: [userId], references: [userId])
-  userId         String
+  userId         String   @db.Uuid
 }
 
 model CommentTag {
-  tagId           String   @id @default(uuid())
+  tagId           String   @id @default(uuid()) @db.Uuid
   createdAt       DateTime @default(now())
   offset          Int
   user            User     @relation(fields: [userId], references: [userId])
-  userId          String
+  userId          String   @db.Uuid
   tagger          User     @relation("Tagger", fields: [taggerId], references: [userId])
-  taggerId        String
+  taggerId        String   @db.Uuid
   spot            Spot     @relation("TagSpot", fields: [spotId], references: [spotId])
-  spotId          String
+  spotId          String   @db.Uuid
   comment         Comment  @relation("TagComment", fields: [commentId], references: [commentId])
-  commentId       String
+  commentId       String   @db.Uuid
   commentParent   Comment  @relation("TagCommentParent", fields: [commentParentId], references: [commentId])
-  commentParentId String
+  commentParentId String   @db.Uuid
 }
