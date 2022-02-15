@@ -21,6 +21,16 @@ const selectModelUser = P.Prisma.validator<P.Prisma.UserSelect>()({
   role: true
 });
 
+// Change the prisma enum to the model enum
+const mapToModelEnum = <T>(
+  userWithRole: T & { role: P.UserRole }
+): T & { role: UserRole } => {
+  return {
+    ...userWithRole,
+    role: UserRole[userWithRole.role]
+  };
+};
+
 // Create a new user, with default metadata
 const createUser = async (
   email: string,
@@ -46,34 +56,64 @@ const createUser = async (
     select: selectModelUser
   });
   // Map the schema enum to the user enum
-  return {
-    ...createdUser,
-    role: UserRole[createdUser.role]
-  };
+  return mapToModelEnum(createdUser);
 };
 
-const findUserById = async (
-  userId: string
-): Promise<P.User | null> => {
+const findUserById = async (userId: string): Promise<P.User | null> => {
   const user = await prisma.user.findUnique({
     where: {
       userId: userId
     }
   });
-  if (user) {
-    // Map the schema enum to the user enum
-    return {
-      ...user,
-      role: UserRole[user.role]
-    };
-  } else {
-    return null;
-  }
+  return user ? mapToModelEnum(user) : null;
 };
 
 // Find a user by their username
 // Use for friends / notifications when we don't know id
-const findUserByUsername = async (
+const findUserByUsername = async (username: string): Promise<P.User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      username: username
+    }
+  });
+  return user ? mapToModelEnum(user) : null;
+};
+
+// Check if the email is alrady in use
+// Useful for checking google / facebook associated emails
+const emailExists = async (email: string): Promise<boolean> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  });
+  return !!user;
+};
+
+// Check if the username is alrady in use
+const usernameExists = async (username: string): Promise<boolean> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      username: username
+    }
+  });
+  return !!user;
+};
+
+// Used by passport to get the account on login with local auth
+const findUserByEmailPassport = async (
+  email: string
+): Promise<P.User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  });
+  return user ? mapToModelEnum(user) : null;
+};
+
+// Used by passport to get the account on login with local auth
+const findUserByUsernamePassport = async (
   username: string
 ): Promise<P.User | null> => {
   const user = await prisma.user.findUnique({
@@ -81,69 +121,11 @@ const findUserByUsername = async (
       username: username
     }
   });
-  if (user) {
-    // Map the schema enum to the user enum
-    return {
-      ...user,
-      role: UserRole[user.role]
-    };
-  } else {
-    return null;
-  }
+  return user ? mapToModelEnum(user) : null;
 };
-
-// Check if the email is alrady in use
-// Useful for checking google / facebook associated emails
-const userEmailExists = async (email: string): Promise<boolean> => {
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email
-    }
-  });
-  if (user) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-// Check if the username is alrady in use
-const userUsernameExists = async (username: string): Promise<boolean> => {
-  const user = await prisma.user.findUnique({
-    where: {
-      username: username
-    }
-  });
-  if (user) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-// Used by passport to get the account on login with local auth
-const findUserByEmailPassport = async (email: string): Promise<P.User | null> => {
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email
-    }
-  })
-  return user;
-}
-
-// Used by passport to get the account on login with local auth
-const findUserByUsernamePassport = async (username: string): Promise<P.User | null> => {
-  const user = await prisma.user.findUnique({
-    where: {
-      username: username
-    }
-  })
-  return user;
-}
 
 // soft delete the user
 const softDeleteUser = async (userId: string): Promise<P.User> => {
-
   const user = await findUserById(userId);
   const timestamp = new Date().getTime();
 
@@ -159,16 +141,33 @@ const softDeleteUser = async (userId: string): Promise<P.User> => {
       googleId: `@del:${timestamp}:${user?.googleId}`,
       facebookId: `@del:${timestamp}:${user?.facebookId}`
     }
-  })
-  return updatedUser;
-}
+  });
+  return mapToModelEnum(updatedUser);
+};
+
+const updateUsername = async (
+  userId: string,
+  newUsername: string
+): Promise<User | null> => {
+  const updatedUser = await prisma.user.update({
+    where: {
+      userId: userId
+    },
+    data: {
+      username: newUsername,
+      usernameUpdatedAt: new Date()
+    },
+    select: selectModelUser
+  });
+  return mapToModelEnum(updatedUser);
+};
 
 export default {
   createUser,
   findUserById,
   findUserByUsername,
-  userEmailExists,
-  userUsernameExists,
+  emailExists,
+  usernameExists,
   findUserByEmailPassport,
   findUserByUsernamePassport,
   softDeleteUser
