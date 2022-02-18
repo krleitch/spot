@@ -22,3 +22,7 @@ export interface User {
     role: UserRole;
 }
 
+export interface LocationData {
+  latitude: number;
+  longitude: number;
+}

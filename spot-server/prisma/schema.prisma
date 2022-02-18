@@ -20,14 +20,14 @@ enum UserRole {
 
 model User {
   userId               String          @id @default(uuid()) @db.Uuid
-  email                String          @unique @db.VarChar(255)
-  emailUpdatedAt       DateTime        @default(now())
+  email                String?         @unique @db.VarChar(255)
+  emailUpdatedAt       DateTime?       @default(now())
   username             String          @unique @db.VarChar(255)
   usernameUpdatedAt    DateTime        @default(now())
-  phone                String          @unique @db.VarChar(255)
-  phoneUpdatedAt       DateTime        @default(now())
-  password             String          @db.VarChar(1024)
-  salt                 String          @db.VarChar(256)
+  phone                String?         @unique @db.VarChar(255)
+  phoneUpdatedAt       DateTime?       @default(now())
+  password             String?         @db.VarChar(1024)
+  salt                 String?         @db.VarChar(256)
   role                 UserRole
   profilePictureSrc    String?         @db.VarChar(255)
   facebookId           String?         @unique @db.VarChar(36)
@@ -99,12 +99,13 @@ model Spot {
   totalComments    Int            @default(0)
   createdAt        DateTime       @default(now())
   deletedAt        DateTime?
-  user             User           @relation(fields: [userId], references: [userId])
-  userId           String         @db.Uuid
+  user             User           @relation(fields: [owner], references: [userId])
+  owner            String         @db.Uuid
   SpotRating       SpotRating[]   @relation("SpotRating")
   SpotNotification Notification[] @relation("NotificationSpot")
   Report           Report[]       @relation("ReportSpot")
   CommentTag       CommentTag[]   @relation("TagSpot")
+  Comment          Comment[]      @relation("SpotComment")
 }
 
 model Comment {
@@ -117,10 +118,12 @@ model Comment {
   dislikes            Int             @default(0)
   createdAt           DateTime        @default(now())
   deletedAt           DateTime?
-  user                User            @relation(fields: [userId], references: [userId])
-  userId              String          @db.Uuid
-  parentComment       Comment         @relation("CommentParent", fields: [parentCommentId], references: [commentId])
-  parentCommentId     String          @db.Uuid
+  user                User            @relation(fields: [owner], references: [userId])
+  owner               String          @db.Uuid
+  spot                Spot            @relation("SpotComment", fields: [spotId], references: [spotId])
+  spotId              String          @db.Uuid
+  parentComment       Comment?        @relation("CommentParent", fields: [parentCommentId], references: [commentId])
+  parentCommentId     String?         @db.Uuid
   ChildComment        Comment[]       @relation("CommentParent")
   CommentRating       CommentRating[] @relation("CommentRating")
   CommentNotification Notification[]  @relation("NotificationComment")
@@ -143,6 +146,8 @@ model SpotRating {
   spotId       String         @db.Uuid
   user         User           @relation(fields: [userId], references: [userId])
   userId       String         @db.Uuid
+
+  @@unique([userId, spotId])
 }
 
 enum CommentRatingType {
@@ -158,6 +163,8 @@ model CommentRating {
   commentId       String            @db.Uuid
   user            User              @relation(fields: [userId], references: [userId])
   userId          String            @db.Uuid
+
+  @@unique([userId, commentId])
 }
 
 enum NotificationType {
@@ -205,13 +212,15 @@ model Report {
 }
 
 model Friend {
-  friendId     String     @id @default(uuid()) @db.Uuid
-  createdAt    DateTime   @default(now())
+  friendId     String    @id @default(uuid()) @db.Uuid
+  createdAt    DateTime  @default(now())
   confirmedAt  DateTime?
-  user         User       @relation(fields: [userId], references: [userId])
-  userId       String     @db.Uuid
-  friendUser   User       @relation("FriendUser", fields: [friendUserId], references: [userId])
-  friendUserId String     @db.Uuid
+  user         User      @relation(fields: [userId], references: [userId])
+  userId       String    @db.Uuid
+  friendUser   User      @relation("FriendUser", fields: [friendUserId], references: [userId])
+  friendUserId String    @db.Uuid
+
+  @@unique([userId, friendUserId])
 }
 
 model PasswordReset {
