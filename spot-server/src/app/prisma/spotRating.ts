@@ -4,7 +4,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { SpotRatingType } from '@models/../newModels/spot';
+import { SpotRatingType } from '@models/../newModels/spot.js';
 
 const likeSpot = async (userId: string, spotId: string): Promise<P.SpotRating> => {
   const spotRating = await prisma.spotRating.upsert({

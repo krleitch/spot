@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { CommentRatingType } from '@models/../newModels/comment';
+import { CommentRatingType } from '@models/../newModels/comment.js';
 
 const likeComment = async (
   userId: string,

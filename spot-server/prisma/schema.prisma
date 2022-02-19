@@ -47,7 +47,7 @@ model User {
   Friend               Friend[]
   FriendUser           Friend[]        @relation("FriendUser")
   PasswordReset        PasswordReset[]
-  VerifyUser           VerifyUser[]
+  UserVerify           UserVerify[]
   UserLocation         UserLocation[]
   CommentTag           CommentTag[]
   CommentTagger        CommentTag[]    @relation("Tagger")
@@ -231,8 +231,8 @@ model PasswordReset {
   userId          String   @db.Uuid
 }
 
-model VerifyUser {
-  verifyUserId String   @id @default(uuid()) @db.Uuid
+model UserVerify {
+  userVerifyId String   @id @default(uuid()) @db.Uuid
   createdAt    DateTime @default(now())
   token        String   @unique @db.VarChar(36)
   user         User     @relation(fields: [userId], references: [userId])
