@@ -5,7 +5,7 @@ const prisma = DBClient.instance;
 
 import { Spot } from '@models/../newModels/spot.js';
 import { SearchType, LocationType } from '@models/../newModels/userMetadata';
-import { LocationData } from '@models/../newModels/user';
+import { LocationData } from '@models/../newModels/location.js';
 
 import { SPOT_CONSTANTS } from '@constants/spot.js';
 

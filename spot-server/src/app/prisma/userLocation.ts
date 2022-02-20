@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { LocationData } from '@models/../newModels/user.js';
+import { LocationData } from '@models/../newModels/location.js';
 
 const createLocation = async (
   userId: string,

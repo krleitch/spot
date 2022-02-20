@@ -27,3 +27,22 @@ export interface UserMetadata {
   matureFilter: boolean,
   score: number
 }
+
+// Get
+export interface GetUserMetadataRequest {}
+export interface GetUserMetadataResponse {
+    metadata: UserMetadata;
+}
+
+// Update
+export interface UpdateUserMetadataRequest {
+    unitSystem?: UnitSystem;
+    searchType?: SearchType;
+    locationType?: LocationType;
+    matureFilter?: boolean;
+    themeWeb?: ThemeWeb;
+}
+
+export interface UpdateUserMetadataResponse {
+    metadata: UserMetadata;
+}

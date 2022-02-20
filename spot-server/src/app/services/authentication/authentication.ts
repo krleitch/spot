@@ -206,13 +206,14 @@ async function createUsernameFromEmail(email: string): Promise<string> {
 
 // Update times
 
-function isValidAccountUpdateTime(time: string): boolean {
+function isValidUserUpdateTime(time: Date | null): boolean {
+  if (!time) {
+    return true;
+  }
   // the constant should be a number in hours
   const expire =
     AUTHENTICATION_CONSTANTS.ACCOUNT_UPDATE_TIMEOUT * 60 * 60 * 1000;
-
   const now = new Date();
-
   return now.getTime() - new Date(time).getTime() > expire;
 }
 
@@ -280,5 +281,5 @@ export default {
   isValidToken,
   createUsernameFromEmail,
   verifyGoogleIdToken,
-  isValidAccountUpdateTime
+  isValidUserUpdateTime
 };

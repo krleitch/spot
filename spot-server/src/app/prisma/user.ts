@@ -7,6 +7,7 @@ import { User, UserRole } from '@models/../newModels/user.js';
 
 // The properties that exist on the @model user
 const selectModelUser = P.Prisma.validator<P.Prisma.UserSelect>()({
+  userId: true,
   email: true,
   emailUpdatedAt: true,
   username: true,
@@ -23,8 +24,8 @@ const selectModelUser = P.Prisma.validator<P.Prisma.UserSelect>()({
 
 // Change the prisma enum to the model enum
 const mapToModelEnum = <T>(
-  userWithRole: T & { role: P.UserRole }
-): T & { role: UserRole } => {
+  userWithRole: Omit<T, 'role'> & { role: P.UserRole }
+): Omit<T, 'role'> & { role: UserRole } => {
   return {
     ...userWithRole,
     role: UserRole[userWithRole.role]
@@ -56,16 +57,18 @@ const createUser = async (
     select: selectModelUser
   });
   // Map the schema enum to the user enum
-  return mapToModelEnum(createdUser);
+  return mapToModelEnum<User>(createdUser);
 };
 
-const findUserById = async (userId: string): Promise<P.User | null> => {
+// Returns the client user
+const findUserById = async (userId: string): Promise<User | null> => {
   const user = await prisma.user.findUnique({
     where: {
       userId: userId
-    }
+    },
+    select: selectModelUser
   });
-  return user ? mapToModelEnum(user) : null;
+  return user ? mapToModelEnum<User>(user) : null;
 };
 
 // Also get the user metadata
@@ -78,7 +81,7 @@ const findUserAndMetadataById = async (userId: string): Promise<P.User | null> =
       UserMetadata: true
     }
   });
-  return user ? mapToModelEnum(user) : null;
+  return user ? mapToModelEnum<P.User>(user) : null;
 };
 
 // Find a user by their username
@@ -89,7 +92,7 @@ const findUserByUsername = async (username: string): Promise<P.User | null> => {
       username: username
     }
   });
-  return user ? mapToModelEnum(user) : null;
+  return user ? mapToModelEnum<P.User>(user) : null;
 };
 
 // Check if the email is alrady in use
@@ -113,6 +116,16 @@ const usernameExists = async (username: string): Promise<boolean> => {
   return !!user;
 };
 
+// Check if the username is alrady in use
+const phoneExists = async (phone: string): Promise<boolean> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      phone: phone
+    }
+  });
+  return !!user;
+};
+
 // Used by passport to get the account on login with local auth
 const findUserByEmailPassport = async (
   email: string
@@ -122,7 +135,7 @@ const findUserByEmailPassport = async (
       email: email
     }
   });
-  return user ? mapToModelEnum(user) : null;
+  return user ? mapToModelEnum<P.User>(user) : null;
 };
 
 // Used by passport to get the account on login with local auth
@@ -134,7 +147,7 @@ const findUserByUsernamePassport = async (
       username: username
     }
   });
-  return user ? mapToModelEnum(user) : null;
+  return user ? mapToModelEnum<P.User>(user) : null;
 };
 
 // soft delete the user
@@ -155,7 +168,7 @@ const softDeleteUser = async (userId: string): Promise<P.User> => {
       facebookId: `@del:${timestamp}:${user?.facebookId}`
     }
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<P.User>(updatedUser);
 };
 
 const updateUsername = async (
@@ -172,7 +185,7 @@ const updateUsername = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 const updateEmail = async (
@@ -189,7 +202,7 @@ const updateEmail = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 const updatePhone = async (
@@ -206,7 +219,7 @@ const updatePhone = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 const updatePassword = async (
@@ -222,7 +235,7 @@ const updatePassword = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 const verifyUser = async (
@@ -237,7 +250,7 @@ const verifyUser = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 // Facebook Accounts
@@ -256,7 +269,7 @@ const createFacebookUser = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(createdUser);
+  return mapToModelEnum<User>(createdUser);
 };
 
 const findUserByFacebookId = async (
@@ -268,7 +281,7 @@ const findUserByFacebookId = async (
     },
     select: selectModelUser
   });
-  return user ? mapToModelEnum(user): null;
+  return user ? mapToModelEnum<User>(user): null;
 };
 
 const connectFacebook = async (
@@ -284,7 +297,7 @@ const connectFacebook = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 const disconnectFacebook = async (
@@ -299,7 +312,7 @@ const disconnectFacebook = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 // Google Accounts
@@ -318,7 +331,7 @@ const createGoogleUser = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(createdUser);
+  return mapToModelEnum<User>(createdUser);
 };
 
 const findUserByGoogleId = async (
@@ -330,7 +343,7 @@ const findUserByGoogleId = async (
     },
     select: selectModelUser
   });
-  return user ? mapToModelEnum(user): null;
+  return user ? mapToModelEnum<User>(user): null;
 };
 
 const connectGoogle = async (
@@ -346,7 +359,7 @@ const connectGoogle = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 const disconnectGoogle = async (
@@ -361,7 +374,7 @@ const disconnectGoogle = async (
     },
     select: selectModelUser
   });
-  return mapToModelEnum(updatedUser);
+  return mapToModelEnum<User>(updatedUser);
 };
 
 export default {
@@ -371,6 +384,7 @@ export default {
   findUserByUsername,
   emailExists,
   usernameExists,
+  phoneExists,
   findUserByEmailPassport,
   findUserByUsernamePassport,
   softDeleteUser,

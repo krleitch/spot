@@ -1,28 +1,80 @@
-
 export enum UserRole {
   USER = "USER",
   GUEST = "GUEST",
   MODERATOR = "MODERATOR",
   ADMIN = "ADMIN",
-  OWNER = "OWNER"
+  OWNER = "OWNER",
 }
 
+// Client side user
+// Facebook and Google accounts can possibly be missing several fields
 export interface User {
-    email: string;
-    emailUpdatedAt: Date;
-    username: string;
-    usernameUpdatedAt: Date;
-    phone: string;
-    phoneUpdatedAt: Date;
-    facebookId: string | null;
-    googleId: string | null;
-    verifiedAt: Date | null;
-    createdAt: Date;
-    deletedAt: Date | null;
-    role: UserRole;
+  userId: string;
+  email: string | null;
+  emailUpdatedAt: Date | null;
+  username: string;
+  usernameUpdatedAt: Date;
+  phone: string | null;
+  phoneUpdatedAt: Date | null;
+  facebookId: string | null;
+  googleId: string | null;
+  verifiedAt: Date | null;
+  createdAt: Date;
+  deletedAt: Date | null;
+  role: UserRole;
 }
 
-export interface LocationData {
-  latitude: number;
-  longitude: number;
+// Get
+export interface GetUserRequest {}
+export interface GetUserResponse {
+  user: User;
+}
+
+// Update
+export interface UpdateUsernameRequest {
+  username: string;
+}
+export interface UpdateUsernameResponse {
+  user: User;
+}
+
+export interface UpdateEmailRequest {
+  email: string;
+}
+export interface UpdateEmailResponse {
+  user: User;
+}
+
+export interface UpdatePhoneRequest {
+  phone: string;
+}
+export interface UpdatePhoneResponse {
+  user: User;
+}
+
+// Delete
+export interface DeleteUserRequest {}
+export interface DeleteUserResponse {}
+
+// Facebook and Google
+export interface FacebookConnectRequest {
+  accessToken: string;
+}
+export interface FacebookConnectResponse {
+  user: User;
+}
+export interface FacebookDisconnectRequest {}
+export interface FacebookDisconnectResponse {
+  user: User;
+}
+
+export interface GoogleConnectRequest {
+  accessToken: string;
+}
+export interface GoogleConnectResponse {
+  user: User;
+}
+export interface GoogleDisconnectRequest {}
+export interface GoogleDisconnectResponse {
+  user: User;
 }

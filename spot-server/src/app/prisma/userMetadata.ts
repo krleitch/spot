@@ -26,13 +26,16 @@ const selectModelUserMetadata =
 
 // Change the prisma enum to the model enum
 const mapToModelEnum = <T>(
-  metadataWithProps: T & {
+  metadataWithProps: Omit<
+    T,
+    'unitSystem' | 'locationType' | 'searchType' | 'themeWeb'
+  > & {
     unitSystem: P.UnitSystem;
     locationType: P.LocationType;
     searchType: P.SearchType;
     themeWeb: P.ThemeWeb;
   }
-): T & {
+): Omit<T, 'unitSystem' | 'locationType' | 'searchType' | 'themeWeb'> & {
   unitSystem: UnitSystem;
   locationType: LocationType;
   searchType: SearchType;
@@ -43,7 +46,7 @@ const mapToModelEnum = <T>(
     unitSystem: UnitSystem[metadataWithProps.unitSystem],
     locationType: LocationType[metadataWithProps.locationType],
     searchType: SearchType[metadataWithProps.searchType],
-    themeWeb: ThemeWeb[metadataWithProps.themeWeb],
+    themeWeb: ThemeWeb[metadataWithProps.themeWeb]
   };
 };
 
@@ -61,7 +64,7 @@ const updateUserMetadataUnitSystem = async (
     select: selectModelUserMetadata
   });
   // Map the schema enum to the user enum
-  return mapToModelEnum(updatedMetadata);
+  return mapToModelEnum<UserMetadata>(updatedMetadata);
 };
 
 const updateUserMetadataSearchType = async (
@@ -78,7 +81,7 @@ const updateUserMetadataSearchType = async (
     select: selectModelUserMetadata
   });
   // Map the schema enum to the user enum
-  return mapToModelEnum(updatedMetadata);
+  return mapToModelEnum<UserMetadata>(updatedMetadata);
 };
 
 const updateUserMetadataLocationType = async (
@@ -95,7 +98,7 @@ const updateUserMetadataLocationType = async (
     select: selectModelUserMetadata
   });
   // Map the schema enum to the user enum
-  return mapToModelEnum(updatedMetadata);
+  return mapToModelEnum<UserMetadata>(updatedMetadata);
 };
 
 const updateUserMetadataMatureFilter = async (
@@ -112,7 +115,7 @@ const updateUserMetadataMatureFilter = async (
     select: selectModelUserMetadata
   });
   // Map the schema enum to the user enum
-  return mapToModelEnum(updatedMetadata);
+  return mapToModelEnum<UserMetadata>(updatedMetadata);
 };
 const updateUserMetadataThemeWeb = async (
   userId: string,
@@ -128,7 +131,7 @@ const updateUserMetadataThemeWeb = async (
     select: selectModelUserMetadata
   });
   // Map the schema enum to the user enum
-  return mapToModelEnum(updatedMetadata);
+  return mapToModelEnum<UserMetadata>(updatedMetadata);
 };
 
 export default {

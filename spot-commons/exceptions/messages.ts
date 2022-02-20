@@ -135,8 +135,38 @@ export const ERROR_MESSAGES = {
             SEND_VERIFY: 'Error sending verification email',
             CONFIRM_VERIFY: 'Error confirming email verification'
 
-        }
+        },
     
+        USER: {
+
+            DELETE_USER: 'Error deleting user',
+            GET_USER: 'Error getting user',
+
+            UPDATE_USERNAME: 'Error updating username',
+            UPDATE_USERNAME_TIMEOUT: 'You can only update your username once every 24h',
+            UPDATE_EMAIL: 'Error updating email',
+            UPDATE_EMAIL_TIMEOUT: 'You can only update your email once every 24h',
+            UPDATE_PHONE: 'Error updating phone',
+            UPDATE_PHONE_TIMEOUT: 'You can only update your phone number once every 24h',
+
+            FACEBOOK_CONNECT: 'Error connecting user to facebook',
+            FACEBOOK_CONNECT_EXISTS: 'This facebook user is already connected to a user',
+            FACEBOOK_DISCONNECT: 'Error disconnecting user from facebook',
+            GOOGLE_CONNECT: 'Error connecting user to google',
+            GOOGLE_CONNECT_EXISTS: 'This google user is already connected to a user',
+            GOOGLE_DISCONNECT: 'Error disconnecting user from google',
+
+            GET_METADATA: 'Error getting user metadata',
+            METADATA_DISTANCE_UNIT: 'Error updating metadata distance unit',
+            METADATA_SEARCH_TYPE: 'Error updating metadata search type',
+            METADATA_SEARCH_DISTANCE: 'Error updating metadata search distance',
+            METADATA_MATURE_FILTER: 'Error updating metadata mature filter',
+            METADATA_THEME_WEB: 'Error updating metadata theme web',
+
+            SEND_VERIFY: 'Error sending verification email',
+            CONFIRM_VERIFY: 'Error confirming email verification'
+
+        }
     },
 
     PRE_AUTH: {

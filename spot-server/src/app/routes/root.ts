@@ -1,12 +1,8 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 const router = express.Router();
 
-router.use(function timeLog(req: any, res: any, next: any) {
+router.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
-
-// router.get('/', function (req: any, res: any) {
-//     res.send('Spot');
-// });
 
 export default router;

@@ -15,7 +15,7 @@ import morgan from 'morgan';
 // Routes
 import posts from '@routes/posts.js';
 import root from '@routes/root.js';
-import accounts from '@routes/accounts.js';
+import user from '@routes/user.js';
 import comments from '@routes/comments.js';
 import notifications from '@routes/notifications.js';
 import friends from '@routes/friends.js';
@@ -24,9 +24,6 @@ import admin from '@routes/admin.js';
 
 // Db
 import * as mySql from '@db/mySql.js';
-// import DBClient from '@db/../prisma/prismaClient';
-// import mongo from '@db/mongo.js';
-import testPrisma from '@db/../prisma/user.js';
 
 // Utils
 import errorHandler from '@helpers/errorHandler.js';
@@ -38,8 +35,11 @@ import roles from '@services/authorization/roles.js';
 
 const port = process.env.PORT || 3000;
 
+// ************
+// Setup
+// ************
+
 mySql.initDb();
-// mongo.initDb();
 
 app.use(passport.initialize());
 // app.use(passport.session());
@@ -57,12 +57,17 @@ const accessLogStream = rfs.createStream('access.log', {
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }));
 
+// ************
+// Routes
+// ************
+
 // Unprotected routes
 app.use('/', root);
 app.use('/auth', auth);
 
 // Optional auth, user may or may not be filled check req.authenticated
-// Only check location on posts and comments, only requests that send location details are verified
+// Only check location on posts and comments
+// only requests that send location details are verified
 app.use(
   '/posts',
   authentication.optionalAuth,
@@ -77,7 +82,7 @@ app.use(
 );
 
 // Required Auth
-app.use('/accounts', authentication.requiredAuth, accounts);
+app.use('/accounts', authentication.requiredAuth, user);
 app.use('/notifications', authentication.requiredAuth, notifications);
 app.use('/friends', authentication.requiredAuth, friends);
 
@@ -89,23 +94,14 @@ app.use(
   admin
 );
 
-// // Error middleware
+// Error middleware
 app.use(errorHandler.errorMiddleware);
 
 app.listen(port, () => {
-  // if (err) {
-  //   console.log('Error listening: ', err);
-  //   mySql.closeDb().then(
-  //     () => {
-  //       console.log('Terminated connection to Db');
-  //     },
-  //     (err: any) => {
-  //       console.log('Error terminating connection to Db', err);
-  //     }
-  //   );
-  // }
-  console.log(testPrisma.findUserByUsername('test'));
   console.log(`Server is listening on ${port}`);
+}).on('error', (err: Error) => {
+  console.log(`Error listening`);
 });
 
+// Make this a module
 export {}

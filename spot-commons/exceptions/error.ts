@@ -7,7 +7,7 @@ export class SpotError extends Error {
     // name: string; // Used for reference, make sure same as class name
     body: any; // contains any additional details about the error
 
-    constructor(message: string, statusCode: number) {
+    constructor(message: string, statusCode: number = 500) {
       super(message);
       this.statusCode = statusCode.toString();
       this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
