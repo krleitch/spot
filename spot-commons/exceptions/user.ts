@@ -109,10 +109,10 @@ export class GetMetadata extends SpotError {
     }
 }
 
-export class MetadataDistanceUnit extends SpotError {
-    constructor(statusCode: number) {
-      super(USER_ERROR_MESSAGES.METADATA_DISTANCE_UNIT, statusCode);
-      this.name = "MetadataDistanceUnit";
+export class MetadataUnitSystem extends SpotError {
+    constructor(statusCode: number = 500) {
+      super(USER_ERROR_MESSAGES.METADATA_UNIT_SYSTEM, statusCode);
+      this.name = "MetadataUnitSystem";
     }
 }
 
@@ -123,10 +123,10 @@ export class MetadataSearchType extends SpotError {
     }
 }
 
-export class MetadataSearchDistance extends SpotError {
+export class MetadataLocationType extends SpotError {
     constructor(statusCode: number = 500) {
-      super(USER_ERROR_MESSAGES.METADATA_SEARCH_DISTANCE, statusCode);
-      this.name = "MetadataSearchDistance";
+      super(USER_ERROR_MESSAGES.METADATA_LOCATION_TYPE, statusCode);
+      this.name = "MetadataLocationType";
     }
 }
 

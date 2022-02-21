@@ -50,6 +50,18 @@ const mapToModelEnum = <T>(
   };
 };
 
+const findUserMetadataByUserId = async (
+  userId: string
+): Promise<UserMetadata | null> => {
+  const metadata = await prisma.userMetadata.findUnique({
+    where: {
+      userId: userId
+    },
+    select: selectModelUserMetadata
+  });
+  return metadata ? mapToModelEnum<UserMetadata>(metadata) : null;
+}
+
 const updateUserMetadataUnitSystem = async (
   userId: string,
   unitSystem: UnitSystem
@@ -135,6 +147,7 @@ const updateUserMetadataThemeWeb = async (
 };
 
 export default {
+  findUserMetadataByUserId,
   updateUserMetadataUnitSystem,
   updateUserMetadataSearchType,
   updateUserMetadataLocationType,

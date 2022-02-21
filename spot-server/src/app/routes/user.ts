@@ -4,9 +4,9 @@ const router = express.Router();
 import { pbkdf2Sync } from 'crypto';
 
 // db
-import accounts from '@db/accounts.js';
-import verifyAccount from '@db/verifyAccount.js';
 import prismaUser from '@db/../prisma/user.js';
+import prismaUserMetadata from '@db/../prisma/userMetadata.js';
+import prismaUserVerify from '@db/../prisma/userVerify.js';
 
 // services
 import authenticationService from '@services/authentication/authentication.js';
@@ -15,8 +15,7 @@ import friendsService from '@services/friends.js';
 import mail from '@services/mail.js';
 
 // exceptions
-import * as AuthenticationError from '@exceptions/authentication.js';
-import * as AccountsError from '@exceptions/accounts.js';
+import * as authenticationError from '@exceptions/authentication.js';
 import * as userError from '@exceptions/user.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
@@ -36,13 +35,17 @@ import {
   FacebookDisconnectResponse,
   GoogleConnectRequest,
   GoogleConnectResponse,
-  GoogleDisconnectResponse
+  GoogleDisconnectResponse,
+  VerifyConfirmRequest,
+  VerifyConfirmResponse,
+  VerifyResponse
 } from '@models/../newModels/user.js';
 import {
+  UserMetadata,
   GetUserMetadataResponse,
   UpdateUserMetadataRequest,
   UpdateUserMetadataResponse
-} from '@models/../newModels/userMetadata.js'
+} from '@models/../newModels/userMetadata.js';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
   next();
@@ -116,7 +119,7 @@ router.put(
       }
       const exists = await prismaUser.usernameExists(body.username);
       if (exists) {
-        return next(new AuthenticationError.UsernameTakenError(400));
+        return next(new authenticationError.UsernameTakenError(400));
       }
 
       const updatedUser = await prismaUser.updateUsername(
@@ -151,22 +154,22 @@ router.put(
       }
       const user = await prismaUser.findUserById(userId);
       if (!user) {
-        return next(new AccountsError.UpdateEmail(500));
+        return next(new userError.UpdateEmail());
       }
       const valid = authenticationService.isValidUserUpdateTime(
         user.emailUpdatedAt
       );
       if (!valid) {
-        return next(new AccountsError.UpdateEmailTimeout(500));
+        return next(new userError.UpdateEmailTimeout());
       }
       const exists = await prismaUser.emailExists(body.email);
       if (exists) {
-        return next(new AuthenticationError.EmailTakenError(400));
+        return next(new authenticationError.EmailTakenError(400));
       }
 
       const updatedUser = await prismaUser.updateEmail(userId, body.email);
       if (!updatedUser) {
-        return next(new AccountsError.UpdateEmail(500));
+        return next(new userError.UpdateEmail());
       }
       const response: UpdateEmailResponse = { user: updatedUser };
       res.status(200).json(response);
@@ -204,7 +207,7 @@ router.put(
       }
       const exists = await prismaUser.phoneExists(body.phone);
       if (!exists) {
-        return next(new AuthenticationError.PhoneTakenError(400));
+        return next(new authenticationError.PhoneTakenError(400));
       }
 
       const updatedUser = await prismaUser.updatePhone(userId, body.phone);
@@ -350,208 +353,210 @@ router.post(
   )
 );
 
-// Get account metadata
-router.get('/metadata', ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
-  const userId = req.user?.userId;
+// Get user metadata
+router.get(
+  '/metadata',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = req.user?.userId;
 
-  if (!userId) {
-      return next(new userError.GetMetadata());
-  }
-
-  // Get account metadata
-  accounts.getAccountMetadata(userId).then(
-    (rows: any) => {
-      if (rows.length < 0) {
-        return next(new AccountsError.GetMetadata(500));
+      if (!userId) {
+        return next(new userError.GetMetadata());
       }
-      const response = { metadata: rows[0] };
-      res.status(200).json(response);
-    },
-    (err: any) => {
-      return next(new AccountsError.GetMetadata(500));
-    }
-  );
-}));
 
+      // Get user metadata
+      const metadata = await prismaUserMetadata.findUserMetadataByUserId(
+        userId
+      );
+      if (!metadata) {
+        return next(new userError.GetMetadata());
+      }
+
+      const response: GetUserMetadataResponse = { metadata: metadata };
+      res.status(200).json(response);
+    }
+  )
+);
+
+// Update metadata
 router.put(
   '/metadata',
-  ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
-    const accountId = req.user.id;
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = req.user?.userId;
 
-    if (authorization.checkRole(req.user, [UserRole.GUEST])) {
-      return next(new AccountsError.GetMetadata(500));
-    }
-
-    const {
-      distance_unit,
-      search_type,
-      search_distance,
-      mature_filter,
-      theme_web
-    } = req.body;
-
-    // TODO, really dont like the await strategy here
-    // We only ever change metadata 1 property at a time right now
-    // Will need to be changed later
-
-    if (distance_unit) {
-      await accounts
-        .updateAccountsMetadataDistanceUnit(accountId, distance_unit)
-        .then(
-          (rows: any) => {},
-          (err: any) => {
-            return next(new AccountsError.MetadataDistanceUnit(500));
-          }
-        );
-    }
-
-    if (search_type) {
-      await accounts
-        .updateAccountsMetadataSearchType(accountId, search_type)
-        .then(
-          (rows: any) => {},
-          (err: any) => {
-            return next(new AccountsError.MetadataSearchType(500));
-          }
-        );
-    }
-
-    if (search_distance) {
-      await accounts
-        .updateAccountsMetadataSearchDistance(accountId, search_distance)
-        .then(
-          (rows: any) => {},
-          (err: any) => {
-            return next(new AccountsError.MetadataSearchDistance(500));
-          }
-        );
-    }
-
-    if (typeof mature_filter !== 'undefined') {
-      await accounts
-        .updateAccountsMetadataMatureFilter(accountId, mature_filter)
-        .then(
-          (rows: any) => {},
-          (err: any) => {
-            return next(new AccountsError.MetadataMatureFilter(500));
-          }
-        );
-    }
-
-    if (theme_web) {
-      await accounts.updateAccountsMetadataThemeWeb(accountId, theme_web).then(
-        (rows: any) => {},
-        (err: any) => {
-          return next(new AccountsError.MetadataThemeWeb(500));
-        }
-      );
-    }
-
-    // Get account metadata
-    accounts.getAccountMetadata(accountId).then(
-      (rows: any) => {
-        if (rows.length < 0) {
-          return next(new AccountsError.GetMetadata(500));
-        }
-        const response = { metadata: rows[0] };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new AccountsError.GetMetadata(500));
+      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+        return next(new userError.GetMetadata());
       }
-    );
-  })
+
+      const body: UpdateUserMetadataRequest = req.body;
+      let updatedMetadata: UserMetadata | null = null;
+
+      // TODO
+      // This can be done better
+
+      if (body.unitSystem) {
+        const metadata = await prismaUserMetadata.updateUserMetadataUnitSystem(
+          userId,
+          body.unitSystem
+        );
+        if (!metadata) {
+          return next(new userError.MetadataUnitSystem());
+        }
+        updatedMetadata = metadata;
+      }
+
+      if (body.searchType) {
+        const metadata = await prismaUserMetadata.updateUserMetadataSearchType(
+          userId,
+          body.searchType
+        );
+        if (!metadata) {
+          return next(new userError.MetadataSearchType());
+        }
+        updatedMetadata = metadata;
+      }
+
+      if (body.locationType) {
+        const metadata =
+          await prismaUserMetadata.updateUserMetadataLocationType(
+            userId,
+            body.locationType
+          );
+        if (!metadata) {
+          return next(new userError.MetadataLocationType());
+        }
+        updatedMetadata = metadata;
+      }
+
+      if (typeof body.matureFilter !== 'undefined') {
+        const metadata =
+          await prismaUserMetadata.updateUserMetadataMatureFilter(
+            userId,
+            body.matureFilter
+          );
+        if (!metadata) {
+          return next(new userError.MetadataMatureFilter());
+        }
+        updatedMetadata = metadata;
+      }
+
+      if (body.themeWeb) {
+        const metadata = await prismaUserMetadata.updateUserMetadataThemeWeb(
+          userId,
+          body.themeWeb
+        );
+        if (!metadata) {
+          return next(new userError.MetadataThemeWeb());
+        }
+        updatedMetadata = metadata;
+      }
+
+      // Nothing was updated
+      if (!updatedMetadata) {
+        return next(new userError.GetMetadata());
+      }
+
+      const response: UpdateUserMetadataResponse = {
+        metadata: updatedMetadata
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
-// Verify Account - Send email
+// Verify user
+// The request for a verification which will send an email
 router.post(
   '/verify',
-  ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
-    const accountId = req.user.id;
-
-    const value = new Date().toString() + accountId.toString();
-    const iterations = 10000;
-    const hashLength = 16;
-    const salt = 'salt';
-    const digest = 'sha512';
-    const token = pbkdf2Sync(
-      value,
-      salt,
-      iterations,
-      hashLength,
-      digest
-    ).toString('hex');
-
-    if (authorization.checkRole(req.user, [UserRole.GUEST])) {
-      return next(new AccountsError.SendVerify(500));
-    }
-
-    if (!req.user.email) {
-      return next(new AccountsError.SendVerify(500));
-    }
-
-    // send email with nodemailerm using aws ses transport
-    // TODO, ERROR HANDLE THIS AND OTHER MAIL
-
-    await mail.email.send({
-      template: 'verify',
-      message: {
-        from: 'spottables.app@gmail.com',
-        to: req.user.email
-      },
-      locals: {
-        link: 'https://spottables.com/verify/' + token,
-        username: req.user.username
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !req.user) {
+        return next(new userError.SendVerify());
       }
-    });
 
-    verifyAccount.addVerifyAccount(accountId, token).then(
-      (rows: any) => {
-        res.status(200).json({});
-      },
-      (err: any) => {
-        return next(new AccountsError.SendVerify(500));
+      // create the token
+      const value = new Date().toString() + req.user.userId.toString();
+      const iterations = 10000;
+      const hashLength = 16;
+      const salt = 'salt';
+      const digest = 'sha512';
+      const token = pbkdf2Sync(
+        value,
+        salt,
+        iterations,
+        hashLength,
+        digest
+      ).toString('hex');
+
+      // No email for user
+      if (!req.user.email) {
+        return next(new userError.SendVerify());
       }
-    );
-  })
+
+      // Send email with nodemailer using aws ses transport
+      // TODO: Error handle and make better
+
+      await mail.email.send({
+        template: 'verify',
+        message: {
+          from: 'spottables.app@gmail.com',
+          to: req.user.email
+        },
+        locals: {
+          link: 'https://spottables.com/verify/' + token,
+          username: req.user.username
+        }
+      });
+
+      const createdToken = await prismaUserVerify.createVerifyUser(
+        req.user.userId,
+        token
+      );
+      if (!createdToken) {
+        return next(new userError.SendVerify());
+      }
+      const response: VerifyResponse = {};
+      res.status(200).json(response);
+    }
+  )
 );
 
-// Verify Account confirmation
-router.post('/verify/confirm', function (req: any, res: any, next: any) {
-  const accountId = req.user.id;
-  const { token } = req.body;
+// Verify User confirmation using token
+router.post(
+  '/verify/confirm',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = req.user?.userId;
+      const body: VerifyConfirmRequest = req.body;
 
-  if (authorization.checkRole(req.user, [UserRole.GUEST])) {
-    return next(new AccountsError.ConfirmVerify(500));
-  }
-
-  // Add record to verify account
-  verifyAccount.getByToken(accountId, token).then(
-    (rows: any) => {
-      if (rows.length > 0) {
-        // check valid expirary date
-        if (!authenticationService.isValidToken(rows[0])) {
-          return next(new AccountsError.ConfirmVerify(499));
-        }
-
-        const verifiedDate = new Date();
-        accounts.verifyAccount(rows[0].account_id, verifiedDate).then(
-          (r: any) => {
-            const response = { account: r[0] };
-            res.status(200).send(response);
-          },
-          (err: any) => {
-            return next(new AccountsError.ConfirmVerify(500));
-          }
-        );
-      } else {
-        return next(new AccountsError.ConfirmVerify(500));
+      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+        return next(new userError.ConfirmVerify());
       }
-    },
-    (err: any) => {
-      return next(new AccountsError.ConfirmVerify(500));
+
+      // Add record to verify account
+      const userVerify = await prismaUserVerify.findByToken(body.token);
+      if (!userVerify) {
+        return next(new userError.ConfirmVerify());
+      }
+
+      // check valid expirary date and correct user
+      if (
+        !authenticationService.isValidToken(userVerify) ||
+        userVerify.userId !== userId
+      ) {
+        return next(new userError.ConfirmVerify(499));
+      }
+
+      const verifiedUser = await prismaUser.verifyUser(userId);
+      if (!verifiedUser) {
+        return next(new userError.ConfirmVerify());
+      }
+
+      const response: VerifyConfirmResponse = { user: verifiedUser };
+      res.status(200).send(response);
     }
-  );
-});
+  )
+);
 
 export default router;

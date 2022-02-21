@@ -78,3 +78,14 @@ export interface GoogleDisconnectRequest {}
 export interface GoogleDisconnectResponse {
   user: User;
 }
+
+// User verification
+export interface VerifyRequest {}
+export interface VerifyResponse {}
+
+export interface VerifyConfirmRequest {
+  token: string;
+}
+export interface VerifyConfirmResponse {
+  user: User;
+}

@@ -157,9 +157,9 @@ export const ERROR_MESSAGES = {
             GOOGLE_DISCONNECT: 'Error disconnecting user from google',
 
             GET_METADATA: 'Error getting user metadata',
-            METADATA_DISTANCE_UNIT: 'Error updating metadata distance unit',
+            METADATA_UNIT_SYSTEM: 'Error updating metadata unit system',
             METADATA_SEARCH_TYPE: 'Error updating metadata search type',
-            METADATA_SEARCH_DISTANCE: 'Error updating metadata search distance',
+            METADATA_LOCATION_TYPE: 'Error updating metadata location type',
             METADATA_MATURE_FILTER: 'Error updating metadata mature filter',
             METADATA_THEME_WEB: 'Error updating metadata theme web',
 
