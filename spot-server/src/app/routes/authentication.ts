@@ -1,116 +1,134 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 import shortid from 'shortid';
 
 // exceptions
-import * as AuthError from '@exceptions/authentication.js';
+import * as authenticationError from '@exceptions/authentication.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // db
 import accounts from '@db/accounts.js';
 import passwordReset from '@db/passwordReset.js';
+import prismaUser from '@db/../prisma/user.js';
+import prismaPasswordReset from '@db/../prisma/passwordReset.js';
 
 // services
-import authentication from '@services/authentication/authentication.js';
+import authenticationService from '@services/authentication/authentication.js';
 import authorization from '@services/authorization/authorization.js';
 import friendsService from '@services/friends.js';
-import mail from '@services/mail.js';
+import mailService from '@services/mail.js';
 
 // ratelimiter
 import rateLimiter from '@helpers/rateLimiter.js';
 
-// constants
-import roles from '@services/authorization/roles.js';
+// models
+import { UserRole } from '@models/../newModels/user.js';
+import {
+  RegisterRequest,
+  RegisterResponse,
+  LoginRequest,
+  LoginResponse,
+  FacebookLoginRequest,
+  FacebookLoginResponse,
+  GoogleLoginRequest,
+  GoogleLoginResponse,
+  PasswordResetRequest,
+  PasswordResetResponse,
+  ValidateTokenRequest,
+  ValidateTokenResponse,
+  NewPasswordRequest,
+  NewPasswordResponse
+} from '@models/../newModels/authentication.js';
 
-router.use(function timeLog(req: any, res: any, next: any) {
+router.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Register for a new account
+// Register a new user
 router.post(
   '/register',
   rateLimiter.authenticationLimiter,
-  function (req: any, res: any, next: any) {
-    const { email, username, password, phone } = req.body;
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: RegisterRequest = req.body;
 
-    // Validation
-
-    const emailError = authentication.validEmail(email);
-    if (emailError) {
-      return next(emailError);
-    }
-
-    const usernameError = authentication.validUsername(username);
-    if (usernameError) {
-      return next(usernameError);
-    }
-
-    const passwordError = authentication.validPassword(password);
-    if (passwordError) {
-      return next(passwordError);
-    }
-
-    const phoneError = authentication.validPhone(phone);
-    if (phoneError) {
-      return next(phoneError);
-    }
-
-    const salt = authentication.generateSalt();
-    const hash = authentication.hashPassword(password, salt);
-
-    accounts.addAccount(email, username, hash, phone, salt).then(
-      (account: any) => {
-        accounts.addAccountMetadata(account[0].id).then(
-          (rows: any) => {
-            const user = account[0];
-            const token = authentication.generateToken(user);
-            res.status(200).json({
-              jwt: { token: token, expiresIn: 7 },
-              account: user
-            });
-          },
-          (err: any) => {
-            return next(new AuthError.Register(500));
-          }
-        );
-      },
-      (err: any) => {
-        // A duplicate exists
-        if (err.code === 'ER_DUP_ENTRY') {
-          // get the column name for the duplicate from the message
-          const column = err.sqlMessage
-            .match(/'.*?'/g)
-            .slice(-1)[0]
-            .replace(/[']+/g, '');
-
-          if (column == 'email') {
-            return next(new AuthError.EmailTakenError(400));
-          } else if (column == 'username') {
-            return next(new AuthError.UsernameTakenError(400));
-          } else if (column == 'phone') {
-            return next(new AuthError.PhoneTakenError(400));
-          }
-        }
-
-        return next(new AuthError.Register(500));
+      // Validation
+      const emailError = authenticationService.validEmail(body.email);
+      if (emailError) {
+        return next(emailError);
       }
-    );
-  }
+      const usernameError = authenticationService.validUsername(body.username);
+      if (usernameError) {
+        return next(usernameError);
+      }
+      const passwordError = authenticationService.validPassword(body.password);
+      if (passwordError) {
+        return next(passwordError);
+      }
+      const phoneError = authenticationService.validPhone(body.phone);
+      if (phoneError) {
+        return next(phoneError);
+      }
+
+      // Exists already
+      const emailExists = await prismaUser.emailExists(body.email);
+      if (emailExists) {
+        return next(new authenticationError.EmailTakenError(400));
+      }
+      const usernameExists = await prismaUser.usernameExists(body.username);
+      if (usernameExists) {
+        return next(new authenticationError.UsernameTakenError(400));
+      }
+      const phoneExists = await prismaUser.phoneExists(body.phone);
+      if (phoneExists) {
+        return next(new authenticationError.PhoneTakenError(400));
+      }
+
+      const salt = authenticationService.generateSalt();
+      const passwordHash = authenticationService.hashPassword(
+        body.password,
+        salt
+      );
+
+      const user = await prismaUser.createUser(
+        body.email,
+        body.username,
+        passwordHash,
+        body.phone,
+        salt
+      );
+      if (!user) {
+        return next(new authenticationError.RegisterError());
+      }
+
+      const token = authenticationService.generateToken(user);
+      const response: RegisterResponse = {
+        jwt: { token: token, expiresIn: 7 },
+        user: user
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
 // Get a user token, use passport local authentication
 router.post(
   '/login',
   rateLimiter.authenticationLimiter,
-  authentication.localAuth,
-  function (req: any, res: any) {
+  authenticationService.localAuth,
+  function (req: Request, res: Response, next: NextFunction) {
     const user = req.user;
-    const token = authentication.generateToken(user);
-    res.status(200).json({
+    if (!user) {
+      return next(new authenticationError.LoginError());
+    }
+
+    const token = authenticationService.generateToken(user);
+    const response: LoginResponse = {
       jwt: { token: token, expiresIn: 7 },
-      account: user
-    });
+      user: user
+    };
+    res.status(200).json(response);
   }
 );
 
@@ -118,299 +136,237 @@ router.post(
 router.post(
   '/login/facebook',
   rateLimiter.authenticationLimiter,
-  function (req: any, res: any, next: any) {
-    const { accessToken } = req.body;
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: FacebookLoginRequest = req.body;
 
-    if (!req.body) {
-      return next(new AuthError.FacebookSignUpError(500));
-    }
-
-    authentication.getFacebookDetails(accessToken).then(
-      (facebookDetails: any) => {
-        accounts.getFacebookAccount(facebookDetails.body.id).then(
-          async (user: any) => {
-            if (user.length == 0) {
-              const username = await authentication.createUsernameFromEmail(
-                facebookDetails.body.email
-              );
-              let email = facebookDetails.body.email;
-
-              // if email is used
-              // do not assign automatically because of errors if email isnt verified by facebook
-              await accounts.getAccountByEmail(email).then(
-                (rows: any) => {
-                  if (rows.length > 0) {
-                    email = null;
-                  }
-                },
-                (err: any) => {}
-              );
-
-              // create the account
-              accounts
-                .addFacebookAccount(facebookDetails.body.id, email, username)
-                .then(
-                  (user2: any) => {
-                    accounts.addAccountMetadata(user2[0].id).then(
-                      (rows: any) => {
-                        user2 = user2[0];
-                        const token = authentication.generateToken(user2);
-
-                        // add facebook friends
-                        friendsService
-                          .addFacebookFriends(accessToken, user2.id)
-                          .then(
-                            (friends: any) => {
-                              res.status(200).json({
-                                created: true,
-                                jwt: { token: token, expiresIn: 7 },
-                                account: user2
-                              });
-                            },
-                            (err: any) => {
-                              // couldnt add your friends
-                              res.status(200).json({
-                                created: true,
-                                jwt: { token: token, expiresIn: 7 },
-                                account: user2
-                              });
-                            }
-                          );
-                      },
-                      (err: any) => {
-                        return next(new AuthError.FacebookSignUpError(500));
-                      }
-                    );
-                  },
-                  (err: any) => {
-                    return next(new AuthError.FacebookSignUpError(500));
-                  }
-                );
-            } else {
-              // account already exists
-              user = user[0];
-              const token = authentication.generateToken(user);
-              res.status(200).json({
-                created: false,
-                jwt: { token: token, expiresIn: 7 },
-                account: user
-              });
-            }
-          },
-          (err: any) => {
-            return next(new AuthError.FacebookSignUpError(500));
-          }
-        );
-      },
-      (err: any) => {
-        return next(new AuthError.FacebookSignUpError(500));
+      if (!req.body) {
+        return next(new authenticationError.FacebookSignUpError());
       }
-    );
-  }
+
+      const facebookDetails = await authenticationService.getFacebookDetails(
+        body.accessToken
+      );
+      if (!facebookDetails) {
+        return next(new authenticationError.FacebookSignUpError());
+      }
+      const facebookUser = await prismaUser.findUserByFacebookId(
+        facebookDetails.body.id
+      );
+      if (!facebookUser) {
+        // Create the user
+        const username = await authenticationService.createUsernameFromEmail(
+          facebookDetails.body.email
+        );
+        // check if email exists first
+        let email = facebookDetails.body.email;
+        const emailExists = await prismaUser.emailExists(email);
+        if (emailExists) {
+          email = null;
+        }
+        const createdUser = await prismaUser.createFacebookUser(
+          facebookDetails.body.id,
+          email,
+          username
+        );
+        if (!createdUser) {
+          return next(new authenticationError.FacebookSignUpError());
+        }
+        // add facebook friends
+        friendsService.addFacebookFriends(body.accessToken, createdUser.userId);
+        // return the user
+        const token = authenticationService.generateToken(createdUser);
+        const response: FacebookLoginResponse = {
+          created: true,
+          jwt: { token: token, expiresIn: 7 },
+          user: createdUser
+        };
+        res.status(200).json(response);
+      } else {
+        // User already exists
+        const token = authenticationService.generateToken(facebookUser);
+        const response: FacebookLoginResponse = {
+          created: false,
+          jwt: { token: token, expiresIn: 7 },
+          user: facebookUser
+        };
+        res.status(200).json(response);
+      }
+    }
+  )
 );
 
 // Google Login
 router.post(
   '/login/google',
   rateLimiter.authenticationLimiter,
-  ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
-    const { accessToken } = req.body;
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: GoogleLoginRequest = req.body;
 
-    try {
-      const ticket = await authentication.verifyGoogleIdToken(accessToken);
+      try {
+        const ticket = await authenticationService.verifyGoogleIdToken(
+          body.accessToken
+        );
+        const payload = ticket.getPayload();
+        const googleid = payload['sub'];
 
-      const payload = ticket.getPayload();
-      const userid = payload['sub'];
-      let email = payload['email'];
-
-      // if email is used
-      // do not assign automatically because of errors if email isnt verified by google
-      await accounts.getAccountByEmail(email).then(
-        (rows: any) => {
-          if (rows.length > 0) {
+        const googleUser = await prismaUser.findUserByGoogleId(googleid);
+        if (!googleUser) {
+          // create the user
+          let email = payload['email'];
+          const username = await authenticationService.createUsernameFromEmail(
+            email
+          );
+          const emailExists = await prismaUser.emailExists(email);
+          if (emailExists) {
             email = null;
           }
-        },
-        (err: any) => {}
-      );
 
-      // make or retrieve account
-      accounts.getGoogleAccount(userid).then(
-        async (user: any) => {
-          if (user.length == 0) {
-            const username = await authentication.createUsernameFromEmail(
-              email
-            );
-
-            // create the account
-            accounts.addGoogleAccount(userid, email, username).then(
-              (user2: any) => {
-                accounts.addAccountMetadata(user2[0].id).then(
-                  (rows: any) => {
-                    user2 = user2[0];
-                    const token = authentication.generateToken(user2);
-
-                    res.status(200).json({
-                      created: true,
-                      jwt: { token: token, expiresIn: 7 },
-                      account: user2
-                    });
-                  },
-                  (err: any) => {
-                    return next(new AuthError.GoogleSignUpError(500));
-                  }
-                );
-              },
-              (err: any) => {
-                return next(new AuthError.GoogleSignUpError(500));
-              }
-            );
-          } else {
-            // account already exists
-            user = user[0];
-            const token = authentication.generateToken(user);
-            res.status(200).json({
-              created: false,
-              jwt: { token: token, expiresIn: 7 },
-              account: user
-            });
+          const createdUser = await prismaUser.createGoogleUser(
+            googleid,
+            email,
+            username
+          );
+          if (!createdUser) {
+            return next(new authenticationError.GoogleSignUpError());
           }
-        },
-        (err: any) => {
-          return next(new AuthError.GoogleSignUpError(500));
+          const token = authenticationService.generateToken(createdUser);
+          const response: GoogleLoginResponse = {
+            created: true,
+            jwt: { token: token, expiresIn: 7 },
+            user: createdUser
+          };
+          res.status(200).json(response);
+        } else {
+          // The user already exists
+          const token = authenticationService.generateToken(googleUser);
+          const response: GoogleLoginResponse = {
+            created: false,
+            jwt: { token: token, expiresIn: 7 },
+            user: googleUser
+          };
+          res.status(200).json(response);
         }
-      );
-    } catch (err) {
-      return next(new AuthError.GoogleSignUpError(500));
+      } catch (err) {
+        return next(new authenticationError.GoogleSignUpError());
+      }
     }
-  })
+  )
 );
 
 // password reset
 router.post(
   '/password-reset',
   rateLimiter.passwordResetLimiter,
-  function (req: any, res: any, next: any) {
-    const { email } = req.body;
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: PasswordResetRequest = req.body;
 
-    accounts.getAccountByEmail(email).then(
-      async (rows: any) => {
-        if (rows.length > 0) {
-          // generate the token
-          const token = shortid.generate();
-
-          // Send email with nodemailer and aws ses transport
-          await mail.email.send(
-            {
-              template: 'password',
-              message: {
-                from: 'spottables.app@gmail.com',
-                to: rows[0].email
-              },
-              locals: {
-                link: 'https://spottables.com/new-password',
-                token: token.toString(),
-                username: rows[0].username
-              }
-            }
-          );
-
-          console.log('meex2');
-          passwordReset.addPasswordReset(rows[0].id, token).then(
-            (r: any) => {
-              res.status(200).send({});
-            },
-            (err: any) => {
-              return next(new AuthError.PasswordReset(500));
-            }
-          );
-        } else {
-          // No account
-          res.status(200).send({});
-        }
-      },
-      (err: any) => {
-        return next(new AuthError.PasswordReset(500));
+      const user = await prismaUser.findUserByEmail(body.email);
+      if (!user || !user.email) {
+        return next(new authenticationError.PasswordReset());
       }
-    );
-  }
+
+      // generate the token
+      const token = shortid.generate();
+
+      // Send email with nodemailer and aws ses transport
+      await mailService.email.send({
+        template: 'password',
+        message: {
+          from: 'spottables.app@gmail.com',
+          to: user.email
+        },
+        locals: {
+          link: 'https://spottables.com/new-password',
+          token: token.toString(),
+          username: user.username
+        }
+      });
+
+      const passwordReset = await prismaPasswordReset.createPasswordReset(
+        user.userId,
+        token
+      );
+      if (!passwordReset) {
+        return next(new authenticationError.PasswordReset());
+      }
+      const response: PasswordResetResponse = {};
+      res.status(200).send(response);
+    }
+  )
 );
 
 // checks if a token for password reset exists and is valid
 router.post(
   '/new-password/validate',
   rateLimiter.tokenLimiter,
-  function (req: any, res: any, next: any) {
-    const { token } = req.body;
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: ValidateTokenRequest = req.body;
 
-    passwordReset.getByToken(token).then(
-      (rows: any) => {
-        if (rows.length > 0) {
-          if (authentication.isValidToken(rows[0])) {
-            res.status(200).send({ token: token, valid: true });
-          } else {
-            // Token expired
-            return next(new AuthError.PasswordResetValidate(400));
-          }
-        } else {
-          // No token exists
-          return next(new AuthError.PasswordResetValidate(400));
-        }
-      },
-      (err: any) => {
-        return next(new AuthError.PasswordResetValidate(400));
+      const passwordReset = await prismaPasswordReset.findByToken(body.token);
+      if (!passwordReset) {
+        return next(new authenticationError.PasswordResetValidate());
       }
-    );
-  }
+      if (authenticationService.isValidToken(passwordReset.token)) {
+        const response: ValidateTokenResponse = {};
+        res.status(200).send(response);
+      } else {
+        // Token expired
+        return next(new authenticationError.PasswordResetValidate());
+      }
+    }
+  )
 );
 
 // password reset
 router.post(
   '/new-password',
   rateLimiter.newPasswordLimiter,
-  function (req: any, res: any, next: any) {
-    const { password, token } = req.body;
+  ErrorHandler.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const body: NewPasswordRequest = req.body;
 
-    passwordReset.getByToken(token).then(
-      (rows: any) => {
-        if (rows.length > 0 && authentication.isValidToken(rows[0])) {
-          const passwordError = authentication.validPassword(password);
-          if (passwordError) {
-            return next(passwordError);
-          }
+    const passwordReset = await prismaPasswordReset.findByToken(body.token);
+    if (!passwordReset) {
+      return next(new authenticationError.NewPassword());
+    }
+    if (!authenticationService.isValidToken(passwordReset.token)) {
+      return next(new authenticationError.NewPassword());
+    }
 
-          const salt = authentication.generateSalt();
-          const hash = authentication.hashPassword(password, salt);
+    // validate the password
+    const passwordError = authenticationService.validPassword(body.password);
+    if (passwordError) {
+      return next(passwordError);
+    }
 
-          accounts.getAccountById(rows[0].account_id).then(
-            (users: any) => {
-              if (authorization.checkRole(users[0], [roles.guest])) {
-                return next(new AuthError.NewPassword(500));
-              }
-
-              accounts.changePassword(rows[0].account_id, hash, salt).then(
-                (r: any) => {
-                  res.status(200).send({ reset: true });
-                },
-                (err: any) => {
-                  return next(new AuthError.NewPassword(500));
-                }
-              );
-            },
-            (err: any) => {
-              return next(new AuthError.NewPassword(500));
-            }
-          );
-        } else {
-          // Either no token, or expired
-          return next(new AuthError.NewPassword(500));
-        }
-      },
-      (err: any) => {
-        return next(new AuthError.NewPassword(500));
-      }
+    const salt = authenticationService.generateSalt();
+    const passwordHash = authenticationService.hashPassword(
+      body.password,
+      salt
     );
-  }
+
+    const user = await prismaUser.findUserById(passwordReset.userId);
+    if (!user) {
+      return next(new authenticationError.NewPassword());
+    }
+    if (authorization.checkRole(user, [UserRole.GUEST])) {
+      return next(new authenticationError.NewPassword());
+    }
+
+    const updatedUser = await prismaUser.updatePassword(
+      user.userId,
+      passwordHash,
+      salt
+    );
+    if (!updatedUser) {
+      return next(new authenticationError.NewPassword());
+    }
+    const response: NewPasswordResponse = {};
+    res.status(200).send(response);
+  })
 );
 
 export default router;

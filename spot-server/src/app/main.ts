@@ -82,7 +82,7 @@ app.use(
 );
 
 // Required Auth
-app.use('/accounts', authentication.requiredAuth, user);
+app.use('/user', authentication.requiredAuth, user);
 app.use('/notifications', authentication.requiredAuth, notifications);
 app.use('/friends', authentication.requiredAuth, friends);
 

@@ -178,7 +178,10 @@ export const ERROR_MESSAGES = {
             VERIFY: 'User email not verified',
 
             // Register
-            REGISTER: 'Something has gone wrong. Please try again',
+            REGISTER_ERROR: 'Something has gone wrong. Please try again',
+
+            // Login
+            LOGIN_ERROR: 'Something has gone wrong. Please try again',
 
             // Username
             USERNAME_TAKEN: 'Username is not available',

@@ -95,6 +95,14 @@ const findUserByUsername = async (username: string): Promise<P.User | null> => {
   return user ? mapToModelEnum<P.User>(user) : null;
 };
 
+const findUserByEmail = async (email: string): Promise<P.User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  });
+  return user ? mapToModelEnum<P.User>(user) : null;
+};
 // Check if the email is alrady in use
 // Useful for checking google / facebook associated emails
 const emailExists = async (email: string): Promise<boolean> => {
@@ -224,7 +232,8 @@ const updatePhone = async (
 
 const updatePassword = async (
   userId: string,
-  newPassword: string
+  newPassword: string,
+  newSalt: string,
 ): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {
@@ -232,6 +241,7 @@ const updatePassword = async (
     },
     data: {
       password: newPassword,
+      salt: newSalt,
     },
     select: selectModelUser
   });
@@ -382,6 +392,7 @@ export default {
   findUserById,
   findUserAndMetadataById,
   findUserByUsername,
+  findUserByEmail,
   emailExists,
   usernameExists,
   phoneExists,

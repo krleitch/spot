@@ -23,10 +23,10 @@ export class VerifyError extends SpotError {
 
 // Validation Auth Errors for signup
 
-export class Register extends SpotError {
+export class RegisterError extends SpotError {
   constructor(statusCode: number = 500) {
-    super(AUTHENTICATION_ERROR_MESSAGES.REGISTER, statusCode);
-    this.name = "Register";
+    super(AUTHENTICATION_ERROR_MESSAGES.REGISTER_ERROR, statusCode);
+    this.name = "RegisterError";
   }
 }
 
@@ -90,6 +90,12 @@ export class PhoneInvalidError extends SpotError {
 
 // Login Auth Errors
 
+export class LoginError extends SpotError {
+  constructor(statusCode: number = 500) {
+    super(AUTHENTICATION_ERROR_MESSAGES.LOGIN_ERROR, statusCode);
+    this.name = "LoginError";
+  }
+}
 // If account doesnt exist or password is wrong
 export class UsernameOrPasswordError extends SpotError {
   constructor(statusCode: number = 500) {
