@@ -22,7 +22,7 @@ import {
   CommentsStoreSelectors
 } from '@store/comments-store';
 import { StoreReply } from '@store/comments-store/state';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
@@ -35,7 +35,9 @@ import { TranslateService } from '@ngx-translate/core';
 // Models
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { Account, AccountMetadata, Location } from '@models/accounts';
+import { User } from '@models/../newModels/user';
+import { UserMetadata } from '@models/../newModels/userMetadata';
+import { LocationData } from '@models/../newModels/location';
 import {
   AddReplyRequest,
   AddReplyStoreRequest,
@@ -89,8 +91,8 @@ export class CommentComponent
   expanded = false;
   isExpandable = false;
 
-  location$: Observable<Location>;
-  location: Location;
+  location$: Observable<LocationData>;
+  location: LocationData;
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
@@ -113,9 +115,9 @@ export class CommentComponent
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
-  accountMetadata$: Observable<AccountMetadata>;
-  account$: Observable<Account>;
-  account: Account;
+  userMetadata$: Observable<UserMetadata>;
+  user$: Observable<User>;
+  user: User;
 
   // Image
   FILENAME_MAX_SIZE = 25;
@@ -217,21 +219,21 @@ export class CommentComponent
       });
 
     this.isAuthenticated$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsAuthenticated)
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
     this.location$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
       });
 
     this.isVerified$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsVerified)
+      select(UserStoreSelectors.selectIsVerified)
     );
 
     this.friends$ = this.store$.pipe(
@@ -242,17 +244,15 @@ export class CommentComponent
       this.friendsList = friends;
     });
 
-    // account
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
-    );
+    // user
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
 
-    this.account$.pipe(takeUntil(this.onDestroy)).subscribe((account) => {
-      this.account = account;
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user) => {
+      this.user = user;
     });
 
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
     this.getTime(this.comment.creation_date);

@@ -14,11 +14,11 @@ import { mapTo, take, takeUntil } from 'rxjs/operators';
 // Store
 import { Store, select } from '@ngrx/store';
 import {
-  AccountsActions,
-  AccountsFacebookActions,
-  AccountsGoogleActions
-} from '@store/accounts-store';
-import { AccountsStoreSelectors, RootStoreState } from '@store';
+  UserActions,
+  UserFacebookActions,
+  UserGoogleActions
+} from '@src/app/root-store/user-store';
+import { UserStoreSelectors, RootStoreState } from '@store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
@@ -29,13 +29,12 @@ import { ThemeService } from '@services/theme.service';
 
 // Models
 import {
-  Account,
-  AccountMetadata,
+  User,
+  UserRole,
   FacebookConnectRequest,
   FacebookDisconnectRequest,
   GoogleConnectRequest,
   GoogleDisconnectRequest,
-  UpdateAccountMetadataRequest,
   UpdateEmailRequest,
   UpdateEmailResponse,
   UpdatePhoneRequest,
@@ -43,7 +42,13 @@ import {
   UpdateUsernameRequest,
   UpdateUsernameResponse,
   VerifyRequest
-} from '@models/accounts';
+} from '@models/../newModels/user';
+import {
+  UserMetadata,
+  UpdateUserMetadataRequest,
+  UnitSystem,
+  ThemeWeb
+} from '@models/../newModels/userMetadata';
 import { SpotError } from '@exceptions/error';
 import { ModalConfirmResult, ModalConfirmResultTypes } from '@models/modal';
 
@@ -61,10 +66,14 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('editEmail') editEmailInput: ElementRef;
   @ViewChild('editPhone') editPhoneInput: ElementRef;
 
-  account$: Observable<Account>;
-  showAccountIndicator$: Observable<boolean>;
-  accountMetadata$: Observable<AccountMetadata>;
-  accountMetadata: AccountMetadata;
+  eUserRole = UserRole;
+  eUnitSystem = UnitSystem;
+  eThemeWeb = ThemeWeb;
+
+  user$: Observable<User>;
+  showUserIndicator$: Observable<boolean>;
+  userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
 
   verificationSent = false;
 
@@ -86,7 +95,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   facebookConnected$: Observable<boolean>;
   googleConnected$: Observable<boolean>;
 
-  accountOptionsEnabled: boolean;
+  userOptionsEnabled: boolean;
   facebookLoaded = false;
 
   STRINGS;
@@ -105,42 +114,38 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
-    this.accountMetadata$
+    this.userMetadata$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((metadata: AccountMetadata) => {
-        this.accountMetadata = metadata;
+      .subscribe((metadata: UserMetadata) => {
+        this.userMetadata = metadata;
       });
 
     this.facebookConnected$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectFacebookConnected)
+      select(UserStoreSelectors.selectFacebookConnected)
     );
 
     this.googleConnected$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectGoogleConnected)
+      select(UserStoreSelectors.selectGoogleConnected)
     );
 
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
+
+    this.showUserIndicator$ = merge(
+      timer(1000).pipe(mapTo(true), takeUntil(this.user$)),
+      this.user$.pipe(mapTo(false))
     );
 
-    this.showAccountIndicator$ = merge(
-      timer(1000).pipe(mapTo(true), takeUntil(this.account$)),
-      this.account$.pipe(mapTo(false))
-    );
-
-    this.account$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((account: Account) => {
-        if (account) {
-          this.username = account.username;
-          this.email = account.email;
-          this.phone = account.phone;
-        }
-      });
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      if (user) {
+        this.username = user.username;
+        this.email = user.email;
+        this.phone = user.phone;
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -276,9 +281,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           this.editUsernameEnabled = false;
 
           // Update the store
-          this.store$.dispatch(
-            new AccountsActions.UpdateUsernameAction(request)
-          );
+          this.store$.dispatch(new UserActions.UpdateUsernameAction(request));
         },
         (err: { error: SpotError }) => {
           if (err.error.name === 'RateLimitError') {
@@ -318,7 +321,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           this.emailSuccessMessage = this.STRINGS.EMAIL_SUCCESS;
           this.editEmailEnabled = false;
 
-          this.store$.dispatch(new AccountsActions.UpdateEmailAction(request));
+          this.store$.dispatch(new UserActions.UpdateEmailAction(request));
         },
         (err: { error: SpotError }) => {
           this.emailErrorMessage = err.error.message;
@@ -353,7 +356,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           this.phoneSuccessMessage = this.STRINGS.PHONE_SUCCESS;
           this.editPhoneEnabled = false;
 
-          this.store$.dispatch(new AccountsActions.UpdatePhoneAction(request));
+          this.store$.dispatch(new UserActions.UpdatePhoneAction(request));
         },
         (err: { error: SpotError }) => {
           this.phoneErrorMessage = err.error.message;
@@ -362,26 +365,26 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteUser(): void {
-    if (this.accountOptionsEnabled) {
+    if (this.userOptionsEnabled) {
       this.modalService
         .open('global', 'confirm')
         .pipe(take(1))
         .subscribe((result: ModalConfirmResult) => {
           if (result.status === ModalConfirmResultTypes.CONFIRM) {
-            this.store$.dispatch(new AccountsActions.DeleteRequestAction());
+            this.store$.dispatch(new UserActions.DeleteRequestAction());
           }
         });
     }
   }
 
-  verifyAccount(): void {
+  verifyUser(): void {
     if (this.email === '') {
       // give a warning probably
       // just should show maybe
       return;
     } else {
       const request: VerifyRequest = {};
-      this.store$.dispatch(new AccountsActions.VerifyRequestAction(request));
+      this.store$.dispatch(new UserActions.VerifyRequestAction(request));
       this.verificationSent = true;
     }
   }
@@ -399,7 +402,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
             };
 
             this.store$.dispatch(
-              new AccountsFacebookActions.FacebookConnectRequestAction(request)
+              new UserFacebookActions.FacebookConnectRequestAction(request)
             );
           } else {
             // could not login
@@ -412,7 +415,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         };
 
         this.store$.dispatch(
-          new AccountsFacebookActions.FacebookConnectRequestAction(request)
+          new UserFacebookActions.FacebookConnectRequestAction(request)
         );
       }
     });
@@ -422,7 +425,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     const request: FacebookDisconnectRequest = {};
 
     this.store$.dispatch(
-      new AccountsFacebookActions.FacebookDisconnectRequestAction(request)
+      new UserFacebookActions.FacebookDisconnectRequestAction(request)
     );
   }
 
@@ -437,7 +440,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     this.store$.dispatch(
-      new AccountsGoogleActions.GoogleConnectRequestAction(request)
+      new UserGoogleActions.GoogleConnectRequestAction(request)
     );
 
     // sign out of the instance, so we don't auto login
@@ -453,44 +456,44 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     const request: GoogleDisconnectRequest = {};
 
     this.store$.dispatch(
-      new AccountsGoogleActions.GoogleDisconnectRequestAction(request)
+      new UserGoogleActions.GoogleDisconnectRequestAction(request)
     );
   }
 
-  public setUnit(unit: string): void {
-    const request: UpdateAccountMetadataRequest = {
-      distance_unit: unit
+  public setUnit(unit: UnitSystem): void {
+    const request: UpdateUserMetadataRequest = {
+      unitSystem: unit
     };
 
     this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      new UserActions.UpdateUserMetadataRequestAction(request)
     );
   }
 
   public setMature(value: boolean): void {
-    const request: UpdateAccountMetadataRequest = {
-      mature_filter: value
+    const request: UpdateUserMetadataRequest = {
+      matureFilter: value
     };
 
     this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      new UserActions.UpdateUserMetadataRequestAction(request)
     );
   }
 
-  public setTheme(theme: string) {
-    if (theme === 'light') {
+  public setTheme(theme: ThemeWeb) {
+    if (theme === ThemeWeb.LIGHT) {
       this.themeService.setLightTheme();
-    } else if (theme === 'dark') {
+    } else if (theme === ThemeWeb.DARK) {
       this.themeService.setDarkTheme();
     } else {
       return;
     }
-    const request: UpdateAccountMetadataRequest = {
-      theme_web: theme
+    const request: UpdateUserMetadataRequest = {
+      themeWeb: theme
     };
 
     this.store$.dispatch(
-      new AccountsActions.UpdateAccountMetadataRequestAction(request)
+      new UserActions.UpdateUserMetadataRequestAction(request)
     );
   }
 }

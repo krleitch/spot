@@ -64,7 +64,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use('/', root);
 app.use('/authentication', authentication);
 
-// Optional auth, user may or may not be filled check req.authenticated
+// Optional auth, user may or may not be filled check req.user
 // Only check location on posts and comments
 // only requests that send location details are verified
 app.use(

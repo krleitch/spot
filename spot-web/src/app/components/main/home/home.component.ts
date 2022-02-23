@@ -22,22 +22,27 @@ import {
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
-import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+import {
+  UserActions,
+  UserStoreSelectors
+} from '@src/app/root-store/user-store';
 
 // Models
 import { LoadPostRequest, Post } from '@models/posts';
+import { User, VerifyRequest, UserRole } from '@models/../newModels/user';
 import {
-  Account,
-  AccountMetadata,
-  Location,
-  UpdateAccountMetadataRequest,
-  VerifyRequest
-} from '@models/accounts';
+  UserMetadata,
+  UpdateUserMetadataRequest,
+  SearchType,
+  LocationType,
+  UnitSystem
+} from '@models/../newModels/userMetadata';
 import {
   LoadLocationRequest,
   LocationFailure,
-  SetLocationRequest
-} from '@models/accounts';
+  SetLocationRequest,
+  LocationData
+} from '@models/../newModels/location';
 
 // Assets
 import { LOCATIONS_CONSTANTS } from '@constants/locations';
@@ -67,23 +72,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   loadingLocation$: Observable<boolean>;
   loadingLocation: boolean;
   bypassLocation = false; // if true we will not wait for location to load for posts
-  location$: Observable<Location>;
-  location: Location = null;
+  location$: Observable<LocationData>;
+  location: LocationData = null;
   showLocationIndicator$: Observable<boolean>;
   locationFailure$: Observable<string>;
   locationFailure: string;
   locationTimeReceived$: Observable<Date>;
   locationTimeReceived: Date;
 
-  // Account
-  account$: Observable<Account>;
-  account: Account;
-  accountMetadata$: Observable<AccountMetadata>;
+  // User
+  user$: Observable<User>;
+  user: User;
+  userMetadata$: Observable<UserMetadata>;
 
   // Metadata
-  postLocation: string = undefined;
-  postSort: string = undefined;
-  distanceUnit = '';
+  eLocationType = LocationType; // for use in view
+  eSearchType = SearchType; // for use in view
+  eUserRole = UserRole;
+  locationType: LocationType | undefined = undefined;
+  searchType: SearchType | undefined = undefined;
+  unitSystem = UnitSystem.METRIC;
 
   // State
   loadedPosts: number; // offset for loaded posts for 'hot'
@@ -102,39 +110,35 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Account
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
+    // User
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
+
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      this.user = user;
+    });
+
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
-    this.account$
+    this.userMetadata$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((account: Account) => {
-        this.account = account;
-      });
-
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
-    );
-
-    this.accountMetadata$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((metadata: AccountMetadata) => {
+      .subscribe((metadata: UserMetadata) => {
         if (metadata) {
-          this.postLocation = metadata.search_distance;
-          this.postSort = metadata.search_type;
-          this.distanceUnit = metadata.distance_unit;
+          this.locationType = metadata.locationType;
+          this.searchType = metadata.searchType;
+          this.unitSystem = metadata.unitSystem;
         }
       });
 
     // Location
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
     this.location$
       .pipe(takeUntil(this.onDestroy), distinctUntilChanged())
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
         if (!location) {
           this.getLocation();
@@ -142,7 +146,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
 
     this.locationFailure$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocationFailure)
+      select(UserStoreSelectors.selectLocationFailure)
     );
 
     this.locationFailure$
@@ -152,7 +156,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
 
     this.locationTimeReceived$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocationTimeReceived)
+      select(UserStoreSelectors.selectLocationTimeReceived)
     );
 
     this.locationTimeReceived$
@@ -162,7 +166,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
 
     this.loadingLocation$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLoadingLocation)
+      select(UserStoreSelectors.selectLoadingLocation)
     );
 
     this.loadingLocation$
@@ -285,9 +289,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       .pipe(
         skipWhile(
           () =>
-            typeof this.postLocation === 'undefined' ||
-            typeof this.postSort === 'undefined' ||
-            (this.location === null && this.postLocation === 'local') ||
+            typeof this.locationType === 'undefined' ||
+            typeof this.searchType === 'undefined' ||
+            (this.location === null &&
+              this.locationType === LocationType.LOCAL) ||
             (this.loadingLocation === true && this.bypassLocation === false)
         ),
         take(1),
@@ -305,7 +310,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       // if sorting by new, just need date
       // if sorting by hot, need offset
 
-      if (this.postSort === 'new') {
+      if (this.searchType === SearchType.NEW) {
         // use date
         const request: LoadPostRequest = {
           limit: POSTS_CONSTANTS.INITIAL_LIMIT,
@@ -316,18 +321,18 @@ export class HomeComponent implements OnInit, OnDestroy {
             : new Date().toString(),
           initialLoad: this.initialLoad,
           location: this.location,
-          filter: { location: this.postLocation, sort: this.postSort }
+          filter: { location: this.locationType, sort: this.searchType }
         };
 
         this.store$.dispatch(new PostsStoreActions.LoadRequestAction(request));
-      } else if (this.postSort === 'hot') {
+      } else if (this.searchType === SearchType.HOT) {
         // use offset
         const request: LoadPostRequest = {
           offset: this.loadedPosts,
           limit: POSTS_CONSTANTS.INITIAL_LIMIT,
           initialLoad: this.initialLoad,
           location: this.location,
-          filter: { location: this.postLocation, sort: this.postSort }
+          filter: { location: this.locationType, sort: this.searchType }
         };
 
         this.store$.dispatch(new PostsStoreActions.LoadRequestAction(request));
@@ -350,15 +355,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setGlobal(): void {
-    this.postLocation = 'global';
+    this.locationType = LocationType.GLOBAL;
 
-    if (this.account.role !== 'guest') {
-      const request: UpdateAccountMetadataRequest = {
-        search_distance: 'global'
+    if (this.user.role !== UserRole.GUEST) {
+      const request: UpdateUserMetadataRequest = {
+        locationType: LocationType.GLOBAL
       };
 
       this.store$.dispatch(
-        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+        new UserActions.UpdateUserMetadataRequestAction(request)
       );
     }
 
@@ -370,15 +375,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   setLocal(): void {
     this.bypassLocation = false;
 
-    this.postLocation = 'local';
+    this.locationType = LocationType.LOCAL;
 
-    if (this.account.role !== 'guest') {
-      const request: UpdateAccountMetadataRequest = {
-        search_distance: 'local'
+    if (this.user.role !== UserRole.GUEST) {
+      const request: UpdateUserMetadataRequest = {
+        locationType: LocationType.LOCAL
       };
 
       this.store$.dispatch(
-        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+        new UserActions.UpdateUserMetadataRequestAction(request)
       );
     }
 
@@ -387,20 +392,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refresh();
   }
 
-  isSelectedLocation(location): boolean {
-    return this.postLocation === location;
+  isSelectedLocation(location: LocationType): boolean {
+    return this.locationType === location;
   }
 
   setNew(): void {
-    this.postSort = 'new';
+    this.searchType = SearchType.NEW;
 
-    if (this.account.role !== 'guest') {
-      const request: UpdateAccountMetadataRequest = {
-        search_type: 'new'
+    if (this.user.role !== UserRole.GUEST) {
+      const request: UpdateUserMetadataRequest = {
+        searchType: SearchType.NEW
       };
 
       this.store$.dispatch(
-        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+        new UserActions.UpdateUserMetadataRequestAction(request)
       );
     }
 
@@ -410,15 +415,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setHot(): void {
-    this.postSort = 'hot';
+    this.searchType = SearchType.HOT;
 
-    if (this.account.role !== 'guest') {
-      const request: UpdateAccountMetadataRequest = {
-        search_type: 'hot'
+    if (this.user.role !== UserRole.GUEST) {
+      const request: UpdateUserMetadataRequest = {
+        searchType: SearchType.HOT
       };
 
       this.store$.dispatch(
-        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+        new UserActions.UpdateUserMetadataRequestAction(request)
       );
     }
 
@@ -427,18 +432,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refresh();
   }
 
-  isSelectedPostSort(postSort): boolean {
-    return this.postSort === postSort;
+  isSelectedPostSort(postSort: SearchType): boolean {
+    return this.searchType === postSort;
   }
 
-  verifyAccount(): void {
+  verifyUser(): void {
     const request: VerifyRequest = {};
-    this.store$.dispatch(new AccountsActions.VerifyRequestAction(request));
+    this.store$.dispatch(new UserActions.VerifyRequestAction(request));
     this.verificationSent = true;
   }
 
   loadLocationBackground(): void {
-    this.postLocation = 'global';
+    this.locationType = LocationType.GLOBAL;
     // the location is actually still loading, we just say in this component we arent worried about it anymore
     // So onScroll() posts are loaded
     this.bypassLocation = true;
@@ -452,7 +457,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           if (navigator.geolocation) {
             const loadLocationRequest: LoadLocationRequest = {};
             this.store$.dispatch(
-              new AccountsActions.LoadLocationAction(loadLocationRequest)
+              new UserActions.LoadLocationAction(loadLocationRequest)
             );
 
             navigator.geolocation.getCurrentPosition((position) => {
@@ -463,7 +468,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                 }
               };
               this.store$.dispatch(
-                new AccountsActions.SetLocationAction(setLocationRequest)
+                new UserActions.SetLocationAction(setLocationRequest)
               );
             }, this.locationError.bind(this));
           } else {
@@ -472,7 +477,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               error: 'browser'
             };
             this.store$.dispatch(
-              new AccountsActions.LocationFailureAction(locationFailure)
+              new UserActions.LocationFailureAction(locationFailure)
             );
           }
         });
@@ -482,7 +487,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         error: 'browser'
       };
       this.store$.dispatch(
-        new AccountsActions.LocationFailureAction(locationFailure)
+        new UserActions.LocationFailureAction(locationFailure)
       );
     }
   }
@@ -496,7 +501,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             if (navigator.geolocation) {
               const loadLocationRequest: LoadLocationRequest = {};
               this.store$.dispatch(
-                new AccountsActions.LoadLocationAction(loadLocationRequest)
+                new UserActions.LoadLocationAction(loadLocationRequest)
               );
 
               navigator.geolocation.getCurrentPosition((position) => {
@@ -507,7 +512,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                   }
                 };
                 this.store$.dispatch(
-                  new AccountsActions.SetLocationAction(setLocationRequest)
+                  new UserActions.SetLocationAction(setLocationRequest)
                 );
               }, this.locationError.bind(this));
             } else {
@@ -516,7 +521,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                 error: 'browser'
               };
               this.store$.dispatch(
-                new AccountsActions.LocationFailureAction(locationFailure)
+                new UserActions.LocationFailureAction(locationFailure)
               );
             }
           } else if (permission.state === 'denied') {
@@ -524,21 +529,21 @@ export class HomeComponent implements OnInit, OnDestroy {
               error: 'permission'
             };
             this.store$.dispatch(
-              new AccountsActions.LocationFailureAction(locationFailure)
+              new UserActions.LocationFailureAction(locationFailure)
             );
           } else if (permission.state === 'prompt') {
             const locationFailure: LocationFailure = {
               error: 'prompt'
             };
             this.store$.dispatch(
-              new AccountsActions.LocationFailureAction(locationFailure)
+              new UserActions.LocationFailureAction(locationFailure)
             );
           } else {
             const locationFailure: LocationFailure = {
               error: 'general'
             };
             this.store$.dispatch(
-              new AccountsActions.LocationFailureAction(locationFailure)
+              new UserActions.LocationFailureAction(locationFailure)
             );
           }
         });
@@ -548,7 +553,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         error: 'browser'
       };
       this.store$.dispatch(
-        new AccountsActions.LocationFailureAction(locationFailure)
+        new UserActions.LocationFailureAction(locationFailure)
       );
     }
   }
@@ -558,20 +563,20 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: error.code === 1 ? 'permission' : 'general'
     };
     this.store$.dispatch(
-      new AccountsActions.LocationFailureAction(locationFailure)
+      new UserActions.LocationFailureAction(locationFailure)
     );
   }
 
   continueWithGlobal(): void {
-    this.postLocation = 'global';
+    this.locationType = LocationType.GLOBAL;
 
-    if (this.account.role !== 'guest') {
-      const request: UpdateAccountMetadataRequest = {
-        search_distance: 'global'
+    if (this.user.role !== UserRole.GUEST) {
+      const request: UpdateUserMetadataRequest = {
+        locationType: LocationType.GLOBAL
       };
 
       this.store$.dispatch(
-        new AccountsActions.UpdateAccountMetadataRequestAction(request)
+        new UserActions.UpdateUserMetadataRequestAction(request)
       );
     }
     // the location is actually still loading, we just say in this component we arent worried about it anymore

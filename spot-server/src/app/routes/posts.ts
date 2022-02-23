@@ -41,7 +41,7 @@ router.get(
   rateLimiter.genericPostLimiter,
   ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
     // You must have an account to get all posts
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -94,12 +94,12 @@ router.post(
   rateLimiter.createPostLimiter,
   ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
     // You must have an account to make a post
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
     // You must be verified to make a post
-    if (!req.verified) {
+    if (!req.user.verifiedAt) {
       return next(new AuthenticationError.VerifyError(400));
     }
 
@@ -237,7 +237,7 @@ router.put(
   rateLimiter.genericPostLimiter,
   function (req: any, res: any, next: any) {
     // You must have an account to like a post
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -266,7 +266,7 @@ router.put(
   rateLimiter.genericPostLimiter,
   function (req: any, res: any, next: any) {
     // You must have an account to dislike a post
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -294,7 +294,7 @@ router.put(
   '/:postId/unrated',
   rateLimiter.genericPostLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -323,7 +323,7 @@ router.delete(
   rateLimiter.genericPostLimiter,
   function (req: any, res: any, next: any) {
     // You must have an account to delete a post
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -366,7 +366,7 @@ router.put(
   rateLimiter.genericPostLimiter,
   function (req: any, res: any, next: any) {
     // You must have an account to report something
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -408,7 +408,7 @@ router.get(
   rateLimiter.genericPostLimiter,
   function (req: any, res: any, next: any) {
     // You must have an account to see activity
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -457,7 +457,7 @@ router.get(
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
 
-    posts.getPostByLink(postLink, req.authenticated ? req.user.id : null).then(
+    posts.getPostByLink(postLink, req.user ? req.user.id : null).then(
       (rows: any) => {
         if (rows.length < 1) {
           return next(new PostsError.GetSinglePost(500));

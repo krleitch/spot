@@ -65,7 +65,7 @@
       <ng-template #verify>
         <div class="auth-message">
           <i style="visibility: hidden" class="material-icons icon"> send </i>
-          <span *ngIf="account.role !== 'guest'; else guest" class="text">
+          <span *ngIf="user.role !== 'GUEST'; else guest" class="text">
             {{ 'MAIN.COMMENTS_CONTAINER.VERIFY' | translate }}
           </span>
           <ng-template #guest>

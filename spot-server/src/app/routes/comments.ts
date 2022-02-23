@@ -42,7 +42,7 @@ router.get(
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
     // You must have an account to make a comment
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -110,7 +110,7 @@ router.get(
       try {
         const comment = await comments.getCommentByLink(
           commentLink,
-          req.authenticated ? req.user.id : null
+          req.user ? req.user.userId : null
         );
         if (comment.length < 1) {
           return next(new CommentsError.GetComments(500));
@@ -119,7 +119,7 @@ router.get(
         // if its a reply, get the parent creation_date
         if (comment[0].parent_id) {
           let parent;
-          if (req.authenticated) {
+          if (req.user) {
             parent = await comments.getCommentById(
               comment[0].parent_id,
               req.user.id
@@ -143,7 +143,7 @@ router.get(
           date,
           limit,
           type,
-          req.authenticated ? req.user.id : null
+          req.user ? req.user.id : null
         );
         commentsArray = commentsArray.concat(rows);
       } catch (err) {
@@ -156,7 +156,7 @@ router.get(
           date,
           limit,
           type,
-          req.authenticated ? req.user.id : null
+          req.user ? req.user.id : null
         );
         commentsArray = commentsArray.concat(rows);
       } catch (err) {
@@ -166,7 +166,7 @@ router.get(
 
     try {
       await commentsService
-        .getTags(commentsArray, req.authenticated ? req.user.id : null)
+        .getTags(commentsArray, req.user ? req.user.id : null)
         .then((taggedComments: any) => {
           commentsArray = taggedComments;
         });
@@ -241,7 +241,7 @@ router.get(
       try {
         const comment = await comments.getCommentByLink(
           replyLink,
-          req.authenticated ? req.user.id : null
+          req.user ? req.user.id : null
         );
         if (comment.length < 1) {
           return next(new CommentsError.GetReplies(500));
@@ -254,7 +254,7 @@ router.get(
             postId,
             commentId,
             comment[0].creation_date,
-            req.authenticated ? req.user.id : null
+            req.user ? req.user.id : null
           );
         } else {
           replies = await comments.getRepliesByCommentId(
@@ -262,7 +262,7 @@ router.get(
             commentId,
             date,
             limit,
-            req.authenticated ? req.user.id : null
+            req.user ? req.user.id : null
           );
         }
       } catch (err) {
@@ -274,12 +274,12 @@ router.get(
         commentId,
         date,
         limit,
-        req.authenticated ? req.user.id : null
+        req.user ? req.user.id : null
       );
     }
 
     await commentsService
-      .getTags(replies, req.authenticated ? req.user.id : null)
+      .getTags(replies, req.user ? req.user.id : null)
       .then((taggedComments: any) => {
         replies = taggedComments;
       });
@@ -322,12 +322,12 @@ router.post(
   rateLimiter.createCommentLimiter,
   ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
     // You must have an account to make a comment
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
     // You must be verified to make a comment
-    if (!req.verified) {
+    if (!req.user.verifiedAt) {
       return next(new AuthenticationError.VerifyError(400));
     }
 
@@ -495,12 +495,12 @@ router.post(
   '/:postId/:commentId',
   rateLimiter.createCommentLimiter,
   ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
     // You must be verified to make a reply
-    if (!req.verified) {
+    if (!req.user.verifiedAt) {
       return next(new AuthenticationError.VerifyError(400));
     }
 
@@ -680,7 +680,7 @@ router.delete(
   '/:postId/:commentId',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -730,7 +730,7 @@ router.delete(
   '/:postId/:parentId/:commentId',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -778,7 +778,7 @@ router.put(
   '/:postId/:commentId/like',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -807,7 +807,7 @@ router.put(
   '/:postId/:commentId/dislike',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -836,7 +836,7 @@ router.put(
   '/:postId/:commentId/unrated',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -865,7 +865,7 @@ router.put(
   '/:postId/:parentId/:commentId/like',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -899,7 +899,7 @@ router.put(
   '/:postId/:parentId/:commentId/dislike',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -933,7 +933,7 @@ router.put(
   '/:postId/:parentId/:commentId/unrated',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
@@ -967,7 +967,7 @@ router.put(
   '/:postId/:commentId/report',
   rateLimiter.genericCommentLimiter,
   function (req: any, res: any, next: any) {
-    if (!req.authenticated) {
+    if (!req.user) {
       return next(new AuthenticationError.AuthenticationError(401));
     }
 

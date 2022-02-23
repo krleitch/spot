@@ -18,7 +18,10 @@ import { ThemeService } from '@services/theme.service';
 
 // Models
 import { VerifyResponse } from '@models/../newModels/user';
-import { GetUserMetadataResponse } from '@models/../newModels/userMetadata';
+import {
+  GetUserMetadataResponse,
+  ThemeWeb
+} from '@models/../newModels/userMetadata';
 import { SpotError } from '@exceptions/error';
 @Injectable()
 export class UserStoreEffects {
@@ -86,9 +89,7 @@ export class UserStoreEffects {
       this.authenticationService.loginUser(authenticateRequest.request).pipe(
         map((response) => new userActions.LoginSuccessAction(response)),
         catchError((errorResponse) =>
-          observableOf(
-            new userActions.LoginFailureAction(errorResponse.error)
-          )
+          observableOf(new userActions.LoginFailureAction(errorResponse.error))
         )
       )
     )
@@ -133,7 +134,7 @@ export class UserStoreEffects {
       userActions.ActionTypes.DELETE_REQUEST
     ),
     switchMap((deleteRequest) =>
-      this.userService.deleteUser().pipe(
+      this.userService.deleteUser({}).pipe(
         map((response) => {
           return new userActions.DeleteSuccessAction();
         }),
@@ -156,11 +157,9 @@ export class UserStoreEffects {
 
   @Effect()
   getUserEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<userActions.UserRequestAction>(
-      userActions.ActionTypes.USER_REQUEST
-    ),
+    ofType<userActions.UserRequestAction>(userActions.ActionTypes.USER_REQUEST),
     switchMap((action) =>
-      this.userService.getUser().pipe(
+      this.userService.getUser({}).pipe(
         tap((response) => {
           this.userService.getUserRedirect();
         }),
@@ -174,9 +173,7 @@ export class UserStoreEffects {
 
   @Effect()
   getUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<userActions.UserSuccessAction>(
-      userActions.ActionTypes.USER_SUCCESS
-    ),
+    ofType<userActions.UserSuccessAction>(userActions.ActionTypes.USER_SUCCESS),
     tap((action: userActions.UserSuccessAction) => {
       // none
     }),
@@ -197,9 +194,7 @@ export class UserStoreEffects {
     switchMap((action) =>
       this.userService.updateUserMetadata(action.request).pipe(
         map((response) => {
-          return new userActions.UpdateUserMetadataRequestSuccess(
-            response
-          );
+          return new userActions.UpdateUserMetadataRequestSuccess(response);
         }),
         catchError((errorResponse) =>
           observableOf(
@@ -217,8 +212,8 @@ export class UserStoreEffects {
     ),
     switchMap((action: userActions.GetUserMetadataRequestAction) =>
       this.userService.getUserMetadata(action.request).pipe(
-        map((response: GetUserMetadataSuccess) => {
-          if (response.metadata.theme_web === 'dark') {
+        map((response: GetUserMetadataResponse) => {
+          if (response.metadata.themeWeb === ThemeWeb.DARK) {
             this.themeService.setDarkTheme();
           } else {
             this.themeService.setLightTheme();
@@ -227,9 +222,7 @@ export class UserStoreEffects {
         }),
         catchError((errorResponse: { error: SpotError }) =>
           observableOf(
-            new userActions.GetUserMetadataFailureAction(
-              errorResponse.error
-            )
+            new userActions.GetUserMetadataFailureAction(errorResponse.error)
           )
         )
       )

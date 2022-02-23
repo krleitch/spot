@@ -57,19 +57,19 @@
               <div class="post-content">
                 <div
                   class="image"
-                  *ngIf="activity.image_src && accountMetadata"
+                  *ngIf="activity.image_src && userMetadata"
                   (click)="activityClicked(activity)"
                 >
                   <img
                     [src]="activity.image_src"
                     [ngClass]="{
                       'image-blur':
-                        activity.imageBlurred && accountMetadata.mature_filter
+                        activity.imageBlurred && userMetadata.matureFilter
                     }"
                   />
                   <div
                     *ngIf="
-                      activity.imageBlurred && accountMetadata.mature_filter
+                      activity.imageBlurred && userMetadata.matureFilter
                     "
                     class="image-blur-text"
                   >
@@ -88,11 +88,11 @@
                     </span>
                     <span class="info-bar-item">
                       {{ 'MAIN.ACTIVITY.POSTS_LOCATION' | translate }}
-                      <span *ngIf="activity.distance && accountMetadata">
+                      <span *ngIf="activity.distance && userMetadata">
                         {{
                           getDistance(
                             activity.distance,
-                            accountMetadata.distance_unit
+                            userMetadata.unitSystem
                           )
                         }}
                         -

@@ -14,7 +14,7 @@ import { catchError, map, takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
-import { AccountsStoreSelectors, RootStoreState } from '@store';
+import { UserStoreSelectors, RootStoreState } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
@@ -82,7 +82,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     // Is the user authenticated
     this.authenticated$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsAuthenticated)
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
     this.authenticated$

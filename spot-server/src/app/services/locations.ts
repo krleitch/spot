@@ -23,7 +23,7 @@ import roles from '@services/authorization/roles.js';
 // Middleware to call verifyLocation
 const checkLocation = async (req: any, res: any, next: any) => {
   // if you aren't logged in then verifying your location doesn't matter
-  if (!req.authenticated) {
+  if (!req.user) {
     return next();
   }
 

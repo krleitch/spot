@@ -60,7 +60,7 @@
           </span>
         </div>
 
-        <div *ngIf="accountMetadata$ | async as accountMetadata">
+        <div *ngIf="userMetadata$ | async as userMetadata">
           <div
             *ngIf="comment.image_src !== null"
             (click)="imageClicked()"
@@ -69,11 +69,11 @@
             <img
               [src]="comment.image_src"
               [ngClass]="{
-                'image-blur': imageBlurred && accountMetadata.mature_filter
+                'image-blur': imageBlurred && userMetadata.matureFilter
               }"
             />
             <div
-              *ngIf="imageBlurred && accountMetadata.mature_filter"
+              *ngIf="imageBlurred && userMetadata.matureFilter"
               class="image-blur-text"
             >
               <span class="material-icons icon"> error_outline </span>
@@ -170,8 +170,8 @@
             <div
               *ngIf="
                 comment.owned ||
-                account.role === 'admin' ||
-                account.role === 'owner'
+                user.role === 'ADMIN' ||
+                user.role === 'OWNER'
               "
               class="button"
               (click)="deleteComment()"

@@ -4,14 +4,14 @@
 <div class="locationToggle desktop">
   <div
     class="local"
-    [ngClass]="{ selectedLocation: isSelectedLocation('local') }"
+    [ngClass]="{ selectedLocation: isSelectedLocation(eLocationType.LOCAL) }"
     (click)="setLocal()"
   >
     <i class="material-icons icon"> home </i>
   </div>
   <div
     class="global"
-    [ngClass]="{ selectedLocation: isSelectedLocation('global') }"
+    [ngClass]="{ selectedLocation: isSelectedLocation(eLocationType.GLOBAL) }"
     (click)="setGlobal()"
   >
     <i class="material-icons icon"> public </i>
@@ -19,8 +19,8 @@
 </div>
 <div #mobiledropdownlocation class="locationToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
-    <i *ngIf="isSelectedLocation('local')" class="material-icons"> home </i>
-    <i *ngIf="isSelectedLocation('global')" class="material-icons"> public </i>
+    <i *ngIf="isSelectedLocation(eLocationType.LOCAL)" class="material-icons"> home </i>
+    <i *ngIf="isSelectedLocation(eLocationType.GLOBAL)" class="material-icons"> public </i>
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
@@ -30,14 +30,14 @@
     >
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedLocation('local') }"
+        [ngClass]="{ 'selected-highlight': isSelectedLocation(eLocationType.LOCAL) }"
         (click)="setLocal()"
       >
         <i class="material-icons dropdown-icon"> home </i>
       </div>
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedLocation('global') }"
+        [ngClass]="{ 'selected-highlight': isSelectedLocation(eLocationType.GLOBAL) }"
         (click)="setGlobal()"
       >
         <i class="material-icons dropdown-icon"> public </i>
@@ -50,7 +50,7 @@
 <div class="postFilterToggle desktop">
   <div
     class="hot"
-    [ngClass]="{ selectedSort: isSelectedPostSort('hot') }"
+    [ngClass]="{ selectedSort: isSelectedPostSort(eSearchType.HOT) }"
     (click)="setHot()"
   >
     <span class="material-icons icon"> rocket_launch </span>
@@ -58,7 +58,7 @@
   </div>
   <div
     class="new"
-    [ngClass]="{ selectedSort: isSelectedPostSort('new') }"
+    [ngClass]="{ selectedSort: isSelectedPostSort(eSearchType.NEW) }"
     (click)="setNew()"
   >
     <span class="material-icons icon"> local_florist </span>
@@ -67,10 +67,10 @@
 </div>
 <div #mobiledropdownsort class="postFilterToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownSort(true)">
-    <div *ngIf="isSelectedPostSort('hot')">
+    <div *ngIf="isSelectedPostSort(eSearchType.HOT)">
       {{ 'MAIN.HOME.HOT' | translate }}
     </div>
-    <div *ngIf="isSelectedPostSort('new')">
+    <div *ngIf="isSelectedPostSort(eSearchType.NEW)">
       {{ 'MAIN.HOME.NEW' | translate }}
     </div>
     <span class="material-icons"> expand_more </span>
@@ -82,14 +82,14 @@
     >
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedPostSort('hot') }"
+        [ngClass]="{ 'selected-highlight': isSelectedPostSort(eSearchType.HOT) }"
         (click)="setHot()"
       >
         {{ 'MAIN.HOME.HOT' | translate }}
       </div>
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedPostSort('new') }"
+        [ngClass]="{ 'selected-highlight': isSelectedPostSort(eSearchType.NEW) }"
         (click)="setNew()"
       >
         {{ 'MAIN.HOME.NEW' | translate }}
@@ -105,36 +105,36 @@
     class="fit-container"
   >
     <!-- Don't show anything until we get the metadata -->
-    <div *ngIf="postLocation && postSort" class="fit-container">
+    <div *ngIf="locationType && searchType" class="fit-container">
       <!-- Determine if we need location -->
       <div
-        *ngIf="location || postLocation === 'global'; else noLocation"
+        *ngIf="location || locationType === eLocationType.GLOBAL; else noLocation"
         class="content"
       >
-        <div *ngIf="account" class="fit-container">
+        <div *ngIf="user" class="fit-container">
           <!-- You still need location -->
           <div *ngIf="location; else createlocation" class="fit-container">
             <div
-              *ngIf="account.role !== 'guest'; else guest"
+              *ngIf="user.role !== eUserRole.GUEST; else guest"
               class="fit-container"
             >
-              <!-- Need a verified account -->
+              <!-- Need a verified user -->
               <spot-create
-                *ngIf="account.verified_date !== null; else verify"
+                *ngIf="user.verifiedAt !== null; else verify"
               ></spot-create>
               <ng-template #verify>
                 <div class="info-container">
                   <span class="material-icons icon"> email </span>
-                  <div *ngIf="account.email; else noEmail">
+                  <div *ngIf="user.email; else noEmail">
                     <span class="text">
                       {{ 'MAIN.HOME.VERIFY' | translate }}
                     </span>
                     <div *ngIf="verificationSent === false; else sentverify">
-                      <div class="text clickable" (click)="verifyAccount()">
+                      <div class="text clickable" (click)="verifyUser()">
                         {{ 'MAIN.HOME.VERIFY_SEND' | translate }}
                       </div>
                       <span class="small-text">
-                        {{ account.email }} (
+                        {{ user.email }} (
                         <a
                           class="clickable small-text"
                           [routerLink]="'/account'"
@@ -147,7 +147,7 @@
                     <ng-template #sentverify>
                       <span class="small-text">
                         {{ 'MAIN.HOME.VERIFY_SENT' | translate }}
-                        {{ account.email }}
+                        {{ user.email }}
                       </span>
                     </ng-template>
                   </div>

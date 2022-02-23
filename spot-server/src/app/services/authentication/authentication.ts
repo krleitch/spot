@@ -151,7 +151,7 @@ function hashPassword(password: string, salt: string): string {
 function validatePassword(user: any, password: string): boolean {
   if (user === undefined) return false;
   const hashedPassword = hashPassword(password, user.salt);
-  return hashedPassword === user.pass;
+  return hashedPassword === user.password;
 }
 
 function generateToken(user: any): any {

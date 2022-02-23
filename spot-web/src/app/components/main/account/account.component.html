@@ -1,8 +1,8 @@
 <spot-main-nav></spot-main-nav>
 <div class="account">
   <div class="account-content">
-    <div *ngIf="account$ | async as account; else noAccount">
-      <div *ngIf="account.role === 'guest'" class="guest">
+    <div *ngIf="user$ | async as user; else noUser">
+      <div *ngIf="user.role === eUserRole.GUEST" class="guest">
         {{ 'MAIN.ACCOUNT.GUEST' | translate }}
       </div>
 
@@ -22,16 +22,16 @@
           <div class="age">
             <span class="material-icons icon"> cake </span>
             <span class="text">
-              {{ formatBirthday(account.creation_date) }}
+              {{ formatBirthday(user.createdAt) }}
             </span>
           </div>
           <!-- Verification -->
-          <div *ngIf="account.verified_date === null; else verified">
-            <div *ngIf="account.email">
+          <div *ngIf="user.verifiedAt === null; else verified">
+            <div *ngIf="user.email">
               <div
                 *ngIf="verificationSent === false; else sent"
                 class="verify-container clickable"
-                (click)="verifyAccount()"
+                (click)="verifyUser()"
               >
                 <span class="material-icons icon"> email </span>
                 <span class="text">
@@ -101,7 +101,7 @@
           <div *ngIf="emailSuccessMessage" class="success">
             {{ emailSuccessMessage }}
           </div>
-          <div *ngIf="account.verified_date === null">
+          <div *ngIf="user.verifiedAt === null">
             <div class="description">
               {{ 'MAIN.ACCOUNT.EMAIL_VERIFY_DESCRIPTION' | translate }}
             </div>
@@ -186,11 +186,11 @@
           </div>
 
           <!-- Score -->
-          <div *ngIf="accountMetadata" class="info-container">
+          <div *ngIf="userMetadata" class="info-container">
             <div class="subheader">{{ 'MAIN.ACCOUNT.SCORE' | translate }}:</div>
             <div class="value">
               <i class="material-icons hot"> whatshot </i>
-              {{ accountMetadata.score }}
+              {{ userMetadata.score }}
             </div>
           </div>
           <div class="description">
@@ -200,7 +200,7 @@
       </div>
 
       <!-- Settings -->
-      <div *ngIf="accountMetadata" class="section">
+      <div *ngIf="userMetadata" class="section">
         <div class="header">
           <span class="material-icons title-icon"> settings </span>
           <span class="title">
@@ -216,18 +216,18 @@
                 class="left"
                 [ngClass]="{
                   'button-selected':
-                    accountMetadata.distance_unit === 'imperial'
+                    userMetadata.unitSystem === eUnitSystem.IMPERIAL
                 }"
-                (click)="setUnit('imperial')"
+                (click)="setUnit(eUnitSystem.IMPERIAL)"
               >
                 {{ 'MAIN.ACCOUNT.IMPERIAL' | translate }}
               </button>
               <button
                 class="right"
                 [ngClass]="{
-                  'button-selected': accountMetadata.distance_unit === 'metric'
+                  'button-selected': userMetadata.unitSystem === eUnitSystem.METRIC
                 }"
-                (click)="setUnit('metric')"
+                (click)="setUnit(eUnitSystem.METRIC)"
               >
                 {{ 'MAIN.ACCOUNT.METRIC' | translate }}
               </button>
@@ -243,7 +243,7 @@
               <button
                 class="left"
                 [ngClass]="{
-                  'button-selected': accountMetadata.mature_filter === 1
+                  'button-selected': userMetadata.matureFilter === true
                 }"
                 (click)="setMature(true)"
               >
@@ -252,7 +252,7 @@
               <button
                 class="right"
                 [ngClass]="{
-                  'button-selected': accountMetadata.mature_filter === 0
+                  'button-selected': userMetadata.matureFilter === false
                 }"
                 (click)="setMature(false)"
               >
@@ -268,18 +268,18 @@
               <button
                 class="left"
                 [ngClass]="{
-                  'button-selected': accountMetadata.theme_web === 'light'
+                  'button-selected': userMetadata.themeWeb === eThemeWeb.LIGHT
                 }"
-                (click)="setTheme('light')"
+                (click)="setTheme(eThemeWeb.LIGHT)"
               >
                 {{ 'MAIN.ACCOUNT.LIGHT' | translate }}
               </button>
               <button
                 class="right"
                 [ngClass]="{
-                  'button-selected': accountMetadata.theme_web === 'dark'
+                  'button-selected': userMetadata.themeWeb === eThemeWeb.DARK
                 }"
-                (click)="setTheme('dark')"
+                (click)="setTheme(eThemeWeb.DARK)"
               >
                 {{ 'MAIN.ACCOUNT.DARK' | translate }}
               </button>
@@ -323,10 +323,11 @@
                   class="facebook-logo"
                 />
                 <span class="text"> Logged in with Facebook </span>
+                <!-- TODO, dont disconnect facebook without a password for the account -->
                 <button
                   *ngIf="
-                    (facebookLoaded && account.local_account) ||
-                    account.google_id
+                    (facebookLoaded && false) ||
+                    user.googleId
                   "
                   (click)="facebookDisconnect()"
                 >
@@ -349,7 +350,7 @@
                 />
                 <span class="text"> Logged in with Google </span>
                 <button
-                  *ngIf="account.local_account || account.facebook_id"
+                  *ngIf="false || user.facebookId"
                   (click)="googleDisconnect()"
                 >
                   {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}
@@ -376,7 +377,7 @@
             <span class="enable-text">
               {{ 'MAIN.ACCOUNT.ENABLE_OPTIONS' | translate }}
             </span>
-            <input type="checkbox" [(ngModel)]="accountOptionsEnabled" />
+            <input type="checkbox" [(ngModel)]="userOptionsEnabled" />
             <span class="checkmark">
               <span class="checkmark-inner"> </span>
             </span>
@@ -385,7 +386,7 @@
         <div class="body">
           <button
             class="delete"
-            [ngClass]="{ disabled: !accountOptionsEnabled }"
+            [ngClass]="{ disabled: !userOptionsEnabled }"
             (click)="deleteUser()"
           >
             {{ 'MAIN.ACCOUNT.DELETE' | translate }}
@@ -394,9 +395,9 @@
       </div>
     </div>
 
-    <!-- No Account -->
-    <ng-template #noAccount>
-      <div *ngIf="showAccountIndicator$ | async" class="no-account">
+    <!-- No User -->
+    <ng-template #noUser>
+      <div *ngIf="showUserIndicator$ | async" class="no-account">
         <span class="material-icons icon"> person </span>
         <span class="text">
           {{ 'MAIN.ACCOUNT.NO_ACCOUNT' | translate }}

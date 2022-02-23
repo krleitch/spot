@@ -16,13 +16,13 @@ import { TranslateService } from '@ngx-translate/core';
 
 // Store
 import { Store, select } from '@ngrx/store';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { RootStoreState } from '@store';
 import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
 
 // Models
 import { AddPostRequest } from '@models/posts';
-import { Location } from '@models/accounts';
+import { LocationData } from '@models/../newModels/location';
 import { SpotError } from '@exceptions/error';
 
 // Assets
@@ -42,8 +42,8 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
   // Location
-  location$: Observable<Location>;
-  location: Location;
+  location$: Observable<LocationData>;
+  location: LocationData;
 
   // Content
   currentLength = 0;
@@ -113,12 +113,12 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Location
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
     this.location$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
       });
   }

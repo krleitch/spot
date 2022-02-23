@@ -26,6 +26,8 @@ passport.use(
       const regex = /^\S+@\S+\.\S+$/;
       const isEmail = emailOrUsername.match(regex) != null;
 
+      console.log('meeee');
+
       try {
         let passportUser;
         if (isEmail) {

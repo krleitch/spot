@@ -22,7 +22,7 @@ import {
   CommentsStoreSelectors
 } from '@store/comments-store';
 import { StoreComment } from '@store/comments-store/state';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
@@ -43,7 +43,8 @@ import { Tag } from '@models/notifications';
 import { Post } from '@models/posts';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { Account, Location } from '@models/accounts';
+import { User } from '@models/../newModels/user';
+import { LocationData } from '@models/../newModels/location';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';
@@ -86,8 +87,8 @@ export class CommentsContainerComponent
   addCommentLoading = false;
   addCommentError: string;
 
-  location$: Observable<Location>;
-  location: Location;
+  location$: Observable<LocationData>;
+  location: LocationData;
   friends$: Observable<Friend[]>;
   friends: Friend[] = [];
 
@@ -95,8 +96,8 @@ export class CommentsContainerComponent
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
-  account$: Observable<Account>;
-  account: Account;
+  user$: Observable<User>;
+  user: User;
 
   imageFile: File;
   imgSrc: string = null;
@@ -193,33 +194,29 @@ export class CommentsContainerComponent
         }
       });
 
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
-    );
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
 
-    this.account$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((account: Account) => {
-        this.account = account;
-      });
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      this.user = user;
+    });
 
     // Authentication
     this.isAuthenticated$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsAuthenticated)
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
     // Verified
     this.isVerified$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsVerified)
+      select(UserStoreSelectors.selectIsVerified)
     );
 
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
     this.location$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
       });
 

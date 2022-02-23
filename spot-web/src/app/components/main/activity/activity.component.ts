@@ -14,7 +14,7 @@ import {
 // store
 import { RootStoreState } from '@store';
 import { Store, select } from '@ngrx/store';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // services
 import { PostsService } from '@services/posts.service';
@@ -27,7 +27,8 @@ import {
   ActivityCommentSuccess,
   CommentActivity
 } from '@models/comments';
-import { AccountMetadata, Location } from '@models/accounts';
+import { UserMetadata, UnitSystem } from '@models/../newModels/userMetadata';
+import { LocationData } from '@models/../newModels/location';
 
 // Extend Post and Comment to include acitivty specefic properties
 interface PostActivity extends Post {
@@ -46,11 +47,11 @@ interface CommentActivityActivity extends CommentActivity {
 export class ActivityComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
-  location$: Observable<Location>;
-  location: Location;
+  location$: Observable<LocationData>;
+  location: LocationData;
 
-  accountMetadata$: Observable<AccountMetadata>;
-  accountMetadata: AccountMetadata;
+  userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
 
   selectedTab = 'posts';
 
@@ -77,22 +78,22 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
-    this.accountMetadata$
+    this.userMetadata$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((accountMetadata: AccountMetadata) => {
-        this.accountMetadata = accountMetadata;
+      .subscribe((userMetadata: UserMetadata) => {
+        this.userMetadata = userMetadata;
       });
 
     this.location$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
       });
   }
@@ -127,8 +128,8 @@ export class ActivityComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDistance(distance: number, unit: string): string {
-    if (unit === 'metric') {
+  getDistance(distance: number, unit: UnitSystem): string {
+    if (unit === UnitSystem.METRIC) {
       return (distance * 1.60934).toFixed(1) + ' km';
     } else {
       return distance.toFixed(1) + ' m';

@@ -19,7 +19,7 @@ import {
   CommentsStoreActions,
   CommentsStoreSelectors
 } from '@store/comments-store';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
@@ -44,7 +44,9 @@ import { Post } from '@models/posts';
 import { Tag } from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
-import { Account, AccountMetadata, Location } from '@models/accounts';
+import { User } from '@models/../newModels/user';
+import { UserMetadata } from '@models/../newModels/userMetadata';
+import { LocationData } from '@models/../newModels/location';
 import {
   ModalImageData,
   ModalOptions,
@@ -84,8 +86,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   tagged$: Observable<boolean>;
   tagged: boolean; // Was the user tagged in the comment chain
 
-  location$: Observable<Location>;
-  location: Location;
+  location$: Observable<LocationData>;
+  location: LocationData;
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
@@ -94,9 +96,9 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
-  accountMetadata$: Observable<AccountMetadata>;
-  account$: Observable<Account>;
-  account: Account;
+  userMetadata$: Observable<UserMetadata>;
+  user$: Observable<User>;
+  user: User;
 
   // For large replies
   expanded = false;
@@ -142,11 +144,11 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.imageBlurred = this.reply.image_nsfw;
 
     this.isAuthenticated$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsAuthenticated)
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
     this.isVerified$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsVerified)
+      select(UserStoreSelectors.selectIsVerified)
     );
 
     this.friends$ = this.store$.pipe(
@@ -158,26 +160,24 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
     this.location$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
       });
 
-    // account
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
-    );
+    // user
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
 
-    this.account$.pipe(takeUntil(this.onDestroy)).subscribe((account) => {
-      this.account = account;
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user) => {
+      this.user = user;
     });
 
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
     this.tagged$ = this.store$.pipe(

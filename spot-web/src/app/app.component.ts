@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 // Store
 import { Store } from '@ngrx/store';
-import { AccountsActions, RootStoreState } from '@store';
+import { UserActions, RootStoreState } from '@store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
@@ -11,12 +11,12 @@ import { ThemeService } from '@services/theme.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
+import { GetUserRequest } from '@models/../newModels/user';
 import {
-  GetAccountRequest,
   LoadLocationRequest,
   LocationFailure,
   SetLocationRequest
-} from '@models/accounts';
+} from '@models/../newModels/location';
 
 declare const gapi: any;
 
@@ -57,10 +57,10 @@ export class AppComponent implements OnInit {
     // Init third party libaries
     this.twitterLibrary();
     this.fbLibrary();
-    // Get Account if JWT token exists
-    this.getAccountIfExists();
+    // Get User if JWT token exists
+    this.getUserIfExists();
     // Get Location if permission was already granted
-    this.getAccountLocationIfPermitted();
+    this.getUserLocationIfPermitted();
   }
 
   private twitterLibrary(): void {
@@ -108,22 +108,22 @@ export class AppComponent implements OnInit {
     })(document, 'script', 'facebook-jssdk');
   }
 
-  private getAccountIfExists(): void {
+  private getUserIfExists(): void {
     // checks id_token exists and has not expired
     if (this.authenticationService.isAuthenticated()) {
-      const request: GetAccountRequest = {};
-      this.store$.dispatch(new AccountsActions.AccountRequestAction(request));
+      const request: GetUserRequest = {};
+      this.store$.dispatch(new UserActions.UserRequestAction(request));
     }
   }
 
-  private getAccountLocationIfPermitted(): void {
+  private getUserLocationIfPermitted(): void {
     // --------------
     // FAKE LOCATION
     // --------------
 
     // const request1: LoadLocationRequest = {};
     // this.store$.dispatch(
-    //   new AccountsActions.LoadLocationAction(request1)
+    //   new UserActions.LoadLocationAction(request1)
     // );
 
     // const request2: SetLocationRequest = {
@@ -132,7 +132,7 @@ export class AppComponent implements OnInit {
     // };
     // this.store$.dispatch(
     //   // TODO send login location
-    //   new AccountsActions.SetLocationAction(request2)
+    //   new UserActions.SetLocationAction(request2)
     // );
 
     // return;
@@ -150,7 +150,7 @@ export class AppComponent implements OnInit {
             if (navigator.geolocation) {
               const loadLocationRequest: LoadLocationRequest = {};
               this.store$.dispatch(
-                new AccountsActions.LoadLocationAction(loadLocationRequest)
+                new UserActions.LoadLocationAction(loadLocationRequest)
               );
 
               navigator.geolocation.getCurrentPosition((position) => {
@@ -161,7 +161,7 @@ export class AppComponent implements OnInit {
                   }
                 };
                 this.store$.dispatch(
-                  new AccountsActions.SetLocationAction(setLocationRequest)
+                  new UserActions.SetLocationAction(setLocationRequest)
                 );
               }, this.locationError.bind(this));
             } else {
@@ -170,7 +170,7 @@ export class AppComponent implements OnInit {
                 error: 'browser'
               };
               this.store$.dispatch(
-                new AccountsActions.LocationFailureAction(locationFailure)
+                new UserActions.LocationFailureAction(locationFailure)
               );
             }
           } else if (permission.state === 'denied') {
@@ -178,14 +178,14 @@ export class AppComponent implements OnInit {
               error: 'permission'
             };
             this.store$.dispatch(
-              new AccountsActions.LocationFailureAction(locationFailure)
+              new UserActions.LocationFailureAction(locationFailure)
             );
           } else {
             const locationFailure: LocationFailure = {
               error: 'prompt'
             };
             this.store$.dispatch(
-              new AccountsActions.LocationFailureAction(locationFailure)
+              new UserActions.LocationFailureAction(locationFailure)
             );
           }
         });
@@ -195,7 +195,7 @@ export class AppComponent implements OnInit {
         error: 'prompt'
       };
       this.store$.dispatch(
-        new AccountsActions.LocationFailureAction(locationFailure)
+        new UserActions.LocationFailureAction(locationFailure)
       );
     }
   }
@@ -205,7 +205,7 @@ export class AppComponent implements OnInit {
       error: error.code === 1 ? 'permission' : 'general'
     };
     this.store$.dispatch(
-      new AccountsActions.LocationFailureAction(locationFailure)
+      new UserActions.LocationFailureAction(locationFailure)
     );
   }
 }
