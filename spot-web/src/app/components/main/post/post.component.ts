@@ -19,7 +19,7 @@ import { AuthenticationService } from '@services/authentication.service';
 
 // Store
 import { Store, select } from '@ngrx/store';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { RootStoreState } from '@store';
 import { PostsStoreActions } from '@store/posts-store';
 
@@ -33,7 +33,9 @@ import {
   Post,
   UnratedPostRequest
 } from '@models/posts';
-import { Account, AccountMetadata, Location } from '@models/accounts';
+import { User } from '@models/../newModels/user';
+import { UserMetadata, UnitSystem } from '@models/../newModels/userMetadata';
+import { LocationData } from '@models/../newModels/location';
 import {
   ModalImageData,
   ModalOptions,
@@ -56,12 +58,12 @@ export class PostComponent implements OnInit, OnDestroy {
 
   POSTS_CONSTANTS = POSTS_CONSTANTS;
 
-  location$: Observable<Location>;
-  location: Location;
-  account$: Observable<Account>;
-  account: Account;
-  accountMetadata$: Observable<AccountMetadata>;
-  accountMetadata: AccountMetadata;
+  location$: Observable<LocationData>;
+  location: LocationData;
+  user$: Observable<User>;
+  user: User;
+  userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
 
   time: string;
   imageBlurred: boolean; // if content flagged nsfw
@@ -80,35 +82,31 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Account
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
+    // User
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
+
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      this.user = user;
+    });
+
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
-    this.account$
+    this.userMetadata$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((account: Account) => {
-        this.account = account;
-      });
-
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
-    );
-
-    this.accountMetadata$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((accountMetadata: AccountMetadata) => {
-        this.accountMetadata = accountMetadata;
+      .subscribe((userMetadata: UserMetadata) => {
+        this.userMetadata = userMetadata;
       });
 
     // Location
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
     this.location$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
       });
 
@@ -192,10 +190,10 @@ export class PostComponent implements OnInit, OnDestroy {
 
   getDistance(distance: number): string {
     let unit;
-    if (this.accountMetadata) {
-      unit = this.accountMetadata.distance_unit;
+    if (this.userMetadata) {
+      unit = this.userMetadata.unitSystem;
     } else {
-      unit = 'imperial';
+      unit = UnitSystem.IMPERIAL;
     }
 
     let distanceString = '';
@@ -204,7 +202,7 @@ export class PostComponent implements OnInit, OnDestroy {
       distanceString += '< ';
     }
 
-    if (unit === 'metric') {
+    if (unit === UnitSystem.METRIC) {
       distanceString += (distance * 1.60934).toFixed(1) + ' km';
     } else {
       distanceString += distance.toFixed(1) + ' m';

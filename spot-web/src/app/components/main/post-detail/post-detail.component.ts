@@ -14,7 +14,10 @@ import { Observable, Subject, interval, throwError, timer } from 'rxjs';
 
 // store
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+import {
+  UserActions,
+  UserStoreSelectors
+} from '@src/app/root-store/user-store';
 import { CommentsStoreActions } from '@store/comments-store';
 import { Store, select } from '@ngrx/store';
 
@@ -30,10 +33,10 @@ import {
 } from '@models/posts';
 import {
   LoadLocationRequest,
-  Location,
+  LocationData,
   LocationFailure,
   SetLocationRequest
-} from '@models/accounts';
+} from '@models/../newModels/location';
 import { ClearCommentsRequest } from '@models/comments';
 
 @Component({
@@ -59,8 +62,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   showLoadingIndicator$: Observable<boolean>;
 
   authenticated$: Observable<boolean>;
-  location$: Observable<Location>;
-  location: Location;
+  location$: Observable<LocationData>;
+  location: LocationData;
   loadingLocation$: Observable<boolean>;
   loadingLocation: boolean;
   locationFailure$: Observable<string>;
@@ -72,17 +75,17 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Location
     this.location$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocation)
+      select(UserStoreSelectors.selectLocation)
     );
 
     this.location$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: Location) => {
+      .subscribe((location: LocationData) => {
         this.location = location;
       });
 
     this.loadingLocation$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLoadingLocation)
+      select(UserStoreSelectors.selectLoadingLocation)
     );
 
     this.loadingLocation$
@@ -92,7 +95,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       });
 
     this.locationFailure$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectLocationFailure)
+      select(UserStoreSelectors.selectLocationFailure)
     );
 
     this.locationFailure$
@@ -112,7 +115,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
     // Authenication
     this.authenticated$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsAuthenticated)
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
     // reload if user becomes authenticated, skip if we are waiting for store to say authenticated first try
@@ -140,7 +143,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           if (navigator.geolocation) {
             const loadLocationRequest: LoadLocationRequest = {};
             this.store$.dispatch(
-              new AccountsActions.LoadLocationAction(loadLocationRequest)
+              new UserActions.LoadLocationAction(loadLocationRequest)
             );
 
             navigator.geolocation.getCurrentPosition((position) => {
@@ -151,7 +154,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
                 }
               };
               this.store$.dispatch(
-                new AccountsActions.SetLocationAction(setLocationRequest)
+                new UserActions.SetLocationAction(setLocationRequest)
               );
               this.bypassLocation = false;
               this.waitForPosts();
@@ -162,7 +165,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
               error: 'browser'
             };
             this.store$.dispatch(
-              new AccountsActions.LocationFailureAction(locationFailure)
+              new UserActions.LocationFailureAction(locationFailure)
             );
           }
         });
@@ -172,7 +175,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         error: 'browser'
       };
       this.store$.dispatch(
-        new AccountsActions.LocationFailureAction(locationFailure)
+        new UserActions.LocationFailureAction(locationFailure)
       );
     }
   }
@@ -182,7 +185,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       error: error.code === 1 ? 'permission' : 'general'
     };
     this.store$.dispatch(
-      new AccountsActions.LocationFailureAction(locationFailure)
+      new UserActions.LocationFailureAction(locationFailure)
     );
   }
 

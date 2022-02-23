@@ -2,10 +2,10 @@
   <div (click)="navigateHome()" class="title-link">
     <div class="title-image"></div>
   </div>
-  <div *ngIf="account$ | async as myaccount; else noAccount" class="features">
-    <div *ngIf="accountMetadata$ | async as accountMetadata" class="score">
+  <div *ngIf="user$ | async as myuser; else noUser" class="features">
+    <div *ngIf="userMetadata$ | async as userMetadata" class="score">
       <i class="material-icons hot"> whatshot </i>
-      <span> {{ accountMetadata.score }} </span>
+      <span> {{ userMetadata.score }} </span>
     </div>
     <div class="notifications" #notifications>
       <i class="material-icons" (click)="toggleNotifications()">
@@ -20,10 +20,10 @@
       </div>
       <spot-notifications *ngIf="showNotifications"></spot-notifications>
     </div>
-    <div #account class="account" (click)="accountSetDropdown(true)">
+    <div #user class="user" (click)="userSetDropdown(true)">
       <i class="material-icons icon"> person_outline </i>
-      <span class="username"> {{ myaccount.username }} </span>
-      <div class="dropdown-content" [ngClass]="{ show: accountShowDropdown }">
+      <span class="username"> {{ myuser.username }} </span>
+      <div class="dropdown-content" [ngClass]="{ show: userShowDropdown }">
         <a class="button" [routerLink]="'/activity'">
           <span class="material-icons icon"> show_chart </span>
           {{ 'MAIN.NAV.ACTIVITY' | translate }}
@@ -43,8 +43,8 @@
       </div>
     </div>
   </div>
-  <ng-template #noAccount>
-    <div *ngIf="!loading || (showAccountIndicator$ | async)">
+  <ng-template #noUser>
+    <div *ngIf="!loading || (showUserIndicator$ | async)">
       <div class="login" (click)="openAuthModal()">
         {{ 'MAIN.NAV.LOGIN_REGISTER' | translate }}
       </div>

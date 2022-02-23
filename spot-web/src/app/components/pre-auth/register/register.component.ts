@@ -8,11 +8,11 @@ import { skip, takeUntil } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
-  AccountsActions,
-  AccountsFacebookActions,
-  AccountsGoogleActions,
-  AccountsStoreSelectors
-} from '@store/accounts-store';
+  UserActions,
+  UserFacebookActions,
+  UserGoogleActions,
+  UserStoreSelectors
+} from '@src/app/root-store/user-store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
@@ -68,7 +68,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     // FAILURE
     this.authenticationError$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAuthenticationError)
+      select(UserStoreSelectors.selectAuthenticationError)
     );
 
     this.authenticationError$
@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // SUCCESS
     this.authenticationSuccess$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAuthenticationSuccess)
+      select(UserStoreSelectors.selectAuthenticationSuccess)
     );
 
     this.authenticationSuccess$
@@ -206,7 +206,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     this.store$.dispatch(
-      new AccountsActions.RegisterRequestAction(registerRequest)
+      new UserActions.RegisterRequestAction(registerRequest)
     );
     this.buttonsDisabled = true;
   }
@@ -225,7 +225,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
             };
 
             this.store$.dispatch(
-              new AccountsFacebookActions.FacebookLoginRequestAction(request)
+              new UserFacebookActions.FacebookLoginRequestAction(request)
             );
             this.buttonsDisabled = true;
           }
@@ -237,7 +237,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
         };
 
         this.store$.dispatch(
-          new AccountsFacebookActions.FacebookLoginRequestAction(request)
+          new UserFacebookActions.FacebookLoginRequestAction(request)
         );
         this.buttonsDisabled = true;
       }
@@ -259,7 +259,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     this.store$.dispatch(
-      new AccountsGoogleActions.GoogleLoginRequestAction(request)
+      new UserGoogleActions.GoogleLoginRequestAction(request)
     );
     this.buttonsDisabled = true;
 

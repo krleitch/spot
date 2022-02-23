@@ -9,7 +9,6 @@ import { ModalService } from '@services/modal.service';
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent implements OnInit {
-  
   // MODAL
   modalId: string;
   data; // unused

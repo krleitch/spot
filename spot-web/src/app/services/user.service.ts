@@ -9,18 +9,18 @@ import { AlertService } from '@services/alert.service';
 
 // Models
 import {
+  GetUserRequest,
+  GetUserResponse,
+  DeleteUserRequest,
+  DeleteUserResponse,
   FacebookConnectRequest,
   FacebookConnectResponse,
   FacebookDisconnectRequest,
   FacebookDisconnectResponse,
-  GetAccountMetadataRequest,
-  GetAccountMetadataSuccess,
   GoogleConnectRequest,
   GoogleConnectResponse,
   GoogleDisconnectRequest,
   GoogleDisconnectResponse,
-  UpdateAccountMetadataRequest,
-  UpdateAccountMetadataSuccess,
   UpdateEmailRequest,
   UpdateEmailResponse,
   UpdatePhoneRequest,
@@ -31,7 +31,13 @@ import {
   VerifyConfirmResponse,
   VerifyRequest,
   VerifyResponse
-} from '@models/accounts';
+} from '@models/../newModels/user';
+import {
+  GetUserMetadataRequest,
+  GetUserMetadataResponse,
+  UpdateUserMetadataRequest,
+  UpdateUserMetadataResponse
+} from '@models/../newModels/userMetadata';
 
 // Assets
 import { environment } from 'src/environments/environment';
@@ -39,7 +45,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class AccountsService {
+export class UserService {
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -50,113 +56,116 @@ export class AccountsService {
 
   // Facebook requests
 
-  connectFacebookAccount(
+  connectFacebookUser(
     request: FacebookConnectRequest
   ): Observable<FacebookConnectResponse> {
     return this.http.post<FacebookConnectResponse>(
-      `${this.baseUrl}/accounts/facebook`,
+      `${this.baseUrl}/user/facebook`,
       request
     );
   }
 
-  disconnectFacebookAccount(
+  disconnectFacebookUser(
     request: FacebookDisconnectRequest
   ): Observable<FacebookDisconnectResponse> {
     return this.http.post<FacebookDisconnectResponse>(
-      `${this.baseUrl}/accounts/facebook/disconnect`,
+      `${this.baseUrl}/user/facebook/disconnect`,
       request
     );
   }
 
   // Google requests
 
-  connectGoogleAccount(
+  connectGoogleUser(
     request: GoogleConnectRequest
   ): Observable<GoogleConnectResponse> {
     return this.http.post<GoogleConnectResponse>(
-      `${this.baseUrl}/accounts/google`,
+      `${this.baseUrl}/user/google`,
       request
     );
   }
 
-  disconnectGoogleAccount(
+  disconnectGoogleUser(
     request: GoogleDisconnectRequest
   ): Observable<GoogleDisconnectResponse> {
     return this.http.post<GoogleDisconnectResponse>(
-      `${this.baseUrl}/accounts/google/disconnect`,
+      `${this.baseUrl}/user/google/disconnect`,
       request
     );
   }
 
   // Normal requests
 
-  deleteAccount(): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/accounts`);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  deleteUser(_request: DeleteUserRequest): Observable<DeleteUserResponse> {
+    return this.http.delete<DeleteUserResponse>(`${this.baseUrl}/user`);
   }
 
-  getAccount(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/accounts`);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getUser(_request: GetUserRequest): Observable<GetUserResponse> {
+    return this.http.get<GetUserResponse>(`${this.baseUrl}/user`);
   }
 
   updateUsername(
     request: UpdateUsernameRequest
   ): Observable<UpdateUsernameResponse> {
     return this.http.put<UpdateUsernameResponse>(
-      `${this.baseUrl}/accounts/username`,
+      `${this.baseUrl}/user/username`,
       request
     );
   }
 
   updateEmail(request: UpdateEmailRequest): Observable<UpdateEmailResponse> {
     return this.http.put<UpdateEmailResponse>(
-      `${this.baseUrl}/accounts/email`,
+      `${this.baseUrl}/user/email`,
       request
     );
   }
 
   updatePhone(request: UpdatePhoneRequest): Observable<UpdatePhoneResponse> {
     return this.http.put<UpdatePhoneResponse>(
-      `${this.baseUrl}/accounts/phone`,
+      `${this.baseUrl}/user/phone`,
       request
     );
   }
 
-  getAccountMetadata(
-    request: GetAccountMetadataRequest
-  ): Observable<GetAccountMetadataSuccess> {
-    return this.http.get<GetAccountMetadataSuccess>(
-      `${this.baseUrl}/accounts/metadata`
+  getUserMetadata(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _request: GetUserMetadataRequest
+  ): Observable<GetUserMetadataResponse> {
+    return this.http.get<GetUserMetadataResponse>(
+      `${this.baseUrl}/user/metadata`
     );
   }
 
-  updateAccountMetadata(
-    request: UpdateAccountMetadataRequest
-  ): Observable<UpdateAccountMetadataSuccess> {
-    return this.http.put<UpdateAccountMetadataSuccess>(
-      `${this.baseUrl}/accounts/metadata`,
+  updateUserMetadata(
+    request: UpdateUserMetadataRequest
+  ): Observable<UpdateUserMetadataResponse> {
+    return this.http.put<UpdateUserMetadataResponse>(
+      `${this.baseUrl}/user/metadata`,
       request
     );
   }
 
-  verifyAccount(request: VerifyRequest): Observable<VerifyResponse> {
+  verifyUser(request: VerifyRequest): Observable<VerifyResponse> {
     return this.http.post<VerifyResponse>(
-      `${this.baseUrl}/accounts/verify`,
+      `${this.baseUrl}/user/verify`,
       request
     );
   }
 
-  verifyConfirmAccount(
+  verifyConfirmUser(
     request: VerifyConfirmRequest
   ): Observable<VerifyConfirmResponse> {
     return this.http.post<VerifyConfirmResponse>(
-      `${this.baseUrl}/accounts/verify/confirm`,
+      `${this.baseUrl}/user/verify/confirm`,
       request
     );
   }
 
   // service functions
 
-  onDeleteAccountSuccess(): void {
+  onDeleteUserSuccess(): void {
     this.router.navigateByUrl('/');
   }
 
@@ -164,7 +173,7 @@ export class AccountsService {
     this.alertService.error(message);
   }
 
-  getAccountRedirect(): void {
+  getUserRedirect(): void {
     if (this.router.url === '/') {
       this.router.navigateByUrl('/home');
     }

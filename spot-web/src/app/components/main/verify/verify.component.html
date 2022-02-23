@@ -1,6 +1,6 @@
 <spot-main-nav></spot-main-nav>
 <div class="verify">
-  <div class="container" *ngIf="account$ | async as account">
+  <div class="container" *ngIf="user$ | async as user">
     <div class="section" *ngIf="successMessage">
       <span class="material-icons icon"> done </span>
       <span class="text"> {{ successMessage }} </span>
@@ -17,7 +17,7 @@
           {{ 'MAIN.VERIFY.VERIFY_SEND' | translate }}
         </div>
         <span class="small-text">
-          {{ account.email }} (
+          {{ user.email }} (
           <a class="clickable small-text" [routerLink]="'/account'">
             Change Email
           </a>
@@ -26,7 +26,7 @@
       </div>
       <ng-template #sentverify>
         <span class="small-text">
-          {{ 'MAIN.VERIFY.VERIFY_SENT' | translate }} {{ account.email }}
+          {{ 'MAIN.VERIFY.VERIFY_SENT' | translate }} {{ user.email }}
         </span>
       </ng-template>
     </div>

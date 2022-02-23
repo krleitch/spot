@@ -1,8 +1,7 @@
-
 import path from 'path';
 import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import express from 'express';
 const app = express();
@@ -19,7 +18,7 @@ import user from '@routes/user.js';
 import comments from '@routes/comments.js';
 import notifications from '@routes/notifications.js';
 import friends from '@routes/friends.js';
-import auth from '@routes/authentication.js';
+import authentication from '@routes/authentication.js';
 import admin from '@routes/admin.js';
 
 // Db
@@ -28,9 +27,9 @@ import * as mySql from '@db/mySql.js';
 // Utils
 import errorHandler from '@helpers/errorHandler.js';
 import passport from '@services/authentication/passport.js';
-import authentication from '@services/authentication/authentication.js';
+import authenticationService from '@services/authentication/authentication.js';
 import locationService from '@services/locations.js';
-import authorization from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization/authorization.js';
 import roles from '@services/authorization/roles.js';
 
 const port = process.env.PORT || 3000;
@@ -63,45 +62,47 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 // Unprotected routes
 app.use('/', root);
-app.use('/auth', auth);
+app.use('/authentication', authentication);
 
 // Optional auth, user may or may not be filled check req.authenticated
 // Only check location on posts and comments
 // only requests that send location details are verified
 app.use(
   '/posts',
-  authentication.optionalAuth,
+  authenticationService.optionalAuth,
   locationService.checkLocation,
   posts
 );
 app.use(
   '/comments',
-  authentication.optionalAuth,
+  authenticationService.optionalAuth,
   locationService.checkLocation,
   comments
 );
 
 // Required Auth
-app.use('/user', authentication.requiredAuth, user);
-app.use('/notifications', authentication.requiredAuth, notifications);
-app.use('/friends', authentication.requiredAuth, friends);
+app.use('/user', authenticationService.requiredAuth, user);
+app.use('/notifications', authenticationService.requiredAuth, notifications);
+app.use('/friends', authenticationService.requiredAuth, friends);
 
 // Required Auth + roles
 app.use(
   '/admin',
-  authentication.requiredAuth,
-  authorization.checkRoleMiddleware([roles.owner, roles.admin]),
+  authenticationService.requiredAuth,
+  authorizationService.checkRoleMiddleware([roles.owner, roles.admin]),
   admin
 );
 
 // Error middleware
 app.use(errorHandler.errorMiddleware);
 
-app.listen(port, () => {
-  console.log(`Server is listening on ${port}`);
-}).on('error', (err: Error) => {
-  console.log(`Error listening`);
-});
+app
+  .listen(port, () => {
+    console.log(`Server is listening on ${port}`);
+  })
+  .on('error', (err: Error) => {
+    console.log(`Error listening`);
+  });
 
 // Make this a module
-export {}
+export {};

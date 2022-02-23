@@ -542,7 +542,7 @@ router.post(
 
       // check valid expirary date and correct user
       if (
-        !authenticationService.isValidToken(userVerify) ||
+        !authenticationService.isValidTokenTime(userVerify.createdAt) ||
         userVerify.userId !== userId
       ) {
         return next(new userError.ConfirmVerify(499));

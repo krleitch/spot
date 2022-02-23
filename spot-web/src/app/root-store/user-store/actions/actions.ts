@@ -6,59 +6,63 @@ import {
   LoginResponse,
   RegisterRequest,
   RegisterResponse
-} from '@models/authentication';
+} from '@models/../newModels/authentication';
 import {
-  GetAccountMetadataRequest,
-  GetAccountMetadataSuccess,
-  GetAccountRequest,
-  GetAccountSuccess,
-  LoadLocationRequest,
-  LocationFailure,
-  SetLocationRequest,
-  UpdateAccountMetadataRequest,
-  UpdateAccountMetadataSuccess,
+  GetUserRequest,
+  GetUserResponse,
   UpdateEmailRequest,
   UpdatePhoneRequest,
   UpdateUsernameRequest,
   VerifyConfirmResponse,
   VerifyRequest,
   VerifyResponse
-} from '@models/accounts';
+} from '@models/../newModels/user';
+import {
+  GetUserMetadataRequest,
+  GetUserMetadataResponse,
+  UpdateUserMetadataRequest,
+  UpdateUserMetadataResponse
+} from '@models/../newModels/userMetadata';
+import {
+  LoadLocationRequest,
+  LocationFailure,
+  SetLocationRequest
+} from '@models/../newModels/location';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
-  RESET_STORE = '[Accounts] Reset Store',
-  LOGIN_REQUEST = '[Accounts] Login Request',
-  LOGIN_SUCCESS = '[Accounts] Login Success',
-  LOGIN_FAILURE = '[Accounts] Login Failure',
-  REGISTER_REQUEST = '[Accounts] Register Request',
-  REGISTER_SUCCESS = '[Accounts] Register Success',
-  REGISTER_FAILURE = '[Accounts] Register Failure',
-  LOGOUT_REQUEST = '[Accounts] Logout Request',
-  DELETE_REQUEST = '[Accounts] Delete Request',
-  DELETE_SUCCESS = '[Accounts] Delete Success',
-  DELETE_FAILURE = '[Accounts] Delete Failure',
-  ACCOUNT_REQUEST = '[Accounts] Account Request',
-  ACCOUNT_SUCCESS = '[Accounts] Account Success',
-  ACCOUNT_FAILURE = '[Accounts] Account Failure',
-  UPDATE_USERNAME_REQUEST = '[Accounts] Update Username Request',
-  UPDATE_USERNAME_SUCCESS = '[Accounts] Update Username Success',
-  UPDATE_USERNAME_FAILURE = '[Accounts] Update Username Failure',
-  UPDATE_METADATA_REQUEST = '[Accounts] Update Metadata Request',
-  UPDATE_METADATA_SUCCESS = '[Accounts] Update Metadata Success',
-  UPDATE_METADATA_FAILURE = '[Accounts] Update Metadata Failure',
-  GET_METADATA_REQUEST = '[Accounts] Get Metadata Request',
-  GET_METADATA_SUCCESS = '[Accounts] Get Metadata Success',
-  GET_METADATA_FAILURE = '[Accounts] Get Metadata Failure',
-  LOAD_LOCATION = '[Accounts] Load Location',
-  SET_LOCATION = '[Accounts] Set Location',
-  LOCATION_FAILURE = '[Accounts] Location Failure',
-  VERIFY_REQUEST = '[Accounts] Verify Request',
-  VERIFY_SUCCESS = '[Accounts] Verify Success',
-  VERIFY_CONFIRM_REQUEST = '[Accounts] Verify Confrim Request',
-  UPDATE_EMAIL_REQUEST = '[Accounts] Update Email Request',
-  UPDATE_PHONE_REQUEST = '[Accounts] Update Phone Request',
-  GENERIC_FAILURE = '[Accounts] Generic Failure'
+  RESET_STORE = '[User] Reset Store',
+  LOGIN_REQUEST = '[User] Login Request',
+  LOGIN_SUCCESS = '[User] Login Success',
+  LOGIN_FAILURE = '[User] Login Failure',
+  REGISTER_REQUEST = '[User] Register Request',
+  REGISTER_SUCCESS = '[User] Register Success',
+  REGISTER_FAILURE = '[User] Register Failure',
+  LOGOUT_REQUEST = '[User] Logout Request',
+  DELETE_REQUEST = '[User] Delete Request',
+  DELETE_SUCCESS = '[User] Delete Success',
+  DELETE_FAILURE = '[User] Delete Failure',
+  USER_REQUEST = '[User] User Request',
+  USER_SUCCESS = '[User] User Success',
+  USER_FAILURE = '[User] User Failure',
+  UPDATE_USERNAME_REQUEST = '[User] Update Username Request',
+  UPDATE_USERNAME_SUCCESS = '[User] Update Username Success',
+  UPDATE_USERNAME_FAILURE = '[User] Update Username Failure',
+  UPDATE_METADATA_REQUEST = '[User] Update Metadata Request',
+  UPDATE_METADATA_SUCCESS = '[User] Update Metadata Success',
+  UPDATE_METADATA_FAILURE = '[User] Update Metadata Failure',
+  GET_METADATA_REQUEST = '[User] Get Metadata Request',
+  GET_METADATA_SUCCESS = '[User] Get Metadata Success',
+  GET_METADATA_FAILURE = '[User] Get Metadata Failure',
+  LOAD_LOCATION = '[User] Load Location',
+  SET_LOCATION = '[User] Set Location',
+  LOCATION_FAILURE = '[User] Location Failure',
+  VERIFY_REQUEST = '[User] Verify Request',
+  VERIFY_SUCCESS = '[User] Verify Success',
+  VERIFY_CONFIRM_REQUEST = '[User] Verify Confrim Request',
+  UPDATE_EMAIL_REQUEST = '[User] Update Email Request',
+  UPDATE_PHONE_REQUEST = '[User] Update Phone Request',
+  GENERIC_FAILURE = '[User] Generic Failure'
 }
 
 export class ResetStoreAction implements Action {
@@ -118,18 +122,18 @@ export class DeleteFailureAction implements Action {
   constructor(public error: string) {}
 }
 
-export class AccountRequestAction implements Action {
-  readonly type = ActionTypes.ACCOUNT_REQUEST;
-  constructor(public request: GetAccountRequest) {}
+export class UserRequestAction implements Action {
+  readonly type = ActionTypes.USER_REQUEST;
+  constructor(public request: GetUserRequest) {}
 }
 
-export class AccountSuccessAction implements Action {
-  readonly type = ActionTypes.ACCOUNT_SUCCESS;
-  constructor(public response: GetAccountSuccess) {}
+export class UserSuccessAction implements Action {
+  readonly type = ActionTypes.USER_SUCCESS;
+  constructor(public response: GetUserResponse) {}
 }
 
-export class AccountFailureAction implements Action {
-  readonly type = ActionTypes.ACCOUNT_FAILURE;
+export class UserFailureAction implements Action {
+  readonly type = ActionTypes.USER_FAILURE;
   constructor(public error: string) {}
 }
 
@@ -153,32 +157,32 @@ export class UpdateUsernameAction implements Action {
   constructor(public request: UpdateUsernameRequest) {}
 }
 
-export class UpdateAccountMetadataRequestAction implements Action {
+export class UpdateUserMetadataRequestAction implements Action {
   readonly type = ActionTypes.UPDATE_METADATA_REQUEST;
-  constructor(public request: UpdateAccountMetadataRequest) {}
+  constructor(public request: UpdateUserMetadataRequest) {}
 }
 
-export class UpdateAccountMetadataRequestSuccess implements Action {
+export class UpdateUserMetadataRequestSuccess implements Action {
   readonly type = ActionTypes.UPDATE_METADATA_SUCCESS;
-  constructor(public response: UpdateAccountMetadataSuccess) {}
+  constructor(public response: UpdateUserMetadataResponse) {}
 }
 
-export class UpdateAccountMetadataRequestFailure implements Action {
+export class UpdateUserMetadataRequestFailure implements Action {
   readonly type = ActionTypes.UPDATE_METADATA_FAILURE;
   constructor(public error: SpotError) {}
 }
 
-export class GetAccountMetadataRequestAction implements Action {
+export class GetUserMetadataRequestAction implements Action {
   readonly type = ActionTypes.GET_METADATA_REQUEST;
-  constructor(public request: GetAccountMetadataRequest) {}
+  constructor(public request: GetUserMetadataRequest) {}
 }
 
-export class GetAccountMetadataRequestSuccess implements Action {
+export class GetUserMetadataRequestSuccess implements Action {
   readonly type = ActionTypes.GET_METADATA_SUCCESS;
-  constructor(public response: GetAccountMetadataSuccess) {}
+  constructor(public response: GetUserMetadataResponse) {}
 }
 
-export class GetAccountMetadataFailureAction implements Action {
+export class GetUserMetadataFailureAction implements Action {
   readonly type = ActionTypes.GET_METADATA_FAILURE;
   constructor(public error: SpotError) {}
 }
@@ -220,18 +224,18 @@ export type Actions =
   | DeleteRequestAction
   | DeleteSuccessAction
   | DeleteFailureAction
-  | AccountRequestAction
-  | AccountSuccessAction
+  | UserRequestAction
+  | UserSuccessAction
   | SetLocationAction
-  | AccountFailureAction
+  | UserFailureAction
   | UpdateUsernameAction
   | UpdatePhoneAction
   | GenericFailureAction
-  | UpdateAccountMetadataRequestAction
-  | UpdateAccountMetadataRequestSuccess
-  | GetAccountMetadataRequestAction
-  | GetAccountMetadataRequestSuccess
-  | GetAccountMetadataFailureAction
+  | UpdateUserMetadataRequestAction
+  | UpdateUserMetadataRequestSuccess
+  | GetUserMetadataRequestAction
+  | GetUserMetadataRequestSuccess
+  | GetUserMetadataFailureAction
   | LoadLocationAction
   | UpdateEmailAction
   | VerifyRequestAction

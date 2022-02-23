@@ -11,9 +11,9 @@ import {
   SocialStoreSelectors
 } from '@store/social-store';
 import {
-  AccountsFacebookActions,
-  AccountsStoreSelectors
-} from '@store/accounts-store';
+  UserFacebookActions,
+  UserStoreSelectors
+} from '@src/app/root-store/user-store';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -40,7 +40,7 @@ import {
   GetPendingFriendRequests,
   GetPendingFriendRequestsSuccess
 } from '@models/friends';
-import { FacebookConnectRequest } from '@models/accounts';
+import { FacebookConnectRequest } from '@models/../newModels/user';
 import { SpotError } from '@exceptions/error';
 
 @Component({
@@ -95,7 +95,7 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.facebookConnected$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectFacebookConnected)
+      select(UserStoreSelectors.selectFacebookConnected)
     );
 
     // Get all friend requests
@@ -306,7 +306,7 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
             };
 
             this.store$.dispatch(
-              new AccountsFacebookActions.FacebookConnectRequestAction(request)
+              new UserFacebookActions.FacebookConnectRequestAction(request)
             );
           }
         });
@@ -317,7 +317,7 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this.store$.dispatch(
-          new AccountsFacebookActions.FacebookConnectRequestAction(request)
+          new UserFacebookActions.FacebookConnectRequestAction(request)
         );
       }
     });

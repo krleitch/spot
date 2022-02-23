@@ -1,24 +1,26 @@
-import { Account, AccountMetadata, Location } from '@models/accounts';
+import { User } from '@models/../newModels/user';
+import { LocationData } from '@models/../newModels/location';
+import { UserMetadata } from '@models/../newModels/userMetadata';
 import { SpotError } from '@exceptions/error';
 
 export interface State {
-  account: Account;
-  accountLoading: boolean;
-  accountMetadata: AccountMetadata;
+  user: User;
+  userLoading: boolean;
+  userMetadata: UserMetadata;
   authenticationSuccess: boolean;
   authenticationError: SpotError; // Error for signup / login
   usernameError: SpotError; // Error when chaning or updating username
   usernameSuccess: boolean; // Successfully changed username
-  location: Location;
+  location: LocationData;
   locationFailure: string;
   locationTimeReceived: Date;
   loadingLocation: boolean;
 }
 
 export const initialState: State = {
-  account: null,
-  accountLoading: false,
-  accountMetadata: null,
+  user: null,
+  userLoading: false,
+  userMetadata: null,
   authenticationSuccess: null,
   authenticationError: null,
   usernameError: null,

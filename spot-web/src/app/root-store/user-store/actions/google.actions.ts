@@ -3,13 +3,13 @@ import { Action } from '@ngrx/store';
 import {
   GoogleLoginRequest,
   GoogleLoginResponse
-} from '@models/authentication';
+} from '@models/../newModels/authentication';
 import {
   GoogleConnectRequest,
   GoogleConnectResponse,
   GoogleDisconnectRequest,
   GoogleDisconnectResponse
-} from '@models/accounts';
+} from '@models/../newModels/user';
 import { SpotError } from '@exceptions/error';
 
 export enum GoogleActionTypes {

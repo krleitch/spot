@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 // store
 import { RootStoreState } from '@store';
 import { Store, select } from '@ngrx/store';
-import { AccountsStoreSelectors } from '@store/accounts-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { SocialStoreNotificationsActions } from '@store/social-store';
 
 // assets
@@ -24,7 +24,7 @@ import {
   DeleteNotificationRequest,
   SetNotificationSeenRequest
 } from '@models/notifications';
-import { AccountMetadata } from '@models/accounts';
+import { UserMetadata } from '@models/../newModels/userMetadata';
 
 @Component({
   selector: 'spot-notification-item',
@@ -40,8 +40,8 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
   imageBlurred: boolean;
   time: string;
 
-  accountMetadata$: Observable<AccountMetadata>;
-  accountMetadata: AccountMetadata;
+  userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
 
   constructor(
     private router: Router,
@@ -49,14 +49,14 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
-    this.accountMetadata$
+    this.userMetadata$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((accountMetadata: AccountMetadata) => {
-        this.accountMetadata = accountMetadata;
+      .subscribe((userMetadata: UserMetadata) => {
+        this.userMetadata = userMetadata;
       });
 
     if (this.notification.reply_image_src)

@@ -4,32 +4,37 @@ import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+// store
 import * as googleActions from '../actions/google.actions';
 import * as featureActions from '../actions/actions';
 import * as friendsActions from '../../social-store/actions/friends.actions';
+
+// services
 import { AuthenticationService } from '@services/authentication.service';
-import { AccountsService } from '@services/accounts.service';
-import { GoogleLoginResponse } from '@models/authentication';
+import { UserService } from '@src/app/services/user.service';
+
+// models
+import { GoogleLoginResponse } from '@models/../newModels/authentication';
 import {
   GoogleConnectResponse,
   GoogleDisconnectResponse
-} from '@models/accounts';
+} from '@models/../newModels/user';
 
 @Injectable()
 export class GoogleStoreEffects {
   constructor(
     private authenticationService: AuthenticationService,
-    private accountsService: AccountsService,
+    private userService: UserService,
     private actions$: Actions
   ) {}
 
   @Effect()
-  loginGoogleAccountEffect$: Observable<Action> = this.actions$.pipe(
+  loginGoogleUserEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleLoginRequestAction>(
       googleActions.GoogleActionTypes.GOOGLE_LOGIN_REQUEST
     ),
     switchMap((action) =>
-      this.authenticationService.loginGoogleAccount(action.request).pipe(
+      this.authenticationService.loginGoogleUser(action.request).pipe(
         map(
           (response: GoogleLoginResponse) =>
             new googleActions.GoogleLoginSuccessAction(response)
@@ -42,29 +47,29 @@ export class GoogleStoreEffects {
   );
 
   @Effect()
-  loginGoogleAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+  loginGoogleUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleLoginSuccessAction>(
       googleActions.GoogleActionTypes.GOOGLE_LOGIN_SUCCESS
     ),
     tap((action: googleActions.GoogleLoginSuccessAction) => {
-      this.authenticationService.loginGoogleAccountSuccess(action.response);
+      this.authenticationService.loginGoogleUserSuccess(action.response);
     }),
     switchMap((action: googleActions.GoogleLoginSuccessAction) => [
       new friendsActions.GetFriendsRequestAction({
         date: new Date().toString(),
         limit: null
       }),
-      new featureActions.GetAccountMetadataRequestAction({})
+      new featureActions.GetUserMetadataRequestAction({})
     ])
   );
 
   @Effect()
-  connectGoogleAccountEffect$: Observable<Action> = this.actions$.pipe(
+  connectGoogleUserEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleConnectRequestAction>(
       googleActions.GoogleActionTypes.GOOGLE_CONNECT_REQUEST
     ),
     switchMap((action) =>
-      this.accountsService.connectGoogleAccount(action.request).pipe(
+      this.userService.connectGoogleUser(action.request).pipe(
         map(
           (response: GoogleConnectResponse) =>
             new googleActions.GoogleConnectSuccessAction(response)
@@ -77,22 +82,22 @@ export class GoogleStoreEffects {
   );
 
   @Effect({ dispatch: false })
-  connectGoogleAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+  connectGoogleUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleConnectSuccessAction>(
       googleActions.GoogleActionTypes.GOOGLE_CONNECT_SUCCESS
     ),
     tap((action: googleActions.GoogleConnectSuccessAction) => {
-      // this.authenticationService.loginGoogleAccountSuccess(action.response);
+      // this.authenticationService.loginGoogleUserSuccess(action.response);
     })
   );
 
   @Effect()
-  disconnectGoogleAccountEffect$: Observable<Action> = this.actions$.pipe(
+  disconnectGoogleUserEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleDisconnectRequestAction>(
       googleActions.GoogleActionTypes.GOOGLE_DISCONNECT_REQUEST
     ),
     switchMap((action) =>
-      this.accountsService.disconnectGoogleAccount(action.request).pipe(
+      this.userService.disconnectGoogleUser(action.request).pipe(
         map(
           (response: GoogleDisconnectResponse) =>
             new googleActions.GoogleDisconnectSuccessAction(response)
@@ -105,12 +110,12 @@ export class GoogleStoreEffects {
   );
 
   @Effect({ dispatch: false })
-  disconnectGoogleAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+  disconnectGoogleUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<googleActions.GoogleDisconnectSuccessAction>(
       googleActions.GoogleActionTypes.GOOGLE_DISCONNECT_SUCCESS
     ),
     tap((action: googleActions.GoogleDisconnectSuccessAction) => {
-      // this.authenticationService.loginGoogleAccountSuccess(action.response);
+      // this.authenticationService.loginGoogleUserSuccess(action.response);
     })
   );
 }

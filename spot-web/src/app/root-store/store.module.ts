@@ -4,7 +4,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 
 import { PostsStoreModule } from './posts-store';
-import { AccountsStoreModule } from './accounts-store';
+import { UserStoreModule } from './user-store';
 import { CommentsStoreModule } from './comments-store/comments-store.module';
 import { SocialStoreModule } from './social-store/social-store.module';
 
@@ -12,7 +12,7 @@ import { SocialStoreModule } from './social-store/social-store.module';
   imports: [
     CommonModule,
     PostsStoreModule,
-    AccountsStoreModule,
+    UserStoreModule,
     CommentsStoreModule,
     SocialStoreModule,
     StoreModule.forRoot({}),

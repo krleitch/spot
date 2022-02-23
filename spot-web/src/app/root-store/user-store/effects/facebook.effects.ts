@@ -4,71 +4,74 @@ import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+// store
 import * as facebookActions from '../actions/facebook.actions';
 import * as featureActions from '../actions/actions';
 import * as friendsActions from '../../social-store/actions/friends.actions';
+
+// services
+import { UserService } from '@src/app/services/user.service';
+import { AlertService } from '@services/alert.service';
 import { AuthenticationService } from '@services/authentication.service';
-import { AccountsService } from '@services/accounts.service';
-import { FacebookLoginResponse } from '@models/authentication';
+
+// models
+import { FacebookLoginResponse } from '@models/../newModels/authentication';
 import {
   FacebookConnectResponse,
   FacebookDisconnectResponse
-} from '@models/accounts';
-import { AlertService } from '@services/alert.service';
+} from '@models/../newModels/user';
 
 @Injectable()
 export class FacebookStoreEffects {
   constructor(
     private authenticationService: AuthenticationService,
     private alertService: AlertService,
-    private accountsService: AccountsService,
+    private userService: UserService,
     private actions$: Actions
   ) {}
 
   @Effect()
-  loginFacebookAccountEffect$: Observable<Action> = this.actions$.pipe(
+  loginFacebookUserEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookLoginRequestAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_LOGIN_REQUEST
     ),
     switchMap((loginRequest) =>
-      this.authenticationService
-        .loginFacebookAccount(loginRequest.request)
-        .pipe(
-          map(
-            (response: FacebookLoginResponse) =>
-              new facebookActions.FacebookLoginSuccessAction(response)
-          ),
-          catchError((error) =>
-            observableOf(new facebookActions.FacebookLoginFailureAction(error))
-          )
+      this.authenticationService.loginFacebookUser(loginRequest.request).pipe(
+        map(
+          (response: FacebookLoginResponse) =>
+            new facebookActions.FacebookLoginSuccessAction(response)
+        ),
+        catchError((error) =>
+          observableOf(new facebookActions.FacebookLoginFailureAction(error))
         )
+      )
     )
   );
 
   @Effect()
-  loginFacebookAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+  loginFacebookUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookLoginSuccessAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS
     ),
     tap((action: facebookActions.FacebookLoginSuccessAction) => {
-      this.authenticationService.loginFacebookAccountSuccess(action.response);
+      this.authenticationService.loginFacebookUserSuccess(action.response);
     }),
     switchMap((action: facebookActions.FacebookLoginSuccessAction) => [
       new friendsActions.GetFriendsRequestAction({
         date: new Date().toString(),
         limit: null
       }),
-      new featureActions.GetAccountMetadataRequestAction({})
+      new featureActions.GetUserMetadataRequestAction({})
     ])
   );
 
   @Effect()
-  connectFacebookAccountEffect$: Observable<Action> = this.actions$.pipe(
+  connectFacebookUserEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookConnectRequestAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_REQUEST
     ),
     switchMap((action) =>
-      this.accountsService.connectFacebookAccount(action.request).pipe(
+      this.userService.connectFacebookUser(action.request).pipe(
         map(
           (response: FacebookConnectResponse) =>
             new facebookActions.FacebookConnectSuccessAction(response)
@@ -85,17 +88,17 @@ export class FacebookStoreEffects {
   );
 
   @Effect({ dispatch: false })
-  connectFacebookAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+  connectFacebookUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookConnectSuccessAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS
     ),
     tap((action: facebookActions.FacebookConnectSuccessAction) => {
-      // this.authenticationService.loginFacebookAccountSuccess(action.response);
+      // this.authenticationService.loginFacebookUserSuccess(action.response);
     })
   );
 
   @Effect({ dispatch: false })
-  connectFacebookAccountFailureEffect$: Observable<Action> = this.actions$.pipe(
+  connectFacebookUserFailureEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookConnectFailureAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_FAILURE
     ),
@@ -105,12 +108,12 @@ export class FacebookStoreEffects {
   );
 
   @Effect()
-  disconnectFacebookAccountEffect$: Observable<Action> = this.actions$.pipe(
+  disconnectFacebookUserEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookDisconnectRequestAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_REQUEST
     ),
     switchMap((action) =>
-      this.accountsService.disconnectFacebookAccount(action.request).pipe(
+      this.userService.disconnectFacebookUser(action.request).pipe(
         map(
           (response: FacebookDisconnectResponse) =>
             new facebookActions.FacebookDisconnectSuccessAction(response)
@@ -125,12 +128,12 @@ export class FacebookStoreEffects {
   );
 
   @Effect({ dispatch: false })
-  disconnectFacebookAccountSuccessEffect$: Observable<Action> = this.actions$.pipe(
+  disconnectFacebookUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
     ofType<facebookActions.FacebookDisconnectSuccessAction>(
       facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS
     ),
     tap((action: facebookActions.FacebookDisconnectSuccessAction) => {
-      // this.authenticationService.loginFacebookAccountSuccess(action.response);
+      // this.authenticationService.loginFacebookUserSuccess(action.response);
     })
   );
 }

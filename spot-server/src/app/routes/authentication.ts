@@ -8,8 +8,6 @@ import * as authenticationError from '@exceptions/authentication.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // db
-import accounts from '@db/accounts.js';
-import passwordReset from '@db/passwordReset.js';
 import prismaUser from '@db/../prisma/user.js';
 import prismaPasswordReset from '@db/../prisma/passwordReset.js';
 
@@ -27,7 +25,6 @@ import { UserRole } from '@models/../newModels/user.js';
 import {
   RegisterRequest,
   RegisterResponse,
-  LoginRequest,
   LoginResponse,
   FacebookLoginRequest,
   FacebookLoginResponse,
@@ -310,7 +307,7 @@ router.post(
       if (!passwordReset) {
         return next(new authenticationError.PasswordResetValidate());
       }
-      if (authenticationService.isValidToken(passwordReset.token)) {
+      if (authenticationService.isValidTokenTime(passwordReset.createdAt)) {
         const response: ValidateTokenResponse = {};
         res.status(200).send(response);
       } else {
@@ -332,7 +329,7 @@ router.post(
     if (!passwordReset) {
       return next(new authenticationError.NewPassword());
     }
-    if (!authenticationService.isValidToken(passwordReset.token)) {
+    if (!authenticationService.isValidTokenTime(passwordReset.createdAt)) {
       return next(new authenticationError.NewPassword());
     }
 

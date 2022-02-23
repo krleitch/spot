@@ -15,17 +15,18 @@ import { mapTo, startWith, takeUntil, takeWhile } from 'rxjs/operators';
 
 // store
 import { Store, select } from '@ngrx/store';
-import { AccountsActions } from '@store/accounts-store';
+import { UserActions } from '@src/app/root-store/user-store';
 import {
   SocialStoreNotificationsActions,
   SocialStoreSelectors
 } from '@store/social-store';
-import { AccountsStoreSelectors, RootStoreState } from '@store';
+import { UserStoreSelectors, RootStoreState } from '@store';
 
 // services
 import { ModalService } from '@services/modal.service';
 
-import { Account, AccountMetadata } from '@models/accounts';
+import { User } from '@models/../newModels/user';
+import { UserMetadata } from '@models/../newModels/userMetadata';
 import { GetNotificationsUnreadRequest } from '@models/notifications';
 
 @Component({
@@ -39,14 +40,14 @@ export class NavComponent implements OnInit, OnDestroy {
   // on title click
   @Output() titleEvent = new EventEmitter<boolean>();
 
-  // account
-  @ViewChild('account') accountView;
-  accountShowDropdown = false;
-  account$: Observable<Account>;
-  accountLoading$: Observable<boolean>;
+  // user
+  @ViewChild('user') userView;
+  userShowDropdown = false;
+  user$: Observable<User>;
+  userLoading$: Observable<boolean>;
   loading: boolean;
-  showAccountIndicator$: Observable<boolean>;
-  accountMetadata$: Observable<AccountMetadata>;
+  showUserIndicator$: Observable<boolean>;
+  userMetadata$: Observable<UserMetadata>;
 
   // Auth
   isAuthenticated$: Observable<boolean>;
@@ -68,12 +69,10 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
-    );
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
 
-    this.accountMetadata$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountMetadata)
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
     );
 
     this.unread$ = this.store$.pipe(
@@ -81,7 +80,7 @@ export class NavComponent implements OnInit, OnDestroy {
     );
 
     this.isAuthenticated$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectIsAuthenticated)
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
     this.isAuthenticated$
@@ -111,16 +110,16 @@ export class NavComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.accountLoading$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccountLoading)
+    this.userLoading$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserLoading)
     );
 
-    this.accountLoading$
+    this.userLoading$
       .pipe(takeUntil(this.onDestroy))
       .subscribe((loading: boolean) => {
         this.loading = loading;
         if (this.loading) {
-          this.showAccountIndicator$ = timer(1000)
+          this.showUserIndicator$ = timer(1000)
             .pipe(
               mapTo(true),
               takeWhile((_) => this.loading)
@@ -136,11 +135,8 @@ export class NavComponent implements OnInit, OnDestroy {
 
   offClickHandler(event: MouseEvent): void {
     // Hide the dropdown if you click outside
-    if (
-      this.accountView &&
-      !this.accountView.nativeElement.contains(event.target)
-    ) {
-      this.accountSetDropdown(false);
+    if (this.userView && !this.userView.nativeElement.contains(event.target)) {
+      this.userSetDropdown(false);
     }
 
     if (
@@ -151,12 +147,12 @@ export class NavComponent implements OnInit, OnDestroy {
     }
   }
 
-  accountSetDropdown(value: boolean): void {
-    this.accountShowDropdown = value;
+  userSetDropdown(value: boolean): void {
+    this.userShowDropdown = value;
   }
 
   logout(): void {
-    this.store$.dispatch(new AccountsActions.LogoutRequestAction());
+    this.store$.dispatch(new UserActions.LogoutRequestAction());
   }
 
   navigateHome(): void {

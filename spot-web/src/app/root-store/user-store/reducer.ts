@@ -19,7 +19,7 @@ export function featureReducer(
     case ActionTypes.REGISTER_SUCCESS: {
       return {
         ...state,
-        account: action.response.account,
+        user: action.response.user,
         authenticationError: null,
         authenticationSuccess: true
       };
@@ -27,7 +27,7 @@ export function featureReducer(
     case ActionTypes.REGISTER_FAILURE: {
       return {
         ...state,
-        account: null,
+        user: null,
         authenticationError: action.error,
         authenticationSuccess: false
       };
@@ -35,7 +35,7 @@ export function featureReducer(
     case ActionTypes.LOGIN_SUCCESS: {
       return {
         ...state,
-        account: action.response.account,
+        user: action.response.user,
         authenticationError: null,
         authenticationSuccess: true
       };
@@ -43,7 +43,7 @@ export function featureReducer(
     case ActionTypes.LOGIN_FAILURE: {
       return {
         ...state,
-        account: null,
+        user: null,
         authenticationError: action.error,
         authenticationSuccess: false
       };
@@ -51,13 +51,13 @@ export function featureReducer(
     case ActionTypes.LOGOUT_REQUEST: {
       return {
         ...state,
-        account: null
+        user: null
       };
     }
     case ActionTypes.DELETE_SUCCESS: {
       return {
         ...state,
-        account: null
+        user: null
       };
     }
     case ActionTypes.LOAD_LOCATION: {
@@ -87,96 +87,96 @@ export function featureReducer(
         locationTimeReceived: null
       };
     }
-    case ActionTypes.ACCOUNT_REQUEST: {
+    case ActionTypes.USER_REQUEST: {
       return {
         ...state,
-        accountLoading: true
+        userLoading: true
       };
     }
-    case ActionTypes.ACCOUNT_SUCCESS: {
+    case ActionTypes.USER_SUCCESS: {
       return {
         ...state,
-        account: action.response.account,
-        accountLoading: false
+        user: action.response.user,
+        userLoading: false
       };
     }
     case ActionTypes.UPDATE_USERNAME_REQUEST: {
       return {
         ...state,
-        account: { ...state.account, username: action.request.username }
+        user: { ...state.user, username: action.request.username }
       };
     }
     case ActionTypes.UPDATE_EMAIL_REQUEST: {
       return {
         ...state,
-        account: {
-          ...state.account,
+        user: {
+          ...state.user,
           email: action.request.email,
-          verified_date: null
+          verifiedAt: null
         }
       };
     }
     case ActionTypes.UPDATE_PHONE_REQUEST: {
       return {
         ...state,
-        account: { ...state.account, phone: action.request.phone }
+        user: { ...state.user, phone: action.request.phone }
       };
     }
     case ActionTypes.GET_METADATA_SUCCESS: {
       return {
         ...state,
-        accountMetadata: action.response.metadata
+        userMetadata: action.response.metadata
       };
     }
     case ActionTypes.UPDATE_METADATA_SUCCESS: {
       return {
         ...state,
-        accountMetadata: action.response.metadata
+        userMetadata: action.response.metadata
       };
     }
     case ActionTypes.VERIFY_CONFIRM_REQUEST: {
       return {
         ...state,
-        account: {
-          ...state.account,
-          verified_date: action.request.verified_date
+        user: {
+          ...state.user,
+          verifiedAt: action.request.user.verifiedAt
         }
       };
     }
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,
-        account: action.response.account
+        user: action.response.user
       };
     }
     case FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS: {
       return {
         ...state,
-        account: action.response.account
+        user: action.response.user
       };
     }
     case FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS: {
       return {
         ...state,
-        account: { ...state.account, facebook_id: null }
+        user: { ...state.user, facebookId: null }
       };
     }
     case GoogleActionTypes.GOOGLE_LOGIN_SUCCESS: {
       return {
         ...state,
-        account: action.response.account
+        user: action.response.user
       };
     }
     case GoogleActionTypes.GOOGLE_CONNECT_SUCCESS: {
       return {
         ...state,
-        account: action.response.account
+        user: action.response.user
       };
     }
     case GoogleActionTypes.GOOGLE_DISCONNECT_SUCCESS: {
       return {
         ...state,
-        account: { ...state.account, google_id: null }
+        user: { ...state.user, googleId: null }
       };
     }
     default: {

@@ -14,16 +14,17 @@ import {
   FacebookLoginResponse,
   GoogleLoginRequest,
   GoogleLoginResponse,
-  LoginResponse,
   NewPasswordRequest,
-  NewPasswordSuccess,
+  NewPasswordResponse,
   PasswordResetRequest,
-  PasswordResetSuccess,
+  PasswordResetResponse,
   RegisterRequest,
   RegisterResponse,
+  LoginRequest,
+  LoginResponse,
   ValidateTokenRequest,
-  ValidateTokenSuccess
-} from '@models/authentication';
+  ValidateTokenResponse
+} from '@models/../newModels/authentication';
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
 import { ModalOptions } from '@models/modal';
 
@@ -49,63 +50,61 @@ export class AuthenticationService {
   ) {}
 
   // Facebook
-  loginFacebookAccount(
+  loginFacebookUser(
     request: FacebookLoginRequest
   ): Observable<FacebookLoginResponse> {
     return this.http.post<FacebookLoginResponse>(
-      `${this.baseUrl}/auth/login/facebook`,
+      `${this.baseUrl}/authentication/login/facebook`,
       request
     );
   }
 
   // Google
-  loginGoogleAccount(
+  loginGoogleUser(
     request: GoogleLoginRequest
   ): Observable<GoogleLoginResponse> {
     return this.http.post<GoogleLoginResponse>(
-      `${this.baseUrl}/auth/login/google`,
+      `${this.baseUrl}/authentication/login/google`,
       request
     );
   }
 
   // Normal auth
-  registerAccount(
-    registerRequest: RegisterRequest
-  ): Observable<RegisterResponse> {
+  registerUser(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(
-      `${this.baseUrl}/auth/register`,
-      registerRequest
+      `${this.baseUrl}/authentication/register`,
+      request
     );
   }
 
-  loginAccount(loginAccountRequest: any): Observable<any> {
-    return this.http.post<any>(
-      `${this.baseUrl}/auth/login`,
-      loginAccountRequest
+  loginUser(request: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${this.baseUrl}/authentication/login`,
+      request
     );
   }
 
   passwordReset(
     request: PasswordResetRequest
-  ): Observable<PasswordResetSuccess> {
-    return this.http.post<PasswordResetSuccess>(
-      `${this.baseUrl}/auth/password-reset`,
+  ): Observable<PasswordResetResponse> {
+    return this.http.post<PasswordResetResponse>(
+      `${this.baseUrl}/authentication/password-reset`,
       request
     );
   }
 
   validateToken(
     request: ValidateTokenRequest
-  ): Observable<ValidateTokenSuccess> {
-    return this.http.post<ValidateTokenSuccess>(
-      `${this.baseUrl}/auth/new-password/validate`,
+  ): Observable<ValidateTokenResponse> {
+    return this.http.post<ValidateTokenResponse>(
+      `${this.baseUrl}/authentication/new-password/validate`,
       request
     );
   }
 
-  newPassword(request: NewPasswordRequest): Observable<NewPasswordSuccess> {
-    return this.http.post<NewPasswordSuccess>(
-      `${this.baseUrl}/auth/new-password`,
+  newPassword(request: NewPasswordRequest): Observable<NewPasswordResponse> {
+    return this.http.post<NewPasswordResponse>(
+      `${this.baseUrl}/authentication/new-password`,
       request
     );
   }
@@ -174,7 +173,7 @@ export class AuthenticationService {
     return Md5.hashStr(data).toString();
   }
 
-  registerAccountSuccess(response: LoginResponse): void {
+  registerUserSuccess(response: LoginResponse): void {
     this.addIdToken(response.jwt);
     // TODO, this just chgecks global modal, should check auth modal
     if (this.modalService.isOpen('global')) {
@@ -191,7 +190,7 @@ export class AuthenticationService {
 
   // login / logout
 
-  loginAccountSuccess(response: LoginResponse): void {
+  loginUserSuccess(response: LoginResponse): void {
     this.addIdToken(response.jwt);
     if (this.modalService.isOpen('global')) {
       this.modalService.close('global');
@@ -202,23 +201,7 @@ export class AuthenticationService {
     }
   }
 
-  loginFacebookAccountSuccess(response: FacebookLoginResponse): void {
-    this.addIdToken(response.jwt);
-    if (this.modalService.isOpen('global')) {
-      this.modalService.close('global');
-    }
-    if (response.created) {
-      this.zone.run(() => {
-        this.router.navigateByUrl('/username');
-      });
-    } else {
-      this.zone.run(() => {
-        this.router.navigateByUrl('/home');
-      });
-    }
-  }
-
-  loginGoogleAccountSuccess(response: GoogleLoginResponse): void {
+  loginFacebookUserSuccess(response: FacebookLoginResponse): void {
     this.addIdToken(response.jwt);
     if (this.modalService.isOpen('global')) {
       this.modalService.close('global');
@@ -234,7 +217,23 @@ export class AuthenticationService {
     }
   }
 
-  logoutAccountSuccess(): void {
+  loginGoogleUserSuccess(response: GoogleLoginResponse): void {
+    this.addIdToken(response.jwt);
+    if (this.modalService.isOpen('global')) {
+      this.modalService.close('global');
+    }
+    if (response.created) {
+      this.zone.run(() => {
+        this.router.navigateByUrl('/username');
+      });
+    } else {
+      this.zone.run(() => {
+        this.router.navigateByUrl('/home');
+      });
+    }
+  }
+
+  logoutUserSuccess(): void {
     this.removeIdToken();
 
     // Logout of facebook

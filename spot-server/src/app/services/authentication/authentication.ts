@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 import { randomBytes, pbkdf2Sync } from 'crypto';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
@@ -15,10 +16,10 @@ const client = new OAuth2Client(
 import passport from '@services/authentication/passport.js';
 
 // db
-import accounts from '@db/accounts.js';
+import prismaUser from '@db/../prisma/user.js';
 
 // exceptions
-import * as AuthenticationError from '@exceptions/authentication.js';
+import * as authenticationError from '@exceptions/authentication.js';
 
 // constants
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication.js';
@@ -31,7 +32,7 @@ function validUsername(username: string): Error | null {
     username.length < AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH ||
     username.length > AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH
   ) {
-    return new AuthenticationError.UsernameLengthError(
+    return new authenticationError.UsernameLengthError(
       400,
       AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH,
       AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH
@@ -43,7 +44,7 @@ function validUsername(username: string): Error | null {
 
   // Check characters
   if (username.match(PATTERN) == null) {
-    return new AuthenticationError.UsernameCharacterError(400);
+    return new authenticationError.UsernameCharacterError(400);
   }
 
   return null;
@@ -55,7 +56,7 @@ function validPassword(password: string): Error | null {
     password.length < AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH ||
     password.length > AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH
   ) {
-    return new AuthenticationError.PasswordLengthError(
+    return new authenticationError.PasswordLengthError(
       400,
       AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH,
       AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH
@@ -69,7 +70,7 @@ function validEmail(email: string): Error | null {
   const regex = /^\S+@\S+\.\S+$/;
 
   if (email.match(regex) == null) {
-    return new AuthenticationError.EmailInvalidError(400);
+    return new authenticationError.EmailInvalidError(400);
   }
 
   return null;
@@ -80,21 +81,18 @@ function validPhone(phone: string): Error | null {
     /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 
   if (phone.match(regex) == null) {
-    return new AuthenticationError.PhoneInvalidError(400);
+    return new authenticationError.PhoneInvalidError(400);
   }
 
   return null;
 }
 
 // Optional Authentication Middleware
-// has req.authenticated if authenticated
 const optionalAuth = function (req: any, res: any, next: any) {
   passport.authenticate(
     'jwt',
     { session: false },
     function (err: any, user: any, info: any) {
-      req.authenticated = !!user;
-      req.verified = user ? !!user.verified_date : null;
       req.user = user || null;
       next();
     }
@@ -107,11 +105,9 @@ const requiredAuth = function (req: any, res: any, next: any) {
     'jwt',
     { session: false },
     function (err: any, user: any, info: any) {
-      req.authenticated = !!user;
-      req.verified = user ? !!user.verified_date : null;
       req.user = user || null;
-      if (!req.authenticated) {
-        return next(new AuthenticationError.AuthenticationError(401));
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError(401));
       } else {
         next();
       }
@@ -121,17 +117,15 @@ const requiredAuth = function (req: any, res: any, next: any) {
 
 // Uses a Username/Email and password combination
 // Will throw if doesnt exist
-const localAuth = function (req: any, res: any, next: any) {
+const localAuth = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
     'local',
     { session: false },
     function (err: any, user: any, info: any) {
-      req.authenticated = !!user;
-      req.verified = user ? !!user.verified_date : null;
       req.user = user || null;
       // No user found
       if (user == false) {
-        return next(new AuthenticationError.UsernameOrPasswordError(401));
+        return next(new authenticationError.UsernameOrPasswordError(401));
       } else {
         next();
       }
@@ -166,13 +160,12 @@ function generateToken(user: any): any {
 
 // Password Reset
 
-function isValidToken(token: any): boolean {
+function isValidTokenTime(tokenCreatedAt: Date): boolean {
   // the constant should be a number in minutes
   const expire = AUTHENTICATION_CONSTANTS.TOKEN_EXPIRE_TIME * 60 * 1000;
 
   const now = new Date();
-
-  return now.getTime() - new Date(token.creation_date).getTime() <= expire;
+  return now.getTime() - tokenCreatedAt.getTime() <= expire;
 }
 
 async function createUsernameFromEmail(email: string): Promise<string> {
@@ -190,14 +183,14 @@ async function createUsernameFromEmail(email: string): Promise<string> {
   }
 
   // Need to make sure the username isn't taken
-  let exists = await accounts.usernameExists(username);
+  let exists = await prismaUser.usernameExists(username);
 
   do {
     if (exists) {
       // add a random number from 0-9
       username += Math.floor(Math.random() * 10).toString();
       // check again
-      exists = await accounts.usernameExists(username);
+      exists = await prismaUser.usernameExists(username);
     }
   } while (exists);
 
@@ -206,15 +199,15 @@ async function createUsernameFromEmail(email: string): Promise<string> {
 
 // Update times
 
-function isValidUserUpdateTime(time: Date | null): boolean {
-  if (!time) {
+function isValidUserUpdateTime(updatedTime: Date | null): boolean {
+  if (!updatedTime) {
     return true;
   }
-  // the constant should be a number in hours
+  // the constant is in number of hours
   const expire =
     AUTHENTICATION_CONSTANTS.ACCOUNT_UPDATE_TIMEOUT * 60 * 60 * 1000;
   const now = new Date();
-  return now.getTime() - new Date(time).getTime() > expire;
+  return now.getTime() - updatedTime.getTime() > expire;
 }
 
 // Facebook
@@ -278,7 +271,7 @@ export default {
   localAuth,
   validEmail,
   validPhone,
-  isValidToken,
+  isValidTokenTime,
   createUsernameFromEmail,
   verifyGoogleIdToken,
   isValidUserUpdateTime

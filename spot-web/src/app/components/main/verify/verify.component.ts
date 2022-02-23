@@ -8,14 +8,21 @@ import { takeUntil } from 'rxjs/operators';
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+import {
+  UserActions,
+  UserStoreSelectors
+} from '@src/app/root-store/user-store';
 
 // Services
-import { AccountsService } from '@services/accounts.service';
+import { UserService } from '@src/app/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Assets
-import { Account, VerifyConfirmRequest, VerifyRequest } from '@models/accounts';
+import {
+  User,
+  VerifyConfirmRequest,
+  VerifyRequest
+} from '@models/../newModels/user';
 
 @Component({
   selector: 'spot-verify',
@@ -30,11 +37,11 @@ export class VerifyComponent implements OnInit, OnDestroy {
   successMessage = '';
   errorMessage = '';
   verificationSent = false;
-  account$: Observable<Account>;
+  user$: Observable<User>;
 
   constructor(
     private route: ActivatedRoute,
-    private accountsService: AccountsService,
+    private userService: UserService,
     private store$: Store<RootStoreState.State>,
     private translateService: TranslateService
   ) {
@@ -44,10 +51,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Account
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
-    );
+    // User
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
 
     this.route.paramMap.subscribe((p) => {
       const token = p.get('token');
@@ -56,15 +61,15 @@ export class VerifyComponent implements OnInit, OnDestroy {
         token
       };
 
-      this.accountsService
-        .verifyConfirmAccount(request)
+      this.userService
+        .verifyConfirmUser(request)
         .pipe(takeUntil(this.onDestroy))
         .subscribe(
           (response) => {
             this.successMessage = this.STRINGS.SUCCESS;
 
             this.store$.dispatch(
-              new AccountsActions.VerifyConfirmRequestAction(response)
+              new UserActions.VerifyConfirmRequestAction(response)
             );
           },
           (err: any) => {
@@ -80,7 +85,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
 
   sendVerification(): void {
     const request: VerifyRequest = {};
-    this.store$.dispatch(new AccountsActions.VerifyRequestAction(request));
+    this.store$.dispatch(new UserActions.VerifyRequestAction(request));
     this.verificationSent = true;
   }
 }

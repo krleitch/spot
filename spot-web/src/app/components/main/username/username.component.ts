@@ -8,19 +8,22 @@ import { take, takeUntil } from 'rxjs/operators';
 // store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { AccountsActions, AccountsStoreSelectors } from '@store/accounts-store';
+import {
+  UserActions,
+  UserStoreSelectors
+} from '@src/app/root-store/user-store';
 
 // services
 import { AuthenticationService } from '@services/authentication.service';
-import { AccountsService } from '@services/accounts.service';
+import { UserService } from '@src/app/services/user.service';
 import { ModalService } from '@services/modal.service';
 import { TranslateService } from '@ngx-translate/core';
 
 import {
-  Account,
+  User,
   UpdateUsernameRequest,
   UpdateUsernameResponse
-} from '@models/accounts';
+} from '@models/../newModels/user';
 import { SpotError } from '@exceptions/error';
 
 @Component({
@@ -33,7 +36,7 @@ export class UsernameComponent implements OnInit, OnDestroy {
 
   STRINGS;
 
-  account$: Observable<Account>;
+  user$: Observable<User>;
   username: string;
   terms: boolean;
   errorMessage: string;
@@ -42,7 +45,7 @@ export class UsernameComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<RootStoreState.State>,
     private authenticationService: AuthenticationService,
-    private accountsService: AccountsService,
+    private userService: UserService,
     private modalService: ModalService,
     private router: Router,
     private translateService: TranslateService
@@ -53,17 +56,13 @@ export class UsernameComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.account$ = this.store$.pipe(
-      select(AccountsStoreSelectors.selectAccount)
-    );
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
 
-    this.account$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((account: Account) => {
-        if (account) {
-          this.username = account.username;
-        }
-      });
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      if (user) {
+        this.username = user.username;
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -99,15 +98,13 @@ export class UsernameComponent implements OnInit, OnDestroy {
     };
 
     this.buttonsDisabled = true;
-    this.accountsService
+    this.userService
       .updateUsername(request)
       .pipe(take(1))
       .subscribe(
         (response: UpdateUsernameResponse) => {
           this.buttonsDisabled = false;
-          this.store$.dispatch(
-            new AccountsActions.UpdateUsernameAction(request)
-          );
+          this.store$.dispatch(new UserActions.UpdateUsernameAction(request));
 
           this.router.navigateByUrl('/home');
         },

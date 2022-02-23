@@ -22,7 +22,7 @@ import { AccountsStoreSelectors, RootStoreState } from '@store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
-import { AccountsService } from '@services/accounts.service';
+import { UserService } from '@src/app/services/user.service';
 import { ModalService } from '@services/modal.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ThemeService } from '@services/theme.service';
@@ -94,7 +94,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
-    private accountsService: AccountsService,
+    private userService: UserService,
     private authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private themeService: ThemeService
@@ -267,7 +267,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       username: this.username
     };
 
-    this.accountsService
+    this.userService
       .updateUsername(request)
       .pipe(take(1))
       .subscribe(
@@ -310,7 +310,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       email: this.email
     };
 
-    this.accountsService
+    this.userService
       .updateEmail(request)
       .pipe(take(1))
       .subscribe(
@@ -345,7 +345,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       phone: this.phone
     };
 
-    this.accountsService
+    this.userService
       .updatePhone(request)
       .pipe(take(1))
       .subscribe(

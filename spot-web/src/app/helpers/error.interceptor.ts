@@ -15,7 +15,7 @@ import { AuthenticationService } from '@services/authentication.service';
 
 // store
 import { Store } from '@ngrx/store';
-import { AccountsActions } from '@store/accounts-store';
+import { UserActions } from '@src/app/root-store/user-store';
 import { RootStoreState } from '@store';
 
 @Injectable()
@@ -33,7 +33,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((err: any) => {
         if (err.status === 401) {
           // auto logout if 401 response returned from api
-          this.store$.dispatch(new AccountsActions.LogoutRequestAction());
+          this.store$.dispatch(new UserActions.LogoutRequestAction());
         }
 
         return throwError(err);
