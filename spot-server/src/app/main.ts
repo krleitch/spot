@@ -12,7 +12,7 @@ import rfs from 'rotating-file-stream';
 import morgan from 'morgan';
 
 // Routes
-import posts from '@routes/posts.js';
+import spot from '@routes/spot.js';
 import root from '@routes/root.js';
 import user from '@routes/user.js';
 import comments from '@routes/comments.js';
@@ -68,10 +68,10 @@ app.use('/authentication', authentication);
 // Only check location on posts and comments
 // only requests that send location details are verified
 app.use(
-  '/posts',
+  '/spot',
   authenticationService.optionalAuth,
   locationService.checkLocation,
-  posts
+  spot
 );
 app.use(
   '/comments',

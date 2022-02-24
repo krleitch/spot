@@ -39,15 +39,14 @@ const findSpots = async (
   searchType: SearchType,
   locationType: LocationType,
   location: LocationData,
-  offset: number,
+  before: string | null | undefined,
+  after: string | null | undefined,
   limit: number,
-  date: Date
 ): Promise<P.Spot[]> => {
   const spots = await prisma.spot.findMany({
     orderBy: {
       createdAt: 'desc'
     },
-    skip: offset,
     take: limit
   });
   return spots;

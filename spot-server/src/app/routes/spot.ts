@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 import uuid from 'uuid';
@@ -6,86 +6,135 @@ import uuid from 'uuid';
 // db
 import posts from '@db/posts.js';
 import reports from '@db/reports.js';
+import prismaSpot from '@db/../prisma/spot.js';
+import prismaReport from '@db/../prisma/report.js';
 
 // services
 import postsService from '@services/posts.js';
 import locationsService from '@services/locations.js';
 import imageService from '@services/image.js';
-import authorization from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization/authorization.js';
 const singleUpload = imageService.upload.single('image');
 
 // errors
-import * as PostsError from '@exceptions/posts.js';
-import * as ReportError from '@exceptions/report.js';
-import * as AuthenticationError from '@exceptions/authentication.js';
+import * as spotError from '@exceptions/spot.js';
+import * as reportError from '@exceptions/report.js';
+import * as authenticationError from '@exceptions/authentication.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // ratelimiter
 import rateLimiter from '@helpers/rateLimiter.js';
 
 // constants
-import { POSTS_CONSTANTS } from '@constants/posts.js';
+import { SPOT_CONSTANTS } from '@constants/spot.js';
 import { REPORT_CONSTANTS } from '@constants/report.js';
-import roles from '@services/authorization/roles.js';
+
+// models
+import { UserRole } from '@models/../newModels/user';
+import { SearchType, LocationType } from '@models/../newModels/userMetadata';
+import {
+  GetSpotRequest,
+  GetSpotResponse,
+  GetSingleSpotRequest,
+  GetSingleSpotResponse,
+  CreateSpotRequest,
+  CreateSpotResponse,
+  RateSpotRequest,
+  RateSpotResponse,
+  DeleteRatingRequest,
+  DeleteRatingResponse,
+  ReportSpotRequest,
+  ReportSpotResponse,
+  GetSpotActivityRequest,
+  GetSpotActivityResponse
+} from '@models/../newModels/spot.js';
 
 // config
 import config from '@config/config.js';
 
-router.use(function timeLog(req: any, res: any, next: any) {
+router.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Get all posts
+// Get Spots
 router.get(
   '/',
-  rateLimiter.genericPostLimiter,
-  ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
-    // You must have an account to get all posts
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
+  rateLimiter.genericSpotLimiter,
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      // You must have an account
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
+      }
 
-    const accountId = req.user.id;
+      // Todo, make dynamic
+      let queryLocationType: LocationType;
+      switch (req.query?.location) {
+        case 'GLOBAL':
+          queryLocationType = LocationType.GLOBAL;
+          break;
+        case 'LOCAL':
+          queryLocationType = LocationType.LOCAL;
+          break;
+        default:
+          queryLocationType = LocationType.GLOBAL;
+      }
+      let querySearchType: SearchType;
+      switch (req.query?.search) {
+        case 'HOT':
+          querySearchType = SearchType.HOT;
+          break;
+        case 'NEW':
+          querySearchType = SearchType.NEW;
+          break;
+        default:
+          querySearchType = SearchType.HOT;
+      }
 
-    // latitude and longitude are optional if location is global
-    const latitude = Number(req.query.latitude);
-    const longitude = Number(req.query.longitude);
-
-    const location = req.query.location;
-    const sort = req.query.sort;
-    const offset = Number(req.query.offset);
-    const limit = Number(req.query.limit);
-    const date = req.query.date || null;
-
-    posts
-      .getPosts(
-        accountId,
-        sort,
-        location,
-        latitude,
-        longitude,
-        offset,
-        limit,
-        date
-      )
-      .then(
-        (rows: any) => {
-          // add the distance
-          rows = locationsService.addDistanceToRows(
-            rows,
-            latitude,
-            longitude,
-            true
-          );
-
-          const response = { posts: rows };
-          res.status(200).json(response);
+      const query: GetSpotRequest = {
+        limit: Number(req.query.limit),
+        before: req.query.before ? req.query.before.toString() : null,
+        after: req.query.after ? req.query.after.toString() : null,
+        initialLoad: req.query.initial ? Boolean(req.query.initial) : false,
+        options: {
+          locationType: queryLocationType,
+          searchType: querySearchType
         },
-        (err: any) => {
-          return next(new PostsError.GetPosts(500));
+        location: {
+          latitude: Number(req.query.latitude),
+          longitude: Number(req.query.longitude)
         }
+      };
+
+      let spots = await prismaSpot.findSpots(
+        req.user.userId,
+        query.options.searchType,
+        query.options.locationType,
+        query.location,
+        query.before,
+        query.after,
+        query.limit
       );
-  })
+
+      // add the distance
+      spots = locationsService.addDistanceToRows(
+        spots,
+        query.location.latitude,
+        query.location.longitude,
+        true
+      );
+
+      const response: GetSpotResponse = {
+        spots: spots,
+        intialLoad: query.initialLoad,
+        cursor: {
+          before: '',
+          after: ''
+        }
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
 // Add a post

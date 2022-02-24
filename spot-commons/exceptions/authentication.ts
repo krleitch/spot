@@ -7,7 +7,7 @@ const AUTHENTICATION_ERROR_MESSAGES = ERROR_MESSAGES.PRE_AUTH.AUTHENTICATION;
 
 // The user is not authenticated
 export class AuthenticationError extends SpotError {
-  constructor(statusCode: number = 500) {
+  constructor(statusCode: number = 401) {
     super(AUTHENTICATION_ERROR_MESSAGES.NO_AUTHENTICATION, statusCode);
     this.name = "AuthenticationError";
   }

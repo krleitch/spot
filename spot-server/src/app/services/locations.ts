@@ -20,6 +20,10 @@ import authorization from '@services/authorization/authorization.js';
 import { LOCATIONS_CONSTANTS } from '@constants/locations.js';
 import roles from '@services/authorization/roles.js';
 
+// models
+import { LocationData } from '@models/../newModels/location.js';
+import { Spot } from '@models/../newModels/spot.js';
+
 // Middleware to call verifyLocation
 const checkLocation = async (req: any, res: any, next: any) => {
   // if you aren't logged in then verifying your location doesn't matter
@@ -137,11 +141,10 @@ function verifyLocation(
   );
 }
 
-function addDistanceToRows(
-  rows: any[],
-  latitude: number,
-  longitude: number,
-  hideDistance: boolean
+function addLocationPropsToSpots(
+  spots: Spot[],
+  location: LocationData,
+  options: { hideDistance: boolean }
 ): any[] {
   return rows.map((row: any) => {
     const newRow = row;
@@ -328,5 +331,5 @@ export default {
   verifyLocation,
   distanceBetween,
   getGeolocation,
-  addDistanceToRows
+  addLocationPropsToSpots
 };

@@ -34,22 +34,21 @@ export const ERROR_MESSAGES = {
 
         },
 
-        POSTS: {
+        SPOT: {
 
-            POST_ERROR: 'Post Error',
-            INVALID_POST_CONTENT: 'Invalid post content',
-            INVALID_POST_LENGTH: 'Invalid post length',
-            INVALID_POST_LINE_LENGTH: 'Invalid post line length',
+            INVALID_SPOT_CONTENT: 'Invalid spot content',
+            INVALID_SPOT_LENGTH: 'Invalid spot length',
+            INVALID_SPOT_LINE_LENGTH: 'Invalid spot line length',
             NO_CONTENT: 'No content',
             IMAGE: 'Error with image',
-            INVALID_POST_PROFANITY: 'Spot cannot contain profanity',
-            POST_ACTIVITY: 'Error getting post activity',
-            GET_SINGLE_POST: 'Error getting the requested post',
-            DELETE_POST: 'Error deleting post',
-            DISLIKE_POST: 'Error disliking post',
-            LIKE_POST: 'Error liking post',
-            UNRATED_POST: 'Error removing rating from post',
-            GET_POSTS: 'Error getting posts'
+            INVALID_SPOT_PROFANITY: 'Spot cannot contain profanity',
+            SPOT_ACTIVITY: 'Error getting spot activity',
+            GET_SINGLE_SPOT: 'Error getting the requested spot',
+            DELETE_SPOT: 'Error deleting spot',
+            DISLIKE_SPOT: 'Error disliking spot',
+            LIKE_SPOT: 'Error liking spot',
+            DELETE_RATING_SPOT: 'Error removing rating from spot',
+            GET_SPOT: 'Error getting spots'
 
         },
 
@@ -77,7 +76,7 @@ export const ERROR_MESSAGES = {
             UNRATED_REPLY: 'Error removing rating from reply',
 
             REPORT_COMMENT: 'Error reporting comment',
-            NOT_IN_RANGE: 'Error, you are not close enough to comment on this post',
+            NOT_IN_RANGE: 'Error, you are not close enough to comment on this spot',
             NOT_TAGGED: 'Error, you need to be tagged in this comment chain to add your own comment'
 
         },

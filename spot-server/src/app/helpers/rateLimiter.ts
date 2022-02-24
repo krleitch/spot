@@ -56,30 +56,30 @@ const genericFriendLimiter = rateLimit({
 });
 
 // Post Limiters
-const createPostTimeout = 1; // minutes
-const createPostLimit = 1;
-const createPostLimiter = rateLimit({
-  windowMs: createPostTimeout * 60 * 1000,
-  max: createPostLimit,
+const createSpotTimeout = 1; // minutes
+const createSpotLimit = 1;
+const createSpotLimiter = rateLimit({
+  windowMs: createSpotTimeout * 60 * 1000,
+  max: createSpotLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
-      new RateLimitError(429, createPostLimit, createPostTimeout)
+      new RateLimitError(429, createSpotLimit, createSpotTimeout)
     );
   },
   skipFailedRequests: true
 });
 
-const genericPostTimeout = 1; // minutes
-const genericPostLimit = 300;
-const genericPostLimiter = rateLimit({
-  windowMs: genericPostTimeout * 60 * 1000,
-  max: genericPostLimit,
+const genericSpotTimeout = 1; // minutes
+const genericSpotLimit = 300;
+const genericSpotLimiter = rateLimit({
+  windowMs: genericSpotTimeout * 60 * 1000,
+  max: genericSpotLimit,
   handler: function (req: any, res: any, next: any) {
     return next(
       new RateLimitError(
         429,
-        genericPostLimit,
-        genericPostTimeout
+        genericSpotLimit,
+        genericSpotTimeout
       )
     );
   }
@@ -186,10 +186,10 @@ const newPasswordLimiter = rateLimit({
 
 export default {
   adminLimiter,
-  genericPostLimiter,
+  genericSpotLimiter,
   createCommentLimiter,
   genericCommentLimiter,
-  createPostLimiter,
+  createSpotLimiter,
   authenticationLimiter,
   passwordResetLimiter,
   tokenLimiter,
