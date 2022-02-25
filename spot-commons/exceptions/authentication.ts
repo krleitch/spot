@@ -15,7 +15,7 @@ export class AuthenticationError extends SpotError {
 
 // Account email is not verified
 export class VerifyError extends SpotError {
-  constructor(statusCode: number = 500) {
+  constructor(statusCode: number = 400) {
     super(AUTHENTICATION_ERROR_MESSAGES.VERIFY, statusCode);
     this.name = "VerifyError";
   }

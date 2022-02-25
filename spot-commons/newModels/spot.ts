@@ -10,11 +10,8 @@ export enum SpotRatingType {
 
 export interface Spot {
     spotId: string;
-    owner: string;
     createdAt: Date;
-    deletedAt: Date;
-    longitude: number;
-    latitude: number;
+    deletedAt: Date | null;
     distance?: number;
     inRange: boolean;
     geolocation: string;
@@ -23,9 +20,8 @@ export interface Spot {
     imageNsfw: boolean;
     likes: number;
     dislikes: number;
-    rated: number;
+    myRating: SpotRatingType;
     totalComments: number;
-    owned: boolean;
     link: string;
     startCommentLink?: string; // The comment link to make first request from
 }
@@ -99,14 +95,14 @@ export interface ReportSpotResponse {}
 export interface GetSpotActivityRequest {
     limit: number;
     location: LocationData;
-    before?: string;
-    after?: string;
+    before?: Date | null;
+    after?: Date | null;
 }
 export interface GetSpotActivityResponse {
     activity: Spot[];
     size: number;
     cursor: {
-        before: string;
-        after: string;
+        before: Date | null;
+        after: Date | null;
     }
 }

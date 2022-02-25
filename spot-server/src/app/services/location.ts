@@ -1,5 +1,3 @@
-
-
 import axios from 'axios';
 
 // config
@@ -11,18 +9,19 @@ import locations from '@db/locations.js';
 import redisClient from '@db/redis.js';
 
 // error
-import * as LocationsError from '@exceptions/locations.js';
+import * as locationError from '@exceptions/location.js';
 
 // services
 import authorization from '@services/authorization/authorization.js';
 
 // constants
-import { LOCATIONS_CONSTANTS } from '@constants/locations.js';
+import { LOCATION_CONSTANTS } from '@constants/location.js';
 import roles from '@services/authorization/roles.js';
 
 // models
 import { LocationData } from '@models/../newModels/location.js';
 import { Spot } from '@models/../newModels/spot.js';
+import P from '@prisma/client';
 
 // Middleware to call verifyLocation
 const checkLocation = async (req: any, res: any, next: any) => {
@@ -64,7 +63,7 @@ const checkLocation = async (req: any, res: any, next: any) => {
     await verifyLocation(accountId, latitude, longitude).then(
       (valid: boolean | void) => {
         if (!valid) {
-          return next(new LocationsError.LocationError(500));
+          return next(new locationError.LocationError());
         } else {
           // We have a new valid location, update it
           locations.updateLocation(accountId, latitude, longitude).then(
@@ -110,7 +109,7 @@ function verifyLocation(
           new Date().valueOf() >=
           new Date(
             new Date(creation_date).valueOf() +
-              LOCATIONS_CONSTANTS.MAX_TIME_CHANGE * 3600000
+              LOCATION_CONSTANTS.MAX_TIME_CHANGE * 3600000
           ).valueOf()
         ) {
           return true;
@@ -120,11 +119,11 @@ function verifyLocation(
             3600000;
 
           const maxDistance =
-            LOCATIONS_CONSTANTS.MAX_DISTANCE_CHANGE * numHours;
+            LOCATION_CONSTANTS.MAX_DISTANCE_CHANGE * numHours;
 
           // TODO: fix Math.max(1) to be a constant
           return (
-            distanceBetween(
+            distanceBetweenTwoLocations(
               myLatitude,
               myLongitude,
               latitude,
@@ -141,41 +140,51 @@ function verifyLocation(
   );
 }
 
-function addLocationPropsToSpots(
-  spots: Spot[],
+// Take a P.Spot, remove the lat and long and add locationProps
+type locationProps = {
+  inRange: boolean;
+  distance: number;
+};
+type spotWithLocation = Omit<P.Spot, 'latitude' | 'longitude'> &
+  locationProps;
+const addLocationPropsToSpots = (
+  spots: P.Spot[],
   location: LocationData,
   options: { hideDistance: boolean }
-): any[] {
-  return rows.map((row: any) => {
-    const newRow = row;
-    if (latitude && longitude) {
-      const distance = distanceBetween(
-        latitude,
-        longitude,
-        row.latitude,
-        row.longitude,
+): spotWithLocation[] => {
+  const newSpots = spots.map((spot: P.Spot) => {
+    // remove the latitude and longitude
+    const { latitude, longitude, ...spotProps } = spot;
+    const newSpot: spotWithLocation = {
+      ...spotProps,
+      inRange: false,
+      distance: 0
+    };
+    if (location.latitude && location.longitude) {
+      const distance = distanceBetweenTwoLocations(
+        location.latitude,
+        location.longitude,
+        Number(spot.latitude),
+        Number(spot.longitude),
         'M'
       );
-      newRow.distance = hideDistance
-        ? Math.max(LOCATIONS_CONSTANTS.MIN_DISTANCE, distance)
+      newSpot.distance = options.hideDistance
+        ? Math.max(LOCATION_CONSTANTS.MIN_DISTANCE, distance)
         : distance;
-      newRow.inRange = newRow.distance <= 10;
-    } else {
-      newRow.inRange = false;
+      newSpot.inRange = newSpot.distance <= LOCATION_CONSTANTS.IN_RANGE_DISTANCE;
     }
-    delete newRow.latitude;
-    delete newRow.longitude;
-    return newRow;
+    return newSpot;
   });
-}
+  return newSpots;
+};
 
-function distanceBetween(
+const distanceBetweenTwoLocations = (
   lat1: number,
   lon1: number,
   lat2: number,
   lon2: number,
-  unit: string
-): number {
+  unit: 'M' | 'K' | 'N'
+): number => {
   if (lat1 == lat2 && lon1 == lon2) {
     return 0;
   } else {
@@ -200,7 +209,7 @@ function distanceBetween(
     }
     return dist;
   }
-}
+};
 
 function getGeolocation(latitude: string, longitude: string): Promise<string> {
   // In order the most preferred location type
@@ -241,7 +250,7 @@ function getGeolocation(latitude: string, longitude: string): Promise<string> {
 
   return new Promise((resolve, reject) => {
     resolve('TEST');
-  })
+  });
 
   // TODO: FIX THIS!!!!
 
@@ -329,7 +338,7 @@ function getGeolocation(latitude: string, longitude: string): Promise<string> {
 export default {
   checkLocation,
   verifyLocation,
-  distanceBetween,
+  distanceBetweenTwoLocations,
   getGeolocation,
   addLocationPropsToSpots
 };

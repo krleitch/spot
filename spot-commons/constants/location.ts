@@ -1,6 +1,6 @@
 // Constants for posts
 
-export const LOCATIONS_CONSTANTS = {
+export const LOCATION_CONSTANTS = {
 
     VALID_LOCATION_TIME: 60, // minutes
 
@@ -11,7 +11,9 @@ export const LOCATIONS_CONSTANTS = {
     MAX_TIME_CHANGE: 24, // hours
 
     // the min distance location that can be returned
-    MIN_DISTANCE: 0.1 // miles
+    MIN_DISTANCE: 0.1, // miles
  
+    IN_RANGE_DISTANCE: 10 // miles
+
  };
  

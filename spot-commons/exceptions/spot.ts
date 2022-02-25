@@ -76,17 +76,10 @@ export class DeleteSpot extends SpotError {
   }
 }
 
-export class DislikeSpot extends SpotError {
+export class RateSpot extends SpotError {
   constructor(statusCode: number = 500) {
-    super(SPOT_ERROR_MESSAGES.DISLIKE_SPOT, statusCode);
-    this.name = "DislikeSpot";
-  }
-}
-
-export class LikeSpot extends SpotError {
-  constructor(statusCode: number = 500) {
-    super(SPOT_ERROR_MESSAGES.LIKE_SPOT, statusCode);
-    this.name = "LikeSpot";
+    super(SPOT_ERROR_MESSAGES.RATE_SPOT, statusCode);
+    this.name = "RateSpot";
   }
 }
 
@@ -94,5 +87,12 @@ export class DeleteRatingSpot extends SpotError {
   constructor(statusCode: number = 500) {
     super(SPOT_ERROR_MESSAGES.DELETE_RATING_SPOT, statusCode);
     this.name = "DeleteRatingSpot";
+  }
+}
+
+export class CreateSpot extends SpotError {
+  constructor(statusCode: number = 500) {
+    super(SPOT_ERROR_MESSAGES.CREATE_SPOT, statusCode);
+    this.name = "CreateSpot";
   }
 }

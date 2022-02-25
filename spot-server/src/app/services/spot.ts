@@ -9,7 +9,7 @@ import badwords from '@services/badwords.js';
 import posts from '@db/posts.js';
 
 // error
-import * as PostsError from '@exceptions/posts.js';
+import * as spotError from '@exceptions/spot.js';
 
 // constants
 import { POSTS_CONSTANTS } from '@constants/posts.js';
@@ -32,7 +32,7 @@ function validContent(content: string): Error | null {
     content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH ||
     content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH
   ) {
-    return new PostsError.InvalidPostLength(
+    return new spotError.InvalidSpotLength(
       400,
       POSTS_CONSTANTS.MIN_CONTENT_LENGTH,
       POSTS_CONSTANTS.MAX_CONTENT_LENGTH
@@ -43,12 +43,12 @@ function validContent(content: string): Error | null {
   // content field is setup as utf8mb4 so emoji can be added later
   // eslint-disable-next-line no-control-regex
   if (!/^[\x00-\x7F]*$/.test(content)) {
-    return new PostsError.InvalidPostContent(400);
+    return new spotError.InvalidSpotContent();
   }
 
   const profane = badwords.checkProfanityIndex(content);
   if (profane) {
-    return new PostsError.InvalidPostProfanity(400, profane);
+    return new spotError.InvalidSpotProfanity(400, profane);
   }
 
   return null;

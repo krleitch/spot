@@ -28,7 +28,7 @@ import * as mySql from '@db/mySql.js';
 import errorHandler from '@helpers/errorHandler.js';
 import passport from '@services/authentication/passport.js';
 import authenticationService from '@services/authentication/authentication.js';
-import locationService from '@services/locations.js';
+import locationService from '@services/location.js';
 import authorizationService from '@services/authorization/authorization.js';
 import roles from '@services/authorization/roles.js';
 

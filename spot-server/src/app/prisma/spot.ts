@@ -66,7 +66,7 @@ const findSpotById = async (
 
 const findSpotByLink = async (
   link: string,
-  userId?: string
+  userId?: string | null
 ): Promise<P.Spot | null> => {
   const spot = await prisma.spot.findUnique({
     where: {
@@ -76,7 +76,7 @@ const findSpotByLink = async (
   return spot;
 };
 
-const softDeleteSpot = async (spotId: string): Promise<P.Spot | null> => {
+const softDeleteSpot = async (spotId: string): Promise<P.Spot> => {
   const spot = await prisma.spot.delete({
     where: {
       spotId: spotId
@@ -115,8 +115,9 @@ const findSpotActivity = async (
   userId: string,
   before: Date | undefined,
   after: Date | undefined,
-  limit: number
-): Promise<P.Spot[] | null> => {
+  limit: number,
+  location: LocationData
+): Promise<P.Spot[]> => {
   const maxActivityBeforeDate = new Date();
   maxActivityBeforeDate.setDate(
     maxActivityBeforeDate.getDate() - SPOT_CONSTANTS.ACTIVITY_DAYS

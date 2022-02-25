@@ -11,7 +11,7 @@ import shortid from 'shortid';
 
 // services
 import badwords from '@services/badwords.js';
-import locations from '@services/locations.js';
+import locations from '@services/location.js';
 import aws from '@services/aws.js';
 
 // db
@@ -311,12 +311,12 @@ async function inRange(
     }
 
     const post = rows[0];
-    const distance = locations.distanceBetween(
+    const distance = locations.distanceBetweenTwoLocations(
       post.latitude,
       post.longitude,
       latitude,
       longitude,
-      'm'
+      'M'
     );
 
     return distance <= COMMENTS_CONSTANTS.MAX_DISTANCE;

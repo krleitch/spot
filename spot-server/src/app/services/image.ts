@@ -1,4 +1,4 @@
-
+import { Request } from 'express';
 
 import aws from '@services/aws.js';
 import axios from 'axios';
@@ -47,7 +47,7 @@ const upload = multer({
     acl: 'public-read',
     s3: aws.s3,
     bucket: 'spottables',
-    metadata: function (req: any, file: any, cb: any) {
+    metadata: function (req: Request, file: any, cb: any) {
       cb(null, { originalname: file.originalname.substr(0, 255) });
     },
     key: function (req: any, file: any, cb: any) {

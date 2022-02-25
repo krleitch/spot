@@ -45,10 +45,10 @@ export const ERROR_MESSAGES = {
             SPOT_ACTIVITY: 'Error getting spot activity',
             GET_SINGLE_SPOT: 'Error getting the requested spot',
             DELETE_SPOT: 'Error deleting spot',
-            DISLIKE_SPOT: 'Error disliking spot',
-            LIKE_SPOT: 'Error liking spot',
+            RATE_SPOT: 'Error rating spot',
             DELETE_RATING_SPOT: 'Error removing rating from spot',
-            GET_SPOT: 'Error getting spots'
+            GET_SPOT: 'Error getting spots',
+            CREATE_SPOT: 'Error creating spot'
 
         },
 
