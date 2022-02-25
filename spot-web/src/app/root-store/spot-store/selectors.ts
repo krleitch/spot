@@ -17,7 +17,7 @@ export const selectCreateSpotSuccessFromStore = (state: State): boolean =>
 export const selectNoSpotsFromStore = (state: State): boolean => state.noSpots;
 
 export const selectSpotsState: MemoizedSelector<object, State> =
-  createFeatureSelector<State>('spots');
+  createFeatureSelector<State>('spot');
 
 export const selectSpots: MemoizedSelector<object, Spot[]> = createSelector(
   selectSpotsState,
