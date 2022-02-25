@@ -21,14 +21,17 @@ import {
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
+import {
+  SpotStoreActions,
+  SpotStoreSelectors
+} from '@src/app/root-store/spot-store';
 import {
   UserActions,
   UserStoreSelectors
 } from '@src/app/root-store/user-store';
 
 // Models
-import { LoadPostRequest, Post } from '@models/posts';
+import { GetSpotRequest, Spot } from '@models/../newModels/spot';
 import { User, VerifyRequest, UserRole } from '@models/../newModels/user';
 import {
   UserMetadata,
@@ -45,8 +48,8 @@ import {
 } from '@models/../newModels/location';
 
 // Assets
-import { LOCATIONS_CONSTANTS } from '@constants/locations';
-import { POSTS_CONSTANTS } from '@constants/posts';
+import { LOCATION_CONSTANTS } from '@constants/location';
+import { SPOT_CONSTANTS } from '@constants/spot';
 
 @Component({
   selector: 'spot-home',
@@ -55,23 +58,23 @@ import { POSTS_CONSTANTS } from '@constants/posts';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
-  private readonly stop$ = new Subject<void>(); // Used to cancel loading posts
+  private readonly stop$ = new Subject<void>(); // Used to cancel loading spots
 
-  POSTS_CONSTANTS = POSTS_CONSTANTS;
+  SPOT_CONSTANTS = SPOT_CONSTANTS;
 
-  // Posts
-  posts$: Observable<Post[]>;
-  posts: Post[] = [];
-  showPostsIndicator$: Observable<boolean>;
+  // Spots
+  spots$: Observable<Spot[]>;
+  spots: Spot[] = [];
+  showSpotsIndicator$: Observable<boolean>;
   loading$: Observable<boolean>;
   loading: boolean;
-  noPosts$: Observable<boolean>;
-  noPosts: boolean;
+  noSpots$: Observable<boolean>;
+  noSpots: boolean;
 
   // Location
   loadingLocation$: Observable<boolean>;
   loadingLocation: boolean;
-  bypassLocation = false; // if true we will not wait for location to load for posts
+  bypassLocation = false; // if true we will not wait for location to load for spots
   location$: Observable<LocationData>;
   location: LocationData = null;
   showLocationIndicator$: Observable<boolean>;
@@ -94,7 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   unitSystem = UnitSystem.METRIC;
 
   // State
-  loadedPosts: number; // offset for loaded posts for 'hot'
+  loadedSpots: number; // offset for loaded spots for 'hot'
   initialLoad = true; // is this the first load?
   verificationSent = false;
 
@@ -183,13 +186,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
 
-    // Posts
-    this.posts$ = this.store$.pipe(select(PostsStoreSelectors.selectPosts));
+    // Spots
+    this.spots$ = this.store$.pipe(select(SpotStoreSelectors.selectSpots));
 
-    this.posts$.pipe(takeUntil(this.onDestroy)).subscribe((posts: Post[]) => {
-      this.posts = posts;
-      this.loadedPosts = posts.length;
-      if (this.posts.length !== 0) {
+    this.spots$.pipe(takeUntil(this.onDestroy)).subscribe((spots: Spot[]) => {
+      this.spots = spots;
+      this.loadedSpots = spots.length;
+      if (this.spots.length !== 0) {
         this.initialLoad = false;
       }
 
@@ -208,13 +211,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.loading$ = this.store$.pipe(select(PostsStoreSelectors.selectLoading));
+    this.loading$ = this.store$.pipe(select(SpotStoreSelectors.selectLoading));
 
     this.loading$
       .pipe(takeUntil(this.onDestroy))
       .subscribe((loading: boolean) => {
         this.loading = loading;
-        this.showPostsIndicator$ = concat(
+        this.showSpotsIndicator$ = concat(
           timer(500)
             .pipe(
               mapTo(true),
@@ -225,12 +228,12 @@ export class HomeComponent implements OnInit, OnDestroy {
         );
       });
 
-    this.noPosts$ = this.store$.pipe(select(PostsStoreSelectors.selectNoPosts));
+    this.noSpots$ = this.store$.pipe(select(SpotStoreSelectors.selectNoSpots));
 
-    this.noPosts$
+    this.noSpots$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((noPosts: boolean) => {
-        this.noPosts = noPosts;
+      .subscribe((noSpots: boolean) => {
+        this.noSpots = noSpots;
       });
   }
 
@@ -262,7 +265,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onScroll(): void {
-    if (this.noPosts) {
+    if (this.noSpots) {
       return;
     }
 
@@ -275,12 +278,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (
       !this.loadingLocation &&
       (!this.location ||
-        minutesSinceLocation > LOCATIONS_CONSTANTS.VALID_LOCATION_TIME)
+        minutesSinceLocation > LOCATION_CONSTANTS.VALID_LOCATION_TIME)
     ) {
       this.getLocation();
     }
 
-    // Wait until we have the required info to load posts
+    // Wait until we have the required info to load spots
     // only local requires location
     // If location is loading, we should wait for it
 
@@ -299,11 +302,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         takeUntil(this.stop$)
       )
       .subscribe(() => {
-        this.loadPosts();
+        this.loadSpots();
       });
   }
 
-  loadPosts(): void {
+  loadSpots(): void {
     // don't load if we are already loading
     if (!this.loading) {
       // TODO: Change to before/after cursors
@@ -312,32 +315,33 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       if (this.searchType === SearchType.NEW) {
         // use date
-        const request: LoadPostRequest = {
-          limit: POSTS_CONSTANTS.INITIAL_LIMIT,
-          date: this.initialLoad
-            ? new Date().toString()
-            : this.posts.length > 0
-            ? this.posts.slice(-1).pop().creation_date
-            : new Date().toString(),
+        const request: GetSpotRequest = {
+          limit: SPOT_CONSTANTS.INITIAL_LIMIT,
+          before: 'someidhere',
           initialLoad: this.initialLoad,
           location: this.location,
-          filter: { location: this.locationType, sort: this.searchType }
+          options: {
+            locationType: this.locationType,
+            searchType: this.searchType
+          }
         };
 
-        this.store$.dispatch(new PostsStoreActions.LoadRequestAction(request));
+        this.store$.dispatch(new SpotStoreActions.GetRequestAction(request));
       } else if (this.searchType === SearchType.HOT) {
         // use offset
-        const request: LoadPostRequest = {
-          offset: this.loadedPosts,
-          limit: POSTS_CONSTANTS.INITIAL_LIMIT,
+        const request: GetSpotRequest = {
+          limit: SPOT_CONSTANTS.INITIAL_LIMIT,
           initialLoad: this.initialLoad,
           location: this.location,
-          filter: { location: this.locationType, sort: this.searchType }
+          options: {
+            locationType: this.locationType,
+            searchType: this.searchType
+          }
         };
 
-        this.store$.dispatch(new PostsStoreActions.LoadRequestAction(request));
+        this.store$.dispatch(new SpotStoreActions.GetRequestAction(request));
 
-        this.loadedPosts += POSTS_CONSTANTS.INITIAL_LIMIT;
+        this.loadedSpots += SPOT_CONSTANTS.INITIAL_LIMIT;
       }
 
       this.initialLoad = false;
@@ -347,8 +351,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   refresh(): void {
     // Cancel previous calls
     this.stop$.next();
-    this.noPosts = false;
-    this.loadedPosts = 0;
+    this.noSpots = false;
+    this.loadedSpots = 0;
     this.initialLoad = true;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.onScroll();
@@ -432,8 +436,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.refresh();
   }
 
-  isSelectedPostSort(postSort: SearchType): boolean {
-    return this.searchType === postSort;
+  isSelectedSpotSort(spotSort: SearchType): boolean {
+    return this.searchType === spotSort;
   }
 
   verifyUser(): void {
@@ -445,7 +449,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   loadLocationBackground(): void {
     this.locationType = LocationType.GLOBAL;
     // the location is actually still loading, we just say in this component we arent worried about it anymore
-    // So onScroll() posts are loaded
+    // So onScroll() spots are loaded
     this.bypassLocation = true;
   }
 
@@ -580,7 +584,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       );
     }
     // the location is actually still loading, we just say in this component we arent worried about it anymore
-    // So onScroll() posts are loaded
+    // So onScroll() spots are loaded
     this.bypassLocation = true;
   }
 }

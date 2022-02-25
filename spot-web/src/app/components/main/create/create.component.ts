@@ -18,7 +18,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Store, select } from '@ngrx/store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { RootStoreState } from '@store';
-import { PostsStoreActions, PostsStoreSelectors } from '@store/posts-store';
+import {
+  SpotStoreActions,
+  SpotStoreSelectors
+} from '@src/app/root-store/spot-store';
 
 // Models
 import { AddPostRequest } from '@models/posts';
@@ -26,7 +29,7 @@ import { LocationData } from '@models/../newModels/location';
 import { SpotError } from '@exceptions/error';
 
 // Assets
-import { POSTS_CONSTANTS } from '@constants/posts';
+import { SPOT_CONSTANTS } from '@constants/spot';
 
 @Component({
   selector: 'spot-create',
@@ -39,7 +42,7 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('create') create: ElementRef;
 
   STRINGS;
-  POSTS_CONSTANTS = POSTS_CONSTANTS;
+  SPOT_CONSTANTS = SPOT_CONSTANTS;
 
   // Location
   location$: Observable<LocationData>;
@@ -71,7 +74,7 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     // Success
     this.createSuccess$ = this.store$.pipe(
-      select(PostsStoreSelectors.selectCreatePostsSuccess)
+      select(SpotStoreSelectors.selectCreateSpotSuccess)
     );
 
     this.createSuccess$
@@ -92,7 +95,7 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Error
     this.createError$ = this.store$.pipe(
-      select(PostsStoreSelectors.selectCreatePostsError)
+      select(SpotStoreSelectors.selectCreateSpotError)
     );
 
     this.createError$
@@ -150,7 +153,7 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   invalidLength(): boolean {
-    return this.currentLength > POSTS_CONSTANTS.MAX_CONTENT_LENGTH;
+    return this.currentLength > SPOT_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
   submit(): void {
@@ -183,10 +186,10 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
     // trim whitespace at beginning and end
     content = text.trim();
 
-    if (content.split(/\r\n|\r|\n/).length > POSTS_CONSTANTS.MAX_LINE_LENGTH) {
+    if (content.split(/\r\n|\r|\n/).length > SPOT_CONSTANTS.MAX_LINE_LENGTH) {
       this.createError = this.STRINGS.ERROR_LINE_LENGTH.replace(
         '%LENGTH%',
-        POSTS_CONSTANTS.MAX_LINE_LENGTH.toString()
+        SPOT_CONSTANTS.MAX_LINE_LENGTH.toString()
       );
       return;
     }
@@ -196,18 +199,18 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    if (content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH) {
+    if (content.length < SPOT_CONSTANTS.MIN_CONTENT_LENGTH) {
       this.createError = this.STRINGS.ERROR_MIN_CONTENT.replace(
         '%MIN%',
-        POSTS_CONSTANTS.MIN_CONTENT_LENGTH.toString()
+        SPOT_CONSTANTS.MIN_CONTENT_LENGTH.toString()
       );
       return;
     }
 
-    if (content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH) {
+    if (content.length > SPOT_CONSTANTS.MAX_CONTENT_LENGTH) {
       this.createError = this.STRINGS.ERROR_MAX_CONTENT.replace(
         '%MAX%',
-        POSTS_CONSTANTS.MAX_CONTENT_LENGTH.toString()
+        SPOT_CONSTANTS.MAX_CONTENT_LENGTH.toString()
       );
       return;
     }
@@ -229,7 +232,7 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
         location: this.location,
         image: this.imageFile
       };
-      this.store$.dispatch(new PostsStoreActions.AddRequestAction(post));
+      this.store$.dispatch(new SpotStoreActions.CreateRequestAction(post));
       this.createLoading = true;
     } else {
       this.createError = this.STRINGS.ERROR_LOCATION;

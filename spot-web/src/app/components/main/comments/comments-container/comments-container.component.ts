@@ -40,7 +40,7 @@ import {
   SetCommentsStoreRequest
 } from '@models/comments';
 import { Tag } from '@models/notifications';
-import { Post } from '@models/posts';
+import { Spot } from '@models/../newModels/spot';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
 import { User } from '@models/../newModels/user';
@@ -63,7 +63,7 @@ export class CommentsContainerComponent
   private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
-  @Input() post: Post;
+  @Input() spot: Spot;
 
   @ViewChild('comment') comment: ElementRef;
   currentLength = 0;
@@ -123,7 +123,9 @@ export class CommentsContainerComponent
   ngOnInit(): void {
     // Comments
     this.comments$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectComments, { postId: this.post.id })
+      select(CommentsStoreSelectors.selectComments, {
+        postId: this.spot.spotId
+      })
     );
 
     this.comments$
@@ -144,11 +146,11 @@ export class CommentsContainerComponent
 
           // Get the latest initialLimit of comments
           const request: GetCommentsRequest = {
-            postId: this.post.id,
+            postId: this.spot.spotId,
             date: new Date().toString(),
             type: 'before',
             limit: initialLimit,
-            commentLink: this.post.startCommentLink || null
+            commentLink: this.spot.startCommentLink || null
           };
 
           this.loadingCommentsBefore = true;
@@ -167,7 +169,7 @@ export class CommentsContainerComponent
                 this.loadingCommentsBefore = false;
                 if (comments.comments) {
                   const storeRequest: SetCommentsStoreRequest = {
-                    postId: this.post.id,
+                    postId: this.spot.spotId,
                     type: 'before',
                     initialLoad: true,
                     comments: comments.comments,
@@ -255,11 +257,11 @@ export class CommentsContainerComponent
 
       // Get the latest initialLimit of comments
       const request: GetCommentsRequest = {
-        postId: this.post.id,
+        postId: this.spot.spotId,
         date: new Date().toString(),
         type: 'before',
         limit: initialLimit,
-        commentLink: this.post.startCommentLink || null
+        commentLink: this.spot.startCommentLink || null
       };
 
       this.loadingCommentsBefore = true;
@@ -278,7 +280,7 @@ export class CommentsContainerComponent
             this.loadingCommentsBefore = false;
             if (comments.comments) {
               const storeRequest: SetCommentsStoreRequest = {
-                postId: this.post.id,
+                postId: this.spot.spotId,
                 type: 'before',
                 initialLoad: true,
                 comments: comments.comments,
@@ -471,7 +473,7 @@ export class CommentsContainerComponent
       if (elem.className === 'tag-inline') {
         const tag: Tag = {
           username: elem.textContent,
-          postLink: this.post.link,
+          postLink: this.spot.link,
           offset
         };
         tags.push(tag);
@@ -553,7 +555,7 @@ export class CommentsContainerComponent
 
     // Make the request
     const request: AddCommentRequest = {
-      postId: this.post.id,
+      postId: this.spot.spotId,
       content,
       image: this.imageFile,
       tagsList: tags,
@@ -616,7 +618,7 @@ export class CommentsContainerComponent
     const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
 
     const request: GetCommentsRequest = {
-      postId: this.post.id,
+      postId: this.spot.spotId,
       date: this.comments.length > 0 ? this.comments[0].creation_date : null,
       type: 'after',
       limit
@@ -633,7 +635,7 @@ export class CommentsContainerComponent
           this.loadingCommentsAfter = false;
           if (comments.comments) {
             const storeRequest: SetCommentsStoreRequest = {
-              postId: this.post.id,
+              postId: this.spot.spotId,
               type: 'after',
               initialLoad: this.initialLoad,
               comments: comments.comments,
@@ -674,7 +676,7 @@ export class CommentsContainerComponent
     }
 
     const request: GetCommentsRequest = {
-      postId: this.post.id,
+      postId: this.spot.spotId,
       date:
         this.comments.length > 0
           ? this.comments.slice(-1).pop().creation_date
@@ -695,7 +697,7 @@ export class CommentsContainerComponent
           this.loadingCommentsBefore = false;
           if (comments.comments) {
             const storeRequest: SetCommentsStoreRequest = {
-              postId: this.post.id,
+              postId: this.spot.spotId,
               type: 'before',
               initialLoad: this.initialLoad,
               comments: comments.comments,

@@ -22,15 +22,15 @@ import { CommentsStoreActions } from '@store/comments-store';
 import { Store, select } from '@ngrx/store';
 
 // services
-import { PostsService } from '@services/posts.service';
+import { SpotService } from '@src/app/services/spot.service';
 import { AuthenticationService } from '@services/authentication.service';
 
-// assets
+// models
 import {
-  LoadSinglePostRequest,
-  LoadSinglePostSuccess,
-  Post
-} from '@models/posts';
+  GetSingleSpotRequest,
+  GetSingleSpotResponse,
+  Spot
+} from '@models/../newModels/spot';
 import {
   LoadLocationRequest,
   LocationData,
@@ -49,16 +49,16 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private postsService: PostsService,
+    private spotService: SpotService,
     private authenticationService: AuthenticationService,
     private store$: Store<RootStoreState.State>
   ) {}
 
   commentLink: string;
-  postLink: string;
+  spotLink: string;
 
-  post: Post;
-  loadingPost: boolean;
+  spot: Spot;
+  loadingSpot: boolean;
   showLoadingIndicator$: Observable<boolean>;
 
   authenticated$: Observable<boolean>;
@@ -110,7 +110,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     // params
     this.route.paramMap.pipe(takeUntil(this.onDestroy)).subscribe((p: any) => {
       this.commentLink = p.get('commentLink');
-      this.postLink = p.get('postLink');
+      this.spotLink = p.get('spotLink');
     });
 
     // Authenication
@@ -127,7 +127,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((authenticated: boolean) => {
-        this.waitForPosts();
+        this.waitForSpot();
       });
   }
 
@@ -157,7 +157,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
                 new UserActions.SetLocationAction(setLocationRequest)
               );
               this.bypassLocation = false;
-              this.waitForPosts();
+              this.waitForSpot();
             }, this.locationError.bind(this));
           } else {
             // the permissions api isnt implemented in this browser so setup to prompt again
@@ -194,12 +194,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.loadingLocation = false;
   }
 
-  waitForPosts(): void {
-    this.loadingPost = true;
+  waitForSpot(): void {
+    this.loadingSpot = true;
     this.showLoadingIndicator$ = timer(2000)
       .pipe(
         mapTo(true),
-        takeWhile((_) => this.loadingPost)
+        takeWhile((_) => this.loadingSpot)
       )
       .pipe(startWith(false));
 
@@ -209,33 +209,33 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       .pipe(
         skipWhile(
           () =>
-            typeof this.postLink === 'undefined' ||
+            typeof this.spotLink === 'undefined' ||
             (this.location === null && this.bypassLocation === false)
         ),
         take(1)
       )
       .subscribe(() => {
-        this.loadPost();
+        this.loadSpot();
       });
   }
 
-  loadPost(): void {
-    // load the post
-    const request: LoadSinglePostRequest = {
-      postLink: this.postLink,
+  loadSpot(): void {
+    // load the spot
+    const request: GetSingleSpotRequest = {
+      spotLink: this.spotLink,
       location: this.location
     };
 
-    this.postsService
-      .getPost(request)
+    this.spotService
+      .getSingleSpot(request)
       .pipe(take(1))
       .subscribe(
-        (postSuccess: LoadSinglePostSuccess) => {
+        (response: GetSingleSpotResponse) => {
           this.error = false;
-          this.loadingPost = false;
+          this.loadingSpot = false;
 
           const clearCommentsRequest: ClearCommentsRequest = {
-            postId: postSuccess.post.id
+            postId: response.spot.spotId
           };
           this.store$.dispatch(
             new CommentsStoreActions.ClearCommentsRequestAction(
@@ -244,19 +244,19 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           );
 
           if (this.commentLink) {
-            postSuccess.post.startCommentLink = this.commentLink;
+            response.spot.startCommentLink = this.commentLink;
           }
-          this.post = postSuccess.post;
+          this.spot = response.spot;
         },
         (errorResponse: any) => {
           this.error = true;
-          this.loadingPost = false;
+          this.loadingSpot = false;
           return throwError(errorResponse.error);
         }
       );
   }
 
-  getPostLink(post: Post): string {
-    return window.location.origin + '/posts/' + post.link;
+  getSpotLink(spot: Spot): string {
+    return window.location.origin + '/spot/' + spot.link;
   }
 }

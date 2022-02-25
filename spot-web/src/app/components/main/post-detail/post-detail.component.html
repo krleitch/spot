@@ -10,7 +10,7 @@
       Reload Spot with Your Location
     </span>
   </div>
-  <div *ngIf="loadingLocation && !loadingPost" class="loading">
+  <div *ngIf="loadingLocation && !loadingSpot" class="loading">
     <span class="text"> Loading Your Location </span>
     <span class="text clickable" (click)="skipLocation()">
       Skip waiting for location
@@ -19,19 +19,19 @@
   </div>
   <div
     class="loading"
-    *ngIf="loadingPost && (showLoadingIndicator$ | async); else postloaded"
+    *ngIf="loadingSpot && (showLoadingIndicator$ | async); else spotloaded"
   >
     <span class="text"> {{ 'MAIN.POST_DETAILED.LOADING' | translate }} </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
-  <ng-template #postloaded>
-    <div class="content" *ngIf="post && !loadingLocation">
-      <meta property="og:url" content="{{ getPostLink(post) }}" />
+  <ng-template #spotloaded>
+    <div class="content" *ngIf="spot && !loadingLocation">
+      <meta property="og:url" content="{{ getSpotLink(spot) }}" />
       <meta property="og:type" content="website" />
       <meta property="og:title" content="Spot" />
       <meta property="og:description" content="A friend has sent you a spot" />
-      <meta property="og:image" content="{{ post.image_src }}" />
-      <spot-post [post]="post" [detailed]="true"></spot-post>
+      <meta property="og:image" content="{{ spot.imageSrc }}" />
+      <spot-post [spot]="spot" [detailed]="true"></spot-post>
     </div>
   </ng-template>
   <div class="error" *ngIf="error">

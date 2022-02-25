@@ -5,13 +5,13 @@
       #tagelem
       *ngIf="showTag"
       [name]="tagName"
-      [postLink]="post.link"
+      [postLink]="spot.link"
       (tag)="addTag($event)"
     ></spot-tag>
   </span>
 
   <!-- Add -->
-  <div *ngIf="post.inRange && location">
+  <div *ngIf="spot.inRange && location">
     <div *ngIf="isAuthenticated$ | async; else auth">
       <div class="add" *ngIf="isVerified$ | async; else verify">
         <div class="editor">
@@ -138,7 +138,7 @@
       <div *ngFor="let comment of comments">
         <spot-comment
           [comment]="comment"
-          [post]="post"
+          [spot]="spot"
           [detailed]="detailed"
         ></spot-comment>
       </div>
@@ -182,7 +182,7 @@
       comments.length >= 5 &&
       (isAuthenticated$ | async) &&
       (isVerified$ | async) &&
-      post.inRange &&
+      spot.inRange &&
       location
     "
     class="comment-reminder"

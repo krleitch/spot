@@ -17,11 +17,15 @@ import { Store, select } from '@ngrx/store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // services
-import { PostsService } from '@services/posts.service';
+import { SpotService } from '@src/app/services/spot.service';
 import { CommentService } from '@services/comments.service';
 
 // assets
-import { ActivityPostRequest, ActivityPostSuccess, Post } from '@models/posts';
+import {
+  GetSpotActivityRequest,
+  GetSpotActivityResponse,
+  Spot
+} from '@models/../newModels/spot';
 import {
   ActivityCommentRequest,
   ActivityCommentSuccess,
@@ -30,8 +34,8 @@ import {
 import { UserMetadata, UnitSystem } from '@models/../newModels/userMetadata';
 import { LocationData } from '@models/../newModels/location';
 
-// Extend Post and Comment to include acitivty specefic properties
-interface PostActivity extends Post {
+// Extend Spot and Comment to include acitivty specefic properties
+interface SpotActivity extends Spot {
   imageBlurred: boolean;
 }
 
@@ -53,14 +57,14 @@ export class ActivityComponent implements OnInit, OnDestroy {
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
 
-  selectedTab = 'posts';
+  selectedTab = 'spots';
 
-  postActivity: PostActivity[] = [];
-  postLimit = 10;
-  postActivityLoading = false;
-  showPostsIndicator$: Observable<boolean>;
-  postsLoadedOnce = false;
-  postAfter: string = null;
+  spotActivity: SpotActivity[] = [];
+  spotLimit = 10;
+  spotActivityLoading = false;
+  showSpotsIndicator$: Observable<boolean>;
+  spotsLoadedOnce = false;
+  spotAfter: Date = null;
 
   commentActivity: CommentActivityActivity[] = [];
   commentLimit = 10;
@@ -71,7 +75,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   constructor(
     private store$: Store<RootStoreState.State>,
-    private postsService: PostsService,
+    private spotService: SpotService,
     private commentService: CommentService,
     private router: Router
   ) {}
@@ -108,8 +112,8 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   formatDate(date: string): string {
     const curTime = new Date();
-    const postTime = new Date(date);
-    const timeDiff = curTime.getTime() - postTime.getTime();
+    const spotTime = new Date(date);
+    const timeDiff = curTime.getTime() - spotTime.getTime();
     if (timeDiff < 60000) {
       const secDiff = Math.round(timeDiff / 1000);
       return secDiff + (secDiff === 1 ? ' second' : ' seconds');
@@ -139,7 +143,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
   onScrollComments(): void {
     if (!this.commentActivityLoading) {
       const activityCommentRequest: ActivityCommentRequest = {
-        limit: this.postLimit,
+        limit: this.spotLimit,
         after: this.commentsAfter
       };
 
@@ -176,39 +180,39 @@ export class ActivityComponent implements OnInit, OnDestroy {
     }
   }
 
-  onScrollPost(): void {
-    if (!this.postActivityLoading) {
-      const activityPostRequest: ActivityPostRequest = {
-        limit: this.postLimit,
+  onScrollSpot(): void {
+    if (!this.spotActivityLoading) {
+      const activitySpotRequest: GetSpotActivityRequest = {
+        limit: this.spotLimit,
         location: this.location,
-        after: this.postAfter
+        after: this.spotAfter
       };
 
-      this.postActivityLoading = true;
+      this.spotActivityLoading = true;
 
-      const posts$ = this.postsService.getActivity(activityPostRequest).pipe(
+      const spots$ = this.spotService.getSpotActivity(activitySpotRequest).pipe(
         take(1),
         finalize(() => {
-          this.postActivityLoading = false;
-          this.postsLoadedOnce = true;
+          this.spotActivityLoading = false;
+          this.spotsLoadedOnce = true;
         })
       );
 
-      this.showPostsIndicator$ = timer(500)
+      this.showSpotsIndicator$ = timer(500)
         .pipe(
           mapTo(true),
-          takeWhile((val) => this.postActivityLoading)
+          takeWhile((val) => this.spotActivityLoading)
         )
         .pipe(startWith(false));
 
-      posts$.subscribe((activitySuccess: ActivityPostSuccess) => {
-        const activities: PostActivity[] = activitySuccess.activity.map(
-          (activity) => ({ ...activity, imageBlurred: activity.image_nsfw })
+      spots$.subscribe((response: GetSpotActivityResponse) => {
+        const activities: SpotActivity[] = response.activity.map(
+          (activity) => ({ ...activity, imageBlurred: activity.imageNsfw })
         );
-        // const activities: PostActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
-        this.postActivity = this.postActivity.concat(activities);
-        if (activitySuccess.cursor.after) {
-          this.postAfter = activitySuccess.cursor.after;
+        // const activities: SpotActivity[] = activitySuccess.activity.map(activity => ({ ...activity, imageBlurred: true }))
+        this.spotActivity = this.spotActivity.concat(activities);
+        if (response.cursor.after) {
+          this.spotAfter = response.cursor.after;
         }
       });
     }

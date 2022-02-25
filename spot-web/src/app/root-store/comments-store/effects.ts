@@ -10,7 +10,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 // actions
 import * as featureActions from './actions';
-import * as postsActions from '@store/posts-store/actions';
+import * as spotActions from '@src/app/root-store/spot-store/actions';
 
 // services
 import { CommentService } from '../../services/comments.service';
@@ -217,7 +217,7 @@ export class CommentsStoreEffects {
       // none
     }),
     switchMap((action: featureActions.AddCommentRequestAction) => [
-      new postsActions.AddCommentAction({ postId: action.request.postId })
+      new spotActions.CreateCommentAction({ spotId: action.request.postId })
     ])
   );
 
@@ -230,7 +230,7 @@ export class CommentsStoreEffects {
       // none
     }),
     switchMap((action: featureActions.AddReplyRequestAction) => [
-      new postsActions.AddCommentAction({ postId: action.request.postId })
+      new spotActions.CreateCommentAction({ spotId: action.request.postId })
     ])
   );
 
@@ -243,7 +243,7 @@ export class CommentsStoreEffects {
       // none
     }),
     switchMap((action: featureActions.DeleteSuccessAction) => [
-      new postsActions.DeleteCommentAction({ postId: action.response.postId })
+      new spotActions.DeleteCommentAction({ spotId: action.response.postId })
     ])
   );
 
@@ -256,7 +256,7 @@ export class CommentsStoreEffects {
       // none
     }),
     switchMap((action: featureActions.DeleteReplySuccessAction) => [
-      new postsActions.DeleteCommentAction({ postId: action.response.postId })
+      new spotActions.DeleteCommentAction({ spotId: action.response.postId })
     ])
   );
 }

@@ -2,11 +2,11 @@
 <div class="activity-container">
   <div class="activity-content">
     <div class="tab-container">
-      <div class="tab" (click)="setTab('posts')">
+      <div class="tab" (click)="setTab('spots')">
         {{ 'MAIN.ACTIVITY.POSTS' | translate }}
         <div
           class="selected"
-          [ngClass]="{ show: selectedTab === 'posts' }"
+          [ngClass]="{ show: selectedTab === 'spots' }"
         ></div>
       </div>
       <div class="tab" (click)="setTab('commentsreplies')">
@@ -27,7 +27,7 @@
         {{ 'MAIN.ACTIVITY.POSTS' | translate }}
         <div
           class="selected"
-          [ngClass]="{ show: selectedTab === 'posts' }"
+          [ngClass]="{ show: selectedTab === 'spots' }"
         ></div>
       </div>
       <div class="tab">
@@ -40,17 +40,17 @@
     </div>
 
     <div class="content-container">
-      <div class="activity-posts-container" *ngIf="selectedTab === 'posts'">
-        <spot-infinite-scroll (scrolled)="onScrollPost()">
-          <div *ngIf="postActivity.length > 0; else noPostActivity">
-            <div class="activity-post" *ngFor="let activity of postActivity">
+      <div class="activity-posts-container" *ngIf="selectedTab === 'spots'">
+        <spot-infinite-scroll (scrolled)="onScrollSpot()">
+          <div *ngIf="spotActivity.length > 0; else noSpotActivity">
+            <div class="activity-post" *ngFor="let activity of spotActivity">
               <div class="activity-header">
                 <div class="date">
                   {{ 'MAIN.ACTIVITY.DATE_POST_PROMPT' | translate }}
                   {{ formatDate(activity.creation_date) }}
                   {{ 'MAIN.ACTIVITY.DATE_PROMPT_END' | translate }}
                 </div>
-                <a class="post-link" [routerLink]="'/posts/' + activity.link">
+                <a class="post-link" [routerLink]="'/spot/' + activity.link">
                   {{ 'MAIN.ACTIVITY.POSTS_OPEN' | translate }}
                 </a>
               </div>
@@ -104,8 +104,8 @@
               </div>
             </div>
           </div>
-          <ng-template #noPostActivity>
-            <div *ngIf="postsLoadedOnce" class="no-post-activity">
+          <ng-template #noSpotActivity>
+            <div *ngIf="spotsLoadedOnce" class="no-post-activity">
               <span class="text"> {{ 'MAIN.ACTIVITY.NO_POST_ACTIVITY' | translate }} </span>
               <span class="text time"> {{ 'MAIN.ACTIVITY.NO_POST_TIME' | translate }} </span>
               <span class="material-icons icon"> insights </span>
@@ -113,7 +113,7 @@
           </ng-template>
         </spot-infinite-scroll>
         <div
-          *ngIf="(showPostsIndicator$ | async) && postActivityLoading"
+          *ngIf="(showSpotsIndicator$ | async) && spotActivityLoading"
           class="loading"
         >
           <spot-spinner size="medium" type="dot"></spot-spinner>
@@ -144,9 +144,9 @@
                 <a
                   class="comment-link"
                   [routerLink]="
-                    '/posts/' +
+                    '/spot/' +
                     activity.post_link +
-                    '/comments/' +
+                    '/comment/' +
                     activity.link
                   "
                 >

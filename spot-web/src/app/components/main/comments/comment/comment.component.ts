@@ -51,7 +51,7 @@ import {
   SetRepliesStoreRequest,
   UnratedCommentRequest
 } from '@models/comments';
-import { Post } from '@models/posts';
+import { Spot } from '@models/../newModels/spot';
 import { Tag } from '@models/notifications';
 import {
   ModalImageData,
@@ -78,7 +78,7 @@ export class CommentComponent
 
   @Input() detailed: boolean;
   @Input() comment: Comment;
-  @Input() post: Post;
+  @Input() spot: Spot;
 
   @ViewChild('options') options;
   @ViewChild('text') text;
@@ -173,7 +173,7 @@ export class CommentComponent
           const request: GetRepliesRequest = {
             postId: this.comment.post_id,
             commentId: this.comment.id,
-            replyLink: this.post.startCommentLink || null,
+            replyLink: this.spot.startCommentLink || null,
             date: null,
             initialLoad: true,
             limit: initialLimit
@@ -288,7 +288,7 @@ export class CommentComponent
       const request: GetRepliesRequest = {
         postId: this.comment.post_id,
         commentId: this.comment.id,
-        replyLink: this.post.startCommentLink || null,
+        replyLink: this.spot.startCommentLink || null,
         date: null,
         initialLoad: true,
         limit: initialLimit
@@ -731,7 +731,7 @@ export class CommentComponent
       if (elem.className === 'tag-inline') {
         const tag: Tag = {
           username: elem.textContent,
-          postLink: this.post.link,
+          postLink: this.spot.link,
           offset
         };
         tags.push(tag);
@@ -963,21 +963,21 @@ export class CommentComponent
     }
   }
 
-  openReportModal(postId: string, commentId: string): void {
+  openReportModal(spotId: string, commentId: string): void {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');
       return;
     }
 
     this.modalService.open('global', 'report', {
-      postId: postId,
+      spotId: spotId,
       commentId: commentId
     });
   }
 
   openShareModal(
-    postId: string,
-    postLink: string,
+    spotId: string,
+    spotLink: string,
     commentId: string,
     commentLink: string
   ) {
@@ -987,9 +987,9 @@ export class CommentComponent
     }
 
     this.modalService.open('global', 'share', {
-      postId: postId,
+      spotId: spotId,
       commentId: commentId,
-      postLink: postLink,
+      spotLink: spotLink,
       commentLink: commentLink
     });
   }

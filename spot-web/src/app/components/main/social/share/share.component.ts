@@ -48,7 +48,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // MODAL
   modalId: string;
-  data: ModalShareData = { postId: null, postLink: null };
+  data: ModalShareData = { spotId: null, spotLink: null };
 
   @ViewChild('usernameinput') usernameinput: ElementRef;
   @ViewChild('social') social: ElementRef;
@@ -111,9 +111,9 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         this.friends = friends;
       });
 
-    this.link = window.location.origin + '/posts/' + this.data.postLink;
+    this.link = window.location.origin + '/spot/' + this.data.spotLink;
     if (this.data.commentLink) {
-      this.link += '/comments/' + this.data.commentLink;
+      this.link += '/comment/' + this.data.commentLink;
     }
   }
 
@@ -187,13 +187,13 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.data.commentId) {
       request = {
         receiver: this.username,
-        postId: this.data.postId,
+        postId: this.data.spotId,
         commentId: this.data.commentId
       };
     } else {
       request = {
         receiver: this.username,
-        postId: this.data.postId
+        postId: this.data.spotId
       };
     }
 
@@ -225,13 +225,13 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.data.commentId) {
       request = {
         receiver: username,
-        postId: this.data.postId,
+        postId: this.data.spotId,
         commentId: this.data.commentId
       };
     } else {
       request = {
         receiver: username,
-        postId: this.data.postId
+        postId: this.data.spotId
       };
     }
 

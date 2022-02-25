@@ -4,19 +4,19 @@
       <i
         class="material-icons vote"
         (click)="like()"
-        [ngClass]="{ highlight: post.rated === 1 }"
+        [ngClass]="{ highlight: spot.myRating === eSpotRatingType.LIKE }"
       >
         keyboard_arrow_up
       </i>
-      <div class="points">{{ post.likes - post.dislikes }}</div>
+      <div class="points">{{ spot.likes - spot.dislikes }}</div>
       <i
         class="material-icons vote"
         (click)="dislike()"
-        [ngClass]="{ highlight: post.rated === 0 }"
+        [ngClass]="{ highlight: spot.myRating === eSpotRatingType.DISLIKE }"
       >
         keyboard_arrow_down
       </i>
-      <a class="time" [routerLink]="'/posts/' + post.link">
+      <a class="time" [routerLink]="'/spot/' + spot.link">
         {{ time }}
       </a>
     </div>
@@ -41,13 +41,13 @@
 
       <!-- Image -->
       <div
-        *ngIf="post.image_src !== null"
+        *ngIf="spot.imageSrc !== null"
         (click)="imageClicked()"
         class="image"
       >
         <img
-          #postimage
-          [src]="post.image_src"
+          #spotimage
+          [src]="spot.imageSrc"
           [ngClass]="{
             'image-blur':
               (userMetadata === null && imageBlurred) ||
@@ -71,8 +71,8 @@
 
       <div class="options">
         <span class="comment-number">
-          {{ post.comments }}
-          <span *ngIf="post.comments === 1; else plural">
+          {{ spot.totalComments }}
+          <span *ngIf="spot.totalComments === 1; else plural">
             {{ 'MAIN.POST.COMMENTS_SINGLE' | translate }}
           </span>
           <ng-template #plural>
@@ -80,10 +80,10 @@
           </ng-template>
         </span>
         <div class="distance">
-          <span *ngIf="post.distance">
-            {{ getDistance(post.distance) }} -
+          <span *ngIf="spot.distance">
+            {{ getDistance(spot.distance) }} -
           </span>
-          {{ post.geolocation }}
+          {{ spot.geolocation }}
         </div>
       </div>
     </div>
@@ -98,30 +98,30 @@
             <a
               *ngIf="!detailed"
               class="button"
-              [routerLink]="'/posts/' + post.link"
+              [routerLink]="'/spot/' + spot.link"
             >
               <span class="material-icons icon"> chevron_right </span>
               {{ 'MAIN.POST.OPEN_POST' | translate }}
             </a>
-            <div class="button" (click)="openReportModal(post.id)">
+            <div class="button" (click)="openReportModal(spot.spotId)">
               <span class="material-icons icon"> outlined_flag </span>
               {{ 'MAIN.POST.REPORT' | translate }}
             </div>
             <div
               class="button"
-              (click)="openShareModal(post.id, post.link)"
+              (click)="openShareModal(spot.spotId, spot.link)"
             >
               <span class="material-icons icon"> share </span>
               {{ 'MAIN.POST.SHARE' | translate }}
             </div>
             <div
               *ngIf="
-                post.owned ||
-                user.role === 'ADMIN' ||
-                user.role === 'OWNER'
+                spot.owned ||
+                user.role === eUserRole.ADMIN ||
+                user.role === eUserRole.OWNER
               "
               class="button"
-              (click)="deletePost()"
+              (click)="deleteSpot()"
             >
               <span class="material-icons icon"> delete </span>
               {{ 'MAIN.POST.DELETE' | translate }}
@@ -133,7 +133,7 @@
       <div>
         <i
           class="material-icons share"
-          (click)="openShareModal(post.id, post.link)"
+          (click)="openShareModal(spot.spotId, spot.link)"
         >
           share
         </i>
@@ -146,7 +146,7 @@
   </div>
 
   <spot-comments-container
-    [post]="post"
+    [spot]="spot"
     [detailed]="detailed"
   ></spot-comments-container>
 </div>

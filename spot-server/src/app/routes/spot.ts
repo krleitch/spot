@@ -31,9 +31,9 @@ import { SPOT_CONSTANTS } from '@constants/spot.js';
 import { REPORT_CONSTANTS } from '@constants/report.js';
 
 // models
-import { UserRole } from '@models/../newModels/user';
-import { SearchType, LocationType } from '@models/../newModels/userMetadata';
-import { ReportCategory } from '@models/../newModels/report';
+import { UserRole } from '@models/../newModels/user.js';
+import { SearchType, LocationType } from '@models/../newModels/userMetadata.js';
+import { ReportCategory } from '@models/../newModels/report.js';
 import {
   Spot,
   SpotRatingType,
@@ -134,7 +134,8 @@ router.get(
         spotsWithLocation.map(async (spot) => {
           const newSpot: Spot = {
             ...spot,
-            myRating: SpotRatingType.NONE
+            myRating: SpotRatingType.NONE,
+            owned: false
           };
           if (req.user) {
             const spotRating = await prismaSpotRating.findRatingForUserAndSpot(
@@ -184,6 +185,7 @@ router.post(
       }
 
       // set the filename for aws s3 bucket
+      // @ts-ignore
       req.filename = postId;
 
       singleUpload(req, res, async function (err: any) {
@@ -195,6 +197,7 @@ router.post(
         const json = JSON.parse(req.body.json);
         let content = json.content;
         const location = json.location;
+        // @ts-ignore
         const image = req.file ? req.file.location : null;
 
         // remove leading and trailing whitespaces
@@ -275,7 +278,8 @@ router.post(
           spotWithLocation.map(async (spot) => {
             const newSpot: Spot = {
               ...spot,
-              myRating: SpotRatingType.NONE
+              myRating: SpotRatingType.NONE,
+              owned: false
             };
             if (req.user) {
               const spotRating =
@@ -495,8 +499,12 @@ router.get(
 
       const query: GetSpotActivityRequest = {
         limit: Number(req.query.limit),
-        before: req.query.before ? new Date(req.query.before.toString()) : undefined,
-        after: req.query.after ? new Date(req.query.after.toString()) : undefined,
+        before: req.query.before
+          ? new Date(req.query.before.toString())
+          : undefined,
+        after: req.query.after
+          ? new Date(req.query.after.toString())
+          : undefined,
         location: {
           latitude: Number(req.query.latitude),
           longitude: Number(req.query.longitude)
@@ -523,7 +531,8 @@ router.get(
         spotActivityWithLocation.map(async (spot) => {
           const newSpot: Spot = {
             ...spot,
-            myRating: SpotRatingType.NONE
+            myRating: SpotRatingType.NONE,
+            owned: false
           };
           if (req.user) {
             const spotRating = await prismaSpotRating.findRatingForUserAndSpot(
@@ -596,7 +605,8 @@ router.get(
         spotWithLocation.map(async (spot) => {
           const newSpot: Spot = {
             ...spot,
-            myRating: SpotRatingType.NONE
+            myRating: SpotRatingType.NONE,
+            owned: false
           };
           if (req.user) {
             const spotRating = await prismaSpotRating.findRatingForUserAndSpot(
@@ -611,7 +621,9 @@ router.get(
         })
       );
 
-      const response: GetSingleSpotResponse = { spot: spotWithLocationAndRating[0] };
+      const response: GetSingleSpotResponse = {
+        spot: spotWithLocationAndRating[0]
+      };
       res.status(200).json(response);
     }
   )

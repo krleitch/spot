@@ -8,8 +8,8 @@ export interface ModalOptions {
 export type ModalData = ModalShareData | ModalConfirmData | ModalReportData | ModalImageData;
 
 export interface ModalShareData {
-  postId: string;
-  postLink: string;
+  spotId: string;
+  spotLink: string;
   commentId?: string;
   commentLink?: string;
 }
@@ -19,7 +19,7 @@ export interface ModalConfirmData {
 }
 
 export interface ModalReportData {
-  postId: string;
+  spotId: string;
   commentId?: string;
 }
 

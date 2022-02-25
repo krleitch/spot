@@ -50,7 +50,7 @@
 <div class="postFilterToggle desktop">
   <div
     class="hot"
-    [ngClass]="{ selectedSort: isSelectedPostSort(eSearchType.HOT) }"
+    [ngClass]="{ selectedSort: isSelectedSpotSort(eSearchType.HOT) }"
     (click)="setHot()"
   >
     <span class="material-icons icon"> rocket_launch </span>
@@ -58,7 +58,7 @@
   </div>
   <div
     class="new"
-    [ngClass]="{ selectedSort: isSelectedPostSort(eSearchType.NEW) }"
+    [ngClass]="{ selectedSort: isSelectedSpotSort(eSearchType.NEW) }"
     (click)="setNew()"
   >
     <span class="material-icons icon"> local_florist </span>
@@ -67,10 +67,10 @@
 </div>
 <div #mobiledropdownsort class="postFilterToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownSort(true)">
-    <div *ngIf="isSelectedPostSort(eSearchType.HOT)">
+    <div *ngIf="isSelectedSpotSort(eSearchType.HOT)">
       {{ 'MAIN.HOME.HOT' | translate }}
     </div>
-    <div *ngIf="isSelectedPostSort(eSearchType.NEW)">
+    <div *ngIf="isSelectedSpotSort(eSearchType.NEW)">
       {{ 'MAIN.HOME.NEW' | translate }}
     </div>
     <span class="material-icons"> expand_more </span>
@@ -82,14 +82,14 @@
     >
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedPostSort(eSearchType.HOT) }"
+        [ngClass]="{ 'selected-highlight': isSelectedSpotSort(eSearchType.HOT) }"
         (click)="setHot()"
       >
         {{ 'MAIN.HOME.HOT' | translate }}
       </div>
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedPostSort(eSearchType.NEW) }"
+        [ngClass]="{ 'selected-highlight': isSelectedSpotSort(eSearchType.NEW) }"
         (click)="setNew()"
       >
         {{ 'MAIN.HOME.NEW' | translate }}
@@ -257,16 +257,16 @@
         <!-- Spots -->
         <div class="posts">
           <spot-infinite-scroll (scrolled)="onScroll()">
-            <div *ngIf="posts.length > 0; else empty">
-              <div *ngFor="let post of posts">
-                <spot-post [post]="post" [detailed]="false"></spot-post>
+            <div *ngIf="spots.length > 0; else empty">
+              <div *ngFor="let spot of spots">
+                <spot-post [spot]="spot" [detailed]="false"></spot-post>
               </div>
             </div>
             <div #bottom class="empty-placeholder">
               <ng-template #empty>
                 <!-- no spots in the area -->
                 <div
-                  *ngIf="noPosts && !loading && (showPostsIndicator$ | async)"
+                  *ngIf="noSpots && !loading && (showSpotsIndicator$ | async)"
                   class="empty-container"
                 >
                   <div class="empty-image">
@@ -286,7 +286,7 @@
               <!-- There are no more spots -->
               <div
                 *ngIf="
-                  noPosts && posts.length !== 0 && (showPostsIndicator$ | async)
+                  noSpots && spots.length !== 0 && (showSpotsIndicator$ | async)
                 "
                 class="empty-container"
               >
@@ -297,7 +297,7 @@
               </div>
               <!-- Loading spots -->
               <div
-                *ngIf="loading && (showPostsIndicator$ | async)"
+                *ngIf="loading && (showSpotsIndicator$ | async)"
                 class="empty-container"
               >
                 <spot-spinner type="dot"></spot-spinner>

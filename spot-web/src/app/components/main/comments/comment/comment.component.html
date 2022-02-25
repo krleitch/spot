@@ -1,7 +1,7 @@
 <div class="container">
   <div
     class="comment"
-    [ngClass]="{ linked: post.startCommentLink === comment.link }"
+    [ngClass]="{ linked: spot.startCommentLink === comment.link }"
   >
     <div class="left-bar">
       <div class="left-bar-alignment">
@@ -161,7 +161,7 @@
             <div
               class="button"
               (click)="
-                openShareModal(post.id, post.link, comment.id, comment.link)
+                openShareModal(spot.spotId, spot.link, comment.id, comment.link)
               "
             >
               <span class="material-icons icon"> share </span>
@@ -191,7 +191,7 @@
         [ngClass]="{
           disabled: !(
             comment.tag.tagged ||
-            (post.inRange &&
+            (spot.inRange &&
               (isAuthenticated$ | async) &&
               (isVerified$ | async) &&
               location)
@@ -208,7 +208,7 @@
       #tagelem
       *ngIf="showTag"
       [name]="tagName"
-      [postLink]="post.link"
+      [postLink]="spot.link"
       (tag)="addTag($event)"
     ></spot-tag>
   </span>
@@ -229,7 +229,7 @@
       <spot-reply
         [reply]="reply"
         [comment]="comment"
-        [post]="post"
+        [spot]="spot"
         [detailed]="detailed"
       ></spot-reply>
     </div>

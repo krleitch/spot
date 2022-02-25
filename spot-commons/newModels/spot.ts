@@ -23,6 +23,7 @@ export interface Spot {
     myRating: SpotRatingType;
     totalComments: number;
     link: string;
+    owned: boolean;
     startCommentLink?: string; // The comment link to make first request from
 }
 

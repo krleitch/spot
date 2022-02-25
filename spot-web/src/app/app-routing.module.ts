@@ -66,11 +66,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'posts/:postLink',
+    path: 'spot/:spotLink',
     component: PostDetailComponent
   },
   {
-    path: 'posts/:postLink/comments/:commentLink',
+    path: 'spot/:spotLink/comment/:commentLink',
     component: PostDetailComponent
   },
   {

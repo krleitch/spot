@@ -10,13 +10,16 @@ import { Store } from '@ngrx/store';
 
 // services
 import { ModalService } from '@services/modal.service';
-import { PostsService } from '@services/posts.service';
+import { SpotService } from '@src/app/services/spot.service';
 import { AlertService } from '@services/alert.service';
 import { CommentService } from '@services/comments.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // assets
-import { ReportPostRequest, ReportPostSuccess } from '@models/posts';
+import {
+  ReportSpotRequest,
+  ReportSpotResponse
+} from '@models/../newModels/spot';
 import { ReportCommentRequest } from '@models/comments';
 import { ReportCategory } from '@models/report';
 import { SpotError } from '@exceptions/error';
@@ -34,7 +37,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   // MODAL
   modalId: string;
   data: ModalReportData = {
-    postId: null,
+    spotId: null,
     commentId: null
   };
 
@@ -48,7 +51,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
-    private postsService: PostsService,
+    private spotService: SpotService,
     private commentService: CommentService,
     private alertService: AlertService,
     private translateService: TranslateService
@@ -73,9 +76,9 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   sendReport(): void {
-    if (this.data.postId && this.data.commentId) {
+    if (this.data.spotId && this.data.commentId) {
       const request: ReportCommentRequest = {
-        postId: this.data.postId,
+        postId: this.data.spotId,
         commentId: this.data.commentId,
         content: this.content,
         category: this.category
@@ -90,7 +93,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe(
-          (response: ReportPostSuccess) => {
+          (response: ReportSpotResponse) => {
             this.content = '';
             this.modalService.close(this.modalId);
             this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
@@ -99,15 +102,15 @@ export class ReportComponent implements OnInit, OnDestroy {
             this.errorMessage = error.message;
           }
         );
-    } else if (this.data.postId) {
-      const request: ReportPostRequest = {
-        postId: this.data.postId,
+    } else if (this.data.spotId) {
+      const request: ReportSpotRequest = {
+        spotId: this.data.spotId,
         content: this.content || '',
         category: this.category
       };
 
-      this.postsService
-        .reportPost(request)
+      this.spotService
+        .reportSpot(request)
         .pipe(
           takeUntil(this.onDestroy),
           catchError((errorResponse) => {
@@ -115,7 +118,7 @@ export class ReportComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe(
-          (response: ReportPostSuccess) => {
+          (response: ReportSpotResponse) => {
             this.content = '';
             this.modalService.close(this.modalId);
             this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);

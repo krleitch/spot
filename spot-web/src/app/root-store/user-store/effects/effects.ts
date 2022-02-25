@@ -7,7 +7,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 // Store
 import * as userActions from '@src/app/root-store/user-store/actions/actions';
 import * as friendsActions from '@store/social-store/actions/friends.actions';
-import * as postsActions from '@store/posts-store/actions';
+import * as postsActions from '@src/app/root-store/spot-store/actions';
 import * as commentsActions from '@store/comments-store/actions';
 import * as socialActions from '@store/social-store/actions/actions';
 

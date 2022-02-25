@@ -21,19 +21,19 @@ import { AuthenticationService } from '@services/authentication.service';
 import { Store, select } from '@ngrx/store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { RootStoreState } from '@store';
-import { PostsStoreActions } from '@store/posts-store';
+import { SpotStoreActions } from '@src/app/root-store/spot-store';
 
 // Assets
-import { POSTS_CONSTANTS } from '@constants/posts';
-import { LOCATIONS_CONSTANTS } from '@constants/locations';
+import { SPOT_CONSTANTS } from '@constants/spot';
+import { LOCATION_CONSTANTS } from '@constants/location';
 import {
-  DeletePostRequest,
-  DislikePostRequest,
-  LikePostRequest,
-  Post,
-  UnratedPostRequest
-} from '@models/posts';
-import { User } from '@models/../newModels/user';
+  DeleteSpotRequest,
+  RateSpotRequest,
+  Spot,
+  DeleteRatingRequest,
+  SpotRatingType
+} from '@models/../newModels/spot';
+import { User, UserRole } from '@models/../newModels/user';
 import { UserMetadata, UnitSystem } from '@models/../newModels/userMetadata';
 import { LocationData } from '@models/../newModels/location';
 import {
@@ -52,11 +52,11 @@ export class PostComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
   @Input() detailed: boolean;
-  @Input() post: Post;
+  @Input() spot: Spot;
   @ViewChild('options') options: ElementRef;
-  @ViewChild('postimage') postImage: ElementRef;
+  @ViewChild('spotimage') spotImage: ElementRef;
 
-  POSTS_CONSTANTS = POSTS_CONSTANTS;
+  SPOT_CONSTANTS = SPOT_CONSTANTS;
 
   location$: Observable<LocationData>;
   location: LocationData;
@@ -70,6 +70,8 @@ export class PostComponent implements OnInit, OnDestroy {
   expanded = false;
   isExpandable = false;
 
+  eSpotRatingType = SpotRatingType;
+  eUserRole = UserRole;
   optionsEnabled = false;
 
   constructor(
@@ -112,15 +114,15 @@ export class PostComponent implements OnInit, OnDestroy {
 
     // Check if content needs to be truncated
     if (
-      this.post.content.split(/\r\n|\r|\n/).length >
-        POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
-      this.post.content.length > POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+      this.spot.content.split(/\r\n|\r|\n/).length >
+        SPOT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
+      this.spot.content.length > SPOT_CONSTANTS.MAX_TRUNCATE_LENGTH
     ) {
       this.isExpandable = true;
     }
 
     this.time = this.getTime();
-    this.imageBlurred = this.post.image_nsfw;
+    this.imageBlurred = this.spot.imageNsfw;
   }
 
   ngOnDestroy(): void {
@@ -137,21 +139,21 @@ export class PostComponent implements OnInit, OnDestroy {
     this.optionsEnabled = value;
   }
 
-  openPost(): void {
-    this.router.navigateByUrl('posts/' + this.post.link);
+  openSpot(): void {
+    this.router.navigateByUrl('spot/' + this.spot.link);
   }
 
-  deletePost(): void {
+  deleteSpot(): void {
     this.modalService
       .open('global', 'confirm')
       .pipe(take(1))
       .subscribe((result: ModalConfirmResult) => {
         if (result.status === ModalConfirmResultTypes.CONFIRM) {
-          const request: DeletePostRequest = {
-            postId: this.post.id
+          const request: DeleteSpotRequest = {
+            spotId: this.spot.spotId
           };
           this.store$.dispatch(
-            new PostsStoreActions.DeleteRequestAction(request)
+            new SpotStoreActions.DeleteRequestAction(request)
           );
           // go home
           if (this.detailed) {
@@ -164,8 +166,8 @@ export class PostComponent implements OnInit, OnDestroy {
   getTime(): string {
     const curTime = new Date();
     // Need to convert from UTC  date to current time
-    const postTime = new Date(this.post.creation_date);
-    const timeDiff = curTime.getTime() - postTime.getTime();
+    const spotTime = new Date(this.spot.createdAt);
+    const timeDiff = curTime.getTime() - spotTime.getTime();
     if (timeDiff < 60000) {
       const secDiff = Math.round(timeDiff / 1000);
       if (secDiff <= 0) {
@@ -198,7 +200,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
     let distanceString = '';
 
-    if (distance <= LOCATIONS_CONSTANTS.MIN_DISTANCE) {
+    if (distance <= LOCATION_CONSTANTS.MIN_DISTANCE) {
       distanceString += '< ';
     }
 
@@ -213,24 +215,24 @@ export class PostComponent implements OnInit, OnDestroy {
 
   getContent(): string {
     if (this.expanded || !this.isExpandable) {
-      return this.post.content;
+      return this.spot.content;
     }
 
-    const textArrays = this.post.content.split(/\r\n|\r|\n/);
+    const textArrays = this.spot.content.split(/\r\n|\r|\n/);
     let truncatedContent = '';
 
     for (
       let i = 0;
-      i < textArrays.length && i < POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
+      i < textArrays.length && i < SPOT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
       i++
     ) {
       if (
         truncatedContent.length + textArrays[i].length >
-        POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+        SPOT_CONSTANTS.MAX_TRUNCATE_LENGTH
       ) {
         truncatedContent = textArrays[i].substring(
           0,
-          POSTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
+          SPOT_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
         );
         break;
       } else {
@@ -238,7 +240,7 @@ export class PostComponent implements OnInit, OnDestroy {
         // Dont add newline for last line or last line before line length reached
         if (
           i !== textArrays.length - 1 &&
-          i !== POSTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
+          i !== SPOT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
         ) {
           truncatedContent += '\n';
         }
@@ -254,23 +256,26 @@ export class PostComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.post.rated === 1) {
-      const request: UnratedPostRequest = {
-        postId: this.post.id
+    if (this.spot.myRating === SpotRatingType.LIKE) {
+      const request: DeleteRatingRequest = {
+        spotId: this.spot.spotId
       };
-      this.store$.dispatch(new PostsStoreActions.UnratedRequestAction(request));
+      this.store$.dispatch(
+        new SpotStoreActions.DeleteRatingRequestAction(request)
+      );
       if (this.detailed) {
-        this.post.likes -= 1;
-        this.post.rated = -1;
+        this.spot.likes -= 1;
+        this.spot.myRating = SpotRatingType.NONE;
       }
     } else {
-      const request: LikePostRequest = {
-        postId: this.post.id
+      const request: RateSpotRequest = {
+        spotId: this.spot.spotId,
+        rating: SpotRatingType.LIKE
       };
-      this.store$.dispatch(new PostsStoreActions.LikeRequestAction(request));
+      this.store$.dispatch(new SpotStoreActions.RateRequestAction(request));
       if (this.detailed) {
-        this.post.likes += 1;
-        this.post.rated = 1;
+        this.spot.likes += 1;
+        this.spot.myRating = SpotRatingType.LIKE;
       }
     }
   }
@@ -281,23 +286,26 @@ export class PostComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.post.rated === 0) {
-      const request: UnratedPostRequest = {
-        postId: this.post.id
+    if (this.spot.myRating === SpotRatingType.DISLIKE) {
+      const request: DeleteRatingRequest = {
+        spotId: this.spot.spotId
       };
-      this.store$.dispatch(new PostsStoreActions.UnratedRequestAction(request));
+      this.store$.dispatch(
+        new SpotStoreActions.DeleteRatingRequestAction(request)
+      );
       if (this.detailed) {
-        this.post.dislikes -= 1;
-        this.post.rated = -1;
+        this.spot.dislikes -= 1;
+        this.spot.myRating = SpotRatingType.NONE;
       }
     } else {
-      const request: DislikePostRequest = {
-        postId: this.post.id
+      const request: RateSpotRequest = {
+        spotId: this.spot.spotId,
+        rating: SpotRatingType.DISLIKE
       };
-      this.store$.dispatch(new PostsStoreActions.DislikeRequestAction(request));
+      this.store$.dispatch(new SpotStoreActions.RateRequestAction(request));
       if (this.detailed) {
-        this.post.dislikes += 1;
-        this.post.rated = 0;
+        this.spot.dislikes += 1;
+        this.spot.myRating = SpotRatingType.DISLIKE;
       }
     }
   }
@@ -310,25 +318,25 @@ export class PostComponent implements OnInit, OnDestroy {
     this.modalService.close(id);
   }
 
-  openReportModal(postId: string): void {
+  openReportModal(spotId: string): void {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');
       return;
     }
 
-    this.modalService.open('global', 'report', { postId: postId });
+    this.modalService.open('global', 'report', { spotId: spotId });
   }
 
-  openShareModal(postId: string, postLink: string) {
+  openShareModal(spotId: string, spotLink: string) {
     this.modalService.open('global', 'share', {
-      postId: postId,
-      postLink: postLink
+      spotId: spotId,
+      spotLink: spotLink
     });
   }
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      const modalData: ModalImageData = { imageSrc: this.post.image_src };
+      const modalData: ModalImageData = { imageSrc: this.spot.imageSrc };
       const modalOptions: ModalOptions = { width: 'auto' };
       this.modalService.open('global', 'image', modalData, modalOptions);
     } else {

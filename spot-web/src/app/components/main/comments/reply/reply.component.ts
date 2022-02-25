@@ -40,7 +40,7 @@ import {
   LikeReplyRequest,
   UnratedReplyRequest
 } from '@models/comments';
-import { Post } from '@models/posts';
+import { Spot } from '@models/../newModels/spot';
 import { Tag } from '@models/notifications';
 import { Friend } from '@models/friends';
 import { SpotError } from '@exceptions/error';
@@ -71,7 +71,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() detailed: boolean;
   @Input() reply: Comment;
   @Input() comment: Comment;
-  @Input() post: Post;
+  @Input() spot: Spot;
 
   @ViewChild('options') options;
   @ViewChild('text') text;
@@ -489,8 +489,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getTime(date): void {
     const curTime = new Date();
-    const postTime = new Date(date);
-    const timeDiff = curTime.getTime() - postTime.getTime();
+    const spotTime = new Date(date);
+    const timeDiff = curTime.getTime() - spotTime.getTime();
     if (timeDiff < 60000) {
       const secDiff = Math.round(timeDiff / 1000);
       if (secDiff <= 0) {
@@ -570,7 +570,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       if (elem.className === 'tag-inline') {
         const tag: Tag = {
           username: elem.textContent,
-          postLink: this.post.link,
+          postLink: this.spot.link,
           offset
         };
         tags.push(tag);
@@ -797,19 +797,19 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  openReportModal(postId: string, commentId: string): void {
+  openReportModal(spotId: string, commentId: string): void {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');
       return;
     }
 
     this.modalService.open('global', 'report', {
-      postId: postId,
+      spotId: spotId,
       commentId: commentId
     });
   }
   openShareModal(
-    postId: string,
+    spotId: string,
     postLink: string,
     replyId: string,
     replyLink: string
@@ -820,8 +820,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.modalService.open('global', 'share', {
-      postId: postId,
-      postLink: postLink,
+      spotId: spotId,
+      spotLink: postLink,
       commentId: replyId,
       commentLink: replyLink
     });

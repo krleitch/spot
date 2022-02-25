@@ -1,18 +1,18 @@
-import { Post } from '@models/posts';
+import { Spot } from '@models/../newModels/spot';
 import { SpotError } from '@exceptions/error';
 
 export interface State {
-  posts: Post[];
+  spots: Spot[];
   loading: boolean;
   createError: SpotError;
   createSuccess: boolean;
-  noPosts: boolean; // Were any posts loaded flag
+  noSpots: boolean; // Were any spots loaded flag
 }
 
 export const initialState: State = {
-  posts: [],
+  spots: [],
   loading: false,
   createError: null,
   createSuccess: false,
-  noPosts: false
+  noSpots: false
 };
