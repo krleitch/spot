@@ -165,6 +165,10 @@ export const ERROR_MESSAGES = {
             SEND_VERIFY: 'Error sending verification email',
             CONFIRM_VERIFY: 'Error confirming email verification'
 
+        },
+
+        AUTHORIZATION: {
+            NOT_AUTHORIZED: 'Error, you are not authorized'
         }
     },
 

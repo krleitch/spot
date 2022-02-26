@@ -14,7 +14,7 @@ import notifications from '@db/notifications.js';
 // services
 import commentsService from '@services/comments.js';
 import imageService from '@services/image.js';
-import authorization from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization.js';
 const singleUpload = imageService.upload.single('image');
 
 // ratelimiter
@@ -27,10 +27,12 @@ import ErrorHandler from '@helpers/errorHandler.js';
 
 // constants
 import { COMMENTS_CONSTANTS } from '@constants/comments.js';
-import roles from '@services/authorization/roles.js';
 
 // config
 import config from '@config/config.js';
+
+// models
+import { UserRole } from '@models/../newModels/user.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -331,7 +333,7 @@ router.post(
       return next(new AuthenticationError.VerifyError(400));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.AddComment(500));
     }
 
@@ -385,7 +387,7 @@ router.post(
       let imageNsfw = false;
       if (config.testNsfwLocal && image) {
         try {
-          imageNsfw = await imageService.predictNsfw(image);
+          imageNsfw = await imageService.predictNsfwLocal(image);
         } catch (err) {
           // err
         }
@@ -504,7 +506,7 @@ router.post(
       return next(new AuthenticationError.VerifyError(400));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.AddComment(500));
     }
 
@@ -567,7 +569,7 @@ router.post(
       let imageNsfw = false;
       if (config.testNsfwLocal && image) {
         try {
-          imageNsfw = await imageService.predictNsfw(image);
+          imageNsfw = await imageService.predictNsfwLocal(image);
         } catch (err) {
           // err
         }
@@ -684,7 +686,7 @@ router.delete(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.DeleteComment(500));
     }
 
@@ -696,7 +698,7 @@ router.delete(
       (owned: boolean) => {
         if (
           owned ||
-          authorization.checkRole(req.user, [roles.owner, roles.admin])
+          authorizationService.checkUserHasRole(req.user, [UserRole.OWNER, UserRole.ADMIN])
         ) {
           comments.deleteCommentById(commentId).then(
             (rows: any) => {
@@ -734,7 +736,7 @@ router.delete(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.DeleteReply(500));
     }
 
@@ -747,7 +749,7 @@ router.delete(
       (owned: boolean) => {
         if (
           owned ||
-          authorization.checkRole(req.user, [roles.owner, roles.admin])
+          authorizationService.checkUserHasRole(req.user, [UserRole.OWNER, UserRole.ADMIN])
         ) {
           comments.deleteCommentById(commentId).then(
             (rows: any) => {
@@ -782,7 +784,7 @@ router.put(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.LikeComment(500));
     }
 
@@ -811,7 +813,7 @@ router.put(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.DislikeComment(500));
     }
 
@@ -840,7 +842,7 @@ router.put(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.UnratedComment(500));
     }
 
@@ -869,7 +871,7 @@ router.put(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.LikeReply(500));
     }
 
@@ -903,7 +905,7 @@ router.put(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.DislikeReply(500));
     }
 
@@ -937,7 +939,7 @@ router.put(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.UnratedComment(500));
     }
 
@@ -971,7 +973,7 @@ router.put(
       return next(new AuthenticationError.AuthenticationError(401));
     }
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new CommentsError.ReportComment(500));
     }
 

@@ -10,7 +10,7 @@ import prismaUserVerify from '@db/../prisma/userVerify.js';
 
 // services
 import authenticationService from '@services/authentication/authentication.js';
-import authorization from '@services/authorization/authorization.js';
+import authorization from '@services/authorization.js';
 import friendsService from '@services/friends.js';
 import mail from '@services/mail.js';
 
@@ -77,12 +77,11 @@ router.delete(
   '/',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
       // Make sure the account is not a guest account
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.DeleteUser());
       }
-      await prismaUser.softDeleteUser(userId);
+      await prismaUser.softDeleteUser(req.user.userId);
       const deleteUserResponse: DeleteUserResponse = {};
       res.status(200).send(deleteUserResponse);
     }
@@ -94,11 +93,10 @@ router.put(
   '/username',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
       const body: UpdateUsernameRequest = req.body;
 
       // Not a guest, and we have the user
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.UpdateUsername());
       }
 
@@ -107,7 +105,7 @@ router.put(
       if (usernameError) {
         return next(usernameError);
       }
-      const user = await prismaUser.findUserById(userId);
+      const user = await prismaUser.findUserById(req.user.userId);
       if (!user) {
         return next(new userError.UpdateUsername());
       }
@@ -123,7 +121,7 @@ router.put(
       }
 
       const updatedUser = await prismaUser.updateUsername(
-        userId,
+        req.user.userId,
         body.username
       );
       if (!updatedUser) {
@@ -140,10 +138,9 @@ router.put(
   '/email',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
       const body: UpdateEmailRequest = req.body;
 
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.UpdateEmail());
       }
 
@@ -152,7 +149,7 @@ router.put(
       if (emailError) {
         return next(emailError);
       }
-      const user = await prismaUser.findUserById(userId);
+      const user = await prismaUser.findUserById(req.user.userId);
       if (!user) {
         return next(new userError.UpdateEmail());
       }
@@ -167,7 +164,7 @@ router.put(
         return next(new authenticationError.EmailTakenError(400));
       }
 
-      const updatedUser = await prismaUser.updateEmail(userId, body.email);
+      const updatedUser = await prismaUser.updateEmail(req.user.userId, body.email);
       if (!updatedUser) {
         return next(new userError.UpdateEmail());
       }
@@ -182,11 +179,10 @@ router.put(
   '/phone',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
       const body: UpdatePhoneRequest = req.body;
 
       // Not a guest and we have the user
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.UpdatePhone());
       }
 
@@ -195,7 +191,7 @@ router.put(
       if (phoneError) {
         return next(phoneError);
       }
-      const user = await prismaUser.findUserById(userId);
+      const user = await prismaUser.findUserById(req.user.userId);
       if (!user) {
         return next(new userError.UpdatePhone());
       }
@@ -210,7 +206,7 @@ router.put(
         return next(new authenticationError.PhoneTakenError(400));
       }
 
-      const updatedUser = await prismaUser.updatePhone(userId, body.phone);
+      const updatedUser = await prismaUser.updatePhone(req.user.userId, body.phone);
       if (!updatedUser) {
         return next(new userError.UpdatePhone());
       }
@@ -226,10 +222,9 @@ router.post(
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const body: FacebookConnectRequest = req.body;
-      const userId = req.user?.userId;
 
       // Not a guest, and we have the user
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.FacebookConnect());
       }
 
@@ -247,7 +242,7 @@ router.post(
       }
       // create the account
       const connectedUser = await prismaUser.connectFacebook(
-        userId,
+        req.user.userId,
         facebookId.body.id
       );
       if (!connectedUser) {
@@ -255,7 +250,7 @@ router.post(
       }
 
       // This can run in the background
-      friendsService.addFacebookFriends(body.accessToken, userId);
+      friendsService.addFacebookFriends(body.accessToken, req.user.userId);
 
       const response: FacebookConnectResponse = {
         user: connectedUser
@@ -269,15 +264,14 @@ router.post(
   '/facebook/disconnect',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
 
       // Not a guest and we have the user
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.FacebookDisconnect());
       }
 
       // remove the facebook id from the user
-      const updatedUser = await prismaUser.disconnectFacebook(userId);
+      const updatedUser = await prismaUser.disconnectFacebook(req.user.userId);
       if (!updatedUser) {
         return next(new userError.FacebookDisconnect());
       }
@@ -298,9 +292,8 @@ router.post(
     next: NextFunction
   ) {
     const body: GoogleConnectRequest = req.body;
-    const userId = req.user?.userId;
 
-    if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+    if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new userError.GoogleConnect());
     }
 
@@ -317,7 +310,7 @@ router.post(
       return next(new userError.GoogleConnectExists());
     }
     // create the account
-    const connectedUser = await prismaUser.connectGoogle(userId, googleId);
+    const connectedUser = await prismaUser.connectGoogle(req.user.userId, googleId);
     if (!connectedUser) {
       return next(new userError.GoogleConnect());
     }
@@ -333,14 +326,13 @@ router.post(
   '/google/disconnect',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
 
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.GoogleDisconnect());
       }
 
       // remove the google id from the account
-      const user = await prismaUser.disconnectGoogle(userId);
+      const user = await prismaUser.disconnectGoogle(req.user.userId);
       if (!user) {
         return next(new userError.GoogleDisconnect());
       }
@@ -383,9 +375,8 @@ router.put(
   '/metadata',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
 
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.GetMetadata());
       }
 
@@ -397,7 +388,7 @@ router.put(
 
       if (body.unitSystem) {
         const metadata = await prismaUserMetadata.updateUserMetadataUnitSystem(
-          userId,
+          req.user.userId,
           body.unitSystem
         );
         if (!metadata) {
@@ -408,7 +399,7 @@ router.put(
 
       if (body.searchType) {
         const metadata = await prismaUserMetadata.updateUserMetadataSearchType(
-          userId,
+          req.user.userId,
           body.searchType
         );
         if (!metadata) {
@@ -420,7 +411,7 @@ router.put(
       if (body.locationType) {
         const metadata =
           await prismaUserMetadata.updateUserMetadataLocationType(
-            userId,
+            req.user.userId,
             body.locationType
           );
         if (!metadata) {
@@ -432,7 +423,7 @@ router.put(
       if (typeof body.matureFilter !== 'undefined') {
         const metadata =
           await prismaUserMetadata.updateUserMetadataMatureFilter(
-            userId,
+            req.user.userId,
             body.matureFilter
           );
         if (!metadata) {
@@ -443,7 +434,7 @@ router.put(
 
       if (body.themeWeb) {
         const metadata = await prismaUserMetadata.updateUserMetadataThemeWeb(
-          userId,
+          req.user.userId,
           body.themeWeb
         );
         if (!metadata) {
@@ -471,7 +462,7 @@ router.post(
   '/verify',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !req.user) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.SendVerify());
       }
 
@@ -527,10 +518,9 @@ router.post(
   '/verify/confirm',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const userId = req.user?.userId;
       const body: VerifyConfirmRequest = req.body;
 
-      if (authorization.checkRole(req.user, [UserRole.GUEST]) || !userId) {
+      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new userError.ConfirmVerify());
       }
 
@@ -543,12 +533,12 @@ router.post(
       // check valid expirary date and correct user
       if (
         !authenticationService.isValidTokenTime(userVerify.createdAt) ||
-        userVerify.userId !== userId
+        userVerify.userId !== req.user.userId
       ) {
         return next(new userError.ConfirmVerify(499));
       }
 
-      const verifiedUser = await prismaUser.verifyUser(userId);
+      const verifiedUser = await prismaUser.verifyUser(req.user.userId);
       if (!verifiedUser) {
         return next(new userError.ConfirmVerify());
       }

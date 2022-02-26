@@ -13,7 +13,7 @@ import prismaPasswordReset from '@db/../prisma/passwordReset.js';
 
 // services
 import authenticationService from '@services/authentication/authentication.js';
-import authorization from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization.js';
 import friendsService from '@services/friends.js';
 import mailService from '@services/mail.js';
 
@@ -349,7 +349,7 @@ router.post(
     if (!user) {
       return next(new authenticationError.NewPassword());
     }
-    if (authorization.checkRole(user, [UserRole.GUEST])) {
+    if (authorizationService.checkUserHasRole(user, [UserRole.GUEST])) {
       return next(new authenticationError.NewPassword());
     }
 

@@ -15,10 +15,10 @@ import { ERROR_MESSAGES } from '@exceptions/messages.js';
 const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.FRIENDS;
 
 // services
-import authorization from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization.js';
 
-// constants
-import roles from '@services/authorization/roles.js';
+// models
+import { UserRole } from '@models/../newModels/user.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -131,7 +131,7 @@ router.post(
     const accountId = req.user.id;
     const { username } = req.body;
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new FriendsError.FriendExistsError(500));
     }
 
@@ -238,7 +238,7 @@ router.post(
     const accountId = req.user.id;
     const { friendRequestId } = req.body;
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new FriendsError.AcceptFriendRequest(500));
     }
 

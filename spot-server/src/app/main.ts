@@ -29,7 +29,7 @@ import errorHandler from '@helpers/errorHandler.js';
 import passport from '@services/authentication/passport.js';
 import authenticationService from '@services/authentication/authentication.js';
 import locationService from '@services/location.js';
-import authorizationService from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization.js';
 
 import { UserRole } from '@models/../newModels/user.js';
 
@@ -90,7 +90,7 @@ app.use('/friends', authenticationService.requiredAuth, friends);
 app.use(
   '/admin',
   authenticationService.requiredAuth,
-  authorizationService.checkRoleMiddleware([UserRole.OWNER, UserRole.ADMIN]),
+  authorizationService.checkUserHasRoleMiddleware([UserRole.OWNER, UserRole.ADMIN]),
   admin
 );
 

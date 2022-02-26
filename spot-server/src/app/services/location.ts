@@ -13,7 +13,7 @@ import prismaUserLocation from '@db/../prisma/userLocation.js';
 import * as locationError from '@exceptions/location.js';
 
 // services
-import authorizationService from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization.js';
 
 // constants
 import { LOCATION_CONSTANTS } from '@constants/location.js';
@@ -36,7 +36,7 @@ const checkLocation = async (
   }
   // allow admins and guests to do whatever
   if (
-    authorizationService.checkRole(req.user, [
+    authorizationService.checkUserHasRole(req.user, [
       UserRole.OWNER,
       UserRole.ADMIN,
       UserRole.GUEST

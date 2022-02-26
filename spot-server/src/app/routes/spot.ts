@@ -14,7 +14,7 @@ import prismaSpotRating from '@db/../prisma/spotRating.js';
 import spotService from '@services/spot.js';
 import locationService from '@services/location.js';
 import imageService from '@services/image.js';
-import authorizationService from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization.js';
 const singleUpload = imageService.upload.single('image');
 
 // errors
@@ -180,7 +180,7 @@ router.post(
         return next(new authenticationError.VerifyError());
       }
 
-      if (authorizationService.checkRole(req.user, [UserRole.GUEST])) {
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new spotError.CreateSpot());
       }
 
@@ -315,7 +315,7 @@ router.put(
         return next(new authenticationError.AuthenticationError());
       }
 
-      if (authorizationService.checkRole(req.user, [UserRole.GUEST])) {
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new spotError.RateSpot());
       }
 
@@ -358,7 +358,7 @@ router.delete(
         return next(new authenticationError.AuthenticationError());
       }
 
-      if (authorizationService.checkRole(req.user, [UserRole.GUEST])) {
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new spotError.DeleteRatingSpot());
       }
 
@@ -391,7 +391,7 @@ router.delete(
         return next(new authenticationError.AuthenticationError());
       }
 
-      if (authorizationService.checkRole(req.user, [UserRole.GUEST])) {
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new spotError.DeleteSpot());
       }
 
@@ -401,7 +401,7 @@ router.delete(
 
       // Check you own the spot, if you are not an admin or owner
       if (
-        !authorizationService.checkRole(req.user, [
+        !authorizationService.checkUserHasRole(req.user, [
           UserRole.OWNER,
           UserRole.ADMIN
         ])
@@ -430,7 +430,7 @@ router.post(
         return next(new authenticationError.AuthenticationError());
       }
 
-      if (authorizationService.checkRole(req.user, [UserRole.GUEST])) {
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new reportError.ReportError());
       }
 

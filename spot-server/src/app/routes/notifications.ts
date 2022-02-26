@@ -8,7 +8,7 @@ import friends from '@db/friends.js';
 
 // services
 import commentsService from '@services/comments.js';
-import authorization from '@services/authorization/authorization.js';
+import authorizationService from '@services/authorization.js';
 
 // ratelimiter
 import rateLimiter from '@helpers/rateLimiter.js';
@@ -17,8 +17,8 @@ import rateLimiter from '@helpers/rateLimiter.js';
 import * as NotificationsError from '@exceptions/notifications.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
-// constants
-import roles from '@services/authorization/roles.js';
+// models
+import { UserRole } from '@models/../newModels/user.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -106,7 +106,7 @@ router.post(
     const { receiver, postId, commentId } = req.body;
     const accountId = req.user.id;
 
-    if (authorization.checkRole(req.user, [roles.guest])) {
+    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
       return next(new NotificationsError.SendNotification(500));
     }
 
