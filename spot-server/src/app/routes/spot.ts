@@ -184,28 +184,29 @@ router.post(
         return next(new spotError.CreateSpot());
       }
 
-      // set the filename for aws s3 bucket
-      // @ts-ignore
-      req.filename = postId;
+      // create the spotid and set filename
+      const spotId = uuid.v4();
+      const json = JSON.parse(req.body.json);
+      json.filename = spotId;
+      req.body.json = JSON.stringify(json);
 
-      singleUpload(req, res, async function (err: any) {
+      // Upload the file
+      singleUpload(req, res, async (err: any) => {
         // error uploading image
         if (err) {
           return next(new spotError.SpotImage(422));
         }
 
-        const json = JSON.parse(req.body.json);
-        let content = json.content;
-        const location = json.location;
+        const body: CreateSpotRequest = JSON.parse(req.body.json);
         // @ts-ignore
-        const image = req.file ? req.file.location : null;
+        // Location is defined on the multers3 file type
+        const imageSrc = req.file ? req.file.location : null;
 
         // remove leading and trailing whitespaces
-        content = content.trim();
-
+        body.content = body.content.trim();
         // check if line length matches
         if (
-          content.split(/\r\n|\r|\n/).length > SPOT_CONSTANTS.MAX_LINE_LENGTH
+          body.content.split(/\r\n|\r|\n/).length > SPOT_CONSTANTS.MAX_LINE_LENGTH
         ) {
           return next(
             new spotError.InvalidSpotLineLength(
@@ -214,52 +215,51 @@ router.post(
             )
           );
         }
-
         // You must either have some text or an image
-        if (content.length == 0 && !image) {
+        if (body.content.length == 0 && !imageSrc) {
           return next(new spotError.NoSpotContent(400));
         }
-
-        const contentError = spotService.validContent(content);
+        const contentError = spotService.validContent(body.content);
         if (contentError) {
           return next(contentError);
         }
 
+        // Test nsfw, locally if needed
         const link = await spotService.generateLink();
-
         let imageNsfw = false;
-        if (config.testNsfwLocal && image) {
+        if (config.testNsfwLocal && imageSrc) {
           try {
-            imageNsfw = await imageService.predictNsfw(image);
+            imageNsfw = await imageService.predictNsfwLocal(imageSrc);
           } catch (err) {
-            // err
+            // do nothing
           }
         }
 
+        // get geolocation
         const geolocation = await locationService.getGeolocation(
-          location.latitude,
-          location.longitude
+          body.location
         );
         const createdSpot = await prismaSpot.createSpot(
+          spotId,
           userId,
-          content,
-          location,
-          image,
+          body.content,
+          body.location,
+          imageSrc,
           imageNsfw,
           link,
           geolocation
         );
 
-        // Nsfw check
-        if (config.testNsfwLambda && image) {
-          imageService.predictNsfwLambda(image).then((result: any) => {
-            if (result?.statusCode === 200) {
-              const payload = JSON.parse(result.Payload);
+        // Nsfw check using lambda in the background, do not wait
+        if (config.testNsfwLambda && imageSrc) {
+          imageService.predictNsfwLambda(imageSrc).then((result: AWS.Lambda.InvocationResponse) => {
+            if (result?.StatusCode === 200 && result.Payload) {
+              const payload = JSON.parse(result.Payload.toString());
               if (payload.statusCode === 200) {
-                const predict = JSON.parse(payload.body);
+                const predictionResult = JSON.parse(payload.body);
                 const isNsfw =
-                  predict?.className === 'Porn' ||
-                  predict?.className === 'Hentai';
+                  predictionResult?.className === 'Porn' ||
+                  predictionResult?.className === 'Hentai';
                 prismaSpot.updateNsfw(createdSpot.spotId, isNsfw);
               }
             }
@@ -269,7 +269,7 @@ router.post(
         // add the location props
         const spotWithLocation = locationService.addLocationPropsToSpots(
           [createdSpot],
-          location,
+          body.location,
           { hideDistance: true }
         );
 

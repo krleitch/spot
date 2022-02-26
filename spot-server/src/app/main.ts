@@ -30,7 +30,8 @@ import passport from '@services/authentication/passport.js';
 import authenticationService from '@services/authentication/authentication.js';
 import locationService from '@services/location.js';
 import authorizationService from '@services/authorization/authorization.js';
-import roles from '@services/authorization/roles.js';
+
+import { UserRole } from '@models/../newModels/user.js';
 
 const port = process.env.PORT || 3000;
 
@@ -89,7 +90,7 @@ app.use('/friends', authenticationService.requiredAuth, friends);
 app.use(
   '/admin',
   authenticationService.requiredAuth,
-  authorizationService.checkRoleMiddleware([roles.owner, roles.admin]),
+  authorizationService.checkRoleMiddleware([UserRole.OWNER, UserRole.ADMIN]),
   admin
 );
 

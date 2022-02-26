@@ -10,6 +10,7 @@ import { LocationData } from '@models/../newModels/location.js';
 import { SPOT_CONSTANTS } from '@constants/spot.js';
 
 const createSpot = async (
+  spotId: string,
   userId: string,
   content: string,
   location: LocationData,
@@ -20,6 +21,7 @@ const createSpot = async (
 ): Promise<P.Spot> => {
   const spot = await prisma.spot.create({
     data: {
+      spotId: spotId,
       latitude: location.latitude,
       longitude: location.longitude,
       content: content,

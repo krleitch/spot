@@ -7,36 +7,48 @@ import { LocationData } from '@models/../newModels/location.js';
 
 const createLocation = async (
   userId: string,
-  location: LocationData
+  latitude: number,
+  longitude: number
 ): Promise<P.UserLocation> => {
   const createdLocation = await prisma.userLocation.create({
     data: {
       userId: userId,
-      latitude: location.latitude,
-      longitude: location.longitude
+      latitude: latitude,
+      longitude: longitude
     }
   });
   return createdLocation;
 };
 
 // TODO: delete others and make a new one?
-// const updateLocation = async (
-//   userId: string,
-//   location: LocationData
-// ): Promise<P.UserLocation> => {
-//   const updatedLocation = await prisma.userLocation.update({
-//     where: {
-//       userId: userId,
-//     },
-//     data: {
-//       latitude: location.latitude,
-//       longitude: location.longitude
-//     }
-//   });
-//   return updatedLocation;
-// };
+const updateLatestLocation = async (
+  userId: string,
+  latitude: number,
+  longitude: number
+): Promise<P.UserLocation> => {
 
-const findLatestLocation = async (userId: string): Promise<P.UserLocation | null> => {
+  const latestLocation = await findLatestLocation(userId);
+
+  const updatedLocation = await prisma.userLocation.upsert({
+    where: {
+      userLocationId: latestLocation?.userLocationId
+    },
+    update: {
+      latitude: latitude,
+      longitude: longitude
+    },
+    create: {
+      userId: userId,
+      latitude: latitude,
+      longitude: longitude
+    }
+  });
+  return updatedLocation;
+};
+
+const findLatestLocation = async (
+  userId: string
+): Promise<P.UserLocation | null> => {
   const location = prisma.userLocation.findFirst({
     where: {
       userId: userId
@@ -50,5 +62,6 @@ const findLatestLocation = async (userId: string): Promise<P.UserLocation | null
 
 export default {
   createLocation,
+  updateLatestLocation,
   findLatestLocation
 };
