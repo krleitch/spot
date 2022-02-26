@@ -11,7 +11,7 @@ const createComment = async (
   spotId: string,
   userId: string,
   content: string,
-  imageSrc: string,
+  imageSrc: string | null,
   imageNsfw: boolean,
   link: string
 ): Promise<P.Comment> => {

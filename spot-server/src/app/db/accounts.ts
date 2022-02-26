@@ -32,7 +32,6 @@ export default {
 import uuid from 'uuid';
 
 // Services
-import roles from '@services/authorization/roles.js';
 
 import { query } from '@db/mySql.js';
 
@@ -126,7 +125,7 @@ function addAccount(
     currentDate,
     salt,
     false,
-    roles.user
+    'user'
   ];
   return query(sql, values).then((rows: any) => {
     return getAccountById(id);
@@ -250,7 +249,7 @@ function addFacebookAccount(
 ): Promise<any> {
   const sql =
     'INSERT INTO accounts (id, creation_date, email, username, facebook_id, role) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [uuid.v4(), new Date(), email, username, id, roles.user];
+  const values = [uuid.v4(), new Date(), email, username, id, 'roles.useuserr'];
   return query(sql, values).then((rows: any) => {
     return getFacebookAccount(id);
   });
@@ -289,7 +288,7 @@ function addGoogleAccount(
 ): Promise<any> {
   const sql =
     'INSERT INTO accounts (id, creation_date, email, username, google_id, role) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [uuid.v4(), new Date(), email, username, id, roles.user];
+  const values = [uuid.v4(), new Date(), email, username, id, "roles.user"];
   return query(sql, values).then((rows: any) => {
     return getGoogleAccount(id);
   });

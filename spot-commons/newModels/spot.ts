@@ -16,8 +16,8 @@ export interface Spot {
     inRange: boolean;
     geolocation: string;
     content: string;
-    imageSrc: string;
-    imageNsfw: boolean;
+    imageSrc: string | null;
+    imageNsfw: boolean | null;
     likes: number;
     dislikes: number;
     myRating: SpotRatingType;

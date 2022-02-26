@@ -186,9 +186,7 @@ router.post(
 
       // create the spotid and set filename
       const spotId = uuid.v4();
-      const json = JSON.parse(req.body.json);
-      json.filename = spotId;
-      req.body.json = JSON.stringify(json);
+      req.body.filename = spotId;
 
       // Upload the file
       singleUpload(req, res, async (err: any) => {
@@ -200,7 +198,7 @@ router.post(
         const body: CreateSpotRequest = JSON.parse(req.body.json);
         // @ts-ignore
         // Location is defined on the multers3 file type
-        const imageSrc = req.file ? req.file.location : null;
+        const imageSrc: string = req.file ? req.file.location : null;
 
         // remove leading and trailing whitespaces
         body.content = body.content.trim();

@@ -14,7 +14,7 @@ const createSpot = async (
   userId: string,
   content: string,
   location: LocationData,
-  imageSrc: string,
+  imageSrc: string | null,
   imageNsfw: boolean,
   link: string,
   geolocation: string

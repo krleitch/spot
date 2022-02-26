@@ -40,12 +40,10 @@ const port = process.env.PORT || 3000;
 // ************
 
 mySql.initDb();
-
 app.use(passport.initialize());
-// app.use(passport.session());
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(Cors());
 
 // create a rotating write stream
@@ -53,7 +51,6 @@ const accessLogStream = rfs.createStream('access.log', {
   interval: '1d', // rotate daily
   path: path.join(__dirname, 'log')
 });
-
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }));
 

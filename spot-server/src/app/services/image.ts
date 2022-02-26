@@ -52,19 +52,20 @@ const upload = multer({
     ) {
       const json: CreateRequestWithFile = JSON.parse(req.body.json);
       let prefix = '';
-      // json.filename contains the id for the new spot/comment/reply
-      if (json.spotId && json.commentId && json.filename) {
+      console.log(req.body.filename);
+      // req.body.filename contains the id for the new spot/comment/reply
+      if (json.spotId && json.commentId && req.body.filename) {
         // reply
         prefix = 'spots/' + json.spotId + '/comments/' + json.commentId + '/';
       } else if (json.spotId) {
         // comment
-        prefix = 'spots/' + json.spotId + '/comments/' + json.filename + '/';
+        prefix = 'spots/' + json.spotId + '/comments/' + req.body.filename + '/';
       } else {
         // spot
-        prefix = 'spots/' + json.filename + '/';
+        prefix = 'spots/' + req.body.filename + '/';
       }
 
-      cb(null, prefix + json.filename);
+      cb(null, prefix + req.body.filename);
     }
   })
 });

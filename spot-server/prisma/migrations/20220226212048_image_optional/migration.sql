@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Comment" ALTER COLUMN "imageSrc" DROP NOT NULL,
+ALTER COLUMN "imageNsfw" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Spot" ALTER COLUMN "imageSrc" DROP NOT NULL,
+ALTER COLUMN "imageNsfw" DROP NOT NULL;
