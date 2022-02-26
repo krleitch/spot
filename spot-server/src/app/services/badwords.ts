@@ -1,5 +1,3 @@
-export default { checkProfanity, checkProfanityIndex };
-
 import Filter from 'badwords-filter';
 
 // TODO: languages
@@ -29,12 +27,12 @@ const config = {
 
 const filter = new Filter(config);
 
-function checkProfanity(text: string): boolean {
+const checkProfanity = (text: string): boolean => {
   return filter.isUnclean(text);
 }
 
 // Return the first word that is profane
-function checkProfanityIndex(text: string): string | null {
+const checkProfanityIndex = (text: string): string | null => {
   const index = filter.getUncleanWordIndexes(text);
 
   if (index.length < 0) {
@@ -43,3 +41,5 @@ function checkProfanityIndex(text: string): string | null {
 
   return text.split(/\b\s+/)[index[0]];
 }
+
+export default { checkProfanity, checkProfanityIndex };

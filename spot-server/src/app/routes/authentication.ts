@@ -99,7 +99,7 @@ router.post(
         return next(new authenticationError.RegisterError());
       }
 
-      const token = authenticationService.generateToken(user);
+      const token = authenticationService.generateJwtFromUser(user);
       const response: RegisterResponse = {
         jwt: { token: token, expiresIn: 7 },
         user: user
@@ -120,7 +120,7 @@ router.post(
       return next(new authenticationError.LoginError());
     }
 
-    const token = authenticationService.generateToken(user);
+    const token = authenticationService.generateJwtFromUser(user);
     const response: LoginResponse = {
       jwt: { token: token, expiresIn: 7 },
       user: user
@@ -156,7 +156,7 @@ router.post(
           facebookDetails.body.email
         );
         // check if email exists first
-        let email = facebookDetails.body.email;
+        let email: string | null = facebookDetails.body.email;
         const emailExists = await prismaUser.emailExists(email);
         if (emailExists) {
           email = null;
@@ -172,7 +172,7 @@ router.post(
         // add facebook friends
         friendsService.addFacebookFriends(body.accessToken, createdUser.userId);
         // return the user
-        const token = authenticationService.generateToken(createdUser);
+        const token = authenticationService.generateJwtFromUser(createdUser);
         const response: FacebookLoginResponse = {
           created: true,
           jwt: { token: token, expiresIn: 7 },
@@ -181,7 +181,7 @@ router.post(
         res.status(200).json(response);
       } else {
         // User already exists
-        const token = authenticationService.generateToken(facebookUser);
+        const token = authenticationService.generateJwtFromUser(facebookUser);
         const response: FacebookLoginResponse = {
           created: false,
           jwt: { token: token, expiresIn: 7 },
@@ -206,16 +206,19 @@ router.post(
           body.accessToken
         );
         const payload = ticket.getPayload();
+        if (!payload) {
+          return next(new authenticationError.GoogleSignUpError());
+        }
         const googleid = payload['sub'];
 
         const googleUser = await prismaUser.findUserByGoogleId(googleid);
         if (!googleUser) {
           // create the user
-          let email = payload['email'];
+          let email = payload['email'] || null;
           const username = await authenticationService.createUsernameFromEmail(
             email
           );
-          const emailExists = await prismaUser.emailExists(email);
+          const emailExists = !email || (await prismaUser.emailExists(email));
           if (emailExists) {
             email = null;
           }
@@ -228,7 +231,7 @@ router.post(
           if (!createdUser) {
             return next(new authenticationError.GoogleSignUpError());
           }
-          const token = authenticationService.generateToken(createdUser);
+          const token = authenticationService.generateJwtFromUser(createdUser);
           const response: GoogleLoginResponse = {
             created: true,
             jwt: { token: token, expiresIn: 7 },
@@ -237,7 +240,7 @@ router.post(
           res.status(200).json(response);
         } else {
           // The user already exists
-          const token = authenticationService.generateToken(googleUser);
+          const token = authenticationService.generateJwtFromUser(googleUser);
           const response: GoogleLoginResponse = {
             created: false,
             jwt: { token: token, expiresIn: 7 },
@@ -307,7 +310,11 @@ router.post(
       if (!passwordReset) {
         return next(new authenticationError.PasswordResetValidate());
       }
-      if (authenticationService.isValidTokenTime(passwordReset.createdAt)) {
+      if (
+        authenticationService.isValidPasswordResetTokenTime(
+          passwordReset.createdAt
+        )
+      ) {
         const response: ValidateTokenResponse = {};
         res.status(200).send(response);
       } else {
@@ -322,48 +329,54 @@ router.post(
 router.post(
   '/new-password',
   rateLimiter.newPasswordLimiter,
-  ErrorHandler.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const body: NewPasswordRequest = req.body;
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: NewPasswordRequest = req.body;
 
-    const passwordReset = await prismaPasswordReset.findByToken(body.token);
-    if (!passwordReset) {
-      return next(new authenticationError.NewPassword());
-    }
-    if (!authenticationService.isValidTokenTime(passwordReset.createdAt)) {
-      return next(new authenticationError.NewPassword());
-    }
+      const passwordReset = await prismaPasswordReset.findByToken(body.token);
+      if (!passwordReset) {
+        return next(new authenticationError.NewPassword());
+      }
+      if (
+        !authenticationService.isValidPasswordResetTokenTime(
+          passwordReset.createdAt
+        )
+      ) {
+        return next(new authenticationError.NewPassword());
+      }
 
-    // validate the password
-    const passwordError = authenticationService.validPassword(body.password);
-    if (passwordError) {
-      return next(passwordError);
-    }
+      // validate the password
+      const passwordError = authenticationService.validPassword(body.password);
+      if (passwordError) {
+        return next(passwordError);
+      }
 
-    const salt = authenticationService.generateSalt();
-    const passwordHash = authenticationService.hashPassword(
-      body.password,
-      salt
-    );
+      const salt = authenticationService.generateSalt();
+      const passwordHash = authenticationService.hashPassword(
+        body.password,
+        salt
+      );
 
-    const user = await prismaUser.findUserById(passwordReset.userId);
-    if (!user) {
-      return next(new authenticationError.NewPassword());
-    }
-    if (authorizationService.checkUserHasRole(user, [UserRole.GUEST])) {
-      return next(new authenticationError.NewPassword());
-    }
+      const user = await prismaUser.findUserById(passwordReset.userId);
+      if (!user) {
+        return next(new authenticationError.NewPassword());
+      }
+      if (authorizationService.checkUserHasRole(user, [UserRole.GUEST])) {
+        return next(new authenticationError.NewPassword());
+      }
 
-    const updatedUser = await prismaUser.updatePassword(
-      user.userId,
-      passwordHash,
-      salt
-    );
-    if (!updatedUser) {
-      return next(new authenticationError.NewPassword());
+      const updatedUser = await prismaUser.updatePassword(
+        user.userId,
+        passwordHash,
+        salt
+      );
+      if (!updatedUser) {
+        return next(new authenticationError.NewPassword());
+      }
+      const response: NewPasswordResponse = {};
+      res.status(200).send(response);
     }
-    const response: NewPasswordResponse = {};
-    res.status(200).send(response);
-  })
+  )
 );
 
 export default router;

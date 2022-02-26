@@ -302,6 +302,9 @@ router.post(
     );
 
     const payload = ticket.getPayload();
+    if (!payload) {
+      return next(new userError.GoogleConnect());
+    }
     const googleId = payload['sub'];
 
     const user = await prismaUser.findUserByGoogleId(googleId);
@@ -532,7 +535,7 @@ router.post(
 
       // check valid expirary date and correct user
       if (
-        !authenticationService.isValidTokenTime(userVerify.createdAt) ||
+        !authenticationService.isValidPasswordResetTokenTime(userVerify.createdAt) ||
         userVerify.userId !== req.user.userId
       ) {
         return next(new userError.ConfirmVerify(499));

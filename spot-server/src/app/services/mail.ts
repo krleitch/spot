@@ -34,7 +34,6 @@ const email = new Email({
   send: true,
   preview: false,
   message: {
-    // from: 'test@spot.com',
     attachments: [
       {
         filename: 'spot_logo.png',

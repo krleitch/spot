@@ -1,4 +1,3 @@
-export default { calcDistance, generateLink, validContent };
 
 import shortid from 'shortid';
 
@@ -6,28 +5,27 @@ import shortid from 'shortid';
 import badwords from '@services/badwords.js';
 
 // db
-import posts from '@db/posts.js';
+import prismaSpot from '@db/../prisma/spot.js';
 
 // error
 import * as spotError from '@exceptions/spot.js';
+import { SpotError } from '@exceptions/error.js';
 
 // constants
 import { POSTS_CONSTANTS } from '@constants/posts.js';
 
-async function generateLink(): Promise<string> {
+const generateSpotLink = async (): Promise<string> => {
   // Need to make sure the link isnt already taken
-
-  let link;
-  let exists;
+  let link: string;
+  let exists: boolean;
   do {
     link = shortid.generate();
-    exists = await posts.linkExists(link);
+    exists = await prismaSpot.linkExists(link);
   } while (exists);
-
   return link;
 }
 
-function validContent(content: string): Error | null {
+const checkValidSpotContent = (content: string): SpotError | null => {
   if (
     content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH ||
     content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH
@@ -54,35 +52,4 @@ function validContent(content: string): Error | null {
   return null;
 }
 
-function calcDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-  unit: string
-) {
-  if (lat1 == lat2 && lon1 == lon2) {
-    return 0;
-  } else {
-    const radlat1 = (Math.PI * lat1) / 180;
-    const radlat2 = (Math.PI * lat2) / 180;
-    const theta = lon1 - lon2;
-    const radtheta = (Math.PI * theta) / 180;
-    let dist =
-      Math.sin(radlat1) * Math.sin(radlat2) +
-      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    if (dist > 1) {
-      dist = 1;
-    }
-    dist = Math.acos(dist);
-    dist = (dist * 180) / Math.PI;
-    dist = dist * 60 * 1.1515;
-    if (unit == 'K') {
-      dist = dist * 1.609344;
-    }
-    if (unit == 'N') {
-      dist = dist * 0.8684;
-    }
-    return dist;
-  }
-}
+export default { generateSpotLink, checkValidSpotContent };

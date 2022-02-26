@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { randomBytes, pbkdf2Sync } from 'crypto';
 import jwt from 'jsonwebtoken';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 // config
 import secret from '@config/secret.js';
 
 // Google auth
-import { OAuth2Client } from 'google-auth-library';
+import { LoginTicket, OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client(
   '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com'
 );
@@ -20,13 +20,19 @@ import prismaUser from '@db/../prisma/user.js';
 
 // exceptions
 import * as authenticationError from '@exceptions/authentication.js';
+import { SpotError } from '@exceptions/error.js';
 
 // constants
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication.js';
 
-// Registration Validation
+// models
+import { User } from '@models/../newModels/user.js';
 
-function validUsername(username: string): Error | null {
+// *************************
+// Validation
+// *************************
+
+const validUsername = (username: string): SpotError | null => {
   // Check length
   if (
     username.length < AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH ||
@@ -48,9 +54,9 @@ function validUsername(username: string): Error | null {
   }
 
   return null;
-}
+};
 
-function validPassword(password: string): Error | null {
+const validPassword = (password: string): Error | null => {
   // Check length
   if (
     password.length < AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH ||
@@ -64,9 +70,9 @@ function validPassword(password: string): Error | null {
   }
 
   return null;
-}
+};
 
-function validEmail(email: string): Error | null {
+const validEmail = (email: string): SpotError | null => {
   const regex = /^\S+@\S+\.\S+$/;
 
   if (email.match(regex) == null) {
@@ -74,9 +80,9 @@ function validEmail(email: string): Error | null {
   }
 
   return null;
-}
+};
 
-function validPhone(phone: string): Error | null {
+const validPhone = (phone: string): SpotError | null => {
   const regex =
     /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 
@@ -85,90 +91,99 @@ function validPhone(phone: string): Error | null {
   }
 
   return null;
-}
+};
+
+// *************************
+// Middleware
+// *************************
 
 // Optional Authentication Middleware
-const optionalAuth = function (req: any, res: any, next: any) {
-  passport.authenticate(
-    'jwt',
-    { session: false },
-    function (err: any, user: any, info: any) {
-      req.user = user || null;
-      next();
-    }
-  )(req, res, next);
+const optionalAuth = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  passport.authenticate('jwt', { session: false }, (err: any, user: User) => {
+    req.user = user || null;
+    next();
+  })(req, res, next);
 };
 
 // Will throw a authentication error if not authenticated
-const requiredAuth = function (req: any, res: any, next: any) {
-  passport.authenticate(
-    'jwt',
-    { session: false },
-    function (err: any, user: any, info: any) {
-      req.user = user || null;
-      if (!req.user) {
-        return next(new authenticationError.AuthenticationError(401));
-      } else {
-        next();
-      }
+const requiredAuth = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  passport.authenticate('jwt', { session: false }, (err: any, user: User) => {
+    req.user = user || null;
+    // No user found
+    if (!req.user) {
+      return next(new authenticationError.AuthenticationError(401));
+    } else {
+      next();
     }
-  )(req, res, next);
+  })(req, res, next);
 };
 
 // Uses a Username/Email and password combination
 // Will throw if doesnt exist
 const localAuth = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate(
-    'local',
-    { session: false },
-    function (err: any, user: any, info: any) {
-      req.user = user || null;
-      // No user found
-      if (user == false) {
-        return next(new authenticationError.UsernameOrPasswordError(401));
-      } else {
-        next();
-      }
+  passport.authenticate('local', { session: false }, (err: any, user: User) => {
+    req.user = user || null;
+    // No user found
+    if (!req.user) {
+      return next(new authenticationError.UsernameOrPasswordError(401));
+    } else {
+      next();
     }
-  )(req, res, next);
+  })(req, res, next);
 };
 
-// Password Generation
+// *************************
+// Password Generation, Validation, and JWT
+// *************************
 
-function generateSalt(): string {
+const generateSalt = (): string => {
   return randomBytes(128).toString('hex');
-}
+};
 
-function hashPassword(password: string, salt: string): string {
+const hashPassword = (password: string, salt: string): string => {
   const iterations = 10000;
   const hashLength = 512;
   const digest = 'sha512';
   return pbkdf2Sync(password, salt, iterations, hashLength, digest).toString(
     'hex'
   );
-}
+};
 
-function validatePassword(user: any, password: string): boolean {
-  if (user === undefined) return false;
-  const hashedPassword = hashPassword(password, user.salt);
-  return hashedPassword === user.password;
-}
+const validatePassword = (
+  userHashedPassword: string,
+  salt: string,
+  password: string
+): boolean => {
+  const hashedPassword = hashPassword(password, salt);
+  return hashedPassword === userHashedPassword;
+};
 
-function generateToken(user: any): any {
+const generateJwtFromUser = (user: User): string => {
   return jwt.sign({ id: user }, secret.secret, { expiresIn: '7d' });
-}
+};
 
-// Password Reset
+// *************************
+// Check Times, Create Username
+// *************************
 
-function isValidTokenTime(tokenCreatedAt: Date): boolean {
+const isValidPasswordResetTokenTime = (tokenCreatedAt: Date): boolean => {
   // the constant should be a number in minutes
   const expire = AUTHENTICATION_CONSTANTS.TOKEN_EXPIRE_TIME * 60 * 1000;
-
   const now = new Date();
   return now.getTime() - tokenCreatedAt.getTime() <= expire;
-}
+};
 
-async function createUsernameFromEmail(email: string): Promise<string> {
+const createUsernameFromEmail = async (
+  email: string | null
+): Promise<string> => {
   // Try using the email first
   let username;
   if (email) {
@@ -184,7 +199,6 @@ async function createUsernameFromEmail(email: string): Promise<string> {
 
   // Need to make sure the username isn't taken
   let exists = await prismaUser.usernameExists(username);
-
   do {
     if (exists) {
       // add a random number from 0-9
@@ -195,11 +209,9 @@ async function createUsernameFromEmail(email: string): Promise<string> {
   } while (exists);
 
   return username;
-}
+};
 
-// Update times
-
-function isValidUserUpdateTime(updatedTime: Date | null): boolean {
+const isValidUserUpdateTime = (updatedTime: Date | null): boolean => {
   if (!updatedTime) {
     return true;
   }
@@ -208,60 +220,69 @@ function isValidUserUpdateTime(updatedTime: Date | null): boolean {
     AUTHENTICATION_CONSTANTS.ACCOUNT_UPDATE_TIMEOUT * 60 * 60 * 1000;
   const now = new Date();
   return now.getTime() - updatedTime.getTime() > expire;
-}
+};
 
-// Facebook
-function getFacebookDetails(accessToken: string): Promise<any> {
+// *************************
+// Facebook and Google
+// *************************
+
+// Get id, email
+type facebookGetDetailResponse = {
+  response: AxiosResponse;
+  body: { id: string; email: string };
+};
+const getFacebookDetails = (
+  accessToken: string
+): Promise<facebookGetDetailResponse> => {
   const url =
     'https://graph.facebook.com/me?fields=id,email&access_token=' + accessToken;
 
   return new Promise((resolve, reject) => {
     axios
       .get(url)
-      .then((response: any) => {
-        resolve({ response: response, body: JSON.parse(response) });
+      .then((response) => {
+        resolve({ response: response, body: JSON.parse(response.data) });
       })
       .catch((error) => {
         return reject(error);
       });
   });
-}
+};
 
-function getFacebookId(accessToken: string): Promise<any> {
+// Only get id
+type facebookGetIdResponse = { response: AxiosResponse; body: { id: string } };
+const getFacebookId = (accessToken: string): Promise<facebookGetIdResponse> => {
   const url =
     'https://graph.facebook.com/me?fields=id&access_token=' + accessToken;
 
   return new Promise((resolve, reject) => {
     axios
       .get(url)
-      .then((response: any) => {
-        resolve({ response: response, body: JSON.parse(response) });
+      .then((response) => {
+        resolve({ response: response, body: JSON.parse(response.data) });
       })
       .catch((error) => {
         return reject(error);
       });
   });
-}
+};
 
-// Google
-
-async function verifyGoogleIdToken(accessToken: string): Promise<any> {
+const verifyGoogleIdToken = async (
+  accessToken: string
+): Promise<LoginTicket> => {
   const ticket = await client.verifyIdToken({
     idToken: accessToken,
     audience:
       '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com'
-    // Specify the CLIENT_ID of the app that accesses the backend
-    // Or, if multiple clients access the backend:
-    //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
   });
   return ticket;
-}
+};
 
 export default {
   generateSalt,
   hashPassword,
   validatePassword,
-  generateToken,
+  generateJwtFromUser,
   getFacebookDetails,
   getFacebookId,
   validUsername,
@@ -271,7 +292,7 @@ export default {
   localAuth,
   validEmail,
   validPhone,
-  isValidTokenTime,
+  isValidPasswordResetTokenTime,
   createUsernameFromEmail,
   verifyGoogleIdToken,
   isValidUserUpdateTime

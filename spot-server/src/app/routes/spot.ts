@@ -219,13 +219,13 @@ router.post(
         if (body.content.length == 0 && !imageSrc) {
           return next(new spotError.NoSpotContent(400));
         }
-        const contentError = spotService.validContent(body.content);
+        const contentError = spotService.checkValidSpotContent(body.content);
         if (contentError) {
           return next(contentError);
         }
 
         // Test nsfw, locally if needed
-        const link = await spotService.generateLink();
+        const link = await spotService.generateSpotLink();
         let imageNsfw = false;
         if (config.testNsfwLocal && imageSrc) {
           try {
