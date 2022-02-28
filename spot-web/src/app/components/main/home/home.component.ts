@@ -308,7 +308,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       );
       const request: GetSpotRequest = {
         limit: SPOT_CONSTANTS.INITIAL_LIMIT,
-        after: this.spots.length > 0 ? this.spots[-1].spotId : null,
+        after:
+          this.spots.length > 0
+            ? this.spots[this.spots.length - 1].spotId
+            : null,
         before: null,
         initialLoad: this.initialLoad,
         location: this.location,

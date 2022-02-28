@@ -46,7 +46,7 @@ const findSpots = async (
     orderBy: {
       createdAt: 'desc'
     },
-    take: limit // take forwards or backwards
+    take: limit
   });
   return spots;
 };

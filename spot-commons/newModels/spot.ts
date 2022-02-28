@@ -37,8 +37,8 @@ export interface GetSpotRequest {
     initialLoad: boolean;
     location: LocationData;
     options: GetSpotOptions;
-    before: string | null, // id
-    after: string | null, // id of the spot before returned spots
+    before?: string, // id of the first spot
+    after?: string, // id of the last spot
 }
 export interface GetSpotResponse {
     spots: Spot[];

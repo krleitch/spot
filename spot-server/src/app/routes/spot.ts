@@ -75,7 +75,7 @@ router.get(
 
       // Todo, make dynamic
       let queryLocationType: LocationType;
-      switch (req.query?.location) {
+      switch (req.query?.locationType) {
         case 'GLOBAL':
           queryLocationType = LocationType.GLOBAL;
           break;
@@ -86,7 +86,7 @@ router.get(
           queryLocationType = LocationType.GLOBAL;
       }
       let querySearchType: SearchType;
-      switch (req.query?.search) {
+      switch (req.query?.searchType) {
         case 'HOT':
           querySearchType = SearchType.HOT;
           break;
@@ -99,8 +99,8 @@ router.get(
 
       const query: GetSpotRequest = {
         limit: Number(req.query.limit),
-        before: req.query.before ? req.query.before.toString() : null,
-        after: req.query.after ? req.query.after.toString() : null,
+        before: req.query.before?.toString(),
+        after: req.query.after?.toString(),
         initialLoad: req.query.initial ? Boolean(req.query.initial) : false,
         options: {
           locationType: queryLocationType,
@@ -132,6 +132,7 @@ router.get(
           query.limit
         );
       }
+
       // add the location props
       const spotsWithLocation = locationService.addLocationPropsToSpots(
         spots,
@@ -166,7 +167,7 @@ router.get(
         initialLoad: query.initialLoad,
         cursor: {
           before: l > 0 ? spotsWithLocationAndRating[0].spotId : null,
-          after: l > 0 ? spotsWithLocationAndRating[-1].spotId : null
+          after: l > 0 ? spotsWithLocationAndRating[l-1].spotId : null
         }
       };
       res.status(200).json(response);

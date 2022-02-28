@@ -46,11 +46,15 @@ export class SpotService {
         request.location.longitude.toString()
       );
     }
-    params = params.append('location', request.options.locationType);
-    params = params.append('sort', request.options.searchType);
+    params = params.append('locationType', request.options.locationType);
+    params = params.append('searchType', request.options.searchType);
     params = params.append('limit', request.limit.toString());
-    params = params.append('before', request.before ? request.before : null);
-    params = params.append('after', request.after ? request.after : null);
+    if (request.before) {
+      params = params.append('before', request.before);
+    }
+    if (request.after) {
+      params = params.append('after', request.after);
+    }
     return this.http.get<GetSpotResponse>(`${this.baseUrl}/spot`, { params });
   }
 
