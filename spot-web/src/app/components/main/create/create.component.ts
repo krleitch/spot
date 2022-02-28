@@ -9,10 +9,11 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil } from 'rxjs/operators';
+import { skip, takeUntil, take } from 'rxjs/operators';
 
 // Services
 import { TranslateService } from '@ngx-translate/core';
+import { SpotService } from '@services/spot.service';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -24,7 +25,11 @@ import {
 } from '@src/app/root-store/spot-store';
 
 // Models
-import { AddPostRequest } from '@models/posts';
+import {
+  CreateSpotRequest,
+  CreateSpotResponse,
+  AddSpotStoreRequest
+} from '@models/../newModels/spot';
 import { LocationData } from '@models/../newModels/location';
 import { SpotError } from '@exceptions/error';
 
@@ -64,7 +69,8 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private store$: Store<RootStoreState.State>,
     public domSanitizer: DomSanitizer,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private spotService: SpotService
   ) {
     this.translateService.get('MAIN.CREATE').subscribe((res: any) => {
       this.STRINGS = res;
@@ -72,48 +78,6 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // Success
-    this.createSuccess$ = this.store$.pipe(
-      select(SpotStoreSelectors.selectCreateSpotSuccess)
-    );
-
-    this.createSuccess$
-      .pipe(takeUntil(this.onDestroy), skip(1))
-      .subscribe((success: boolean) => {
-        this.createLoading = false;
-        if (success) {
-          this.removeFile();
-          this.create.nativeElement.innerText = '';
-          this.create.nativeElement.innerHTML = '';
-          Array.from(this.create.nativeElement.children).forEach(
-            (c: HTMLElement) => (c.innerHTML = '')
-          );
-          this.create.nativeElement.innerHTML = '';
-          this.currentLength = 0;
-        }
-      });
-
-    // Error
-    this.createError$ = this.store$.pipe(
-      select(SpotStoreSelectors.selectCreateSpotError)
-    );
-
-    this.createError$
-      .pipe(takeUntil(this.onDestroy), skip(1))
-      .subscribe((createError: SpotError) => {
-        this.createLoading = false;
-        if (createError) {
-          if (createError.name === 'InvalidPostProfanity') {
-            this.createError = this.STRINGS.ERROR_PROFANITY.replace(
-              '%PROFANITY%',
-              createError.body.word
-            );
-          } else {
-            this.createError = createError.message;
-          }
-        }
-      });
-
     // Location
     this.location$ = this.store$.pipe(
       select(UserStoreSelectors.selectLocation)
@@ -227,13 +191,48 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Send the request
     if (this.location != null) {
-      const post: AddPostRequest = {
+      const post: CreateSpotRequest = {
         content,
         location: this.location,
         image: this.imageFile
       };
-      this.store$.dispatch(new SpotStoreActions.CreateRequestAction(post));
+
       this.createLoading = true;
+      this.spotService
+        .createSpot(post)
+        .pipe(take(1))
+        .subscribe(
+          (response: CreateSpotResponse) => {
+            const addRequest: AddSpotStoreRequest = {
+              spot: response.spot
+            };
+            this.store$.dispatch(
+              new SpotStoreActions.AddSpotStoreAction(addRequest)
+            );
+            this.createLoading = false;
+            this.removeFile();
+            this.create.nativeElement.innerText = '';
+            this.create.nativeElement.innerHTML = '';
+            Array.from(this.create.nativeElement.children).forEach(
+              (c: HTMLElement) => (c.innerHTML = '')
+            );
+            this.create.nativeElement.innerHTML = '';
+            this.currentLength = 0;
+          },
+          (createError: SpotError) => {
+            this.createLoading = false;
+            if (createError) {
+              if (createError.name === 'InvalidPostProfanity') {
+                this.createError = this.STRINGS.ERROR_PROFANITY.replace(
+                  '%PROFANITY%',
+                  createError.body.word
+                );
+              } else {
+                this.createError = createError.message;
+              }
+            }
+          }
+        );
     } else {
       this.createError = this.STRINGS.ERROR_LOCATION;
       return;

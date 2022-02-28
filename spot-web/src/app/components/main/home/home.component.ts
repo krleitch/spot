@@ -30,8 +30,16 @@ import {
   UserStoreSelectors
 } from '@src/app/root-store/user-store';
 
+// service
+import { SpotService } from '@services/spot.service';
+
 // Models
-import { GetSpotRequest, Spot } from '@models/../newModels/spot';
+import {
+  GetSpotRequest,
+  Spot,
+  GetSpotResponse,
+  SetSpotStoreRequest
+} from '@models/../newModels/spot';
 import { User, VerifyRequest, UserRole } from '@models/../newModels/user';
 import {
   UserMetadata,
@@ -66,9 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   spots$: Observable<Spot[]>;
   spots: Spot[] = [];
   showSpotsIndicator$: Observable<boolean>;
-  loading$: Observable<boolean>;
   loading: boolean;
-  noSpots$: Observable<boolean>;
   noSpots: boolean;
 
   // Location
@@ -108,7 +114,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   dropdownSortEnabled = false;
   @ViewChild('bottom') bottom: ElementRef;
 
-  constructor(private store$: Store<RootStoreState.State>) {
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private spotService: SpotService
+  ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
 
@@ -210,31 +219,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       }
     });
-
-    this.loading$ = this.store$.pipe(select(SpotStoreSelectors.selectLoading));
-
-    this.loading$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((loading: boolean) => {
-        this.loading = loading;
-        this.showSpotsIndicator$ = concat(
-          timer(500)
-            .pipe(
-              mapTo(true),
-              takeWhile((_) => this.loading)
-            )
-            .pipe(startWith(false)),
-          of(true)
-        );
-      });
-
-    this.noSpots$ = this.store$.pipe(select(SpotStoreSelectors.selectNoSpots));
-
-    this.noSpots$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((noSpots: boolean) => {
-        this.noSpots = noSpots;
-      });
   }
 
   ngOnDestroy(): void {
@@ -312,38 +296,46 @@ export class HomeComponent implements OnInit, OnDestroy {
       // TODO: Change to before/after cursors
       // if sorting by new, just need date
       // if sorting by hot, need offset
+      this.loading = true;
+      this.showSpotsIndicator$ = concat(
+        timer(500)
+          .pipe(
+            mapTo(true),
+            takeWhile((_) => this.loading)
+          )
+          .pipe(startWith(false)),
+        of(true)
+      );
+      const request: GetSpotRequest = {
+        limit: SPOT_CONSTANTS.INITIAL_LIMIT,
+        after: this.spots.length > 0 ? this.spots[-1].spotId : null,
+        before: null,
+        initialLoad: this.initialLoad,
+        location: this.location,
+        options: {
+          locationType: this.locationType,
+          searchType: this.searchType
+        }
+      };
 
-      if (this.searchType === SearchType.NEW) {
-        // use date
-        const request: GetSpotRequest = {
-          limit: SPOT_CONSTANTS.INITIAL_LIMIT,
-          before: 'someidhere',
-          initialLoad: this.initialLoad,
-          location: this.location,
-          options: {
-            locationType: this.locationType,
-            searchType: this.searchType
-          }
-        };
-
-        this.store$.dispatch(new SpotStoreActions.GetRequestAction(request));
-      } else if (this.searchType === SearchType.HOT) {
-        // use offset
-        const request: GetSpotRequest = {
-          limit: SPOT_CONSTANTS.INITIAL_LIMIT,
-          initialLoad: this.initialLoad,
-          location: this.location,
-          options: {
-            locationType: this.locationType,
-            searchType: this.searchType
-          }
-        };
-
-        this.store$.dispatch(new SpotStoreActions.GetRequestAction(request));
-
-        this.loadedSpots += SPOT_CONSTANTS.INITIAL_LIMIT;
-      }
-
+      this.spotService
+        .getSpots(request)
+        .pipe(take(1))
+        .subscribe(
+          (response: GetSpotResponse) => {
+            this.noSpots = response.spots.length === 0;
+            const setRequest: SetSpotStoreRequest = {
+              spots: response.spots,
+              initialLoad: response.initialLoad
+            };
+            this.store$.dispatch(
+              new SpotStoreActions.SetSpotStoreRequestAction(setRequest)
+            );
+            this.loading = false;
+          },
+          (err) => {}
+        );
+      this.loadedSpots += SPOT_CONSTANTS.INITIAL_LIMIT;
       this.initialLoad = false;
     }
   }

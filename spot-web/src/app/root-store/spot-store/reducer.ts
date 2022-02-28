@@ -9,36 +9,22 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...initialState
       };
     }
-    case ActionTypes.GET_REQUEST: {
-      return {
-        ...state,
-        spots: action.request.initialLoad ? [] : state.spots,
-        loading: true,
-        noSpots: false
-      };
-    }
-    case ActionTypes.GET_SUCCESS: {
-      if (action.response.initialLoad) {
+    case ActionTypes.SET_SPOT_STORE_REQUEST: {
+      if (action.request.initialLoad) {
         return {
           ...state,
-          spots: action.response.spots,
-          loading: false,
-          noSpots: action.response.spots.length === 0
+          spots: action.request.spots
         };
       } else {
         // only need to concat if we have spots
-        if (action.response.spots.length === 0) {
+        if (action.request.spots.length === 0) {
           return {
-            ...state,
-            loading: false,
-            noSpots: true
+            ...state
           };
         } else {
           return {
             ...state,
-            spots: state.spots.concat(action.response.spots),
-            loading: false,
-            noSpots: false
+            spots: state.spots.concat(action.request.spots)
           };
         }
       }
@@ -73,27 +59,12 @@ export function featureReducer(state = initialState, action: Actions): State {
         spots: newSpots
       };
     }
-    case ActionTypes.CREATE_REQUEST: {
-      return {
-        ...state,
-        createSuccess: false
-      };
-    }
-    case ActionTypes.CREATE_SUCCESS: {
+    case ActionTypes.ADD_SPOT_STORE_REQUEST: {
       const newSpots = Array.from(state.spots);
-
-      newSpots.unshift(action.response.spot);
+      newSpots.unshift(action.request.spot);
       return {
         ...state,
-        createSuccess: true,
         spots: newSpots
-      };
-    }
-    case ActionTypes.CREATE_FAILURE: {
-      return {
-        ...state,
-        createError: action.error,
-        createSuccess: false
       };
     }
     case ActionTypes.RATE_SUCCESS: {

@@ -1,14 +1,12 @@
 import { Action } from '@ngrx/store';
 
 import {
-  CreateSpotRequest,
-  CreateSpotResponse,
+  AddSpotStoreRequest,
   DeleteSpotRequest,
   DeleteSpotResponse,
   RateSpotRequest,
   RateSpotResponse,
-  GetSpotRequest,
-  GetSpotResponse,
+  SetSpotStoreRequest,
   DeleteRatingRequest,
   DeleteRatingResponse,
   SpotRatingType
@@ -23,11 +21,9 @@ export enum ActionTypes {
   DELETE_RATING_SUCCESS = '[Spot] Delete rating Success',
   DELETE_REQUEST = '[Spot] Delete Request',
   DELETE_SUCCESS = '[Spot] Delete Success',
-  CREATE_REQUEST = '[Spot] Create Request',
-  CREATE_SUCCESS = '[Spot] Create Success',
+  ADD_SPOT_STORE_REQUEST = '[Spot] Add Spot store request',
   CREATE_FAILURE = '[Spot] Create Failure',
-  GET_REQUEST = '[Spot] Get Request',
-  GET_SUCCESS = '[Spot] Get Success',
+  SET_SPOT_STORE_REQUEST = '[Spot] Set Spot Store Request',
   CREATE_COMMENT = '[Spot] Create Comment',
   DELETE_COMMENT = '[Spot] Delete Comment',
   GENERIC_FAILURE = '[Spot] Generic Failure'
@@ -83,29 +79,18 @@ export class DeleteSuccessAction implements Action {
   ) {}
 }
 
-export class CreateRequestAction implements Action {
-  readonly type = ActionTypes.CREATE_REQUEST;
-  constructor(public request: CreateSpotRequest) {}
+export class AddSpotStoreAction implements Action {
+  readonly type = ActionTypes.ADD_SPOT_STORE_REQUEST;
+  constructor(public request: AddSpotStoreRequest) {}
 }
-
-export class CreateSuccessAction implements Action {
-  readonly type = ActionTypes.CREATE_SUCCESS;
-  constructor(public response: CreateSpotResponse) {}
-}
-
 export class CreateFailureAction implements Action {
   readonly type = ActionTypes.CREATE_FAILURE;
   constructor(public error: SpotError) {}
 }
 
-export class GetRequestAction implements Action {
-  readonly type = ActionTypes.GET_REQUEST;
-  constructor(public request: GetSpotRequest) {}
-}
-
-export class GetSuccessAction implements Action {
-  readonly type = ActionTypes.GET_SUCCESS;
-  constructor(public response: GetSpotResponse) {}
+export class SetSpotStoreRequestAction implements Action {
+  readonly type = ActionTypes.SET_SPOT_STORE_REQUEST;
+  constructor(public request: SetSpotStoreRequest) {}
 }
 
 export class CreateCommentAction implements Action {
@@ -120,10 +105,8 @@ export class DeleteCommentAction implements Action {
 
 export type Actions =
   | GenericFailureAction
-  | GetRequestAction
-  | GetSuccessAction
-  | CreateRequestAction
-  | CreateSuccessAction
+  | SetSpotStoreRequestAction
+  | AddSpotStoreAction
   | CreateFailureAction
   | DeleteRequestAction
   | DeleteSuccessAction

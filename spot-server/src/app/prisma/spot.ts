@@ -35,21 +35,41 @@ const createSpot = async (
   return spot;
 };
 
-// TODO: Add cursor pagination
 const findSpots = async (
   userId: string,
   searchType: SearchType,
   locationType: LocationType,
   location: LocationData,
-  before: string | null | undefined,
-  after: string | null | undefined,
   limit: number,
 ): Promise<P.Spot[]> => {
   const spots = await prisma.spot.findMany({
     orderBy: {
       createdAt: 'desc'
     },
-    take: limit
+    take: limit // take forwards or backwards
+  });
+  return spots;
+};
+
+// Find spots by got/new global/local
+const findSpotsWithCursor = async (
+  userId: string,
+  searchType: SearchType,
+  locationType: LocationType,
+  location: LocationData,
+  before: string | undefined,
+  after: string | undefined,
+  limit: number,
+): Promise<P.Spot[]> => {
+  const spots = await prisma.spot.findMany({
+    orderBy: {
+      createdAt: 'desc'
+    },
+    cursor: {
+      spotId: after
+    },
+    skip: (after || before) ? 1 : 0, // skip the cursor
+    take: limit * (before ? - 1 : 1) // take forwards or backwards
   });
   return spots;
 };
@@ -147,6 +167,7 @@ const findSpotActivity = async (
 export default {
   createSpot,
   findSpots,
+  findSpotsWithCursor,
   findSpotById,
   findSpotByLink,
   softDeleteSpot,

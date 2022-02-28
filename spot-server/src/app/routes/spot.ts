@@ -112,16 +112,26 @@ router.get(
         }
       };
 
-      let spots = await prismaSpot.findSpots(
-        req.user.userId,
-        query.options.searchType,
-        query.options.locationType,
-        query.location,
-        query.before,
-        query.after,
-        query.limit
-      );
-
+      let spots;
+      if (query.after || query.before) {
+        spots = await prismaSpot.findSpotsWithCursor(
+          req.user.userId,
+          query.options.searchType,
+          query.options.locationType,
+          query.location,
+          query.before ? query.before : undefined,
+          query.after ? query.after : undefined,
+          query.limit
+        );
+      } else {
+        spots = await prismaSpot.findSpots(
+          req.user.userId,
+          query.options.searchType,
+          query.options.locationType,
+          query.location,
+          query.limit
+        );
+      }
       // add the location props
       const spotsWithLocation = locationService.addLocationPropsToSpots(
         spots,
@@ -150,12 +160,13 @@ router.get(
         })
       );
 
+      const l = spotsWithLocationAndRating.length;
       const response: GetSpotResponse = {
         spots: spotsWithLocationAndRating,
         initialLoad: query.initialLoad,
         cursor: {
-          before: '',
-          after: ''
+          before: l > 0 ? spotsWithLocationAndRating[0].spotId : null,
+          after: l > 0 ? spotsWithLocationAndRating[-1].spotId : null
         }
       };
       res.status(200).json(response);
@@ -184,10 +195,6 @@ router.post(
         return next(new spotError.CreateSpot());
       }
 
-      // create the spotid and set filename
-      const spotId = uuid.v4();
-      req.body.filename = spotId;
-
       // Upload the file
       singleUpload(req, res, async (err: any) => {
         // error uploading image
@@ -199,12 +206,14 @@ router.post(
         // @ts-ignore
         // Location is defined on the multers3 file type
         const imageSrc: string = req.file ? req.file.location : null;
+        const spotId = req.file?.filename.split('.')[0] || uuid.v4();
 
         // remove leading and trailing whitespaces
         body.content = body.content.trim();
         // check if line length matches
         if (
-          body.content.split(/\r\n|\r|\n/).length > SPOT_CONSTANTS.MAX_LINE_LENGTH
+          body.content.split(/\r\n|\r|\n/).length >
+          SPOT_CONSTANTS.MAX_LINE_LENGTH
         ) {
           return next(
             new spotError.InvalidSpotLineLength(
@@ -234,9 +243,7 @@ router.post(
         }
 
         // get geolocation
-        const geolocation = await locationService.getGeolocation(
-          body.location
-        );
+        const geolocation = await locationService.getGeolocation(body.location);
         const createdSpot = await prismaSpot.createSpot(
           spotId,
           userId,
@@ -250,18 +257,20 @@ router.post(
 
         // Nsfw check using lambda in the background, do not wait
         if (config.testNsfwLambda && imageSrc) {
-          imageService.predictNsfwLambda(imageSrc).then((result: AWS.Lambda.InvocationResponse) => {
-            if (result?.StatusCode === 200 && result.Payload) {
-              const payload = JSON.parse(result.Payload.toString());
-              if (payload.statusCode === 200) {
-                const predictionResult = JSON.parse(payload.body);
-                const isNsfw =
-                  predictionResult?.className === 'Porn' ||
-                  predictionResult?.className === 'Hentai';
-                prismaSpot.updateNsfw(createdSpot.spotId, isNsfw);
+          imageService
+            .predictNsfwLambda(imageSrc)
+            .then((result: AWS.Lambda.InvocationResponse) => {
+              if (result?.StatusCode === 200 && result.Payload) {
+                const payload = JSON.parse(result.Payload.toString());
+                if (payload.statusCode === 200) {
+                  const predictionResult = JSON.parse(payload.body);
+                  const isNsfw =
+                    predictionResult?.className === 'Porn' ||
+                    predictionResult?.className === 'Hentai';
+                  prismaSpot.updateNsfw(createdSpot.spotId, isNsfw);
+                }
               }
-            }
-          });
+            });
         }
 
         // add the location props

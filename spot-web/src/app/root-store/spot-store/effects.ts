@@ -108,44 +108,4 @@ export class SpotStoreEffects {
       )
     )
   );
-
-  @Effect()
-  createSpotEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.CreateRequestAction>(
-      featureActions.ActionTypes.CREATE_REQUEST
-    ),
-    switchMap((post: featureActions.CreateRequestAction) =>
-      this.spotService.createSpot(post.request).pipe(
-        map(
-          (response: CreateSpotResponse) =>
-            new featureActions.CreateSuccessAction(response)
-        ),
-        catchError((errorResponse) =>
-          observableOf(
-            new featureActions.CreateFailureAction(errorResponse.error)
-          )
-        )
-      )
-    )
-  );
-
-  @Effect()
-  getRequestEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.GetRequestAction>(
-      featureActions.ActionTypes.GET_REQUEST
-    ),
-    switchMap((action) =>
-      this.spotService.getSpots(action.request).pipe(
-        map((response: GetSpotResponse) => {
-          response.initialLoad = action.request.initialLoad;
-          return new featureActions.GetSuccessAction(response);
-        }),
-        catchError((errorResponse) => {
-          return observableOf(
-            new featureActions.GenericFailureAction(errorResponse.error)
-          );
-        })
-      )
-    )
-  );
 }

@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import uuid from 'uuid';
 
 // aws
 import aws from '@services/aws.js';
@@ -52,20 +53,20 @@ const upload = multer({
     ) {
       const json: CreateRequestWithFile = JSON.parse(req.body.json);
       let prefix = '';
-      console.log(req.body.filename);
-      // req.body.filename contains the id for the new spot/comment/reply
-      if (json.spotId && json.commentId && req.body.filename) {
+      const filename = uuid.v4();
+      // filename contains the id for the new spot/comment/reply
+      if (json.spotId && json.commentId && filename) {
         // reply
         prefix = 'spots/' + json.spotId + '/comments/' + json.commentId + '/';
       } else if (json.spotId) {
         // comment
-        prefix = 'spots/' + json.spotId + '/comments/' + req.body.filename + '/';
+        prefix = 'spots/' + json.spotId + '/comments/' + filename + '/';
       } else {
         // spot
-        prefix = 'spots/' + req.body.filename + '/';
+        prefix = 'spots/' + filename + '/';
       }
 
-      cb(null, prefix + req.body.filename);
+      cb(null, prefix + filename);
     }
   })
 });

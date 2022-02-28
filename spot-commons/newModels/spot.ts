@@ -37,15 +37,15 @@ export interface GetSpotRequest {
     initialLoad: boolean;
     location: LocationData;
     options: GetSpotOptions;
-    before?: string | null, // id
-    after?: string | null, // id of the spot before returned spots
+    before: string | null, // id
+    after: string | null, // id of the spot before returned spots
 }
 export interface GetSpotResponse {
     spots: Spot[];
     initialLoad: boolean,
     cursor: {
-        before: string,
-        after: string,
+        before: string | null,
+        after: string | null,
     }
 }
 export interface GetSingleSpotRequest {
@@ -54,6 +54,10 @@ export interface GetSingleSpotRequest {
 }
 export interface GetSingleSpotResponse {
     spot: Spot;
+}
+export interface SetSpotStoreRequest {
+    spots: Spot[];
+    initialLoad: boolean;
 }
 
 // Create
@@ -64,6 +68,10 @@ export interface CreateSpotRequest {
 }
 export interface CreateSpotResponse {
     spot: Spot;
+}
+
+export interface AddSpotStoreRequest {
+    spot: Spot
 }
 
 // Update spot properties
