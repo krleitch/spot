@@ -21,7 +21,7 @@ import accounts from '@db/accounts.js';
 import tags from '@db/tags.js';
 
 // error
-import * as CommentsError from '@exceptions/comments.js';
+import * as CommentsError from '@exceptions/comment.js';
 
 // constants
 import { COMMENTS_CONSTANTS } from '@constants/comments.js';

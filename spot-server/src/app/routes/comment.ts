@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 import uuid from 'uuid';
@@ -10,9 +10,14 @@ import comments from '@db/comments.js';
 import accounts from '@db/accounts.js';
 import tags from '@db/tags.js';
 import notifications from '@db/notifications.js';
+import prismaSpot from '@db/../prisma/spot.js';
+import prismaReport from '@db/../prisma/report.js';
+import prismaComment from '@db/../prisma/comment.js';
+import prismaCommentTag from '@db/../prisma/commentTag.js';
+import prismaNotification from '@db/../prisma/notification.js';
 
 // services
-import commentsService from '@services/comments.js';
+import commentService from '@services/comment.js';
 import imageService from '@services/image.js';
 import authorizationService from '@services/authorization.js';
 const singleUpload = imageService.upload.single('image');
@@ -21,18 +26,38 @@ const singleUpload = imageService.upload.single('image');
 import rateLimiter from '@helpers/rateLimiter.js';
 
 // errors
-import * as CommentsError from '@exceptions/comments.js';
-import * as AuthenticationError from '@exceptions/authentication.js';
+import * as commentError from '@exceptions/comment.js';
+import * as authenticationError from '@exceptions/authentication.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // constants
-import { COMMENTS_CONSTANTS } from '@constants/comments.js';
+import { COMMENT_CONSTANTS } from '@constants/comment.js';
 
 // config
 import config from '@config/config.js';
 
 // models
 import { UserRole } from '@models/../newModels/user.js';
+import {
+  Comment,
+  CommentActivity,
+  GetCommentsRequest,
+  GetCommentsResponse,
+  CreateCommentRequest,
+  CreateCommentResponse,
+  DeleteCommentRequest,
+  DeleteCommentResponse,
+  RateCommentRequest,
+  RateCommentResponse,
+  CreateReplyRequest,
+  CreateReplyResponse,
+  DeleteReplyRequest,
+  DeleteReplyResponse,
+  RateReplyRequest,
+  RateReplyResponse,
+  GetCommentActivityRequest,
+  GetCommentActivityResponse
+} from '@models/../newModels/comment.js';
 
 router.use(function timeLog(req: any, res: any, next: any) {
   next();
@@ -42,13 +67,12 @@ router.use(function timeLog(req: any, res: any, next: any) {
 router.get(
   '/activity',
   rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
+  ErrorHandler.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // You must have an account to make a comment
     if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
+      return next(new authenticationError.AuthenticationError());
     }
 
-    const accountId = req.user.id;
     const before = req.query.before ? new Date(req.query.before) : null;
     const after = req.query.after ? new Date(req.query.after) : null;
     const limit = Number(req.query.limit);
@@ -85,12 +109,12 @@ router.get(
       }
     );
   }
-);
+));
 
 // Get all comments for a post
 router.get(
   '/:postId',
-  ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
+  ErrorHandler.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const postId = req.params.postId;
 
     const commentLink = req.query.comment;
@@ -698,7 +722,10 @@ router.delete(
       (owned: boolean) => {
         if (
           owned ||
-          authorizationService.checkUserHasRole(req.user, [UserRole.OWNER, UserRole.ADMIN])
+          authorizationService.checkUserHasRole(req.user, [
+            UserRole.OWNER,
+            UserRole.ADMIN
+          ])
         ) {
           comments.deleteCommentById(commentId).then(
             (rows: any) => {
@@ -749,7 +776,10 @@ router.delete(
       (owned: boolean) => {
         if (
           owned ||
-          authorizationService.checkUserHasRole(req.user, [UserRole.OWNER, UserRole.ADMIN])
+          authorizationService.checkUserHasRole(req.user, [
+            UserRole.OWNER,
+            UserRole.ADMIN
+          ])
         ) {
           comments.deleteCommentById(commentId).then(
             (rows: any) => {

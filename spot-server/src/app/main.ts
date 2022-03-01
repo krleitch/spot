@@ -15,7 +15,7 @@ import morgan from 'morgan';
 import spot from '@routes/spot.js';
 import root from '@routes/root.js';
 import user from '@routes/user.js';
-import comments from '@routes/comments.js';
+import comment from '@routes/comment.js';
 import notifications from '@routes/notifications.js';
 import friends from '@routes/friends.js';
 import authentication from '@routes/authentication.js';
@@ -72,10 +72,10 @@ app.use(
   spot
 );
 app.use(
-  '/comments',
+  '/comment',
   authenticationService.optionalAuth,
   locationService.checkLocation,
-  comments
+  comment
 );
 
 // Required Auth
