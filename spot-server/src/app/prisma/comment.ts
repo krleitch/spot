@@ -113,6 +113,18 @@ const findCommentById = async (
   return comment;
 };
 
+const findCommentByLink = async (
+  link: string,
+  userId?: string
+): Promise<P.Comment | null> => {
+  const comment = await prisma.comment.findUnique({
+    where: {
+      link: link
+    }
+  });
+  return comment;
+};
+
 const softDeleteComment = async (
   commentId: string
 ): Promise<P.Comment | null> => {
@@ -152,7 +164,6 @@ const updateNsfw = async (
 };
 
 // Activity
-
 const findCommentActivity = async (
   userId: string,
   before: Date | undefined,
@@ -189,6 +200,7 @@ export default {
   findCommentForSpot,
   findCommentForComment,
   findCommentById,
+  findCommentByLink,
   softDeleteComment,
   linkExists,
   updateNsfw,

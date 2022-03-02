@@ -67,188 +67,199 @@ router.use(function timeLog(req: any, res: any, next: any) {
 router.get(
   '/activity',
   rateLimiter.genericCommentLimiter,
-  ErrorHandler.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // You must have an account to make a comment
-    if (!req.user) {
-      return next(new authenticationError.AuthenticationError());
-    }
-
-    const before = req.query.before ? new Date(req.query.before) : null;
-    const after = req.query.after ? new Date(req.query.after) : null;
-    const limit = Number(req.query.limit);
-
-    comments.getCommentsActivity(accountId, before, after, limit).then(
-      async (activities: any) => {
-        for (let i = 0; i < activities.length; i++) {
-          try {
-            activities[i].content = await commentsService.addTagsToContent(
-              activities[i].id,
-              accountId,
-              activities[i].account_id,
-              activities[i].content
-            );
-          } catch (err) {
-            return next(new CommentsError.CommentActivity(500));
-          }
-        }
-        const response = {
-          activity: activities,
-          size: activities.length,
-          cursor: {
-            before: activities.length > 0 ? activities[0].creation_date : null,
-            after:
-              activities.length > 0
-                ? activities[activities.length - 1].creation_date
-                : null
-          }
-        };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new CommentsError.CommentActivity(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      // You must have an account to make a comment
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
       }
-    );
-  }
-));
 
-// Get all comments for a post
+      const before = req.query.before
+        ? new Date(req.query.before.toString())
+        : undefined;
+      const after = req.query.after
+        ? new Date(req.query.after.toString())
+        : undefined;
+      const limit = Number(req.query.limit);
+
+      comments.getCommentsActivity(accountId, before, after, limit).then(
+        async (activities: any) => {
+          for (let i = 0; i < activities.length; i++) {
+            try {
+              activities[i].content = await commentsService.addTagsToContent(
+                activities[i].id,
+                accountId,
+                activities[i].account_id,
+                activities[i].content
+              );
+            } catch (err) {
+              return next(new CommentsError.CommentActivity(500));
+            }
+          }
+          const response = {
+            activity: activities,
+            size: activities.length,
+            cursor: {
+              before:
+                activities.length > 0 ? activities[0].creation_date : null,
+              after:
+                activities.length > 0
+                  ? activities[activities.length - 1].creation_date
+                  : null
+            }
+          };
+          res.status(200).json(response);
+        },
+        (err: any) => {
+          return next(new CommentsError.CommentActivity(500));
+        }
+      );
+    }
+  )
+);
+
+// Get all comments for a spot
 router.get(
-  '/:postId',
-  ErrorHandler.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const postId = req.params.postId;
+  '/:spotId',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const request: GetCommentsRequest = {
+        spotId: req.params.spotId,
+        commentLink: req.query.comment?.toString(),
+        limit: Number(req.query.limit),
+        before: req.query?.before?.toString(),
+        after: req.query?.before?.toString()
+      };
 
-    const commentLink = req.query.comment;
-    let date = req.query.date;
-    let type = req.query.type;
-    let limit = Number(req.query.limit);
+      // If comment id given, get that comment, then get limit-1 posts after that time stamp
+      // otherwise get limit timestamps from the given date
 
-    // If comment id given, get that comment, then get limit-1 posts after that time stamp
-    // otherwise get limit timestamps from the given date
+      // Type means get before the date or after the date LIMIT #
 
-    // Type means get before the date or after the date LIMIT #
+      // TYPE CAHNGES THE SQL SORT ASC / DESC
 
-    // TYPE CAHNGES THE SQL SORT ASC / DESC
+      let commentsArray: any[] = [];
 
-    let commentsArray: any[] = [];
+      // If given a commentId we fetch that comment and everything after
+      if (request.commentLink) {
+        try {
+          const comment = await prismaComment.findCommentByLink(
+            request.commentLink,
+            req.user?.userId
+          );
+          if (!comment) {
+            return next(new commentError.GetComments());
+          }
 
-    // If given a commentId we fetch that comment and everything after
-    if (commentLink) {
-      try {
-        const comment = await comments.getCommentByLink(
-          commentLink,
-          req.user ? req.user.userId : null
-        );
-        if (comment.length < 1) {
+          // if its a reply, get the parent creation_date
+          if (comment[0].parent_id) {
+            let parent;
+            if (req.user) {
+              parent = await comments.getCommentById(
+                comment[0].parent_id,
+                req.user.id
+              );
+            } else {
+              parent = await comments.getCommentByIdNoAccount(
+                comment[0].parent_id
+              );
+            }
+            date = parent[0].creation_date;
+            commentsArray = commentsArray.concat(parent);
+          } else {
+            date = comment[0].creation_date;
+            commentsArray = commentsArray.concat(comment);
+          }
+          type = 'before';
+          limit -= 1;
+
+          const rows = await comments.getCommentByPostId(
+            postId,
+            date,
+            limit,
+            type,
+            req.user ? req.user.id : null
+          );
+          commentsArray = commentsArray.concat(rows);
+        } catch (err) {
           return next(new CommentsError.GetComments(500));
         }
-
-        // if its a reply, get the parent creation_date
-        if (comment[0].parent_id) {
-          let parent;
-          if (req.user) {
-            parent = await comments.getCommentById(
-              comment[0].parent_id,
-              req.user.id
-            );
-          } else {
-            parent = await comments.getCommentByIdNoAccount(
-              comment[0].parent_id
-            );
-          }
-          date = parent[0].creation_date;
-          commentsArray = commentsArray.concat(parent);
-        } else {
-          date = comment[0].creation_date;
-          commentsArray = commentsArray.concat(comment);
+      } else {
+        try {
+          const rows = await comments.getCommentByPostId(
+            postId,
+            date,
+            limit,
+            type,
+            req.user ? req.user.id : null
+          );
+          commentsArray = commentsArray.concat(rows);
+        } catch (err) {
+          return next(new CommentsError.GetComments(500));
         }
-        type = 'before';
-        limit -= 1;
-
-        const rows = await comments.getCommentByPostId(
-          postId,
-          date,
-          limit,
-          type,
-          req.user ? req.user.id : null
-        );
-        commentsArray = commentsArray.concat(rows);
-      } catch (err) {
-        return next(new CommentsError.GetComments(500));
       }
-    } else {
+
       try {
-        const rows = await comments.getCommentByPostId(
-          postId,
-          date,
-          limit,
-          type,
-          req.user ? req.user.id : null
-        );
-        commentsArray = commentsArray.concat(rows);
+        await commentsService
+          .getTags(commentsArray, req.user ? req.user.id : null)
+          .then((taggedComments: any) => {
+            commentsArray = taggedComments;
+          });
       } catch (err) {
         return next(new CommentsError.GetComments(500));
       }
-    }
 
-    try {
-      await commentsService
-        .getTags(commentsArray, req.user ? req.user.id : null)
-        .then((taggedComments: any) => {
-          commentsArray = taggedComments;
-        });
-    } catch (err) {
-      return next(new CommentsError.GetComments(500));
-    }
-
-    let numCommentsBefore = 0;
-    let numCommentsAfter = 0;
-    if (type == 'before') {
-      if (commentsArray.length > 0) {
-        const lastDate = commentsArray[commentsArray.length - 1].creation_date;
-        await comments
-          .getNumberOfCommentsForPostBeforeDate(postId, lastDate)
-          .then(
-            (num: any) => {
-              numCommentsBefore = num[0].total;
-            },
-            (err: any) => {
-              return next(new CommentsError.GetComments(500));
-            }
-          );
-        const firstDate = commentsArray[0].creation_date;
-        await comments
-          .getNumberOfCommentsForPostAfterDate(postId, firstDate)
-          .then(
-            (num: any) => {
-              numCommentsAfter = num[0].total;
-            },
-            (err: any) => {
-              return next(new CommentsError.GetComments(500));
-            }
-          );
+      let numCommentsBefore = 0;
+      let numCommentsAfter = 0;
+      if (type == 'before') {
+        if (commentsArray.length > 0) {
+          const lastDate =
+            commentsArray[commentsArray.length - 1].creation_date;
+          await comments
+            .getNumberOfCommentsForPostBeforeDate(postId, lastDate)
+            .then(
+              (num: any) => {
+                numCommentsBefore = num[0].total;
+              },
+              (err: any) => {
+                return next(new CommentsError.GetComments(500));
+              }
+            );
+          const firstDate = commentsArray[0].creation_date;
+          await comments
+            .getNumberOfCommentsForPostAfterDate(postId, firstDate)
+            .then(
+              (num: any) => {
+                numCommentsAfter = num[0].total;
+              },
+              (err: any) => {
+                return next(new CommentsError.GetComments(500));
+              }
+            );
+        }
       }
-    }
 
-    try {
-      const postCreator = await posts.getPostCreator(postId);
-      const a = await commentsService.addProfilePicture(
-        commentsArray,
-        postCreator[0].account_id
-      );
-      commentsArray = a;
-    } catch (err) {
-      return next(new CommentsError.GetComments(500));
-    }
+      try {
+        const postCreator = await posts.getPostCreator(postId);
+        const a = await commentsService.addProfilePicture(
+          commentsArray,
+          postCreator[0].account_id
+        );
+        commentsArray = a;
+      } catch (err) {
+        return next(new CommentsError.GetComments(500));
+      }
 
-    const response = {
-      postId: postId,
-      comments: commentsArray,
-      totalCommentsBefore: numCommentsBefore,
-      totalCommentsAfter: numCommentsAfter,
-      type: type
-    };
-    res.status(200).json(response);
-  })
+      const response = {
+        postId: postId,
+        comments: commentsArray,
+        totalCommentsBefore: numCommentsBefore,
+        totalCommentsAfter: numCommentsAfter,
+        type: type
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
 // Get all replies for a comment on a post

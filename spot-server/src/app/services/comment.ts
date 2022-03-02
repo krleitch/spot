@@ -1,17 +1,8 @@
-export default {
-  addProfilePicture,
-  getTags,
-  addTagsToContent,
-  generateLink,
-  validContent,
-  inRange
-};
-
 import shortid from 'shortid';
 
 // services
 import badwords from '@services/badwords.js';
-import locations from '@services/location.js';
+import locationService from '@services/location.js';
 import aws from '@services/aws.js';
 
 // db
@@ -19,25 +10,34 @@ import posts from '@db/posts.js';
 import comments from '@db/comments.js';
 import accounts from '@db/accounts.js';
 import tags from '@db/tags.js';
+import prismaSpot from '@db/../prisma/spot.js';
+import prismaComment from '@db/../prisma/comment.js';
+import prismaUser from '@db/../prisma/user.js';
+import prismaCommentTag from '@db/../prisma/commentTag.js';
 
 // error
-import * as CommentsError from '@exceptions/comment.js';
+import * as commentError from '@exceptions/comment.js';
+import { SpotError } from '@exceptions/error.js';
 
 // constants
-import { COMMENTS_CONSTANTS } from '@constants/comments.js';
+import { COMMENT_CONSTANTS } from '@constants/comment.js';
 
 // sources
 import profileImages from '@helpers/profileImages.js';
 
-function validContent(content: string): Error | null {
+// models
+import P from '@prisma/client';
+import { Tag, Comment, CommentTag } from '@models/../newModels/comment.js';
+
+function validContent(content: string): SpotError | null {
   if (
-    content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH ||
-    content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH
+    content.length < COMMENT_CONSTANTS.MIN_CONTENT_LENGTH ||
+    content.length > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH
   ) {
-    return new CommentsError.InvalidCommentLength(
+    return new commentError.InvalidCommentLength(
       400,
-      COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH,
-      COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH
+      COMMENT_CONSTANTS.MIN_CONTENT_LENGTH,
+      COMMENT_CONSTANTS.MAX_CONTENT_LENGTH
     );
   }
 
@@ -45,11 +45,11 @@ function validContent(content: string): Error | null {
   // content field is setup as utf8mb4 so emoji can be added later
   // eslint-disable-next-line no-control-regex
   if (!/^[\x00-\x7F]*$/.test(content)) {
-    return new CommentsError.InvalidCommentContent(400);
+    return new commentError.InvalidCommentContent(400);
   }
 
   if (badwords.checkProfanity(content)) {
-    return new CommentsError.InvalidCommentProfanity(400);
+    return new commentError.InvalidCommentProfanity(400);
   }
 
   return null;
@@ -135,12 +135,78 @@ async function addProfilePicture(comments: any, postCreator: string) {
   return comments;
 }
 
-// Tags
-
-async function getTags(comments: any, accountId: string): Promise<any[]> {
+// Add the tag object to the content, the client takes care of filling the content properly
+const addTagsToComments = async (
+  comments: P.Comment[],
+  userId: string
+): Promise<Array<P.Comment & { tag: CommentTag}>> => {
   // get tags for each reply
-  for (let index = 0; index < comments.length; index++) {
-    await tags.getTagsByCommentId(comments[index].id).then(
+
+  const commentsWithTags =  await Promise.all(comments.map(async (comment) => {
+    const tags = await prismaCommentTag.findTagsByCommentId(
+      comment.commentId
+    );
+    let taggedBy = '';
+    if (tags.map((t) => t.userId).includes(userId)) {
+      const tagger = await prismaUser.findUserById(comment.owner);
+      taggedBy = tagger ? tagger.username : '';
+    }
+    const tagList: Tag[] = [];
+    for (let j = 0; j < tags.length; j++) {
+      if (userId === comment.owner || userId === tags[j].userId) {
+        const user = await prismaUser.findUserById(tags[j].userId);
+        tagList.push({
+          offset: tags[j].offset,
+          username: user ? user.username : ''
+        });
+      } else {
+        tagList.push({
+          offset: tags[j].offset,
+          username: ''
+        });
+      }
+    }
+    return {
+      ...comment,
+      tag: {
+        tagged: taggedBy !== '',
+        taggedBy: taggedBy,
+        tags: tagList
+      }
+    }
+  }));
+
+  return commentsWithTags;
+  
+  for (let i = 0; i < comments.length; i++) {
+    const tags = await prismaCommentTag.findTagsByCommentId(
+      comments[i].commentId
+    );
+
+    // You were tagged, so get the tagger username
+    if (tags.map((t) => t.userId).includes(userId)) {
+      const tagger = await prismaUser.findUserById(comments[i].owner);
+    }
+
+    const tagList: Tag[] = [];
+    for (let j = 0; j < tags.length; j++) {
+      if (userId === comments[i].owner || userId === tags[j].userId) {
+        const user = await prismaUser.findUserById(tags[j].userId);
+        tagList.push({
+          offset: tags[j].offset,
+          username: user ? user.username : ''
+        });
+      } else {
+        tagList.push({
+          offset: tags[j].offset,
+          username: ''
+        });
+      }
+    }
+
+
+
+    await tags.getTagsByCommentId(comments[i].commentId).then(
       async (tagList: any) => {
         // The required properties
         const tagObject: {
@@ -200,15 +266,31 @@ async function getTags(comments: any, accountId: string): Promise<any[]> {
   }
 
   return comments;
-}
+};
 
-async function addTagsToContent(
-  commentId: string,
-  accountId: string,
-  commentAccountId: string,
-  commentContent: string
-): Promise<string> {
-  let ret = '';
+// For When we don't need the tag object, Content is filled by server
+const addTagsToCommentsContent = async (
+  userId: string,
+  comments: P.Comment[]
+): Promise<P.Comment> => {
+  for (let i = 0; i < comments.length; i++) {
+    const tags = await prismaCommentTag.findTagsByCommentId(
+      comments[i].commentId
+    );
+    let currentIndex = 0;
+    let newContent = '';
+    for (let j = 0; j < tags.length; j++) {
+      let username = '???';
+      if (userId === tags[j].userId) {
+      }
+      newContent += comments[i].content.substring(currentIndex, tags[j].offset);
+      newContent += tags[j].userId === '@' + tags[j].username;
+      currentIndex += tags[j].offset;
+    }
+    tags.forEach((tag: P.CommentTag) => {});
+
+    ret += commentContent.substring(myindex, commentContent.length);
+  }
 
   await tags.getTagsByCommentId(commentId).then(
     async (tagList: any) => {
@@ -279,7 +361,7 @@ async function addTagsToContent(
   );
 
   return ret;
-}
+};
 
 // Links
 
@@ -322,3 +404,12 @@ async function inRange(
     return distance <= COMMENTS_CONSTANTS.MAX_DISTANCE;
   });
 }
+
+export default {
+  addProfilePicture,
+  getTags,
+  addTagsToContent,
+  generateLink,
+  validContent,
+  inRange
+};
