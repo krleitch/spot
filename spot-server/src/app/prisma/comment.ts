@@ -53,8 +53,8 @@ const createReply = async (
 
 const findCommentForSpot = async (
   spotId: string,
-  before: Date,
-  after: Date,
+  before: string | undefined,
+  after: string | undefined,
   limit: number,
   userId?: string
 ): Promise<P.Comment[]> => {
@@ -70,7 +70,11 @@ const findCommentForSpot = async (
     orderBy: {
       createdAt: after ? 'asc' : 'desc'
     },
-    take: limit
+    cursor: {
+      commentId: after ? after : before
+    },
+    skip: (after || before) ? 1 : 0, // skip the cursor
+    take: limit * (before ? - 1 : 1) // take forwards or backwards
   });
   return comment;
 };
@@ -125,6 +129,36 @@ const findCommentByLink = async (
   return comment;
 };
 
+const findTotalCommentsAfterDate = async (
+  spotId: string,
+  after: Date | undefined,
+): Promise<number> => {
+  const totalAfter = await prisma.comment.count({
+    where: {
+      spotId: spotId,
+      createdAt: {
+        gt: after
+      }
+    },
+  });
+  return totalAfter;
+};
+
+const findTotalCommentsBeforeDate = async (
+  spotId: string,
+  before: Date | undefined,
+): Promise<number> => {
+  const totalBefore = await prisma.comment.count({
+    where: {
+      spotId: spotId,
+      createdAt: {
+        lt: before
+      }
+    },
+  });
+  return totalBefore;
+};
+
 const softDeleteComment = async (
   commentId: string
 ): Promise<P.Comment | null> => {
@@ -169,7 +203,7 @@ const findCommentActivity = async (
   before: Date | undefined,
   after: Date | undefined,
   limit: number
-): Promise<P.Comment[] | null> => {
+): Promise<P.Comment[]> => {
   const maxActivityBeforeDate = new Date();
   maxActivityBeforeDate.setDate(
     maxActivityBeforeDate.getDate() - COMMENT_CONSTANTS.ACTIVITY_DAYS
@@ -201,6 +235,8 @@ export default {
   findCommentForComment,
   findCommentById,
   findCommentByLink,
+  findTotalCommentsAfterDate,
+  findTotalCommentsBeforeDate,
   softDeleteComment,
   linkExists,
   updateNsfw,

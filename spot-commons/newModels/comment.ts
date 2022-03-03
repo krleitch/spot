@@ -48,8 +48,8 @@ export interface GetCommentsResponse {
   totalCommentsAfter: number; // Should we show load recent
   comments: Comment[];
   cursor: {
-    before: string | null;
-    after: string | null;
+    before: string | undefined;
+    after: string | undefined;
   };
 }
 export interface SetCommentsStoreRequest {
@@ -184,11 +184,9 @@ export interface CommentActivity {
   imageNsfw: boolean;
   parentId: string;
   link: string;
-  spotContent: string;
   spotImageSrc: string;
   spotImageNsfw: boolean;
   spotLink: string;
-  parentCommentContent: string;
   parentCommentImageSrc: string;
   parentCommentImageNsfw: boolean;
   parentCommentLink: string;
@@ -200,11 +198,10 @@ export interface GetCommentActivityRequest {
   after?: Date;
 }
 export interface GetCommentActivityResponse {
-  size: number;
   activity: CommentActivity[];
   cursor: {
-    before: Date;
-    after: Date;
+    before?: Date;
+    after?: Date;
   };
 }
 
