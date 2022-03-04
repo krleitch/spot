@@ -15,6 +15,7 @@ import prismaReport from '@db/../prisma/report.js';
 import prismaComment from '@db/../prisma/comment.js';
 import prismaCommentTag from '@db/../prisma/commentTag.js';
 import prismaNotification from '@db/../prisma/notification.js';
+import prismaCommentRating from '@db/../prisma/commentRating.js';
 
 // services
 import commentService from '@services/comment.js';
@@ -41,6 +42,7 @@ import { UserRole } from '@models/../newModels/user.js';
 import {
   Comment,
   CommentActivity,
+  CommentRatingType,
   GetCommentsRequest,
   GetCommentsResponse,
   CreateCommentRequest,
@@ -178,14 +180,35 @@ router.get(
       const commentsWithTagsAndProfilePicture =
         await commentService.addProfilePicturesToComments(commentsWithTags, spot.spotId);
 
+      // Add your rating
+      const commentsWithTagsAndProfilePictureAndRating: Comment[] = await Promise.all(
+        commentsWithTagsAndProfilePicture.map(async (comment) => {
+          const newComment: Comment = {
+            ...comment,
+            myRating: CommentRatingType.NONE,
+            owned: req.user?.userId === comment.owner
+          };
+          if (req.user) {
+            const commentRating = await prismaCommentRating.findRatingForUserAndComment(
+              req.user.userId,
+              comment.commentId
+            );
+            if (commentRating) {
+              newComment.myRating = commentRating.rating;
+            }
+          }
+          return newComment;
+        })
+      );
+
       const response: GetCommentsResponse = {
         spotId: request.spotId,
-        comments: commentsWithTagsAndProfilePicture,
+        comments: commentsWithTagsAndProfilePictureAndRating,
         totalCommentsBefore: totalCommentsBefore,
         totalCommentsAfter: totalCommentsAfter,
         cursor: {
-          before: commentsWithTagsAndProfilePicture.at(0)?.commentId,
-          after: commentsWithTagsAndProfilePicture.at(-1)?.commentId
+          before: commentsWithTagsAndProfilePictureAndRating.at(0)?.commentId,
+          after: commentsWithTagsAndProfilePictureAndRating.at(-1)?.commentId
         }
       };
       res.status(200).json(response);

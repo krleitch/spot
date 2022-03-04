@@ -18,9 +18,9 @@ export interface CommentTag {
 export interface Comment {
   commentId: string;
   spotId: string;
-  parentCommentId: string;
+  parentCommentId: string | null;
   createdAt: Date;
-  deletedAt: Date;
+  deletedAt: Date | null;
   content: string;
   imageSrc: string | null;
   imageNsfw: boolean | null;
@@ -30,7 +30,7 @@ export interface Comment {
   link: string;
   owned: boolean;
   profilePictureNum: number; // The enumeration of the image (colour)
-  profilePictureSrc: number; // The image
+  profilePictureSrc: string; // The image
   tag: CommentTag;
 }
 
@@ -176,13 +176,13 @@ export interface ReportCommentResponse {}
 // Activity
 export interface CommentActivity {
   commentId: string;
-  CreatedAt: Date;
+  createdAt: Date;
   likes: number;
   dislikes: number;
   content: string;
   imageSrc: string;
   imageNsfw: boolean;
-  parentId: string;
+  parentCommentId: string;
   link: string;
   spotImageSrc: string;
   spotImageNsfw: boolean;
