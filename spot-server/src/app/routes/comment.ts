@@ -4,18 +4,13 @@ const router = express.Router();
 import uuid from 'uuid';
 
 // db
-import posts from '@db/posts.js';
-import reports from '@db/reports.js';
-import comments from '@db/comments.js';
-import accounts from '@db/accounts.js';
-import tags from '@db/tags.js';
-import notifications from '@db/notifications.js';
 import prismaSpot from '@db/../prisma/spot.js';
 import prismaReport from '@db/../prisma/report.js';
 import prismaComment from '@db/../prisma/comment.js';
 import prismaCommentTag from '@db/../prisma/commentTag.js';
 import prismaNotification from '@db/../prisma/notification.js';
 import prismaCommentRating from '@db/../prisma/commentRating.js';
+import prismaUser from '@db/../prisma/user.js';
 
 // services
 import commentService from '@services/comment.js';
@@ -39,12 +34,15 @@ import config from '@config/config.js';
 
 // models
 import { UserRole } from '@models/../newModels/user.js';
+import { ReportCategory } from '@models/../newModels/report.js';
 import {
   Comment,
   CommentActivity,
   CommentRatingType,
   GetCommentsRequest,
   GetCommentsResponse,
+  GetRepliesRequest,
+  GetRepliesResponse,
   CreateCommentRequest,
   CreateCommentResponse,
   DeleteCommentRequest,
@@ -58,7 +56,9 @@ import {
   RateReplyRequest,
   RateReplyResponse,
   GetCommentActivityRequest,
-  GetCommentActivityResponse
+  GetCommentActivityResponse,
+  ReportCommentRequest,
+  ReportCommentResponse
 } from '@models/../newModels/comment.js';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
@@ -97,11 +97,42 @@ router.get(
         req.user.userId
       );
 
+      // add activity props
+      const commentActivityWithTagsAndProps = await Promise.all(
+        commentActivityWithTags.map(async (activity) => {
+          const spot = await prismaSpot.findSpotById(
+            activity.spotId,
+            req.user?.userId
+          );
+          const parentComment = activity.parentCommentId
+            ? await prismaComment.findCommentById(
+                activity.parentCommentId,
+                req.user?.userId
+              )
+            : null;
+
+          const newActivity: CommentActivity = {
+            ...activity,
+            parentCommentImageSrc: parentComment
+              ? parentComment.imageSrc
+              : null,
+            parentCommentImageNsfw: parentComment
+              ? parentComment.imageNsfw
+              : null,
+            parentCommentLink: parentComment ? parentComment.link : null,
+            spotImageSrc: spot ? spot.imageSrc : null,
+            spotImageNsfw: spot ? spot.imageNsfw : null,
+            spotLink: spot ? spot.link : ''
+          };
+          return newActivity;
+        })
+      );
+
       const response: GetCommentActivityResponse = {
-        activity: commentActivityWithTags,
+        activity: commentActivityWithTagsAndProps,
         cursor: {
-          before: commentActivityWithTags.at(0)?.createdAt,
-          after: commentActivityWithTags.at(-1)?.createdAt
+          before: commentActivityWithTagsAndProps.at(0)?.createdAt,
+          after: commentActivityWithTagsAndProps.at(-1)?.createdAt
         }
       };
       res.status(200).json(response);
@@ -174,32 +205,37 @@ router.get(
 
       const spot = await prismaSpot.findSpotById(request.spotId);
       if (!spot) {
-          return next(new commentError.GetComments());
+        return next(new commentError.GetComments());
       }
 
       const commentsWithTagsAndProfilePicture =
-        await commentService.addProfilePicturesToComments(commentsWithTags, spot.spotId);
+        await commentService.addProfilePicturesToComments(
+          commentsWithTags,
+          spot.spotId
+        );
 
       // Add your rating
-      const commentsWithTagsAndProfilePictureAndRating: Comment[] = await Promise.all(
-        commentsWithTagsAndProfilePicture.map(async (comment) => {
-          const newComment: Comment = {
-            ...comment,
-            myRating: CommentRatingType.NONE,
-            owned: req.user?.userId === comment.owner
-          };
-          if (req.user) {
-            const commentRating = await prismaCommentRating.findRatingForUserAndComment(
-              req.user.userId,
-              comment.commentId
-            );
-            if (commentRating) {
-              newComment.myRating = commentRating.rating;
+      const commentsWithTagsAndProfilePictureAndRating: Comment[] =
+        await Promise.all(
+          commentsWithTagsAndProfilePicture.map(async (comment) => {
+            const newComment: Comment = {
+              ...comment,
+              myRating: CommentRatingType.NONE,
+              owned: req.user?.userId === comment.owner
+            };
+            if (req.user) {
+              const commentRating =
+                await prismaCommentRating.findRatingForUserAndComment(
+                  req.user.userId,
+                  comment.commentId
+                );
+              if (commentRating) {
+                newComment.myRating = commentRating.rating;
+              }
             }
-          }
-          return newComment;
-        })
-      );
+            return newComment;
+          })
+        );
 
       const response: GetCommentsResponse = {
         spotId: request.spotId,
@@ -216,778 +252,683 @@ router.get(
   )
 );
 
-// Get all replies for a comment on a post
+// Get all replies for a comment on a spot
 router.get(
-  '/:postId/:commentId',
-  ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const replyLink = req.query.reply;
-    const date = req.query.date || null;
-    const limit = Number(req.query.limit);
+  '/:spotId/:commentId',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const request: GetRepliesRequest = {
+        spotId: req.params.spotId,
+        commentId: req.params.commentId,
+        replyLink: req.query.reply?.toString(),
+        limit: Number(req.query.limit),
+        before: req.query?.before?.toString(),
+        after: req.query?.before?.toString(),
+        initialLoad: false
+      };
 
-    let replies: any;
-
-    if (replyLink) {
-      try {
-        const comment = await comments.getCommentByLink(
-          replyLink,
-          req.user ? req.user.id : null
+      let replies: any;
+      if (request.replyLink) {
+        const reply = await prismaComment.findCommentByLink(
+          request.replyLink,
+          req.user?.userId
         );
-        if (comment.length < 1) {
-          return next(new CommentsError.GetReplies(500));
+        if (!reply) {
+          return next(new commentError.GetReplies());
         }
-
-        // If its a reply, get all replies up to this comment, otherwise get replies normally
-        if (comment[0].parent_id == commentId) {
-          // its a reply
-          replies = await comments.getRepliesUpToDate(
-            postId,
-            commentId,
-            comment[0].creation_date,
-            req.user ? req.user.id : null
+        // If its a reply, get all replies up to this comment, else get replies normally
+        // Todo: fix
+        if (reply.parentCommentId == request.commentId) {
+          // Up to id
+          replies = await prismaComment.findRepliesForComment(
+            request.spotId,
+            request.commentId,
+            request.before,
+            request.after,
+            request.limit,
+            req.user?.userId
           );
         } else {
-          replies = await comments.getRepliesByCommentId(
-            postId,
-            commentId,
-            date,
-            limit,
-            req.user ? req.user.id : null
+          replies = await prismaComment.findRepliesForComment(
+            request.spotId,
+            request.commentId,
+            request.before,
+            request.after,
+            request.limit,
+            req.user?.userId
           );
         }
-      } catch (err) {
-        return next(new CommentsError.GetReplies(500));
+      } else {
+        replies = await prismaComment.findRepliesForComment(
+          request.spotId,
+          request.commentId,
+          request.before,
+          request.after,
+          request.limit,
+          req.user?.userId
+        );
       }
-    } else {
-      replies = await comments.getRepliesByCommentId(
-        postId,
-        commentId,
-        date,
-        limit,
-        req.user ? req.user.id : null
+
+      const spot = await prismaSpot.findSpotById(request.spotId);
+      if (!spot) {
+        return next(new commentError.GetReplies());
+      }
+
+      const repliesWithTags = await commentService.addTagsToComments(
+        replies,
+        req.user?.userId
       );
-    }
+      const repliesWithTagsAndProfilePicture =
+        await commentService.addProfilePicturesToComments(
+          repliesWithTags,
+          spot.owner
+        );
 
-    await commentsService
-      .getTags(replies, req.user ? req.user.id : null)
-      .then((taggedComments: any) => {
-        replies = taggedComments;
-      });
-
-    const lastDate =
-      replies.length > 0 ? replies[replies.length - 1].creation_date : null;
-    comments
-      .getNumberOfRepliesForCommentAfterDate(postId, commentId, lastDate)
-      .then(
-        (num: any) => {
-          posts.getPostCreator(postId).then(
-            async (postCreator: any) => {
-              await commentsService.addProfilePicture(
-                replies,
-                postCreator[0].account_id
-              );
-              const response = {
-                postId: postId,
-                commentId: commentId,
-                replies: replies,
-                totalRepliesAfter: num[0].total
-              };
-              res.status(200).json(response);
-            },
-            (err: any) => {
-              return next(new CommentsError.GetReplies(500));
+      // Add your rating
+      const repliesWithTagsAndProfilePictureAndRating: Comment[] =
+        await Promise.all(
+          repliesWithTagsAndProfilePicture.map(async (reply) => {
+            const newReply: Comment = {
+              ...reply,
+              myRating: CommentRatingType.NONE,
+              owned: req.user?.userId === reply.owner
+            };
+            if (req.user) {
+              const commentRating =
+                await prismaCommentRating.findRatingForUserAndComment(
+                  req.user.userId,
+                  reply.commentId
+                );
+              if (commentRating) {
+                newReply.myRating = commentRating.rating;
+              }
             }
-          );
-        },
-        (err: any) => {
-          return next(new CommentsError.GetReplies(500));
-        }
+            return newReply;
+          })
+        );
+
+      const totalRepliesAfter = await prismaComment.findTotalRepliesAfterReply(
+        request.spotId,
+        request.commentId,
+        replies.at(-1)
       );
-  })
+
+      const response: GetRepliesResponse = {
+        spotId: request.spotId,
+        commentId: request.commentId,
+        replies: repliesWithTagsAndProfilePictureAndRating,
+        totalRepliesAfter: totalRepliesAfter,
+        initialLoad: request.initialLoad,
+        cursor: {
+          before: repliesWithTagsAndProfilePictureAndRating.at(0)?.commentId,
+          after: repliesWithTagsAndProfilePictureAndRating.at(-1)?.commentId
+        }
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
 // Create a comment
 router.post(
-  '/:postId',
+  '/:spotId',
   rateLimiter.createCommentLimiter,
-  ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
-    // You must have an account to make a comment
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      // You must have an account to make a comment
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
+      }
+      const userId = req.user.userId;
 
-    // You must be verified to make a comment
-    if (!req.user.verifiedAt) {
-      return next(new AuthenticationError.VerifyError(400));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.AddComment(500));
-    }
-
-    const accountId = req.user.id;
-    const commentId = uuid.v4();
-    req.filename = commentId;
-
-    singleUpload(req, res, async function (error: any) {
-      // There was an error uploading the image
-      if (error) {
-        return next(new CommentsError.CommentImage(422));
+      // You must be verified to make a comment
+      if (!req.user.verifiedAt) {
+        return next(new authenticationError.VerifyError());
       }
 
-      const { content, tagsList, location } = JSON.parse(req.body.json);
-      const image = req.file ? req.file.location : null;
-      const postId = req.params.postId;
-
-      // Check you are in range of the post
-      const inRange = await commentsService.inRange(
-        postId,
-        location.latitude,
-        location.longitude
-      );
-      if (!inRange) {
-        return next(new CommentsError.NotInRange(400));
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
+        return next(new commentError.AddComment());
       }
 
-      // check if line length matches
-      if (
-        content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-      ) {
-        return next(
-          new CommentsError.InvalidCommentLineLength(
-            400,
-            COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-          )
-        );
-      }
-
-      // You must either have some text or an image
-      if (content.length === 0 && !image && tagsList.length === 0) {
-        return next(new CommentsError.NoCommentContent(400));
-      }
-
-      const contentError = commentsService.validContent(content);
-      if (contentError) {
-        return next(contentError);
-      }
-
-      const link = await commentsService.generateLink();
-      let imageNsfw = false;
-      if (config.testNsfwLocal && image) {
-        try {
-          imageNsfw = await imageService.predictNsfwLocal(image);
-        } catch (err) {
-          // err
+      singleUpload(req, res, async (error: any) => {
+        // There was an error uploading the image
+        if (error) {
+          return next(new commentError.CommentImage(422));
         }
-      }
 
-      comments
-        .addComment(
-          commentId,
-          postId,
-          accountId,
-          content,
-          image,
-          imageNsfw,
-          link,
-          commentId
-        )
-        .then(
-          async (comment: any) => {
-            // async test nsfw
-            if (config.testNsfwLambda && image) {
-              imageService.predictNsfwLambda(image).then(
-                (result: any) => {
-                  if (
-                    Object.prototype.hasOwnProperty.call(
-                      result,
-                      'StatusCode'
-                    ) &&
-                    result.StatusCode === 200
-                  ) {
-                    const payload = JSON.parse(result.Payload);
-                    if (payload.statusCode === 200) {
-                      const predict = JSON.parse(payload.body);
-                      if (
-                        Object.prototype.hasOwnProperty.call(
-                          predict,
-                          'className'
-                        )
-                      ) {
-                        const isNsfw =
-                          predict.className === 'Porn' ||
-                          predict.className === 'Hentai';
-                        comments.updateNsfw(commentId, isNsfw);
-                      }
-                    }
-                  }
-                },
-                (err: any) => {}
-              );
-            }
+        const body: CreateCommentRequest = JSON.parse(req.body.json);
+        body.spotId = req.params.spotId.toString();
+        // @ts-ignore
+        // Location is defined on the multers3 file type
+        const imageSrc: string = req.file ? req.file.location : null;
+        const commentId = req.file?.filename.split('.')[0] || uuid.v4();
 
-            // Add tags and send notifications
-            for (let index = 0; index < tagsList.length; index++) {
-              try {
-                const account = await accounts.getAccountByUsername(
-                  tagsList[index].username
-                );
-                await tags.addTag(
-                  account[0].id,
-                  comment[0].id,
-                  Math.min(tagsList[index].offset, content.length)
-                );
-                await notifications.addCommentNotification(
-                  accountId,
-                  account[0].id,
-                  comment[0].post_id,
-                  comment[0].id
-                );
-              } catch (err) {
-                return next(new CommentsError.AddComment(500));
-              }
-            }
-
-            // Add tags to our comment
-            await commentsService.getTags(comment, accountId).then(
-              (taggedComments: any) => {
-                comment = taggedComments;
-              },
-              (err: any) => {
-                return next(new CommentsError.AddComment(500));
-              }
-            );
-
-            // Add profile picture and send
-            posts.getPostCreator(postId).then(
-              async (postCreator: any) => {
-                await commentsService.addProfilePicture(
-                  comment,
-                  postCreator[0].account_id
-                );
-                res.status(200).json({ postId: postId, comment: comment[0] });
-              },
-              (err: any) => {
-                return next(new CommentsError.AddComment(500));
-              }
-            );
-          },
-          (err: any) => {
-            return next(new CommentsError.AddComment(500));
-          }
+        // Check you are in range of the spot
+        const inRange = await commentService.userInRangeForComment(
+          body.spotId,
+          body.location.latitude,
+          body.location.longitude
         );
-    });
-  })
+        if (!inRange) {
+          return next(new commentError.NotInRange());
+        }
+
+        // check if line length matches
+        if (
+          body.content.split(/\r\n|\r|\n/).length >
+          COMMENT_CONSTANTS.MAX_LINE_LENGTH
+        ) {
+          return next(
+            new commentError.InvalidCommentLineLength(
+              400,
+              COMMENT_CONSTANTS.MAX_LINE_LENGTH
+            )
+          );
+        }
+
+        // You must either have some text or an image
+        if (
+          body.content.length === 0 &&
+          !imageSrc &&
+          body.tagsList.length === 0
+        ) {
+          return next(new commentError.NoCommentContent());
+        }
+
+        const contentError = commentService.validCommentContent(body.content);
+        if (contentError) {
+          return next(contentError);
+        }
+
+        const link = await commentService.generateCommentLink();
+        let imageNsfw = false;
+        if (config.testNsfwLocal && imageSrc) {
+          try {
+            imageNsfw = await imageService.predictNsfwLocal(imageSrc);
+          } catch (err) {
+            // err
+          }
+        }
+
+        const createdComment = await prismaComment.createComment(
+          commentId,
+          body.spotId,
+          userId,
+          body.content,
+          imageSrc,
+          imageNsfw,
+          link
+        );
+
+        // Nsfw check using lambda in the background, do not wait
+        if (config.testNsfwLambda && imageSrc) {
+          imageService
+            .predictNsfwLambda(imageSrc)
+            .then((result: AWS.Lambda.InvocationResponse) => {
+              if (result?.StatusCode === 200 && result.Payload) {
+                const payload = JSON.parse(result.Payload.toString());
+                if (payload.statusCode === 200) {
+                  const predictionResult = JSON.parse(payload.body);
+                  const isNsfw =
+                    predictionResult?.className === 'Porn' ||
+                    predictionResult?.className === 'Hentai';
+                  prismaComment.updateNsfw(createdComment.commentId, isNsfw);
+                }
+              }
+            });
+        }
+
+        // Create notifications and tag in tables
+        for (let index = 0; index < body.tagsList.length; index++) {
+          const taggedUser = await prismaUser.findUserByUsername(
+            body.tagsList[index].username || ''
+          );
+          if (!taggedUser) {
+            return next(new commentError.AddComment());
+          }
+          await prismaCommentTag.createTag(
+            taggedUser.userId,
+            userId,
+            createdComment.spotId,
+            createdComment.commentId,
+            createdComment.parentCommentId || undefined,
+            Math.min(body.tagsList[index].offset, body.content.length)
+          );
+          await prismaNotification.createTagCommentNotification(
+            userId,
+            taggedUser.userId,
+            createdComment.spotId,
+            createdComment.commentId
+          );
+        }
+
+        const spot = await prismaSpot.findSpotById(createdComment.spotId);
+        if (!spot) {
+          return next(new commentError.AddComment());
+        }
+
+        const createdCommentWithTags = await commentService.addTagsToComments(
+          [createdComment],
+          req.user?.userId
+        );
+        const createdCommentWithTagsAndProfilePicture =
+          await commentService.addProfilePicturesToComments(
+            createdCommentWithTags,
+            spot.owner
+          );
+
+        const response: CreateCommentResponse = {
+          comment: {
+            ...createdCommentWithTagsAndProfilePicture[0],
+            myRating: CommentRatingType.NONE,
+            owned: true
+          }
+        };
+        res.status(200).json(response);
+      });
+    }
+  )
 );
 
 // Create a reply
 router.post(
-  '/:postId/:commentId',
+  '/:spotId/:commentId',
   rateLimiter.createCommentLimiter,
-  ErrorHandler.catchAsync(async function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
-
-    // You must be verified to make a reply
-    if (!req.user.verifiedAt) {
-      return next(new AuthenticationError.VerifyError(400));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.AddComment(500));
-    }
-
-    const accountId = req.user.id;
-    const replyId = uuid.v4();
-    req.filename = replyId;
-
-    singleUpload(req, res, async function (err: any) {
-      if (err) {
-        return next(new CommentsError.CommentImage(422));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
       }
 
-      const { content, tagsList, commentParentId, location } = JSON.parse(
-        req.body.json
-      );
-      const image = req.file ? req.file.location : null;
-
-      const postId = req.params.postId;
-      const commentId = req.params.commentId;
-
-      // Check you are either in range, or were tagged in the comment chain
-      const inRange = await commentsService.inRange(
-        postId,
-        location.latitude,
-        location.longitude
-      );
-      const isTagged = await tags.TaggedInCommentChain(
-        commentParentId,
-        accountId
-      );
-      if (!inRange && !isTagged) {
-        return next(new CommentsError.NotTagged(400));
-      } else if (!inRange) {
-        return next(new CommentsError.NotInRange(400));
+      // You must be verified to make a reply
+      if (!req.user.verifiedAt) {
+        return next(new authenticationError.VerifyError());
       }
 
-      // check if line length matches
-      if (
-        content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-      ) {
-        return next(
-          new CommentsError.InvalidCommentLineLength(
-            400,
-            COMMENTS_CONSTANTS.MAX_LINE_LENGTH
-          )
-        );
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
+        return next(new commentError.AddComment());
       }
 
-      // You must either have some text or an image
-      if (content.length === 0 && !image && tagsList.length === 0) {
-        return next(new CommentsError.NoCommentContent(400));
-      }
+      const userId = req.user.userId;
 
-      const contentError = commentsService.validContent(content);
-      if (contentError) {
-        return next(contentError);
-      }
-
-      const link = await commentsService.generateLink();
-      let imageNsfw = false;
-      if (config.testNsfwLocal && image) {
-        try {
-          imageNsfw = await imageService.predictNsfwLocal(image);
-        } catch (err) {
-          // err
+      singleUpload(req, res, async (err: any) => {
+        if (err) {
+          return next(new commentError.CommentImage(422));
         }
-      }
 
-      comments
-        .addReply(
+        const body: CreateReplyRequest = JSON.parse(req.body.json);
+        body.spotId = req.params.spotId.toString();
+        body.commentId = req.params.commentId.toString();
+        // @ts-ignore
+        // Location is defined on the multers3 file type
+        const imageSrc: string = req.file ? req.file.location : null;
+        const replyId = req.file?.filename.split('.')[0] || uuid.v4();
+
+        // Check you are either in range, or were tagged in the comment chain
+        const inRange = await commentService.userInRangeForComment(
+          body.spotId,
+          body.location.latitude,
+          body.location.longitude
+        );
+        const isTagged = await prismaCommentTag.taggedInCommentChain(
+          body.commentParentId,
+          userId
+        );
+        if (!inRange && !isTagged) {
+          return next(new commentError.NotTagged());
+        } else if (!inRange) {
+          return next(new commentError.NotInRange());
+        }
+
+        // check if line length matches
+        if (
+          body.content.split(/\r\n|\r|\n/).length >
+          COMMENT_CONSTANTS.MAX_LINE_LENGTH
+        ) {
+          return next(
+            new commentError.InvalidCommentLineLength(
+              400,
+              COMMENT_CONSTANTS.MAX_LINE_LENGTH
+            )
+          );
+        }
+
+        // You must either have some text or an image
+        if (
+          body.content.length === 0 &&
+          !imageSrc &&
+          body.tagsList.length === 0
+        ) {
+          return next(new commentError.NoCommentContent());
+        }
+
+        const contentError = commentService.validCommentContent(body.content);
+        if (contentError) {
+          return next(contentError);
+        }
+
+        const link = await commentService.generateCommentLink();
+        let imageNsfw = false;
+        if (config.testNsfwLocal && imageSrc) {
+          try {
+            imageNsfw = await imageService.predictNsfwLocal(imageSrc);
+          } catch (err) {
+            // err
+          }
+        }
+
+        const createdReply = await prismaComment.createReply(
           replyId,
-          postId,
-          commentId,
-          commentParentId,
-          accountId,
-          content,
-          image,
+          body.spotId,
+          userId,
+          body.commentId,
+          body.content,
+          imageSrc,
           imageNsfw,
           link
-        )
-        .then(
-          async (reply: any) => {
-            // async test nsfw
-            if (config.testNsfwLambda && image) {
-              imageService.predictNsfwLambda(image).then(
-                (result: any) => {
-                  if (
-                    Object.prototype.hasOwnProperty.call(
-                      result,
-                      'StatusCode'
-                    ) &&
-                    result.StatusCode === 200
-                  ) {
-                    const payload = JSON.parse(result.Payload);
-                    if (payload.statusCode === 200) {
-                      const predict = JSON.parse(payload.body);
-                      if (
-                        Object.prototype.hasOwnProperty.call(
-                          predict,
-                          'className'
-                        )
-                      ) {
-                        const isNsfw =
-                          predict.className === 'Porn' ||
-                          predict.className === 'Hentai';
-                        comments.updateNsfw(replyId, isNsfw);
-                      }
-                    }
-                  }
-                },
-                (err: any) => {}
-              );
-            }
-
-            // Add tags
-            for (let index = 0; index < tagsList.length; index++) {
-              try {
-                const account = await accounts.getAccountByUsername(
-                  tagsList[index].username
-                );
-                await tags.addTag(
-                  account[0].id,
-                  reply[0].id,
-                  Math.min(tagsList[index].offset, content.length)
-                );
-                await notifications.addReplyNotification(
-                  accountId,
-                  account[0].id,
-                  reply[0].post_id,
-                  reply[0].parent_id,
-                  reply[0].id
-                );
-              } catch (err) {
-                return next(new CommentsError.AddComment(500));
-              }
-            }
-
-            // add tags to content
-            await commentsService
-              .getTags(reply, accountId)
-              .then((taggedComments: any) => {
-                reply = taggedComments;
-              });
-
-            posts.getPostCreator(postId).then(
-              async (postCreator: any) => {
-                await commentsService.addProfilePicture(
-                  reply,
-                  postCreator[0].account_id
-                );
-                const response = {
-                  postId: postId,
-                  commentId: commentId,
-                  reply: reply[0]
-                };
-                res.status(200).json(response);
-              },
-              (err: any) => {
-                return next(new CommentsError.AddComment(500));
-              }
-            );
-          },
-          (err: any) => {
-            return next(new CommentsError.AddComment(500));
-          }
         );
-    });
-  })
+
+        // Nsfw check using lambda in the background, do not wait
+        if (config.testNsfwLambda && imageSrc) {
+          imageService
+            .predictNsfwLambda(imageSrc)
+            .then((result: AWS.Lambda.InvocationResponse) => {
+              if (result?.StatusCode === 200 && result.Payload) {
+                const payload = JSON.parse(result.Payload.toString());
+                if (payload.statusCode === 200) {
+                  const predictionResult = JSON.parse(payload.body);
+                  const isNsfw =
+                    predictionResult?.className === 'Porn' ||
+                    predictionResult?.className === 'Hentai';
+                  prismaComment.updateNsfw(createdReply.commentId, isNsfw);
+                }
+              }
+            });
+        }
+
+        // Create notifications and tag in tables
+        for (let index = 0; index < body.tagsList.length; index++) {
+          const taggedUser = await prismaUser.findUserByUsername(
+            body.tagsList[index].username || ''
+          );
+          if (!taggedUser) {
+            return next(new commentError.AddComment());
+          }
+          await prismaCommentTag.createTag(
+            taggedUser.userId,
+            userId,
+            createdReply.spotId,
+            createdReply.commentId,
+            createdReply.parentCommentId || undefined,
+            Math.min(body.tagsList[index].offset, body.content.length)
+          );
+          await prismaNotification.createTagCommentNotification(
+            userId,
+            taggedUser.userId,
+            createdReply.spotId,
+            createdReply.commentId
+          );
+        }
+
+        const spot = await prismaSpot.findSpotById(createdReply.spotId);
+        if (!spot) {
+          return next(new commentError.AddComment());
+        }
+
+        const createdReplyWithTags = await commentService.addTagsToComments(
+          [createdReply],
+          req.user?.userId
+        );
+        const createdReplyWithTagsAndProfilePicture =
+          await commentService.addProfilePicturesToComments(
+            createdReplyWithTags,
+            spot.owner
+          );
+
+        const response: CreateReplyResponse = {
+          reply: {
+            ...createdReplyWithTagsAndProfilePicture[0],
+            myRating: CommentRatingType.NONE,
+            owned: true
+          }
+        };
+        res.status(200).json(response);
+      });
+    }
+  )
 );
 
 // Delete a comment
 router.delete(
-  '/:postId/:commentId',
+  '/:spotId/:commentId',
   rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.DeleteComment(500));
-    }
-
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.checkOwned(postId, accountId).then(
-      (owned: boolean) => {
-        if (
-          owned ||
-          authorizationService.checkUserHasRole(req.user, [
-            UserRole.OWNER,
-            UserRole.ADMIN
-          ])
-        ) {
-          comments.deleteCommentById(commentId).then(
-            (rows: any) => {
-              comments.deleteReplyByParentId(commentId).then(
-                (rows: any) => {
-                  const response = { postId: postId, commentId: commentId };
-                  res.status(200).json(response);
-                },
-                (err: any) => {
-                  return next(new CommentsError.DeleteComment(500));
-                }
-              );
-            },
-            (err: any) => {
-              return next(new CommentsError.DeleteComment(500));
-            }
-          );
-        } else {
-          return next(new CommentsError.DeleteComment(500));
-        }
-      },
-      (err: any) => {
-        return next(new CommentsError.DeleteComment(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
       }
-    );
-  }
+
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
+        return next(new commentError.DeleteComment());
+      }
+
+      const request: DeleteCommentRequest = {
+        spotId: req.params.spotId,
+        commentId: req.params.commentId
+      };
+
+      const commentOwned = await prismaComment.userOwnsComment(
+        req.user.userId,
+        request.commentId
+      );
+      if (
+        commentOwned ||
+        authorizationService.checkUserHasRole(req.user, [
+          UserRole.OWNER,
+          UserRole.ADMIN
+        ])
+      ) {
+        const deletedComment = await prismaComment.softDeleteComment(
+          request.commentId
+        );
+        if (!deletedComment) {
+          return next(new commentError.DeleteComment());
+        }
+        await prismaComment.softDeleteReplyByParentId(request.commentId);
+
+        const response: DeleteCommentResponse = {};
+        res.status(200).json(response);
+      } else {
+        return next(new commentError.DeleteComment());
+      }
+    }
+  )
 );
 
 // Delete a reply
 router.delete(
-  '/:postId/:parentId/:commentId',
+  '/:spotId/:commentId/:replyId',
   rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
+      }
 
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.DeleteReply(500));
-    }
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
+        return next(new commentError.DeleteReply());
+      }
 
-    const postId = req.params.postId;
-    const parentId = req.params.parentId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
+      const request: DeleteReplyRequest = {
+        spotId: req.params.spotId,
+        commentId: req.params.commentId,
+        replyId: req.params.replyId
+      };
 
-    comments.checkOwned(postId, accountId).then(
-      (owned: boolean) => {
-        if (
-          owned ||
-          authorizationService.checkUserHasRole(req.user, [
-            UserRole.OWNER,
-            UserRole.ADMIN
-          ])
-        ) {
-          comments.deleteCommentById(commentId).then(
-            (rows: any) => {
-              const response = {
-                postId: postId,
-                parentId: parentId,
-                commentId: commentId
-              };
-              res.status(200).json(response);
-            },
-            (err: any) => {
-              return next(new CommentsError.DeleteReply(500));
-            }
-          );
-        } else {
-          return next(new CommentsError.DeleteReply(500));
+      const replyOwned = await prismaComment.userOwnsComment(
+        req.user.userId,
+        request.replyId
+      );
+      if (
+        replyOwned ||
+        authorizationService.checkUserHasRole(req.user, [
+          UserRole.OWNER,
+          UserRole.ADMIN
+        ])
+      ) {
+        const deletedReply = await prismaComment.softDeleteComment(
+          request.replyId
+        );
+        if (!deletedReply) {
+          return next(new commentError.DeleteReply());
         }
-      },
-      (err: any) => {
-        return next(new CommentsError.DeleteReply(500));
+
+        const response: DeleteReplyResponse = {};
+        res.status(200).json(response);
+      } else {
+        return next(new commentError.DeleteReply());
       }
-    );
-  }
+    }
+  )
 );
 
-// Like a comment
+// Rate a comment
 router.put(
-  '/:postId/:commentId/like',
+  '/:spotId/:commentId/:rating',
   rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.LikeComment(500));
-    }
-
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.likeComment(commentId, accountId).then(
-      (rows: any) => {
-        const response = { postId: postId, commentId: commentId };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new CommentsError.LikeComment(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
       }
-    );
-  }
+
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
+        return next(new commentError.RateComment());
+      }
+
+      let commentRating: CommentRatingType;
+      if (req.params.rating === 'LIKE') {
+        commentRating = CommentRatingType.LIKE;
+      } else if (req.params.rating === 'DISLIKE') {
+        commentRating = CommentRatingType.DISLIKE;
+      } else if (req.params.rating === 'NONE') {
+        commentRating = CommentRatingType.NONE;
+      } else {
+        commentRating = CommentRatingType.NONE;
+      }
+
+      const params: RateCommentRequest = {
+        spotId: req.params.spotId,
+        commentId: req.params.commentId,
+        rating: commentRating
+      };
+
+      await prismaCommentRating.rateComment(
+        req.user.userId,
+        params.commentId,
+        params.rating
+      );
+
+      const response: RateCommentResponse = {};
+      res.status(200).json(response);
+    }
+  )
 );
 
-// Dislike a comment
+// Rate a reply
 router.put(
-  '/:postId/:commentId/dislike',
+  '/:spotId/:commentId/:replyId/:rating',
   rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.DislikeComment(500));
-    }
-
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.dislikeComment(commentId, accountId).then(
-      (rows: any) => {
-        const response = { postId: postId, commentId: commentId };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new CommentsError.DislikeComment(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
       }
-    );
-  }
-);
 
-// remove like / dislike from comment
-router.put(
-  '/:postId/:commentId/unrated',
-  rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.UnratedComment(500));
-    }
-
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.unratedComment(commentId, accountId).then(
-      (rows: any) => {
-        const response = { postId: postId, commentId: commentId };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new CommentsError.UnratedComment(500));
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
+        return next(new commentError.RateReply());
       }
-    );
-  }
-);
 
-// Like a reply
-router.put(
-  '/:postId/:parentId/:commentId/like',
-  rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.LikeReply(500));
-    }
-
-    const postId = req.params.postId;
-    const parentId = req.params.parentId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.likeComment(commentId, accountId).then(
-      (rows: any) => {
-        const response = {
-          postId: postId,
-          parentId: parentId,
-          commentId: commentId
-        };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new CommentsError.LikeReply(500));
+      let commentRating: CommentRatingType;
+      if (req.params.rating === 'LIKE') {
+        commentRating = CommentRatingType.LIKE;
+      } else if (req.params.rating === 'DISLIKE') {
+        commentRating = CommentRatingType.DISLIKE;
+      } else if (req.params.rating === 'NONE') {
+        commentRating = CommentRatingType.NONE;
+      } else {
+        commentRating = CommentRatingType.NONE;
       }
-    );
-  }
-);
 
-// Dislike a reply
-router.put(
-  '/:postId/:parentId/:commentId/dislike',
-  rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
+      const params: RateReplyRequest = {
+        spotId: req.params.spotId,
+        commentId: req.params.commentId,
+        replyId: req.params.replyId,
+        rating: commentRating
+      };
+
+      await prismaCommentRating.rateComment(
+        req.user.userId,
+        params.replyId,
+        params.rating
+      );
+
+      const response: RateReplyResponse = {};
+      res.status(200).json(response);
     }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.DislikeReply(500));
-    }
-
-    const postId = req.params.postId;
-    const parentId = req.params.parentId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.dislikeComment(commentId, accountId).then(
-      (rows: any) => {
-        const response = {
-          postId: postId,
-          parentId: parentId,
-          commentId: commentId
-        };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new CommentsError.DislikeReply(500));
-      }
-    );
-  }
-);
-
-// remove like / dislike from reply
-router.put(
-  '/:postId/:parentId/:commentId/unrated',
-  rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.UnratedComment(500));
-    }
-
-    const postId = req.params.postId;
-    const parentId = req.params.parentId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-
-    comments.unratedComment(commentId, accountId).then(
-      (rows: any) => {
-        const response = {
-          postId: postId,
-          parentId: parentId,
-          commentId: commentId
-        };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new CommentsError.UnratedComment(500));
-      }
-    );
-  }
+  )
 );
 
 // Report a comment
 router.put(
-  '/:postId/:commentId/report',
+  '/:spotId/:commentId/report',
   rateLimiter.genericCommentLimiter,
-  function (req: any, res: any, next: any) {
-    if (!req.user) {
-      return next(new AuthenticationError.AuthenticationError(401));
-    }
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new authenticationError.AuthenticationError());
+      }
 
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new CommentsError.ReportComment(500));
-    }
+      if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
+        return next(new commentError.ReportComment());
+      }
 
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const accountId = req.user.id;
-    const { content, category } = req.body;
+      let reportCategory: ReportCategory;
+      switch (req.body.category) {
+        case 'OFFENSIVE':
+          reportCategory = ReportCategory.OFFENSIVE;
+          break;
+        case 'HATE':
+          reportCategory = ReportCategory.HATE;
+          break;
+        case 'MATURE':
+          reportCategory = ReportCategory.MATURE;
+          break;
+        case 'OTHER':
+          reportCategory = ReportCategory.OTHER;
+          break;
+        default:
+          reportCategory = ReportCategory.OFFENSIVE;
+      }
+      const request: ReportCommentRequest = {
+        spotId: req.params.spotId,
+        commentId: req.params.commentId,
+        content: req.body.content,
+        category: reportCategory
+      };
 
-    reports
-      .addCommentReport(postId, commentId, accountId, content, category)
-      .then(
-        (rows: any) => {
-          res.status(200).send({});
-        },
-        (err: any) => {
-          return next(new CommentsError.ReportComment(500));
-        }
+      await prismaReport.createCommentReport(
+        request.spotId,
+        request.commentId,
+        req.user.userId,
+        request.content,
+        request.category
       );
-  }
+
+      const response: ReportCommentResponse = {};
+      res.status(200).send(response);
+    }
+  )
 );
 
 export default router;

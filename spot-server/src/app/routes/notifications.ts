@@ -7,7 +7,7 @@ import accounts from '@db/accounts.js';
 import friends from '@db/friends.js';
 
 // services
-import commentsService from '@services/comments.js';
+import commentsService from '@services/comment.js';
 import authorizationService from '@services/authorization.js';
 
 // ratelimiter
@@ -42,20 +42,20 @@ router.get(
           for (let i = 0; i < rows.length; i++) {
             try {
               if (typeof rows[i].reply_content === 'string') {
-                rows[i].reply_content = await commentsService.addTagsToContent(
-                  rows[i].reply_id,
-                  accountId,
-                  rows[i].account_id,
-                  rows[i].reply_content
-                );
+                // rows[i].reply_content = await commentsService.addTagsToContent(
+                // rows[i].reply_id,
+                // accountId,
+                // rows[i].account_id,
+                // rows[i].reply_content
+                // );
               } else if (typeof rows[i].comment_content === 'string') {
-                rows[i].comment_content =
-                  await commentsService.addTagsToContent(
-                    rows[i].comment_id,
-                    accountId,
-                    rows[i].account_id,
-                    rows[i].comment_content
-                  );
+                // rows[i].comment_content =
+                // await commentsService.addTagsToContent(
+                // rows[i].comment_id,
+                // accountId,
+                // rows[i].account_id,
+                // rows[i].comment_content
+                // );
               }
             } catch (err) {
               return next(new NotificationsError.GetNotifications(500));

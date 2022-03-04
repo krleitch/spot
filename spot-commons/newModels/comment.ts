@@ -1,4 +1,5 @@
 import { ReportCategory } from "./report";
+import { LocationData } from "./location";
 
 export enum CommentRatingType {
   NONE = "NONE",
@@ -69,8 +70,8 @@ export interface CreateCommentRequest {
   spotId: string;
   content: string;
   image: File;
-  tagsList: CommentTag[];
-  location: Location;
+  tagsList: Tag[];
+  location: LocationData;
 }
 export interface CreateCommentResponse {
   comment: Comment;
@@ -85,9 +86,7 @@ export interface DeleteCommentRequest {
   spotId: string;
   commentId: string;
 }
-export interface DeleteCommentResponse {
-  comment: Comment;
-}
+export interface DeleteCommentResponse {}
 
 // Get all replies
 export interface GetRepliesRequest {
@@ -106,8 +105,8 @@ export interface GetRepliesResponse {
   totalRepliesAfter: number;
   initialLoad: boolean;
   cursor: {
-    before: string;
-    after: string;
+    before: string | undefined;
+    after: string | undefined;
   };
 }
 export interface SetRepliesStoreRequest {
@@ -126,8 +125,8 @@ export interface CreateReplyRequest {
   commentParentId: string; // the comment the user added the reply on. it would stil have same parent
   content: string;
   image: File;
-  tagsList: CommentTag[];
-  location: Location;
+  tagsList: Tag[];
+  location: LocationData;
 }
 export interface CreateReplyResponse {
   reply: Comment;
@@ -139,14 +138,10 @@ export interface AddReplyStoreRequest {
 // Delete a reply
 export interface DeleteReplyRequest {
   spotId: string;
-  parentId: string;
   commentId: string;
+  replyId: string;
 }
-export interface DeleteReplyResponse {
-  spotId: string;
-  parentId: string;
-  commentId: string;
-}
+export interface DeleteReplyResponse {}
 
 // Rate a comment
 export interface RateCommentRequest {
@@ -159,8 +154,9 @@ export interface RateCommentResponse {}
 // Rate a reply
 export interface RateReplyRequest {
   spotId: string;
-  parentId: string;
   commentId: string;
+  replyId: string;
+  rating: CommentRatingType
 }
 export interface RateReplyResponse {}
 
@@ -180,16 +176,16 @@ export interface CommentActivity {
   likes: number;
   dislikes: number;
   content: string;
-  imageSrc: string;
-  imageNsfw: boolean;
-  parentCommentId: string;
+  imageSrc: string | null;
+  imageNsfw: boolean | null;
   link: string;
-  spotImageSrc: string;
-  spotImageNsfw: boolean;
+  spotImageSrc: string | null;
+  spotImageNsfw: boolean | null;
   spotLink: string;
-  parentCommentImageSrc: string;
-  parentCommentImageNsfw: boolean;
-  parentCommentLink: string;
+  parentCommentId: string | null;
+  parentCommentImageSrc: string | null;
+  parentCommentImageNsfw: boolean| null;
+  parentCommentLink: string| null;
   tag: CommentTag;
 }
 export interface GetCommentActivityRequest {

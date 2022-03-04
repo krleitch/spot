@@ -8,6 +8,7 @@ import { Comment } from '@models/../newModels/comment.js';
 import { COMMENT_CONSTANTS } from '@constants/comment.js';
 
 const createComment = async (
+  commentId: string,
   spotId: string,
   userId: string,
   content: string,
@@ -17,6 +18,7 @@ const createComment = async (
 ): Promise<P.Comment> => {
   const comment = await prisma.comment.create({
     data: {
+      commentId: commentId,
       spotId: spotId,
       owner: userId,
       content: content,
@@ -29,6 +31,7 @@ const createComment = async (
 };
 
 const createReply = async (
+  commentId: string,
   spotId: string,
   userId: string,
   parentCommentId: string,
@@ -39,6 +42,7 @@ const createReply = async (
 ): Promise<P.Comment> => {
   const comment = await prisma.comment.create({
     data: {
+      commentId: commentId,
       spotId: spotId,
       owner: userId,
       parentCommentId: parentCommentId,
@@ -79,11 +83,11 @@ const findCommentForSpot = async (
   return comment;
 };
 
-const findCommentForComment = async (
+const findRepliesForComment = async (
   spotId: string,
   parentCommentId: string,
-  before: Date,
-  after: Date,
+  before: string | undefined,
+  after: string | undefined,
   limit: number,
   userId?: string
 ): Promise<P.Comment[]> => {
@@ -92,15 +96,15 @@ const findCommentForComment = async (
       spotId: spotId,
       parentCommentId: parentCommentId,
       deletedAt: null,
-      createdAt: {
-        lt: after,
-        gt: before
-      }
     },
     orderBy: {
       createdAt: after ? 'asc' : 'desc'
     },
-    take: limit
+    cursor: {
+      commentId: after ? after : before
+    },
+    skip: (after || before) ? 1 : 0, // skip the cursor
+    take: limit * (before ? - 1 : 1) // take forwards or backwards
   });
   return comment;
 };
@@ -159,6 +163,23 @@ const findTotalCommentsBeforeDate = async (
   return totalBefore;
 };
 
+const findTotalRepliesAfterReply = async (
+  spotId: string,
+  parentCommentId: string,
+  replyId: string,
+): Promise<number> => {
+  const totalBefore = await prisma.comment.count({
+    where: {
+      spotId: spotId,
+      parentCommentId: parentCommentId
+    },
+    cursor: {
+      commentId: replyId
+    }
+  });
+  return totalBefore;
+};
+
 const softDeleteComment = async (
   commentId: string
 ): Promise<P.Comment | null> => {
@@ -173,6 +194,20 @@ const softDeleteComment = async (
   return comment;
 };
 
+const softDeleteReplyByParentId = async (
+  parentCommentId: string
+): Promise<number> => {
+  const comment = await prisma.comment.updateMany({
+    where: {
+      parentCommentId: parentCommentId
+    },
+    data: {
+      deletedAt: new Date()
+    }
+  });
+  return comment.count;
+};
+
 const linkExists = async (link: string): Promise<boolean> => {
   const exists = await prisma.comment.findUnique({
     where: {
@@ -180,6 +215,15 @@ const linkExists = async (link: string): Promise<boolean> => {
     }
   });
   return exists ? true : false;
+};
+
+const userOwnsComment = async (userId: string, commentId: string): Promise<boolean> => {
+  const comment = await prisma.comment.findUnique({
+    where: {
+      commentId: commentId
+    }
+  });
+  return comment ? comment.owner === userId : false;
 };
 
 const updateNsfw = async (
@@ -232,13 +276,16 @@ export default {
   createComment,
   createReply,
   findCommentForSpot,
-  findCommentForComment,
+  findRepliesForComment,
   findCommentById,
   findCommentByLink,
   findTotalCommentsAfterDate,
   findTotalCommentsBeforeDate,
+  findTotalRepliesAfterReply,
   softDeleteComment,
+  softDeleteReplyByParentId,
   linkExists,
+  userOwnsComment,
   updateNsfw,
   findCommentActivity
 };

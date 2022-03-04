@@ -93,45 +93,17 @@ export class DeleteReply extends SpotError {
   }
 }
 
-export class LikeComment extends SpotError {
+export class RateComment extends SpotError {
   constructor(statusCode: number = 500) {
-    super(COMMENTS_ERROR_MESSAGES.LIKE_COMMENT, statusCode);
-    this.name = "LikeComment";
+    super(COMMENTS_ERROR_MESSAGES.RATE_COMMENT, statusCode);
+    this.name = "RateComment";
   }
 }
 
-export class UnratedComment extends SpotError {
+export class RateReply extends SpotError {
   constructor(statusCode: number = 500) {
-    super(COMMENTS_ERROR_MESSAGES.UNRATED_COMMENT, statusCode);
-    this.name = "UnratedComment";
-  }
-}
-
-export class DislikeComment extends SpotError {
-  constructor(statusCode: number = 500) {
-    super(COMMENTS_ERROR_MESSAGES.DISLIKE_COMMENT, statusCode);
-    this.name = "DislikeComment";
-  }
-}
-
-export class LikeReply extends SpotError {
-  constructor(statusCode: number = 500) {
-    super(COMMENTS_ERROR_MESSAGES.LIKE_REPLY, statusCode);
-    this.name = "LikeReply";
-  }
-}
-
-export class DislikeReply extends SpotError {
-  constructor(statusCode: number = 500) {
-    super(COMMENTS_ERROR_MESSAGES.DISLIKE_REPLY, statusCode);
-    this.name = "DislikeReply";
-  }
-}
-
-export class UnratedReply extends SpotError {
-  constructor(statusCode: number = 500) {
-    super(COMMENTS_ERROR_MESSAGES.UNRATED_REPLY, statusCode);
-    this.name = "UnratedReply";
+    super(COMMENTS_ERROR_MESSAGES.RATE_REPLY, statusCode);
+    this.name = "RateReply";
   }
 }
 

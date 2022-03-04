@@ -8,7 +8,7 @@ const createTag = async (
   taggerId: string,
   spotId: string,
   commentId: string,
-  commentParentId: string,
+  commentParentId: string | undefined,
   offset: number
 ): Promise<P.CommentTag> => {
   const createdTag = await prisma.commentTag.create({

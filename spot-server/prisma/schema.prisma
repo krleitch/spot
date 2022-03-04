@@ -260,6 +260,6 @@ model CommentTag {
   spotId          String   @db.Uuid
   comment         Comment  @relation("TagComment", fields: [commentId], references: [commentId])
   commentId       String   @db.Uuid
-  commentParent   Comment  @relation("TagCommentParent", fields: [commentParentId], references: [commentId])
-  commentParentId String   @db.Uuid
+  commentParent   Comment? @relation("TagCommentParent", fields: [commentParentId], references: [commentId])
+  commentParentId String?  @db.Uuid
 }

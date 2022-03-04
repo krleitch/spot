@@ -68,12 +68,8 @@ export const ERROR_MESSAGES = {
             DELETE_COMMENT: 'Error deleting comment',
             DELETE_REPLY: 'Error deleting reply',
 
-            LIKE_COMMENT: 'Error liking comment',
-            DISLIKE_COMMENT: 'Error disliking comment',
-            UNRATED_COMMENT: 'Error removing rating from comment',
-            LIKE_REPLY: 'Error liking reply',
-            DISLIKE_REPLY: 'Error disliking reply',
-            UNRATED_REPLY: 'Error removing rating from reply',
+            RATE_COMMENT: 'Error rating comment',
+            RATE_REPLY: 'Error rating reply',
 
             REPORT_COMMENT: 'Error reporting comment',
             NOT_IN_RANGE: 'Error, you are not close enough to comment on this spot',

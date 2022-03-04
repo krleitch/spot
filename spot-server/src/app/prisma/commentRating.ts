@@ -13,9 +13,10 @@ const mapToModelEnum = <T>(
   };
 };
 
-const likeComment = async (
+const rateComment = async (
   userId: string,
-  commentId: string
+  commentId: string,
+  rating: CommentRatingType
 ): Promise<P.CommentRating> => {
   const commentRating = await prisma.commentRating.upsert({
     where: {
@@ -27,33 +28,10 @@ const likeComment = async (
     create: {
       commentId: commentId,
       userId: userId,
-      rating: CommentRatingType.LIKE
+      rating: rating
     },
     update: {
-      rating: CommentRatingType.LIKE
-    }
-  });
-  return commentRating;
-};
-
-const dislikeComment = async (
-  userId: string,
-  commentId: string
-): Promise<P.CommentRating> => {
-  const commentRating = await prisma.commentRating.upsert({
-    where: {
-      userId_commentId: {
-        commentId: commentId,
-        userId: userId
-      }
-    },
-    create: {
-      commentId: commentId,
-      userId: userId,
-      rating: CommentRatingType.DISLIKE
-    },
-    update: {
-      rating: CommentRatingType.DISLIKE
+      rating: rating
     }
   });
   return commentRating;
@@ -92,8 +70,7 @@ const findRatingForUserAndComment = async (
 };
 
 export default {
-  likeComment,
-  dislikeComment,
+  rateComment,
   deleteRating,
   findRatingForUserAndComment
 };
