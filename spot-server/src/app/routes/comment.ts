@@ -77,10 +77,10 @@ router.get(
 
       const request: GetCommentActivityRequest = {
         before: req.query.before
-          ? new Date(req.query.before.toString())
+          ? req.query.before.toString()
           : undefined,
         after: req.query.after
-          ? new Date(req.query.after.toString())
+          ? req.query.after.toString()
           : undefined,
         limit: Number(req.query.limit)
       };
@@ -131,8 +131,8 @@ router.get(
       const response: GetCommentActivityResponse = {
         activity: commentActivityWithTagsAndProps,
         cursor: {
-          before: commentActivityWithTagsAndProps.at(0)?.createdAt,
-          after: commentActivityWithTagsAndProps.at(-1)?.createdAt
+          before: commentActivityWithTagsAndProps.at(0)?.commentId,
+          after: commentActivityWithTagsAndProps.at(-1)?.commentId
         }
       };
       res.status(200).json(response);

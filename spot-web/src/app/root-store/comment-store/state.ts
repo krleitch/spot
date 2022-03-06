@@ -1,6 +1,6 @@
 import { Comment } from '@models/comments';
 
-// The id on all is the post id
+// The id on all is the spot id
 
 export interface StoreComment {
   comments: Comment[]; // the comments
@@ -18,10 +18,10 @@ export interface StoreReply {
 
 export interface State {
   comments: {
-    [postId: string]: StoreComment;
+    [spotId: string]: StoreComment;
   };
   replies: {
-    [postId: string]: {
+    [spotId: string]: {
       [commentId: string]: StoreReply;
     };
   };

@@ -190,14 +190,14 @@ export interface CommentActivity {
 }
 export interface GetCommentActivityRequest {
   limit: number;
-  before?: Date;
-  after?: Date;
+  before?: string;
+  after?: string;
 }
 export interface GetCommentActivityResponse {
   activity: CommentActivity[];
   cursor: {
-    before?: Date;
-    after?: Date;
+    before?: string;
+    after?: string;
   };
 }
 

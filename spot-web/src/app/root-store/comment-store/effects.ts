@@ -28,7 +28,7 @@ import {
 } from '@models/comments';
 
 @Injectable()
-export class CommentsStoreEffects {
+export class CommentStoreEffects {
   constructor(
     private commentService: CommentService,
     private actions$: Actions

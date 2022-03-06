@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { CommentsStoreEffects } from './effects';
+import { CommentStoreEffects } from './effects';
 import { featureReducer } from './reducer';
 
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forFeature('comments', featureReducer),
-    EffectsModule.forFeature([CommentsStoreEffects])
+    StoreModule.forFeature('comment', featureReducer),
+    EffectsModule.forFeature([CommentStoreEffects])
   ],
-  providers: [CommentsStoreEffects]
+  providers: [CommentStoreEffects]
 })
-export class CommentsStoreModule {}
+export class CommentStoreModule {}
