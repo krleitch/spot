@@ -5,11 +5,20 @@ const prisma = DBClient.instance;
 
 import { NotificationType } from '@models/../newModels/notification.js';
 
+const mapToModelEnum = <T>(
+  userWithType: Omit<T, 'type'> & { type: P.NotificationType }
+): Omit<T, 'type'> & { type: NotificationType } => {
+  return {
+    ...userWithType,
+    type: NotificationType[userWithType.type]
+  };
+};
+
 const createTagSpotNotification = async (
   senderId: string,
   receiverId: string,
   spotId: string
-): Promise<P.Notification> => {
+) => {
   const notification = await prisma.notification.create({
     data: {
       senderId: senderId,
@@ -18,7 +27,7 @@ const createTagSpotNotification = async (
       type: NotificationType.TAG
     }
   });
-  return notification;
+  return mapToModelEnum<P.Notification>(notification);
 };
 
 const createTagCommentNotification = async (
@@ -26,7 +35,7 @@ const createTagCommentNotification = async (
   receiverId: string,
   spotId: string,
   commentId: string
-): Promise<P.Notification> => {
+) => {
   const notification = await prisma.notification.create({
     data: {
       senderId: senderId,
@@ -36,15 +45,16 @@ const createTagCommentNotification = async (
       type: NotificationType.TAG
     }
   });
-  return notification;
+  return mapToModelEnum<P.Notification>(notification);
 };
+
 const createTagReplyNotification = async (
   senderId: string,
   receiverId: string,
   spotId: string,
   commentId: string,
   replyId: string
-): Promise<P.Notification> => {
+) => {
   const notification = await prisma.notification.create({
     data: {
       senderId: senderId,
@@ -55,42 +65,43 @@ const createTagReplyNotification = async (
       type: NotificationType.TAG
     }
   });
-  return notification;
+  return mapToModelEnum<P.Notification>(notification);
 };
+
 const findAllNotification = async (
   receiverId: string,
-  before: Date | undefined,
-  after: Date | undefined,
+  before: string | undefined,
+  after: string | undefined,
   limit: number
-): Promise<P.Notification[]> => {
+) => {
   const notifications = await prisma.notification.findMany({
     where: {
-      receiverId: receiverId,
-      createdAt: {
-        lt: after,
-        gt: before
-      }
+      receiverId: receiverId
+    },
+    cursor: {
+      notificationId: after
     },
     orderBy: {
       createdAt: 'desc'
     },
-    take: limit
+    take: before ? -limit : limit,
+    skip: before || after ? 1 : 0
   });
-  return notifications;
+  return notifications.map((notification) => {
+    return mapToModelEnum<P.Notification>(notification);
+  });
 };
 
-const findNotificationById = async (
-  notificationId: string
-): Promise<P.Notification | null> => {
+const findNotificationById = async (notificationId: string) => {
   const notification = await prisma.notification.findUnique({
     where: {
       notificationId: notificationId
     }
   });
-  return notification;
+  return notification ? mapToModelEnum<P.Notification>(notification) : null;
 };
 
-const findTotalUnreadForReceiver = async (
+const findTotalUnseenForReceiver = async (
   receiverId: string
 ): Promise<number> => {
   const unread = await prisma.notification.count({
@@ -100,7 +111,7 @@ const findTotalUnreadForReceiver = async (
     }
   });
   return unread;
-}
+};
 
 const updateNotificationSeen = async (
   notificationId: string
@@ -130,16 +141,15 @@ const updateAllNotificationSeen = async (
   return notification.count;
 };
 
-
 const deleteNotificationById = async (
   notificationId: string
-): Promise<P.Notification | null> => {
+) => {
   const notification = await prisma.notification.delete({
     where: {
       notificationId: notificationId
     }
   });
-  return notification;
+  return mapToModelEnum<P.Notification>(notification);
 };
 
 const deleteAllNotificationForReceiver = async (
@@ -159,7 +169,7 @@ export default {
   createTagReplyNotification,
   findAllNotification,
   findNotificationById,
-  findTotalUnreadForReceiver,
+  findTotalUnseenForReceiver,
   updateNotificationSeen,
   updateAllNotificationSeen,
   deleteNotificationById,

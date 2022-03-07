@@ -1,4 +1,3 @@
-import { Tag } from './notifications';
 import { Location } from './accounts';
 import { ReportCategory } from './report';
 export interface Comment {
@@ -63,7 +62,7 @@ export interface AddCommentRequest {
     postId: string;
     content: string;
     image: File;
-    tagsList: Tag[];
+    tagsList: any[];
     location: Location;
 }
 
@@ -123,7 +122,7 @@ export interface AddReplyRequest {
     commentParentId: string; // the comment the user added the reply on. it would stil have same parent
     content: string;
     image: File;
-    tagsList: Tag[];
+    tagsList: any[];
     location: Location;
 }
 

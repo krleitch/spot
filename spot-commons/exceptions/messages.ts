@@ -93,7 +93,7 @@ export const ERROR_MESSAGES = {
         NOTIFICATIONS: {
 
             GET_NOTIFICATIONS: 'Error getting notifications',
-            GET_UNREAD_NOTIFICATIONS: 'Error getting unread notifications number',
+            GET_UNSEEN_NOTIFICATIONS: 'Error getting unseen notifications number',
             SEND_NOTIFICATION: 'Error sending notification',
             SEEN_NOTIFICATION: 'Error setting notification seen',
             SEEN_ALL_NOTIFICATION: 'Error setting all notifications seen',

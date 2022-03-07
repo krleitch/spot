@@ -10,10 +10,10 @@ export class GetNotifications extends SpotError {
     }
 }
 
-export class GetUnreadNotifications extends SpotError {
+export class GetUnseenNotifications extends SpotError {
     constructor(statusCode: number = 500) {
-        super(NOTIFICATIONS_ERROR_MESSAGES.GET_UNREAD_NOTIFICATIONS, statusCode);
-        this.name = "GetUnreadNotifications";
+        super(NOTIFICATIONS_ERROR_MESSAGES.GET_UNSEEN_NOTIFICATIONS, statusCode);
+        this.name = "GetUnseenNotifications";
     }
 }
 

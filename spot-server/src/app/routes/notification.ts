@@ -1,26 +1,44 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 // db
-import notifications from '@db/notifications.js';
-import accounts from '@db/accounts.js';
-import friends from '@db/friends.js';
+import prismaNotification from '@db/../prisma/notification.js';
+import prismaUser from '@db/../prisma/user.js';
+import prismaFriend from '@db/../prisma/friend.js';
 
 // services
-import commentsService from '@services/comment.js';
+import commentService from '@services/comment.js';
 import authorizationService from '@services/authorization.js';
 
 // ratelimiter
 import rateLimiter from '@helpers/rateLimiter.js';
 
 // errors
-import * as NotificationsError from '@exceptions/notifications.js';
+import * as notificationError from '@exceptions/notification.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // models
 import { UserRole } from '@models/../newModels/user.js';
+import {
+  Notification,
+  NotificationType,
+  GetNotificationsRequest,
+  GetNotificationsResponse,
+  CreateTagNotificationRequest,
+  CreateTagNotificationResponse,
+  DeleteAllNotificationsRequest,
+  DeleteAllNotificationsResponse,
+  DeleteNotificationRequest,
+  DeleteNotificationResponse,
+  SetAllNotificationsSeenRequest,
+  SetAllNotificationsSeenResponse,
+  SetNotificationSeenRequest,
+  SetNotificationSeenResponse,
+  GetUnseenNotificationsRequest,
+  GetUnseenNotificationsResponse
+} from '@models/../newModels/notification.js';
 
-router.use(function timeLog(req: any, res: any, next: any) {
+router.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
@@ -28,215 +46,229 @@ router.use(function timeLog(req: any, res: any, next: any) {
 router.get(
   '/',
   rateLimiter.genericNotificationLimiter,
-  ErrorHandler.catchAsync(async (req: any, res: any, next: any) => {
-    const accountId = req.user.id;
-    const before = req.query.before ? new Date(req.query.before) : null;
-    const after = req.query.after ? new Date(req.query.after) : null;
-    const limit = Number(req.query.limit);
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const request: GetNotificationsRequest = {
+        before: req.query.before ? req.query.before.toString() : undefined,
+        after: req.query.after ? req.query.after.toString() : undefined,
+        limit: Number(req.query.limit),
+        initialLoad: false
+      };
 
-    notifications
-      .getNotificationByReceiverId(accountId, before, after, limit)
-      .then(
-        async (rows: any) => {
-          // Add tags to comments and replies
-          for (let i = 0; i < rows.length; i++) {
-            try {
-              if (typeof rows[i].reply_content === 'string') {
-                // rows[i].reply_content = await commentsService.addTagsToContent(
-                // rows[i].reply_id,
-                // accountId,
-                // rows[i].account_id,
-                // rows[i].reply_content
-                // );
-              } else if (typeof rows[i].comment_content === 'string') {
-                // rows[i].comment_content =
-                // await commentsService.addTagsToContent(
-                // rows[i].comment_id,
-                // accountId,
-                // rows[i].account_id,
-                // rows[i].comment_content
-                // );
-              }
-            } catch (err) {
-              return next(new NotificationsError.GetNotifications(500));
-            }
-          }
-
-          const response = {
-            notifications: rows,
-            cursor: {
-              before: rows.length > 0 ? rows[0].creation_date : null,
-              after:
-                rows.length > 0 ? rows[rows.length - 1].creation_date : null
-            }
-          };
-          res.status(200).json(response);
-        },
-        (err: any) => {
-          return next(new NotificationsError.GetNotifications(500));
-        }
-      );
-  })
-);
-
-// get number of unread notifications
-router.get(
-  '/unread',
-  rateLimiter.genericNotificationLimiter,
-  function (req: any, res: any, next: any) {
-    const id = req.user.id;
-
-    notifications.getNotificationUnreadByReceiverId(id).then(
-      (rows: any) => {
-        const response = { unread: rows[0].unread };
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new NotificationsError.GetNotifications(500));
+      if (!req.user) {
+        return next(new notificationError.GetNotifications());
       }
-    );
-  }
+
+      const notifications = await prismaNotification.findAllNotification(
+        req.user?.userId,
+        request.before,
+        request.after,
+        request.limit
+      );
+
+      // Todo add Tags
+
+      const response: GetNotificationsResponse = {
+        notifications: notifications,
+        cursor: {
+          before: notifications.at(0)?.notificationId,
+          after: notifications.at(-1)?.notificationId
+        }
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
-// Send a notification, keep errors generic
+// Get number of unseen notifications
+router.get(
+  '/unseen',
+  rateLimiter.genericNotificationLimiter,
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new notificationError.GetUnseenNotifications());
+      }
+
+      const request: GetUnseenNotificationsRequest = {};
+      const unseen = await prismaNotification.findTotalUnseenForReceiver(
+        req.user.userId
+      );
+
+      const response: GetUnseenNotificationsResponse = { totalUnseen: unseen };
+      res.status(200).json(response);
+    }
+  )
+);
+
+// Create a notification
 router.post(
   '/',
   rateLimiter.genericNotificationLimiter,
-  function (req: any, res: any, next: any) {
-    const { receiver, postId, commentId } = req.body;
-    const accountId = req.user.id;
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new NotificationsError.SendNotification(500));
-    }
-
-    accounts.getAccountByUsername(receiver).then(
-      async (receiver: any) => {
-        // The receiving account doesnt exist
-        if (!receiver[0]) {
-          return next(new NotificationsError.SendNotification(500));
-        }
-        receiver = receiver[0];
-
-        // Make sure they are friends
-        await friends.getFriendsExist(accountId, receiver.id).then(
-          (friendExists: any) => {
-            if (!friendExists[0]) {
-              return next(new NotificationsError.SendNotification(500));
-            }
-          },
-          (err: any) => {
-            return next(new NotificationsError.SendNotification(500));
-          }
-        );
-
-        if (commentId) {
-          notifications
-            .addCommentNotification(accountId, receiver.id, postId, commentId)
-            .then(
-              (rows: any) => {
-                const response = { notification: rows[0] };
-                res.status(200).json(response);
-              },
-              (err: any) => {
-                return next(new NotificationsError.SendNotification(500));
-              }
-            );
-        } else {
-          notifications.addNotification(accountId, receiver.id, postId).then(
-            (rows: any) => {
-              const response = { notification: rows[0] };
-              res.status(200).json(response);
-            },
-            (err: any) => {
-              return next(new NotificationsError.SendNotification(500));
-            }
-          );
-        }
-      },
-      (err: any) => {
-        return next(new NotificationsError.SendNotification(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (
+        !req.user ||
+        authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
+        return next(new notificationError.SendNotification());
       }
-    );
-  }
+
+      const request: CreateTagNotificationRequest = {
+        receiver: req.body.receiver,
+        spotId: req.body.spotId,
+        commentId: req.body.commentId,
+        replyId: req.body.replyId
+      };
+
+      const receiverUser = await prismaUser.findUserByUsername(
+        request.receiver
+      );
+      // User must exist
+      if (!receiverUser) {
+        return next(new notificationError.SendNotification());
+      }
+      const friendExists = await prismaFriend.friendExists(
+        req.user.userId,
+        receiverUser.userId
+      );
+      // You must be friends
+      if (!friendExists) {
+        return next(new notificationError.SendNotification());
+      }
+      let createdTagNotification: Notification;
+      if (request.replyId && request.commentId) {
+        createdTagNotification =
+          await prismaNotification.createTagReplyNotification(
+            req.user.userId,
+            receiverUser.userId,
+            request.spotId,
+            request.commentId,
+            request.replyId
+          );
+      } else if (request.commentId) {
+        createdTagNotification =
+          await prismaNotification.createTagCommentNotification(
+            req.user.userId,
+            receiverUser.userId,
+            request.spotId,
+            request.commentId
+          );
+      } else {
+        createdTagNotification =
+          await prismaNotification.createTagSpotNotification(
+            req.user.userId,
+            receiverUser.userId,
+            request.spotId
+          );
+      }
+      const response: CreateTagNotificationResponse = {
+        notification: createdTagNotification
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
 // Set a notification as seen
 router.put(
   '/:notificationId/seen',
   rateLimiter.genericNotificationLimiter,
-  function (req: any, res: any, next: any) {
-    const notificationId = req.params.notificationId;
-    const accountId = req.user.id;
-
-    // only sets seen if you own it
-    notifications.setNotificationSeen(notificationId, accountId).then(
-      (rows: any) => {
-        const response = { notificationId: notificationId };
-        res.status(200).send(response);
-      },
-      (err: any) => {
-        return next(new NotificationsError.SeenNotification(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new notificationError.SeenNotification());
       }
-    );
-  }
+
+      const request: SetNotificationSeenRequest = {
+        notificationId: req.params.notificationId
+      };
+
+      const notification = await prismaNotification.findNotificationById(
+        request.notificationId
+      );
+      // You must own the notification
+      if (!notification || notification.receiverId !== req.user.userId) {
+        return next(new notificationError.SeenNotification());
+      }
+
+      await prismaNotification.updateNotificationSeen(request.notificationId);
+
+      const response: SetNotificationSeenResponse = {};
+      res.status(200).send(response);
+    }
+  )
 );
 
 // Set all notifications as seen
 router.put(
   '/seen',
   rateLimiter.genericNotificationLimiter,
-  function (req: any, res: any, next: any) {
-    const accountId = req.user.id;
-
-    notifications.setAllNotificationsSeen(accountId).then(
-      (rows: any) => {
-        res.status(200).send({});
-      },
-      (err: any) => {
-        return next(new NotificationsError.SeenAllNotification(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new notificationError.SeenAllNotification());
       }
-    );
-  }
+
+      const request: SetAllNotificationsSeenRequest = {};
+
+      await prismaNotification.updateAllNotificationSeen(req.user.userId);
+
+      const response: SetAllNotificationsSeenResponse = {};
+      res.status(200).send(response);
+    }
+  )
 );
 
-// Delete a notification
+// Delete a single notification
 router.delete(
   '/:notificationId',
   rateLimiter.genericNotificationLimiter,
-  function (req: any, res: any, next: any) {
-    const notificationId = req.params.notificationId;
-    const accountId = req.user.id;
-
-    // only removes if you own it
-    notifications.deleteNotificationById(notificationId, accountId).then(
-      (rows: any) => {
-        const response = { notificationId: notificationId };
-        res.status(200).send(response);
-      },
-      (err: any) => {
-        return next(new NotificationsError.DeleteNotification(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new notificationError.DeleteNotification());
       }
-    );
-  }
+
+      const request: DeleteNotificationRequest = {
+        notificationId: req.params.notificationId
+      };
+      const notification = await prismaNotification.findNotificationById(
+        request.notificationId
+      );
+      // You must own the notification
+      if (!notification || notification.receiverId !== req.user.userId) {
+        return next(new notificationError.DeleteNotification());
+      }
+
+      await prismaNotification.deleteNotificationById(request.notificationId);
+
+      const response: DeleteNotificationResponse = {};
+      res.status(200).send(response);
+    }
+  )
 );
 
 // Delete all notifications
 router.delete(
   '/',
   rateLimiter.genericNotificationLimiter,
-  function (req: any, res: any, next: any) {
-    const accountId = req.user.id;
-
-    notifications.deleteAllNotificationsForAccount(accountId).then(
-      (rows: any) => {
-        res.status(200).send({});
-      },
-      (err: any) => {
-        return next(new NotificationsError.DeleteAllNotification(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new notificationError.DeleteAllNotification());
       }
-    );
-  }
+
+      const request: DeleteAllNotificationsRequest = {};
+
+      await prismaNotification.deleteAllNotificationForReceiver(
+        req.user.userId
+      );
+
+      const response: DeleteAllNotificationsResponse = {};
+      res.status(200).send(response);
+    }
+  )
 );
 
 export default router;
