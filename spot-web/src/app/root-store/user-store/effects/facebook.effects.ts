@@ -7,7 +7,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 // store
 import * as facebookActions from '../actions/facebook.actions';
 import * as featureActions from '../actions/actions';
-import * as friendsActions from '../../social-store/actions/friends.actions';
+import * as friendActions from '../../social-store/actions/friend.actions';
 
 // services
 import { UserService } from '@src/app/services/user.service';
@@ -57,8 +57,7 @@ export class FacebookStoreEffects {
       this.authenticationService.loginFacebookUserSuccess(action.response);
     }),
     switchMap((action: facebookActions.FacebookLoginSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({
-        date: new Date().toString(),
+      new friendActions.GetFriendsRequestAction({
         limit: null
       }),
       new featureActions.GetUserMetadataRequestAction({})

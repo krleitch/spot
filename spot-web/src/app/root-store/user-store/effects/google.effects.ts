@@ -7,7 +7,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 // store
 import * as googleActions from '../actions/google.actions';
 import * as featureActions from '../actions/actions';
-import * as friendsActions from '../../social-store/actions/friends.actions';
+import * as friendActions from '../../social-store/actions/friend.actions';
 
 // services
 import { AuthenticationService } from '@services/authentication.service';
@@ -55,8 +55,7 @@ export class GoogleStoreEffects {
       this.authenticationService.loginGoogleUserSuccess(action.response);
     }),
     switchMap((action: googleActions.GoogleLoginSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({
-        date: new Date().toString(),
+      new friendActions.GetFriendsRequestAction({
         limit: null
       }),
       new featureActions.GetUserMetadataRequestAction({})

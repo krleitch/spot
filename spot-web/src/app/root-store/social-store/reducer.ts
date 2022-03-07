@@ -2,7 +2,7 @@ import {
   NotificationsActionTypes,
   NotificationsActions
 } from './actions/notifications.actions';
-import { FriendsActionTypes, FriendsActions } from './actions/friends.actions';
+import { FriendsActionTypes, FriendsActions } from './actions/friend.actions';
 import { ActionTypes, Actions } from './actions/actions';
 import { State, initialState } from './state';
 
@@ -103,7 +103,7 @@ export function featureReducer(
         friends: action.response.friends
       };
     }
-    case FriendsActionTypes.ADD_FRIEND: {
+    case FriendsActionTypes.CREATE_FRIEND: {
       const newFriends = Array.from(state.friends);
       newFriends.unshift(action.request.friend);
       return {
@@ -111,11 +111,11 @@ export function featureReducer(
         friends: newFriends
       };
     }
-    case FriendsActionTypes.DELETE_FRIENDS_SUCCESS: {
+    case FriendsActionTypes.DELETE_FRIEND_SUCCESS: {
       const newFriends = Array.from(state.friends);
 
       newFriends.forEach((friend, i) => {
-        if (friend.id === action.response.friendId) {
+        if (friend.friendId === action.response.friendId) {
           newFriends.splice(i, 1);
         }
       });

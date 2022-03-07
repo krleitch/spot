@@ -28,7 +28,7 @@ import {
   AddNotificationRequest,
   AddNotificationSuccess
 } from '@models/notifications';
-import { Friend } from '@models/friends';
+import { Friend } from '@models/../newModels/friend';
 import { SpotError } from '@exceptions/error';
 import { ModalShareData } from '@models/modal';
 

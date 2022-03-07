@@ -7,7 +7,7 @@ import { mapTo, startWith, take, takeUntil } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
-  SocialStoreFriendsActions,
+  SocialStoreFriendActions,
   SocialStoreSelectors
 } from '@store/social-store';
 import {
@@ -17,29 +17,29 @@ import {
 
 // Services
 import { ModalService } from '@services/modal.service';
-import { FriendsService } from '@services/friends.service';
+import { FriendService } from '@src/app/services/friend.service';
 import { AuthenticationService } from '@services/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
   AcceptFriendRequest,
-  AcceptFriendRequestSuccess,
-  AddFriendRequest,
-  AddFriendRequestSuccess,
+  AcceptFriendResponse,
+  CreateFriendRequest,
+  CreateFriendResponse,
   AddFriendToStore,
   DeclineFriendRequest,
-  DeclineFriendRequestSuccess,
-  DeleteFriendsRequest,
+  DeclineFriendResponse,
+  DeleteFriendRequest,
   DeletePendingFriendRequest,
-  DeletePendingFriendSuccess,
+  DeletePendingFriendResponse,
   Friend,
-  GetFriendRequests,
-  GetFriendRequestsSuccess,
+  GetFriendRequestsRequest,
+  GetFriendRequestsResponse,
   GetFriendsRequest,
-  GetPendingFriendRequests,
-  GetPendingFriendRequestsSuccess
-} from '@models/friends';
+  GetPendingFriendsRequest,
+  GetPendingFriendsResponse
+} from '@models/../newModels/friend';
 import { FacebookConnectRequest } from '@models/../newModels/user';
 import { SpotError } from '@exceptions/error';
 
@@ -75,7 +75,7 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private store$: Store<RootStoreState.State>,
-    private friendsService: FriendsService,
+    private friendService: FriendService,
     private authenticationService: AuthenticationService,
     private modalService: ModalService,
     private translateService: TranslateService
@@ -99,39 +99,38 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     // Get all friend requests
-    const getFriendRequests: GetFriendRequests = {};
+    const getFriendRequests: GetFriendRequestsRequest = {};
 
-    this.friendsService
+    this.friendService
       .getFriendRequests(getFriendRequests)
       .pipe(take(1))
       .subscribe(
-        (response: GetFriendRequestsSuccess) => {
+        (response: GetFriendRequestsResponse) => {
           this.friendRequests = response.friendRequests;
         },
         (error: SpotError) => {}
       );
 
     // Get pending requests
-    const getPendingFriendRequests: GetPendingFriendRequests = {};
+    const getPendingFriendRequests: GetPendingFriendsRequest = {};
 
-    this.friendsService
-      .getPendingFriendRequests(getPendingFriendRequests)
+    this.friendService
+      .getPendingFriends(getPendingFriendRequests)
       .pipe(take(1))
       .subscribe(
-        (response: GetPendingFriendRequestsSuccess) => {
-          this.pendingFriendRequests = response.friendRequests;
+        (response: GetPendingFriendsResponse) => {
+          this.pendingFriendRequests = response.pendingFriends;
         },
         (error: SpotError) => {}
       );
 
     // Get all friends
     const getFriends: GetFriendsRequest = {
-      date: new Date().toString(),
       limit: null
     };
 
     this.store$.dispatch(
-      new SocialStoreFriendsActions.GetFriendsRequestAction(getFriends)
+      new SocialStoreFriendActions.GetFriendsRequestAction(getFriends)
     );
   }
 
@@ -165,18 +164,18 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Send the friend request
-    const request: AddFriendRequest = {
+    const request: CreateFriendRequest = {
       username: this.friendRequestUsername
     };
 
-    this.friendsService
-      .addFriendRequest(request)
+    this.friendService
+      .createFriend(request)
       .pipe(take(1))
       .subscribe(
-        (response: AddFriendRequestSuccess) => {
-          if (response.friend.confirmed_date) {
+        (response: CreateFriendResponse) => {
+          if (response.friend.confirmedAt) {
             this.friendRequests.forEach((friend, i) => {
-              if (friend.id === response.friend.id) {
+              if (friend.friendId === response.friend.friendId) {
                 this.friendRequests.splice(i, 1);
               }
             });
@@ -186,7 +185,7 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
             };
             // accept
             this.store$.dispatch(
-              new SocialStoreFriendsActions.AddFriendAction(addFriendRequest)
+              new SocialStoreFriendActions.AddFriendAction(addFriendRequest)
             );
           } else {
             this.pendingFriendRequests.push(response.friend);
@@ -204,13 +203,13 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
       friendRequestId: id
     };
 
-    this.friendsService
-      .acceptFriendRequests(request)
+    this.friendService
+      .acceptFriendRequest(request)
       .pipe(take(1))
       .subscribe(
-        (response: AcceptFriendRequestSuccess) => {
+        (response: AcceptFriendResponse) => {
           this.friendRequests.forEach((friend, i) => {
-            if (friend.id === response.friend.id) {
+            if (friend.friendId === response.friend.friendId) {
               this.friendRequests.splice(i, 1);
             }
           });
@@ -221,7 +220,7 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
 
           // accept
           this.store$.dispatch(
-            new SocialStoreFriendsActions.AddFriendAction(addFriendRequest)
+            new SocialStoreFriendActions.AddFriendAction(addFriendRequest)
           );
         },
         (response: { error: SpotError }) => {
@@ -235,13 +234,13 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
       friendRequestId: id
     };
 
-    this.friendsService
-      .declineFriendRequests(request)
+    this.friendService
+      .declineFriendRequest(request)
       .pipe(take(1))
       .subscribe(
-        (response: DeclineFriendRequestSuccess) => {
+        (response: DeclineFriendResponse) => {
           this.friendRequests.forEach((friend, i) => {
-            if (friend.id === id) {
+            if (friend.friendId === id) {
               this.friendRequests.splice(i, 1);
             }
           });
@@ -257,12 +256,12 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((result: { status: string }) => {
         if (result.status === 'confirm') {
           // Delete the friend
-          const request: DeleteFriendsRequest = {
+          const request: DeleteFriendRequest = {
             friendId: id
           };
 
           this.store$.dispatch(
-            new SocialStoreFriendsActions.DeleteFriendsRequestAction(request)
+            new SocialStoreFriendActions.DeleteFriendsRequestAction(request)
           );
         }
       });
@@ -276,16 +275,16 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
         if (result.status === 'confirm') {
           // Delete the friend
           const request: DeletePendingFriendRequest = {
-            friendRequestId: id
+            friendId: id
           };
 
-          this.friendsService
-            .deletePendingFriendRequest(request)
+          this.friendService
+            .deletePendingFriend(request)
             .pipe(take(1))
             .subscribe(
-              (response: DeletePendingFriendSuccess) => {
+              (response: DeletePendingFriendResponse) => {
                 this.pendingFriendRequests.forEach((friend, i) => {
-                  if (friend.id === response.friendRequestId) {
+                  if (friend.friendId === id) {
                     this.pendingFriendRequests.splice(i, 1);
                   }
                 });

@@ -33,7 +33,7 @@ import { AuthenticationService } from '@services/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
-import { Friend } from '@models/friends';
+import { Friend } from '@models/../newModels/friend';
 import { SpotError } from '@exceptions/error';
 import { User } from '@models/../newModels/user';
 import { UserMetadata } from '@models/../newModels/userMetadata';

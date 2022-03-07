@@ -15,12 +15,12 @@ import { Observable, from } from 'rxjs';
 import { RootStoreState } from '@store';
 import { Store, select } from '@ngrx/store';
 import {
-  SocialStoreFriendsActions,
+  SocialStoreFriendActions,
   SocialStoreSelectors
 } from '@store/social-store';
 
 // Assets
-import { Friend, GetFriendsRequest } from '@models/friends';
+import { Friend, GetFriendsRequest } from '@models/../newModels/friend';
 import { Tag } from '@models/notifications';
 
 @Component({

@@ -3,15 +3,15 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { SocialStoreEffects } from './effects/notifications.effects';
-import { FriendsEffects } from './effects/friends.effects';
+import { FriendEffects } from './effects/friend.effects';
 import { featureReducer } from './reducer';
 
 @NgModule({
   imports: [
     CommonModule,
     StoreModule.forFeature('social', featureReducer),
-    EffectsModule.forFeature([SocialStoreEffects, FriendsEffects])
+    EffectsModule.forFeature([SocialStoreEffects, FriendEffects])
   ],
-  providers: [SocialStoreEffects, FriendsEffects]
+  providers: [SocialStoreEffects, FriendEffects]
 })
 export class SocialStoreModule {}

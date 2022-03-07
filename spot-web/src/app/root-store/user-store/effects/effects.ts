@@ -6,7 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 // Store
 import * as userActions from '@src/app/root-store/user-store/actions/actions';
-import * as friendActions from '@store/social-store/actions/friends.actions';
+import * as friendActions from '@src/app/root-store/social-store/actions/friend.actions';
 import * as spotActions from '@src/app/root-store/spot-store/actions';
 import * as commentActions from '@src/app/root-store/comment-store/actions';
 import * as socialActions from '@store/social-store/actions/actions';
@@ -73,7 +73,6 @@ export class UserStoreEffects {
     }),
     switchMap((action: userActions.RegisterSuccessAction) => [
       new friendActions.GetFriendsRequestAction({
-        date: new Date().toString(),
         limit: null
       }),
       new userActions.GetUserMetadataRequestAction({})
@@ -105,7 +104,6 @@ export class UserStoreEffects {
     }),
     switchMap((action: userActions.LoginSuccessAction) => [
       new friendActions.GetFriendsRequestAction({
-        date: new Date().toString(),
         limit: null
       }),
       new userActions.GetUserMetadataRequestAction({})
@@ -179,7 +177,6 @@ export class UserStoreEffects {
     }),
     switchMap((action: userActions.UserSuccessAction) => [
       new friendActions.GetFriendsRequestAction({
-        date: new Date().toString(),
         limit: null
       }),
       new userActions.GetUserMetadataRequestAction({})

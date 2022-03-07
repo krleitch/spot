@@ -41,7 +41,7 @@ import {
 } from '@models/../newModels/comment';
 import { Tag } from '@models/notifications';
 import { Spot } from '@models/../newModels/spot';
-import { Friend } from '@models/friends';
+import { Friend } from '@models/../newModels/friend';
 import { SpotError } from '@exceptions/error';
 import { User } from '@models/../newModels/user';
 import { LocationData } from '@models/../newModels/location';

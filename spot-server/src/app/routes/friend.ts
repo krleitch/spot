@@ -2,8 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 // db
-import friends from '@db/friends.js';
-import accounts from '@db/accounts.js';
 import prismaUser from '@db/../prisma/user.js';
 import prismaFriend from '@db/../prisma/friend.js';
 
