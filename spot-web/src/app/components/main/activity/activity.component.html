@@ -57,11 +57,11 @@
               <div class="post-content">
                 <div
                   class="image"
-                  *ngIf="activity.image_src && userMetadata"
+                  *ngIf="activity.imageSrc && userMetadata"
                   (click)="activityClicked(activity)"
                 >
                   <img
-                    [src]="activity.image_src"
+                    [src]="activity.imageSrc"
                     [ngClass]="{
                       'image-blur':
                         activity.imageBlurred && userMetadata.matureFilter
@@ -132,7 +132,7 @@
             >
               <div class="activity-header">
                 <div class="date">
-                  <span *ngIf="activity.parent_id === null; else replyDate">
+                  <span *ngIf="activity.commentParentId === null; else replyDate">
                     {{ 'MAIN.ACTIVITY.DATE_COMMENT_PROMPT' | translate }}
                   </span>
                   <ng-template #replyDate>
@@ -145,7 +145,7 @@
                   class="comment-link"
                   [routerLink]="
                     '/spot/' +
-                    activity.post_link +
+                    activity.postLink +
                     '/comment/' +
                     activity.link
                   "
@@ -154,8 +154,8 @@
                 </a>
               </div>
               <div class="comment-content">
-                <div class="image" *ngIf="activity.image_src">
-                  <img [src]="activity.image_src" />
+                <div class="image" *ngIf="activity.imageSrc">
+                  <img [src]="activity.imageSrc" />
                 </div>
                 <div class="comment-info">
                   <div class="content-preview-comment">

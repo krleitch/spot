@@ -16,8 +16,8 @@ import spot from '@routes/spot.js';
 import root from '@routes/root.js';
 import user from '@routes/user.js';
 import comment from '@routes/comment.js';
-import notifications from '@routes/notifications.js';
-import friends from '@routes/friends.js';
+import notification from '@routes/notification.js';
+import friend from '@routes/friend.js';
 import authentication from '@routes/authentication.js';
 import admin from '@routes/admin.js';
 
@@ -80,8 +80,8 @@ app.use(
 
 // Required Auth
 app.use('/user', authenticationService.requiredAuth, user);
-app.use('/notifications', authenticationService.requiredAuth, notifications);
-app.use('/friends', authenticationService.requiredAuth, friends);
+app.use('/notification', authenticationService.requiredAuth, notification);
+app.use('/friend', authenticationService.requiredAuth, friend);
 
 // Required Auth + roles
 app.use(
@@ -96,7 +96,7 @@ app.use(errorHandler.errorMiddleware);
 
 app
   .listen(port, () => {
-    console.log(`Server is listening on ${port}`);
+    console.log(`Spot Server is listening on port ${port}`);
   })
   .on('error', (err: Error) => {
     console.log(`Error listening`);

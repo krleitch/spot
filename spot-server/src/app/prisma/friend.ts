@@ -16,7 +16,12 @@ const createFriend = async (
   return friend;
 };
 
-const findAllFriend = async (userId: string): Promise<P.Friend[]> => {
+const findAllFriend = async (
+  userId: string,
+  before: string | undefined,
+  after: string | undefined,
+  limit: number
+): Promise<P.Friend[]> => {
   const friend = await prisma.friend.findMany({
     where: {
       OR: [
@@ -158,5 +163,5 @@ export default {
   deleteFriendById,
   friendExists,
   acceptFriendRequest,
-  declineFriendRequest,
+  declineFriendRequest
 };
