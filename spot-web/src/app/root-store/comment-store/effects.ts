@@ -13,19 +13,15 @@ import * as featureActions from './actions';
 import * as spotActions from '@src/app/root-store/spot-store/actions';
 
 // services
-import { CommentService } from '../../services/comments.service';
+import { CommentService } from '../../services/comment.service';
 
 // assets
 import {
-  DeleteCommentSuccess,
-  DeleteReplySuccess,
-  DislikeCommentSuccess,
-  DislikeReplySuccess,
-  LikeCommentSuccess,
-  LikeReplySuccess,
-  UnratedCommentSuccess,
-  UnratedReplySuccess
-} from '@models/comments';
+  DeleteCommentResponse,
+  DeleteReplyResponse,
+  RateCommentResponse,
+  RateReplyResponse
+} from '@models/../newModels/comment';
 
 @Injectable()
 export class CommentStoreEffects {
@@ -56,8 +52,12 @@ export class CommentStoreEffects {
     switchMap((action) =>
       this.commentService.deleteComment(action.request).pipe(
         map(
-          (response: DeleteCommentSuccess) =>
-            new featureActions.DeleteSuccessAction(response)
+          (response: DeleteCommentResponse) =>
+            new featureActions.DeleteSuccessAction({
+              response: response,
+              spotId: action.request.spotId,
+              commentId: action.request.commentId
+            })
         ),
         catchError((errorResponse) =>
           observableOf(
@@ -76,8 +76,13 @@ export class CommentStoreEffects {
     switchMap((action) =>
       this.commentService.deleteReply(action.request).pipe(
         map(
-          (response: DeleteReplySuccess) =>
-            new featureActions.DeleteReplySuccessAction(response)
+          (response: DeleteReplyResponse) =>
+            new featureActions.DeleteReplySuccessAction({
+              response: response,
+              spotId: action.request.spotId,
+              commentId: action.request.commentId,
+              replyId: action.request.replyId
+            })
         ),
         catchError((errorResponse) =>
           observableOf(
@@ -89,15 +94,20 @@ export class CommentStoreEffects {
   );
 
   @Effect()
-  dislikeCommentEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.DislikeRequestAction>(
-      featureActions.ActionTypes.DISLIKE_REQUEST
+  rateCommentEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.RateRequestAction>(
+      featureActions.ActionTypes.RATE_REQUEST
     ),
     switchMap((action) =>
-      this.commentService.dislikeComment(action.request).pipe(
+      this.commentService.rateComment(action.request).pipe(
         map(
-          (response: DislikeCommentSuccess) =>
-            new featureActions.DislikeSuccessAction(response)
+          (response: RateCommentResponse) =>
+            new featureActions.RateSuccessAction({
+              response: response,
+              spotId: action.request.spotId,
+              commentId: action.request.commentId,
+              rating: action.request.rating
+            })
         ),
         catchError((errorResponse) =>
           observableOf(
@@ -109,95 +119,21 @@ export class CommentStoreEffects {
   );
 
   @Effect()
-  likeCommentEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LikeRequestAction>(
-      featureActions.ActionTypes.LIKE_REQUEST
+  rateReplytEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.RateReplyRequestAction>(
+      featureActions.ActionTypes.RATE_REPLY_REQUEST
     ),
     switchMap((action) =>
-      this.commentService.likeComment(action.request).pipe(
+      this.commentService.rateReply(action.request).pipe(
         map(
-          (response: LikeCommentSuccess) =>
-            new featureActions.LikeSuccessAction(response)
-        ),
-        catchError((errorResponse) =>
-          observableOf(
-            new featureActions.GenericFailureAction(errorResponse.error)
-          )
-        )
-      )
-    )
-  );
-
-  @Effect()
-  unratedCommentEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.UnratedRequestAction>(
-      featureActions.ActionTypes.UNRATED_REQUEST
-    ),
-    switchMap((action) =>
-      this.commentService.unratedComment(action.request).pipe(
-        map(
-          (response: UnratedCommentSuccess) =>
-            new featureActions.UnratedSuccessAction(response)
-        ),
-        catchError((errorResponse) =>
-          observableOf(
-            new featureActions.GenericFailureAction(errorResponse.error)
-          )
-        )
-      )
-    )
-  );
-
-  @Effect()
-  dislikeReplytEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.DislikeReplyRequestAction>(
-      featureActions.ActionTypes.DISLIKE_REPLY_REQUEST
-    ),
-    switchMap((action) =>
-      this.commentService.dislikeReply(action.request).pipe(
-        map(
-          (response: DislikeReplySuccess) =>
-            new featureActions.DislikeReplySuccessAction(response)
-        ),
-        catchError((errorResponse) =>
-          observableOf(
-            new featureActions.GenericFailureAction(errorResponse.error)
-          )
-        )
-      )
-    )
-  );
-
-  @Effect()
-  likeReplyEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LikeReplyRequestAction>(
-      featureActions.ActionTypes.LIKE_REPLY_REQUEST
-    ),
-    switchMap((action) =>
-      this.commentService.likeReply(action.request).pipe(
-        map(
-          (response: LikeReplySuccess) =>
-            new featureActions.LikeReplySuccessAction(response)
-        ),
-        catchError((errorResponse) =>
-          observableOf(
-            new featureActions.GenericFailureAction(errorResponse.error)
-          )
-        )
-      )
-    )
-  );
-
-  @Effect()
-  unratedReplyEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.UnratedReplyRequestAction>(
-      featureActions.ActionTypes.UNRATED_REPLY_REQUEST
-    ),
-    switchMap((action) =>
-      this.commentService.unratedReply(action.request).pipe(
-        map(
-          (response: UnratedReplySuccess) =>
-            new featureActions.UnratedReplySuccessAction(response)
+          (response: RateReplyResponse) =>
+            new featureActions.RateReplySuccessAction({
+              response: response,
+              spotId: action.request.spotId,
+              commentId: action.request.commentId,
+              replyId: action.request.replyId,
+              rating: action.request.rating
+            })
         ),
         catchError((errorResponse) =>
           observableOf(
@@ -217,7 +153,9 @@ export class CommentStoreEffects {
       // none
     }),
     switchMap((action: featureActions.AddCommentRequestAction) => [
-      new spotActions.CreateCommentAction({ spotId: action.request.postId })
+      new spotActions.CreateCommentAction({
+        spotId: action.request.comment.spotId
+      })
     ])
   );
 
@@ -230,7 +168,9 @@ export class CommentStoreEffects {
       // none
     }),
     switchMap((action: featureActions.AddReplyRequestAction) => [
-      new spotActions.CreateCommentAction({ spotId: action.request.postId })
+      new spotActions.CreateCommentAction({
+        spotId: action.request.reply.spotId
+      })
     ])
   );
 
@@ -243,7 +183,7 @@ export class CommentStoreEffects {
       // none
     }),
     switchMap((action: featureActions.DeleteSuccessAction) => [
-      new spotActions.DeleteCommentAction({ spotId: action.response.postId })
+      new spotActions.DeleteCommentAction({ spotId: action.response.spotId })
     ])
   );
 
@@ -256,7 +196,7 @@ export class CommentStoreEffects {
       // none
     }),
     switchMap((action: featureActions.DeleteReplySuccessAction) => [
-      new spotActions.DeleteCommentAction({ spotId: action.response.postId })
+      new spotActions.DeleteCommentAction({ spotId: action.response.spotId })
     ])
   );
 }

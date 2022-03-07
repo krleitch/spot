@@ -77,7 +77,6 @@ export interface CreateCommentResponse {
   comment: Comment;
 }
 export interface AddCommentStoreRequest {
-  spotId: string;
   comment: Comment;
 }
 

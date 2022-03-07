@@ -44,19 +44,25 @@ export class CommentService {
 
   getComments(request: GetCommentsRequest): Observable<GetCommentsResponse> {
     let params = new HttpParams();
-    params = params.append('date', request.date);
-    if (request.commentLink) {
-      params = params.append('comment', request.commentLink);
+    if (request.after) {
+      params = params.append('after', request.after);
     }
-    params = params.append('type', request.type);
+    if (request.before) {
+      params = params.append('before', request.before);
+    }
+    if (request.commentLink) {
+      params = params.append('commentLink', request.commentLink);
+    }
     params = params.append('limit', request.limit.toString());
     return this.http.get<GetCommentsResponse>(
-      `${this.baseUrl}/comments/${request.postId}`,
+      `${this.baseUrl}/comment/${request.spotId}`,
       { params }
     );
   }
 
-  addComment(request: CreateCommentRequest): Observable<CreateCommentResponse> {
+  createComment(
+    request: CreateCommentRequest
+  ): Observable<CreateCommentResponse> {
     const formData = new FormData();
     formData.append('json', JSON.stringify(request));
 
@@ -65,7 +71,7 @@ export class CommentService {
     }
 
     return this.http.post<CreateCommentResponse>(
-      `${this.baseUrl}/comments/${request.postId}`,
+      `${this.baseUrl}/comment/${request.spotId}`,
       formData
     );
   }
@@ -74,26 +80,29 @@ export class CommentService {
     request: DeleteCommentRequest
   ): Observable<DeleteCommentResponse> {
     return this.http.delete<DeleteCommentResponse>(
-      `${this.baseUrl}/comments/${request.postId}/${request.commentId}`
+      `${this.baseUrl}/comment/${request.spotId}/${request.commentId}`
     );
   }
 
   getReplies(request: GetRepliesRequest): Observable<GetRepliesResponse> {
     let params = new HttpParams();
-    if (request.date) {
-      params = params.append('date', request.date);
+    if (request.after) {
+      params = params.append('after', request.after);
+    }
+    if (request.before) {
+      params = params.append('before', request.before);
     }
     if (request.replyLink) {
-      params = params.append('reply', request.replyLink);
+      params = params.append('replyLink', request.replyLink);
     }
     params = params.append('limit', request.limit.toString());
     return this.http.get<GetRepliesResponse>(
-      `${this.baseUrl}/comments/${request.postId}/${request.commentId}`,
+      `${this.baseUrl}/comment/${request.spotId}/${request.commentId}`,
       { params }
     );
   }
 
-  addReply(request: CreateReplyRequest): Observable<CreateReplyResponse> {
+  createReply(request: CreateReplyRequest): Observable<CreateReplyResponse> {
     const formData = new FormData();
     formData.append('json', JSON.stringify(request));
 
@@ -102,20 +111,20 @@ export class CommentService {
     }
 
     return this.http.post<CreateReplyResponse>(
-      `${this.baseUrl}/comments/${request.postId}/${request.commentId}`,
+      `${this.baseUrl}/comment/${request.spotId}/${request.commentId}`,
       formData
     );
   }
 
   deleteReply(request: DeleteReplyRequest): Observable<DeleteReplyResponse> {
     return this.http.delete<DeleteReplyResponse>(
-      `${this.baseUrl}/comments/${request.postId}/${request.parentId}/${request.commentId}`
+      `${this.baseUrl}/comment/${request.spotId}/${request.commentId}/${request.replyId}`
     );
   }
 
   rateComment(request: RateCommentRequest): Observable<RateCommentResponse> {
     return this.http.put<RateCommentResponse>(
-      `${this.baseUrl}/comments/${request.spotId}/${request.commentId}/${request.rating}`,
+      `${this.baseUrl}/comment/${request.spotId}/${request.commentId}/${request.rating}`,
       request
     );
   }
@@ -124,14 +133,14 @@ export class CommentService {
     request: ReportCommentRequest
   ): Observable<ReportCommentResponse> {
     return this.http.put<ReportCommentResponse>(
-      `${this.baseUrl}/comments/${request.postId}/${request.commentId}/report`,
+      `${this.baseUrl}/comment/${request.spotId}/${request.commentId}/report`,
       request
     );
   }
 
   getCommentActivity(
     request: GetCommentActivityRequest
-  ): Observable<GetCommentActivityRequest> {
+  ): Observable<GetCommentActivityResponse> {
     let params = new HttpParams();
     if (request.before) {
       params = params.append('before', request.before);
@@ -140,15 +149,15 @@ export class CommentService {
       params = params.append('after', request.after);
     }
     params = params.append('limit', request.limit.toString());
-    return this.http.get<GetCommentActivityRequest>(
-      `${this.baseUrl}/comments/activity`,
+    return this.http.get<GetCommentActivityResponse>(
+      `${this.baseUrl}/comment/activity`,
       { params }
     );
   }
 
   rateReply(request: RateReplyRequest): Observable<RateReplyResponse> {
     return this.http.put<RateReplyResponse>(
-      `${this.baseUrl}/comments/${request.spotId}/${request.commentId}/${request.commentId}/${request.rating}`,
+      `${this.baseUrl}/comment/${request.spotId}/${request.commentId}/${request.commentId}/${request.rating}`,
       request
     );
   }

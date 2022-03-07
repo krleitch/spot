@@ -244,30 +244,31 @@ const updateNsfw = async (
 // Activity
 const findCommentActivity = async (
   userId: string,
-  before: Date | undefined,
-  after: Date | undefined,
+  before: string | undefined,
+  after: string | undefined,
   limit: number
 ): Promise<P.Comment[]> => {
   const maxActivityBeforeDate = new Date();
   maxActivityBeforeDate.setDate(
     maxActivityBeforeDate.getDate() - COMMENT_CONSTANTS.ACTIVITY_DAYS
   );
-  before =
-    before && before > maxActivityBeforeDate ? before : maxActivityBeforeDate;
 
   const comment = await prisma.comment.findMany({
     where: {
       owner: userId,
       deletedAt: null,
       createdAt: {
-        lt: after,
-        gt: before
+        gt: maxActivityBeforeDate
       }
+    },
+    cursor: {
+      commentId: after
     },
     orderBy: {
       createdAt: 'desc'
     },
-    take: limit
+    take: before ? -limit : limit,
+    skip: before || after ? 1 : 0
   });
   return comment;
 };

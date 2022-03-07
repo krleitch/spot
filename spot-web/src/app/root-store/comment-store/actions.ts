@@ -13,7 +13,8 @@ import {
   RateReplyRequest,
   RateReplyResponse,
   SetCommentsStoreRequest,
-  SetRepliesStoreRequest
+  SetRepliesStoreRequest,
+  CommentRatingType
 } from '@models/../newModels/comment';
 import { SpotError } from '@exceptions/error';
 
@@ -67,7 +68,13 @@ export class DeleteRequestAction implements Action {
 
 export class DeleteSuccessAction implements Action {
   readonly type = ActionTypes.DELETE_SUCCESS;
-  constructor(public response: DeleteCommentResponse) {}
+  constructor(
+    public response: {
+      response: DeleteCommentResponse;
+      spotId: string;
+      commentId: string;
+    }
+  ) {}
 }
 
 export class AddReplyRequestAction implements Action {
@@ -87,7 +94,14 @@ export class DeleteReplyRequestAction implements Action {
 
 export class DeleteReplySuccessAction implements Action {
   readonly type = ActionTypes.DELETE_REPLY_SUCCESS;
-  constructor(public response: DeleteReplyResponse) {}
+  constructor(
+    public response: {
+      response: DeleteReplyResponse;
+      spotId: string;
+      commentId: string;
+      replyId: string;
+    }
+  ) {}
 }
 
 export class RateRequestAction implements Action {
@@ -97,7 +111,14 @@ export class RateRequestAction implements Action {
 
 export class RateSuccessAction implements Action {
   readonly type = ActionTypes.RATE_SUCCESS;
-  constructor(public response: RateCommentResponse) {}
+  constructor(
+    public response: {
+      response: RateCommentResponse;
+      spotId: string;
+      commentId: string;
+      rating: CommentRatingType;
+    }
+  ) {}
 }
 
 export class RateReplyRequestAction implements Action {
@@ -107,7 +128,15 @@ export class RateReplyRequestAction implements Action {
 
 export class RateReplySuccessAction implements Action {
   readonly type = ActionTypes.RATE_REPLY_SUCCESS;
-  constructor(public response: RateReplyResponse) {}
+  constructor(
+    public response: {
+      response: RateReplyResponse;
+      spotId: string;
+      commentId: string;
+      replyId: string;
+      rating: CommentRatingType;
+    }
+  ) {}
 }
 
 export type Actions =
@@ -116,9 +145,11 @@ export type Actions =
   | SetCommentsRequestAction
   | DeleteRequestAction
   | DeleteSuccessAction
+  | RateSuccessAction
   | SetRepliesRequestAction
   | AddReplyRequestAction
   | DeleteReplyRequestAction
   | DeleteReplySuccessAction
+  | RateReplySuccessAction
   | GenericFailureAction
   | ResetStoreAction;

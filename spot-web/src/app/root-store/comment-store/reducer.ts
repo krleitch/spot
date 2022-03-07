@@ -1,6 +1,6 @@
 import { ActionTypes, Actions } from './actions';
 import { State, initialState } from './state';
-import { Comment } from '@models/comments';
+import { Comment, CommentRatingType } from '@models/../newModels/comment';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
@@ -11,13 +11,13 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.CLEAR_COMMENTS_REQUEST: {
       const newComments = Object.assign({}, state.comments);
-      newComments[action.request.postId] = {
+      newComments[action.request.spotId] = {
         comments: [],
         totalCommentsBefore: 0,
         totalCommentsAfter: 0
       };
       const newReplies = Object.assign({}, state.replies);
-      newReplies[action.request.postId] = {};
+      newReplies[action.request.spotId] = {};
       return {
         comments: newComments,
         replies: newReplies
@@ -25,19 +25,21 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.ADD_COMMENT_REQUEST: {
       const newComments = Object.assign({}, state.comments);
-      if (newComments[action.request.postId] === undefined) {
+      if (newComments[action.request.comment.spotId] === undefined) {
         // initialize the comments
-        newComments[action.request.postId] = {
+        newComments[action.request.comment.spotId] = {
           comments: [action.request.comment],
           totalCommentsAfter: 0,
           totalCommentsBefore: 0
         };
       } else {
         // otherwise just add the comment
-        const newArr = Array.from(newComments[action.request.postId].comments);
+        const newArr = Array.from(
+          newComments[action.request.comment.spotId].comments
+        );
         newArr.unshift(action.request.comment);
-        newComments[action.request.postId] = {
-          ...newComments[action.request.postId],
+        newComments[action.request.comment.spotId] = {
+          ...newComments[action.request.comment.spotId],
           comments: newArr
         };
       }
@@ -49,23 +51,23 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.DELETE_SUCCESS: {
       const newComments = Object.assign({}, state.comments);
 
-      newComments[action.response.postId].comments.forEach((comment, i) => {
-        if (comment.id === action.response.commentId) {
-          const newObj = Object.assign({}, newComments[action.response.postId]);
+      newComments[action.response.spotId].comments.forEach((comment, i) => {
+        if (comment.commentId === action.response.commentId) {
+          const newObj = Object.assign({}, newComments[action.response.spotId]);
           const newArr = Array.from(newObj.comments);
           newArr.splice(i, 1);
           newObj.comments = newArr;
-          newComments[action.response.postId] = newObj;
+          newComments[action.response.spotId] = newObj;
         }
       });
 
       const newReplies = Object.assign({}, state.replies);
       const newRepliesInner = Object.assign(
         {},
-        newReplies[action.response.postId]
+        newReplies[action.response.spotId]
       );
       delete newRepliesInner[action.response.commentId];
-      newReplies[action.response.postId] = newRepliesInner;
+      newReplies[action.response.spotId] = newRepliesInner;
 
       return {
         ...state,
@@ -78,10 +80,10 @@ export function featureReducer(state = initialState, action: Actions): State {
 
       // initialize if needed
       if (
-        newComments[action.request.postId] === undefined ||
+        newComments[action.request.spotId] === undefined ||
         action.request.initialLoad
       ) {
-        newComments[action.request.postId] = {
+        newComments[action.request.spotId] = {
           comments: [],
           totalCommentsAfter: 0,
           totalCommentsBefore: 0
@@ -93,26 +95,26 @@ export function featureReducer(state = initialState, action: Actions): State {
         'totalCommentsAfter'
       )
         ? action.request.totalCommentsAfter
-        : newComments[action.request.postId].totalCommentsAfter;
+        : newComments[action.request.spotId].totalCommentsAfter;
       const newTotalCommentsBefore = Object.prototype.hasOwnProperty.call(
         action.request,
         'totalCommentsBefore'
       )
         ? action.request.totalCommentsBefore
-        : newComments[action.request.postId].totalCommentsBefore;
+        : newComments[action.request.spotId].totalCommentsBefore;
 
       // after or before
       if (action.request.type === 'after') {
-        newComments[action.request.postId] = {
+        newComments[action.request.spotId] = {
           comments: action.request.comments.concat(
-            newComments[action.request.postId].comments
+            newComments[action.request.spotId].comments
           ),
           totalCommentsAfter: newTotalCommentsAfter,
           totalCommentsBefore: newTotalCommentsBefore
         };
       } else {
-        newComments[action.request.postId] = {
-          comments: newComments[action.request.postId].comments.concat(
+        newComments[action.request.spotId] = {
+          comments: newComments[action.request.spotId].comments.concat(
             action.request.comments
           ),
           totalCommentsAfter: newTotalCommentsAfter,
@@ -183,37 +185,38 @@ export function featureReducer(state = initialState, action: Actions): State {
       const newReplies = Object.assign({}, state.replies);
 
       // initialize outer object
-      if (newReplies[action.request.postId] === undefined) {
-        newReplies[action.request.postId] = {};
+      if (newReplies[action.request.reply.spotId] === undefined) {
+        newReplies[action.request.reply.spotId] = {};
       }
       // initialize or add to inner
       if (
-        newReplies[action.request.postId][action.request.commentId] ===
-        undefined
+        newReplies[action.request.reply.spotId][
+          action.request.reply.parentCommentId
+        ] === undefined
       ) {
         const newRepliesInner = {};
-        newRepliesInner[action.request.commentId] = {
+        newRepliesInner[action.request.reply.parentCommentId] = {
           replies: [action.request.reply]
         };
-        newReplies[action.request.postId] = newRepliesInner;
+        newReplies[action.request.reply.spotId] = newRepliesInner;
       } else {
         const newRepliesInner = Object.assign(
           {},
-          newReplies[action.request.postId]
+          newReplies[action.request.reply.spotId]
         );
         const newArr = Array.from(
-          newRepliesInner[action.request.commentId].replies
+          newRepliesInner[action.request.reply.parentCommentId].replies
         );
         newArr.push(action.request.reply);
         const newTag =
           action.request.reply.tag.tagged ||
-          newRepliesInner[action.request.commentId].tagged;
-        newRepliesInner[action.request.commentId] = {
-          ...newRepliesInner[action.request.commentId],
+          newRepliesInner[action.request.reply.parentCommentId].tagged;
+        newRepliesInner[action.request.reply.parentCommentId] = {
+          ...newRepliesInner[action.request.reply.parentCommentId],
           replies: newArr,
           tagged: newTag
         };
-        newReplies[action.request.postId] = newRepliesInner;
+        newReplies[action.request.reply.spotId] = newRepliesInner;
       }
       return {
         ...state,
@@ -224,51 +227,66 @@ export function featureReducer(state = initialState, action: Actions): State {
       const newReplies = Object.assign({}, state.replies);
       const newRepliesInner = Object.assign(
         {},
-        newReplies[action.response.postId]
+        newReplies[action.response.spotId]
       );
 
-      newRepliesInner[action.response.parentId].replies.forEach(
+      newRepliesInner[action.response.commentId].replies.forEach(
         (comment, i) => {
-          if (comment.id === action.response.commentId) {
+          if (comment.commentId === action.response.replyId) {
             const newArr = Array.from(
-              newRepliesInner[action.response.parentId].replies
+              newRepliesInner[action.response.commentId].replies
             );
             newArr.splice(i, 1);
             const newTag =
               newArr.filter((x: Comment) => x.tag.tagged).length > 0;
-            newRepliesInner[action.response.parentId] = {
-              ...newRepliesInner[action.response.parentId],
+            newRepliesInner[action.response.commentId] = {
+              ...newRepliesInner[action.response.commentId],
               replies: newArr,
               tagged: newTag
             };
           }
         }
       );
-      newReplies[action.response.postId] = newRepliesInner;
+      newReplies[action.response.spotId] = newRepliesInner;
       return {
         ...state,
         replies: newReplies
       };
     }
-    case ActionTypes.LIKE_SUCCESS: {
+    case ActionTypes.RATE_SUCCESS: {
       const newComments = Object.assign({}, state.comments);
-      const newArr = Array.from(newComments[action.response.postId].comments);
+      const newArr = Array.from(newComments[action.response.spotId].comments);
 
-      newComments[action.response.postId].comments.forEach(
-        (comment: any, i) => {
-          if (comment.id === action.response.commentId) {
+      newComments[action.response.spotId].comments.forEach(
+        (comment: Comment, i) => {
+          if (comment.commentId === action.response.commentId) {
             const newObj = Object.assign({}, comment);
-            newObj.likes += 1;
-            if (comment.rated === 0) {
+            // remove old rating
+            if (comment.myRating === CommentRatingType.LIKE) {
+              newObj.likes -= 1;
+            }
+            if (comment.myRating === CommentRatingType.DISLIKE) {
               newObj.dislikes -= 1;
             }
-            newObj.rated = 1;
+            switch (action.response.rating) {
+              case CommentRatingType.LIKE:
+                newObj.likes += 1;
+                break;
+              case CommentRatingType.DISLIKE:
+                newObj.dislikes += 1;
+                break;
+              case CommentRatingType.NONE:
+                break;
+              default:
+                break;
+            }
+            newObj.myRating = action.response.rating;
             newArr[i] = newObj;
           }
         }
       );
-      newComments[action.response.postId] = {
-        ...newComments[action.response.postId],
+      newComments[action.response.spotId] = {
+        ...newComments[action.response.spotId],
         comments: newArr
       };
       return {
@@ -276,159 +294,51 @@ export function featureReducer(state = initialState, action: Actions): State {
         comments: newComments
       };
     }
-    case ActionTypes.DISLIKE_SUCCESS: {
-      const newComments = Object.assign({}, state.comments);
-      const newArr = Array.from(newComments[action.response.postId].comments);
-
-      newComments[action.response.postId].comments.forEach((comment, i) => {
-        if (comment.id === action.response.commentId) {
-          const newObj = Object.assign({}, comment);
-          newObj.dislikes += 1;
-          if (comment.rated === 1) {
-            newObj.likes -= 1;
-          }
-          newObj.rated = 0;
-          newArr[i] = newObj;
-        }
-      });
-      newComments[action.response.postId] = {
-        ...newComments[action.response.postId],
-        comments: newArr
-      };
-      return {
-        ...state,
-        comments: newComments
-      };
-    }
-    case ActionTypes.UNRATED_SUCCESS: {
-      const newComments = Object.assign({}, state.comments);
-      const newArr = Array.from(newComments[action.response.postId].comments);
-
-      newComments[action.response.postId].comments.forEach((comment, i) => {
-        if (comment.id === action.response.commentId) {
-          const newObj = Object.assign({}, comment);
-          if (comment.rated === 1) {
-            newObj.likes -= 1;
-          } else if (comment.rated === 0) {
-            newObj.dislikes -= 1;
-          }
-          newObj.rated = -1;
-          newArr[i] = newObj;
-        }
-      });
-      newComments[action.response.postId] = {
-        ...newComments[action.response.postId],
-        comments: newArr
-      };
-      return {
-        ...state,
-        comments: newComments
-      };
-    }
-    case ActionTypes.LIKE_REPLY_SUCCESS: {
+    case ActionTypes.RATE_REPLY_SUCCESS: {
       const newReplies = Object.assign({}, state.replies);
       const newRepliesInner = Object.assign(
         {},
-        newReplies[action.response.postId]
+        newReplies[action.response.spotId]
       );
       const newArr = Array.from(
-        newReplies[action.response.postId][action.response.parentId].replies
+        newReplies[action.response.spotId][action.response.commentId].replies
       );
       const newTag =
-        newReplies[action.response.postId][action.response.parentId].tagged;
+        newReplies[action.response.spotId][action.response.commentId].tagged;
 
-      newReplies[action.response.postId][
-        action.response.parentId
+      newReplies[action.response.spotId][
+        action.response.commentId
       ].replies.forEach((reply, i) => {
-        if (reply.id === action.response.commentId) {
+        if (reply.commentId === action.response.replyId) {
           const newObj = Object.assign({}, reply);
-          newObj.likes += 1;
-          if (reply.rated === 0) {
-            newObj.dislikes -= 1;
-          }
-          newObj.rated = 1;
-          newArr[i] = newObj;
-        }
-      });
-      newRepliesInner[action.response.parentId] = {
-        ...newRepliesInner[action.response.parentId],
-        replies: newArr,
-        tagged: newTag
-      };
-      newReplies[action.response.postId] = newRepliesInner;
-      return {
-        ...state,
-        replies: newReplies
-      };
-    }
-    case ActionTypes.DISLIKE_REPLY_SUCCESS: {
-      const newReplies = Object.assign({}, state.replies);
-      const newRepliesInner = Object.assign(
-        {},
-        newReplies[action.response.postId]
-      );
-      const newArr = Array.from(
-        newReplies[action.response.postId][action.response.parentId].replies
-      );
-      const newTag =
-        newReplies[action.response.postId][action.response.parentId].tagged;
-
-      newReplies[action.response.postId][
-        action.response.parentId
-      ].replies.forEach((reply, i) => {
-        if (reply.id === action.response.commentId) {
-          const newObj = Object.assign({}, reply);
-          newObj.dislikes += 1;
-          if (reply.rated === 1) {
+          if (reply.myRating === CommentRatingType.LIKE) {
             newObj.likes -= 1;
           }
-          newObj.rated = 0;
-          newArr[i] = newObj;
-        }
-      });
-      newRepliesInner[action.response.parentId] = {
-        ...newRepliesInner[action.response.parentId],
-        replies: newArr,
-        tagged: newTag
-      };
-      newReplies[action.response.postId] = newRepliesInner;
-      return {
-        ...state,
-        replies: newReplies
-      };
-    }
-    case ActionTypes.UNRATED_REPLY_SUCCESS: {
-      const newReplies = Object.assign({}, state.replies);
-      const newRepliesInner = Object.assign(
-        {},
-        newReplies[action.response.postId]
-      );
-      const newArr = Array.from(
-        newReplies[action.response.postId][action.response.parentId].replies
-      );
-      const newTag =
-        newReplies[action.response.postId][action.response.parentId].tagged;
-
-      newReplies[action.response.postId][
-        action.response.parentId
-      ].replies.forEach((reply, i) => {
-        if (reply.id === action.response.commentId) {
-          const newObj = Object.assign({}, reply);
-          if (reply.rated === 1) {
-            newObj.likes -= 1;
-          } else if (reply.rated === 0) {
+          if (reply.myRating === CommentRatingType.DISLIKE) {
             newObj.dislikes -= 1;
           }
-          newObj.rated = -1;
+          switch (action.response.rating) {
+            case CommentRatingType.LIKE:
+              newObj.likes += 1;
+              break;
+            case CommentRatingType.DISLIKE:
+              newObj.dislikes += 1;
+              break;
+            case CommentRatingType.NONE:
+              break;
+            default:
+              break;
+          }
+          newObj.myRating = action.response.rating;
           newArr[i] = newObj;
         }
       });
-      newRepliesInner[action.response.parentId] = {
-        ...newRepliesInner[action.response.parentId],
+      newRepliesInner[action.response.commentId] = {
+        ...newRepliesInner[action.response.commentId],
         replies: newArr,
         tagged: newTag
       };
-      newReplies[action.response.postId] = newRepliesInner;
+      newReplies[action.response.spotId] = newRepliesInner;
       return {
         ...state,
         replies: newReplies

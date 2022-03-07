@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 
 import { SpotStoreModule } from './spot-store';
 import { UserStoreModule } from './user-store';
-import { CommentsStoreModule } from './comments-store/comments-store.module';
+import { CommentStoreModule } from './comment-store/comment-store.module';
 import { SocialStoreModule } from './social-store/social-store.module';
 
 @NgModule({
@@ -13,7 +13,7 @@ import { SocialStoreModule } from './social-store/social-store.module';
     CommonModule,
     SpotStoreModule,
     UserStoreModule,
-    CommentsStoreModule,
+    CommentStoreModule,
     SocialStoreModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([])
