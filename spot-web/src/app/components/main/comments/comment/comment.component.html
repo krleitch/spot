@@ -9,7 +9,7 @@
           <i
             class="material-icons vote"
             (click)="like()"
-            [ngClass]="{ highlight: comment.rated === 1 }"
+            [ngClass]="{ highlight: comment.myRating === eCommentRatingType.LIKE }"
           >
             keyboard_arrow_up
           </i>
@@ -17,14 +17,14 @@
           <i
             class="material-icons vote"
             (click)="dislike()"
-            [ngClass]="{ highlight: comment.rated === 0 }"
+            [ngClass]="{ highlight: comment.myRating === eCommentRatingType.DISLIKE }"
           >
             keyboard_arrow_down
           </i>
         </div>
 
         <div
-          [class]="getProfilePictureClass(comment.profilePicture)"
+          [class]="getProfilePictureClass(comment.profilePictureNum)"
           [ngClass]="{ 'profile-owned': comment.owned }"
         >
           <img
@@ -62,12 +62,12 @@
 
         <div *ngIf="userMetadata$ | async as userMetadata">
           <div
-            *ngIf="comment.image_src !== null"
+            *ngIf="comment.imageSrc !== null"
             (click)="imageClicked()"
             class="image"
           >
             <img
-              [src]="comment.image_src"
+              [src]="comment.imageSrc"
               [ngClass]="{
                 'image-blur': imageBlurred && userMetadata.matureFilter
               }"
@@ -153,7 +153,7 @@
           <div class="dropdown-content" [ngClass]="{ show: optionsEnabled }">
             <div
               class="button"
-              (click)="openReportModal(comment.post_id, comment.id)"
+              (click)="openReportModal(comment.spotId, comment.commentId)"
             >
               <span class="material-icons icon"> outlined_flag </span>
               {{ 'MAIN.COMMENTS.REPORT' | translate }}
@@ -161,7 +161,7 @@
             <div
               class="button"
               (click)="
-                openShareModal(spot.spotId, spot.link, comment.id, comment.link)
+                openShareModal(spot.spotId, spot.link, comment.commentId, comment.link)
               "
             >
               <span class="material-icons icon"> share </span>

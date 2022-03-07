@@ -18,15 +18,15 @@ import { mapTo, startWith, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
-  CommentsStoreActions,
-  CommentsStoreSelectors
-} from '@store/comments-store';
-import { StoreReply } from '@store/comments-store/state';
+  CommentStoreActions,
+  CommentStoreSelectors
+} from '@src/app/root-store/comment-store';
+import { StoreReply } from '@src/app/root-store/comment-store/state';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
-import { CommentService } from '@services/comments.service';
+import { CommentService } from '@src/app/services/comment.service';
 import { ModalService } from '@services/modal.service';
 import { AlertService } from '@services/alert.service';
 import { AuthenticationService } from '@services/authentication.service';
@@ -39,18 +39,17 @@ import { User } from '@models/../newModels/user';
 import { UserMetadata } from '@models/../newModels/userMetadata';
 import { LocationData } from '@models/../newModels/location';
 import {
-  AddReplyRequest,
+  CreateReplyRequest,
   AddReplyStoreRequest,
-  AddReplySuccess,
+  CreateReplyResponse,
   Comment,
   DeleteCommentRequest,
-  DislikeCommentRequest,
+  RateCommentRequest,
   GetRepliesRequest,
-  GetRepliesSuccess,
-  LikeCommentRequest,
+  GetRepliesResponse,
   SetRepliesStoreRequest,
-  UnratedCommentRequest
-} from '@models/comments';
+  CommentRatingType
+} from '@models/../newModels/comment';
 import { Spot } from '@models/../newModels/spot';
 import { Tag } from '@models/notifications';
 import {
@@ -85,6 +84,7 @@ export class CommentComponent
   @ViewChild('reply') reply;
 
   STRINGS;
+  eCommentRatingType = CommentRatingType;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
   // For large comments
@@ -153,9 +153,9 @@ export class CommentComponent
 
   ngOnInit(): void {
     this.replies$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectReplies, {
-        postId: this.comment.post_id,
-        commentId: this.comment.id
+      select(CommentStoreSelectors.selectReplies, {
+        spotId: this.comment.spotId,
+        commentId: this.comment.parentCommentId
       })
     );
 
@@ -171,10 +171,10 @@ export class CommentComponent
           const initialLimit = this.detailed ? 10 : 1;
 
           const request: GetRepliesRequest = {
-            postId: this.comment.post_id,
-            commentId: this.comment.id,
+            spotId: this.comment.spotId,
+            commentId: this.comment.commentId,
             replyLink: this.spot.startCommentLink || null,
-            date: null,
+            after: null,
             initialLoad: true,
             limit: initialLimit
           };
@@ -191,11 +191,11 @@ export class CommentComponent
             .getReplies(request)
             .pipe(take(1))
             .subscribe(
-              (replies: GetRepliesSuccess) => {
+              (replies: GetRepliesResponse) => {
                 const storeRequest: SetRepliesStoreRequest = {
-                  postId: replies.postId,
+                  spotId: replies.spotId,
                   commentId: replies.commentId,
-                  date: replies.date,
+                  date: new Date().toString(), // its bogus, FIX
                   initialLoad: true,
                   replies: replies.replies,
                   totalRepliesAfter: replies.totalRepliesAfter
@@ -203,7 +203,7 @@ export class CommentComponent
 
                 this.initialLoad = false;
                 this.store$.dispatch(
-                  new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
+                  new CommentStoreActions.SetRepliesRequestAction(storeRequest)
                 );
 
                 this.totalRepliesAfter = replies.totalRepliesAfter;
@@ -255,8 +255,8 @@ export class CommentComponent
       select(UserStoreSelectors.selectUserMetadata)
     );
 
-    this.getTime(this.comment.creation_date);
-    this.imageBlurred = this.comment.image_nsfw;
+    this.getTime(this.comment.createdAt);
+    this.imageBlurred = this.comment.imageNsfw;
 
     if (
       this.comment.content.split(/\r\n|\r|\n/).length >
@@ -286,10 +286,10 @@ export class CommentComponent
       const initialLimit = this.detailed ? 10 : 1;
 
       const request: GetRepliesRequest = {
-        postId: this.comment.post_id,
-        commentId: this.comment.id,
+        spotId: this.comment.spotId,
+        commentId: this.comment.commentId,
         replyLink: this.spot.startCommentLink || null,
-        date: null,
+        after: null,
         initialLoad: true,
         limit: initialLimit
       };
@@ -306,11 +306,11 @@ export class CommentComponent
         .getReplies(request)
         .pipe(take(1))
         .subscribe(
-          (replies: GetRepliesSuccess) => {
+          (replies: GetRepliesResponse) => {
             const storeRequest: SetRepliesStoreRequest = {
-              postId: replies.postId,
+              spotId: replies.spotId,
               commentId: replies.commentId,
-              date: replies.date,
+              date: new Date().toString(),
               initialLoad: true,
               replies: replies.replies,
               totalRepliesAfter: replies.totalRepliesAfter
@@ -318,7 +318,7 @@ export class CommentComponent
 
             this.initialLoad = false;
             this.store$.dispatch(
-              new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
+              new CommentStoreActions.SetRepliesRequestAction(storeRequest)
             );
 
             this.totalRepliesAfter = replies.totalRepliesAfter;
@@ -622,9 +622,9 @@ export class CommentComponent
     }
 
     const request: GetRepliesRequest = {
-      postId: this.comment.post_id,
-      commentId: this.comment.id,
-      date: this.replies.slice(-1)[0].creation_date,
+      spotId: this.comment.spotId,
+      commentId: this.comment.commentId,
+      after: this.replies.slice(-1)[0].createdAt.toString(),
       initialLoad: false,
       limit: this.detailed
         ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED
@@ -637,18 +637,18 @@ export class CommentComponent
       .getReplies(request)
       .pipe(take(1))
       .subscribe(
-        (replies: GetRepliesSuccess) => {
+        (replies: GetRepliesResponse) => {
           const storeRequest: SetRepliesStoreRequest = {
-            postId: replies.postId,
+            spotId: replies.spotId,
             commentId: replies.commentId,
-            date: replies.date,
+            date: new Date().toString(),
             initialLoad: replies.initialLoad,
             replies: replies.replies,
             totalRepliesAfter: replies.totalRepliesAfter
           };
 
           this.store$.dispatch(
-            new CommentsStoreActions.SetRepliesRequestAction(storeRequest)
+            new CommentStoreActions.SetRepliesRequestAction(storeRequest)
           );
 
           this.totalRepliesAfter = replies.totalRepliesAfter;
@@ -697,11 +697,11 @@ export class CommentComponent
       .subscribe((result: ModalConfirmResult) => {
         if (result.status === ModalConfirmResultTypes.CONFIRM) {
           const request: DeleteCommentRequest = {
-            postId: this.comment.post_id,
-            commentId: this.comment.id
+            spotId: this.comment.spotId,
+            commentId: this.comment.commentId
           };
           this.store$.dispatch(
-            new CommentsStoreActions.DeleteRequestAction(request)
+            new CommentStoreActions.DeleteRequestAction(request)
           );
         }
       });
@@ -812,10 +812,10 @@ export class CommentComponent
     }
 
     // Make the request
-    const request: AddReplyRequest = {
-      postId: this.comment.post_id,
-      commentId: this.comment.id,
-      commentParentId: this.comment.id,
+    const request: CreateReplyRequest = {
+      spotId: this.comment.spotId,
+      commentId: this.comment.parentCommentId,
+      commentParentId: this.comment.commentId,
       content,
       image: this.imageFile,
       tagsList: tags,
@@ -825,18 +825,16 @@ export class CommentComponent
     this.addReplyLoading = true;
 
     this.commentService
-      .addReply(request)
+      .createReply(request)
       .pipe(take(1))
       .subscribe(
-        (reply: AddReplySuccess) => {
+        (reply: CreateReplyResponse) => {
           const storeRequest: AddReplyStoreRequest = {
-            postId: reply.postId,
-            commentId: reply.commentId,
             reply: reply.reply
           };
 
           this.store$.dispatch(
-            new CommentsStoreActions.AddReplyRequestAction(storeRequest)
+            new CommentStoreActions.AddReplyRequestAction(storeRequest)
           );
 
           this.addReplyLoading = false;
@@ -881,20 +879,20 @@ export class CommentComponent
       return;
     }
 
-    if (this.comment.rated === 1) {
-      const request: UnratedCommentRequest = {
-        postId: this.comment.post_id,
-        commentId: this.comment.id
+    if (this.comment.myRating === CommentRatingType.LIKE) {
+      const request: RateCommentRequest = {
+        spotId: this.comment.spotId,
+        commentId: this.comment.commentId,
+        rating: CommentRatingType.NONE
       };
-      this.store$.dispatch(
-        new CommentsStoreActions.UnratedRequestAction(request)
-      );
+      this.store$.dispatch(new CommentStoreActions.RateRequestAction(request));
     } else {
-      const request: LikeCommentRequest = {
-        postId: this.comment.post_id,
-        commentId: this.comment.id
+      const request: RateCommentRequest = {
+        spotId: this.comment.spotId,
+        commentId: this.comment.commentId,
+        rating: CommentRatingType.LIKE
       };
-      this.store$.dispatch(new CommentsStoreActions.LikeRequestAction(request));
+      this.store$.dispatch(new CommentStoreActions.RateRequestAction(request));
     }
   }
 
@@ -904,22 +902,20 @@ export class CommentComponent
       return;
     }
 
-    if (this.comment.rated === 0) {
-      const request: UnratedCommentRequest = {
-        postId: this.comment.post_id,
-        commentId: this.comment.id
+    if (this.comment.myRating === CommentRatingType.DISLIKE) {
+      const request: RateCommentRequest = {
+        spotId: this.comment.spotId,
+        commentId: this.comment.commentId,
+        rating: CommentRatingType.NONE
       };
-      this.store$.dispatch(
-        new CommentsStoreActions.UnratedRequestAction(request)
-      );
+      this.store$.dispatch(new CommentStoreActions.RateRequestAction(request));
     } else {
-      const request: DislikeCommentRequest = {
-        postId: this.comment.post_id,
-        commentId: this.comment.id
+      const request: RateCommentRequest = {
+        spotId: this.comment.spotId,
+        commentId: this.comment.commentId,
+        rating: CommentRatingType.DISLIKE
       };
-      this.store$.dispatch(
-        new CommentsStoreActions.DislikeRequestAction(request)
-      );
+      this.store$.dispatch(new CommentStoreActions.RateRequestAction(request));
     }
   }
 
@@ -955,7 +951,7 @@ export class CommentComponent
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      const modalData: ModalImageData = { imageSrc: this.comment.image_src };
+      const modalData: ModalImageData = { imageSrc: this.comment.imageSrc };
       const modalOptions: ModalOptions = { width: 'auto' };
       this.modalService.open('global', 'image', modalData, modalOptions);
     } else {

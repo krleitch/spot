@@ -12,7 +12,7 @@ import { Store } from '@ngrx/store';
 import { ModalService } from '@services/modal.service';
 import { SpotService } from '@src/app/services/spot.service';
 import { AlertService } from '@services/alert.service';
-import { CommentService } from '@services/comments.service';
+import { CommentService } from '@src/app/services/comment.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // assets
@@ -20,7 +20,7 @@ import {
   ReportSpotRequest,
   ReportSpotResponse
 } from '@models/../newModels/spot';
-import { ReportCommentRequest } from '@models/comments';
+import { ReportCommentRequest } from '@models/../newModels/comment';
 import { ReportCategory } from '@models/report';
 import { SpotError } from '@exceptions/error';
 import { REPORT_CONSTANTS } from '@constants/report';
@@ -78,7 +78,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   sendReport(): void {
     if (this.data.spotId && this.data.commentId) {
       const request: ReportCommentRequest = {
-        postId: this.data.spotId,
+        spotId: this.data.spotId,
         commentId: this.data.commentId,
         content: this.content,
         category: this.category

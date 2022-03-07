@@ -16,30 +16,29 @@ import { take, takeUntil } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
-  CommentsStoreActions,
-  CommentsStoreSelectors
-} from '@store/comments-store';
+  CommentStoreActions,
+  CommentStoreSelectors
+} from '@src/app/root-store/comment-store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
 import { AlertService } from '@services/alert.service';
-import { CommentService } from '@services/comments.service';
+import { CommentService } from '@src/app/services/comment.service';
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
-  AddReplyRequest,
+  CreateReplyRequest,
   AddReplyStoreRequest,
-  AddReplySuccess,
+  CreateReplyResponse,
   Comment,
   DeleteReplyRequest,
-  DislikeReplyRequest,
-  LikeReplyRequest,
-  UnratedReplyRequest
-} from '@models/comments';
+  RateReplyRequest,
+  CommentRatingType
+} from '@models/../newModels/comment';
 import { Spot } from '@models/../newModels/spot';
 import { Tag } from '@models/notifications';
 import { Friend } from '@models/friends';
@@ -92,6 +91,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   friendsList: Friend[] = [];
 
   STRINGS;
+  eCommentRatingType = CommentRatingType;
   COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
 
   isAuthenticated$: Observable<boolean>;
@@ -140,8 +140,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getTime(this.reply.creation_date);
-    this.imageBlurred = this.reply.image_nsfw;
+    this.getTime(this.reply.createdAt);
+    this.imageBlurred = this.reply.imageNsfw;
 
     this.isAuthenticated$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsAuthenticated)
@@ -181,9 +181,9 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.tagged$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectTagged, {
-        postId: this.comment.post_id,
-        commentId: this.comment.id
+      select(CommentStoreSelectors.selectTagged, {
+        spotId: this.comment.spotId,
+        commentId: this.comment.commentId
       })
     );
 
@@ -524,12 +524,12 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((result: ModalConfirmResult) => {
         if (result.status === ModalConfirmResultTypes.CONFIRM) {
           const request: DeleteReplyRequest = {
-            postId: this.reply.post_id,
-            parentId: this.reply.parent_id,
-            commentId: this.reply.id
+            spotId: this.reply.spotId,
+            commentId: this.reply.parentCommentId,
+            replyId: this.reply.commentId
           };
           this.store$.dispatch(
-            new CommentsStoreActions.DeleteReplyRequestAction(request)
+            new CommentStoreActions.DeleteReplyRequestAction(request)
           );
         }
       });
@@ -651,10 +651,10 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Make the request
-    const request: AddReplyRequest = {
-      postId: this.reply.post_id,
-      commentId: this.reply.parent_id,
-      commentParentId: this.reply.id,
+    const request: CreateReplyRequest = {
+      spotId: this.reply.spotId,
+      commentId: this.reply.parentCommentId,
+      commentParentId: this.reply.commentId,
       content,
       image: this.imageFile,
       tagsList: tags,
@@ -664,18 +664,16 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addReply2Loading = true;
 
     this.commentService
-      .addReply(request)
+      .createReply(request)
       .pipe(take(1))
       .subscribe(
-        (r: AddReplySuccess) => {
+        (r: CreateReplyResponse) => {
           const storeRequest: AddReplyStoreRequest = {
-            postId: r.postId,
-            commentId: r.commentId,
             reply: r.reply
           };
 
           this.store$.dispatch(
-            new CommentsStoreActions.AddReplyRequestAction(storeRequest)
+            new CommentStoreActions.AddReplyRequestAction(storeRequest)
           );
 
           this.addReply2Loading = false;
@@ -709,23 +707,25 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    if (this.reply.rated === 1) {
-      const request: UnratedReplyRequest = {
-        postId: this.reply.post_id,
-        parentId: this.reply.parent_id,
-        commentId: this.reply.id
+    if (this.reply.myRating === CommentRatingType.LIKE) {
+      const request: RateReplyRequest = {
+        spotId: this.reply.spotId,
+        commentId: this.reply.parentCommentId,
+        replyId: this.reply.commentId,
+        rating: CommentRatingType.NONE
       };
       this.store$.dispatch(
-        new CommentsStoreActions.UnratedReplyRequestAction(request)
+        new CommentStoreActions.RateReplyRequestAction(request)
       );
     } else {
-      const request: LikeReplyRequest = {
-        postId: this.reply.post_id,
-        parentId: this.reply.parent_id,
-        commentId: this.reply.id
+      const request: RateReplyRequest = {
+        spotId: this.reply.spotId,
+        commentId: this.reply.parentCommentId,
+        replyId: this.reply.commentId,
+        rating: CommentRatingType.LIKE
       };
       this.store$.dispatch(
-        new CommentsStoreActions.LikeReplyRequestAction(request)
+        new CommentStoreActions.RateReplyRequestAction(request)
       );
     }
   }
@@ -736,23 +736,25 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    if (this.reply.rated === 0) {
-      const request: UnratedReplyRequest = {
-        postId: this.reply.post_id,
-        parentId: this.reply.parent_id,
-        commentId: this.reply.id
+    if (this.reply.myRating === CommentRatingType.DISLIKE) {
+      const request: RateReplyRequest = {
+        spotId: this.reply.spotId,
+        commentId: this.reply.parentCommentId,
+        replyId: this.reply.commentId,
+        rating: CommentRatingType.NONE
       };
       this.store$.dispatch(
-        new CommentsStoreActions.UnratedReplyRequestAction(request)
+        new CommentStoreActions.RateReplyRequestAction(request)
       );
     } else {
-      const request: DislikeReplyRequest = {
-        postId: this.reply.post_id,
-        parentId: this.reply.parent_id,
-        commentId: this.reply.id
+      const request: RateReplyRequest = {
+        spotId: this.reply.spotId,
+        commentId: this.reply.parentCommentId,
+        replyId: this.reply.commentId,
+        rating: CommentRatingType.DISLIKE
       };
       this.store$.dispatch(
-        new CommentsStoreActions.DislikeReplyRequestAction(request)
+        new CommentStoreActions.RateReplyRequestAction(request)
       );
     }
   }
@@ -789,7 +791,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   imageClicked(): void {
     if (!this.imageBlurred) {
-      const modalData: ModalImageData = { imageSrc: this.reply.image_src };
+      const modalData: ModalImageData = { imageSrc: this.reply.imageSrc };
       const modalOptions: ModalOptions = { width: 'auto' };
       this.modalService.open('global', 'image', modalData, modalOptions);
     } else {

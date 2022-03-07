@@ -18,27 +18,27 @@ import { mapTo, startWith, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
-  CommentsStoreActions,
-  CommentsStoreSelectors
-} from '@store/comments-store';
-import { StoreComment } from '@store/comments-store/state';
+  CommentStoreActions,
+  CommentStoreSelectors
+} from '@src/app/root-store/comment-store';
+import { StoreComment } from '@src/app/root-store/comment-store/state';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
-import { CommentService } from '@services/comments.service';
+import { CommentService } from '@src/app/services/comment.service';
 import { AlertService } from '@services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
-  AddCommentRequest,
+  CreateCommentRequest,
   AddCommentStoreRequest,
-  AddCommentSuccess,
+  CreateCommentResponse,
   GetCommentsRequest,
-  GetCommentsSuccess,
+  GetCommentsResponse,
   SetCommentsStoreRequest
-} from '@models/comments';
+} from '@models/../newModels/comment';
 import { Tag } from '@models/notifications';
 import { Spot } from '@models/../newModels/spot';
 import { Friend } from '@models/friends';
@@ -123,8 +123,8 @@ export class CommentsContainerComponent
   ngOnInit(): void {
     // Comments
     this.comments$ = this.store$.pipe(
-      select(CommentsStoreSelectors.selectComments, {
-        postId: this.spot.spotId
+      select(CommentStoreSelectors.selectComments, {
+        spotId: this.spot.spotId
       })
     );
 
@@ -146,9 +146,8 @@ export class CommentsContainerComponent
 
           // Get the latest initialLimit of comments
           const request: GetCommentsRequest = {
-            postId: this.spot.spotId,
-            date: new Date().toString(),
-            type: 'before',
+            spotId: this.spot.spotId,
+            after: new Date().toString(),
             limit: initialLimit,
             commentLink: this.spot.startCommentLink || null
           };
@@ -165,11 +164,11 @@ export class CommentsContainerComponent
             .getComments(request)
             .pipe(take(1))
             .subscribe(
-              (comments: GetCommentsSuccess) => {
+              (comments: GetCommentsResponse) => {
                 this.loadingCommentsBefore = false;
                 if (comments.comments) {
                   const storeRequest: SetCommentsStoreRequest = {
-                    postId: this.spot.spotId,
+                    spotId: this.spot.spotId,
                     type: 'before',
                     initialLoad: true,
                     comments: comments.comments,
@@ -178,7 +177,7 @@ export class CommentsContainerComponent
                   };
                   this.initialLoad = false;
                   this.store$.dispatch(
-                    new CommentsStoreActions.SetCommentsRequestAction(
+                    new CommentStoreActions.SetCommentsRequestAction(
                       storeRequest
                     )
                   );
@@ -257,9 +256,8 @@ export class CommentsContainerComponent
 
       // Get the latest initialLimit of comments
       const request: GetCommentsRequest = {
-        postId: this.spot.spotId,
-        date: new Date().toString(),
-        type: 'before',
+        spotId: this.spot.spotId,
+        after: new Date().toString(),
         limit: initialLimit,
         commentLink: this.spot.startCommentLink || null
       };
@@ -276,11 +274,11 @@ export class CommentsContainerComponent
         .getComments(request)
         .pipe(take(1))
         .subscribe(
-          (comments: GetCommentsSuccess) => {
+          (comments: GetCommentsResponse) => {
             this.loadingCommentsBefore = false;
             if (comments.comments) {
               const storeRequest: SetCommentsStoreRequest = {
-                postId: this.spot.spotId,
+                spotId: this.spot.spotId,
                 type: 'before',
                 initialLoad: true,
                 comments: comments.comments,
@@ -289,7 +287,7 @@ export class CommentsContainerComponent
               };
               this.initialLoad = false;
               this.store$.dispatch(
-                new CommentsStoreActions.SetCommentsRequestAction(storeRequest)
+                new CommentStoreActions.SetCommentsRequestAction(storeRequest)
               );
               this.totalCommentsBefore = comments.totalCommentsBefore;
               this.totalCommentsAfter = comments.totalCommentsAfter;
@@ -554,8 +552,8 @@ export class CommentsContainerComponent
     }
 
     // Make the request
-    const request: AddCommentRequest = {
-      postId: this.spot.spotId,
+    const request: CreateCommentRequest = {
+      spotId: this.spot.spotId,
       content,
       image: this.imageFile,
       tagsList: tags,
@@ -565,17 +563,16 @@ export class CommentsContainerComponent
     this.addCommentLoading = true;
 
     this.commentService
-      .addComment(request)
+      .createComment(request)
       .pipe(take(1))
       .subscribe(
-        (comment: AddCommentSuccess) => {
+        (response: CreateCommentResponse) => {
           const storeRequest: AddCommentStoreRequest = {
-            postId: comment.postId,
-            comment: comment.comment
+            comment: response.comment
           };
 
           this.store$.dispatch(
-            new CommentsStoreActions.AddCommentRequestAction(storeRequest)
+            new CommentStoreActions.AddCommentRequestAction(storeRequest)
           );
 
           this.addCommentLoading = false;
@@ -618,9 +615,8 @@ export class CommentsContainerComponent
     const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
 
     const request: GetCommentsRequest = {
-      postId: this.spot.spotId,
-      date: this.comments.length > 0 ? this.comments[0].creation_date : null,
-      type: 'after',
+      spotId: this.spot.spotId,
+      after: this.comments.length > 0 ? this.comments[0].creation_date : null,
       limit
     };
 
@@ -631,27 +627,27 @@ export class CommentsContainerComponent
       .getComments(request)
       .pipe(take(1))
       .subscribe(
-        (comments: GetCommentsSuccess) => {
+        (response: GetCommentsResponse) => {
           this.loadingCommentsAfter = false;
-          if (comments.comments) {
+          if (response.comments) {
             const storeRequest: SetCommentsStoreRequest = {
-              postId: this.spot.spotId,
+              spotId: this.spot.spotId,
               type: 'after',
               initialLoad: this.initialLoad,
-              comments: comments.comments,
-              totalCommentsAfter: comments.totalCommentsAfter
+              comments: response.comments,
+              totalCommentsAfter: response.totalCommentsAfter
             };
             this.store$.dispatch(
-              new CommentsStoreActions.SetCommentsRequestAction(storeRequest)
+              new CommentStoreActions.SetCommentsRequestAction(storeRequest)
             );
 
             // Nothing new was found
             // this has to go before totalCommentsAfter is updated
-            if (comments.totalCommentsAfter === 0) {
+            if (response.totalCommentsAfter === 0) {
               this.refreshed = true;
             }
 
-            this.totalCommentsAfter = comments.totalCommentsAfter;
+            this.totalCommentsAfter = response.totalCommentsAfter;
           }
         },
         (err: SpotError) => {
@@ -676,12 +672,11 @@ export class CommentsContainerComponent
     }
 
     const request: GetCommentsRequest = {
-      postId: this.spot.spotId,
-      date:
+      spotId: this.spot.spotId,
+      after:
         this.comments.length > 0
           ? this.comments.slice(-1).pop().creation_date
           : new Date().toString(),
-      type: 'before',
       limit: this.detailed
         ? COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED
         : COMMENTS_CONSTANTS.MORE_LIMIT
@@ -693,20 +688,20 @@ export class CommentsContainerComponent
       .getComments(request)
       .pipe(take(1))
       .subscribe(
-        (comments: GetCommentsSuccess) => {
+        (response: GetCommentsResponse) => {
           this.loadingCommentsBefore = false;
-          if (comments.comments) {
+          if (response.comments) {
             const storeRequest: SetCommentsStoreRequest = {
-              postId: this.spot.spotId,
+              spotId: this.spot.spotId,
               type: 'before',
               initialLoad: this.initialLoad,
-              comments: comments.comments,
-              totalCommentsBefore: comments.totalCommentsBefore
+              comments: response.comments,
+              totalCommentsBefore: response.totalCommentsBefore
             };
             this.store$.dispatch(
-              new CommentsStoreActions.SetCommentsRequestAction(storeRequest)
+              new CommentStoreActions.SetCommentsRequestAction(storeRequest)
             );
-            this.totalCommentsBefore = comments.totalCommentsBefore;
+            this.totalCommentsBefore = response.totalCommentsBefore;
           }
         },
         (err: SpotError) => {

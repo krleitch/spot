@@ -109,7 +109,7 @@ export interface GetRepliesResponse {
   };
 }
 export interface SetRepliesStoreRequest {
-  postId: string;
+  spotId: string;
   commentId: string;
   replies: Comment[];
   date: string;

@@ -18,7 +18,7 @@ import {
   UserActions,
   UserStoreSelectors
 } from '@src/app/root-store/user-store';
-import { CommentsStoreActions } from '@store/comments-store';
+import { CommentStoreActions } from '@src/app/root-store/comment-store';
 import { Store, select } from '@ngrx/store';
 
 // services
@@ -37,7 +37,7 @@ import {
   LocationFailure,
   SetLocationRequest
 } from '@models/../newModels/location';
-import { ClearCommentsRequest } from '@models/comments';
+import { ClearCommentsRequest } from '@models/../newModels/comment';
 
 @Component({
   selector: 'spot-post-detail',
@@ -235,10 +235,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
           this.loadingSpot = false;
 
           const clearCommentsRequest: ClearCommentsRequest = {
-            postId: response.spot.spotId
+            spotId: response.spot.spotId
           };
           this.store$.dispatch(
-            new CommentsStoreActions.ClearCommentsRequestAction(
+            new CommentStoreActions.ClearCommentsRequestAction(
               clearCommentsRequest
             )
           );

@@ -4,6 +4,6 @@ import * as RootStoreState from './state';
 
 export * from './spot-store';
 export * from './user-store';
-export * from './comments-store';
+export * from './comment-store';
 
 export { RootStoreState, RootStoreSelectors, RootStoreModule };

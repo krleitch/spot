@@ -129,43 +129,43 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.SET_REPLIES_REQUEST: {
       const newReplies = Object.assign({}, state.replies);
 
-      if (newReplies[action.request.postId] === undefined) {
-        newReplies[action.request.postId] = {};
+      if (newReplies[action.request.spotId] === undefined) {
+        newReplies[action.request.spotId] = {};
       }
       if (
-        newReplies[action.request.postId][action.request.commentId] ===
+        newReplies[action.request.spotId][action.request.commentId] ===
         undefined
       ) {
         const newRepliesObj = Object.assign(
           {},
-          newReplies[action.request.postId]
+          newReplies[action.request.spotId]
         );
         newRepliesObj[action.request.commentId] = {
           replies: [],
           tagged: false,
           totalRepliesAfter: 0
         };
-        newReplies[action.request.postId] = newRepliesObj;
+        newReplies[action.request.spotId] = newRepliesObj;
       }
       const newTag =
-        newReplies[action.request.postId][action.request.commentId].tagged ||
+        newReplies[action.request.spotId][action.request.commentId].tagged ||
         action.request.replies.filter((x: Comment) => x.tag.tagged).length > 0;
 
       if (action.request.initialLoad) {
         const newRepliesObj = Object.assign(
           {},
-          newReplies[action.request.postId]
+          newReplies[action.request.spotId]
         );
         newRepliesObj[action.request.commentId] = {
           replies: action.request.replies,
           tagged: newTag,
           totalRepliesAfter: action.request.totalRepliesAfter
         };
-        newReplies[action.request.postId] = newRepliesObj;
+        newReplies[action.request.spotId] = newRepliesObj;
       } else {
         const newRepliesObj = Object.assign(
           {},
-          newReplies[action.request.postId]
+          newReplies[action.request.spotId]
         );
         newRepliesObj[action.request.commentId] = {
           replies: newRepliesObj[action.request.commentId].replies.concat(
@@ -174,7 +174,7 @@ export function featureReducer(state = initialState, action: Actions): State {
           tagged: newTag,
           totalRepliesAfter: action.request.totalRepliesAfter
         };
-        newReplies[action.request.postId] = newRepliesObj;
+        newReplies[action.request.spotId] = newRepliesObj;
       }
       return {
         ...state,

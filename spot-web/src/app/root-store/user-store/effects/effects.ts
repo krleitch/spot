@@ -6,9 +6,9 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 // Store
 import * as userActions from '@src/app/root-store/user-store/actions/actions';
-import * as friendsActions from '@store/social-store/actions/friends.actions';
-import * as postsActions from '@src/app/root-store/spot-store/actions';
-import * as commentsActions from '@store/comments-store/actions';
+import * as friendActions from '@store/social-store/actions/friends.actions';
+import * as spotActions from '@src/app/root-store/spot-store/actions';
+import * as commentActions from '@src/app/root-store/comment-store/actions';
 import * as socialActions from '@store/social-store/actions/actions';
 
 // Services
@@ -72,7 +72,7 @@ export class UserStoreEffects {
       this.authenticationService.registerUserSuccess(action.response);
     }),
     switchMap((action: userActions.RegisterSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({
+      new friendActions.GetFriendsRequestAction({
         date: new Date().toString(),
         limit: null
       }),
@@ -104,7 +104,7 @@ export class UserStoreEffects {
       this.authenticationService.loginUserSuccess(action.response);
     }),
     switchMap((action: userActions.LoginSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({
+      new friendActions.GetFriendsRequestAction({
         date: new Date().toString(),
         limit: null
       }),
@@ -122,8 +122,8 @@ export class UserStoreEffects {
     }),
     switchMap((action: userActions.LogoutRequestAction) => [
       new userActions.ResetStoreAction(),
-      new postsActions.ResetStoreAction(),
-      new commentsActions.ResetStoreAction(),
+      new spotActions.ResetStoreAction(),
+      new commentActions.ResetStoreAction(),
       new socialActions.ResetStoreAction()
     ])
   );
@@ -178,7 +178,7 @@ export class UserStoreEffects {
       // none
     }),
     switchMap((action: userActions.UserSuccessAction) => [
-      new friendsActions.GetFriendsRequestAction({
+      new friendActions.GetFriendsRequestAction({
         date: new Date().toString(),
         limit: null
       }),

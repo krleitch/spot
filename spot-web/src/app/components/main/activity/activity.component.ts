@@ -18,7 +18,7 @@ import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // services
 import { SpotService } from '@src/app/services/spot.service';
-import { CommentService } from '@services/comments.service';
+import { CommentService } from '@src/app/services/comment.service';
 
 // assets
 import {
@@ -27,10 +27,10 @@ import {
   Spot
 } from '@models/../newModels/spot';
 import {
-  ActivityCommentRequest,
-  ActivityCommentSuccess,
+  GetCommentActivityRequest,
+  GetCommentActivityResponse,
   CommentActivity
-} from '@models/comments';
+} from '@models/../newModels/comment';
 import { UserMetadata, UnitSystem } from '@models/../newModels/userMetadata';
 import { LocationData } from '@models/../newModels/location';
 
@@ -142,7 +142,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
 
   onScrollComments(): void {
     if (!this.commentActivityLoading) {
-      const activityCommentRequest: ActivityCommentRequest = {
+      const activityCommentRequest: GetCommentActivityRequest = {
         limit: this.spotLimit,
         after: this.commentsAfter
       };
@@ -150,7 +150,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
       this.commentActivityLoading = true;
 
       const comments$ = this.commentService
-        .getActivity(activityCommentRequest)
+        .getCommentActivity(activityCommentRequest)
         .pipe(
           take(1),
           finalize(() => {
@@ -166,7 +166,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
         )
         .pipe(startWith(false));
 
-      comments$.subscribe((activitySuccess: ActivityCommentSuccess) => {
+      comments$.subscribe((activitySuccess: GetCommentActivityResponse) => {
         const activities: CommentActivityActivity[] =
           activitySuccess.activity.map((activity) => ({
             ...activity,

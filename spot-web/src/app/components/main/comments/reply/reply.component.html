@@ -9,7 +9,7 @@
           <i
             class="material-icons vote"
             (click)="like()"
-            [ngClass]="{ highlight: reply.rated === 1 }"
+            [ngClass]="{ highlight: reply.myRating === eCommentRatingType.LIKE }"
           >
             keyboard_arrow_up
           </i>
@@ -17,13 +17,13 @@
           <i
             class="material-icons vote"
             (click)="dislike()"
-            [ngClass]="{ highlight: reply.rated === 0 }"
+            [ngClass]="{ highlight: reply.myRating === eCommentRatingType.DISLIKE }"
           >
             keyboard_arrow_down
           </i>
         </div>
         <div
-          [class]="getProfilePictureClass(reply.profilePicture)"
+          [class]="getProfilePictureClass(reply.profilePictureNum)"
           [ngClass]="{ 'profile-owned': reply.owned }"
         >
           <img
@@ -59,12 +59,12 @@
 
         <div *ngIf="userMetadata$ | async as userMetadata">
           <div
-            *ngIf="reply.image_src !== null"
+            *ngIf="reply.imageSrc !== null"
             (click)="imageClicked()"
             class="image"
           >
             <img
-              [src]="reply.image_src"
+              [src]="reply.imageSrc"
               [ngClass]="{
                 'image-blur': imageBlurred && userMetadata.matureFilter
               }"
@@ -149,14 +149,14 @@
           <div class="dropdown-content" [ngClass]="{ show: optionsEnabled }">
             <div
               class="button"
-              (click)="openReportModal(reply.post_id, reply.id)"
+              (click)="openReportModal(reply.spotId, reply.commentId)"
             >
               <span class="material-icons icon"> outlined_flag </span>
               {{ 'MAIN.REPLY.REPORT' | translate }}
             </div>
             <div
               class="button"
-              (click)="openShareModal(spot.spotId, spot.link, reply.id, reply.link)"
+              (click)="openShareModal(spot.spotId, spot.link, reply.commentId, reply.link)"
             >
               <span class="material-icons icon"> share </span>
               {{ 'MAIN.REPLY.SHARE' | translate }}
