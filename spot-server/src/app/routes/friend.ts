@@ -40,6 +40,7 @@ import {
   DeclineFriendRequest,
   DeclineFriendResponse
 } from '@models/../newModels/friend.js';
+import P from '@prisma/client';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
   next();
@@ -233,155 +234,157 @@ router.get(
 router.post(
   '/requests',
   rateLimiter.genericFriendLimiter,
-  ErrorHandler.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (
+        !req.user ||
+        authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
+        return next(new friendsError.FriendExistsError());
+      }
 
-    if (!req.user || authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new friendsError.FriendExistsError());
-    }
+      const request: CreateFriendRequest = {
+        username: req.body.username
+      };
 
-    const request: CreateFriendRequest = {
-      username: req.body.username
-    }
-
-    accounts.getAccountByUsername(username).then(
-      async (receiverId: any) => {
-        // No account with this username
-        if (receiverId[0] === undefined) {
-          return next(
-            new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.NO_USER, 400)
-          );
-        }
-
-        // Cannot add yourself
-        if (receiverId[0].id === accountId) {
-          return next(
-            new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.SELF, 400)
-          );
-        }
-
-        const exists = await friends.getFriendsExist(
-          accountId,
-          receiverId[0].id
-        );
-        if (exists.length > 0) {
-          return next(new FriendsError.FriendExistsError(500));
-        }
-
-        friends.friendRequestExists(receiverId[0].id, accountId).then(
-          (friendRequest: any) => {
-            // If a request already exists, then just accept it
-            if (friendRequest.length > 0) {
-              // you already sent a request
-              if (friendRequest[0].account_id === accountId) {
-                return next(
-                  new FriendsError.UsernameError(
-                    FRIENDS_ERROR_MESSAGES.REQUEST_EXISTS,
-                    400
-                  )
-                );
-              }
-
-              // accept the request
-              friends.acceptFriendRequest(friendRequest[0].id, accountId).then(
-                (rows: any) => {
-                  accounts.getAccountById(rows[0].account_id).then(
-                    (account: any) => {
-                      rows[0].username = account[0].username;
-                      const response = { friend: rows[0] };
-                      res.status(200).json(response);
-                    },
-                    (err: any) => {
-                      return next(new FriendsError.FriendExistsError(500));
-                    }
-                  );
-                },
-                (err: any) => {
-                  return next(new FriendsError.FriendExistsError(500));
-                }
-              );
-            } else {
-              friends.addFriendRequest(accountId, receiverId[0].id).then(
-                (rows: any) => {
-                  rows[0].username = rows[0].friend_username;
-                  delete rows[0].friend_username;
-                  delete rows[0].account_username;
-                  const response = { friend: rows[0] };
-                  res.status(200).json(response);
-                },
-                (err: any) => {
-                  return next(
-                    new FriendsError.UsernameError(
-                      FRIENDS_ERROR_MESSAGES.GENERIC,
-                      500
-                    )
-                  );
-                }
-              );
-            }
-          },
-          (err: any) => {
-            return next(new FriendsError.FriendExistsError(500));
-          }
-        );
-      },
-      (err: any) => {
-        return next(
-          new FriendsError.UsernameError(FRIENDS_ERROR_MESSAGES.GENERIC, 500)
+      const friendUser = await prismaUser.findUserByUsername(request.username);
+      if (!friendUser) {
+        return new friendsError.UsernameError(
+          FRIENDS_ERROR_MESSAGES.NO_USER,
+          400
         );
       }
-    );
-  })
-));
+      // You cannot add yourself
+      if (friendUser.userId === req.user.userId) {
+        return next(
+          new friendsError.UsernameError(FRIENDS_ERROR_MESSAGES.SELF, 400)
+        );
+      }
+      // You are already friends
+      const friendExists = await prismaFriend.friendExists(
+        req.user.userId,
+        friendUser.userId
+      );
+      if (friendExists) {
+        return next(new friendsError.FriendExistsError());
+      }
+      const friendRequest = await prismaFriend.findFriendRequest(
+        req.user.userId,
+        friendUser.userId
+      );
+      let createdFriend: P.Friend;
+      if (friendRequest) {
+        // You sent the request
+        if (friendRequest.userId === req.user.userId) {
+          new friendsError.UsernameError(
+            FRIENDS_ERROR_MESSAGES.REQUEST_EXISTS,
+            400
+          );
+        }
+        // Otherwise you were sent the request, so accept
+        createdFriend = await prismaFriend.acceptFriendRequest(req.user.userId);
+      } else {
+        // Create a new friend request
+        createdFriend = await prismaFriend.createFriend(
+          req.user.userId,
+          friendUser.userId
+        );
+      }
+
+      const response: CreateFriendResponse = {
+        friend: {
+          friendId: createdFriend.friendId,
+          createdAt: createdFriend.createdAt,
+          confirmedAt: createdFriend.confirmedAt,
+          username: friendUser.username
+        }
+      };
+      res.status(200).json(response);
+    }
+  )
+);
 
 // accept a friend request
 router.post(
   '/requests/accept',
   rateLimiter.genericFriendLimiter,
-  function (req: any, res: any, next: any) {
-    const accountId = req.user.id;
-    const { friendRequestId } = req.body;
-
-    if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
-      return next(new FriendsError.AcceptFriendRequest(500));
-    }
-
-    friends.acceptFriendRequest(friendRequestId, accountId).then(
-      (rows: any) => {
-        if (rows.length < 1) {
-          return next(new FriendsError.AcceptFriendRequest(500));
-        } else {
-          rows[0].username = rows[0].account_username;
-          delete rows[0].friend_username;
-          delete rows[0].account_username;
-          const response = { friend: rows[0] };
-          res.status(200).json(response);
-        }
-      },
-      (err: any) => {
-        return next(new FriendsError.AcceptFriendRequest(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (
+        !req.user ||
+        authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
+        return next(new friendsError.AcceptFriendRequest());
       }
-    );
-  }
+
+      const request: AcceptFriendRequest = {
+        friendRequestId: req.body.friendRequestId
+      };
+
+      const friendRequest = await prismaFriend.findFriendById(
+        request.friendRequestId
+      );
+      if (friendRequest?.friendUserId !== req.user.userId) {
+        return next(new friendsError.AcceptFriendRequest());
+      }
+      const acceptedFriend = await prismaFriend.acceptFriendRequest(
+        request.friendRequestId
+      );
+
+      const friendUser = await prismaUser.findUserById(acceptedFriend.friendId);
+
+      const response: AcceptFriendResponse = {
+        friend: {
+          friendId: acceptedFriend.friendId,
+          createdAt: acceptedFriend.createdAt,
+          confirmedAt: acceptedFriend.confirmedAt,
+          username: friendUser ? friendUser.username : ''
+        }
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
 // decline a friend request
 router.post(
   '/requests/decline',
   rateLimiter.genericFriendLimiter,
-  function (req: any, res: any, next: any) {
-    const accountId = req.user.id;
-    const { friendRequestId } = req.body;
-
-    friends.declineFriendRequest(friendRequestId, accountId).then(
-      (rows: any) => {
-        const response = {};
-        res.status(200).json(response);
-      },
-      (err: any) => {
-        return next(new FriendsError.DeclineFriendRequest(500));
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (
+        !req.user ||
+        authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
+        return next(new friendsError.AcceptFriendRequest());
       }
-    );
-  }
+
+      const request: DeclineFriendRequest = {
+        friendRequestId: req.body.friendRequestId
+      };
+      const friendRequest = await prismaFriend.findFriendById(
+        request.friendRequestId
+      );
+      if (friendRequest?.friendUserId !== req.user.userId) {
+        return next(new friendsError.AcceptFriendRequest());
+      }
+      const declinedFriend = await prismaFriend.acceptFriendRequest(
+        request.friendRequestId
+      );
+
+      const friendUser = await prismaUser.findUserById(declinedFriend.friendId);
+
+      const response: DeclineFriendResponse = {
+        friend: {
+          friendId: declinedFriend.friendId,
+          createdAt: declinedFriend.createdAt,
+          confirmedAt: declinedFriend.confirmedAt,
+          username: friendUser ? friendUser.username : ''
+        }
+      };
+      res.status(200).json(response);
+    }
+  )
 );
 
 export default router;

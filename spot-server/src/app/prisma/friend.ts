@@ -119,17 +119,39 @@ const friendExists = async (
   return exist ? true : false;
 };
 
+const findFriendRequest = async (
+  firstUserId: string,
+  secondUserId: string
+): Promise<P.Friend | null> => {
+  const exist = await prisma.friend.findFirst({
+    where: {
+      AND: [
+        {
+          OR: [
+            {
+              userId: firstUserId,
+              friendUserId: secondUserId
+            },
+            {
+              userId: secondUserId,
+              friendUserId: firstUserId
+            }
+          ]
+        },
+        { confirmedAt: null }
+      ]
+    }
+  });
+  return exist;
+};
+
 // You are the one who the request was sent to, so you are friendUserId
 const acceptFriendRequest = async (
-  userId: string,
-  friendUserId: string
+  friendId: string
 ): Promise<P.Friend> => {
   const updatedFriend = await prisma.friend.update({
     where: {
-      userId_friendUserId: {
-        friendUserId: userId,
-        userId: friendUserId
-      }
+      friendId: friendId,
     },
     data: {
       confirmedAt: new Date()
@@ -140,15 +162,11 @@ const acceptFriendRequest = async (
 
 // You are the one who the request was sent to, so you are friendUserId
 const declineFriendRequest = async (
-  userId: string,
-  friendUserId: string
+  friendId: string
 ): Promise<P.Friend> => {
   const deletedFriend = await prisma.friend.delete({
     where: {
-      userId_friendUserId: {
-        friendUserId: userId,
-        userId: friendUserId
-      }
+      friendId: friendId
     }
   });
   return deletedFriend;
@@ -162,6 +180,7 @@ export default {
   findAllFriendPending,
   deleteFriendById,
   friendExists,
+  findFriendRequest,
   acceptFriendRequest,
   declineFriendRequest
 };
