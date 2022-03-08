@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { UserRole, User } from '@models/../newModels/user.js';
+import { UserRole, User } from '@models/user.js';
 import * as authorizationError from '@exceptions/authorization.js';
 
 // Middleware used on routes

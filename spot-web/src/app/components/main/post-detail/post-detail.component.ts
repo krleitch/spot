@@ -30,14 +30,14 @@ import {
   GetSingleSpotRequest,
   GetSingleSpotResponse,
   Spot
-} from '@models/../newModels/spot';
+} from '@models/spot';
 import {
   LoadLocationRequest,
   LocationData,
   LocationFailure,
   SetLocationRequest
-} from '@models/../newModels/location';
-import { ClearCommentsRequest } from '@models/../newModels/comment';
+} from '@models/location';
+import { ClearCommentsRequest } from '@models/comment';
 
 @Component({
   selector: 'spot-post-detail',

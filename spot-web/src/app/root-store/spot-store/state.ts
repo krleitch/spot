@@ -1,4 +1,4 @@
-import { Spot } from '@models/../newModels/spot';
+import { Spot } from '@models/spot';
 export interface State {
   spots: Spot[];
 }

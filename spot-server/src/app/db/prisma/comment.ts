@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { Comment } from '@models/../newModels/comment.js';
+import { Comment } from '@models/comment.js';
 
 import { COMMENT_CONSTANTS } from '@constants/comment.js';
 

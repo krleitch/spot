@@ -19,7 +19,7 @@ import {
   GetNotificationsRequest,
   Notification,
   SetAllNotificationsSeenRequest
-} from '@models/../newModels/notification';
+} from '@models/notification';
 @Component({
   selector: 'spot-notifications',
   templateUrl: './notifications.component.html',

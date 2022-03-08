@@ -42,13 +42,13 @@ import {
   UpdateUsernameRequest,
   UpdateUsernameResponse,
   VerifyRequest
-} from '@models/../newModels/user';
+} from '@models/user';
 import {
   UserMetadata,
   UpdateUserMetadataRequest,
   UnitSystem,
   ThemeWeb
-} from '@models/../newModels/userMetadata';
+} from '@models/userMetadata';
 import { SpotError } from '@exceptions/error';
 import { ModalConfirmResult, ModalConfirmResultTypes } from '@models/modal';
 

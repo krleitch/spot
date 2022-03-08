@@ -10,7 +10,7 @@ import {
   DeleteRatingRequest,
   DeleteRatingResponse,
   SpotRatingType
-} from '@models/../newModels/spot';
+} from '@models/spot';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {

@@ -4,9 +4,9 @@ const router = express.Router();
 import { pbkdf2Sync } from 'crypto';
 
 // db
-import prismaUser from '@db/../prisma/user.js';
-import prismaUserMetadata from '@db/../prisma/userMetadata.js';
-import prismaUserVerify from '@db/../prisma/userVerify.js';
+import prismaUser from '@db/prisma/user.js';
+import prismaUserMetadata from '@db/prisma/userMetadata.js';
+import prismaUserVerify from '@db/prisma/userVerify.js';
 
 // services
 import authenticationService from '@services/authentication/authentication.js';
@@ -39,13 +39,13 @@ import {
   VerifyConfirmRequest,
   VerifyConfirmResponse,
   VerifyResponse
-} from '@models/../newModels/user.js';
+} from '@models/user.js';
 import {
   UserMetadata,
   GetUserMetadataResponse,
   UpdateUserMetadataRequest,
   UpdateUserMetadataResponse
-} from '@models/../newModels/userMetadata.js';
+} from '@models/userMetadata.js';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
   next();

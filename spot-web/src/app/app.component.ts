@@ -11,12 +11,12 @@ import { ThemeService } from '@services/theme.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
-import { GetUserRequest } from '@models/../newModels/user';
+import { GetUserRequest } from '@models/user';
 import {
   LoadLocationRequest,
   LocationFailure,
   SetLocationRequest
-} from '@models/../newModels/location';
+} from '@models/location';
 
 declare const gapi: any;
 

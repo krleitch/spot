@@ -23,7 +23,7 @@ import {
   User,
   UpdateUsernameRequest,
   UpdateUsernameResponse
-} from '@models/../newModels/user';
+} from '@models/user';
 import { SpotError } from '@exceptions/error';
 
 @Component({

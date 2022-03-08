@@ -16,11 +16,8 @@ import { CommentService } from '@src/app/services/comment.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // assets
-import {
-  ReportSpotRequest,
-  ReportSpotResponse
-} from '@models/../newModels/spot';
-import { ReportCommentRequest } from '@models/../newModels/comment';
+import { ReportSpotRequest, ReportSpotResponse } from '@models/spot';
+import { ReportCommentRequest } from '@models/comment';
 import { ReportCategory } from '@models/report';
 import { SpotError } from '@exceptions/error';
 import { REPORT_CONSTANTS } from '@constants/report';

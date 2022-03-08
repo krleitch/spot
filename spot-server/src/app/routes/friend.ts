@@ -2,8 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 // db
-import prismaUser from '@db/../prisma/user.js';
-import prismaFriend from '@db/../prisma/friend.js';
+import prismaUser from '@db/prisma/user.js';
+import prismaFriend from '@db/prisma/friend.js';
 
 // ratelimiter
 import rateLimiter from '@helpers/rateLimiter.js';
@@ -18,7 +18,7 @@ const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.FRIENDS;
 import authorizationService from '@services/authorization.js';
 
 // models
-import { UserRole } from '@models/../newModels/user.js';
+import { UserRole } from '@models/user.js';
 import {
   Friend,
   GetFriendsRequest,
@@ -37,7 +37,7 @@ import {
   AcceptFriendResponse,
   DeclineFriendRequest,
   DeclineFriendResponse
-} from '@models/../newModels/friend.js';
+} from '@models/friend.js';
 import P from '@prisma/client';
 
 router.use((req: Request, res: Response, next: NextFunction) => {

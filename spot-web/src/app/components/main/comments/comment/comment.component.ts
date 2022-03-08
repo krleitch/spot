@@ -33,11 +33,11 @@ import { AuthenticationService } from '@services/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
-import { Friend } from '@models/../newModels/friend';
+import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
-import { User } from '@models/../newModels/user';
-import { UserMetadata } from '@models/../newModels/userMetadata';
-import { LocationData } from '@models/../newModels/location';
+import { User } from '@models/user';
+import { UserMetadata } from '@models/userMetadata';
+import { LocationData } from '@models/location';
 import {
   CreateReplyRequest,
   AddReplyStoreRequest,
@@ -49,9 +49,9 @@ import {
   GetRepliesResponse,
   SetRepliesStoreRequest,
   CommentRatingType
-} from '@models/../newModels/comment';
-import { Spot } from '@models/../newModels/spot';
-import { Tag } from '@models/../newModels/comment';
+} from '@models/comment';
+import { Spot } from '@models/spot';
+import { Tag } from '@models/comment';
 import {
   ModalImageData,
   ModalOptions,

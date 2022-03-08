@@ -7,7 +7,7 @@ import config from '@config/config.js';
 
 // db
 import redisClient from '@db/redis.js';
-import prismaUserLocation from '@db/../prisma/userLocation.js';
+import prismaUserLocation from '@db/prisma/userLocation.js';
 
 // error
 import * as locationError from '@exceptions/location.js';
@@ -19,8 +19,8 @@ import authorizationService from '@services/authorization.js';
 import { LOCATION_CONSTANTS } from '@constants/location.js';
 
 // models
-import { LocationData } from '@models/../newModels/location.js';
-import { UserRole } from '@models/../newModels/user.js';
+import { LocationData } from '@models/location.js';
+import { UserRole } from '@models/user.js';
 import P from '@prisma/client';
 import { GeoReplyWith } from '@node-redis/client/dist/lib/commands/generic-transformers.js';
 

@@ -24,7 +24,7 @@ import {
   LoginResponse,
   ValidateTokenRequest,
   ValidateTokenResponse
-} from '@models/../newModels/authentication';
+} from '@models/authentication';
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
 import { ModalOptions } from '@models/modal';
 

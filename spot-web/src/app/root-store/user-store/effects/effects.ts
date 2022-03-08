@@ -17,11 +17,8 @@ import { UserService } from '@src/app/services/user.service';
 import { ThemeService } from '@services/theme.service';
 
 // Models
-import { VerifyResponse } from '@models/../newModels/user';
-import {
-  GetUserMetadataResponse,
-  ThemeWeb
-} from '@models/../newModels/userMetadata';
+import { VerifyResponse } from '@models/user';
+import { GetUserMetadataResponse, ThemeWeb } from '@models/userMetadata';
 import { SpotError } from '@exceptions/error';
 @Injectable()
 export class UserStoreEffects {

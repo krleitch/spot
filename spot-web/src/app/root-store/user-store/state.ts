@@ -1,6 +1,6 @@
-import { User } from '@models/../newModels/user';
-import { LocationData } from '@models/../newModels/location';
-import { UserMetadata } from '@models/../newModels/userMetadata';
+import { User } from '@models/user';
+import { LocationData } from '@models/location';
+import { UserMetadata } from '@models/userMetadata';
 import { SpotError } from '@exceptions/error';
 
 export interface State {

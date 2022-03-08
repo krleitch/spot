@@ -5,10 +5,10 @@ import badwords from '@services/badwords.js';
 import locationService from '@services/location.js';
 
 // db
-import prismaSpot from '@db/../prisma/spot.js';
-import prismaComment from '@db/../prisma/comment.js';
-import prismaUser from '@db/../prisma/user.js';
-import prismaCommentTag from '@db/../prisma/commentTag.js';
+import prismaSpot from '@db/prisma/spot.js';
+import prismaComment from '@db/prisma/comment.js';
+import prismaUser from '@db/prisma/user.js';
+import prismaCommentTag from '@db/prisma/commentTag.js';
 
 // error
 import * as commentError from '@exceptions/comment.js';
@@ -22,7 +22,7 @@ import profileImages from '@helpers/profileImages.js';
 
 // models
 import P from '@prisma/client';
-import { Tag, Comment, CommentTag } from '@models/../newModels/comment.js';
+import { Tag, Comment, CommentTag } from '@models/comment.js';
 
 const validCommentContent = (content: string): SpotError | null => {
   if (

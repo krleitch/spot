@@ -5,7 +5,7 @@ import shortid from 'shortid';
 import badwords from '@services/badwords.js';
 
 // db
-import prismaSpot from '@db/../prisma/spot.js';
+import prismaSpot from '@db/prisma/spot.js';
 
 // error
 import * as spotError from '@exceptions/spot.js';

@@ -19,7 +19,7 @@ import {
   RateSpotResponse,
   GetSpotResponse,
   DeleteRatingResponse
-} from '@models/../newModels/spot';
+} from '@models/spot';
 
 @Injectable()
 export class SpotStoreEffects {

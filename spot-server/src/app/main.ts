@@ -31,7 +31,7 @@ import authenticationService from '@services/authentication/authentication.js';
 import locationService from '@services/location.js';
 import authorizationService from '@services/authorization.js';
 
-import { UserRole } from '@models/../newModels/user.js';
+import { UserRole } from '@models/user.js';
 
 const port = process.env.PORT || 3000;
 

@@ -11,10 +11,10 @@ import secret from '@config/secret.js';
 import authenticationService from '@services/authentication/authentication.js';
 
 // db
-import prismaUser from '@db/../prisma/user.js';
+import prismaUser from '@db/prisma/user.js';
 
 // model
-import { User } from '@models/../newModels/user.js';
+import { User } from '@models/user.js';
 
 // Login Local
 const localOptions = {

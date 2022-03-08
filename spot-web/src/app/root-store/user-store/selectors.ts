@@ -8,9 +8,9 @@ import { State } from './state';
 
 // Assets
 import { SpotError } from '@exceptions/error';
-import { User } from '@models/../newModels/user';
-import { LocationData } from '@models/../newModels/location';
-import { UserMetadata } from '@models/../newModels/userMetadata';
+import { User } from '@models/user';
+import { LocationData } from '@models/location';
+import { UserMetadata } from '@models/userMetadata';
 
 export const selectUserFromStore = (state: State): User => state.user;
 export const selectUserLoadingFromStore = (state: State): boolean =>

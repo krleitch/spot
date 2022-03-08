@@ -2,9 +2,9 @@ import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 // db
-import prismaNotification from '@db/../prisma/notification.js';
-import prismaUser from '@db/../prisma/user.js';
-import prismaFriend from '@db/../prisma/friend.js';
+import prismaNotification from '@db/prisma/notification.js';
+import prismaUser from '@db/prisma/user.js';
+import prismaFriend from '@db/prisma/friend.js';
 
 // services
 import commentService from '@services/comment.js';
@@ -18,7 +18,7 @@ import * as notificationError from '@exceptions/notification.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // models
-import { UserRole } from '@models/../newModels/user.js';
+import { UserRole } from '@models/user.js';
 import {
   Notification,
   NotificationType,
@@ -36,7 +36,7 @@ import {
   SetNotificationSeenResponse,
   GetUnseenNotificationsRequest,
   GetUnseenNotificationsResponse
-} from '@models/../newModels/notification.js';
+} from '@models/notification.js';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
   next();

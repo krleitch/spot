@@ -26,7 +26,7 @@ import {
   ReportSpotResponse,
   DeleteRatingRequest,
   DeleteRatingResponse
-} from '@models/../newModels/spot';
+} from '@models/spot';
 import { SpotError } from '@exceptions/error';
 
 @Injectable({

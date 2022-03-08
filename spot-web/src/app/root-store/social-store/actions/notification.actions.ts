@@ -14,7 +14,7 @@ import {
   SetAllNotificationsSeenResponse,
   SetNotificationSeenRequest,
   SetNotificationSeenResponse
-} from '@models/../newModels/notification';
+} from '@models/notification';
 import { SpotError } from '@exceptions/error';
 
 export enum NotificationsActionTypes {

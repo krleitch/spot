@@ -1,100 +1,86 @@
-export interface Notification {
-    id: string;
-    post_id: string;
-    comment_id: string;
-    reply_id: string;
-    creation_date: string;
-    username: string;
-    image_src: string;
-    image_nsfw: boolean;
-    content: string;
-    seen: number;
-    link: string;
-    comment_link: string;
-    comment_image_src: string;
-    comment_image_nsfw: boolean;
-    comment_content: string;
-    reply_image_src: string;
-    reply_image_nsfw: boolean;
-    reply_content: string;
-    reply_link: string;
+
+export enum NotificationType {
+  INFO = "INFO",
+  TAG = "TAG",
+  ALERT = "ALERT",
 }
 
-// Get notifications
+// Todo, organize fields for types better, data: type
+export interface Notification {
+    notificationId: string;
+    spotId: string | null; // is a spot id associated?
+    commentId: string | null; // is a comment id associated?
+    replyId: string | null; // is a reply id associated?
+    createdAt: Date;
+    username?: string;
+    imageSrc?: string;
+    imageNsfw?: boolean;
+    content: string | null; // is there content?
+    seen: boolean;
+    link?: string;
+    type: NotificationType;
+    commentLink?: string;
+    commentImageSrc?: string;
+    commentImageNsfw?: boolean;
+    commentContent?: string;
+    replyImageSrc?: string;
+    replyImageNsfw?: boolean;
+    replyContent?: string;
+    replyLink?: string;
+}
+// Get 
 export interface GetNotificationsRequest {
-    before?: string; // Date
-    after?: string; // Date
+    before?: string;
+    after?: string;
     initialLoad: boolean;
     limit: number;
 }
-export interface GetNotificationsSuccess {
+export interface GetNotificationsResponse {
     notifications: Notification[];
-    initialLoad: boolean;
     cursor: {
-        before: string // Date
-        after: string // Date
+        before: string | undefined
+        after: string | undefined
     };
 }
 
-// Add a notification
-export interface AddNotificationRequest {
-    receiver: string;
-    postId: string;
+// Create a notification
+export interface CreateTagNotificationRequest {
+    receiver: string; // username
+    spotId: string;
     commentId?: string;
+    replyId?: string;
 }
-
-export interface AddNotificationSuccess {
+export interface CreateTagNotificationResponse {
     notification: Notification;
 }
 
-// Delete notifications
+// Delete
 export interface DeleteNotificationRequest {
     notificationId: string;
 }
-
-export interface DeleteNotificationSuccess {
-    notificationId: string;
-}
-
-export interface DeleteAllNotificationsRequest {
-
-}
-
-export interface DeleteAllNotificationsSuccess {
-
-}
+export interface DeleteNotificationResponse {}
+export interface DeleteAllNotificationsRequest {}
+export interface DeleteAllNotificationsResponse {}
 
 // Set notification Seen
 export interface SetNotificationSeenRequest {
     notificationId: string;
 }
+export interface SetNotificationSeenResponse {}
+export interface SetAllNotificationsSeenRequest {}
+export interface SetAllNotificationsSeenResponse {}
 
-export interface SetNotificationSeenSuccess {
-    notificationId: string;
-}
-
-export interface SetAllNotificationsSeenRequest {
-
-}
-
-export interface SetAllNotificationsSeenSuccess {
-
-}
-
-// get unread notifications
-export interface GetNotificationsUnreadRequest {
-
-}
-
-export interface GetNotificationsUnreadSuccess {
-    unread: number;
+// Get unseen notifications
+export interface GetUnseenNotificationsRequest {}
+export interface GetUnseenNotificationsResponse {
+    totalUnseen: number;
 }
 
 
 // Tags
 // Tag is only used on the front end / Converted to notifcation request
-export interface Tag {
+export interface NotificationTag {
     username: string;
-    postLink: string;
+    spotLink: string;
     offset: number;
 }

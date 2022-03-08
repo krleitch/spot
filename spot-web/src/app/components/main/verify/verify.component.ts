@@ -18,11 +18,7 @@ import { UserService } from '@src/app/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Assets
-import {
-  User,
-  VerifyConfirmRequest,
-  VerifyRequest
-} from '@models/../newModels/user';
+import { User, VerifyConfirmRequest, VerifyRequest } from '@models/user';
 
 @Component({
   selector: 'spot-verify',

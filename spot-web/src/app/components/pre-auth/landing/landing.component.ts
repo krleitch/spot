@@ -22,10 +22,10 @@ import { ModalService } from '@services/modal.service';
 // Models
 import {
   FacebookLoginRequest,
-  GoogleLoginRequest
+  GoogleLoginRequest,
+  RegisterRequest
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
-import { RegisterRequest } from '@models/authentication';
 
 // google api
 declare const gapi: any;

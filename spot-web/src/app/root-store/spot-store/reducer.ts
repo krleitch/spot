@@ -1,6 +1,6 @@
 import { ActionTypes, Actions } from './actions';
 import { State, initialState } from './state';
-import { SpotRatingType } from '@models/../newModels/spot';
+import { SpotRatingType } from '@models/spot';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {

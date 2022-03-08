@@ -23,8 +23,8 @@ import {
   Notification,
   DeleteNotificationRequest,
   SetNotificationSeenRequest
-} from '@models/../newModels/notification';
-import { UserMetadata } from '@models/../newModels/userMetadata';
+} from '@models/notification';
+import { UserMetadata } from '@models/userMetadata';
 
 @Component({
   selector: 'spot-notification-item',

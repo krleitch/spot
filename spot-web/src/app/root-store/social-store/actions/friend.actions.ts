@@ -6,7 +6,7 @@ import {
   DeleteFriendResponse,
   GetFriendsRequest,
   GetFriendsResponse
-} from '@models/../newModels/friend';
+} from '@models/friend';
 
 import { SpotError } from '@exceptions/error';
 

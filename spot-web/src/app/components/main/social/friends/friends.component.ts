@@ -39,8 +39,8 @@ import {
   GetFriendsRequest,
   GetPendingFriendsRequest,
   GetPendingFriendsResponse
-} from '@models/../newModels/friend';
-import { FacebookConnectRequest } from '@models/../newModels/user';
+} from '@models/friend';
+import { FacebookConnectRequest } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
 @Component({

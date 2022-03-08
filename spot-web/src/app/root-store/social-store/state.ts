@@ -1,5 +1,5 @@
-import { Friend } from '@models/../newModels/friend';
-import { Notification } from '@models/../newModels/notification';
+import { Friend } from '@models/friend';
+import { Notification } from '@models/notification';
 import { SpotError } from '@exceptions/error';
 
 export interface State {

@@ -1,4 +1,9 @@
-import { Account } from './accounts';
+import { User } from './user.js';
+
+interface Jwt {
+  token: string,
+  expiresIn: number // Number of days from now
+}
 
 export interface RegisterRequest {
     email: string;
@@ -6,70 +11,50 @@ export interface RegisterRequest {
     password: string;
     phone: string;
 };
-
 export interface RegisterResponse {
-    jwt: { token: string, expiresIn: number };
-    account: Account;
+    jwt: Jwt;
+    user: User;
 };
-
 export interface LoginRequest {
     emailOrUsername: string;
     password: string;
 };
-
 export interface LoginResponse {
-    jwt: { token: string, expiresIn: number };
-    account: Account;
+    jwt: Jwt;
+    user: User;
 };
 
 // Facebook
-
 export interface FacebookLoginRequest {
     accessToken: string;
 }
-
 export interface FacebookLoginResponse {
-    created: boolean;
-    jwt: { token: string, expiresIn: number };
-    account: Account;
+    created: boolean; // Was the account freshly created
+    jwt: Jwt;
+    user: User;
 }
 
 // Google
-
 export interface GoogleLoginRequest {
     accessToken: string;
 }
-
 export interface GoogleLoginResponse {
-    created: boolean;
-    jwt: { token: string, expiresIn: number };
-    account: Account;
+    created: boolean; // Was the account freshly created
+    jwt: Jwt;
+    user: User;
 }
 
-// password reset
-
+// Password reset
 export interface PasswordResetRequest {
     email: string;
 }
-
-export interface PasswordResetSuccess {
-
-}
-
+export interface PasswordResetResponse {}
 export interface ValidateTokenRequest {
     token: string;
 }
-
-export interface ValidateTokenSuccess {
-    token: string;
-    valid: boolean;
-}
-
+export interface ValidateTokenResponse {}
 export interface NewPasswordRequest {
     token: string;
     password: string;
 }
-
-export interface NewPasswordSuccess {
-    reset: boolean;
-}
+export interface NewPasswordResponse {}

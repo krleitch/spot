@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { ReportCategory } from '@models/../newModels/report.js';
+import { ReportCategory } from '@models/report.js';
 
 const createSpotReport = async (
   spotId: string,

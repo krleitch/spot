@@ -29,8 +29,8 @@ import {
   CreateSpotRequest,
   CreateSpotResponse,
   AddSpotStoreRequest
-} from '@models/../newModels/spot';
-import { LocationData } from '@models/../newModels/location';
+} from '@models/spot';
+import { LocationData } from '@models/location';
 import { SpotError } from '@exceptions/error';
 
 // Assets

@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { CommentRatingType } from '@models/../newModels/comment.js';
+import { CommentRatingType } from '@models/comment.js';
 const mapToModelEnum = <T>(
   commentWithRating: Omit<T, 'rating'> & { rating: P.SpotRatingType }
 ): Omit<T, 'rating'> & { rating: CommentRatingType } => {

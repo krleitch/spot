@@ -14,11 +14,8 @@ import { AuthenticationService } from '@services/authentication.service';
 import { UserService } from '@src/app/services/user.service';
 
 // models
-import { GoogleLoginResponse } from '@models/../newModels/authentication';
-import {
-  GoogleConnectResponse,
-  GoogleDisconnectResponse
-} from '@models/../newModels/user';
+import { GoogleLoginResponse } from '@models/authentication';
+import { GoogleConnectResponse, GoogleDisconnectResponse } from '@models/user';
 
 @Injectable()
 export class GoogleStoreEffects {

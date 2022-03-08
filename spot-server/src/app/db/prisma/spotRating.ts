@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { SpotRatingType } from '@models/../newModels/spot.js';
+import { SpotRatingType } from '@models/spot.js';
 
 const mapToModelEnum = <T>(
   spotWithRating: Omit<T, 'rating'> & { rating: P.SpotRatingType }

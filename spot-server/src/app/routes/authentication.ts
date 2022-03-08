@@ -8,8 +8,8 @@ import * as authenticationError from '@exceptions/authentication.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // db
-import prismaUser from '@db/../prisma/user.js';
-import prismaPasswordReset from '@db/../prisma/passwordReset.js';
+import prismaUser from '@db/prisma/user.js';
+import prismaPasswordReset from '@db/prisma/passwordReset.js';
 
 // services
 import authenticationService from '@services/authentication/authentication.js';
@@ -21,7 +21,7 @@ import mailService from '@services/mail.js';
 import rateLimiter from '@helpers/rateLimiter.js';
 
 // models
-import { UserRole } from '@models/../newModels/user.js';
+import { UserRole } from '@models/user.js';
 import {
   RegisterRequest,
   RegisterResponse,
@@ -36,7 +36,7 @@ import {
   ValidateTokenResponse,
   NewPasswordRequest,
   NewPasswordResponse
-} from '@models/../newModels/authentication.js';
+} from '@models/authentication.js';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
   next();

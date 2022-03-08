@@ -8,7 +8,7 @@ import { RootStoreState } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
 
 // Models
-import { Friend } from '@models/../newModels/friend';
+import { Friend } from '@models/friend';
 import { ChatType, Tab, ChatRoom } from '@models/chat';
 
 enum MenuStatus {

@@ -12,7 +12,7 @@ import {
   GetUnseenNotificationsResponse,
   SetAllNotificationsSeenResponse,
   SetNotificationSeenResponse
-} from '@models/../newModels/notification';
+} from '@models/notification';
 
 @Injectable()
 export class SocialStoreEffects {

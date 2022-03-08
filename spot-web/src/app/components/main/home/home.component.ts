@@ -39,21 +39,21 @@ import {
   Spot,
   GetSpotResponse,
   SetSpotStoreRequest
-} from '@models/../newModels/spot';
-import { User, VerifyRequest, UserRole } from '@models/../newModels/user';
+} from '@models/spot';
+import { User, VerifyRequest, UserRole } from '@models/user';
 import {
   UserMetadata,
   UpdateUserMetadataRequest,
   SearchType,
   LocationType,
   UnitSystem
-} from '@models/../newModels/userMetadata';
+} from '@models/userMetadata';
 import {
   LoadLocationRequest,
   LocationFailure,
   SetLocationRequest,
   LocationData
-} from '@models/../newModels/location';
+} from '@models/location';
 
 // Assets
 import { LOCATION_CONSTANTS } from '@constants/location';

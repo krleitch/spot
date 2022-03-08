@@ -25,9 +25,9 @@ import { UserStoreSelectors, RootStoreState } from '@store';
 // services
 import { ModalService } from '@services/modal.service';
 
-import { User } from '@models/../newModels/user';
-import { UserMetadata } from '@models/../newModels/userMetadata';
-import { GetUnseenNotificationsRequest } from '@models/../newModels/notification';
+import { User } from '@models/user';
+import { UserMetadata } from '@models/userMetadata';
+import { GetUnseenNotificationsRequest } from '@models/notification';
 
 @Component({
   selector: 'spot-main-nav',

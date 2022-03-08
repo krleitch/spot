@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { User, UserRole } from '@models/../newModels/user.js';
+import { User, UserRole } from '@models/user.js';
 
 // The properties that exist on the @model user
 const selectModelUser = P.Prisma.validator<P.Prisma.UserSelect>()({

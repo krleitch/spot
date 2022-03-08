@@ -1,4 +1,4 @@
-import { Comment } from '@models/../newModels/comment';
+import { Comment } from '@models/comment';
 
 // The id on all is the spot id
 

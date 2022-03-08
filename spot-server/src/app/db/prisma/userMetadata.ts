@@ -9,7 +9,7 @@ import {
   LocationType,
   SearchType,
   ThemeWeb
-} from '@models/../newModels/userMetadata.js';
+} from '@models/userMetadata.js';
 
 // Creating and Finding and deleting metadata should be done in user.ts
 

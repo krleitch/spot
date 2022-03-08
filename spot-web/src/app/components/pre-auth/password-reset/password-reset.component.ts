@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // Assets
 import {
   PasswordResetRequest,
-  PasswordResetSuccess
+  PasswordResetResponse
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 @Component({
@@ -75,7 +75,7 @@ export class PasswordResetComponent implements OnInit {
     this.emailLoading = true;
     this.buttonsDisabled = true;
     this.authenticationService.passwordReset(request).subscribe(
-      (response: PasswordResetSuccess) => {
+      (response: PasswordResetResponse) => {
         this.buttonsDisabled = false;
         this.successMessage = this.STRINGS.REQUEST_SUCCESS;
         this.emailLoading = false;

@@ -25,14 +25,14 @@ import {
   GetSpotActivityRequest,
   GetSpotActivityResponse,
   Spot
-} from '@models/../newModels/spot';
+} from '@models/spot';
 import {
   GetCommentActivityRequest,
   GetCommentActivityResponse,
   CommentActivity
-} from '@models/../newModels/comment';
-import { UserMetadata, UnitSystem } from '@models/../newModels/userMetadata';
-import { LocationData } from '@models/../newModels/location';
+} from '@models/comment';
+import { UserMetadata, UnitSystem } from '@models/userMetadata';
+import { LocationData } from '@models/location';
 
 // Extend Spot and Comment to include acitivty specefic properties
 interface SpotActivity extends Spot {

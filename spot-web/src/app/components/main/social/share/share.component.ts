@@ -27,8 +27,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   CreateTagNotificationRequest,
   CreateTagNotificationResponse
-} from '@models/../newModels/notification';
-import { Friend } from '@models/../newModels/friend';
+} from '@models/notification';
+import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
 import { ModalShareData } from '@models/modal';
 

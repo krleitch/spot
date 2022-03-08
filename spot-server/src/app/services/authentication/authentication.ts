@@ -16,7 +16,7 @@ const client = new OAuth2Client(
 import passport from '@services/authentication/passport.js';
 
 // db
-import prismaUser from '@db/../prisma/user.js';
+import prismaUser from '@db/prisma/user.js';
 
 // exceptions
 import * as authenticationError from '@exceptions/authentication.js';
@@ -26,7 +26,7 @@ import { SpotError } from '@exceptions/error.js';
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication.js';
 
 // models
-import { User } from '@models/../newModels/user.js';
+import { User } from '@models/user.js';
 
 // *************************
 // Validation

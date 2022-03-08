@@ -38,13 +38,13 @@ import {
   GetCommentsRequest,
   GetCommentsResponse,
   SetCommentsStoreRequest
-} from '@models/../newModels/comment';
-import { Tag } from '@models/../newModels/comment';
-import { Spot } from '@models/../newModels/spot';
-import { Friend } from '@models/../newModels/friend';
+} from '@models/comment';
+import { Tag } from '@models/comment';
+import { Spot } from '@models/spot';
+import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
-import { User } from '@models/../newModels/user';
-import { LocationData } from '@models/../newModels/location';
+import { User } from '@models/user';
+import { LocationData } from '@models/location';
 
 // Components
 import { TagComponent } from '../../social/tag/tag.component';

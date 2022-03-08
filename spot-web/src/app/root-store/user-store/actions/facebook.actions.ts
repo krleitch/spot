@@ -5,7 +5,7 @@ import {
   FacebookConnectResponse,
   FacebookDisconnectRequest,
   FacebookDisconnectResponse
-} from '@models/../newModels/user';
+} from '@models/user';
 import { SpotError } from '@exceptions/error';
 
 export enum FacebookActionTypes {

@@ -3,7 +3,7 @@ import {
   createFeatureSelector,
   createSelector
 } from '@ngrx/store';
-import { Spot } from '@models/../newModels/spot';
+import { Spot } from '@models/spot';
 
 import { State } from './state';
 

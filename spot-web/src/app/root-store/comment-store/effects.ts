@@ -21,7 +21,7 @@ import {
   DeleteReplyResponse,
   RateCommentResponse,
   RateReplyResponse
-} from '@models/../newModels/comment';
+} from '@models/comment';
 
 @Injectable()
 export class CommentStoreEffects {

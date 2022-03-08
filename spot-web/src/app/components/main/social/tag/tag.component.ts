@@ -20,7 +20,7 @@ import {
 } from '@store/social-store';
 
 // Assets
-import { Friend, GetFriendsRequest } from '@models/../newModels/friend';
+import { Friend, GetFriendsRequest } from '@models/friend';
 
 @Component({
   selector: 'spot-tag',

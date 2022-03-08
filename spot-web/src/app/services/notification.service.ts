@@ -26,7 +26,7 @@ import {
   SetAllNotificationsSeenResponse,
   SetNotificationSeenRequest,
   SetNotificationSeenResponse
-} from '@models/../newModels/notification';
+} from '@models/notification';
 
 @Injectable({
   providedIn: 'root'

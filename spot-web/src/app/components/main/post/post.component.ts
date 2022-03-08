@@ -32,10 +32,10 @@ import {
   Spot,
   DeleteRatingRequest,
   SpotRatingType
-} from '@models/../newModels/spot';
-import { User, UserRole } from '@models/../newModels/user';
-import { UserMetadata, UnitSystem } from '@models/../newModels/userMetadata';
-import { LocationData } from '@models/../newModels/location';
+} from '@models/spot';
+import { User, UserRole } from '@models/user';
+import { UserMetadata, UnitSystem } from '@models/userMetadata';
+import { LocationData } from '@models/location';
 import {
   ModalImageData,
   ModalOptions,

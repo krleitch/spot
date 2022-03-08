@@ -15,7 +15,7 @@ import {
   SetCommentsStoreRequest,
   SetRepliesStoreRequest,
   CommentRatingType
-} from '@models/../newModels/comment';
+} from '@models/comment';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {

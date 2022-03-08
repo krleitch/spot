@@ -4,13 +4,13 @@ const router = express.Router();
 import uuid from 'uuid';
 
 // db
-import prismaSpot from '@db/../prisma/spot.js';
-import prismaReport from '@db/../prisma/report.js';
-import prismaComment from '@db/../prisma/comment.js';
-import prismaCommentTag from '@db/../prisma/commentTag.js';
-import prismaNotification from '@db/../prisma/notification.js';
-import prismaCommentRating from '@db/../prisma/commentRating.js';
-import prismaUser from '@db/../prisma/user.js';
+import prismaSpot from '@db/prisma/spot.js';
+import prismaReport from '@db/prisma/report.js';
+import prismaComment from '@db/prisma/comment.js';
+import prismaCommentTag from '@db/prisma/commentTag.js';
+import prismaNotification from '@db/prisma/notification.js';
+import prismaCommentRating from '@db/prisma/commentRating.js';
+import prismaUser from '@db/prisma/user.js';
 
 // services
 import commentService from '@services/comment.js';
@@ -33,8 +33,8 @@ import { COMMENT_CONSTANTS } from '@constants/comment.js';
 import config from '@config/config.js';
 
 // models
-import { UserRole } from '@models/../newModels/user.js';
-import { ReportCategory } from '@models/../newModels/report.js';
+import { UserRole } from '@models/user.js';
+import { ReportCategory } from '@models/report.js';
 import {
   Comment,
   CommentActivity,
@@ -59,7 +59,7 @@ import {
   GetCommentActivityResponse,
   ReportCommentRequest,
   ReportCommentResponse
-} from '@models/../newModels/comment.js';
+} from '@models/comment.js';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
   next();

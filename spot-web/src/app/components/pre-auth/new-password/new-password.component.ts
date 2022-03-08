@@ -9,9 +9,9 @@ import { TranslateService } from '@ngx-translate/core';
 // Assets
 import {
   NewPasswordRequest,
-  NewPasswordSuccess,
+  NewPasswordResponse,
   ValidateTokenRequest,
-  ValidateTokenSuccess
+  ValidateTokenResponse
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 
@@ -80,12 +80,12 @@ export class NewPasswordComponent implements OnInit {
     };
 
     this.authenticationService.validateToken(request).subscribe(
-      (response: ValidateTokenSuccess) => {
-        if (response.valid) {
-          this.token = response.token;
-        } else {
-          this.errorMessage = this.STRINGS.INVALID_TOKEN;
-        }
+      (response: ValidateTokenResponse) => {
+        // if (response) {
+        this.token = val.token;
+        // } else {
+        //   this.errorMessage = this.STRINGS.INVALID_TOKEN;
+        // }
         this.buttonsDisabled = false;
         this.tokenLoading = false;
       },
@@ -146,7 +146,7 @@ export class NewPasswordComponent implements OnInit {
     };
 
     this.authenticationService.newPassword(request).subscribe(
-      (response: NewPasswordSuccess) => {
+      (response: NewPasswordResponse) => {
         this.passwordLoading = false;
         this.buttonsDisabled = false;
         this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;

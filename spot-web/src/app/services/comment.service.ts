@@ -25,7 +25,7 @@ import {
   RateReplyResponse,
   ReportCommentRequest,
   ReportCommentResponse
-} from '@models/../newModels/comment';
+} from '@models/comment';
 
 // Services
 import { AlertService } from '@services/alert.service';

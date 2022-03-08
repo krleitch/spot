@@ -1,6 +1,6 @@
 import { ActionTypes, Actions } from './actions';
 import { State, initialState } from './state';
-import { Comment, CommentRatingType } from '@models/../newModels/comment';
+import { Comment, CommentRatingType } from '@models/comment';
 
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {

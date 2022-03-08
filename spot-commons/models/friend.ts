@@ -1,89 +1,63 @@
-// Friend
 export interface Friend {
-    id: string; // The id of the relationship, not the account id of the friend
-    username: string;
-    creation_date: string;
-    confirmed_date: string;
+  friendId: string; // Id of the relationship, not a user
+  username: string;
+  createdAt: Date;
+  confirmedAt: Date | null;
 }
 
-// get
+// Get
 export interface GetFriendsRequest {
-    limit: number;
-    date: string;
+  limit: number;
+  after?: string;
+  before?: string;
+}
+export interface GetFriendsResponse {
+  friends: Friend[];
+  cursor: {
+    before: string | undefined;
+    after: string | undefined;
+  };
+}
+// Friend Requests, confirmedAt NULL that you RECEIVED
+export interface GetFriendRequestsRequest {}
+export interface GetFriendRequestsResponse {
+  friendRequests: Friend[];
+}
+// Pending Friends, confirmedAt NULL that you SENT
+export interface GetPendingFriendsRequest {}
+export interface GetPendingFriendsResponse {
+  pendingFriends: Friend[];
 }
 
-export interface GetFriendsSuccess {
-    friends: Friend[];
+// Delete
+export interface DeleteFriendRequest {
+  friendId: string; // this is the relationship id, not the user
 }
-
-// delete
-export interface DeleteFriendsRequest {
-    friendId: string;
-}
-
-export interface DeleteFriendsSuccess {
-    friendId: string;
-}
-
-// add to store
-export interface AddFriendToStore {
-    friend: Friend;
-}
-
-// Friend Requests, just have a confirmed_date of NULL
-
-// get
-export interface GetFriendRequests {
-
-}
-
-export interface GetFriendRequestsSuccess {
-    friendRequests: Friend[];
-}
-
-// add
-export interface AddFriendRequest {
-    username: string;
-}
-
-export interface AddFriendRequestSuccess {
-    friend: Friend; // check confirmed null to see if added on return
-}
-
-// accept friend request
-export interface AcceptFriendRequest {
-    friendRequestId: string;
-}
-
-export interface AcceptFriendRequestSuccess {
-    friend: Friend;
-}
-
-// decline friend request
-export interface DeclineFriendRequest {
-    friendRequestId: string;
-}
-
-export interface DeclineFriendRequestSuccess {
-
-}
-
-// Pending
-
-// get
-export interface GetPendingFriendRequests {
-
-}
-
-export interface GetPendingFriendRequestsSuccess {
-    friendRequests: Friend[];
-}
-
-// delete
+export interface DeleteFriendResponse {}
 export interface DeletePendingFriendRequest {
-    friendRequestId: string;
+  friendId: string; // this is the relationship id, not the user
 }
+export interface DeletePendingFriendResponse {}
 
-export interface DeletePendingFriendSuccess {
-    friendRequestId: string;
+// Add
+export interface CreateFriendRequest {
+  username: string;
+}
+export interface CreateFriendResponse {
+  friend: Friend; // This could be a confimed friend, if you try adding someone who sent a request
+}
+export interface AcceptFriendRequest {
+  friendRequestId: string;
+}
+export interface AcceptFriendResponse {
+  friend: Friend;
+}
+// Decline friend request
+export interface DeclineFriendRequest {
+  friendRequestId: string;
+}
+export interface DeclineFriendResponse {}
+// Add to store
+export interface AddFriendToStore {
+  friend: Friend;
 }

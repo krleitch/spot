@@ -24,7 +24,7 @@ import {
   GetFriendsResponse,
   GetPendingFriendsRequest,
   GetPendingFriendsResponse
-} from '@models/../newModels/friend';
+} from '@models/friend';
 
 @Injectable({
   providedIn: 'root'

@@ -6,8 +6,8 @@ import {
 
 import { State } from './state';
 
-import { Notification } from '@models/../newModels/notification';
-import { Friend } from '@models/../newModels/friend';
+import { Notification } from '@models/notification';
+import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
 
 export const selectFriendsFromStore = (state: State): Friend[] => state.friends;

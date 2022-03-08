@@ -31,13 +31,13 @@ import {
   VerifyConfirmResponse,
   VerifyRequest,
   VerifyResponse
-} from '@models/../newModels/user';
+} from '@models/user';
 import {
   GetUserMetadataRequest,
   GetUserMetadataResponse,
   UpdateUserMetadataRequest,
   UpdateUserMetadataResponse
-} from '@models/../newModels/userMetadata';
+} from '@models/userMetadata';
 
 // Assets
 import { environment } from 'src/environments/environment';

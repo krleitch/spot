@@ -15,11 +15,11 @@ import { AlertService } from '@services/alert.service';
 import { AuthenticationService } from '@services/authentication.service';
 
 // models
-import { FacebookLoginResponse } from '@models/../newModels/authentication';
+import { FacebookLoginResponse } from '@models/authentication';
 import {
   FacebookConnectResponse,
   FacebookDisconnectResponse
-} from '@models/../newModels/user';
+} from '@models/user';
 
 @Injectable()
 export class FacebookStoreEffects {

@@ -6,7 +6,7 @@ import {
   LoginResponse,
   RegisterRequest,
   RegisterResponse
-} from '@models/../newModels/authentication';
+} from '@models/authentication';
 import {
   GetUserRequest,
   GetUserResponse,
@@ -16,18 +16,18 @@ import {
   VerifyConfirmResponse,
   VerifyRequest,
   VerifyResponse
-} from '@models/../newModels/user';
+} from '@models/user';
 import {
   GetUserMetadataRequest,
   GetUserMetadataResponse,
   UpdateUserMetadataRequest,
   UpdateUserMetadataResponse
-} from '@models/../newModels/userMetadata';
+} from '@models/userMetadata';
 import {
   LoadLocationRequest,
   LocationFailure,
   SetLocationRequest
-} from '@models/../newModels/location';
+} from '@models/location';
 import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {

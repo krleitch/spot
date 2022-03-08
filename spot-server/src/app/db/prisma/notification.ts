@@ -3,7 +3,7 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { NotificationType } from '@models/../newModels/notification.js';
+import { NotificationType } from '@models/notification.js';
 
 const mapToModelEnum = <T>(
   userWithType: Omit<T, 'type'> & { type: P.NotificationType }

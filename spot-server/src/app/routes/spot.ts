@@ -4,11 +4,9 @@ const router = express.Router();
 import uuid from 'uuid';
 
 // db
-import posts from '@db/posts.js';
-import reports from '@db/reports.js';
-import prismaSpot from '@db/../prisma/spot.js';
-import prismaReport from '@db/../prisma/report.js';
-import prismaSpotRating from '@db/../prisma/spotRating.js';
+import prismaSpot from '@db/prisma/spot.js';
+import prismaReport from '@db/prisma/report.js';
+import prismaSpotRating from '@db/prisma/spotRating.js';
 
 // services
 import spotService from '@services/spot.js';
@@ -31,9 +29,9 @@ import { SPOT_CONSTANTS } from '@constants/spot.js';
 import { REPORT_CONSTANTS } from '@constants/report.js';
 
 // models
-import { UserRole } from '@models/../newModels/user.js';
-import { SearchType, LocationType } from '@models/../newModels/userMetadata.js';
-import { ReportCategory } from '@models/../newModels/report.js';
+import { UserRole } from '@models/user.js';
+import { SearchType, LocationType } from '@models/userMetadata.js';
+import { ReportCategory } from '@models/report.js';
 import {
   Spot,
   SpotRatingType,
@@ -53,7 +51,7 @@ import {
   ReportSpotResponse,
   GetSpotActivityRequest,
   GetSpotActivityResponse
-} from '@models/../newModels/spot.js';
+} from '@models/spot.js';
 
 // config
 import config from '@config/config.js';
