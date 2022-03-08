@@ -6,7 +6,7 @@ import {
 
 import { State } from './state';
 
-import { Notification } from '@models/notifications';
+import { Notification } from '@models/../newModels/notification';
 import { Friend } from '@models/../newModels/friend';
 import { SpotError } from '@exceptions/error';
 
@@ -25,8 +25,8 @@ export const selectNotificationsSuccessFromStore = (state: State): boolean =>
   state.notificationsSuccess;
 export const selectNotificationsErrorFromStore = (state: State): SpotError =>
   state.notificationsError;
-export const selectUnreadNotificationsFromStore = (state: State): number =>
-  state.unreadNotifications;
+export const selectTotalUnseenNotificationsFromStore = (state: State): number =>
+  state.totalUnseenNotifications;
 
 export const selectSocialState: MemoizedSelector<object, State> =
   createFeatureSelector<State>('social');
@@ -43,8 +43,8 @@ export const selectNotificationsSuccess: MemoizedSelector<object, boolean> =
 export const selectNotificationsError: MemoizedSelector<object, SpotError> =
   createSelector(selectSocialState, selectNotificationsErrorFromStore);
 
-export const selectUnreadNotifications: MemoizedSelector<object, number> =
-  createSelector(selectSocialState, selectUnreadNotificationsFromStore);
+export const selectTotalUnseenNotifications: MemoizedSelector<object, number> =
+  createSelector(selectSocialState, selectTotalUnseenNotificationsFromStore);
 
 export const selectFriends: MemoizedSelector<object, Friend[]> = createSelector(
   selectSocialState,

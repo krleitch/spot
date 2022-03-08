@@ -7,7 +7,7 @@ import { mapTo, skip, startWith, takeUntil, takeWhile } from 'rxjs/operators';
 // Store
 import { RootStoreState } from '@store';
 import {
-  SocialStoreNotificationsActions,
+  SocialStoreNotificationActions,
   SocialStoreSelectors
 } from '@store/social-store';
 import { Store, select } from '@ngrx/store';
@@ -19,7 +19,7 @@ import {
   GetNotificationsRequest,
   Notification,
   SetAllNotificationsSeenRequest
-} from '@models/notifications';
+} from '@models/../newModels/notification';
 @Component({
   selector: 'spot-notifications',
   templateUrl: './notifications.component.html',
@@ -95,14 +95,16 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         after: this.initialLoad
           ? null
           : this.notifications.length > 0
-          ? this.notifications[this.notifications.length - 1].creation_date
+          ? this.notifications[
+              this.notifications.length - 1
+            ].createdAt.toString()
           : null,
         limit: NOTIFICATIONS_CONSTANTS.LIMIT
       };
 
       // load the notifications
       this.store$.dispatch(
-        new SocialStoreNotificationsActions.GetNotificationsAction(request)
+        new SocialStoreNotificationActions.GetNotificationsAction(request)
       );
     }
   }
@@ -112,7 +114,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     const request: DeleteAllNotificationsRequest = {};
 
     this.store$.dispatch(
-      new SocialStoreNotificationsActions.DeleteAllNotificationsAction(request)
+      new SocialStoreNotificationActions.DeleteAllNotificationsAction(request)
     );
   }
 
@@ -120,7 +122,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     const request: SetAllNotificationsSeenRequest = {};
 
     this.store$.dispatch(
-      new SocialStoreNotificationsActions.SetAllNotificationsSeenAction(request)
+      new SocialStoreNotificationActions.SetAllNotificationsSeenAction(request)
     );
   }
 }

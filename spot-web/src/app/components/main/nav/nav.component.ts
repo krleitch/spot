@@ -17,7 +17,7 @@ import { mapTo, startWith, takeUntil, takeWhile } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { UserActions } from '@src/app/root-store/user-store';
 import {
-  SocialStoreNotificationsActions,
+  SocialStoreNotificationActions,
   SocialStoreSelectors
 } from '@store/social-store';
 import { UserStoreSelectors, RootStoreState } from '@store';
@@ -27,7 +27,7 @@ import { ModalService } from '@services/modal.service';
 
 import { User } from '@models/../newModels/user';
 import { UserMetadata } from '@models/../newModels/userMetadata';
-import { GetNotificationsUnreadRequest } from '@models/notifications';
+import { GetUnseenNotificationsRequest } from '@models/../newModels/notification';
 
 @Component({
   selector: 'spot-main-nav',
@@ -76,7 +76,7 @@ export class NavComponent implements OnInit, OnDestroy {
     );
 
     this.unread$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectUnreadNotifications)
+      select(SocialStoreSelectors.selectTotalUnseenNotifications)
     );
 
     this.isAuthenticated$ = this.store$.pipe(
@@ -90,10 +90,10 @@ export class NavComponent implements OnInit, OnDestroy {
         if (isAuthenticated) {
           this.ref.markForCheck();
 
-          const request: GetNotificationsUnreadRequest = {};
+          const request: GetUnseenNotificationsRequest = {};
 
           this.store$.dispatch(
-            new SocialStoreNotificationsActions.GetNotificationsUnreadAction(
+            new SocialStoreNotificationActions.GetUnseenNotificationsAction(
               request
             )
           );

@@ -1,5 +1,5 @@
 import { Friend } from '@models/../newModels/friend';
-import { Notification } from '@models/notifications';
+import { Notification } from '@models/../newModels/notification';
 import { SpotError } from '@exceptions/error';
 
 export interface State {
@@ -11,7 +11,7 @@ export interface State {
   notificationsLoading: boolean;
   notificationsError: SpotError;
   notificationsSuccess: boolean;
-  unreadNotifications: number;
+  totalUnseenNotifications: number;
 }
 
 export const initialState: State = {
@@ -23,5 +23,5 @@ export const initialState: State = {
   notificationsLoading: false,
   notificationsError: null,
   notificationsSuccess: false,
-  unreadNotifications: 0
+  totalUnseenNotifications: 0
 };

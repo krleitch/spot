@@ -7,10 +7,10 @@
     <div #notificationImage class="image-preview" *ngIf="userMetadata">
       <div
         class="preview-content"
-        *ngIf="notification.reply_image_src; else noImageReply"
+        *ngIf="notification.replyImageSrc; else noImageReply"
       >
         <img
-          [src]="notification.reply_image_src"
+          [src]="notification.replyImageSrc"
           [ngClass]="{
             'image-blur': imageBlurred && userMetadata.matureFilter
           }"
@@ -25,10 +25,10 @@
       <ng-template #noImageReply>
         <div
           class="preview-content"
-          *ngIf="notification.comment_image_src; else noImageComment"
+          *ngIf="notification.commentImageSrc; else noImageComment"
         >
           <img
-            [src]="notification.comment_image_src"
+            [src]="notification.commentImageSrc"
             [ngClass]="{
               'image-blur': imageBlurred && userMetadata.matureFilter
             }"
@@ -43,10 +43,10 @@
         <ng-template #noImageComment>
           <div
             class="preview-content"
-            *ngIf="notification.image_src; else noImage"
+            *ngIf="notification.imageSrc; else noImage"
           >
             <img
-              [src]="notification.image_src"
+              [src]="notification.imageSrc"
               [ngClass]="{
                 'image-blur': imageBlurred && userMetadata.matureFilter
               }"
@@ -69,16 +69,16 @@
 
     <div class="text-preview">
       <div class="prompt">
-        <div *ngIf="notification.comment_id; else postLink">
-          <div *ngIf="notification.reply_id; else commentLink">
+        <div *ngIf="notification.commentId; else postLink">
+          <div *ngIf="notification.commentParentid; else commentLink">
             <span class="username"> {{ notification.username }} </span>
             <span> {{ 'MAIN.NOTIFICATION_ITEM.REPLY_PROMPT' | translate }} </span>
-            <div class="text">{{ notification.reply_content }}</div>
+            <div class="text">{{ notification.replyContent }}</div>
           </div>
           <ng-template #commentLink>
             <span class="username"> {{ notification.username }} </span>
             <span> {{ 'MAIN.NOTIFICATION_ITEM.COMMENT_PROMPT' | translate }} </span>
-            <div class="text">{{ notification.comment_content }}</div>
+            <div class="text">{{ notification.commentContent }}</div>
           </ng-template>
         </div>
         <ng-template #postLink>

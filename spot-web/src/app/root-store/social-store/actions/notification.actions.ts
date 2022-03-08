@@ -3,26 +3,26 @@ import { Action } from '@ngrx/store';
 // Models
 import {
   DeleteAllNotificationsRequest,
-  DeleteAllNotificationsSuccess,
+  DeleteAllNotificationsResponse,
   DeleteNotificationRequest,
-  DeleteNotificationSuccess,
+  DeleteNotificationResponse,
   GetNotificationsRequest,
-  GetNotificationsSuccess,
-  GetNotificationsUnreadRequest,
-  GetNotificationsUnreadSuccess,
+  GetNotificationsResponse,
+  GetUnseenNotificationsRequest,
+  GetUnseenNotificationsResponse,
   SetAllNotificationsSeenRequest,
-  SetAllNotificationsSeenSuccess,
+  SetAllNotificationsSeenResponse,
   SetNotificationSeenRequest,
-  SetNotificationSeenSuccess
-} from '@models/notifications';
+  SetNotificationSeenResponse
+} from '@models/../newModels/notification';
 import { SpotError } from '@exceptions/error';
 
 export enum NotificationsActionTypes {
   GET_NOTIFICATIONS_REQUEST = '[Social] Get Notifications Request',
   GET_NOTIFICATIONS_SUCCESS = '[Social] Get Notifications Success',
   GET_NOTIFICATIONS_FAILURE = '[Social] Get Notifications Failure',
-  GET_NOTIFICATIONS_UNREAD_REQUEST = '[Social] Get Notifications Unread Request',
-  GET_NOTIFICATIONS_UNREAD_SUCCESS = '[Social] Get Notifications Unread Success',
+  GET_UNSEEN_NOTIFICATIONS_REQUEST = '[Social] Get Unseen Notifications Request',
+  GET_UNSEEN_NOTIFICATIONS_SUCCESS = '[Social] Get Unseen Notifications Success',
   DELETE_NOTIFICATION_REQUEST = '[Social] Delete Notification Request',
   DELETE_NOTIFICATION_SUCCESS = '[Social] Delete Notification Success',
   DELETE_ALL_NOTIFICATIONS_REQUEST = '[Social] Delete All Notifications Request',
@@ -46,7 +46,12 @@ export class GetNotificationsAction implements Action {
 
 export class GetNotificationsSuccessAction implements Action {
   readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_SUCCESS;
-  constructor(public response: GetNotificationsSuccess) {}
+  constructor(
+    public response: {
+      response: GetNotificationsResponse;
+      initialLoad: boolean;
+    }
+  ) {}
 }
 
 export class GetNotificationsFailureAction implements Action {
@@ -61,7 +66,12 @@ export class DeleteNotificationAction implements Action {
 
 export class DeleteNotificationSuccessAction implements Action {
   readonly type = NotificationsActionTypes.DELETE_NOTIFICATION_SUCCESS;
-  constructor(public response: DeleteNotificationSuccess) {}
+  constructor(
+    public response: {
+      response: DeleteNotificationResponse;
+      notificationId: string;
+    }
+  ) {}
 }
 
 export class DeleteAllNotificationsAction implements Action {
@@ -71,7 +81,7 @@ export class DeleteAllNotificationsAction implements Action {
 
 export class DeleteAllNotificationsSuccessAction implements Action {
   readonly type = NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS;
-  constructor(public response: DeleteAllNotificationsSuccess) {}
+  constructor(public response: DeleteAllNotificationsResponse) {}
 }
 
 export class SetNotificationSeenAction implements Action {
@@ -81,7 +91,12 @@ export class SetNotificationSeenAction implements Action {
 
 export class SetNotificationSeenSuccessAction implements Action {
   readonly type = NotificationsActionTypes.SET_NOTIFICATION_SEEN_SUCCESS;
-  constructor(public response: SetNotificationSeenSuccess) {}
+  constructor(
+    public response: {
+      response: SetNotificationSeenResponse;
+      notificationId: string;
+    }
+  ) {}
 }
 
 export class SetAllNotificationsSeenAction implements Action {
@@ -91,17 +106,17 @@ export class SetAllNotificationsSeenAction implements Action {
 
 export class SetAllNotificationsSeenSuccessAction implements Action {
   readonly type = NotificationsActionTypes.SET_ALL_NOTIFICATIONS_SEEN_SUCCESS;
-  constructor(public response: SetAllNotificationsSeenSuccess) {}
+  constructor(public response: SetAllNotificationsSeenResponse) {}
 }
 
-export class GetNotificationsUnreadAction implements Action {
-  readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_REQUEST;
-  constructor(public request: GetNotificationsUnreadRequest) {}
+export class GetUnseenNotificationsAction implements Action {
+  readonly type = NotificationsActionTypes.GET_UNSEEN_NOTIFICATIONS_REQUEST;
+  constructor(public request: GetUnseenNotificationsRequest) {}
 }
 
-export class GetNotificationsUnreadSuccessAction implements Action {
-  readonly type = NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS;
-  constructor(public response: GetNotificationsUnreadSuccess) {}
+export class GetUnseenNotificationsSuccessAction implements Action {
+  readonly type = NotificationsActionTypes.GET_UNSEEN_NOTIFICATIONS_SUCCESS;
+  constructor(public response: GetUnseenNotificationsResponse) {}
 }
 
 export type NotificationsActions =
@@ -109,7 +124,7 @@ export type NotificationsActions =
   | GetNotificationsAction
   | GetNotificationsSuccessAction
   | DeleteNotificationAction
-  | GetNotificationsUnreadSuccessAction
+  | GetUnseenNotificationsSuccessAction
   | GetNotificationsFailureAction
   | SetNotificationSeenAction
   | SetNotificationSeenSuccessAction
@@ -118,4 +133,4 @@ export type NotificationsActions =
   | DeleteAllNotificationsSuccessAction
   | SetAllNotificationsSeenAction
   | SetAllNotificationsSeenSuccessAction
-  | GetNotificationsUnreadAction;
+  | GetUnseenNotificationsAction;

@@ -19,15 +19,15 @@ import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
 import { ModalService } from '@services/modal.service';
-import { NotificationsService } from '@services/notifications.service';
+import { NotificationService } from '@src/app/services/notification.service';
 import { AlertService } from '@services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
-  AddNotificationRequest,
-  AddNotificationSuccess
-} from '@models/notifications';
+  CreateTagNotificationRequest,
+  CreateTagNotificationResponse
+} from '@models/../newModels/notification';
 import { Friend } from '@models/../newModels/friend';
 import { SpotError } from '@exceptions/error';
 import { ModalShareData } from '@models/modal';
@@ -70,7 +70,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
-    private notificationsService: NotificationsService,
+    private notificationService: NotificationService,
     private alertService: AlertService,
     private TranslateService: TranslateService
   ) {
@@ -182,24 +182,24 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    let request: AddNotificationRequest;
+    let request: CreateTagNotificationRequest;
 
     if (this.data.commentId) {
       request = {
         receiver: this.username,
-        postId: this.data.spotId,
+        spotId: this.data.spotId,
         commentId: this.data.commentId
       };
     } else {
       request = {
         receiver: this.username,
-        postId: this.data.spotId
+        spotId: this.data.spotId
       };
     }
 
     // send the request
-    this.notificationsService
-      .addNotification(request)
+    this.notificationService
+      .createTagNotification(request)
       .pipe(
         takeUntil(this.onDestroy),
         catchError((errorResponse) => {
@@ -207,7 +207,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe(
-        (response: AddNotificationSuccess) => {
+        (response: CreateTagNotificationResponse) => {
           this.successMessage = this.STRINGS.SUCCESS + request.receiver;
         },
         (error: SpotError) => {
@@ -220,24 +220,24 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    let request: AddNotificationRequest;
+    let request: CreateTagNotificationRequest;
 
     if (this.data.commentId) {
       request = {
         receiver: username,
-        postId: this.data.spotId,
+        spotId: this.data.spotId,
         commentId: this.data.commentId
       };
     } else {
       request = {
         receiver: username,
-        postId: this.data.spotId
+        spotId: this.data.spotId
       };
     }
 
     // send the request
-    this.notificationsService
-      .addNotification(request)
+    this.notificationService
+      .createTagNotification(request)
       .pipe(
         takeUntil(this.onDestroy),
         catchError((errorResponse) => {
@@ -245,7 +245,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe(
-        (response: AddNotificationSuccess) => {
+        (response: CreateTagNotificationResponse) => {
           // none
         },
         (error: SpotError) => {

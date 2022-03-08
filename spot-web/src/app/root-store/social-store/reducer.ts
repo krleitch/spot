@@ -1,7 +1,7 @@
 import {
   NotificationsActionTypes,
   NotificationsActions
-} from './actions/notifications.actions';
+} from './actions/notification.actions';
 import { FriendsActionTypes, FriendsActions } from './actions/friend.actions';
 import { ActionTypes, Actions } from './actions/actions';
 import { State, initialState } from './state';
@@ -29,8 +29,8 @@ export function featureReducer(
         notificationsSuccess: true,
         notificationsLoading: false,
         notifications: !action.response.initialLoad
-          ? action.response.notifications
-          : state.notifications.concat(action.response.notifications)
+          ? action.response.response.notifications
+          : state.notifications.concat(action.response.response.notifications)
       };
     }
     case NotificationsActionTypes.GET_NOTIFICATIONS_FAILURE: {
@@ -40,29 +40,29 @@ export function featureReducer(
         notificationsLoading: false
       };
     }
-    case NotificationsActionTypes.GET_NOTIFICATIONS_UNREAD_SUCCESS: {
+    case NotificationsActionTypes.GET_UNSEEN_NOTIFICATIONS_SUCCESS: {
       return {
         ...state,
-        unreadNotifications: action.response.unread
+        totalUnseenNotifications: action.response.totalUnseen
       };
     }
     case NotificationsActionTypes.DELETE_ALL_NOTIFICATIONS_SUCCESS: {
       return {
         ...state,
-        unreadNotifications: 0,
+        totalUnseenNotifications: 0,
         notifications: []
       };
     }
     case NotificationsActionTypes.DELETE_NOTIFICATION_SUCCESS: {
       return {
         ...state,
-        unreadNotifications: state.notifications.filter(
-          (item) => item.id === action.response.notificationId
+        totalUnseenNotifications: state.notifications.filter(
+          (item) => item.notificationId === action.response.notificationId
         )[0].seen
-          ? state.unreadNotifications
-          : state.unreadNotifications - 1,
+          ? state.totalUnseenNotifications
+          : state.totalUnseenNotifications - 1,
         notifications: state.notifications.filter(
-          (item) => item.id !== action.response.notificationId
+          (item) => item.notificationId !== action.response.notificationId
         )
       };
     }
@@ -71,13 +71,13 @@ export function featureReducer(
 
       state.notifications.forEach((notif, i) => {
         const newObj = Object.assign({}, notif);
-        newObj.seen = 1;
+        newObj.seen = true;
         newNotifications[i] = newObj;
       });
 
       return {
         ...state,
-        unreadNotifications: 0,
+        totalUnseenNotifications: 0,
         notifications: newNotifications
       };
     }
@@ -86,14 +86,17 @@ export function featureReducer(
 
       state.notifications.forEach((notif, i) => {
         const newObj = Object.assign({}, notif);
-        if (notif.id === action.response.notificationId) {
-          newObj.seen = 1;
+        if (notif.notificationId === action.response.notificationId) {
+          newObj.seen = true;
           newNotifications[i] = newObj;
         }
       });
       return {
         ...state,
-        unreadNotifications: Math.max(0, state.unreadNotifications - 1),
+        totalUnseenNotifications: Math.max(
+          0,
+          state.totalUnseenNotifications - 1
+        ),
         notifications: newNotifications
       };
     }

@@ -51,7 +51,7 @@ import {
   CommentRatingType
 } from '@models/../newModels/comment';
 import { Spot } from '@models/../newModels/spot';
-import { Tag } from '@models/notifications';
+import { Tag } from '@models/../newModels/comment';
 import {
   ModalImageData,
   ModalOptions,
@@ -731,7 +731,6 @@ export class CommentComponent
       if (elem.className === 'tag-inline') {
         const tag: Tag = {
           username: elem.textContent,
-          postLink: this.spot.link,
           offset
         };
         tags.push(tag);

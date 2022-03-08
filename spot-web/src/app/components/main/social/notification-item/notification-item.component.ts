@@ -16,14 +16,14 @@ import { takeUntil } from 'rxjs/operators';
 import { RootStoreState } from '@store';
 import { Store, select } from '@ngrx/store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
-import { SocialStoreNotificationsActions } from '@store/social-store';
+import { SocialStoreNotificationActions } from '@store/social-store';
 
 // assets
-import { Notification } from '@models/notifications';
 import {
+  Notification,
   DeleteNotificationRequest,
   SetNotificationSeenRequest
-} from '@models/notifications';
+} from '@models/../newModels/notification';
 import { UserMetadata } from '@models/../newModels/userMetadata';
 
 @Component({
@@ -59,12 +59,12 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
         this.userMetadata = userMetadata;
       });
 
-    if (this.notification.reply_image_src)
-      this.imageBlurred = this.notification.reply_image_nsfw;
-    else if (this.notification.comment_image_src) {
-      this.imageBlurred = this.notification.comment_image_nsfw;
-    } else if (this.notification.image_src) {
-      this.imageBlurred = this.notification.image_nsfw;
+    if (this.notification.replyImageSrc)
+      this.imageBlurred = this.notification.replyImageNsfw;
+    else if (this.notification.commentImageSrc) {
+      this.imageBlurred = this.notification.commentImageNsfw;
+    } else if (this.notification.imageSrc) {
+      this.imageBlurred = this.notification.imageNsfw;
     } else {
       this.imageBlurred = false;
     }
@@ -78,7 +78,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   getTime(): string {
     const curTime = new Date();
-    const notificationTime = new Date(this.notification.creation_date);
+    const notificationTime = new Date(this.notification.createdAt);
     const timeDiff = curTime.getTime() - notificationTime.getTime();
     if (timeDiff < 60000) {
       const secDiff = Math.round(timeDiff / 1000);
@@ -114,28 +114,28 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
     if (!this.notification.seen) {
       const request: SetNotificationSeenRequest = {
-        notificationId: this.notification.id
+        notificationId: this.notification.notificationId
       };
 
       // set seen
       this.store$.dispatch(
-        new SocialStoreNotificationsActions.SetNotificationSeenAction(request)
+        new SocialStoreNotificationActions.SetNotificationSeenAction(request)
       );
     }
 
-    if (this.notification.reply_link) {
+    if (this.notification.replyLink) {
       this.router.navigateByUrl(
         '/posts/' +
           this.notification.link +
           '/comments/' +
-          this.notification.reply_link
+          this.notification.replyLink
       );
-    } else if (this.notification.comment_link) {
+    } else if (this.notification.commentLink) {
       this.router.navigateByUrl(
         '/posts/' +
           this.notification.link +
           '/comments/' +
-          this.notification.comment_link
+          this.notification.commentLink
       );
     } else {
       this.router.navigateByUrl('/posts/' + this.notification.link);
@@ -144,12 +144,12 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
   delete(): void {
     const request: DeleteNotificationRequest = {
-      notificationId: this.notification.id
+      notificationId: this.notification.notificationId
     };
 
     // delete the notification
     this.store$.dispatch(
-      new SocialStoreNotificationsActions.DeleteNotificationAction(request)
+      new SocialStoreNotificationActions.DeleteNotificationAction(request)
     );
   }
 

@@ -3,22 +3,22 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { NotificationsService } from '@services/notifications.service';
-import * as notificationsActions from '../actions/notifications.actions';
+import { NotificationService } from '@src/app/services/notification.service';
+import * as notificationsActions from '../actions/notification.actions';
 import {
-  DeleteAllNotificationsSuccess,
-  DeleteNotificationSuccess,
-  GetNotificationsSuccess,
-  GetNotificationsUnreadSuccess,
-  SetAllNotificationsSeenSuccess,
-  SetNotificationSeenSuccess
-} from '@models/notifications';
+  DeleteAllNotificationsResponse,
+  DeleteNotificationResponse,
+  GetNotificationsResponse,
+  GetUnseenNotificationsResponse,
+  SetAllNotificationsSeenResponse,
+  SetNotificationSeenResponse
+} from '@models/../newModels/notification';
 
 @Injectable()
 export class SocialStoreEffects {
   constructor(
     private actions$: Actions,
-    private notificationsService: NotificationsService
+    private notificationService: NotificationService
   ) {}
 
   @Effect({ dispatch: false })
@@ -27,7 +27,7 @@ export class SocialStoreEffects {
       notificationsActions.NotificationsActionTypes.GENERIC_FAILURE
     ),
     tap((action: notificationsActions.GenericFailureAction) => {
-      this.notificationsService.failureMessage(action.error.message);
+      this.notificationService.failureMessage(action.error.message);
     })
   );
 
@@ -37,12 +37,12 @@ export class SocialStoreEffects {
       notificationsActions.NotificationsActionTypes.GET_NOTIFICATIONS_REQUEST
     ),
     switchMap((action) =>
-      this.notificationsService.getNotifications(action.request).pipe(
-        map((response: GetNotificationsSuccess) => {
-          response.initialLoad = action.request.initialLoad;
-          return new notificationsActions.GetNotificationsSuccessAction(
-            response
-          );
+      this.notificationService.getNotifications(action.request).pipe(
+        map((response: GetNotificationsResponse) => {
+          return new notificationsActions.GetNotificationsSuccessAction({
+            response: response,
+            initialLoad: action.request.initialLoad
+          });
         }),
         catchError((errorResponse) =>
           observableOf(
@@ -61,11 +61,12 @@ export class SocialStoreEffects {
       notificationsActions.NotificationsActionTypes.DELETE_NOTIFICATION_REQUEST
     ),
     switchMap((action: notificationsActions.DeleteNotificationAction) =>
-      this.notificationsService.deleteNotification(action.request).pipe(
-        map((response: DeleteNotificationSuccess) => {
-          return new notificationsActions.DeleteNotificationSuccessAction(
-            response
-          );
+      this.notificationService.deleteNotification(action.request).pipe(
+        map((response: DeleteNotificationResponse) => {
+          return new notificationsActions.DeleteNotificationSuccessAction({
+            response: response,
+            notificationId: action.request.notificationId
+          });
         }),
         catchError((errorResponse) =>
           observableOf(
@@ -83,8 +84,8 @@ export class SocialStoreEffects {
         .DELETE_ALL_NOTIFICATIONS_REQUEST
     ),
     switchMap((action: notificationsActions.DeleteAllNotificationsAction) =>
-      this.notificationsService.deleteAllNotifications(action.request).pipe(
-        map((response: DeleteAllNotificationsSuccess) => {
+      this.notificationService.deleteAllNotifications(action.request).pipe(
+        map((response: DeleteAllNotificationsResponse) => {
           return new notificationsActions.DeleteAllNotificationsSuccessAction(
             response
           );
@@ -105,11 +106,12 @@ export class SocialStoreEffects {
         .SET_NOTIFICATION_SEEN_REQUEST
     ),
     switchMap((action: notificationsActions.SetNotificationSeenAction) =>
-      this.notificationsService.setNotificationSeen(action.request).pipe(
-        map((response: SetNotificationSeenSuccess) => {
-          return new notificationsActions.SetNotificationSeenSuccessAction(
-            response
-          );
+      this.notificationService.setNotificationSeen(action.request).pipe(
+        map((response: SetNotificationSeenResponse) => {
+          return new notificationsActions.SetNotificationSeenSuccessAction({
+            response: response,
+            notificationId: action.request.notificationId
+          });
         }),
         catchError((errorResponse) =>
           observableOf(
@@ -127,8 +129,8 @@ export class SocialStoreEffects {
         .SET_ALL_NOTIFICATIONS_SEEN_REQUEST
     ),
     switchMap((action: notificationsActions.SetAllNotificationsSeenAction) =>
-      this.notificationsService.setAllNotificationsSeen(action.request).pipe(
-        map((response: SetAllNotificationsSeenSuccess) => {
+      this.notificationService.setAllNotificationsSeen(action.request).pipe(
+        map((response: SetAllNotificationsSeenResponse) => {
           return new notificationsActions.SetAllNotificationsSeenSuccessAction(
             response
           );
@@ -143,15 +145,15 @@ export class SocialStoreEffects {
   );
 
   @Effect()
-  getNotificationsUnreadEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<notificationsActions.GetNotificationsUnreadAction>(
+  getUnseenNotificationsEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<notificationsActions.GetUnseenNotificationsAction>(
       notificationsActions.NotificationsActionTypes
-        .GET_NOTIFICATIONS_UNREAD_REQUEST
+        .GET_UNSEEN_NOTIFICATIONS_REQUEST
     ),
-    switchMap((action: notificationsActions.GetNotificationsUnreadAction) =>
-      this.notificationsService.getNotificationsUnread(action.request).pipe(
-        map((response: GetNotificationsUnreadSuccess) => {
-          return new notificationsActions.GetNotificationsUnreadSuccessAction(
+    switchMap((action: notificationsActions.GetUnseenNotificationsAction) =>
+      this.notificationService.getUnseenNotifications(action.request).pipe(
+        map((response: GetUnseenNotificationsResponse) => {
+          return new notificationsActions.GetUnseenNotificationsSuccessAction(
             response
           );
         }),

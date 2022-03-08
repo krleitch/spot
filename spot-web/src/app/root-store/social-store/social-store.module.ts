@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { SocialStoreEffects } from './effects/notifications.effects';
+import { SocialStoreEffects } from './effects/notification.effects';
 import { FriendEffects } from './effects/friend.effects';
 import { featureReducer } from './reducer';
 

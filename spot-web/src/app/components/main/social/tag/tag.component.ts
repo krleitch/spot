@@ -21,7 +21,6 @@ import {
 
 // Assets
 import { Friend, GetFriendsRequest } from '@models/../newModels/friend';
-import { Tag } from '@models/notifications';
 
 @Component({
   selector: 'spot-tag',

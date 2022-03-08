@@ -40,7 +40,7 @@ import {
   CommentRatingType
 } from '@models/../newModels/comment';
 import { Spot } from '@models/../newModels/spot';
-import { Tag } from '@models/notifications';
+import { Tag } from '@models/../newModels/comment';
 import { Friend } from '@models/../newModels/friend';
 import { SpotError } from '@exceptions/error';
 import { User } from '@models/../newModels/user';
@@ -570,7 +570,6 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       if (elem.className === 'tag-inline') {
         const tag: Tag = {
           username: elem.textContent,
-          postLink: this.spot.link,
           offset
         };
         tags.push(tag);

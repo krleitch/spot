@@ -9,7 +9,7 @@ import prismaFriend from '@db/../prisma/friend.js';
 import rateLimiter from '@helpers/rateLimiter.js';
 
 // errors
-import * as friendsError from '@exceptions/friends.js';
+import * as friendsError from '@exceptions/friend.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 import { ERROR_MESSAGES } from '@exceptions/messages.js';
 const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.FRIENDS;
