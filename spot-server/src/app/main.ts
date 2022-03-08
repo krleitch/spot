@@ -21,9 +21,6 @@ import friend from '@routes/friend.js';
 import authentication from '@routes/authentication.js';
 import admin from '@routes/admin.js';
 
-// Db
-import * as mySql from '@db/mySql.js';
-
 // Utils
 import errorHandler from '@helpers/errorHandler.js';
 import passport from '@services/authentication/passport.js';
@@ -39,7 +36,6 @@ const port = process.env.PORT || 3000;
 // Setup
 // ************
 
-mySql.initDb();
 app.use(passport.initialize());
 
 app.use(bodyParser.json());
