@@ -62,24 +62,38 @@ const findCommentForSpot = async (
   limit: number,
   userId?: string
 ): Promise<P.Comment[]> => {
-  const comment = await prisma.comment.findMany({
-    where: {
-      spotId: spotId,
-      deletedAt: null,
-      createdAt: {
-        lt: after,
-        gt: before
-      }
-    },
-    orderBy: {
-      createdAt: after ? 'asc' : 'desc'
-    },
-    cursor: {
-      commentId: after ? after : before
-    },
-    skip: (after || before) ? 1 : 0, // skip the cursor
-    take: limit * (before ? - 1 : 1) // take forwards or backwards
-  });
+  let comment: P.Comment[];
+  if (!after && !before) {
+    comment = await prisma.comment.findMany({
+      where: {
+        spotId: spotId,
+        deletedAt: null
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: limit
+    });
+  } else {
+    if (after && before) {
+      // Not allowed
+      comment = [];
+    }
+    comment = await prisma.comment.findMany({
+      where: {
+        spotId: spotId,
+        deletedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      cursor: {
+        commentId: after ? after : before
+      },
+      skip: 1, // skip the cursor
+      take: limit * (before ? -1 : 1) // take forwards or backwards
+    });
+  }
   return comment;
 };
 
@@ -95,7 +109,7 @@ const findRepliesForComment = async (
     where: {
       spotId: spotId,
       parentCommentId: parentCommentId,
-      deletedAt: null,
+      deletedAt: null
     },
     orderBy: {
       createdAt: after ? 'asc' : 'desc'
@@ -103,8 +117,8 @@ const findRepliesForComment = async (
     cursor: {
       commentId: after ? after : before
     },
-    skip: (after || before) ? 1 : 0, // skip the cursor
-    take: limit * (before ? - 1 : 1) // take forwards or backwards
+    skip: after || before ? 1 : 0, // skip the cursor
+    take: limit * (before ? -1 : 1) // take forwards or backwards
   });
   return comment;
 };
@@ -135,7 +149,7 @@ const findCommentByLink = async (
 
 const findTotalCommentsAfterDate = async (
   spotId: string,
-  after: Date | undefined,
+  after: Date | undefined
 ): Promise<number> => {
   const totalAfter = await prisma.comment.count({
     where: {
@@ -143,14 +157,14 @@ const findTotalCommentsAfterDate = async (
       createdAt: {
         gt: after
       }
-    },
+    }
   });
   return totalAfter;
 };
 
 const findTotalCommentsBeforeDate = async (
   spotId: string,
-  before: Date | undefined,
+  before: Date | undefined
 ): Promise<number> => {
   const totalBefore = await prisma.comment.count({
     where: {
@@ -158,7 +172,7 @@ const findTotalCommentsBeforeDate = async (
       createdAt: {
         lt: before
       }
-    },
+    }
   });
   return totalBefore;
 };
@@ -166,7 +180,7 @@ const findTotalCommentsBeforeDate = async (
 const findTotalRepliesAfterReply = async (
   spotId: string,
   parentCommentId: string,
-  replyId: string,
+  replyId: string
 ): Promise<number> => {
   const totalBefore = await prisma.comment.count({
     where: {
@@ -217,7 +231,10 @@ const linkExists = async (link: string): Promise<boolean> => {
   return exists ? true : false;
 };
 
-const userOwnsComment = async (userId: string, commentId: string): Promise<boolean> => {
+const userOwnsComment = async (
+  userId: string,
+  commentId: string
+): Promise<boolean> => {
   const comment = await prisma.comment.findUnique({
     where: {
       commentId: commentId

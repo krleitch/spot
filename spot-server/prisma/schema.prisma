@@ -97,6 +97,7 @@ model Spot {
   likes            Int            @default(0)
   dislikes         Int            @default(0)
   totalComments    Int            @default(0)
+  hotRanking       Int            @default(1)
   createdAt        DateTime       @default(now())
   deletedAt        DateTime?
   user             User           @relation(fields: [owner], references: [userId])

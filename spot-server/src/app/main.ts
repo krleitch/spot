@@ -23,11 +23,14 @@ import admin from '@routes/admin.js';
 
 // Utils
 import errorHandler from '@helpers/errorHandler.js';
+
+// Services
 import passport from '@services/authentication/passport.js';
 import authenticationService from '@services/authentication/authentication.js';
 import locationService from '@services/location.js';
 import authorizationService from '@services/authorization.js';
 
+// Models
 import { UserRole } from '@models/user.js';
 
 const port = process.env.PORT || 3000;

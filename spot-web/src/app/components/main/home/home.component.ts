@@ -311,9 +311,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         after:
           this.spots.length > 0
             ? this.spots[this.spots.length - 1].spotId
-            : null,
-        before: null,
-        initialLoad: this.initialLoad,
+            : undefined,
+        before: undefined,
         location: this.location,
         options: {
           locationType: this.locationType,
@@ -329,7 +328,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.noSpots = response.spots.length === 0;
             const setRequest: SetSpotStoreRequest = {
               spots: response.spots,
-              initialLoad: response.initialLoad
+              initialLoad: this.initialLoad
             };
             this.store$.dispatch(
               new SpotStoreActions.SetSpotStoreRequestAction(setRequest)

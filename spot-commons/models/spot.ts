@@ -34,7 +34,6 @@ export interface GetSpotOptions {
 }
 export interface GetSpotRequest {
     limit: number;
-    initialLoad: boolean;
     location: LocationData;
     options: GetSpotOptions;
     before?: string, // id of the first spot
@@ -42,10 +41,9 @@ export interface GetSpotRequest {
 }
 export interface GetSpotResponse {
     spots: Spot[];
-    initialLoad: boolean,
     cursor: {
-        before: string | null,
-        after: string | null,
+        before: string | undefined,
+        after: string | undefined,
     }
 }
 export interface GetSingleSpotRequest {

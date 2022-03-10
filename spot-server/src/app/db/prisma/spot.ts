@@ -3,11 +3,30 @@ import P from '@prisma/client';
 import DBClient from './DBClient.js';
 const prisma = DBClient.instance;
 
-import { Spot } from '@models/spot.js';
-import { SearchType, LocationType } from '@models/userMetadata';
+// Db
+import prismaSpotRating from '@db/prisma/spotRating.js';
+
+// Services
+import locationService from '@services/location.js';
+
+// Models
+import { Spot, SpotRatingType } from '@models/spot.js';
+import { SearchType, LocationType } from '@models/userMetadata.js';
 import { LocationData } from '@models/location.js';
 
+// Constants
 import { SPOT_CONSTANTS } from '@constants/spot.js';
+import { LOCATION_CONSTANTS } from '@constants/location.js';
+
+// Types for adding location to spots
+type LocationProps = {
+  inRange: boolean;
+  distance: number;
+};
+type RatingProps = {
+  myRating: SpotRatingType;
+  owned: boolean;
+};
 
 const createSpot = async (
   spotId: string,
@@ -41,36 +60,146 @@ const findSpots = async (
   locationType: LocationType,
   location: LocationData,
   limit: number,
-): Promise<P.Spot[]> => {
-  const spots = await prisma.spot.findMany({
-    orderBy: {
-      createdAt: 'desc'
+  before: string | undefined,
+  after: string | undefined
+): Promise<Spot[]> => {
+  // Get the spots
+  let spots: P.Spot[];
+  if (searchType === SearchType.HOT) {
+    spots = await _findHotSpots(before, after, limit);
+  } else {
+    spots = await _findNewSpots(before, after, limit);
+  }
+  // Filter the locations and add distance
+  const spotsWithLocation = spots.reduce(
+    (filtered: Array<P.Spot & LocationProps>, spot: P.Spot) => {
+      const distance = locationService.distanceBetweenTwoLocations(
+        location.latitude,
+        location.longitude,
+        Number(spot.latitude),
+        Number(spot.longitude),
+        'M'
+      );
+      if (distance < LOCATION_CONSTANTS.IN_RANGE_DISTANCE) {
+        filtered.push({
+          ...spot,
+          distance: Math.max(LOCATION_CONSTANTS.MIN_DISTANCE, distance),
+          inRange: true
+        });
+      } else {
+        // Only if searching globally, since you are not in range
+        if (locationType === LocationType.GLOBAL) {
+          filtered.push({
+            ...spot,
+            distance: Math.max(LOCATION_CONSTANTS.MIN_DISTANCE, distance),
+            inRange: false
+          });
+        }
+      }
+      return filtered;
     },
-    take: limit
-  });
+    []
+  );
+  // Add the user rating
+  const spotsWithLocationAndRating: Array<
+    P.Spot & LocationProps & RatingProps
+  > = await Promise.all(
+    spotsWithLocation.map(async (spot) => {
+      const spotRating = await prismaSpotRating.findRatingForUserAndSpot(
+        userId,
+        spot.spotId
+      );
+      return {
+        ...spot,
+        myRating: spotRating ? spotRating.rating : SpotRatingType.NONE,
+        owned: spot.owner === userId
+      };
+    })
+  );
+  // Remove The Properties we Dont want
+  const clientSpots: Spot[] = spotsWithLocationAndRating.map((spot) => {
+    return {
+      spotId: spot.spotId,
+      createdAt: spot.createdAt,
+      deletedAt: spot.deletedAt,
+      distance: spot.distance,
+      inRange: spot.inRange,
+      geolocation: spot.geolocation,
+      content: spot.content,
+      imageSrc: spot.imageSrc,
+      imageNsfw: spot.imageNsfw,
+      likes: spot.likes,
+      dislikes: spot.dislikes,
+      myRating: spot.myRating,
+      totalComments: spot.totalComments,
+      link: spot.link,
+      owned: spot.owned,
+    }
+  })
+  return clientSpots;
+};
+
+const _findHotSpots = async (
+  before: string | undefined,
+  after: string | undefined,
+  limit: number
+) => {
+  let spots: P.Spot[];
+  if (!before && !after) {
+    spots = await prisma.spot.findMany({
+      orderBy: {
+        hotRanking: 'desc'
+      },
+      take: limit
+    });
+  } else {
+    if (before && after) {
+      // Not allowed
+      return [];
+    }
+    spots = await prisma.spot.findMany({
+      orderBy: {
+        hotRanking: 'desc'
+      },
+      cursor: {
+        spotId: after ? after : before
+      },
+      skip: 1, // skip the cursor
+      take: limit * (before ? -1 : 1) // take forwards or backwards
+    });
+  }
   return spots;
 };
 
-// Find spots by got/new global/local
-const findSpotsWithCursor = async (
-  userId: string,
-  searchType: SearchType,
-  locationType: LocationType,
-  location: LocationData,
+const _findNewSpots = async (
   before: string | undefined,
   after: string | undefined,
-  limit: number,
-): Promise<P.Spot[]> => {
-  const spots = await prisma.spot.findMany({
-    orderBy: {
-      createdAt: 'desc'
-    },
-    cursor: {
-      spotId: after
-    },
-    skip: (after || before) ? 1 : 0, // skip the cursor
-    take: limit * (before ? - 1 : 1) // take forwards or backwards
-  });
+  limit: number
+) => {
+  let spots: P.Spot[];
+  if (!before && !after) {
+    spots = await prisma.spot.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: limit
+    });
+  } else {
+    if (before && after) {
+      // Not allowed
+      return [];
+    }
+    spots = await prisma.spot.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      cursor: {
+        spotId: after ? after : before
+      },
+      skip: 1, // skip the cursor
+      take: limit * (before ? -1 : 1) // take forwards or backwards
+    });
+  }
   return spots;
 };
 
@@ -167,7 +296,6 @@ const findSpotActivity = async (
 export default {
   createSpot,
   findSpots,
-  findSpotsWithCursor,
   findSpotById,
   findSpotByLink,
   softDeleteSpot,

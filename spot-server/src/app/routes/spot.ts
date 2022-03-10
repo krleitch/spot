@@ -71,7 +71,6 @@ router.get(
         return next(new authenticationError.AuthenticationError());
       }
 
-      // Todo, make dynamic
       let queryLocationType: LocationType;
       switch (req.query?.locationType) {
         case 'GLOBAL':
@@ -95,11 +94,10 @@ router.get(
           querySearchType = SearchType.HOT;
       }
 
-      const query: GetSpotRequest = {
+      const request: GetSpotRequest = {
         limit: Number(req.query.limit),
         before: req.query.before?.toString(),
         after: req.query.after?.toString(),
-        initialLoad: req.query.initial ? Boolean(req.query.initial) : false,
         options: {
           locationType: queryLocationType,
           searchType: querySearchType
@@ -110,62 +108,22 @@ router.get(
         }
       };
 
-      let spots;
-      if (query.after || query.before) {
-        spots = await prismaSpot.findSpotsWithCursor(
-          req.user.userId,
-          query.options.searchType,
-          query.options.locationType,
-          query.location,
-          query.before ? query.before : undefined,
-          query.after ? query.after : undefined,
-          query.limit
-        );
-      } else {
-        spots = await prismaSpot.findSpots(
-          req.user.userId,
-          query.options.searchType,
-          query.options.locationType,
-          query.location,
-          query.limit
-        );
-      }
-
-      // add the location props
-      const spotsWithLocation = locationService.addLocationPropsToSpots(
-        spots,
-        query.location,
-        { hideDistance: true }
+      // Finds the spots, adds location and rating, and removes props for client
+      const spots = await prismaSpot.findSpots(
+        req.user.userId,
+        request.options.searchType,
+        request.options.locationType,
+        request.location,
+        request.limit,
+        request.before,
+        request.after
       );
 
-      // Add your rating
-      const spotsWithLocationAndRating: Spot[] = await Promise.all(
-        spotsWithLocation.map(async (spot) => {
-          const newSpot: Spot = {
-            ...spot,
-            myRating: SpotRatingType.NONE,
-            owned: false
-          };
-          if (req.user) {
-            const spotRating = await prismaSpotRating.findRatingForUserAndSpot(
-              req.user.userId,
-              spot.spotId
-            );
-            if (spotRating) {
-              newSpot.myRating = spotRating.rating;
-            }
-          }
-          return newSpot;
-        })
-      );
-
-      const l = spotsWithLocationAndRating.length;
       const response: GetSpotResponse = {
-        spots: spotsWithLocationAndRating,
-        initialLoad: query.initialLoad,
+        spots: spots,
         cursor: {
-          before: l > 0 ? spotsWithLocationAndRating[0].spotId : null,
-          after: l > 0 ? spotsWithLocationAndRating[l-1].spotId : null
+          before: spots.at(0)?.spotId,
+          after: spots.at(-1)?.spotId
         }
       };
       res.status(200).json(response);
