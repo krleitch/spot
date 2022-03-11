@@ -74,19 +74,36 @@ const findAllNotification = async (
   after: string | undefined,
   limit: number
 ) => {
-  const notifications = await prisma.notification.findMany({
-    where: {
-      receiverId: receiverId
-    },
-    cursor: {
-      notificationId: after
-    },
-    orderBy: {
-      createdAt: 'desc'
-    },
-    take: before ? -limit : limit,
-    skip: before || after ? 1 : 0
-  });
+  let notifications: P.Notification[];
+  if (!before && !after) {
+    notifications = await prisma.notification.findMany({
+      where: {
+        receiverId: receiverId
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: limit
+    });
+  } else {
+    if (before && after) {
+      // Not allowed
+      return [];
+    }
+    notifications = await prisma.notification.findMany({
+      where: {
+        receiverId: receiverId
+      },
+      cursor: {
+        notificationId: after ? after : before
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      skip: 1,
+      take: limit * (before ? -1 : 1)
+    });
+  }
   return notifications.map((notification) => {
     return mapToModelEnum<P.Notification>(notification);
   });
@@ -141,9 +158,7 @@ const updateAllNotificationSeen = async (
   return notification.count;
 };
 
-const deleteNotificationById = async (
-  notificationId: string
-) => {
+const deleteNotificationById = async (notificationId: string) => {
   const notification = await prisma.notification.delete({
     where: {
       notificationId: notificationId

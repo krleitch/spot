@@ -76,12 +76,8 @@ router.get(
       }
 
       const request: GetCommentActivityRequest = {
-        before: req.query.before
-          ? req.query.before.toString()
-          : undefined,
-        after: req.query.after
-          ? req.query.after.toString()
-          : undefined,
+        before: req.query.before?.toString(),
+        after: req.query.after?.toString(),
         limit: Number(req.query.limit)
       };
 
@@ -277,15 +273,15 @@ router.get(
         // If its a reply, get all replies up to this comment, else get replies normally
         // Todo: fix
         if (reply.parentCommentId == request.commentId) {
-          // Up to id
-          replies = await prismaComment.findRepliesForComment(
+          // Up to the date since only sorted by createdAt currently
+          replies = await prismaComment.findRepliesUpToReplyByCreatedAt(
             request.spotId,
             request.commentId,
-            request.before,
-            request.after,
-            request.limit,
+            reply.createdAt,
             req.user?.userId
           );
+          // Add the reply as the final
+          replies.concat(reply)
         } else {
           replies = await prismaComment.findRepliesForComment(
             request.spotId,

@@ -133,9 +133,9 @@ const findSpots = async (
       myRating: spot.myRating,
       totalComments: spot.totalComments,
       link: spot.link,
-      owned: spot.owned,
-    }
-  })
+      owned: spot.owned
+    };
+  });
   return clientSpots;
 };
 
@@ -264,8 +264,8 @@ const updateNsfw = async (
 
 const findSpotActivity = async (
   userId: string,
-  before: Date | undefined,
-  after: Date | undefined,
+  before: string | undefined,
+  after: string | undefined,
   limit: number,
   location: LocationData
 ): Promise<P.Spot[]> => {
@@ -273,23 +273,43 @@ const findSpotActivity = async (
   maxActivityBeforeDate.setDate(
     maxActivityBeforeDate.getDate() - SPOT_CONSTANTS.ACTIVITY_DAYS
   );
-  before =
-    before && before > maxActivityBeforeDate ? before : maxActivityBeforeDate;
-
-  const spot = await prisma.spot.findMany({
-    where: {
-      owner: userId,
-      deletedAt: null,
-      createdAt: {
-        lt: after,
-        gt: before
-      }
-    },
-    orderBy: {
-      createdAt: 'desc'
-    },
-    take: limit
-  });
+  let spot: P.Spot[];
+  if (!before && !after) {
+    spot = await prisma.spot.findMany({
+      where: {
+        owner: userId,
+        deletedAt: null,
+        createdAt: {
+          gt: maxActivityBeforeDate
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: limit
+    });
+  } else {
+    if (before && after) {
+      return [];
+    }
+    spot = await prisma.spot.findMany({
+      where: {
+        owner: userId,
+        deletedAt: null,
+        createdAt: {
+          gt: maxActivityBeforeDate
+        }
+      },
+      cursor: {
+        spotId: after ? after : before
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      skip: 1,
+      take: limit * (before ? -1 : 1)
+    });
+  }
   return spot;
 };
 

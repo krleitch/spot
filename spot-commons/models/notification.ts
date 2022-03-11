@@ -32,7 +32,6 @@ export interface Notification {
 export interface GetNotificationsRequest {
     before?: string;
     after?: string;
-    initialLoad: boolean;
     limit: number;
 }
 export interface GetNotificationsResponse {

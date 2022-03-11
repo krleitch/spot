@@ -12,7 +12,7 @@ import * as spotError from '@exceptions/spot.js';
 import { SpotError } from '@exceptions/error.js';
 
 // constants
-import { POSTS_CONSTANTS } from '@constants/posts.js';
+import { SPOT_CONSTANTS } from '@constants/spot.js';
 
 const generateSpotLink = async (): Promise<string> => {
   // Need to make sure the link isnt already taken
@@ -27,13 +27,13 @@ const generateSpotLink = async (): Promise<string> => {
 
 const checkValidSpotContent = (content: string): SpotError | null => {
   if (
-    content.length < POSTS_CONSTANTS.MIN_CONTENT_LENGTH ||
-    content.length > POSTS_CONSTANTS.MAX_CONTENT_LENGTH
+    content.length < SPOT_CONSTANTS.MIN_CONTENT_LENGTH ||
+    content.length > SPOT_CONSTANTS.MAX_CONTENT_LENGTH
   ) {
     return new spotError.InvalidSpotLength(
       400,
-      POSTS_CONSTANTS.MIN_CONTENT_LENGTH,
-      POSTS_CONSTANTS.MAX_CONTENT_LENGTH
+      SPOT_CONSTANTS.MIN_CONTENT_LENGTH,
+      SPOT_CONSTANTS.MAX_CONTENT_LENGTH
     );
   }
 

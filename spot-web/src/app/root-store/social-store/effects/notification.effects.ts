@@ -41,7 +41,7 @@ export class SocialStoreEffects {
         map((response: GetNotificationsResponse) => {
           return new notificationsActions.GetNotificationsSuccessAction({
             response: response,
-            initialLoad: action.request.initialLoad
+            initialLoad: !action.request.before && !action.request.after
           });
         }),
         catchError((errorResponse) =>

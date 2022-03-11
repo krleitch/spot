@@ -91,17 +91,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   onScroll(): void {
     if (!this.loading) {
       const request: GetNotificationsRequest = {
-        initialLoad: this.notifications.length > 0 ? false : this.initialLoad,
-        after: this.initialLoad
-          ? null
-          : this.notifications.length > 0
-          ? this.notifications[
-              this.notifications.length - 1
-            ].createdAt.toString()
-          : null,
+        after:
+          this.notifications.length > 0
+            ? this.notifications[this.notifications.length - 1].notificationId
+            : undefined,
         limit: NOTIFICATION_CONSTANTS.LIMIT
       };
-
       // load the notifications
       this.store$.dispatch(
         new SocialStoreNotificationActions.GetNotificationsAction(request)

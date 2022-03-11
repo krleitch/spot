@@ -102,14 +102,14 @@ export interface ReportSpotResponse {}
 export interface GetSpotActivityRequest {
     limit: number;
     location: LocationData;
-    before?: Date | null;
-    after?: Date | null;
+    before?: string;
+    after?: string;
 }
 export interface GetSpotActivityResponse {
     activity: Spot[];
     size: number;
     cursor: {
-        before: Date | null;
-        after: Date | null;
+        before: string | undefined;
+        after: string | undefined;
     }
 }

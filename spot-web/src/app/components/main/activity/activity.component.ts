@@ -64,7 +64,7 @@ export class ActivityComponent implements OnInit, OnDestroy {
   spotActivityLoading = false;
   showSpotsIndicator$: Observable<boolean>;
   spotsLoadedOnce = false;
-  spotAfter: Date = null;
+  spotAfter: string = undefined;
 
   commentActivity: CommentActivityActivity[] = [];
   commentLimit = 10;

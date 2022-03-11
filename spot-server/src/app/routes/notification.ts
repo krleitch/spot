@@ -49,10 +49,9 @@ router.get(
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const request: GetNotificationsRequest = {
-        before: req.query.before ? req.query.before.toString() : undefined,
-        after: req.query.after ? req.query.after.toString() : undefined,
-        limit: Number(req.query.limit),
-        initialLoad: false
+        before: req.query.before?.toString(),
+        after: req.query.after?.toString(),
+        limit: Number(req.query.limit)
       };
 
       if (!req.user) {
@@ -60,7 +59,7 @@ router.get(
       }
 
       const notifications = await prismaNotification.findAllNotification(
-        req.user?.userId,
+        req.user.userId,
         request.before,
         request.after,
         request.limit

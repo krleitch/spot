@@ -463,12 +463,8 @@ router.get(
 
       const query: GetSpotActivityRequest = {
         limit: Number(req.query.limit),
-        before: req.query.before
-          ? new Date(req.query.before.toString())
-          : undefined,
-        after: req.query.after
-          ? new Date(req.query.after.toString())
-          : undefined,
+        before: req.query.before?.toString(),
+        after: req.query.after?.toString(),
         location: {
           latitude: Number(req.query.latitude),
           longitude: Number(req.query.longitude)
@@ -517,13 +513,13 @@ router.get(
         cursor: {
           before:
             spotActivityWithLocation.length > 0
-              ? spotActivityWithLocation[0].createdAt
-              : null,
+              ? spotActivityWithLocation[0].spotId
+              : undefined,
           after:
             spotActivityWithLocation.length > 0
               ? spotActivityWithLocation[spotActivityWithLocation.length - 1]
-                  .createdAt
-              : null
+                  .spotId
+              : undefined
         }
       };
       res.status(200).json(response);

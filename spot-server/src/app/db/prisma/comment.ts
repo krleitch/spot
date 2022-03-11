@@ -77,7 +77,7 @@ const findCommentForSpot = async (
   } else {
     if (after && before) {
       // Not allowed
-      comment = [];
+      return [];
     }
     comment = await prisma.comment.findMany({
       where: {
@@ -121,7 +121,7 @@ const findRepliesForComment = async (
   } else {
     if (before && after) {
       // Not allowed
-      comment = [];
+      return [];
     }
     comment = await prisma.comment.findMany({
       where: {
@@ -139,6 +139,29 @@ const findRepliesForComment = async (
       take: limit * (before ? -1 : 1) // take forwards or backwards
     });
   }
+  return comment;
+};
+
+const findRepliesUpToReplyByCreatedAt = async (
+  spotId: string,
+  parentCommentId: string,
+  replyCreatedAt: Date,
+  userId?: string
+): Promise<P.Comment[]> => {
+  const comment = await prisma.comment.findMany({
+    where: {
+      spotId: spotId,
+      parentCommentId: parentCommentId,
+      deletedAt: null,
+      createdAt: {
+        lt: replyCreatedAt
+      }
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
   return comment;
 };
 
@@ -288,24 +311,44 @@ const findCommentActivity = async (
   maxActivityBeforeDate.setDate(
     maxActivityBeforeDate.getDate() - COMMENT_CONSTANTS.ACTIVITY_DAYS
   );
-
-  const comment = await prisma.comment.findMany({
-    where: {
-      owner: userId,
-      deletedAt: null,
-      createdAt: {
-        gt: maxActivityBeforeDate
-      }
-    },
-    cursor: {
-      commentId: after
-    },
-    orderBy: {
-      createdAt: 'desc'
-    },
-    take: before ? -limit : limit,
-    skip: before || after ? 1 : 0
-  });
+  let comment: P.Comment[];
+  if (!before && !after) {
+    comment = await prisma.comment.findMany({
+      where: {
+        owner: userId,
+        deletedAt: null,
+        createdAt: {
+          gt: maxActivityBeforeDate
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: limit
+    });
+  } else {
+    if (before && after) {
+      // Not allowed
+      return [];
+    }
+    comment = await prisma.comment.findMany({
+      where: {
+        owner: userId,
+        deletedAt: null,
+        createdAt: {
+          gt: maxActivityBeforeDate
+        }
+      },
+      cursor: {
+        commentId: after ? after : before
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: limit * (before ? -1 : 1),
+      skip: 1
+    });
+  }
   return comment;
 };
 
@@ -314,6 +357,7 @@ export default {
   createReply,
   findCommentForSpot,
   findRepliesForComment,
+  findRepliesUpToReplyByCreatedAt,
   findCommentById,
   findCommentByLink,
   findTotalCommentsAfterDate,
