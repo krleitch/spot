@@ -13,7 +13,7 @@ import {
 import { Store, select } from '@ngrx/store';
 
 // Assets
-import { NOTIFICATIONS_CONSTANTS } from '@constants/notifications';
+import { NOTIFICATION_CONSTANTS } from '@constants/notification';
 import {
   DeleteAllNotificationsRequest,
   GetNotificationsRequest,
@@ -99,7 +99,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
               this.notifications.length - 1
             ].createdAt.toString()
           : null,
-        limit: NOTIFICATIONS_CONSTANTS.LIMIT
+        limit: NOTIFICATION_CONSTANTS.LIMIT
       };
 
       // load the notifications

@@ -57,7 +57,7 @@ import {
 import { TagComponent } from '../../social/tag/tag.component';
 
 // Assets
-import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { COMMENT_CONSTANTS } from '@constants/comment';
 
 @Component({
   selector: 'spot-reply',
@@ -92,7 +92,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   STRINGS;
   eCommentRatingType = CommentRatingType;
-  COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
+  COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
@@ -195,8 +195,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (
       this.reply.content.split(/\r\n|\r|\n/).length >
-        COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
-      this.reply.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+        COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
+      this.reply.content.length > COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH
     ) {
       this.isExpandable = true;
     }
@@ -331,16 +331,16 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     for (
       let i = 0;
-      i < textArrays.length && i < COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
+      i < textArrays.length && i < COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
       i++
     ) {
       if (
         truncatedContent.length + textArrays[i].length >
-        COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+        COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH
       ) {
         truncatedContent = textArrays[i].substring(
           0,
-          COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
+          COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
         );
         break;
       } else {
@@ -348,7 +348,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
         // Dont add newline for last line or last line before line length reached
         if (
           i !== textArrays.length - 1 &&
-          i !== COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
+          i !== COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
         ) {
           truncatedContent += '\n';
         }
@@ -604,11 +604,11 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     // Error checking
 
     if (
-      content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
+      content.split(/\r\n|\r|\n/).length > COMMENT_CONSTANTS.MAX_LINE_LENGTH
     ) {
       this.addReply2Error = this.STRINGS.ERROR_LINE_LENGTH.replace(
         '%LENGTH%',
-        COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString()
+        COMMENT_CONSTANTS.MAX_LINE_LENGTH.toString()
       );
       return;
     }
@@ -618,18 +618,18 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    if (content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH) {
+    if (content.length < COMMENT_CONSTANTS.MIN_CONTENT_LENGTH) {
       this.addReply2Error = this.STRINGS.ERROR_MIN_CONTENT.replace(
         '%MIN%',
-        COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString()
+        COMMENT_CONSTANTS.MIN_CONTENT_LENGTH.toString()
       );
       return;
     }
 
-    if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
+    if (content.length > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH) {
       this.addReply2Error = this.STRINGS.ERROR_MAX_CONTENT.replace(
         '%MAX%',
-        COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString()
+        COMMENT_CONSTANTS.MAX_CONTENT_LENGTH.toString()
       );
       return;
     }

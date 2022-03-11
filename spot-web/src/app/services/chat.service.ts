@@ -33,6 +33,6 @@ export class ChatService {
     return 'profile pop';
     // }
     // the index should already be in the proper range, but this is just for safety
-    // return 'profile p' + (index % (COMMENTS_CONSTANTS.PROFILE_COLORS_COUNT + 1));
+    // return 'profile p' + (index % (COMMENT_CONSTANTS.PROFILE_COLORS_COUNT + 1));
   }
 }

@@ -51,7 +51,7 @@ import { LocationData } from '@models/location';
 import { TagComponent } from '../../social/tag/tag.component';
 
 // Assets
-import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { COMMENT_CONSTANTS } from '@constants/comment';
 
 @Component({
   selector: 'spot-comments-container',
@@ -104,7 +104,7 @@ export class CommentsContainerComponent
   imgSrc: string = null;
 
   STRINGS;
-  COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
+  COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -142,8 +142,8 @@ export class CommentsContainerComponent
         if (this.comments.length === 0 && this.initialLoad) {
           // if detailed load more comments
           const initialLimit = this.detailed
-            ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT
-            : COMMENTS_CONSTANTS.INITIAL_LIMIT;
+            ? COMMENT_CONSTANTS.DETAILED_INITIAL_LIMIT
+            : COMMENT_CONSTANTS.INITIAL_LIMIT;
 
           // Get the latest initialLimit of comments
           const request: GetCommentsRequest = {
@@ -258,8 +258,8 @@ export class CommentsContainerComponent
         before:
           this.comments.length > 0 ? this.comments[0].commentId : undefined,
         limit: this.detailed
-          ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT
-          : COMMENTS_CONSTANTS.INITIAL_LIMIT,
+          ? COMMENT_CONSTANTS.DETAILED_INITIAL_LIMIT
+          : COMMENT_CONSTANTS.INITIAL_LIMIT,
         commentLink: this.spot.startCommentLink || undefined
       };
       this.loadingCommentsBefore = true;
@@ -503,11 +503,11 @@ export class CommentsContainerComponent
     // Error checking
 
     if (
-      content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
+      content.split(/\r\n|\r|\n/).length > COMMENT_CONSTANTS.MAX_LINE_LENGTH
     ) {
       this.addCommentError = this.STRINGS.ERROR_LINE_LENGTH.replace(
         '%LENGTH%',
-        COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString()
+        COMMENT_CONSTANTS.MAX_LINE_LENGTH.toString()
       );
       return;
     }
@@ -517,18 +517,18 @@ export class CommentsContainerComponent
       return;
     }
 
-    if (content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH) {
+    if (content.length < COMMENT_CONSTANTS.MIN_CONTENT_LENGTH) {
       this.addCommentError = this.STRINGS.ERROR_MIN_CONTENT.replace(
         '%MIN%',
-        COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString()
+        COMMENT_CONSTANTS.MIN_CONTENT_LENGTH.toString()
       );
       return;
     }
 
-    if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
+    if (content.length > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH) {
       this.addCommentError = this.STRINGS.ERROR_MAX_CONTENT.replace(
         '%MAX%',
-        COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString()
+        COMMENT_CONSTANTS.MAX_CONTENT_LENGTH.toString()
       );
       return;
     }
@@ -599,8 +599,8 @@ export class CommentsContainerComponent
     return Math.min(
       this.totalCommentsAfter,
       this.detailed
-        ? this.COMMENTS_CONSTANTS.RECENT_LIMIT_DETAILED
-        : this.COMMENTS_CONSTANTS.RECENT_LIMIT
+        ? this.COMMENT_CONSTANTS.RECENT_LIMIT_DETAILED
+        : this.COMMENT_CONSTANTS.RECENT_LIMIT
     );
   }
 
@@ -611,7 +611,7 @@ export class CommentsContainerComponent
     const request: GetCommentsRequest = {
       spotId: this.spot.spotId,
       before: this.comments.length > 0 ? this.comments[0].commentId : undefined,
-      limit: COMMENTS_CONSTANTS.RECENT_LIMIT
+      limit: COMMENT_CONSTANTS.RECENT_LIMIT
     };
 
     this.loadingCommentsAfter = true;
@@ -654,8 +654,8 @@ export class CommentsContainerComponent
     return Math.min(
       this.totalCommentsBefore,
       this.detailed
-        ? this.COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED
-        : this.COMMENTS_CONSTANTS.MORE_LIMIT
+        ? this.COMMENT_CONSTANTS.MORE_LIMIT_DETAILED
+        : this.COMMENT_CONSTANTS.MORE_LIMIT
     );
   }
 
@@ -671,8 +671,8 @@ export class CommentsContainerComponent
           ? this.comments[this.comments.length - 1].commentId
           : undefined,
       limit: this.detailed
-        ? COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED
-        : COMMENTS_CONSTANTS.MORE_LIMIT
+        ? COMMENT_CONSTANTS.MORE_LIMIT_DETAILED
+        : COMMENT_CONSTANTS.MORE_LIMIT
     };
 
     this.loadingCommentsBefore = true;
@@ -704,7 +704,7 @@ export class CommentsContainerComponent
   }
 
   invalidLength(): boolean {
-    return this.currentLength > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH;
+    return this.currentLength > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH;
   }
 
   onFileChanged(event): void {
