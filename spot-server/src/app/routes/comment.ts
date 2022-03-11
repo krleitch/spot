@@ -238,7 +238,6 @@ router.get(
         );
 
       const response: GetCommentsResponse = {
-        spotId: request.spotId,
         comments: commentsWithTagsAndProfilePictureAndRating,
         totalCommentsBefore: totalCommentsBefore,
         totalCommentsAfter: totalCommentsAfter,
@@ -263,8 +262,7 @@ router.get(
         replyLink: req.query.reply?.toString(),
         limit: Number(req.query.limit),
         before: req.query?.before?.toString(),
-        after: req.query?.before?.toString(),
-        initialLoad: false
+        after: req.query?.before?.toString()
       };
 
       let replies: any;
@@ -354,11 +352,8 @@ router.get(
       );
 
       const response: GetRepliesResponse = {
-        spotId: request.spotId,
-        commentId: request.commentId,
         replies: repliesWithTagsAndProfilePictureAndRating,
         totalRepliesAfter: totalRepliesAfter,
-        initialLoad: request.initialLoad,
         cursor: {
           before: repliesWithTagsAndProfilePictureAndRating.at(0)?.commentId,
           after: repliesWithTagsAndProfilePictureAndRating.at(-1)?.commentId

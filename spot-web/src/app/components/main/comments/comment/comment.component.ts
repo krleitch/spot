@@ -63,7 +63,7 @@ import {
 import { TagComponent } from '../../social/tag/tag.component';
 
 // Assets
-import { COMMENTS_CONSTANTS } from '@constants/comments';
+import { COMMENT_CONSTANTS } from '@constants/comment';
 
 @Component({
   selector: 'spot-comment',
@@ -85,7 +85,7 @@ export class CommentComponent
 
   STRINGS;
   eCommentRatingType = CommentRatingType;
-  COMMENTS_CONSTANTS = COMMENTS_CONSTANTS;
+  COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
   // For large comments
   expanded = false;
@@ -167,23 +167,21 @@ export class CommentComponent
 
         // only load replies if we have none
         if (this.replies.length === 0 && this.initialLoad) {
-          // if detailed load more replies
-          const initialLimit = this.detailed ? 10 : 1;
-
           const request: GetRepliesRequest = {
             spotId: this.comment.spotId,
             commentId: this.comment.commentId,
-            replyLink: this.spot.startCommentLink || null,
-            after: null,
-            initialLoad: true,
-            limit: initialLimit
+            replyLink: this.spot.startCommentLink || undefined,
+            after: undefined,
+            limit: this.detailed
+              ? COMMENT_CONSTANTS.REPLY_DETAILED_INITIAL_LIMIT
+              : COMMENT_CONSTANTS.REPLY_INITIAL_LIMIT
           };
 
           this.loadingReplies = true;
           this.showLoadingRepliesIndicator$ = timer(1500)
             .pipe(
               mapTo(true),
-              takeWhile((val) => this.loadingReplies)
+              takeWhile((_) => this.loadingReplies)
             )
             .pipe(startWith(false));
 
@@ -193,10 +191,9 @@ export class CommentComponent
             .subscribe(
               (replies: GetRepliesResponse) => {
                 const storeRequest: SetRepliesStoreRequest = {
-                  spotId: replies.spotId,
-                  commentId: replies.commentId,
-                  date: new Date().toString(), // its bogus, FIX
-                  initialLoad: true,
+                  spotId: this.comment.spotId,
+                  commentId: this.comment.commentId,
+                  type: 'initial',
                   replies: replies.replies,
                   totalRepliesAfter: replies.totalRepliesAfter
                 };
@@ -260,8 +257,8 @@ export class CommentComponent
 
     if (
       this.comment.content.split(/\r\n|\r|\n/).length >
-        COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
-      this.comment.content.length > COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+        COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH ||
+      this.comment.content.length > COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH
     ) {
       this.isExpandable = true;
     }
@@ -288,9 +285,8 @@ export class CommentComponent
       const request: GetRepliesRequest = {
         spotId: this.comment.spotId,
         commentId: this.comment.commentId,
-        replyLink: this.spot.startCommentLink || null,
-        after: null,
-        initialLoad: true,
+        replyLink: this.spot.startCommentLink || undefined,
+        after: undefined,
         limit: initialLimit
       };
 
@@ -308,10 +304,9 @@ export class CommentComponent
         .subscribe(
           (replies: GetRepliesResponse) => {
             const storeRequest: SetRepliesStoreRequest = {
-              spotId: replies.spotId,
-              commentId: replies.commentId,
-              date: new Date().toString(),
-              initialLoad: true,
+              spotId: this.comment.spotId,
+              commentId: this.comment.commentId,
+              type: 'initial',
               replies: replies.replies,
               totalRepliesAfter: replies.totalRepliesAfter
             };
@@ -448,16 +443,16 @@ export class CommentComponent
 
     for (
       let i = 0;
-      i < textArrays.length && i < COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
+      i < textArrays.length && i < COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
       i++
     ) {
       if (
         truncatedContent.length + textArrays[i].length >
-        COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH
+        COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH
       ) {
         truncatedContent = textArrays[i].substring(
           0,
-          COMMENTS_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
+          COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
         );
         break;
       } else {
@@ -465,7 +460,7 @@ export class CommentComponent
         // Dont add newline for last line or last line before line length reached
         if (
           i !== textArrays.length - 1 &&
-          i !== COMMENTS_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
+          i !== COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
         ) {
           truncatedContent += '\n';
         }
@@ -611,8 +606,8 @@ export class CommentComponent
     return Math.min(
       this.totalRepliesAfter,
       this.detailed
-        ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED
-        : this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT
+        ? this.COMMENT_CONSTANTS.REPLY_MORE_LIMIT_DETAILED
+        : this.COMMENT_CONSTANTS.REPLY_MORE_LIMIT
     );
   }
 
@@ -624,11 +619,13 @@ export class CommentComponent
     const request: GetRepliesRequest = {
       spotId: this.comment.spotId,
       commentId: this.comment.commentId,
-      after: this.replies.slice(-1)[0].createdAt.toString(),
-      initialLoad: false,
+      after:
+        this.replies.length > 0
+          ? this.replies[this.replies.length - 1].commentId
+          : undefined,
       limit: this.detailed
-        ? this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT_DETAILED
-        : this.COMMENTS_CONSTANTS.REPLY_MORE_LIMIT
+        ? this.COMMENT_CONSTANTS.REPLY_MORE_LIMIT_DETAILED
+        : this.COMMENT_CONSTANTS.REPLY_MORE_LIMIT
     };
 
     this.loadingMoreReplies = true;
@@ -639,10 +636,9 @@ export class CommentComponent
       .subscribe(
         (replies: GetRepliesResponse) => {
           const storeRequest: SetRepliesStoreRequest = {
-            spotId: replies.spotId,
-            commentId: replies.commentId,
-            date: new Date().toString(),
-            initialLoad: replies.initialLoad,
+            spotId: this.comment.spotId,
+            commentId: this.comment.commentId,
+            type: 'after',
             replies: replies.replies,
             totalRepliesAfter: replies.totalRepliesAfter
           };
@@ -765,11 +761,11 @@ export class CommentComponent
     // Error checking
 
     if (
-      content.split(/\r\n|\r|\n/).length > COMMENTS_CONSTANTS.MAX_LINE_LENGTH
+      content.split(/\r\n|\r|\n/).length > COMMENT_CONSTANTS.MAX_LINE_LENGTH
     ) {
       this.addReplyError = this.STRINGS.ERROR_LINE_LENGTH.replace(
         '%LENGTH%',
-        COMMENTS_CONSTANTS.MAX_LINE_LENGTH.toString()
+        COMMENT_CONSTANTS.MAX_LINE_LENGTH.toString()
       );
       return;
     }
@@ -779,18 +775,18 @@ export class CommentComponent
       return;
     }
 
-    if (content.length < COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH) {
+    if (content.length < COMMENT_CONSTANTS.MIN_CONTENT_LENGTH) {
       this.addReplyError = this.STRINGS.ERROR_MIN_CONTENT.replace(
         '%MIN%',
-        COMMENTS_CONSTANTS.MIN_CONTENT_LENGTH.toString()
+        COMMENT_CONSTANTS.MIN_CONTENT_LENGTH.toString()
       );
       return;
     }
 
-    if (content.length > COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH) {
+    if (content.length > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH) {
       this.addReplyError = this.STRINGS.ERROR_MAX_CONTENT.replace(
         '%MAX%',
-        COMMENTS_CONSTANTS.MAX_CONTENT_LENGTH.toString()
+        COMMENT_CONSTANTS.MAX_CONTENT_LENGTH.toString()
       );
       return;
     }

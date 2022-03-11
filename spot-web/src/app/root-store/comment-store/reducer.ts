@@ -81,7 +81,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       // initialize if needed
       if (
         newComments[action.request.spotId] === undefined ||
-        action.request.initialLoad
+        action.request.type === 'initial'
       ) {
         newComments[action.request.spotId] = {
           comments: [],
@@ -103,19 +103,20 @@ export function featureReducer(state = initialState, action: Actions): State {
         ? action.request.totalCommentsBefore
         : newComments[action.request.spotId].totalCommentsBefore;
 
-      // after or before
+      // Put after the current comments
       if (action.request.type === 'after') {
         newComments[action.request.spotId] = {
-          comments: action.request.comments.concat(
-            newComments[action.request.spotId].comments
+          comments: newComments[action.request.spotId].comments.concat(
+            action.request.comments
           ),
           totalCommentsAfter: newTotalCommentsAfter,
           totalCommentsBefore: newTotalCommentsBefore
         };
       } else {
+        // Put before or iniital
         newComments[action.request.spotId] = {
-          comments: newComments[action.request.spotId].comments.concat(
-            action.request.comments
+          comments: action.request.comments.concat(
+            newComments[action.request.spotId].comments
           ),
           totalCommentsAfter: newTotalCommentsAfter,
           totalCommentsBefore: newTotalCommentsBefore
@@ -128,7 +129,6 @@ export function featureReducer(state = initialState, action: Actions): State {
     }
     case ActionTypes.SET_REPLIES_REQUEST: {
       const newReplies = Object.assign({}, state.replies);
-
       if (newReplies[action.request.spotId] === undefined) {
         newReplies[action.request.spotId] = {};
       }
@@ -151,7 +151,7 @@ export function featureReducer(state = initialState, action: Actions): State {
         newReplies[action.request.spotId][action.request.commentId].tagged ||
         action.request.replies.filter((x: Comment) => x.tag.tagged).length > 0;
 
-      if (action.request.initialLoad) {
+      if (action.request.type === 'initial') {
         const newRepliesObj = Object.assign(
           {},
           newReplies[action.request.spotId]

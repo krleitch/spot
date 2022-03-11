@@ -21,6 +21,10 @@ export const COMMENT_CONSTANTS = {
     MORE_LIMIT: 5, 
     MORE_LIMIT_DETAILED: 15,
 
+    // Limits Replies
+    REPLY_INITIAL_LIMIT: 1,
+    REPLY_DETAILED_INITIAL_LIMIT: 5,
+
     // Load More Replies
     REPLY_MORE_LIMIT: 5, 
     REPLY_MORE_LIMIT_DETAILED: 15,

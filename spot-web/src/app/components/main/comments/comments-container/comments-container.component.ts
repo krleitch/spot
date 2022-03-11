@@ -32,14 +32,15 @@ import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
+  Comment,
   CreateCommentRequest,
   AddCommentStoreRequest,
   CreateCommentResponse,
   GetCommentsRequest,
   GetCommentsResponse,
-  SetCommentsStoreRequest
+  SetCommentsStoreRequest,
+  Tag
 } from '@models/comment';
-import { Tag } from '@models/comment';
 import { Spot } from '@models/spot';
 import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
@@ -77,7 +78,7 @@ export class CommentsContainerComponent
   tagCaretPosition;
 
   comments$: Observable<StoreComment>;
-  comments = [];
+  comments: Array<Comment> = [];
   totalCommentsBefore = 0;
   totalCommentsAfter = 0;
   showLoadingCommentsIndicator$: Observable<boolean>;
@@ -147,7 +148,10 @@ export class CommentsContainerComponent
           // Get the latest initialLimit of comments
           const request: GetCommentsRequest = {
             spotId: this.spot.spotId,
-            after: new Date().toString(),
+            after:
+              this.comments.length > 0
+                ? this.comments[this.comments.length - 1].commentId
+                : undefined,
             limit: initialLimit,
             commentLink: this.spot.startCommentLink || null
           };
@@ -169,8 +173,7 @@ export class CommentsContainerComponent
                 if (comments.comments) {
                   const storeRequest: SetCommentsStoreRequest = {
                     spotId: this.spot.spotId,
-                    type: 'before',
-                    initialLoad: true,
+                    type: 'initial',
                     comments: comments.comments,
                     totalCommentsBefore: comments.totalCommentsBefore,
                     totalCommentsAfter: comments.totalCommentsAfter
@@ -249,19 +252,16 @@ export class CommentsContainerComponent
 
   ngOnChanges(changes: any): void {
     if (!this.initialLoad) {
-      // if detailed load more comments
-      const initialLimit = this.detailed
-        ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT
-        : COMMENTS_CONSTANTS.INITIAL_LIMIT;
-
-      // Get the latest initialLimit of comments
+      // Get the latest comments
       const request: GetCommentsRequest = {
         spotId: this.spot.spotId,
-        after: new Date().toString(),
-        limit: initialLimit,
-        commentLink: this.spot.startCommentLink || null
+        before:
+          this.comments.length > 0 ? this.comments[0].commentId : undefined,
+        limit: this.detailed
+          ? COMMENTS_CONSTANTS.DETAILED_INITIAL_LIMIT
+          : COMMENTS_CONSTANTS.INITIAL_LIMIT,
+        commentLink: this.spot.startCommentLink || undefined
       };
-
       this.loadingCommentsBefore = true;
       this.showLoadingCommentsIndicator$ = timer(500)
         .pipe(
@@ -269,7 +269,6 @@ export class CommentsContainerComponent
           takeWhile((_) => this.loadingCommentsBefore)
         )
         .pipe(startWith(false));
-
       this.commentService
         .getComments(request)
         .pipe(take(1))
@@ -280,7 +279,6 @@ export class CommentsContainerComponent
               const storeRequest: SetCommentsStoreRequest = {
                 spotId: this.spot.spotId,
                 type: 'before',
-                initialLoad: true,
                 comments: comments.comments,
                 totalCommentsBefore: comments.totalCommentsBefore,
                 totalCommentsAfter: comments.totalCommentsAfter
@@ -293,7 +291,7 @@ export class CommentsContainerComponent
               this.totalCommentsAfter = comments.totalCommentsAfter;
             }
           },
-          (err: SpotError) => {
+          (_err: SpotError) => {
             // Ignore error case for now
             this.loadingCommentsBefore = false;
           }
@@ -610,13 +608,10 @@ export class CommentsContainerComponent
     if (this.loadingCommentsAfter) {
       return;
     }
-
-    const limit = COMMENTS_CONSTANTS.RECENT_LIMIT;
-
     const request: GetCommentsRequest = {
       spotId: this.spot.spotId,
-      after: this.comments.length > 0 ? this.comments[0].creation_date : null,
-      limit
+      before: this.comments.length > 0 ? this.comments[0].commentId : undefined,
+      limit: COMMENTS_CONSTANTS.RECENT_LIMIT
     };
 
     this.loadingCommentsAfter = true;
@@ -631,8 +626,7 @@ export class CommentsContainerComponent
           if (response.comments) {
             const storeRequest: SetCommentsStoreRequest = {
               spotId: this.spot.spotId,
-              type: 'after',
-              initialLoad: this.initialLoad,
+              type: 'before',
               comments: response.comments,
               totalCommentsAfter: response.totalCommentsAfter
             };
@@ -674,8 +668,8 @@ export class CommentsContainerComponent
       spotId: this.spot.spotId,
       after:
         this.comments.length > 0
-          ? this.comments.slice(-1).pop().creation_date
-          : new Date().toString(),
+          ? this.comments[this.comments.length - 1].commentId
+          : undefined,
       limit: this.detailed
         ? COMMENTS_CONSTANTS.MORE_LIMIT_DETAILED
         : COMMENTS_CONSTANTS.MORE_LIMIT
@@ -692,8 +686,7 @@ export class CommentsContainerComponent
           if (response.comments) {
             const storeRequest: SetCommentsStoreRequest = {
               spotId: this.spot.spotId,
-              type: 'before',
-              initialLoad: this.initialLoad,
+              type: 'after',
               comments: response.comments,
               totalCommentsBefore: response.totalCommentsBefore
             };

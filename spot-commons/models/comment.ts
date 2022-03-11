@@ -44,10 +44,9 @@ export interface GetCommentsRequest {
   after?: string;
 }
 export interface GetCommentsResponse {
-  spotId: string;
+  comments: Comment[];
   totalCommentsBefore: number; // Should we show load more
   totalCommentsAfter: number; // Should we show load recent
-  comments: Comment[];
   cursor: {
     before: string | undefined;
     after: string | undefined;
@@ -56,8 +55,7 @@ export interface GetCommentsResponse {
 export interface SetCommentsStoreRequest {
   spotId: string;
   comments: Comment[];
-  type: string; // before / after
-  initialLoad: boolean;
+  type: 'before' | 'after' | 'initial'; // Where to insert
   totalCommentsBefore?: number;
   totalCommentsAfter?: number;
 }
@@ -95,14 +93,10 @@ export interface GetRepliesRequest {
   before?: string;
   after?: string;
   limit: number;
-  initialLoad: boolean;
 }
 export interface GetRepliesResponse {
-  spotId: string;
-  commentId: string;
   replies: Comment[];
   totalRepliesAfter: number;
-  initialLoad: boolean;
   cursor: {
     before: string | undefined;
     after: string | undefined;
@@ -112,8 +106,7 @@ export interface SetRepliesStoreRequest {
   spotId: string;
   commentId: string;
   replies: Comment[];
-  date: string;
-  initialLoad: boolean;
+  type: 'after' | 'initial'; // before not implemented yet
   totalRepliesAfter: number;
 }
 
