@@ -16,17 +16,10 @@
   flex-direction: row;
   margin: 2px 5px;
 
-  .title {
-    flex: 1;
-    color: var(--text-secondary);
-    margin-right: 10px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
   .location {
     color: var(--text-secondary);
     margin-right: 4px;
+    flex: 1;
   }
 
   .count-container {
@@ -48,11 +41,6 @@
   }
 
   .settings-icon {
-    color: var(--icon-secondary);
-    font-size: 18px;
-    margin-right: 4px;
-  }
-  .close-icon {
     color: var(--icon-secondary);
     font-size: 18px;
   }
@@ -97,14 +85,15 @@
 }
 
 .chat-bar {
-  background-color: var(--background-primary);
   display: flex;
-  padding: 5px 5px;
-  margin-top: auto;
+  margin: auto 10px 10px 10px;
 
   .chat {
     flex: 1;
     display: block;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: var(--background-primary);
     border: 0;
     outline: 0;
     white-space: pre-wrap; /* css-3 */
@@ -125,9 +114,10 @@
     align-items: center;
     background-color: var(--primary);
     color: var(--button-text);
-    padding: 5px 5px;
+    padding: 8px;
     font-size: var(--text-regular);
     height: 30;
+    border-radius: 3px;
 
     &:hover {
       background-color: var(--primary-highlight);

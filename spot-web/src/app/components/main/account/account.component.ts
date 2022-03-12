@@ -50,7 +50,11 @@ import {
   ThemeWeb
 } from '@models/userMetadata';
 import { SpotError } from '@exceptions/error';
-import { ModalConfirmResult, ModalConfirmResultTypes } from '@models/modal';
+import {
+  ModalConfirmResult,
+  ModalConfirmResultTypes,
+  ModalUploadPhotoResult
+} from '@models/modal';
 
 declare const gapi: any;
 
@@ -177,6 +181,15 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   formatBirthday(date: string) {
     const d = new Date(date);
     return d.toDateString();
+  }
+
+  openUploadPhotoModal(): void {
+    this.modalService
+      .open('global', 'uploadPhoto')
+      .pipe(take(1))
+      .subscribe((result: ModalUploadPhotoResult) => {
+        console.log('done', result.photo);
+      });
   }
 
   enableEditUsername(): void {

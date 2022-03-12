@@ -299,7 +299,6 @@
     },
 
     "CHAT_ROOM": {
-      "TEST": "TEST TITLE 1234",
       "CHAT_PLACEHOLDER": "Type to chat...",
       "SUBMIT": "Submit"
     },

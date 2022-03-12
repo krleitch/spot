@@ -27,7 +27,7 @@ export interface ModalImageData {
   imageSrc: string;
 }
 
-export type ModalResult = ModalConfirmResult;
+export type ModalResult = ModalConfirmResult | ModalUploadPhotoResult;
 
 export enum ModalConfirmResultTypes {
   CONFIRM = 'CONFIRM',
@@ -35,4 +35,8 @@ export enum ModalConfirmResultTypes {
 }
 export interface ModalConfirmResult {
   status: ModalConfirmResultTypes;
+}
+
+export interface ModalUploadPhotoResult {
+  photo: string;
 }

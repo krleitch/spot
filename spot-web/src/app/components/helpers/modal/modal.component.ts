@@ -19,6 +19,7 @@ import { ImageComponent } from '@src/app/components/helpers/image/image.componen
 import { TermsComponent } from '@src/app/components/pre-auth/terms/terms.component';
 import { AuthModalComponent } from '@src/app/components/pre-auth/auth-modal/auth-modal.component';
 import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.component';
+import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/upload-photo.component';
 
 // services
 import { ModalService } from '@services/modal.service';
@@ -56,7 +57,8 @@ export class ModalComponent implements OnInit, OnDestroy {
     image: ImageComponent,
     terms: TermsComponent,
     auth: AuthModalComponent,
-    welcome: WelcomeComponent
+    welcome: WelcomeComponent,
+    uploadPhoto: UploadPhotoComponent
   };
 
   isOpen: boolean;

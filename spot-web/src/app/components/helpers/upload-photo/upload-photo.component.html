@@ -1,0 +1,22 @@
+<div class="upload-photo">
+  <div class="header">
+    <span class="title"></span>
+  </div>
+  <div class="body">
+    <input type="file" (change)="fileChangeEvent($event)" />
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="1 / 1"
+      [cropperStaticWidth]="200"
+      [cropperStaticHeight]="200"
+      format="png"
+      (imageCropped)="imageCropped($event)"
+      (imageLoaded)="imageLoaded($event)"
+      (cropperReady)="cropperReady()"
+      (loadImageFailed)="loadImageFailed()"
+    ></image-cropper>
+
+    <img [src]="croppedImage" />
+  </div>
+</div>

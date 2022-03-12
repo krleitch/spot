@@ -15,7 +15,13 @@
             </span>
           </span>
           <!-- Photo -->
-          <div class="photo">
+          <div class="photo" (click)="openUploadPhotoModal()">
+            <div class="mask">
+              <div class="background"></div>
+              <div class="mask-icon">
+                <span class="material-icons icon"> add_a_photo </span>
+              </div>
+            </div>
             <img src="../../../../assets/images/op_large.png" />
           </div>
           <!-- Age -->
@@ -225,7 +231,8 @@
               <button
                 class="right"
                 [ngClass]="{
-                  'button-selected': userMetadata.unitSystem === eUnitSystem.METRIC
+                  'button-selected':
+                    userMetadata.unitSystem === eUnitSystem.METRIC
                 }"
                 (click)="setUnit(eUnitSystem.METRIC)"
               >
@@ -325,10 +332,7 @@
                 <span class="text"> Logged in with Facebook </span>
                 <!-- TODO, dont disconnect facebook without a password for the account -->
                 <button
-                  *ngIf="
-                    (facebookLoaded && false) ||
-                    user.googleId
-                  "
+                  *ngIf="(facebookLoaded && false) || user.googleId"
                   (click)="facebookDisconnect()"
                 >
                   {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}

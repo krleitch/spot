@@ -42,6 +42,7 @@ import {
 } from '@models/friend';
 import { FacebookConnectRequest } from '@models/user';
 import { SpotError } from '@exceptions/error';
+import { ModalConfirmResult, ModalConfirmResultTypes } from '@models/modal';
 
 @Component({
   selector: 'spot-friends',
@@ -253,8 +254,8 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService
       .open('global', 'confirm')
       .pipe(take(1))
-      .subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
+      .subscribe((result: ModalConfirmResult) => {
+        if (result.status === ModalConfirmResultTypes.CONFIRM) {
           // Delete the friend
           const request: DeleteFriendRequest = {
             friendId: id
@@ -271,8 +272,8 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService
       .open('global', 'confirm')
       .pipe(take(1))
-      .subscribe((result: { status: string }) => {
-        if (result.status === 'confirm') {
+      .subscribe((result: ModalConfirmResult) => {
+        if (result.status === ModalConfirmResultTypes.CONFIRM) {
           // Delete the friend
           const request: DeletePendingFriendRequest = {
             friendId: id

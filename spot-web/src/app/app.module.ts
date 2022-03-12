@@ -10,6 +10,7 @@ import {
 } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -59,6 +60,7 @@ import { ChatMenuComponent } from './components/main/social/chat/chat-menu/chat-
 import { ChatTabComponent } from './components/main/social/chat/chat-tab/chat-tab.component';
 import { ChatFriendComponent } from './components/main/social/chat/chat-friend/chat-friend.component';
 import { ChatJoinComponent } from './components/main/social/chat/chat-join/chat-join.component';
+import { UploadPhotoComponent } from './components/helpers/upload-photo/upload-photo.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -74,7 +76,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginComponent,
     RegisterComponent,
     NavComponent,
-    // HELPERS
     AlertComponent,
     // MAIN
     MainNavComponent,
@@ -82,7 +83,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     CreateComponent,
     PostComponent,
     AccountComponent,
-    // COMMENTS
     CommentsContainerComponent,
     ReplyComponent,
     CommentComponent,
@@ -113,7 +113,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ChatMenuComponent,
     ChatTabComponent,
     ChatFriendComponent,
-    ChatJoinComponent
+    ChatJoinComponent,
+    UploadPhotoComponent
   ],
   imports: [
     BrowserModule,
@@ -122,6 +123,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    ImageCropperModule,
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([]),
     TranslateModule.forRoot({

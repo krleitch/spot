@@ -321,6 +321,49 @@ spot-main-nav {
   justify-content: center;
   background-color: var(--background-primary);
   border-radius: 50%;
+
+  .mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 125px;
+    width: 125px;
+    border-radius: 50%;
+    opacity: 0%;
+
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: black;
+      height: 125px;
+      width: 125px;
+      border-radius: 50%;
+      opacity: 15%;
+    }
+
+    .mask-icon {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      height: 125px;
+      width: 125px;
+      background: transparent;
+      border-radius: 50%;
+
+      .icon {
+        color: white;
+      }
+    }
+
+    &:hover {
+      opacity: 100%;
+      cursor: pointer;
+    }
+  }
 }
 
 img {
@@ -341,7 +384,6 @@ img {
   .text {
     margin-left: 5px;
   }
-
 }
 
 // Verification
