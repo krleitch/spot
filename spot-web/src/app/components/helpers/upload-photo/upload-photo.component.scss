@@ -1,0 +1,99 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  background-color: var(--background-primary);
+
+  .title {
+  }
+
+  i {
+    color: var(--error);
+
+    &:hover {
+      cursor: pointer;
+      color: var(--error-light);
+    }
+  }
+}
+
+.body {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px;
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      button {
+        border: none;
+        text-decoration: none;
+        outline: none;
+        cursor: pointer;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--button-text);
+        padding: 6px 12px;
+        margin: 5px 10px;
+        font-size: 14px;
+
+        .text {
+          margin-right: 3px;
+        }
+      }
+      button.upload {
+        background-color: var(--button-background);
+        width: 200px;
+        &:hover {
+          background-color: var(--button-background-highlight);
+        }
+      }
+      button.confirm {
+        background-color: var(--primary);
+        width: 100px;
+        &:hover {
+          background-color: var(--primary-highlight);
+        }
+      }
+    }
+    .preview {
+      margin: 0px 5px;
+      height: 125px;
+      width: 125px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--background-primary);
+      border-radius: 50%;
+      overflow: hidden;
+      img {
+        width: 125px;
+        height: 125px;
+      }
+      img.default {
+        width: 100px;
+        height: 100px;
+      }
+    }
+  }
+}
+
+image-cropper {
+  padding: 0px;
+  img {
+    width: 300px;
+  }
+}

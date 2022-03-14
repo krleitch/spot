@@ -1,15 +1,16 @@
 <div class="upload-photo">
   <div class="header">
-    <span class="title"></span>
+    <span class="title">Upload a photo</span>
+    <i class="material-icons photo"> close </i>
   </div>
   <div class="body">
-    <input type="file" (change)="fileChangeEvent($event)" />
     <image-cropper
       [imageChangedEvent]="imageChangedEvent"
       [maintainAspectRatio]="true"
       [aspectRatio]="1 / 1"
-      [cropperStaticWidth]="200"
-      [cropperStaticHeight]="200"
+      [cropperStaticWidth]="100"
+      [cropperStaticHeight]="100"
+      [roundCropper]="true"
       format="png"
       (imageCropped)="imageCropped($event)"
       (imageLoaded)="imageLoaded($event)"
@@ -17,6 +18,31 @@
       (loadImageFailed)="loadImageFailed()"
     ></image-cropper>
 
-    <img [src]="croppedImage" />
+    <div class="preview-container">
+      <div class="button-container">
+        <input
+          style="display: none"
+          type="file"
+          (change)="fileChangeEvent($event)"
+          #fileInput
+        />
+        <button class="upload" (click)="fileInput.click()">
+          <span *ngIf="!croppedImage" class="text"> Upload from computer </span>
+          <span *ngIf="croppedImage" class="text"> Choose another photo </span>
+          <i class="material-icons photo"> upload </i>
+        </button>
+        <button class="confirm">
+          <span class="text"> Confirm </span>
+        </button>
+      </div>
+      <div class="preview">
+        <img *ngIf="croppedImage" [src]="croppedImage" />
+        <img
+          class="default"
+          *ngIf="!croppedImage"
+          src="../../../../assets/images/op_large.png"
+        />
+      </div>
+    </div>
   </div>
 </div>
