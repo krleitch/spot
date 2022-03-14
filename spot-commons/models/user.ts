@@ -89,3 +89,15 @@ export interface VerifyConfirmRequest {
 export interface VerifyConfirmResponse {
   user: User;
 }
+
+// Profile Photo
+export interface CreateProfilePhotoRequest {
+    image: File;
+}
+export interface CreateProfilePhotoResponse {
+    user: User;
+}
+export interface DeleteProfilePhotoRequest {}
+export interface DeleteProfilePhotoResponse {
+    user: User;
+}

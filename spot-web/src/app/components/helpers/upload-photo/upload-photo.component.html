@@ -4,6 +4,15 @@
     <i class="material-icons photo"> close </i>
   </div>
   <div class="body">
+    <div class="description">
+      <span> A profile picture helps others recgonize you. </span>
+      <span>
+        Your picture will only be shown to the specefic users you tag in
+        comments and chats.
+      </span>
+      <span> You will always be anonymous to all other users. </span>
+    </div>
+
     <image-cropper
       [imageChangedEvent]="imageChangedEvent"
       [maintainAspectRatio]="true"
@@ -31,9 +40,14 @@
           <span *ngIf="croppedImage" class="text"> Choose another photo </span>
           <i class="material-icons photo"> upload </i>
         </button>
-        <button class="confirm">
-          <span class="text"> Confirm </span>
-        </button>
+        <div class="response-container">
+          <button class="confirm" (click)="confirm()">
+            <span class="text"> Confirm </span>
+          </button>
+          <button class="remove" (click)="remove()">
+            <span class="text"> Remove </span>
+          </button>
+        </div>
       </div>
       <div class="preview">
         <img *ngIf="croppedImage" [src]="croppedImage" />

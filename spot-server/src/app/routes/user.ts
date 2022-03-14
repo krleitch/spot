@@ -13,6 +13,8 @@ import authenticationService from '@services/authentication/authentication.js';
 import authorization from '@services/authorization.js';
 import friendsService from '@services/friends.js';
 import mail from '@services/mail.js';
+import imageService from '@services/image.js';
+const singleUpload = imageService.upload.single('image');
 
 // exceptions
 import * as authenticationError from '@exceptions/authentication.js';
@@ -38,7 +40,9 @@ import {
   GoogleDisconnectResponse,
   VerifyConfirmRequest,
   VerifyConfirmResponse,
-  VerifyResponse
+  VerifyResponse,
+  CreateProfilePhotoRequest,
+  CreateProfilePhotoResponse
 } from '@models/user.js';
 import {
   UserMetadata,
@@ -78,7 +82,10 @@ router.delete(
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       // Make sure the account is not a guest account
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.DeleteUser());
       }
       await prismaUser.softDeleteUser(req.user.userId);
@@ -96,7 +103,10 @@ router.put(
       const body: UpdateUsernameRequest = req.body;
 
       // Not a guest, and we have the user
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.UpdateUsername());
       }
 
@@ -140,7 +150,10 @@ router.put(
     async (req: Request, res: Response, next: NextFunction) => {
       const body: UpdateEmailRequest = req.body;
 
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.UpdateEmail());
       }
 
@@ -164,7 +177,10 @@ router.put(
         return next(new authenticationError.EmailTakenError(400));
       }
 
-      const updatedUser = await prismaUser.updateEmail(req.user.userId, body.email);
+      const updatedUser = await prismaUser.updateEmail(
+        req.user.userId,
+        body.email
+      );
       if (!updatedUser) {
         return next(new userError.UpdateEmail());
       }
@@ -182,7 +198,10 @@ router.put(
       const body: UpdatePhoneRequest = req.body;
 
       // Not a guest and we have the user
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.UpdatePhone());
       }
 
@@ -206,7 +225,10 @@ router.put(
         return next(new authenticationError.PhoneTakenError(400));
       }
 
-      const updatedUser = await prismaUser.updatePhone(req.user.userId, body.phone);
+      const updatedUser = await prismaUser.updatePhone(
+        req.user.userId,
+        body.phone
+      );
       if (!updatedUser) {
         return next(new userError.UpdatePhone());
       }
@@ -224,7 +246,10 @@ router.post(
       const body: FacebookConnectRequest = req.body;
 
       // Not a guest, and we have the user
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.FacebookConnect());
       }
 
@@ -264,9 +289,11 @@ router.post(
   '/facebook/disconnect',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-
       // Not a guest and we have the user
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.FacebookDisconnect());
       }
 
@@ -293,7 +320,10 @@ router.post(
   ) {
     const body: GoogleConnectRequest = req.body;
 
-    if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+    if (
+      !req.user ||
+      authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+    ) {
       return next(new userError.GoogleConnect());
     }
 
@@ -313,7 +343,10 @@ router.post(
       return next(new userError.GoogleConnectExists());
     }
     // create the account
-    const connectedUser = await prismaUser.connectGoogle(req.user.userId, googleId);
+    const connectedUser = await prismaUser.connectGoogle(
+      req.user.userId,
+      googleId
+    );
     if (!connectedUser) {
       return next(new userError.GoogleConnect());
     }
@@ -329,8 +362,10 @@ router.post(
   '/google/disconnect',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.GoogleDisconnect());
       }
 
@@ -378,8 +413,10 @@ router.put(
   '/metadata',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.GetMetadata());
       }
 
@@ -465,7 +502,10 @@ router.post(
   '/verify',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.SendVerify());
       }
 
@@ -523,7 +563,10 @@ router.post(
     async (req: Request, res: Response, next: NextFunction) => {
       const body: VerifyConfirmRequest = req.body;
 
-      if (!req.user || authorization.checkUserHasRole(req.user, [UserRole.GUEST])) {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.ConfirmVerify());
       }
 
@@ -535,7 +578,9 @@ router.post(
 
       // check valid expirary date and correct user
       if (
-        !authenticationService.isValidPasswordResetTokenTime(userVerify.createdAt) ||
+        !authenticationService.isValidPasswordResetTokenTime(
+          userVerify.createdAt
+        ) ||
         userVerify.userId !== req.user.userId
       ) {
         return next(new userError.ConfirmVerify(499));
@@ -543,6 +588,58 @@ router.post(
 
       const verifiedUser = await prismaUser.verifyUser(req.user.userId);
       if (!verifiedUser) {
+        return next(new userError.ConfirmVerify());
+      }
+
+      const response: VerifyConfirmResponse = { user: verifiedUser };
+      res.status(200).send(response);
+    }
+  )
+);
+
+// Add a profile picture
+router.post(
+  '/photo',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: VerifyConfirmRequest = req.body;
+
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
+        return next(new userError.ConfirmVerify());
+      }
+      // Upload the file
+      singleUpload(req, res, async (err: any) => {
+        // error uploading image
+        if (err) {
+          return next(new spotError.SpotImage(422));
+        }
+
+        const body: CreateSpotRequest = JSON.parse(req.body.json);
+        // @ts-ignore
+        // Location is defined on the multers3 file type
+        const imageSrc: string = req.file ? req.file.location : null;
+        const spotId = req.file?.filename.split('.')[0] || uuid.v4();
+        const response: VerifyConfirmResponse = { user: verifiedUser };
+        res.status(200).send(response);
+      });
+    }
+  )
+);
+
+// Delete a profile picture
+router.delete(
+  '/photo',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const body: VerifyConfirmRequest = req.body;
+
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
         return next(new userError.ConfirmVerify());
       }
 

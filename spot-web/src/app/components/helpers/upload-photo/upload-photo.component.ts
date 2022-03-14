@@ -9,16 +9,16 @@ export class UploadPhotoComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
+  imageChangedEvent = '';
+  croppedImage = '';
 
-  fileChangeEvent(event: any): void {
+  fileChangeEvent(event: string): void {
     this.imageChangedEvent = event;
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
   }
-  imageLoaded(image: LoadedImage) {
+  imageLoaded(_image: LoadedImage) {
     // show cropper
   }
   cropperReady() {
@@ -27,4 +27,8 @@ export class UploadPhotoComponent implements OnInit {
   loadImageFailed() {
     // show message
   }
+
+  confirm() {}
+
+  remove() {}
 }
