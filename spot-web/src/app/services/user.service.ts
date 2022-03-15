@@ -30,7 +30,11 @@ import {
   VerifyConfirmRequest,
   VerifyConfirmResponse,
   VerifyRequest,
-  VerifyResponse
+  VerifyResponse,
+  UpdateProfilePictureRequest,
+  UpdateProfilePictureResponse,
+  DeleteProfilePictureRequest,
+  DeleteProfilePictureResponse
 } from '@models/user';
 import {
   GetUserMetadataRequest,
@@ -159,6 +163,31 @@ export class UserService {
   ): Observable<VerifyConfirmResponse> {
     return this.http.post<VerifyConfirmResponse>(
       `${this.baseUrl}/user/verify/confirm`,
+      request
+    );
+  }
+
+  updateProfilePicture(
+    request: UpdateProfilePictureRequest
+  ): Observable<UpdateProfilePictureResponse> {
+    const formData = new FormData();
+    formData.append('json', JSON.stringify(request));
+    console.log(JSON.stringify(request));
+
+    if (request.image) {
+      formData.append('image', request.image);
+    }
+    return this.http.put<UpdateProfilePictureResponse>(
+      `${this.baseUrl}/user/picture`,
+      formData
+    );
+  }
+
+  deleteProfilePicture(
+    request: DeleteProfilePictureRequest
+  ): Observable<DeleteProfilePictureResponse> {
+    return this.http.delete<DeleteProfilePictureResponse>(
+      `${this.baseUrl}/user/picture`,
       request
     );
   }

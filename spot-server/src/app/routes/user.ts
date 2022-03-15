@@ -14,7 +14,7 @@ import authorization from '@services/authorization.js';
 import friendsService from '@services/friends.js';
 import mail from '@services/mail.js';
 import imageService from '@services/image.js';
-const singleUpload = imageService.upload.single('image');
+const uploadProfilePicture = imageService.uploadProfilePicture.single('image');
 
 // exceptions
 import * as authenticationError from '@exceptions/authentication.js';
@@ -41,8 +41,8 @@ import {
   VerifyConfirmRequest,
   VerifyConfirmResponse,
   VerifyResponse,
-  CreateProfilePhotoRequest,
-  CreateProfilePhotoResponse
+  UpdateProfilePictureResponse,
+  DeleteProfilePictureResponse
 } from '@models/user.js';
 import {
   UserMetadata,
@@ -597,32 +597,38 @@ router.post(
   )
 );
 
-// Add a profile picture
-router.post(
-  '/photo',
+// Update profile picture
+router.put(
+  '/picture',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const body: VerifyConfirmRequest = req.body;
-
       if (
         !req.user ||
         authorization.checkUserHasRole(req.user, [UserRole.GUEST])
       ) {
-        return next(new userError.ConfirmVerify());
+        return next(new userError.CreateProfilePhoto());
       }
+
       // Upload the file
-      singleUpload(req, res, async (err: any) => {
+      uploadProfilePicture(req, res, async (err: any) => {
         // error uploading image
-        if (err) {
-          return next(new spotError.SpotImage(422));
+        if (err || !req.user) {
+          return next(new userError.CreateProfilePhoto(422));
         }
 
-        const body: CreateSpotRequest = JSON.parse(req.body.json);
         // @ts-ignore
         // Location is defined on the multers3 file type
-        const imageSrc: string = req.file ? req.file.location : null;
-        const spotId = req.file?.filename.split('.')[0] || uuid.v4();
-        const response: VerifyConfirmResponse = { user: verifiedUser };
+        const imageSrc: string = req.file ? req.file.location : undefined;
+
+        const user = await prismaUser.updateProfilePicture(
+          req.user.userId,
+          imageSrc
+        );
+        if (!user) {
+          return next(new userError.CreateProfilePhoto());
+        }
+
+        const response: UpdateProfilePictureResponse = { user: user };
         res.status(200).send(response);
       });
     }
@@ -631,19 +637,26 @@ router.post(
 
 // Delete a profile picture
 router.delete(
-  '/photo',
+  '/picture',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const body: VerifyConfirmRequest = req.body;
 
       if (
         !req.user ||
         authorization.checkUserHasRole(req.user, [UserRole.GUEST])
       ) {
-        return next(new userError.ConfirmVerify());
+        return next(new userError.DeleteProfilePhoto());
       }
 
-      const response: VerifyConfirmResponse = { user: verifiedUser };
+      const user = await prismaUser.updateProfilePicture(
+        req.user.userId,
+        undefined
+      );
+      if (!user) {
+        return next(new userError.DeleteProfilePhoto());
+      }
+
+      const response: DeleteProfilePictureResponse = { user: user };
       res.status(200).send(response);
     }
   )

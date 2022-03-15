@@ -100,6 +100,15 @@ export function featureReducer(
         userLoading: false
       };
     }
+    case ActionTypes.UPDATE_PROFILE_PICTURE: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          profilePictureSrc: action.request.profilePictureSrc
+        }
+      };
+    }
     case ActionTypes.UPDATE_USERNAME_REQUEST: {
       return {
         ...state,

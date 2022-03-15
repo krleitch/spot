@@ -1,7 +1,7 @@
 <div class="upload-photo">
   <div class="header">
     <span class="title">Upload a photo</span>
-    <i class="material-icons photo"> close </i>
+    <i class="material-icons photo" (click)="close()"> close </i>
   </div>
   <div class="body">
     <div class="description">
@@ -50,10 +50,13 @@
         </div>
       </div>
       <div class="preview">
-        <img *ngIf="croppedImage" [src]="croppedImage" />
+        <img
+          *ngIf="croppedImage || data.profilePictureSrc"
+          [src]="croppedImage || data.profilePictureSrc"
+        />
         <img
           class="default"
-          *ngIf="!croppedImage"
+          *ngIf="!croppedImage && !data.profilePictureSrc"
           src="../../../../assets/images/op_large.png"
         />
       </div>

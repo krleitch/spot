@@ -15,7 +15,8 @@ import {
   UpdateUsernameRequest,
   VerifyConfirmResponse,
   VerifyRequest,
-  VerifyResponse
+  VerifyResponse,
+  SetStoreUserProfilePicture
 } from '@models/user';
 import {
   GetUserMetadataRequest,
@@ -46,8 +47,10 @@ export enum ActionTypes {
   USER_SUCCESS = '[User] User Success',
   USER_FAILURE = '[User] User Failure',
   UPDATE_USERNAME_REQUEST = '[User] Update Username Request',
-  UPDATE_USERNAME_SUCCESS = '[User] Update Username Success',
-  UPDATE_USERNAME_FAILURE = '[User] Update Username Failure',
+  UPDATE_EMAIL_REQUEST = '[User] Update Email Request',
+  UPDATE_PHONE_REQUEST = '[User] Update Phone Request',
+  UPDATE_PROFILE_PICTURE = '[User] Update Profile Picture',
+  DELETE_PROFILE_PICTURE_REQUEST = '[User] Delete Profile Picture Request',
   UPDATE_METADATA_REQUEST = '[User] Update Metadata Request',
   UPDATE_METADATA_SUCCESS = '[User] Update Metadata Success',
   UPDATE_METADATA_FAILURE = '[User] Update Metadata Failure',
@@ -60,8 +63,6 @@ export enum ActionTypes {
   VERIFY_REQUEST = '[User] Verify Request',
   VERIFY_SUCCESS = '[User] Verify Success',
   VERIFY_CONFIRM_REQUEST = '[User] Verify Confrim Request',
-  UPDATE_EMAIL_REQUEST = '[User] Update Email Request',
-  UPDATE_PHONE_REQUEST = '[User] Update Phone Request',
   GENERIC_FAILURE = '[User] Generic Failure'
 }
 
@@ -152,11 +153,6 @@ export class LocationFailureAction implements Action {
   constructor(public request: LocationFailure) {}
 }
 
-export class UpdateUsernameAction implements Action {
-  readonly type = ActionTypes.UPDATE_USERNAME_REQUEST;
-  constructor(public request: UpdateUsernameRequest) {}
-}
-
 export class UpdateUserMetadataRequestAction implements Action {
   readonly type = ActionTypes.UPDATE_METADATA_REQUEST;
   constructor(public request: UpdateUserMetadataRequest) {}
@@ -203,6 +199,10 @@ export class VerifyConfirmRequestAction implements Action {
   constructor(public request: VerifyConfirmResponse) {}
 }
 
+export class UpdateUsernameAction implements Action {
+  readonly type = ActionTypes.UPDATE_USERNAME_REQUEST;
+  constructor(public request: UpdateUsernameRequest) {}
+}
 export class UpdateEmailAction implements Action {
   readonly type = ActionTypes.UPDATE_EMAIL_REQUEST;
   constructor(public request: UpdateEmailRequest) {}
@@ -211,6 +211,11 @@ export class UpdateEmailAction implements Action {
 export class UpdatePhoneAction implements Action {
   readonly type = ActionTypes.UPDATE_PHONE_REQUEST;
   constructor(public request: UpdatePhoneRequest) {}
+}
+
+export class UpdateProfilePictureAction implements Action {
+  readonly type = ActionTypes.UPDATE_PROFILE_PICTURE;
+  constructor(public request: SetStoreUserProfilePicture) {}
 }
 
 export type Actions =
@@ -242,4 +247,5 @@ export type Actions =
   | VerifySuccessAction
   | VerifyConfirmRequestAction
   | LocationFailureAction
+  | UpdateProfilePictureAction
   | ResetStoreAction;

@@ -16,6 +16,7 @@ export interface User {
   usernameUpdatedAt: Date;
   phone: string | null;
   phoneUpdatedAt: Date | null;
+  profilePictureSrc: string | null;
   facebookId: string | null;
   googleId: string | null;
   verifiedAt: Date | null;
@@ -91,13 +92,16 @@ export interface VerifyConfirmResponse {
 }
 
 // Profile Photo
-export interface CreateProfilePhotoRequest {
-    image: File;
+export interface UpdateProfilePictureRequest {
+  image: File;
 }
-export interface CreateProfilePhotoResponse {
-    user: User;
+export interface UpdateProfilePictureResponse {
+  user: User;
 }
-export interface DeleteProfilePhotoRequest {}
-export interface DeleteProfilePhotoResponse {
-    user: User;
+export interface DeleteProfilePictureRequest {}
+export interface DeleteProfilePictureResponse {
+  user: User;
+}
+export interface SetStoreUserProfilePicture {
+  profilePictureSrc: string;
 }

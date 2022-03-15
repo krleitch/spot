@@ -14,6 +14,7 @@ const selectModelUser = P.Prisma.validator<P.Prisma.UserSelect>()({
   usernameUpdatedAt: true,
   phone: true,
   phoneUpdatedAt: true,
+  profilePictureSrc: true,
   facebookId: true,
   googleId: true,
   verifiedAt: true,
@@ -72,7 +73,9 @@ const findUserById = async (userId: string): Promise<User | null> => {
 };
 
 // Also get the user metadata
-const findUserAndMetadataById = async (userId: string): Promise<P.User | null> => {
+const findUserAndMetadataById = async (
+  userId: string
+): Promise<P.User | null> => {
   const user = await prisma.user.findUnique({
     where: {
       userId: userId
@@ -233,7 +236,7 @@ const updatePhone = async (
 const updatePassword = async (
   userId: string,
   newPassword: string,
-  newSalt: string,
+  newSalt: string
 ): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {
@@ -241,22 +244,20 @@ const updatePassword = async (
     },
     data: {
       password: newPassword,
-      salt: newSalt,
+      salt: newSalt
     },
     select: selectModelUser
   });
   return mapToModelEnum<User>(updatedUser);
 };
 
-const verifyUser = async (
-  userId: string,
-): Promise<User | null> => {
+const verifyUser = async (userId: string): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {
       userId: userId
     },
     data: {
-      verifiedAt: new Date(),
+      verifiedAt: new Date()
     },
     select: selectModelUser
   });
@@ -268,14 +269,14 @@ const verifyUser = async (
 const createFacebookUser = async (
   facebookId: string,
   email: string | null,
-  username: string,
+  username: string
 ): Promise<User | null> => {
   const createdUser = await prisma.user.create({
     data: {
       email: email,
       username: username,
       facebookId: facebookId,
-      role: UserRole.USER,
+      role: UserRole.USER
     },
     select: selectModelUser
   });
@@ -283,7 +284,7 @@ const createFacebookUser = async (
 };
 
 const findUserByFacebookId = async (
-  facebookId: string,
+  facebookId: string
 ): Promise<User | null> => {
   const user = await prisma.user.findUnique({
     where: {
@@ -291,34 +292,32 @@ const findUserByFacebookId = async (
     },
     select: selectModelUser
   });
-  return user ? mapToModelEnum<User>(user): null;
+  return user ? mapToModelEnum<User>(user) : null;
 };
 
 const connectFacebook = async (
   userId: string,
-  facebookId: string,
+  facebookId: string
 ): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {
       userId: userId
     },
     data: {
-      facebookId: facebookId,
+      facebookId: facebookId
     },
     select: selectModelUser
   });
   return mapToModelEnum<User>(updatedUser);
 };
 
-const disconnectFacebook = async (
-  userId: string,
-): Promise<User | null> => {
+const disconnectFacebook = async (userId: string): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {
       userId: userId
     },
     data: {
-      facebookId: null,
+      facebookId: null
     },
     select: selectModelUser
   });
@@ -330,7 +329,7 @@ const disconnectFacebook = async (
 const createGoogleUser = async (
   googleId: string,
   email: string | null,
-  username: string,
+  username: string
 ): Promise<User | null> => {
   const createdUser = await prisma.user.create({
     data: {
@@ -344,43 +343,55 @@ const createGoogleUser = async (
   return mapToModelEnum<User>(createdUser);
 };
 
-const findUserByGoogleId = async (
-  googleId: string,
-): Promise<User | null> => {
+const findUserByGoogleId = async (googleId: string): Promise<User | null> => {
   const user = await prisma.user.findUnique({
     where: {
       googleId: googleId
     },
     select: selectModelUser
   });
-  return user ? mapToModelEnum<User>(user): null;
+  return user ? mapToModelEnum<User>(user) : null;
 };
 
 const connectGoogle = async (
   userId: string,
-  googleId: string,
+  googleId: string
 ): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {
       userId: userId
     },
     data: {
-      googleId: googleId,
+      googleId: googleId
     },
     select: selectModelUser
   });
   return mapToModelEnum<User>(updatedUser);
 };
 
-const disconnectGoogle = async (
+const disconnectGoogle = async (userId: string): Promise<User | null> => {
+  const updatedUser = await prisma.user.update({
+    where: {
+      userId: userId
+    },
+    data: {
+      googleId: null
+    },
+    select: selectModelUser
+  });
+  return mapToModelEnum<User>(updatedUser);
+};
+
+const updateProfilePicture = async (
   userId: string,
+  profilePictureSrc: string | undefined
 ): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {
       userId: userId
     },
     data: {
-      googleId: null,
+      profilePictureSrc: profilePictureSrc
     },
     select: selectModelUser
   });
@@ -411,5 +422,6 @@ export default {
   createGoogleUser,
   findUserByGoogleId,
   connectGoogle,
-  disconnectGoogle
+  disconnectGoogle,
+  updateProfilePicture
 };

@@ -1,11 +1,19 @@
-
 export interface ModalOptions {
-    width?: number | 'auto';
-    height?: number | 'auto';
-    disableClose?: boolean; // close when the background is clicked
+  width?: number | "auto";
+  height?: number | "auto";
+  disableClose?: boolean; // close when the background is clicked
 }
 
-export type ModalData = ModalShareData | ModalConfirmData | ModalReportData | ModalImageData;
+// ********************
+// DATA
+// ********************
+
+export type ModalData =
+  | ModalShareData
+  | ModalConfirmData
+  | ModalReportData
+  | ModalImageData
+  | ModalUploadProfilePictureData;
 
 export interface ModalShareData {
   spotId: string;
@@ -27,16 +35,24 @@ export interface ModalImageData {
   imageSrc: string;
 }
 
-export type ModalResult = ModalConfirmResult | ModalUploadPhotoResult;
+export interface ModalUploadProfilePictureData {
+  profilePictureSrc?: string; // Your current profile picture
+}
+
+// ********************
+// RESULTS
+// ********************
+
+export type ModalResult = ModalConfirmResult | ModalUploadProfilePictureResult;
 
 export enum ModalConfirmResultTypes {
-  CONFIRM = 'CONFIRM',
-  CANCEL = 'CANCEL',
+  CONFIRM = "CONFIRM",
+  CANCEL = "CANCEL",
 }
 export interface ModalConfirmResult {
   status: ModalConfirmResultTypes;
 }
 
-export interface ModalUploadPhotoResult {
-  photo: string;
+export interface ModalUploadProfilePictureResult {
+  profilePictureSrc: string;
 }

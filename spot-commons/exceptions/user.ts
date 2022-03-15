@@ -156,3 +156,16 @@ export class ConfirmVerify extends SpotError {
       this.name = "ConfirmVerify";
     }
 }
+
+export class CreateProfilePhoto extends SpotError {
+    constructor(statusCode: number = 500) {
+      super(USER_ERROR_MESSAGES.CREATE_PROFILE_PHOTO, statusCode);
+      this.name = "CreateProfilePhoto";
+    }
+}
+export class DeleteProfilePhoto extends SpotError {
+    constructor(statusCode: number = 500) {
+      super(USER_ERROR_MESSAGES.DELETE_PROFILE_PHOTO, statusCode);
+      this.name = "DeleteProfilePhoto";
+    }
+}

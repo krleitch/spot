@@ -41,7 +41,8 @@ import {
   UpdatePhoneResponse,
   UpdateUsernameRequest,
   UpdateUsernameResponse,
-  VerifyRequest
+  VerifyRequest,
+  SetStoreUserProfilePicture
 } from '@models/user';
 import {
   UserMetadata,
@@ -53,7 +54,7 @@ import { SpotError } from '@exceptions/error';
 import {
   ModalConfirmResult,
   ModalConfirmResultTypes,
-  ModalUploadPhotoResult
+  ModalUploadProfilePictureResult
 } from '@models/modal';
 
 declare const gapi: any;
@@ -80,6 +81,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   userMetadata: UserMetadata;
 
   verificationSent = false;
+  profilePictureSrc: string;
 
   email: string;
   editEmailEnabled = false;
@@ -148,6 +150,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         this.username = user.username;
         this.email = user.email;
         this.phone = user.phone;
+        this.profilePictureSrc = user.profilePictureSrc;
       }
     });
   }
@@ -185,10 +188,17 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openUploadPhotoModal(): void {
     this.modalService
-      .open('global', 'uploadPhoto')
+      .open('global', 'uploadPhoto', {
+        profilePictureSrc: this.profilePictureSrc
+      })
       .pipe(take(1))
-      .subscribe((result: ModalUploadPhotoResult) => {
-        console.log('done', result.photo);
+      .subscribe((result: ModalUploadProfilePictureResult) => {
+        const request: SetStoreUserProfilePicture = {
+          profilePictureSrc: result.profilePictureSrc
+        };
+        this.store$.dispatch(
+          new UserActions.UpdateProfilePictureAction(request)
+        );
       });
   }
 

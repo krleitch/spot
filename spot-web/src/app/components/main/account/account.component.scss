@@ -316,6 +316,7 @@ spot-main-nav {
   margin: 5px 25px 5px 5px;
   height: 125px;
   width: 125px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -367,6 +368,11 @@ spot-main-nav {
 }
 
 img {
+  width: 125px;
+  height: 125px;
+}
+
+img.op {
   width: 100px;
   height: 100px;
 }

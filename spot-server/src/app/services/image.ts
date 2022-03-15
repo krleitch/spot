@@ -8,6 +8,21 @@ import aws from '@services/aws.js';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 
+// Only allow png
+const profilePhotoFileFilter = (
+  req: Request,
+  file: Express.MulterS3.File,
+  cb: (err: any, valid: boolean) => void
+) => {
+  if (
+    file.mimetype === 'image/png'
+  ) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type, Jpeg, Png, Gif, WebP allowed'), false);
+  }
+};
+
 // Only allow jpeg, png, gif, webp
 const fileFilter = (
   req: Request,
@@ -71,6 +86,31 @@ const upload = multer({
   })
 });
 
+// Upload profile photo to s3
+const uploadProfilePicture = multer({
+  fileFilter,
+  storage: multerS3({
+    acl: 'public-read',
+    s3: aws.s3,
+    bucket: 'spottables',
+    metadata: function (
+      req: Request,
+      file: Express.Multer.File,
+      cb: (err: any, metadata?: any) => void
+    ) {
+      cb(null, { originalname: file.originalname.substring(0, 255) });
+    },
+    key: function (
+      req: Request,
+      file: Express.MulterS3.File,
+      cb: (err: any, key?: string | undefined) => void
+    ) {
+      const filename = uuid.v4();
+      cb(null, `profilePictures/${filename}`);
+    }
+  })
+});
+
 // predict if image is nsfw before the spot is made locally on the server
 const predictNsfwLocal = async (imgUrl: string): Promise<boolean> => {
   // Currently not useable
@@ -88,4 +128,4 @@ const predictNsfwLambda = async (imgUrl: string): Promise<AWS.Lambda.InvocationR
   return aws.lambda.invoke(params).promise();
 }
 
-export default { upload, predictNsfwLocal, predictNsfwLambda };
+export default { upload, uploadProfilePicture, predictNsfwLocal, predictNsfwLambda };
