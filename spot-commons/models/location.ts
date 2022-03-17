@@ -3,11 +3,11 @@ export interface LocationData {
   longitude: number;
 }
 
-export interface LoadLocationRequest {}
-export interface SetLocationRequest {
+// Store
+export interface SetLoadingLocation {}
+export interface SetLocation {
     location: LocationData
 }
-
-export interface LocationFailure {
+export interface SetLocationFailure {
     error: string;
 }

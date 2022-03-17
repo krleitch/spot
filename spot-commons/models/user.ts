@@ -83,7 +83,6 @@ export interface GoogleDisconnectResponse {
 // User verification
 export interface VerifyRequest {}
 export interface VerifyResponse {}
-
 export interface VerifyConfirmRequest {
   token: string;
 }
@@ -102,6 +101,8 @@ export interface DeleteProfilePictureRequest {}
 export interface DeleteProfilePictureResponse {
   user: User;
 }
-export interface SetStoreUserProfilePicture {
-  profilePictureSrc: string;
+
+// Store
+export interface SetStoreUser {
+  user: User;
 }

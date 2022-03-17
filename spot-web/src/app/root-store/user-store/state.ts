@@ -7,26 +7,22 @@ export interface State {
   user: User;
   userLoading: boolean;
   userMetadata: UserMetadata;
-  authenticationSuccess: boolean;
-  authenticationError: SpotError; // Error for signup / login
-  usernameError: SpotError; // Error when chaning or updating username
-  usernameSuccess: boolean; // Successfully changed username
-  location: LocationData;
+  userMetadataLoading: boolean;
+  authenticationError: SpotError;
+  locationLoading: boolean;
   locationFailure: string;
-  locationTimeReceived: Date;
-  loadingLocation: boolean;
+  location: LocationData;
+  locationCreatedAt: Date;
 }
 
 export const initialState: State = {
   user: null,
   userLoading: false,
   userMetadata: null,
-  authenticationSuccess: null,
+  userMetadataLoading: false,
   authenticationError: null,
-  usernameError: null,
-  usernameSuccess: false,
-  loadingLocation: false,
+  locationLoading: false,
   locationFailure: null,
   location: null,
-  locationTimeReceived: null
+  locationCreatedAt: null
 };

@@ -6,6 +6,10 @@ import {
   FacebookDisconnectRequest,
   FacebookDisconnectResponse
 } from '@models/user';
+import {
+  FacebookLoginRequest,
+  FacebookLoginResponse
+} from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 
 export enum FacebookActionTypes {
@@ -22,44 +26,36 @@ export enum FacebookActionTypes {
 
 export class FacebookLoginRequestAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_LOGIN_REQUEST;
-  constructor(public request: any) {}
+  constructor(public request: FacebookLoginRequest) {}
 }
-
 export class FacebookLoginSuccessAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS;
-  constructor(public response: any) {}
+  constructor(public response: FacebookLoginResponse) {}
 }
-
 export class FacebookLoginFailureAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_LOGIN_FAILURE;
-  constructor(public error: string) {}
+  constructor(public error: SpotError) {}
 }
-
 export class FacebookConnectRequestAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_CONNECT_REQUEST;
   constructor(public request: FacebookConnectRequest) {}
 }
-
 export class FacebookConnectSuccessAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS;
   constructor(public response: FacebookConnectResponse) {}
 }
-
 export class FacebookConnectFailureAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_CONNECT_FAILURE;
   constructor(public error: SpotError) {}
 }
-
 export class FacebookDisconnectRequestAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_DISCONNECT_REQUEST;
   constructor(public request: FacebookDisconnectRequest) {}
 }
-
 export class FacebookDisconnectSuccessAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS;
   constructor(public response: FacebookDisconnectResponse) {}
 }
-
 export class FacebookDisconnectFailureAction implements Action {
   readonly type = FacebookActionTypes.FACEBOOK_DISCONNECT_FAILURE;
   constructor(public error: SpotError) {}

@@ -28,42 +28,34 @@ export class GoogleLoginRequestAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_LOGIN_REQUEST;
   constructor(public request: GoogleLoginRequest) {}
 }
-
 export class GoogleLoginSuccessAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_LOGIN_SUCCESS;
   constructor(public response: GoogleLoginResponse) {}
 }
-
 export class GoogleLoginFailureAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_LOGIN_FAILURE;
   constructor(public error: SpotError) {}
 }
-
 export class GoogleConnectRequestAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_CONNECT_REQUEST;
   constructor(public request: GoogleConnectRequest) {}
 }
-
 export class GoogleConnectSuccessAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_CONNECT_SUCCESS;
   constructor(public response: GoogleConnectResponse) {}
 }
-
 export class GoogleConnectFailureAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_CONNECT_FAILURE;
   constructor(public error: SpotError) {}
 }
-
 export class GoogleDisconnectRequestAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_DISCONNECT_REQUEST;
   constructor(public request: GoogleDisconnectRequest) {}
 }
-
 export class GoogleDisconnectSuccessAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_DISCONNECT_SUCCESS;
   constructor(public response: GoogleDisconnectResponse) {}
 }
-
 export class GoogleDisconnectFailureAction implements Action {
   readonly type = GoogleActionTypes.GOOGLE_DISCONNECT_FAILURE;
   constructor(public error: SpotError) {}

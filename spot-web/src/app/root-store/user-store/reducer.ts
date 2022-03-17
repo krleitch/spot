@@ -16,39 +16,36 @@ export function featureReducer(
         ...initialState
       };
     }
+    // User
     case ActionTypes.REGISTER_SUCCESS: {
       return {
         ...state,
         user: action.response.user,
-        authenticationError: null,
-        authenticationSuccess: true
+        authenticationError: null
       };
     }
     case ActionTypes.REGISTER_FAILURE: {
       return {
         ...state,
         user: null,
-        authenticationError: action.error,
-        authenticationSuccess: false
+        authenticationError: action.error
       };
     }
     case ActionTypes.LOGIN_SUCCESS: {
       return {
         ...state,
         user: action.response.user,
-        authenticationError: null,
-        authenticationSuccess: true
+        authenticationError: null
       };
     }
     case ActionTypes.LOGIN_FAILURE: {
       return {
         ...state,
         user: null,
-        authenticationError: action.error,
-        authenticationSuccess: false
+        authenticationError: action.error
       };
     }
-    case ActionTypes.LOGOUT_REQUEST: {
+    case ActionTypes.LOGOUT_USER: {
       return {
         ...state,
         user: null
@@ -60,81 +57,74 @@ export function featureReducer(
         user: null
       };
     }
-    case ActionTypes.LOAD_LOCATION: {
-      return {
-        ...state,
-        loadingLocation: true,
-        locationFailure: null,
-        location: null,
-        locationTimeReceived: null
-      };
-    }
-    case ActionTypes.SET_LOCATION: {
-      return {
-        ...state,
-        loadingLocation: false,
-        location: action.request.location,
-        locationTimeReceived: new Date(),
-        locationFailure: null
-      };
-    }
-    case ActionTypes.LOCATION_FAILURE: {
-      return {
-        ...state,
-        locationFailure: action.request.error,
-        loadingLocation: false,
-        location: null,
-        locationTimeReceived: null
-      };
-    }
-    case ActionTypes.USER_REQUEST: {
+    case ActionTypes.GET_USER_REQUEST: {
       return {
         ...state,
         userLoading: true
       };
     }
-    case ActionTypes.USER_SUCCESS: {
+    case ActionTypes.GET_USER_SUCCESS: {
       return {
         ...state,
         user: action.response.user,
         userLoading: false
       };
     }
-    case ActionTypes.UPDATE_PROFILE_PICTURE: {
+    case ActionTypes.SET_USER: {
       return {
         ...state,
         user: {
-          ...state.user,
-          profilePictureSrc: action.request.profilePictureSrc
+          ...action.request.user
         }
       };
     }
-    case ActionTypes.UPDATE_USERNAME_REQUEST: {
+    // Location
+    case ActionTypes.SET_LOADING_LOCATION: {
       return {
         ...state,
-        user: { ...state.user, username: action.request.username }
+        locationLoading: true,
+        locationFailure: null,
+        location: null,
+        locationCreatedAt: null
       };
     }
-    case ActionTypes.UPDATE_EMAIL_REQUEST: {
+    case ActionTypes.SET_LOCATION: {
       return {
         ...state,
-        user: {
-          ...state.user,
-          email: action.request.email,
-          verifiedAt: null
-        }
+        locationLoading: false,
+        location: action.request.location,
+        locationCreatedAt: new Date(),
+        locationFailure: null
       };
     }
-    case ActionTypes.UPDATE_PHONE_REQUEST: {
+    case ActionTypes.SET_LOCATION_FAILURE: {
       return {
         ...state,
-        user: { ...state.user, phone: action.request.phone }
+        locationFailure: action.request.error,
+        locationLoading: false,
+        location: null,
+        locationCreatedAt: null
+      };
+    }
+    // Metadata
+    case ActionTypes.GET_METADATA_REQUEST: {
+      return {
+        ...state,
+        userMetadataLoading: true
       };
     }
     case ActionTypes.GET_METADATA_SUCCESS: {
       return {
         ...state,
-        userMetadata: action.response.metadata
+        userMetadata: action.response.metadata,
+        userMetadataLoading: false
+      };
+    }
+    case ActionTypes.GET_METADATA_FAILURE: {
+      return {
+        ...state,
+        userMetadata: null,
+        userMetadataLoading: false
       };
     }
     case ActionTypes.UPDATE_METADATA_SUCCESS: {
@@ -143,15 +133,7 @@ export function featureReducer(
         userMetadata: action.response.metadata
       };
     }
-    case ActionTypes.VERIFY_CONFIRM_REQUEST: {
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          verifiedAt: action.request.user.verifiedAt
-        }
-      };
-    }
+    // Facebook
     case FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS: {
       return {
         ...state,
@@ -170,6 +152,7 @@ export function featureReducer(
         user: { ...state.user, facebookId: null }
       };
     }
+    // Google
     case GoogleActionTypes.GOOGLE_LOGIN_SUCCESS: {
       return {
         ...state,
