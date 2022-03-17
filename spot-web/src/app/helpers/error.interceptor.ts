@@ -30,10 +30,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      catchError((err: any) => {
+      catchError((err) => {
         if (err.status === 401) {
           // auto logout if 401 response returned from api
-          this.store$.dispatch(new UserActions.LogoutRequestAction());
+          this.store$.dispatch(new UserActions.LogoutUserAction());
         }
 
         return throwError(err);

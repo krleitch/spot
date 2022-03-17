@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // rxjs
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -18,7 +18,14 @@ import { UserService } from '@src/app/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Assets
-import { User, VerifyConfirmRequest, VerifyRequest } from '@models/user';
+import {
+  User,
+  VerifyConfirmRequest,
+  VerifyRequest,
+  VerifyResponse,
+  VerifyConfirmResponse,
+  SetUserStore
+} from '@models/user';
 
 @Component({
   selector: 'spot-verify',
@@ -61,14 +68,17 @@ export class VerifyComponent implements OnInit, OnDestroy {
         .verifyConfirmUser(request)
         .pipe(takeUntil(this.onDestroy))
         .subscribe(
-          (response) => {
+          (response: VerifyConfirmResponse) => {
             this.successMessage = this.STRINGS.SUCCESS;
 
-            this.store$.dispatch(
-              new UserActions.VerifyConfirmRequestAction(response)
-            );
+            const request: SetUserStore = {
+              user: {
+                verifiedAt: response.user.verifiedAt
+              }
+            };
+            this.store$.dispatch(new UserActions.SetUserAction(request));
           },
-          (err: any) => {
+          (_err) => {
             this.errorMessage = this.STRINGS.FAILURE;
           }
         );
@@ -81,7 +91,11 @@ export class VerifyComponent implements OnInit, OnDestroy {
 
   sendVerification(): void {
     const request: VerifyRequest = {};
-    this.store$.dispatch(new UserActions.VerifyRequestAction(request));
-    this.verificationSent = true;
+    this.userService
+      .verifyUser(request)
+      .pipe(take(1))
+      .subscribe((_response: VerifyResponse) => {
+        this.verificationSent = true;
+      });
   }
 }

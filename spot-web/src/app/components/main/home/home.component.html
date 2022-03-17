@@ -19,8 +19,12 @@
 </div>
 <div #mobiledropdownlocation class="locationToggleMobile mobile">
   <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
-    <i *ngIf="isSelectedLocation(eLocationType.LOCAL)" class="material-icons"> home </i>
-    <i *ngIf="isSelectedLocation(eLocationType.GLOBAL)" class="material-icons"> public </i>
+    <i *ngIf="isSelectedLocation(eLocationType.LOCAL)" class="material-icons">
+      home
+    </i>
+    <i *ngIf="isSelectedLocation(eLocationType.GLOBAL)" class="material-icons">
+      public
+    </i>
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
@@ -30,14 +34,18 @@
     >
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedLocation(eLocationType.LOCAL) }"
+        [ngClass]="{
+          'selected-highlight': isSelectedLocation(eLocationType.LOCAL)
+        }"
         (click)="setLocal()"
       >
         <i class="material-icons dropdown-icon"> home </i>
       </div>
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedLocation(eLocationType.GLOBAL) }"
+        [ngClass]="{
+          'selected-highlight': isSelectedLocation(eLocationType.GLOBAL)
+        }"
         (click)="setGlobal()"
       >
         <i class="material-icons dropdown-icon"> public </i>
@@ -82,14 +90,18 @@
     >
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedSpotSort(eSearchType.HOT) }"
+        [ngClass]="{
+          'selected-highlight': isSelectedSpotSort(eSearchType.HOT)
+        }"
         (click)="setHot()"
       >
         {{ 'MAIN.HOME.HOT' | translate }}
       </div>
       <div
         class="button"
-        [ngClass]="{ 'selected-highlight': isSelectedSpotSort(eSearchType.NEW) }"
+        [ngClass]="{
+          'selected-highlight': isSelectedSpotSort(eSearchType.NEW)
+        }"
         (click)="setNew()"
       >
         {{ 'MAIN.HOME.NEW' | translate }}
@@ -108,7 +120,10 @@
     <div *ngIf="locationType && searchType" class="fit-container">
       <!-- Determine if we need location -->
       <div
-        *ngIf="location || locationType === eLocationType.GLOBAL; else noLocation"
+        *ngIf="
+          location || locationType === eLocationType.GLOBAL;
+          else noLocation
+        "
         class="content"
       >
         <div *ngIf="user" class="fit-container">
@@ -179,7 +194,7 @@
             <!-- location is still loading -->
             <div
               *ngIf="
-                loadingLocation && (showLocationIndicator$ | async);
+                locationLoading && (showLocationIndicator$ | async);
                 else enableLocationCreate
               "
               class="info-container"
@@ -312,7 +327,7 @@
           <!-- Location is just loading -->
           <div
             *ngIf="
-              loadingLocation && (showLocationIndicator$ | async);
+              locationLoading && (showLocationIndicator$ | async);
               else enableLocation
             "
             class="info-container"

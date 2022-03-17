@@ -41,8 +41,10 @@ import {
   UpdatePhoneResponse,
   UpdateUsernameRequest,
   UpdateUsernameResponse,
+  DeleteUserRequest,
   VerifyRequest,
-  SetStoreUserProfilePicture
+  VerifyResponse,
+  SetUserStore
 } from '@models/user';
 import {
   UserMetadata,
@@ -193,12 +195,12 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .pipe(take(1))
       .subscribe((result: ModalUploadProfilePictureResult) => {
-        const request: SetStoreUserProfilePicture = {
-          profilePictureSrc: result.profilePictureSrc
+        const request: SetUserStore = {
+          user: {
+            profilePictureSrc: result.profilePictureSrc
+          }
         };
-        this.store$.dispatch(
-          new UserActions.UpdateProfilePictureAction(request)
-        );
+        this.store$.dispatch(new UserActions.SetUserAction(request));
       });
   }
 
@@ -303,8 +305,11 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
           this.editUsernameEnabled = false;
 
+          const request: SetUserStore = {
+            user: { username: response.user.username }
+          };
           // Update the store
-          this.store$.dispatch(new UserActions.UpdateUsernameAction(request));
+          this.store$.dispatch(new UserActions.SetUserAction(request));
         },
         (err: { error: SpotError }) => {
           if (err.error.name === 'RateLimitError') {
@@ -344,7 +349,10 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           this.emailSuccessMessage = this.STRINGS.EMAIL_SUCCESS;
           this.editEmailEnabled = false;
 
-          this.store$.dispatch(new UserActions.UpdateEmailAction(request));
+          const request: SetUserStore = {
+            user: { email: response.user.email }
+          };
+          this.store$.dispatch(new UserActions.SetUserAction(request));
         },
         (err: { error: SpotError }) => {
           this.emailErrorMessage = err.error.message;
@@ -379,7 +387,10 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
           this.phoneSuccessMessage = this.STRINGS.PHONE_SUCCESS;
           this.editPhoneEnabled = false;
 
-          this.store$.dispatch(new UserActions.UpdatePhoneAction(request));
+          const request: SetUserStore = {
+            user: { phone: response.user.phone }
+          };
+          this.store$.dispatch(new UserActions.SetUserAction(request));
         },
         (err: { error: SpotError }) => {
           this.phoneErrorMessage = err.error.message;
@@ -394,7 +405,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         .pipe(take(1))
         .subscribe((result: ModalConfirmResult) => {
           if (result.status === ModalConfirmResultTypes.CONFIRM) {
-            this.store$.dispatch(new UserActions.DeleteRequestAction());
+            const request: DeleteUserRequest = {};
+            this.store$.dispatch(new UserActions.DeleteRequestAction(request));
           }
         });
     }
@@ -407,8 +419,12 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     } else {
       const request: VerifyRequest = {};
-      this.store$.dispatch(new UserActions.VerifyRequestAction(request));
-      this.verificationSent = true;
+      this.userService
+        .verifyUser(request)
+        .pipe(take(1))
+        .subscribe((response: VerifyResponse) => {
+          this.verificationSent = true;
+        });
     }
   }
 

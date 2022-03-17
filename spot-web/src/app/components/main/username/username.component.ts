@@ -22,7 +22,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   User,
   UpdateUsernameRequest,
-  UpdateUsernameResponse
+  UpdateUsernameResponse,
+  SetUserStore
 } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
@@ -104,7 +105,11 @@ export class UsernameComponent implements OnInit, OnDestroy {
       .subscribe(
         (response: UpdateUsernameResponse) => {
           this.buttonsDisabled = false;
-          this.store$.dispatch(new UserActions.UpdateUsernameAction(request));
+
+          const request: SetUserStore = {
+            user: { username: response.user.username }
+          };
+          this.store$.dispatch(new UserActions.SetUserAction(request));
 
           this.router.navigateByUrl('/home');
         },

@@ -103,6 +103,6 @@ export interface DeleteProfilePictureResponse {
 }
 
 // Store
-export interface SetStoreUser {
-  user: User;
+export interface SetUserStore {
+  user: Partial<User>; // Give properties you want to update
 }

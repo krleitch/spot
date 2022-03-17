@@ -10,7 +10,7 @@
       Reload Spot with Your Location
     </span>
   </div>
-  <div *ngIf="loadingLocation && !loadingSpot" class="loading">
+  <div *ngIf="locationLoading && !loadingSpot" class="loading">
     <span class="text"> Loading Your Location </span>
     <span class="text clickable" (click)="skipLocation()">
       Skip waiting for location
@@ -25,7 +25,7 @@
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
   <ng-template #spotloaded>
-    <div class="content" *ngIf="spot && !loadingLocation">
+    <div class="content" *ngIf="spot && !locationLoading">
       <meta property="og:url" content="{{ getSpotLink(spot) }}" />
       <meta property="og:type" content="website" />
       <meta property="og:title" content="Spot" />

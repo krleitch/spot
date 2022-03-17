@@ -9,5 +9,5 @@ export interface SetLocation {
     location: LocationData
 }
 export interface SetLocationFailure {
-    error: string;
+    error: 'browser' | 'permission' | 'prompt' | 'general';
 }

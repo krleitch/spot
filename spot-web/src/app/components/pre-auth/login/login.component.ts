@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   form: FormGroup;
   authenticationError$: Observable<SpotError>;
-  authenticationSuccess$: Observable<boolean>;
+  isAuthenticated$: Observable<boolean>;
   errorMessage: string;
   buttonsDisabled = false;
   facebookLoaded = false;
@@ -63,14 +63,14 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     // SUCCESS
-    this.authenticationSuccess$ = this.store$.pipe(
-      select(UserStoreSelectors.selectAuthenticationSuccess)
+    this.isAuthenticated$ = this.store$.pipe(
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
-    this.authenticationSuccess$
+    this.isAuthenticated$
       .pipe(takeUntil(this.onDestroy), skip(1))
-      .subscribe((authenticationSuccess: boolean) => {
-        if (authenticationSuccess) {
+      .subscribe((isAuthenticated: boolean) => {
+        if (isAuthenticated) {
           this.buttonsDisabled = false;
         }
       });

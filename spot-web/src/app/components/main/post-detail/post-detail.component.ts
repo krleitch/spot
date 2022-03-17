@@ -32,10 +32,10 @@ import {
   Spot
 } from '@models/spot';
 import {
-  LoadLocationRequest,
+  SetLoadingLocation,
   LocationData,
-  LocationFailure,
-  SetLocationRequest
+  SetLocationFailure,
+  SetLocation
 } from '@models/location';
 import { ClearCommentsRequest } from '@models/comment';
 
@@ -64,8 +64,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   authenticated$: Observable<boolean>;
   location$: Observable<LocationData>;
   location: LocationData;
-  loadingLocation$: Observable<boolean>;
-  loadingLocation: boolean;
+  locationLoading$: Observable<boolean>;
+  locationLoading: boolean;
   locationFailure$: Observable<string>;
   locationFailure: string;
   bypassLocation = false;
@@ -84,14 +84,14 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         this.location = location;
       });
 
-    this.loadingLocation$ = this.store$.pipe(
-      select(UserStoreSelectors.selectLoadingLocation)
+    this.locationLoading$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocationLoading)
     );
 
-    this.loadingLocation$
+    this.locationLoading$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((loadingLocation: boolean) => {
-        this.loadingLocation = loadingLocation;
+      .subscribe((locationLoading: boolean) => {
+        this.locationLoading = locationLoading;
       });
 
     this.locationFailure$ = this.store$.pipe(
@@ -141,13 +141,15 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         .query({ name: 'geolocation' })
         .then((permission: PermissionStatus) => {
           if (navigator.geolocation) {
-            const loadLocationRequest: LoadLocationRequest = {};
+            const setLoadingLocationRequest: SetLoadingLocation = {};
             this.store$.dispatch(
-              new UserActions.LoadLocationAction(loadLocationRequest)
+              new UserActions.SetLoadingLocationAction(
+                setLoadingLocationRequest
+              )
             );
 
             navigator.geolocation.getCurrentPosition((position) => {
-              const setLocationRequest: SetLocationRequest = {
+              const setLocationRequest: SetLocation = {
                 location: {
                   longitude: position.coords.longitude,
                   latitude: position.coords.latitude
@@ -161,37 +163,37 @@ export class PostDetailComponent implements OnInit, OnDestroy {
             }, this.locationError.bind(this));
           } else {
             // the permissions api isnt implemented in this browser so setup to prompt again
-            const locationFailure: LocationFailure = {
+            const locationFailure: SetLocationFailure = {
               error: 'browser'
             };
             this.store$.dispatch(
-              new UserActions.LocationFailureAction(locationFailure)
+              new UserActions.SetLocationFailureAction(locationFailure)
             );
           }
         });
     } else {
       // the permissions api isnt implemented in this browser so setup to prompt again
-      const locationFailure: LocationFailure = {
+      const locationFailure: SetLocationFailure = {
         error: 'browser'
       };
       this.store$.dispatch(
-        new UserActions.LocationFailureAction(locationFailure)
+        new UserActions.SetLocationFailureAction(locationFailure)
       );
     }
   }
 
   private locationError(error: { message: string; code: number }): void {
-    const locationFailure: LocationFailure = {
+    const locationFailure: SetLocationFailure = {
       error: error.code === 1 ? 'permission' : 'general'
     };
     this.store$.dispatch(
-      new UserActions.LocationFailureAction(locationFailure)
+      new UserActions.SetLocationFailureAction(locationFailure)
     );
   }
 
   skipLocation(): void {
     this.bypassLocation = true;
-    this.loadingLocation = false;
+    this.locationLoading = false;
   }
 
   waitForSpot(): void {

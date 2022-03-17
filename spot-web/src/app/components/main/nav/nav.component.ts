@@ -152,7 +152,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.store$.dispatch(new UserActions.LogoutRequestAction());
+    this.store$.dispatch(new UserActions.LogoutUserAction());
   }
 
   navigateHome(): void {

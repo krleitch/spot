@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { Observable, of as observableOf } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 // store
@@ -20,6 +19,7 @@ import {
   FacebookConnectResponse,
   FacebookDisconnectResponse
 } from '@models/user';
+import { SpotError } from '@exceptions/error';
 
 @Injectable()
 export class FacebookStoreEffects {
@@ -30,55 +30,22 @@ export class FacebookStoreEffects {
     private actions$: Actions
   ) {}
 
-  @Effect()
-  loginFacebookUserEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<facebookActions.FacebookLoginRequestAction>(
-      facebookActions.FacebookActionTypes.FACEBOOK_LOGIN_REQUEST
-    ),
-    switchMap((loginRequest) =>
-      this.authenticationService.loginFacebookUser(loginRequest.request).pipe(
-        map(
-          (response: FacebookLoginResponse) =>
-            new facebookActions.FacebookLoginSuccessAction(response)
-        ),
-        catchError((error) =>
-          observableOf(new facebookActions.FacebookLoginFailureAction(error))
-        )
-      )
-    )
-  );
-
-  @Effect()
-  loginFacebookUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<facebookActions.FacebookLoginSuccessAction>(
-      facebookActions.FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS
-    ),
-    tap((action: facebookActions.FacebookLoginSuccessAction) => {
-      this.authenticationService.loginFacebookUserSuccess(action.response);
-    }),
-    switchMap((action: facebookActions.FacebookLoginSuccessAction) => [
-      new friendActions.GetFriendsRequestAction({
-        limit: null
-      }),
-      new featureActions.GetUserMetadataRequestAction({})
-    ])
-  );
-
-  @Effect()
-  connectFacebookUserEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<facebookActions.FacebookConnectRequestAction>(
-      facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_REQUEST
-    ),
-    switchMap((action) =>
-      this.userService.connectFacebookUser(action.request).pipe(
-        map(
-          (response: FacebookConnectResponse) =>
-            new facebookActions.FacebookConnectSuccessAction(response)
-        ),
-        catchError((errorResponse) =>
-          observableOf(
-            new facebookActions.FacebookConnectFailureAction(
-              errorResponse.error
+  loginFacebookUserRequestEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<facebookActions.FacebookLoginRequestAction>(
+        facebookActions.FacebookActionTypes.FACEBOOK_LOGIN_REQUEST
+      ),
+      switchMap((action) =>
+        this.authenticationService.loginFacebookUser(action.request).pipe(
+          map(
+            (response: FacebookLoginResponse) =>
+              new facebookActions.FacebookLoginSuccessAction(response)
+          ),
+          catchError((errorResponse: { error: SpotError }) =>
+            observableOf(
+              new facebookActions.FacebookLoginFailureAction(
+                errorResponse.error
+              )
             )
           )
         )
@@ -86,53 +53,105 @@ export class FacebookStoreEffects {
     )
   );
 
-  @Effect({ dispatch: false })
-  connectFacebookUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<facebookActions.FacebookConnectSuccessAction>(
-      facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS
-    ),
-    tap((action: facebookActions.FacebookConnectSuccessAction) => {
-      // this.authenticationService.loginFacebookUserSuccess(action.response);
-    })
+  loginFacebookUserSuccessEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<facebookActions.FacebookLoginSuccessAction>(
+        facebookActions.FacebookActionTypes.FACEBOOK_LOGIN_SUCCESS
+      ),
+      tap((action) => {
+        this.authenticationService.loginFacebookUserSuccess(action.response);
+      }),
+      switchMap((_action) => [
+        new friendActions.GetFriendsRequestAction({
+          limit: null
+        }),
+        new featureActions.GetUserMetadataRequestAction({})
+      ])
+    )
   );
 
-  @Effect({ dispatch: false })
-  connectFacebookUserFailureEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<facebookActions.FacebookConnectFailureAction>(
-      facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_FAILURE
-    ),
-    tap((action: facebookActions.FacebookConnectFailureAction) => {
-      this.alertService.error(action.error.message);
-    })
-  );
-
-  @Effect()
-  disconnectFacebookUserEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<facebookActions.FacebookDisconnectRequestAction>(
-      facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_REQUEST
-    ),
-    switchMap((action) =>
-      this.userService.disconnectFacebookUser(action.request).pipe(
-        map(
-          (response: FacebookDisconnectResponse) =>
-            new facebookActions.FacebookDisconnectSuccessAction(response)
-        ),
-        catchError((error) =>
-          observableOf(
-            new facebookActions.FacebookDisconnectFailureAction(error)
+  connectFacebookUserRequestEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<facebookActions.FacebookConnectRequestAction>(
+        facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_REQUEST
+      ),
+      switchMap((action) =>
+        this.userService.connectFacebookUser(action.request).pipe(
+          map(
+            (response: FacebookConnectResponse) =>
+              new facebookActions.FacebookConnectSuccessAction(response)
+          ),
+          catchError((errorResponse: { error: SpotError }) =>
+            observableOf(
+              new facebookActions.FacebookConnectFailureAction(
+                errorResponse.error
+              )
+            )
           )
         )
       )
     )
   );
 
-  @Effect({ dispatch: false })
-  disconnectFacebookUserSuccessEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<facebookActions.FacebookDisconnectSuccessAction>(
-      facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS
-    ),
-    tap((action: facebookActions.FacebookDisconnectSuccessAction) => {
-      // this.authenticationService.loginFacebookUserSuccess(action.response);
-    })
+  connectFacebookUserSuccessEffect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<facebookActions.FacebookConnectSuccessAction>(
+          facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS
+        ),
+        tap((_action) => {
+          // empty
+        })
+      ),
+    { dispatch: false }
+  );
+
+  connectFacebookUserFailureEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<facebookActions.FacebookConnectFailureAction>(
+          facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_FAILURE
+        ),
+        tap((action) => {
+          this.alertService.error(action.error.message);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  disconnectFacebookUserRequestEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<facebookActions.FacebookDisconnectRequestAction>(
+        facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_REQUEST
+      ),
+      switchMap((action) =>
+        this.userService.disconnectFacebookUser(action.request).pipe(
+          map(
+            (response: FacebookDisconnectResponse) =>
+              new facebookActions.FacebookDisconnectSuccessAction(response)
+          ),
+          catchError((errorResponse: { error: SpotError }) =>
+            observableOf(
+              new facebookActions.FacebookDisconnectFailureAction(
+                errorResponse.error
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+
+  disconnectFacebookUserSuccessEffect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<facebookActions.FacebookDisconnectSuccessAction>(
+          facebookActions.FacebookActionTypes.FACEBOOK_DISCONNECT_SUCCESS
+        ),
+        tap((_action) => {
+          // empty
+        })
+      ),
+    { dispatch: false }
   );
 }

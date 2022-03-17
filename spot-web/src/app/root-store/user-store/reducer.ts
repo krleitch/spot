@@ -74,6 +74,7 @@ export function featureReducer(
       return {
         ...state,
         user: {
+          ...state.user,
           ...action.request.user
         }
       };

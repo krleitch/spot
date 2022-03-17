@@ -32,6 +32,7 @@ import {
 
 // service
 import { SpotService } from '@services/spot.service';
+import { UserService } from '@services/user.service';
 
 // Models
 import {
@@ -40,7 +41,7 @@ import {
   GetSpotResponse,
   SetSpotStoreRequest
 } from '@models/spot';
-import { User, VerifyRequest, UserRole } from '@models/user';
+import { User, VerifyRequest, VerifyResponse, UserRole } from '@models/user';
 import {
   UserMetadata,
   UpdateUserMetadataRequest,
@@ -49,9 +50,9 @@ import {
   UnitSystem
 } from '@models/userMetadata';
 import {
-  LoadLocationRequest,
-  LocationFailure,
-  SetLocationRequest,
+  SetLoadingLocation,
+  SetLocationFailure,
+  SetLocation,
   LocationData
 } from '@models/location';
 
@@ -78,16 +79,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   noSpots: boolean;
 
   // Location
-  loadingLocation$: Observable<boolean>;
-  loadingLocation: boolean;
+  locationLoading$: Observable<boolean>;
+  locationLoading: boolean;
   bypassLocation = false; // if true we will not wait for location to load for spots
   location$: Observable<LocationData>;
   location: LocationData = null;
   showLocationIndicator$: Observable<boolean>;
   locationFailure$: Observable<string>;
   locationFailure: string;
-  locationTimeReceived$: Observable<Date>;
-  locationTimeReceived: Date;
+  locationCreatedAt$: Observable<Date>;
+  locationCreatedAt: Date;
 
   // User
   user$: Observable<User>;
@@ -116,7 +117,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private store$: Store<RootStoreState.State>,
-    private spotService: SpotService
+    private spotService: SpotService,
+    private userService: UserService
   ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
   }
@@ -167,29 +169,29 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.locationFailure = locationFailure;
       });
 
-    this.locationTimeReceived$ = this.store$.pipe(
-      select(UserStoreSelectors.selectLocationTimeReceived)
+    this.locationCreatedAt$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocationCreatedAt)
     );
 
-    this.locationTimeReceived$
+    this.locationCreatedAt$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((locationTimeReceived: Date) => {
-        this.locationTimeReceived = locationTimeReceived;
+      .subscribe((locationCreatedAt: Date) => {
+        this.locationCreatedAt = locationCreatedAt;
       });
 
-    this.loadingLocation$ = this.store$.pipe(
-      select(UserStoreSelectors.selectLoadingLocation)
+    this.locationLoading$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocationLoading)
     );
 
-    this.loadingLocation$
+    this.locationLoading$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((loadingLocation: boolean) => {
-        this.loadingLocation = loadingLocation;
-        if (this.loadingLocation) {
+      .subscribe((locationLoading: boolean) => {
+        this.locationLoading = locationLoading;
+        if (this.locationLoading) {
           this.showLocationIndicator$ = timer(500)
             .pipe(
               mapTo(true),
-              takeWhile((_) => this.loadingLocation)
+              takeWhile((_) => this.locationLoading)
             )
             .pipe(startWith(false));
         }
@@ -254,13 +256,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     let minutesSinceLocation = 0;
-    if (this.locationTimeReceived) {
+    if (this.locationCreatedAt) {
       minutesSinceLocation =
-        (new Date().getTime() - this.locationTimeReceived.getTime()) / 1000;
+        (new Date().getTime() - this.locationCreatedAt.getTime()) / 1000;
     }
     // check if we need to get location, or if location is outdated
     if (
-      !this.loadingLocation &&
+      !this.locationLoading &&
       (!this.location ||
         minutesSinceLocation > LOCATION_CONSTANTS.VALID_LOCATION_TIME)
     ) {
@@ -280,7 +282,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             typeof this.searchType === 'undefined' ||
             (this.location === null &&
               this.locationType === LocationType.LOCAL) ||
-            (this.loadingLocation === true && this.bypassLocation === false)
+            (this.locationLoading === true && this.bypassLocation === false)
         ),
         take(1),
         takeUntil(this.stop$)
@@ -436,8 +438,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   verifyUser(): void {
     const request: VerifyRequest = {};
-    this.store$.dispatch(new UserActions.VerifyRequestAction(request));
-    this.verificationSent = true;
+    this.userService
+      .verifyUser(request)
+      .pipe(take(1))
+      .subscribe((response: VerifyResponse) => {
+        this.verificationSent = true;
+      });
   }
 
   loadLocationBackground(): void {
@@ -451,15 +457,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (navigator.permissions) {
       navigator.permissions
         .query({ name: 'geolocation' })
-        .then((permission: PermissionStatus) => {
+        .then((_permission: PermissionStatus) => {
           if (navigator.geolocation) {
-            const loadLocationRequest: LoadLocationRequest = {};
+            const setLoadingLocationRequest: SetLoadingLocation = {};
             this.store$.dispatch(
-              new UserActions.LoadLocationAction(loadLocationRequest)
+              new UserActions.SetLoadingLocationAction(
+                setLoadingLocationRequest
+              )
             );
 
             navigator.geolocation.getCurrentPosition((position) => {
-              const setLocationRequest: SetLocationRequest = {
+              const setLocationRequest: SetLocation = {
                 location: {
                   longitude: position.coords.longitude,
                   latitude: position.coords.latitude
@@ -471,21 +479,21 @@ export class HomeComponent implements OnInit, OnDestroy {
             }, this.locationError.bind(this));
           } else {
             // the permissions api isnt implemented in this browser so setup to prompt again
-            const locationFailure: LocationFailure = {
+            const locationFailure: SetLocationFailure = {
               error: 'browser'
             };
             this.store$.dispatch(
-              new UserActions.LocationFailureAction(locationFailure)
+              new UserActions.SetLocationFailureAction(locationFailure)
             );
           }
         });
     } else {
       // the permissions api isnt implemented in this browser so setup to prompt again
-      const locationFailure: LocationFailure = {
+      const locationFailure: SetLocationFailure = {
         error: 'browser'
       };
       this.store$.dispatch(
-        new UserActions.LocationFailureAction(locationFailure)
+        new UserActions.SetLocationFailureAction(locationFailure)
       );
     }
   }
@@ -497,13 +505,15 @@ export class HomeComponent implements OnInit, OnDestroy {
         .then((permission: PermissionStatus) => {
           if (permission.state === 'granted') {
             if (navigator.geolocation) {
-              const loadLocationRequest: LoadLocationRequest = {};
+              const setLoadingLocationRequest: SetLoadingLocation = {};
               this.store$.dispatch(
-                new UserActions.LoadLocationAction(loadLocationRequest)
+                new UserActions.SetLoadingLocationAction(
+                  setLoadingLocationRequest
+                )
               );
 
               navigator.geolocation.getCurrentPosition((position) => {
-                const setLocationRequest: SetLocationRequest = {
+                const setLocationRequest: SetLocation = {
                   location: {
                     longitude: position.coords.longitude,
                     latitude: position.coords.latitude
@@ -515,53 +525,53 @@ export class HomeComponent implements OnInit, OnDestroy {
               }, this.locationError.bind(this));
             } else {
               // geolocation not available in this browser
-              const locationFailure: LocationFailure = {
+              const locationFailure: SetLocationFailure = {
                 error: 'browser'
               };
               this.store$.dispatch(
-                new UserActions.LocationFailureAction(locationFailure)
+                new UserActions.SetLocationFailureAction(locationFailure)
               );
             }
           } else if (permission.state === 'denied') {
-            const locationFailure: LocationFailure = {
+            const locationFailure: SetLocationFailure = {
               error: 'permission'
             };
             this.store$.dispatch(
-              new UserActions.LocationFailureAction(locationFailure)
+              new UserActions.SetLocationFailureAction(locationFailure)
             );
           } else if (permission.state === 'prompt') {
-            const locationFailure: LocationFailure = {
+            const locationFailure: SetLocationFailure = {
               error: 'prompt'
             };
             this.store$.dispatch(
-              new UserActions.LocationFailureAction(locationFailure)
+              new UserActions.SetLocationFailureAction(locationFailure)
             );
           } else {
-            const locationFailure: LocationFailure = {
+            const locationFailure: SetLocationFailure = {
               error: 'general'
             };
             this.store$.dispatch(
-              new UserActions.LocationFailureAction(locationFailure)
+              new UserActions.SetLocationFailureAction(locationFailure)
             );
           }
         });
     } else {
       // the permissions api isnt implemented in this browser so setup to prompt again
-      const locationFailure: LocationFailure = {
+      const locationFailure: SetLocationFailure = {
         error: 'browser'
       };
       this.store$.dispatch(
-        new UserActions.LocationFailureAction(locationFailure)
+        new UserActions.SetLocationFailureAction(locationFailure)
       );
     }
   }
 
   private locationError(error: { message: string; code: number }): void {
-    const locationFailure: LocationFailure = {
+    const locationFailure: SetLocationFailure = {
       error: error.code === 1 ? 'permission' : 'general'
     };
     this.store$.dispatch(
-      new UserActions.LocationFailureAction(locationFailure)
+      new UserActions.SetLocationFailureAction(locationFailure)
     );
   }
 
