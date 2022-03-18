@@ -18,7 +18,7 @@ const FRIENDS_ERROR_MESSAGES = ERROR_MESSAGES.MAIN.FRIENDS;
 import authorizationService from '@services/authorization.js';
 
 // models
-import { UserRole } from '@models/user.js';
+import { UserRole, User } from '@models/user.js';
 import {
   Friend,
   GetFriendsRequest,
@@ -70,7 +70,12 @@ router.get(
       // Add username and delete the friendUserId
       const friendsWithUsername = await Promise.all(
         friends.map(async (friend) => {
-          const friendUser = await prismaUser.findUserById(friend.friendUserId);
+          let friendUser: User | null;
+          if (friend.userId === req.user?.userId) {
+            friendUser = await prismaUser.findUserById(friend.friendUserId);
+          } else {
+            friendUser = await prismaUser.findUserById(friend.userId);
+          }
           const newFriend: Friend = {
             friendId: friend.friendId,
             createdAt: friend.createdAt,
@@ -329,7 +334,7 @@ router.post(
         request.friendRequestId
       );
 
-      const friendUser = await prismaUser.findUserById(acceptedFriend.friendUserId);
+      const friendUser = await prismaUser.findUserById(acceptedFriend.userId);
 
       const response: AcceptFriendResponse = {
         friend: {
@@ -354,7 +359,7 @@ router.post(
         !req.user ||
         authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])
       ) {
-        return next(new friendsError.AcceptFriendRequest());
+        return next(new friendsError.DeclineFriendRequest());
       }
 
       const request: DeclineFriendRequest = {
@@ -364,22 +369,11 @@ router.post(
         request.friendRequestId
       );
       if (friendRequest?.friendUserId !== req.user.userId) {
-        return next(new friendsError.AcceptFriendRequest());
+        return next(new friendsError.DeclineFriendRequest());
       }
-      const declinedFriend = await prismaFriend.acceptFriendRequest(
-        request.friendRequestId
-      );
+      await prismaFriend.declineFriendRequest(request.friendRequestId);
 
-      const friendUser = await prismaUser.findUserById(declinedFriend.friendId);
-
-      const response: DeclineFriendResponse = {
-        friend: {
-          friendId: declinedFriend.friendId,
-          createdAt: declinedFriend.createdAt,
-          confirmedAt: declinedFriend.confirmedAt,
-          username: friendUser ? friendUser.username : ''
-        }
-      };
+      const response: DeclineFriendResponse = {};
       res.status(200).json(response);
     }
   )
