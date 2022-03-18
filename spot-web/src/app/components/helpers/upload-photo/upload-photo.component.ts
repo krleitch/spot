@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { take } from 'rxjs/operators';
 import { Buffer } from 'buffer';
@@ -22,9 +28,12 @@ import {
   templateUrl: './upload-photo.component.html',
   styleUrls: ['./upload-photo.component.scss']
 })
-export class UploadPhotoComponent implements OnInit {
+export class UploadPhotoComponent implements OnInit, AfterViewInit {
   modalId: string;
   data: ModalUploadProfilePictureData = { profilePictureSrc: undefined }; // Your current profile picture
+  @ViewChild('cropper') imageCropper: ElementRef<HTMLElement>;
+  isMouseDown = false;
+  confirmRemove = false;
 
   constructor(
     private modalService: ModalService,
@@ -32,10 +41,57 @@ export class UploadPhotoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    this.imageCropper.nativeElement.addEventListener('mousedown', (_e) => {
+      this.isMouseDown = true;
+    });
+    this.imageCropper.nativeElement.addEventListener('mouseup', (_e) => {
+      this.isMouseDown = false;
+    });
+    this.imageCropper.nativeElement.addEventListener('mousemove', (e) => {
+      if (this.isMouseDown) {
+        const rect = this.imageCropper.nativeElement.getBoundingClientRect();
+        const offsetX = e.x - rect.left;
+        const offsetY = e.y - rect.top;
+        if (offsetX < 15) {
+          // left
+          this.transform = {
+            ...this.transform,
+            translateH: this.transform.translateH - 5
+          };
+        } else if (offsetX > rect.width - 15) {
+          // right
+          this.transform = {
+            ...this.transform,
+            translateH: this.transform.translateH + 5
+          };
+        } else if (offsetY < 15) {
+          // up
+          this.transform = {
+            ...this.transform,
+            translateV: this.transform.translateV - 5
+          };
+        } else if (offsetY > rect.height - 15) {
+          // down
+          this.transform = {
+            ...this.transform,
+            translateV: this.transform.translateV + 5
+          };
+        }
+      }
+    });
+  }
+
   imageChangedEvent = '';
   croppedImage = '';
   errorUploading = false;
   loading = false;
+  transform = {
+    scale: 1,
+    translateH: 0,
+    translateV: 0
+  };
 
   fileChangeEvent(event: string): void {
     this.imageChangedEvent = event;
@@ -51,6 +107,28 @@ export class UploadPhotoComponent implements OnInit {
   }
   loadImageFailed() {
     // show message
+  }
+
+  scaleUp() {
+    this.transform = {
+      ...this.transform,
+      scale: this.transform.scale + 1
+    };
+  }
+
+  scaleDown() {
+    this.transform = {
+      ...this.transform,
+      scale: Math.max(this.transform.scale - 1, 0)
+    };
+  }
+
+  reset() {
+    this.transform = {
+      scale: 1,
+      translateH: 0,
+      translateV: 0
+    };
   }
 
   dataUrlToFile(dataUrl: string, filename: string): File | undefined {
@@ -69,6 +147,7 @@ export class UploadPhotoComponent implements OnInit {
 
   confirm() {
     this.errorUploading = false;
+    this.confirmRemove = false;
     const file = this.dataUrlToFile(this.croppedImage, 'photo');
     const request: UpdateProfilePictureRequest = {
       image: file
@@ -94,8 +173,13 @@ export class UploadPhotoComponent implements OnInit {
       );
   }
 
+  showConfirmRemove() {
+    this.confirmRemove = true;
+  }
+
   remove() {
     this.errorUploading = false;
+    this.confirmRemove = false;
     const request: DeleteProfilePictureRequest = {};
     this.loading = true;
 

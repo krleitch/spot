@@ -13,19 +13,37 @@
       <span> You will always be anonymous to all other users. </span>
     </div>
 
-    <image-cropper
-      [imageChangedEvent]="imageChangedEvent"
-      [maintainAspectRatio]="true"
-      [aspectRatio]="1 / 1"
-      [cropperStaticWidth]="100"
-      [cropperStaticHeight]="100"
-      [roundCropper]="true"
-      format="png"
-      (imageCropped)="imageCropped($event)"
-      (imageLoaded)="imageLoaded($event)"
-      (cropperReady)="cropperReady()"
-      (loadImageFailed)="loadImageFailed()"
-    ></image-cropper>
+    <div *ngIf="croppedImage" class="preview-header">
+      <span> Crop your photo </span>
+      <span class="scale-container">
+        <button (click)="scaleUp()">
+          <i class="material-icons"> add </i>
+        </button>
+        <button (click)="scaleDown()">
+          <i class="material-icons"> remove </i>
+        </button>
+        <button (click)="reset()">
+          <i class="material-icons"> restart_alt </i>
+        </button>
+      </span>
+    </div>
+
+    <div #cropper>
+      <image-cropper
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="1 / 1"
+        [cropperStaticWidth]="100"
+        [cropperStaticHeight]="100"
+        [roundCropper]="true"
+        [transform]="transform"
+        format="png"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded($event)"
+        (cropperReady)="cropperReady()"
+        (loadImageFailed)="loadImageFailed()"
+      ></image-cropper>
+    </div>
 
     <div class="preview-container">
       <div class="button-container">
@@ -44,7 +62,7 @@
           <button class="confirm" (click)="confirm()">
             <span class="text"> Confirm </span>
           </button>
-          <button class="remove" (click)="remove()">
+          <button class="remove" (click)="showConfirmRemove()">
             <span class="text"> Remove </span>
           </button>
         </div>
@@ -60,6 +78,16 @@
           src="../../../../assets/images/op_large.png"
         />
       </div>
+    </div>
+
+    <div class="confirm-remove" *ngIf="confirmRemove">
+      <span class="text">
+        Are you sure you would like to permanently delete your profile
+        picture</span
+      >
+      <button class="remove" (click)="remove()">
+        Delete
+      </button>
     </div>
   </div>
 </div>
