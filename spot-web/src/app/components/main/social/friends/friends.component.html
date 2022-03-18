@@ -35,7 +35,7 @@
           <div class="friend-request-options">
             <button
               class="decline friend-button"
-              (click)="deletePendingFriendRequest(pendingFriendRequest.id)"
+              (click)="deletePendingFriendRequest(pendingFriendRequest.friendId)"
             >
               {{ 'MAIN.FRIENDS.CANCEL' | translate }}
             </button>
@@ -57,13 +57,13 @@
           <div class="friend-request-options">
             <button
               class="accept friend-button"
-              (click)="acceptFriendRequest(friendRequest.id)"
+              (click)="acceptFriendRequest(friendRequest.friendId)"
             >
               {{ 'MAIN.FRIENDS.FRIEND_REQUEST_ACCEPT' | translate }}
             </button>
             <button
               class="decline friend-button"
-              (click)="declineFriendRequest(friendRequest.id)"
+              (click)="declineFriendRequest(friendRequest.friendId)"
             >
               {{ 'MAIN.FRIENDS.FRIEND_REQUEST_DECLINE' | translate }}
             </button>

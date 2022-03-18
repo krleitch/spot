@@ -329,7 +329,7 @@ router.post(
         request.friendRequestId
       );
 
-      const friendUser = await prismaUser.findUserById(acceptedFriend.friendId);
+      const friendUser = await prismaUser.findUserById(acceptedFriend.friendUserId);
 
       const response: AcceptFriendResponse = {
         friend: {

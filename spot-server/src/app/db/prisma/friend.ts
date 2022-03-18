@@ -24,12 +24,23 @@ const findAllFriend = async (
 ): Promise<P.Friend[]> => {
   const friend = await prisma.friend.findMany({
     where: {
-      OR: [
+      AND: [
         {
-          userId: userId
+          OR: [
+            {
+              userId: userId
+            },
+            {
+              friendUserId: userId
+            }
+          ]
         },
         {
-          friendUserId: userId
+          NOT: [
+            {
+              confirmedAt: null
+            }
+          ]
         }
       ]
     },
@@ -146,12 +157,10 @@ const findFriendRequest = async (
 };
 
 // You are the one who the request was sent to, so you are friendUserId
-const acceptFriendRequest = async (
-  friendId: string
-): Promise<P.Friend> => {
+const acceptFriendRequest = async (friendId: string): Promise<P.Friend> => {
   const updatedFriend = await prisma.friend.update({
     where: {
-      friendId: friendId,
+      friendId: friendId
     },
     data: {
       confirmedAt: new Date()
@@ -161,9 +170,7 @@ const acceptFriendRequest = async (
 };
 
 // You are the one who the request was sent to, so you are friendUserId
-const declineFriendRequest = async (
-  friendId: string
-): Promise<P.Friend> => {
+const declineFriendRequest = async (friendId: string): Promise<P.Friend> => {
   const deletedFriend = await prisma.friend.delete({
     where: {
       friendId: friendId

@@ -225,7 +225,7 @@ export class FriendsComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         },
         (response: { error: SpotError }) => {
-          this.friendRequestsError = response.error.message;
+          this.friendRequestsError = 'Error. Please try again';
         }
       );
   }

@@ -2,20 +2,19 @@ import { Injectable } from '@angular/core';
 
 // store
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
 
 // rxjs
-import { Observable, of as observableOf } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-// actions
+// Actions
 import * as featureActions from './actions';
 import * as spotActions from '@src/app/root-store/spot-store/actions';
 
-// services
-import { CommentService } from '../../services/comment.service';
+// Services
+import { CommentService } from '@services/comment.service';
 
-// assets
+// Models
 import {
   DeleteCommentResponse,
   DeleteReplyResponse,
