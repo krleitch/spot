@@ -119,7 +119,7 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
   scaleDown() {
     this.transform = {
       ...this.transform,
-      scale: Math.max(this.transform.scale - 1, 0)
+      scale: Math.max(this.transform.scale - 1, 1)
     };
   }
 
@@ -146,6 +146,10 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
   }
 
   confirm() {
+    if (this.loading) {
+      return;
+    }
+
     this.errorUploading = false;
     this.confirmRemove = false;
     const file = this.dataUrlToFile(this.croppedImage, 'photo');
@@ -173,34 +177,36 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
       );
   }
 
-  showConfirmRemove() {
-    this.confirmRemove = true;
-  }
-
   remove() {
-    this.errorUploading = false;
-    this.confirmRemove = false;
-    const request: DeleteProfilePictureRequest = {};
-    this.loading = true;
+    if (!this.confirmRemove) {
+      this.confirmRemove = true;
+    } else {
+      if (this.loading) {
+        return;
+      }
+      this.errorUploading = false;
+      this.confirmRemove = false;
+      const request: DeleteProfilePictureRequest = {};
+      this.loading = true;
 
-    this.userService
-      .deleteProfilePicture(request)
-      .pipe(take(1))
-      .subscribe(
-        (_response: UpdateProfilePictureResponse) => {
-          this.loading = false;
-          const result: ModalUploadProfilePictureResult = {
-            profilePictureSrc: undefined
-          };
-          this.modalService.setResult(this.modalId, result);
-          this.close();
-        },
-        (_err) => {
-          this.loading = false;
-          this.errorUploading = true;
-        }
-      );
-    this.close();
+      this.userService
+        .deleteProfilePicture(request)
+        .pipe(take(1))
+        .subscribe(
+          (_response: UpdateProfilePictureResponse) => {
+            this.loading = false;
+            const result: ModalUploadProfilePictureResult = {
+              profilePictureSrc: undefined
+            };
+            this.modalService.setResult(this.modalId, result);
+            this.close();
+          },
+          (_err) => {
+            this.loading = false;
+            this.errorUploading = true;
+          }
+        );
+    }
   }
 
   close() {

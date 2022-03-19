@@ -5,16 +5,15 @@
   </div>
   <div class="body">
     <div class="description">
-      <span> A profile picture helps others recgonize you. </span>
+      <span> {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_1' | translate }} </span>
       <span>
-        Your picture will only be shown to the specefic users you tag in
-        comments and chats.
+        {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_2' | translate }}
       </span>
-      <span> You will always be anonymous to all other users. </span>
+      <span> {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_3' | translate }} </span>
     </div>
 
     <div *ngIf="croppedImage" class="preview-header">
-      <span> Crop your photo </span>
+      <span> {{ 'MAIN.UPLOAD_PHOTO.CROP_TITLE' | translate }} </span>
       <span class="scale-container">
         <button (click)="scaleUp()">
           <i class="material-icons"> add </i>
@@ -54,16 +53,35 @@
           #fileInput
         />
         <button class="upload" (click)="fileInput.click()">
-          <span *ngIf="!croppedImage" class="text"> Upload from computer </span>
-          <span *ngIf="croppedImage" class="text"> Choose another photo </span>
+          <span *ngIf="!croppedImage" class="text">
+            {{ 'MAIN.UPLOAD_PHOTO.UPLOAD' | translate }}
+          </span>
+          <span *ngIf="croppedImage" class="text">
+            {{ 'MAIN.UPLOAD_PHOTO.CHOOSE_ANOTHER' | translate }}
+          </span>
           <i class="material-icons photo"> upload </i>
         </button>
         <div class="response-container">
-          <button class="confirm" (click)="confirm()">
-            <span class="text"> Confirm </span>
+          <button
+            class="confirm"
+            [ngClass]="{ disabled: loading }"
+            (click)="confirm()"
+          >
+            <span class="text">
+              {{ 'MAIN.UPLOAD_PHOTO.CONFIRM' | translate }}
+            </span>
           </button>
-          <button class="remove" (click)="showConfirmRemove()">
-            <span class="text"> Remove </span>
+          <button
+            class="remove"
+            [ngClass]="{ disabled: loading }"
+            (click)="remove()"
+          >
+            <span *ngIf="!confirmRemove" class="text">
+              {{ 'MAIN.UPLOAD_PHOTO.REMOVE' | translate }}
+            </span>
+            <span *ngIf="confirmRemove" class="text">
+              {{ 'MAIN.UPLOAD_PHOTO.DELETE' | translate }}
+            </span>
           </button>
         </div>
       </div>
@@ -82,12 +100,13 @@
 
     <div class="confirm-remove" *ngIf="confirmRemove">
       <span class="text">
-        Are you sure you would like to permanently delete your profile
-        picture</span
+        {{ 'MAIN.UPLOAD_PHOTO.DELETE_MESSAGE' | translate }}</span
       >
-      <button class="remove" (click)="remove()">
-        Delete
-      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      <span class="text"> {{ 'MAIN.UPLOAD_PHOTO.LOADING' | translate }} </span>
+      <spot-spinner size="small"></spot-spinner>
     </div>
   </div>
 </div>

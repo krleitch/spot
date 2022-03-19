@@ -650,7 +650,7 @@ router.delete(
 
       const user = await prismaUser.updateProfilePicture(
         req.user.userId,
-        undefined
+        null
       );
       if (!user) {
         return next(new userError.DeleteProfilePhoto());

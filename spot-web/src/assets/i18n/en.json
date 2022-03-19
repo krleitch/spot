@@ -388,6 +388,20 @@
       "FAILURE": "There was an error verifying your email. Your verification code is either invalid or expired",
       "VERIFY_SEND": "Send email verification",
       "VERIFY_SENT": "Verification email sent to"
+    },
+
+    "UPLOAD_PHOTO": {
+      "DESCRIPTION_1": "A profile picture helps others recgonize you.",
+      "DESCRIPTION_2": "Your picture will only be shown to the sepcific users you tag in comments and chats.",
+      "DESCRIPTION_3": "You will always be anonymous to all other users.",
+      "CROP_TITLE": "Crop your photo",
+      "UPLOAD": "Upload from computer",
+      "CHOOSE_ANOTHER": "Choose another photo",
+      "CONFIRM": "Confirm",
+      "REMOVE": "Remove",
+      "DELETE_MESSAGE": "Are you sure you would like to permanently delete your profile picture?",
+      "DELETE": "Delete",
+      "LOADING": "Uploading photo to Spot"
     }
   },
 

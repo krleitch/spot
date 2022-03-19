@@ -172,7 +172,6 @@ export class UserService {
   ): Observable<UpdateProfilePictureResponse> {
     const formData = new FormData();
     formData.append('json', JSON.stringify(request));
-    console.log(JSON.stringify(request));
 
     if (request.image) {
       formData.append('image', request.image);

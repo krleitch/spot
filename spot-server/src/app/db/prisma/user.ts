@@ -384,7 +384,7 @@ const disconnectGoogle = async (userId: string): Promise<User | null> => {
 
 const updateProfilePicture = async (
   userId: string,
-  profilePictureSrc: string | undefined
+  profilePictureSrc: string | null
 ): Promise<User | null> => {
   const updatedUser = await prisma.user.update({
     where: {

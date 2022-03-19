@@ -19,7 +19,7 @@
 }
 
 .body {
-  padding: 5px;
+  padding: 20px 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -134,6 +134,13 @@
             background-color: var(--error-light-highlight);
           }
         }
+        button.disabled {
+          cursor: not-allowed;
+          background-color: var(--button-disabled);
+          &:hover {
+            background-color: var(--button-disabled);
+          }
+        }
       }
     }
     .preview {
@@ -163,29 +170,21 @@
     align-items: center;
 
     .text {
-      color: var(--text-secondary);
+      color: var(--error);
       text-align: center;
     }
+  }
 
-    button {
-      border: none;
-      text-decoration: none;
-      outline: none;
-      cursor: pointer;
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--button-text);
-      padding: 6px 12px;
-      font-size: 14px;
-      height: 36px;
-      background-color: var(--error-light);
-      width: 95px;
-      margin: 5px 10px 5px 5px;
-      &:hover {
-        background-color: var(--error-light-highlight);
-      }
+    .text {
+      color: var(--text-secondary);
+      text-align: center;
+      margin-right: 5px;
+      margin-bottom: 2px;
     }
   }
 }
