@@ -31,7 +31,11 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        if (err.status === 401) {
+        if (
+          err.status === 401 &&
+          !request.url.includes('http://localhost:4000')
+        ) {
+          // TODO: fix, do not logout if error is from chat service
           // auto logout if 401 response returned from api
           this.store$.dispatch(new UserActions.LogoutUserAction());
         }

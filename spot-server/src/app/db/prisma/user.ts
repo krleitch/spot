@@ -161,6 +161,18 @@ const findUserByUsernamePassport = async (
   return user ? mapToModelEnum<P.User>(user) : null;
 };
 
+// Used by passport to get the account on login with local auth
+const findUserByIdChat = async (
+  userId: string
+): Promise<P.User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      userId: userId
+    }
+  });
+  return user ? mapToModelEnum<P.User>(user) : null;
+};
+
 // soft delete the user
 const softDeleteUser = async (userId: string): Promise<P.User> => {
   const user = await findUserById(userId);
@@ -409,6 +421,7 @@ export default {
   phoneExists,
   findUserByEmailPassport,
   findUserByUsernamePassport,
+  findUserByIdChat,
   softDeleteUser,
   updateUsername,
   updateEmail,

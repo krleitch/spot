@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:3000',
+  chatBaseUrl: 'http://localhost:4000/api',
   googleProviderId:
     '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com'
 };

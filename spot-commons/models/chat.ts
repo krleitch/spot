@@ -1,32 +1,47 @@
 export enum MessageType {
-    MESSAGE = 'MESSAGE',
-    INFO = 'INFO',
+  MESSAGE = "MESSAGE",
+  INFO = "INFO",
 }
 
 export enum ChatType {
-  ROOM = 'ROOM',
-  FRIEND = 'FRIEND'
+  ROOM = "ROOM",
+  FRIEND = "FRIEND",
 }
 export interface Tab {
   id: string;
   type: ChatType;
   name: string;
-  topic? : string; // topic is on ChatType Room
+  data?: ChatRoom; // topic is on ChatType Room
 }
 export interface Message {
-    content: string;
-    timestamp: Date;
-    owned?: boolean;
-    profilePicture?: number; // The enumeration of the image (colour)
-    profilePictureSrc?: number; // The image
-    type: MessageType;
+  id: string;
+  inserted_at: Date;
+  text: string;
+  user: {
+    id: string
+  }
+  // timestamp: Date;
+  // owned?: boolean;
+  // profilePicture?: number; // The enumeration of the image (colour)
+  // profilePictureSrc?: number; // The image
+  // type: MessageType;
 }
 
 export interface NewMessage {
-    content: string;
+  text: string;
 }
 
 export interface ChatRoom {
+  id: number;
   topic: string;
   name: string;
+}
+
+export interface CreateChatRoomRequest {
+  topic: string;
+  name: string;
+}
+
+export interface findAllChatRooms {
+
 }

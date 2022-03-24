@@ -9,26 +9,11 @@
   </div>
   <div class="messages-container">
     <div *ngFor="let message of messages" class="message">
-      <div
-        [class]="getProfilePictureClass(message.profilePicture)"
-        [ngClass]="{
-          'profile-owned': message.owned,
-          'profile-info': message.type === 'INFO'
-        }"
-      >
-        <img
-          [ngClass]="{ 'image-info': message.type === 'INFO' }"
-          [src]="
-            '../../../../../assets/images/profile/' + message.profilePictureSrc
-          "
-        />
+      <div [class]="getProfilePictureClass('op.png')">
+        <img src="../../../../../assets/images/profile/op.png" />
       </div>
-      <span
-        class="content"
-        [ngClass]="{ 'content-info': message.type === 'INFO' }"
-        >{{ message.content }}</span
-      >
-      <span class="time">{{ formatTimestamp(message.timestamp) }}</span>
+      <span class="content">{{ message.text }}</span>
+      <span class="time">{{ formatTimestamp(message.inserted_at) }}</span>
     </div>
   </div>
   <div class="chat-bar">

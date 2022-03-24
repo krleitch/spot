@@ -7,9 +7,12 @@ import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
 
+// Services
+import { ChatService } from '@services/chat.service';
+
 // Models
 import { Friend } from '@models/friend';
-import { ChatType, Tab, ChatRoom } from '@models/chat';
+import { ChatType, Tab, ChatRoom, CreateChatRoomRequest } from '@models/chat';
 
 enum MenuStatus {
   HIDDEN = 'HIDDEN',
@@ -38,9 +41,12 @@ export class ChatMenuComponent implements OnInit {
   // Tabs
   tabs: Tab[] = [];
   minimizedTabs: Tab[] = [];
-  rooms: ChatRoom[] = [{ topic: 'lobby', name: 'Test Chat' }];
+  rooms: ChatRoom[] = [];
 
-  constructor(private store$: Store<RootStoreState.State>) {}
+  constructor(
+    private store$: Store<RootStoreState.State>,
+    private chatService: ChatService
+  ) {}
 
   ngOnInit(): void {
     this.friends$ = this.store$.pipe(
@@ -84,13 +90,13 @@ export class ChatMenuComponent implements OnInit {
     this.tabs.push(newTab);
   }
 
-  createRoomTab(type: ChatType, name: string, topic: string) {
+  createRoomTab(type: ChatType, room: ChatRoom) {
     // check if the tab exists already
     const newTab: Tab = {
       id: uuidv4(),
-      name: name,
+      name: room.name,
       type: type,
-      topic: topic
+      data: room
     };
     this.tabs.push(newTab);
   }
@@ -135,7 +141,20 @@ export class ChatMenuComponent implements OnInit {
     }
   }
 
-  searchRooms() {}
+  searchRooms() {
+    this.chatService.getRooms().subscribe((result) => {
+      console.log(result);
+      this.rooms = result.data;
+    });
+  }
 
-  createRoom() {}
+  createRoom() {
+    const request: CreateChatRoomRequest = {
+      topic: 'lobby',
+      name: 'test room'
+    };
+    this.chatService.createChatRoom(request).subscribe((result) => {
+      this.rooms.push(result);
+    });
+  }
 }

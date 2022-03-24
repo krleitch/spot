@@ -15,6 +15,7 @@ import morgan from 'morgan';
 import spot from '@routes/spot.js';
 import root from '@routes/root.js';
 import user from '@routes/user.js';
+import chat from '@routes/chat.js';
 import comment from '@routes/comment.js';
 import notification from '@routes/notification.js';
 import friend from '@routes/friend.js';
@@ -43,6 +44,14 @@ app.use(passport.initialize());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Allow only the chat service to call this route
+const chatCors = {
+  origin: 'http://localhost:4000',
+  optionsSuccessStatus: 200
+};
+app.use('/chat', Cors(chatCors), authenticationService.requiredAuth, chat);
+
 app.use(Cors());
 
 // create a rotating write stream
@@ -86,7 +95,10 @@ app.use('/friend', authenticationService.requiredAuth, friend);
 app.use(
   '/admin',
   authenticationService.requiredAuth,
-  authorizationService.checkUserHasRoleMiddleware([UserRole.OWNER, UserRole.ADMIN]),
+  authorizationService.checkUserHasRoleMiddleware([
+    UserRole.OWNER,
+    UserRole.ADMIN
+  ]),
   admin
 );
 

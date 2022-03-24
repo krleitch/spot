@@ -80,7 +80,8 @@ router.get(
             friendId: friend.friendId,
             createdAt: friend.createdAt,
             confirmedAt: friend.confirmedAt,
-            username: friendUser ? friendUser?.username : ''
+            username: friendUser ? friendUser?.username : null,
+            profilePictureSrc: friendUser ? friendUser?.profilePictureSrc : null
           };
           return newFriend;
         })
@@ -154,7 +155,8 @@ router.get(
             friendId: friend.friendId,
             createdAt: friend.createdAt,
             confirmedAt: friend.confirmedAt,
-            username: friendUser ? friendUser?.username : ''
+            username: friendUser ? friendUser?.username : null,
+            profilePictureSrc: friendUser ? friendUser?.profilePictureSrc : null
           };
           return newFriend;
         })
@@ -219,7 +221,8 @@ router.get(
             friendId: friend.friendId,
             createdAt: friend.createdAt,
             confirmedAt: friend.confirmedAt,
-            username: friendUser ? friendUser?.username : ''
+            username: friendUser ? friendUser?.username : null,
+            profilePictureSrc: friendUser ? friendUser?.profilePictureSrc : null
           };
           return newFriend;
         })
@@ -299,7 +302,8 @@ router.post(
           friendId: createdFriend.friendId,
           createdAt: createdFriend.createdAt,
           confirmedAt: createdFriend.confirmedAt,
-          username: friendUser.username
+          username: friendUser.username,
+          profilePictureSrc: friendUser.profilePictureSrc
         }
       };
       res.status(200).json(response);
@@ -341,7 +345,8 @@ router.post(
           friendId: acceptedFriend.friendId,
           createdAt: acceptedFriend.createdAt,
           confirmedAt: acceptedFriend.confirmedAt,
-          username: friendUser ? friendUser.username : ''
+          username: friendUser ? friendUser.username : null,
+          profilePictureSrc: friendUser ? friendUser?.profilePictureSrc : null
         }
       };
       res.status(200).json(response);

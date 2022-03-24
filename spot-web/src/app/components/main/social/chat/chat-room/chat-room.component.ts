@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 import { ChatService } from '@services/chat.service';
 
 // Assets
-import { Message, NewMessage } from '@models/chat';
+import { Message, NewMessage, ChatRoom } from '@models/chat';
 
 @Component({
   selector: 'spot-chat-room',
@@ -13,7 +13,7 @@ import { Message, NewMessage } from '@models/chat';
 export class ChatRoomComponent implements OnInit {
   // Chat Text Content
   @ViewChild('chat') chat: ElementRef;
-  @Input() topic: string;
+  @Input() chatRoom: ChatRoom;
 
   currentLength = 0;
   channel: any;
@@ -22,10 +22,7 @@ export class ChatRoomComponent implements OnInit {
   constructor(private chatService: ChatService) {}
 
   ngOnInit(): void {
-    this.channel = this.chatService.getChannel(
-      'chat_room:' + this.topic,
-      'token'
-    );
+    this.channel = this.chatService.connectToChannel(this.chatRoom.id);
     this.channel.on('new_message', (payload: Message) => {
       this.messages.push(payload);
       // scroll to top
@@ -63,7 +60,7 @@ export class ChatRoomComponent implements OnInit {
   submit(): void {
     const content = this.chat.nativeElement.innerHTML;
     const newMessage: NewMessage = {
-      content: content
+      text: content
     };
     this.channel
       .push('new_message', newMessage, 10000)
@@ -83,6 +80,7 @@ export class ChatRoomComponent implements OnInit {
       .join()
       .receive('ok', ({ messages }) => {
         console.log('catching up', messages);
+        this.messages = messages;
       })
       .receive('error', ({ reason }) => {
         console.log('failed join', reason);
@@ -90,5 +88,14 @@ export class ChatRoomComponent implements OnInit {
       .receive('timeout', () => {
         console.log('Networking issue. Still waiting...');
       });
+
+    this.channel.on('message_created', (message) => {
+      console.log('got message', message);
+      this.messages.push(message);
+    });
+  }
+
+  leaveRoom(): void {
+    this.chatService.disconnectFromChannel(this.channel);
   }
 }

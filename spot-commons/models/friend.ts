@@ -1,6 +1,7 @@
 export interface Friend {
   friendId: string; // Id of the relationship, not a user
-  username: string;
+  username: string | null;
+  profilePictureSrc: string | null;
   createdAt: Date;
   confirmedAt: Date | null;
 }

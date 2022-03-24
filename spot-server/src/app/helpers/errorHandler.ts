@@ -7,7 +7,7 @@ const catchAsync = (fn: any) => {
   };
 };
 
-// Todo: types
+// Todo: Only return the error messages for internal errors if in dev
 const errorMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';

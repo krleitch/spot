@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Socket as PhoenixSocket } from 'phoenix';
 
+// models
+import { CreateChatRoomRequest } from '@models/chat';
+
 // env
 import { environment } from 'src/environments/environment';
 
@@ -11,21 +14,50 @@ export const WEBSOCKET_SERVER_URI = 'ws://localhost:4000/socket';
   providedIn: 'root'
 })
 export class ChatService {
-  private baseUrl = environment.baseUrl;
+  private chatBaseUrl = environment.chatBaseUrl;
   phoenixSocket: PhoenixSocket;
 
   constructor(private http: HttpClient) {
+    // Connect to socket
     this.phoenixSocket = new PhoenixSocket(WEBSOCKET_SERVER_URI, {
-      params: { token: localStorage.getItem('id_token') }
+      params: {
+        token: localStorage.getItem('id_token'),
+        logger: (kind, msg, data) => {
+          console.log(`${kind}: ${msg}`, data);
+        }
+      }
     });
     this.phoenixSocket.connect();
   }
 
-  getChannel(name: string, token: string): any {
-    const channel = this.phoenixSocket.channel(name, {
-      token: token
+  // getSession(token: string): any {
+  //   return this.http.post<any>(`${this.chatBaseUrl}/sessions`, {
+  //     token: token
+  //   });
+  // }
+
+  getRooms(): any {
+    return this.http.get<any>(`${this.chatBaseUrl}/rooms`);
+  }
+
+  createChatRoom(request: CreateChatRoomRequest) {
+    return this.http.post<any>(`${this.chatBaseUrl}/rooms`, request);
+  }
+
+  connectToChannel(roomId: number): any {
+    if (!this.phoenixSocket) {
+      return;
+    }
+    const channel = this.phoenixSocket.channel(`chat_room:${roomId}`, {
+      token: localStorage.getItem('id_token')
     });
     return channel;
+  }
+
+  disconnectFromChannel(channel) {
+    if (channel) {
+      channel.leave();
+    }
   }
 
   getProfilePictureClass(index): string {

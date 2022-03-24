@@ -68,7 +68,7 @@
           <div
             class="room"
             *ngFor="let room of rooms"
-            (click)="createRoomTab(eChatType.ROOM, room.name, room.topic)"
+            (click)="createRoomTab(eChatType.ROOM, room)"
           >
             <span class="image">{{ getMinimizedName(room.name) }}</span>
             <span
@@ -95,9 +95,15 @@
               *ngFor="let friend of friends"
               (click)="createFriendTab(eChatType.FRIEND, friend.username)"
             >
-              <span class="profile">{{
-                getMinimizedName(friend.username)
-              }}</span>
+              <span class="profile">
+                <span *ngIf="!friend.profilePictureSrc">{{
+                  getMinimizedName(friend.username)
+                }}</span>
+                <img
+                  *ngIf="friend.profilePictureSrc"
+                  [src]="friend.profilePictureSrc"
+                />
+              </span>
               <span
                 *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
                 class="text-container"
@@ -139,7 +145,10 @@
   >
     <div class="tab" *ngFor="let tab of tabs">
       <spot-chat-tab [tab]="tab" [close]="closeTab" [minimize]="minimizeTab">
-        <spot-chat-room *ngIf="tab.type === eChatType.ROOM" [topic]="tab.topic"></spot-chat-room>
+        <spot-chat-room
+          *ngIf="tab.type === eChatType.ROOM"
+          [chatRoom]="tab.data"
+        ></spot-chat-room>
         <spot-chat-friend
           *ngIf="tab.type === eChatType.FRIEND"
         ></spot-chat-friend>
