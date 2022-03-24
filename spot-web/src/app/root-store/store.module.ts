@@ -7,6 +7,7 @@ import { SpotStoreModule } from './spot-store';
 import { UserStoreModule } from './user-store';
 import { CommentStoreModule } from './comment-store/comment-store.module';
 import { SocialStoreModule } from './social-store/social-store.module';
+import { ChatStoreModule } from './chat-store/chat-store.module';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { SocialStoreModule } from './social-store/social-store.module';
     UserStoreModule,
     CommentStoreModule,
     SocialStoreModule,
+    ChatStoreModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([])
   ],

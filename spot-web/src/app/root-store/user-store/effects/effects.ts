@@ -10,6 +10,7 @@ import * as friendActions from '@src/app/root-store/social-store/actions/friend.
 import * as spotActions from '@src/app/root-store/spot-store/actions';
 import * as commentActions from '@src/app/root-store/comment-store/actions';
 import * as socialActions from '@store/social-store/actions/actions';
+import * as chatActions from '@store/chat-store/actions';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
@@ -193,7 +194,8 @@ export class UserStoreEffects {
         new userActions.ResetStoreAction(),
         new spotActions.ResetStoreAction(),
         new commentActions.ResetStoreAction(),
-        new socialActions.ResetStoreAction()
+        new socialActions.ResetStoreAction(),
+        new chatActions.ResetStoreAction()
       ])
     )
   );
