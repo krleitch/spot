@@ -1,4 +1,4 @@
-@import '../../../../styles/sizes';
+@use '~sass-mq/mq';
 
 spot-main-nav {
   position: fixed;
@@ -25,6 +25,10 @@ spot-main-nav {
   width: 70%;
   max-width: 650px;
   margin-top: 25px;
+  @include mq.mq($until: tablet) {
+    width: 95%;
+    min-width: 0;
+  }
 }
 
 .title-wrapper {
@@ -32,6 +36,10 @@ spot-main-nav {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  @include mq.mq($until: tablet) {
+    flex-flow: column;
+    align-items: flex-start;
+  }
 
   .friends-title {
     display: flex;
@@ -58,6 +66,9 @@ spot-main-nav {
     box-sizing: border-box;
     cursor: pointer;
     width: 240px;
+    @include mq.mq($until: tablet) {
+      margin-bottom: var(--gutter-sm);
+    }
   }
 
   .facebook-logo {
@@ -194,9 +205,16 @@ input {
   align-items: center;
   background-color: var(--background-header);
   padding: 5px;
+  @include mq.mq($until: tablet) {
+    flex-flow: column;
+    align-items: flex-start;
+  }
 
   .subtitle {
     font-size: 20px;
+    @include mq.mq($until: tablet) {
+      margin-bottom: var(--gutter-sm);
+    }
   }
 
   .search {
@@ -242,31 +260,5 @@ input {
 
   .icon {
     margin-right: 8px;
-  }
-}
-
-// For Mobile
-@media screen and (max-width: $mobile-width) {
-  .facebook {
-    margin-bottom: 5px;
-  }
-
-  .subtitle {
-    margin-bottom: 5px;
-  }
-
-  .friends-content {
-    width: 95%;
-    min-width: 0;
-  }
-
-  .friends-search {
-    flex-flow: column;
-    align-items: flex-start;
-  }
-
-  .title-wrapper {
-    flex-flow: column;
-    align-items: flex-start;
   }
 }

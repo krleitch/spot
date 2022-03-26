@@ -1,26 +1,13 @@
-$directions: (
-  // All, will not use a prefix to use
-  a,
-  // Top
-  t,
-  // Right
-  r,
-  // Left
-  l,
-  // Bottom
-  b,
-  // Horizontal
-  h,
-  // Vertical
-  v
-);
+// All, top, right, left, bottom, horizontal, vertical
+// All will not use a prefix
+$directions: (a, t, r, l, b, h, v);
 
 $gutter-sizes: (
-  'xs': 2px,
-  'sm': 5px,
-  'md': 7px,
-  'lg': 10px,
-  'xl': 15px
+  'xs': var(--gutter-xs),
+  'sm': var(--gutter-sm),
+  'md': var(--gutter-md),
+  'lg': var(--gutter-lg),
+  'xl': var(--gutter-xl)
 );
 
 // padding

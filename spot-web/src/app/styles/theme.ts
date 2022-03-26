@@ -1,6 +1,6 @@
 export interface Theme {
   name: string;
-  properties: any;
+  properties: { [key: string]: string };
 }
 
 export enum ColorThemes {
@@ -99,6 +99,12 @@ export const DarkTheme: Theme = {
 export const RegularSizeTheme: Theme = {
   name: SizeThemes.REGULAR,
   properties: {
+    '--gutter-xs': '2px',
+    '--gutter-sm': '5px',
+    '--gutter-md': '7px',
+    '--gutter-lg': '10px',
+    '--gutter-xl': '15px',
+
     '--text-xs': '8px',
     '--text-sm': '10px',
     '--text-md': '14px',

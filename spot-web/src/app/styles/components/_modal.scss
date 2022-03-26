@@ -1,0 +1,9 @@
+// Hide modals by default
+spot-modal {
+  display: none;
+}
+
+// body overflow is hidden to hide main scrollbar when modal window is open
+body.spot-modal-open {
+  overflow: hidden;
+}
