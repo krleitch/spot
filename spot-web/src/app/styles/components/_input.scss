@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 
-.input {
+// Input with a full border
+.input-border {
   @extend %input-shared;
   width: 300px;
   padding: 8px 12px;
@@ -13,11 +14,13 @@
   background-color: var(--input-background);
   color: var(--input-text);
 }
-
-.input.ng-dirty.ng-invalid {
+// touched, dirty and invalid
+.input-border.ng-dirty.ng-invalid.ng-touched {
+  color: var(--error);
   border: 1px solid var(--error);
 }
 
+// text input with a bottom border
 .input-border-bottom {
   @extend %input-shared;
   width: 300px;
@@ -27,7 +30,8 @@
   background-color: var(--container-background);
   color: var(--input-text);
 }
-
-.input-border-bottom.ng-dirty.ng-invalid {
+// touched, dirty and invalid
+.input-border-bottom.ng-dirty.ng-invalid.ng-touched {
+  color: var(--error);
   border-bottom: 1px solid var(--error);
 }

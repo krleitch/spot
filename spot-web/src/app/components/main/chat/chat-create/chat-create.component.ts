@@ -11,6 +11,7 @@ import { ModalUploadPhotoResult, ModalData } from '@models/modal';
 
 // Validators
 import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
+import { validateAllFormFields } from '@helpers/validators/validate-helpers';
 
 @Component({
   selector: 'spot-chat-create',
@@ -24,30 +25,39 @@ export class ChatCreateComponent implements OnInit {
 
   // Form
   createChatForm: FormGroup;
-  // name = '';
-  // description = '';
 
+  // Status
   errorMessage: string;
   createLoading = false;
+
   // Is the chat open to others, or invite only
   isPublic = true;
 
   constructor(
     private chatService: ChatService,
     private modalService: ModalService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.createChatForm = new FormGroup({
       name: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(63),
-        forbiddenNameValidator(/bob/i)
+        Validators.maxLength(64),
+        forbiddenNameValidator(
+          /^[a-zA-Z][\w!@#$%^&*()_+-=[\]{};':"\\|,.<>/?+\s$]*$/,
+          'allow'
+        )
       ]),
-      description: new FormControl('', [Validators.maxLength(255)])
+      description: new FormControl('', [
+        Validators.maxLength(256),
+        forbiddenNameValidator(
+          /^[a-zA-Z]?[\w!@#$%^&*()_+-=[\]{};':"\\|,.<>/?+\s$]*$/,
+          'allow'
+        )
+      ])
     });
   }
-
-  ngOnInit(): void {}
 
   get name() {
     return this.createChatForm.get('name');
@@ -56,7 +66,13 @@ export class ChatCreateComponent implements OnInit {
     return this.createChatForm.get('description');
   }
 
-  createRoom(): void {}
+  createRoom(): void {
+    if (this.createChatForm.valid) {
+      console.log('submit form');
+    } else {
+      validateAllFormFields(this.createChatForm);
+    }
+  }
 
   openPhotoModal(): void {
     this.modalService

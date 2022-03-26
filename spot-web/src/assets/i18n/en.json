@@ -318,9 +318,12 @@
       "PHOTO_DESCRIPTION": "Add a photo to make your chat recgonizable. You can always add or change your photo later",
       "NAME_TITLE": "Name",
       "NAME_PLACEHOLDER": "How others will see your chat",
-      "NAME_INVALID": "Name must in range of [3,63] characters",
+      "NAME_INVALID_LENGTH": "Must be in range [3,64] characters",
+      "NAME_INVALID_TEXT": "Must start with a letter",
       "DESCRIPTION_TITLE": "Description (optional)",
       "DESCRIPTION_PLACEHOLDER": "What are you chatting about?",
+      "DESCRIPTION_INVALID_LENGTH": "Must be less than 256 characters",
+      "DESCRIPTION_INVALID_TEXT": "Must start with a letter",
       "PUBLIC": "Public",
       "PRIVATE": "Private",
       "CREATE": "Create"

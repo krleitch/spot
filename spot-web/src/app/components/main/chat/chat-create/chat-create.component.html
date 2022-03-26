@@ -16,9 +16,6 @@
           <div class="form-title">
             {{ 'MAIN.CHAT_CREATE.NAME_TITLE' | translate }}
           </div>
-          <div *ngIf="name.invalid && name.dirty" class="form-text-error">
-            {{ 'MAIN.CHAT_CREATE.NAME_INVALID' | translate }}
-          </div>
           <div class="form-field">
             <input
               class="input-border-bottom"
@@ -31,6 +28,17 @@
               }}"
               required
             />
+          </div>
+          <div *ngIf="name.invalid && name.dirty && name.touched">
+            <div
+              *ngIf="name.errors?.['minlength'] || name.errors?.['maxlength']"
+              class="form-text-error"
+            >
+              {{ 'MAIN.CHAT_CREATE.NAME_INVALID_LENGTH' | translate }}
+            </div>
+            <div *ngIf="name.errors?.['forbiddenName']" class="form-text-error">
+              {{ 'MAIN.CHAT_CREATE.NAME_INVALID_TEXT' | translate }}
+            </div>
           </div>
         </div>
         <div class="col-h-center">
@@ -48,6 +56,24 @@
                 'MAIN.CHAT_CREATE.DESCRIPTION_PLACEHOLDER' | translate
               }}"
             />
+          </div>
+          <div
+            *ngIf="
+              description.invalid && description.dirty && description.touched
+            "
+          >
+            <div
+              *ngIf="description.errors?.['maxlength']"
+              class="form-text-error"
+            >
+              {{ 'MAIN.CHAT_CREATE.DESCRIPTION_INVALID_LENGTH' | translate }}
+            </div>
+            <div
+              *ngIf="description.errors?.['forbiddenName']"
+              class="form-text-error"
+            >
+              {{ 'MAIN.CHAT_CREATE.DESCRIPTION_INVALID_TEXT' | translate }}
+            </div>
           </div>
         </div>
       </fieldset>
