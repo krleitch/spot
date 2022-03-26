@@ -20,6 +20,7 @@ import { TermsComponent } from '@src/app/components/pre-auth/terms/terms.compone
 import { AuthModalComponent } from '@src/app/components/pre-auth/auth-modal/auth-modal.component';
 import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.component';
 import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/upload-photo.component';
+import { ChatCreateComponent } from '@src/app/components/main/social/chat/chat-create/chat-create.component';
 
 // services
 import { ModalService } from '@services/modal.service';
@@ -44,7 +45,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() componentName: string;
   componentRef: ComponentRef<unknown>;
 
-  private element: any;
+  private element;
 
   // The container to dynamically add content to
   @ViewChild('container', { read: ViewContainerRef, static: true })
@@ -58,7 +59,8 @@ export class ModalComponent implements OnInit, OnDestroy {
     terms: TermsComponent,
     auth: AuthModalComponent,
     welcome: WelcomeComponent,
-    uploadPhoto: UploadPhotoComponent
+    uploadPhoto: UploadPhotoComponent,
+    chatCreate: ChatCreateComponent
   };
 
   isOpen: boolean;
@@ -75,7 +77,7 @@ export class ModalComponent implements OnInit, OnDestroy {
 
     document.body.appendChild(this.element);
 
-    this.element.addEventListener('click', (e: any) => {
+    this.element.addEventListener('click', (e) => {
       if (e.target.className === 'spot-modal' && !this.disableClose) {
         this.close();
       }

@@ -1,0 +1,96 @@
+$text-sizes: (
+  'xs': var(--text-xs),
+  'sm': var(--text-sm),
+  'md': var(--text-md),
+  'lg': var(--text-lg),
+  'xl': var(--text-xl)
+);
+
+// text sizes
+@each $key, $value in $text-sizes {
+  .text-#{$key} {
+    font-size: $value;
+    color: var(--text-primary);
+  }
+}
+
+$icon-sizes: (
+  'xs': var(--icon-xs),
+  'sm': var(--icon-sm),
+  'md': var(--icon-md),
+  'lg': var(--icon-lg),
+  'xl': var(--icon-xl)
+);
+
+// icon sizes
+@each $key, $value in $icon-sizes {
+  .icon-#{$key} {
+    font-size: $value;
+    color: var(--icon-primary);
+  }
+}
+
+$title-sizes: (
+  'xs': var(--title-xs),
+  'sm': var(--title-sm),
+  'md': var(--title-md),
+  'lg': var(--title-lg),
+  'xl': var(--title-xl)
+);
+
+// title sizes
+@each $key, $value in $title-sizes {
+  .title-#{$key} {
+    font-size: $value;
+    color: var(--text-primary);
+  }
+}
+
+// Layout
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-justify {
+  text-align: justify;
+}
+
+// Text Colors
+.text-success {
+  color: var(--success);
+}
+.text-error {
+  color: var(--error);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-primary {
+  color: var(--primary);
+}
+
+// Icon Colors
+.icon-success {
+  color: var(--success);
+}
+.icon-error {
+  color: var(--error);
+}
+.icon-secondary {
+  color: var(--icon-secondary);
+}
+.icon-primary {
+  color: var(--primary);
+}
+.icon-close {
+  color: var(--icon-secondary);
+  &:hover {
+    cursor: pointer;
+    color: var(--error);
+  }
+}

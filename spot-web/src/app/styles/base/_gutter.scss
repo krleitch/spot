@@ -1,0 +1,100 @@
+$directions: (
+  // All, will not use a prefix to use
+  a,
+  // Top
+  t,
+  // Right
+  r,
+  // Left
+  l,
+  // Bottom
+  b,
+  // Horizontal
+  h,
+  // Vertical
+  v
+);
+
+$gutter-sizes: (
+  'xs': 2px,
+  'sm': 5px,
+  'md': 7px,
+  'lg': 10px,
+  'xl': 15px
+);
+
+// padding
+// eg. padding-xs, padding-t-sm
+@each $direction in $directions {
+  @each $key, $value in $gutter-sizes {
+    @if $direction == a {
+      .padding-#{$key} {
+        padding: $value;
+      }
+    } @else if $direction == t {
+      .padding-#{$direction}-#{$key} {
+        padding-top: $value;
+      }
+    } @else if $direction == r {
+      .padding-#{$direction}-#{$key} {
+        padding-right: $value;
+      }
+    } @else if $direction == l {
+      .padding-#{$direction}-#{$key} {
+        padding-left: $value;
+      }
+    } @else if $direction == b {
+      .padding-#{$direction}-#{$key} {
+        padding-bottom: $value;
+      }
+    } @else if $direction == h {
+      .padding-#{$direction}-#{$key} {
+        padding-left: $value;
+        padding-right: $value;
+      }
+    } @else if $direction == v {
+      .padding-#{$direction}-#{$key} {
+        padding-top: $value;
+        padding-bottom: $value;
+      }
+    }
+  }
+}
+
+// margins
+// eg. margin-xs, margin-t-sm
+@each $direction in $directions {
+  @each $key, $value in $gutter-sizes {
+    @if $direction == a {
+      .margin-#{$key} {
+        margin: $value;
+      }
+    } @else if $direction == t {
+      .margin-#{$direction}-#{$key} {
+        margin-top: $value;
+      }
+    } @else if $direction == r {
+      .margin-#{$direction}-#{$key} {
+        margin-right: $value;
+      }
+    } @else if $direction == l {
+      .margin-#{$direction}-#{$key} {
+        margin-left: $value;
+      }
+    } @else if $direction == b {
+      .margin-#{$direction}-#{$key} {
+        margin-bottom: $value;
+      }
+    } @else if $direction == h {
+      .margin-#{$direction}-#{$key} {
+        margin-left: $value;
+        margin-right: $value;
+      }
+    } @else if $direction == v {
+      .margin-#{$direction}-#{$key} {
+        margin-top: $value;
+        margin-bottom: $value;
+      }
+    }
+  }
+}

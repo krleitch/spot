@@ -1,0 +1,48 @@
+<div class="chat-create">
+  <div class="row-center padding-sm background-header">
+    <span class="fill"> {{ 'MAIN.CHAT_CREATE.TITLE' | translate }} </span>
+    <span class="material-icons icon-close" (click)="close()"> close </span>
+  </div>
+  <div class="padding-md">
+    <form class="form" [formGroup]="form" autocomplete="off">
+      <fieldset class="fieldset">
+        <div class="form-title">Description</div>
+        <div class="form-field">
+          <input
+            name="name"
+            formControlName="name"
+            autocomplete="off"
+            placeholder="{{ 'MAIN.CHAT_CREATE.NAME_PLACEHOLDER' | translate }}"
+            required
+          />
+        </div>
+        <div class="form-title">Description</div>
+        <div class="form-field">
+          <input
+            name="description"
+            formControlName="description"
+            autocomplete="off"
+            placeholder="{{
+              'MAIN.CHAT_CREATE.DESCRIPTION_PLACEHOLDER' | translate
+            }}"
+            type="password"
+          />
+        </div>
+      </fieldset>
+
+      <div class="text-error">
+        {{ errorMessage }}
+      </div>
+      <div class="form-buttons">
+        <button
+          class="button"
+          [class.disabled]="buttonsDisabled"
+          type="button"
+          (click)="createRoom()"
+        >
+          {{ 'MAIN.CHAT_CREATE.CREATE' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -99,15 +99,22 @@ export const DarkTheme: Theme = {
 export const RegularSizeTheme: Theme = {
   name: SizeThemes.REGULAR,
   properties: {
-    '--text-tiny': '10px',
-    '--text-regular': '14px',
-    '--text-large': '18px',
-    '--text-huge': '22px',
+    '--text-xs': '8px',
+    '--text-sm': '10px',
+    '--text-md': '14px',
+    '--text-lg': '18px',
+    '--text-xl': '22px',
 
-    '--heading-regular': '20px',
+    '--title-xs': '15px',
+    '--title-sm': '18px',
+    '--title-md': '22px',
+    '--title-lg': '28px',
+    '--title-xl': '35px',
 
-    '--icon-tiny': '12px',
-    '--icon-regular': '16px',
-    '--icon-large': '20px'
+    '--icon-xs': '10px',
+    '--icon-sm': '12px',
+    '--icon-md': '16px',
+    '--icon-lg': '20px',
+    '--icon-xl': '25px'
   }
 };

@@ -61,6 +61,7 @@ import { ChatTabComponent } from './components/main/social/chat/chat-tab/chat-ta
 import { ChatFriendComponent } from './components/main/social/chat/chat-friend/chat-friend.component';
 import { ChatJoinComponent } from './components/main/social/chat/chat-join/chat-join.component';
 import { UploadPhotoComponent } from './components/helpers/upload-photo/upload-photo.component';
+import { ChatCreateComponent } from './components/main/social/chat/chat-create/chat-create.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -114,7 +115,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ChatTabComponent,
     ChatFriendComponent,
     ChatJoinComponent,
-    UploadPhotoComponent
+    UploadPhotoComponent,
+    ChatCreateComponent
   ],
   imports: [
     BrowserModule,

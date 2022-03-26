@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import { take } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -9,6 +10,7 @@ import { SocialStoreSelectors } from '@store/social-store';
 
 // Services
 import { ChatService } from '@services/chat.service';
+import { ModalService } from '@services/modal.service';
 
 // Models
 import { Friend } from '@models/friend';
@@ -45,7 +47,8 @@ export class ChatMenuComponent implements OnInit {
 
   constructor(
     private store$: Store<RootStoreState.State>,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -149,12 +152,18 @@ export class ChatMenuComponent implements OnInit {
   }
 
   createRoom() {
-    const request: CreateChatRoomRequest = {
-      topic: 'lobby',
-      name: 'test room'
-    };
-    this.chatService.createChatRoom(request).subscribe((result) => {
-      this.rooms.push(result);
-    });
+    this.modalService
+      .open('global', 'chatCreate')
+      .pipe(take(1))
+      .subscribe((result) => {
+        // Open the room, if a room was created
+      });
+    // const request: CreateChatRoomRequest = {
+    // topic: 'lobby',
+    // name: 'test room'
+    // };
+    // this.chatService.createChatRoom(request).subscribe((result) => {
+    // this.rooms.push(result);
+    // });
   }
 }

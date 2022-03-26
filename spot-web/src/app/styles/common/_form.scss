@@ -1,0 +1,32 @@
+.form {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.fieldset {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 10px 0;
+  box-sizing: border-box;
+}
+
+.form-title {
+  
+}
+
+.form-field {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}

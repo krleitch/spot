@@ -1,0 +1,33 @@
+.button {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--button-background);
+  color: var(--button-text);
+  padding: 12px 24px;
+  font-size: 14px;
+
+  &:hover {
+    background-color: var(--button-background-highlight);
+  }
+}
+
+.button-primary {
+  background-color: var(--primary);
+  &:hover {
+    background-color: var(--primary-highlight);
+  }
+}
+
+.button-disabled {
+  background-color: var(--button-disabled);
+  cursor: not-allowed;
+}
+.button-loading {
+  // TODO
+}

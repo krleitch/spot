@@ -313,6 +313,13 @@
       "CREATE_ROOM": "Create Room"
     },
 
+    "CHAT_CREATE": {
+      "TITLE": "Create a room",
+      "NAME_PLACEHOLDER": "Enter name",
+      "DESCRIPTION_PLACEHOLDER": "Enter description",
+      "CREATE": "Create"
+    },
+
     "ACTIVITY": {
       "TITLE": "Activity",
 

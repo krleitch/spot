@@ -1,0 +1,14 @@
+.input {
+  width: 300px;
+  padding: 8px 12px;
+  margin: 6px 0px;
+  box-sizing: border-box;
+  border: 1px solid var(--input-border);
+  background-color: var(--input-background);
+  color: var(--input-text);
+  outline: none;
+}
+
+.input.ng-dirty.ng-invalid {
+  border: 1px solid var(--error);
+}
