@@ -56,7 +56,7 @@ import { SpotError } from '@exceptions/error';
 import {
   ModalConfirmResult,
   ModalConfirmResultTypes,
-  ModalUploadProfilePictureResult
+  ModalUploadPhotoResult
 } from '@models/modal';
 
 declare const gapi: any;
@@ -191,13 +191,14 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   openUploadPhotoModal(): void {
     this.modalService
       .open('global', 'uploadPhoto', {
-        profilePictureSrc: this.profilePictureSrc
+        type: 'profile-picture',
+        imageSrc: this.profilePictureSrc
       })
       .pipe(take(1))
-      .subscribe((result: ModalUploadProfilePictureResult) => {
+      .subscribe((result: ModalUploadPhotoResult) => {
         const request: SetUserStore = {
           user: {
-            profilePictureSrc: result.profilePictureSrc
+            profilePictureSrc: result.imageSrc
           }
         };
         this.store$.dispatch(new UserActions.SetUserAction(request));

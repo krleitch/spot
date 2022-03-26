@@ -9,20 +9,17 @@ import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { take } from 'rxjs/operators';
 import { Buffer } from 'buffer';
 
-// services
+// Services
 import { ModalService } from '@services/modal.service';
 import { UserService } from '@services/user.service';
 
-// models
+// Models
 import {
   UpdateProfilePictureRequest,
   UpdateProfilePictureResponse,
   DeleteProfilePictureRequest
 } from '@models/user';
-import {
-  ModalUploadProfilePictureData,
-  ModalUploadProfilePictureResult
-} from '@models/modal';
+import { ModalUploadPhotoData, ModalUploadPhotoResult } from '@models/modal';
 @Component({
   selector: 'spot-upload-photo',
   templateUrl: './upload-photo.component.html',
@@ -30,7 +27,7 @@ import {
 })
 export class UploadPhotoComponent implements OnInit, AfterViewInit {
   modalId: string;
-  data: ModalUploadProfilePictureData = { profilePictureSrc: undefined }; // Your current profile picture
+  data: ModalUploadPhotoData = { type: undefined, imageSrc: undefined }; // Your current profile picture
   @ViewChild('cropper') imageCropper: ElementRef<HTMLElement>;
   isMouseDown = false;
   confirmRemove = false;
@@ -164,8 +161,8 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
       .subscribe(
         (response: UpdateProfilePictureResponse) => {
           this.loading = false;
-          const result: ModalUploadProfilePictureResult = {
-            profilePictureSrc: response.user.profilePictureSrc
+          const result: ModalUploadPhotoResult = {
+            imageSrc: response.user.profilePictureSrc
           };
           this.modalService.setResult(this.modalId, result);
           this.close();
@@ -195,8 +192,8 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
         .subscribe(
           (_response: UpdateProfilePictureResponse) => {
             this.loading = false;
-            const result: ModalUploadProfilePictureResult = {
-              profilePictureSrc: undefined
+            const result: ModalUploadPhotoResult = {
+              imageSrc: undefined
             };
             this.modalService.setResult(this.modalId, result);
             this.close();

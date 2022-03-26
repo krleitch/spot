@@ -87,12 +87,12 @@
       </div>
       <div class="preview">
         <img
-          *ngIf="croppedImage || data.profilePictureSrc"
-          [src]="croppedImage || data.profilePictureSrc"
+          *ngIf="croppedImage || data.imageSrc"
+          [src]="croppedImage || data.imageSrc"
         />
         <img
           class="default"
-          *ngIf="!croppedImage && !data.profilePictureSrc"
+          *ngIf="!croppedImage && !data.imageSrc"
           src="../../../../assets/images/op_large.png"
         />
       </div>

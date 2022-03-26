@@ -7,7 +7,7 @@ import { ChatService } from '@services/chat.service';
 import { ModalService } from '@services/modal.service';
 
 // Models
-import { ModalUploadProfilePictureResult, ModalImageData } from '@models/modal';
+import { ModalUploadPhotoResult, ModalData } from '@models/modal';
 
 @Component({
   selector: 'spot-chat-create',
@@ -16,7 +16,7 @@ import { ModalUploadProfilePictureResult, ModalImageData } from '@models/modal';
 })
 export class ChatCreateComponent implements OnInit {
   // Modal properties
-  data: ModalImageData;
+  data: ModalData;
   modalId: string;
 
   form: FormGroup;
@@ -48,12 +48,13 @@ export class ChatCreateComponent implements OnInit {
         'create-chat-photo',
         'uploadPhoto',
         {
-          profilePictureSrc: 'op.png'
+          type: 'create-chat',
+          imageSrc: undefined
         },
         { darkenBackground: false, disableClose: true }
       )
       .pipe(take(1))
-      .subscribe((result: ModalUploadProfilePictureResult) => {
+      .subscribe((result: ModalUploadPhotoResult) => {
         console.log('got result');
       });
   }

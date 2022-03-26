@@ -25,7 +25,7 @@ export type ModalData =
   | ModalConfirmData
   | ModalReportData
   | ModalImageData
-  | ModalUploadProfilePictureData;
+  | ModalUploadPhotoData;
 
 export interface ModalShareData {
   spotId: string;
@@ -47,15 +47,16 @@ export interface ModalImageData {
   imageSrc: string;
 }
 
-export interface ModalUploadProfilePictureData {
-  profilePictureSrc?: string; // Your current profile picture
+export interface ModalUploadPhotoData {
+  type?: 'profile-picture' | 'create-chat';
+  imageSrc?: string; // The current photo to show, or no photo
 }
 
 // ********************
 // RESULTS
 // ********************
 
-export type ModalResult = ModalConfirmResult | ModalUploadProfilePictureResult;
+export type ModalResult = ModalConfirmResult | ModalUploadPhotoResult;
 
 export enum ModalConfirmResultTypes {
   CONFIRM = "CONFIRM",
@@ -65,6 +66,6 @@ export interface ModalConfirmResult {
   status: ModalConfirmResultTypes;
 }
 
-export interface ModalUploadProfilePictureResult {
-  profilePictureSrc: string;
+export interface ModalUploadPhotoResult {
+  imageSrc?: string; // the location of the created image
 }
