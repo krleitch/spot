@@ -1,5 +1,5 @@
-import { AuthInterceptor } from './helpers/auth.interceptor';
-import { ErrorInterceptor } from './helpers/error.interceptor';
+import { AuthInterceptor } from './helpers/interceptors/auth.interceptor';
+import { ErrorInterceptor } from './helpers/interceptors/error.interceptor';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +15,9 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RootStoreModule } from './root-store';
+
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import { LandingComponent } from './components/pre-auth/landing/landing.component';
 import { NavComponent } from './components/pre-auth/nav/nav.component';
@@ -45,23 +48,21 @@ import { ReportComponent } from './components/main/social/report/report.componen
 import { ModalComponent } from './components/helpers/modal/modal.component';
 import { PasswordResetComponent } from './components/pre-auth/password-reset/password-reset.component';
 import { NewPasswordComponent } from './components/pre-auth/new-password/new-password.component';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { TagComponent } from './components/main/social/tag/tag.component';
 import { SpinnerComponent } from './components/helpers/spinner/spinner.component';
 import { ConfirmComponent } from './components/helpers/confirm/confirm.component';
 import { AuthModalComponent } from './components/pre-auth/auth-modal/auth-modal.component';
 import { VerifyComponent } from './components/main/verify/verify.component';
 import { WelcomeComponent } from './components/main/welcome/welcome.component';
-import { FilterPipe } from './pipes/filter.pipe';
+import { FilterPipe } from './helpers/pipes/filter.pipe';
 import { TermsComponent } from './components/pre-auth/terms/terms.component';
-import { ChatRoomComponent } from './components/main/social/chat/chat-room/chat-room.component';
-import { ChatMenuComponent } from './components/main/social/chat/chat-menu/chat-menu.component';
-import { ChatTabComponent } from './components/main/social/chat/chat-tab/chat-tab.component';
-import { ChatFriendComponent } from './components/main/social/chat/chat-friend/chat-friend.component';
-import { ChatJoinComponent } from './components/main/social/chat/chat-join/chat-join.component';
+import { ChatRoomComponent } from './components/main/chat/chat-room/chat-room.component';
+import { ChatMenuComponent } from './components/main/chat/chat-menu/chat-menu.component';
+import { ChatTabComponent } from './components/main/chat/chat-tab/chat-tab.component';
+import { ChatFriendComponent } from './components/main/chat/chat-friend/chat-friend.component';
+import { ChatJoinComponent } from './components/main/chat/chat-join/chat-join.component';
 import { UploadPhotoComponent } from './components/helpers/upload-photo/upload-photo.component';
-import { ChatCreateComponent } from './components/main/social/chat/chat-create/chat-create.component';
+import { ChatCreateComponent } from './components/main/chat/chat-create/chat-create.component';
 
 // TODO: Seperate Modules and optimize load bundles
 

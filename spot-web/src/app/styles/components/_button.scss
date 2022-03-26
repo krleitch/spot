@@ -1,20 +1,26 @@
-// Basic buttons
-.button {
+%button-shared {
   border: none;
   text-decoration: none;
   outline: none;
   cursor: pointer;
   position: relative;
-
   display: flex;
   justify-content: center;
   align-items: center;
+  .button-icon {
+    font-size: var(--icon-md);
+    color: var(--button-text);
+  }
+}
+
+// Basic buttons
+.button {
+  @extend %button-shared;
   background-color: var(--button-background);
   color: var(--button-text);
   padding: 10px 24px;
   border-radius: 5px;
-  font-size: 14px;
-
+  font-size: var(--text-md);
   &:not(.button-disabled):not(.button-loading):hover {
     background-color: var(--button-background-highlight);
   }
@@ -51,15 +57,72 @@
   border: 3px solid transparent;
   border-top-color: var(--button-text);
   border-radius: 50%;
-  animation: button-loading-spinner 1s linear infinite;
+  animation: button-loading-spinner 1s ease infinite;
 }
 
 // Custom buttons
 .button-primary {
+  @extend %button-shared;
   background-color: var(--primary);
+  color: var(--button-text);
+  padding: 10px 24px;
+  border-radius: 5px;
+  font-size: var(--text-md);
   &:not(.button-disabled):not(.button-loading):hover {
     background-color: var(--primary-highlight);
   }
 }
 
 // Social Media button
+
+// Button Switch with 2 options (left and right)
+.button-switch {
+  border: none;
+  outline: none;
+  text-decoration: none;
+  color: var(--input-text);
+  background-color: var(--background-primary);
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 1s ease;
+  .button-icon {
+    transition: all 1s ease;
+    font-size: var(--icon-md);
+    color: var(--input-text);
+  }
+}
+.button-switch.left {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background: linear-gradient(
+    to right,
+    var(--background-primary) 50%,
+    var(--primary) 50%
+  );
+  background-size: 200% 100%;
+  background-position: left bottom;
+}
+.button-switch.right {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: linear-gradient(
+    to left,
+    var(--background-primary) 50%,
+    var(--primary) 50%
+  );
+  background-size: 200% 100%;
+  background-position: right bottom;
+}
+.button-switch.selected {
+  color: white;
+  background-color: var(--primary);
+  .button-icon {
+    color: white;
+  }
+}
+.button-switch.selected.left {
+  background-position: right bottom;
+}
+.button-switch.selected.right {
+  background-position: left bottom;
+}

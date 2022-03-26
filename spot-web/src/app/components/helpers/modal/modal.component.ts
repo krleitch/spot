@@ -20,7 +20,7 @@ import { TermsComponent } from '@src/app/components/pre-auth/terms/terms.compone
 import { AuthModalComponent } from '@src/app/components/pre-auth/auth-modal/auth-modal.component';
 import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.component';
 import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/upload-photo.component';
-import { ChatCreateComponent } from '@src/app/components/main/social/chat/chat-create/chat-create.component';
+import { ChatCreateComponent } from '@src/app/components/main/chat/chat-create/chat-create.component';
 
 // Services
 import { ModalService } from '@services/modal.service';

@@ -6,14 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat-join.component.scss']
 })
 export class ChatJoinComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-  }
-
-  joinRoom() {
-
-  }
-
+  joinRoom() {}
 }

@@ -315,10 +315,14 @@
 
     "CHAT_CREATE": {
       "TITLE": "Create a room",
+      "PHOTO_DESCRIPTION": "Add a photo to make your chat recgonizable. You can always add or change your photo later",
       "NAME_TITLE": "Name",
-      "NAME_PLACEHOLDER": "Enter name",
-      "DESCRIPTION_TITLE": "Description",
-      "DESCRIPTION_PLACEHOLDER": "Enter description",
+      "NAME_PLACEHOLDER": "How others will see your chat",
+      "NAME_INVALID": "Name must in range of [3,63] characters",
+      "DESCRIPTION_TITLE": "Description (optional)",
+      "DESCRIPTION_PLACEHOLDER": "What are you chatting about?",
+      "PUBLIC": "Public",
+      "PRIVATE": "Private",
       "CREATE": "Create"
     },
 

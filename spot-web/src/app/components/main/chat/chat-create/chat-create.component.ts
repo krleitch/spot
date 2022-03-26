@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 
 // Services
@@ -8,6 +8,9 @@ import { ModalService } from '@services/modal.service';
 
 // Models
 import { ModalUploadPhotoResult, ModalData } from '@models/modal';
+
+// Validators
+import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
 
 @Component({
   selector: 'spot-chat-create',
@@ -19,28 +22,41 @@ export class ChatCreateComponent implements OnInit {
   data: ModalData;
   modalId: string;
 
-  form: FormGroup;
+  // Form
+  createChatForm: FormGroup;
+  // name = '';
+  // description = '';
+
   errorMessage: string;
-  buttonsDisabled = false;
   createLoading = false;
+  // Is the chat open to others, or invite only
+  isPublic = true;
 
   constructor(
-    private fb: FormBuilder,
     private chatService: ChatService,
     private modalService: ModalService
   ) {
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      description: ['']
+    this.createChatForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(63),
+        forbiddenNameValidator(/bob/i)
+      ]),
+      description: new FormControl('', [Validators.maxLength(255)])
     });
   }
 
   ngOnInit(): void {}
 
-  createRoom(): void {
-    this.createLoading = true;
-    this.buttonsDisabled = true;
+  get name() {
+    return this.createChatForm.get('name');
   }
+  get description() {
+    return this.createChatForm.get('description');
+  }
+
+  createRoom(): void {}
 
   openPhotoModal(): void {
     this.modalService
@@ -59,5 +75,11 @@ export class ChatCreateComponent implements OnInit {
       });
   }
 
-  close(): void {}
+  toggleIsPublic() {
+    this.isPublic = !this.isPublic;
+  }
+
+  close(): void {
+    this.modalService.close(this.modalId);
+  }
 }

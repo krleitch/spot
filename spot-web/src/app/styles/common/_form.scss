@@ -6,7 +6,7 @@
   width: 100%;
 }
 
-// Contains the titles and fields
+// Contains form-titles and form-fields
 .fieldset {
   display: flex;
   flex-flow: column;
@@ -18,11 +18,11 @@
   margin: 0 0 10px 0;
   box-sizing: border-box;
 }
-
+// Text and Icons
 .form-title {
   font-size: var(--text-md);
 }
-
+// Contains the inputs
 .form-field {
   display: flex;
   flex-flow: column;
@@ -30,4 +30,10 @@
   align-items: center;
   width: 100%;
   box-sizing: border-box;
+}
+
+// Errors
+.form-text-error {
+  font-size: var(--text-sm);
+  color: var(--error);
 }

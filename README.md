@@ -16,20 +16,20 @@ spot-web
 - Setup environemnt.ts with your googleProviderId and server base url
 
 spot-server
-- Add awskey.json to config folder
+- Add awskey.ts to config folder
 ```
 {
     "AccessKeyID": "",
     "SecretAccessKey": ""
 }
 ```
-- Add googlekey.json to config folder
+- Add googlekey.ts to config folder
 ```
 {
     "APIKey": ""
 }
 ```
-- Add secret.json to config folder
+- Add secret.ts to config folder
 ```
 {
     "secret": ""
@@ -38,9 +38,9 @@ spot-server
 - Update config.ts in config folder with nsfwModelDir and logFileDir
 
 ## Spot-Server
-Express Server with MySql Db
+Express Server with Postgresql Db
 
 ## Spot-Web
-Angular10 with NgRx10 store
+Angular13 with NgRx13 store
 ## Spot-Commons
-Common Types, Errors, and Constants for both web and server
+Common Models, Exceptions, and Constants for both web and server

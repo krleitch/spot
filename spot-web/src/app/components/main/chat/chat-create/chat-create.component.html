@@ -7,16 +7,23 @@
     <div class="row-center photo" (click)="openPhotoModal()">
       <span class="material-icons icon-md icon-secondary"> add_a_photo </span>
     </div>
-    <form class="form" [formGroup]="form" autocomplete="off">
+    <div class="padding-v-md text-secondary text-center">
+      {{ 'MAIN.CHAT_CREATE.PHOTO_DESCRIPTION' | translate }}
+    </div>
+    <form class="form" [formGroup]="createChatForm" autocomplete="off">
       <fieldset class="fieldset">
         <div class="col-h-center">
           <div class="form-title">
             {{ 'MAIN.CHAT_CREATE.NAME_TITLE' | translate }}
           </div>
+          <div *ngIf="name.invalid && name.dirty" class="form-text-error">
+            {{ 'MAIN.CHAT_CREATE.NAME_INVALID' | translate }}
+          </div>
           <div class="form-field">
             <input
-              class="input"
-              name="name"
+              class="input-border-bottom"
+              type="text"
+              id="name"
               formControlName="name"
               autocomplete="off"
               placeholder="{{
@@ -32,19 +39,45 @@
           </div>
           <div class="form-field">
             <input
-              class="input"
-              name="description"
+              class="input-border-bottom"
+              type="text"
+              id="description"
               formControlName="description"
               autocomplete="off"
               placeholder="{{
                 'MAIN.CHAT_CREATE.DESCRIPTION_PLACEHOLDER' | translate
               }}"
-              type="password"
             />
           </div>
         </div>
       </fieldset>
-      <div class="text-error">
+      <div class="row-center">
+        <button
+          class="button-switch left"
+          [class.selected]="isPublic"
+          (click)="toggleIsPublic()"
+        >
+          <div class="row-center">
+            <span class="material-icons button-icon"> meeting_room </span>
+            <span class="padding-l-xs"
+              >{{ 'MAIN.CHAT_CREATE.PUBLIC' | translate }}
+            </span>
+          </div>
+        </button>
+        <button
+          class="button-switch right"
+          [class.selected]="!isPublic"
+          (click)="toggleIsPublic()"
+        >
+          <div class="row-center">
+            <span class="material-icons button-icon"> lock </span>
+            <span class="padding-l-xs">
+              {{ 'MAIN.CHAT_CREATE.PRIVATE' | translate }}
+            </span>
+          </div>
+        </button>
+      </div>
+      <div class="padding-v-md text-error text-center">
         {{ errorMessage }}
       </div>
       <div class="align-right">
