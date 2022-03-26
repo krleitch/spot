@@ -1,33 +1,65 @@
+// Basic buttons
 .button {
   border: none;
   text-decoration: none;
   outline: none;
   cursor: pointer;
+  position: relative;
 
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--button-background);
   color: var(--button-text);
-  padding: 12px 24px;
+  padding: 10px 24px;
+  border-radius: 5px;
   font-size: 14px;
 
-  &:hover {
+  &:not(.button-disabled):not(.button-loading):hover {
     background-color: var(--button-background-highlight);
   }
 }
-
-.button-primary {
-  background-color: var(--primary);
-  &:hover {
-    background-color: var(--primary-highlight);
-  }
+// Loading
+.button.button-loading {
+  color: transparent;
+  cursor: wait;
 }
-
+// Disabled
 .button-disabled {
   background-color: var(--button-disabled);
   cursor: not-allowed;
 }
-.button-loading {
-  // TODO
+// Loading Animation
+@keyframes button-loading-spinner {
+  from {
+    transform: roate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
 }
+.button-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid transparent;
+  border-top-color: var(--button-text);
+  border-radius: 50%;
+  animation: button-loading-spinner 1s linear infinite;
+}
+
+// Custom buttons
+.button-primary {
+  background-color: var(--primary);
+  &:not(.button-disabled):not(.button-loading):hover {
+    background-color: var(--primary-highlight);
+  }
+}
+
+// Social Media button

@@ -35,12 +35,15 @@
   bottom: 0;
   left: 0;
 
-  /* semi-transparent black  */
-  background-color: #000;
-  opacity: 20%;
 
   /* z-index must be below .jw-modal and above everything else  */
   z-index: 999999;
+}
+
+.darken {
+  /* semi-transparent black  */
+  background-color: #000;
+  opacity: 20%;
 }
 
 // Mobile stylings

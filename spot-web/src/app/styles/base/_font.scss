@@ -94,3 +94,10 @@ $title-sizes: (
     color: var(--error);
   }
 }
+.icon-highlight {
+  color: var(--icon-secondary);
+  &:hover {
+    cursor: pointer;
+    color: var(--primary);
+  }
+}

@@ -315,7 +315,9 @@
 
     "CHAT_CREATE": {
       "TITLE": "Create a room",
+      "NAME_TITLE": "Name",
       "NAME_PLACEHOLDER": "Enter name",
+      "DESCRIPTION_TITLE": "Description",
       "DESCRIPTION_PLACEHOLDER": "Enter description",
       "CREATE": "Create"
     },

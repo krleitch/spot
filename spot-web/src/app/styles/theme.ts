@@ -111,10 +111,10 @@ export const RegularSizeTheme: Theme = {
     '--title-lg': '28px',
     '--title-xl': '35px',
 
-    '--icon-xs': '10px',
-    '--icon-sm': '12px',
-    '--icon-md': '16px',
-    '--icon-lg': '20px',
-    '--icon-xl': '25px'
+    '--icon-xs': '12px',
+    '--icon-sm': '16px',
+    '--icon-md': '20px',
+    '--icon-lg': '25px',
+    '--icon-xl': '32px'
   }
 };

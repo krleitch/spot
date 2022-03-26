@@ -6,6 +6,7 @@
   width: 100%;
 }
 
+// Contains the titles and fields
 .fieldset {
   display: flex;
   flex-flow: column;
@@ -19,7 +20,7 @@
 }
 
 .form-title {
-  
+  font-size: var(--text-md);
 }
 
 .form-field {

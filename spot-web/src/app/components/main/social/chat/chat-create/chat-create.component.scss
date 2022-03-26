@@ -1,0 +1,10 @@
+.photo {
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  border: 2px dashed var(--background-primary);
+  cursor: pointer;
+  &:hover span {
+    color: var(--primary);
+  }
+}

@@ -2,7 +2,19 @@ export interface ModalOptions {
   width?: number | "auto";
   height?: number | "auto";
   disableClose?: boolean; // close when the background is clicked
+  darkenBackground?: boolean; // does the background change color
 }
+
+export type ModalComponents =
+  | "share"
+  | "report"
+  | "confirm"
+  | "image"
+  | "terms"
+  | "auth"
+  | "welcome"
+  | "uploadPhoto"
+  | "chatCreate";
 
 // ********************
 // DATA

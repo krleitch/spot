@@ -8,9 +8,9 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
 
 // TODO: Can lazy load components here
-
 // Components
 import { ShareComponent } from '@src/app/components/main/social/share/share.component';
 import { ReportComponent } from '@src/app/components/main/social/report/report.component';
@@ -22,14 +22,11 @@ import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.compo
 import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/upload-photo.component';
 import { ChatCreateComponent } from '@src/app/components/main/social/chat/chat-create/chat-create.component';
 
-// services
+// Services
 import { ModalService } from '@services/modal.service';
 
-// rxjs
-import { Subject, Observable } from 'rxjs';
-
-// assets
-import { ModalResult } from '@models/modal';
+// Modals
+import { ModalResult, ModalOptions, ModalComponents } from '@models/modal';
 
 @Component({
   selector: 'spot-modal',
@@ -38,20 +35,43 @@ import { ModalResult } from '@models/modal';
 })
 export class ModalComponent implements OnInit, OnDestroy {
   @Input() id: string;
-  @Input() width: number;
-  @Input() height: number;
+  @Input() width: number | 'auto';
+  @Input() height: number | 'auto';
   @Input() disableClose: boolean;
-
+  @Input() darkenBackground: boolean;
   @Input() componentName: string;
-  componentRef: ComponentRef<unknown>;
 
+  // All modals must have data and modalId properties
+  componentRef: ComponentRef<
+    | ShareComponent
+    | ReportComponent
+    | ConfirmComponent
+    | ImageComponent
+    | TermsComponent
+    | AuthModalComponent
+    | WelcomeComponent
+    | UploadPhotoComponent
+    | ChatCreateComponent
+  >;
+
+  // Element used for clicking and closing background
   private element;
-
   // The container to dynamically add content to
   @ViewChild('container', { read: ViewContainerRef, static: true })
   container: ViewContainerRef;
 
-  componentsMapping = {
+  componentsMapping: {
+    [key in ModalComponents]:
+      | typeof ShareComponent
+      | typeof ReportComponent
+      | typeof ConfirmComponent
+      | typeof ImageComponent
+      | typeof TermsComponent
+      | typeof AuthModalComponent
+      | typeof WelcomeComponent
+      | typeof UploadPhotoComponent
+      | typeof ChatCreateComponent;
+  } = {
     share: ShareComponent,
     report: ReportComponent,
     confirm: ConfirmComponent,
@@ -74,15 +94,12 @@ export class ModalComponent implements OnInit, OnDestroy {
     if (!this.id) {
       return;
     }
-
     document.body.appendChild(this.element);
-
     this.element.addEventListener('click', (e) => {
       if (e.target.className === 'spot-modal' && !this.disableClose) {
         this.close();
       }
     });
-
     this.modalService.add(this);
   }
 
@@ -94,6 +111,36 @@ export class ModalComponent implements OnInit, OnDestroy {
   setComponent(componentName: string): void {
     const component = this.componentsMapping[componentName];
     this.componentRef = this.container.createComponent(component);
+  }
+
+  setOptions(options: ModalOptions) {
+    // Set the options or reset to the default since reusing modal is possible
+    if (options) {
+      this.width = Object.prototype.hasOwnProperty.call(options, 'width')
+        ? options.width
+        : 400;
+      this.height = Object.prototype.hasOwnProperty.call(options, 'height')
+        ? options.height
+        : 'auto';
+      this.disableClose = Object.prototype.hasOwnProperty.call(
+        options,
+        'disableClose'
+      )
+        ? options.disableClose
+        : false;
+      this.darkenBackground = Object.prototype.hasOwnProperty.call(
+        options,
+        'darkenBackground'
+      )
+        ? options.darkenBackground
+        : true;
+    } else {
+      // defaults
+      this.width = 400;
+      this.height = 'auto';
+      this.disableClose = false;
+      this.darkenBackground = true;
+    }
   }
 
   removeComponent(): void {
@@ -117,7 +164,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     if (this.result) {
       this.result.complete();
     }
-
     this.removeComponent();
   }
 

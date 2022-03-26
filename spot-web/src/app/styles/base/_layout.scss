@@ -39,6 +39,7 @@
 }
 
 // Layouts
+// Flexbox
 .align-items-start {
   align-items: flex-start;
 }
@@ -63,14 +64,24 @@
 .justify-content-end {
   justify-content: flex-end;
 }
+// Other
+.align-right {
+  margin-left: auto;
+}
+.align-left {
+  margin-right: auto
+}
 
 // wrapping
-.wrap {
+.flex-wrap {
   flex-wrap: 'wrap';
+}
+.text-wrap {
+  word-wrap: break-word;
 }
 
 // sizes
-.fill {
+.flex-fill {
   flex: 1;
 }
 .full-size {
