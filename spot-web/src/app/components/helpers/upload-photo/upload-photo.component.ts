@@ -33,6 +33,7 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
 
   // Cropper properties
   @ViewChild('cropper') imageCropper: ElementRef<HTMLElement>;
+  imageShow = false;
   isMouseDown = false;
   imageChangedEvent = '';
   croppedImage = '';
@@ -105,12 +106,14 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
   }
   imageLoaded(_image: LoadedImage) {
     // show cropper
+    this.imageShow = true;
   }
   cropperReady() {
     // cropper ready
   }
   loadImageFailed() {
     // show message
+    this.imageShow = false;
   }
 
   scaleUp(): void {
@@ -135,14 +138,14 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
     };
   }
 
-  dataUrlToFile(dataUrl: string, filename: string): File | undefined {
+  dataUrlToFile(dataUrl: string, filename: string): File | null {
     const arr = dataUrl.split(',');
     if (arr.length < 2) {
-      return undefined;
+      return null;
     }
     const mimeArr = arr[0].match(/:(.*?);/);
     if (!mimeArr || mimeArr.length < 2) {
-      return undefined;
+      return null;
     }
     const mime = mimeArr[1];
     const buff = Buffer.from(arr[1], 'base64');
@@ -157,12 +160,11 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
     this.errorUploading = false;
     this.confirmRemove = false;
     this.uploadLoading = true;
-    const file = this.dataUrlToFile(this.croppedImage, 'photo');
-    const request: UpdateProfilePictureRequest = {
-      image: file
-    };
-
     if (this.data.type === 'profile-picture') {
+      const file = this.dataUrlToFile(this.croppedImage, 'photo');
+      const request: UpdateProfilePictureRequest = {
+        image: file
+      };
       this.userService
         .updateProfilePicture(request)
         .pipe(take(1))
@@ -181,10 +183,20 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
           }
         );
     } else if (this.data.type === 'create-chat') {
-      const file = this.dataUrlToFile(this.croppedImage, 'photo');
-      const result: ModalUploadPhotoResult = {
-        image: file
-      };
+      let result: ModalUploadPhotoResult;
+      if (!this.croppedImage && !this.data.imageSrc) {
+        result = {};
+      } else if (this.croppedImage) {
+        const file = this.dataUrlToFile(this.croppedImage, 'photo');
+        result = {
+          image: file
+        };
+      } else {
+        // We still have the data.imageSrc so create-chat shouldnt delete it
+        result = {
+          image: null
+        };
+      }
       this.uploadLoading = false;
       this.errorUploading = true;
       this.modalService.setResult(this.modalId, result);

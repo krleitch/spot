@@ -101,6 +101,9 @@ export class ChatCreateComponent implements OnInit {
         // Set the imageSrc
         if (result.image) {
           this.processPhoto(result.image);
+        } else if (result.image === undefined) {
+          this.image = null;
+          this.imageSrc = '';
         }
       });
   }
