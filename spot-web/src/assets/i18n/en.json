@@ -407,17 +407,21 @@
     },
 
     "UPLOAD_PHOTO": {
-      "DESCRIPTION_1": "A profile picture helps others recgonize you.",
-      "DESCRIPTION_2": "Your picture will only be shown to the sepcific users you tag in comments and chats.",
-      "DESCRIPTION_3": "You will always be anonymous to all other users.",
+      "TITLE": "Upload a photo",
+      "DESCRIPTION_PP_1": "A profile picture helps others recgonize you.",
+      "DESCRIPTION_PP_2": "Your picture will only be shown to the sepcific users you tag in comments and chats.",
+      "DESCRIPTION_PP_3": "You will always be anonymous to all other users.",
+      "DESCRIPTION_CC_1": "Add a photo to make your chat recgonizable.",
+      "DESCRIPTION_CC_2": "You can add or change a photo at any time.",
       "CROP_TITLE": "Crop your photo",
       "UPLOAD": "Upload from computer",
       "CHOOSE_ANOTHER": "Choose another photo",
       "CONFIRM": "Confirm",
       "REMOVE": "Remove",
-      "DELETE_MESSAGE": "Are you sure you would like to permanently delete your profile picture?",
+      "DELETE_MESSAGE": "Are you sure you would like to permanently delete your current photo?",
       "DELETE": "Delete",
-      "LOADING": "Uploading photo to Spot"
+      "ERROR_UPLOADING": "There was an error uploading your image, please try again.",
+      "ERROR_REMOVING": "There was an error removing your image, please try again."
     }
   },
 

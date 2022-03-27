@@ -1,10 +1,21 @@
 .photo {
-  width: 125px;
-  height: 125px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   border: 2px dashed var(--background-primary);
+  overflow: hidden;
   cursor: pointer;
   &:hover span {
     color: var(--primary);
   }
+  img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+// Change the border if we actually have an image
+.photo.image-selected {
+  border: none;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
 }

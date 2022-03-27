@@ -3,6 +3,7 @@ export interface ModalOptions {
   height?: number | "auto";
   disableClose?: boolean; // close when the background is clicked
   darkenBackground?: boolean; // does the background change color
+  hideModals?: boolean; // hide all other modals when this is open, show when closed
 }
 
 export type ModalComponents =
@@ -67,5 +68,8 @@ export interface ModalConfirmResult {
 }
 
 export interface ModalUploadPhotoResult {
-  imageSrc?: string; // the location of the created image
+  // profile picture returns this
+  imageSrc?: string; // the location of the created image, if created
+  // create-chat returns this
+  image?: File; // the file, if we didnt create it yet
 }

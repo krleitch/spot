@@ -1,33 +1,36 @@
 <div class="upload-photo">
-  <div class="header">
-    <span class="title">Upload a photo</span>
-    <i class="material-icons photo" (click)="close()"> close </i>
+  <!-- HEADER -->
+  <div class="row-center padding-sm background-header">
+    <span class="flex-fill">
+      {{ 'MAIN.UPLOAD_PHOTO.TITLE' | translate }}
+    </span>
+    <i class="material-icons icon-close" (click)="close()"> close </i>
   </div>
-  <div class="body">
-    <div class="description">
-      <span> {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_1' | translate }} </span>
-      <span>
-        {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_2' | translate }}
+  <!-- BODY -->
+  <div class="col-center padding-lg">
+    <!-- Description -->
+    <div *ngIf="data.type === 'profile-picture'" class="col-center">
+      <span class="text-secondary text-center">
+        {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_PP_1' | translate }}
       </span>
-      <span> {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_3' | translate }} </span>
-    </div>
-
-    <div *ngIf="croppedImage" class="preview-header">
-      <span> {{ 'MAIN.UPLOAD_PHOTO.CROP_TITLE' | translate }} </span>
-      <span class="scale-container">
-        <button (click)="scaleUp()">
-          <i class="material-icons"> add </i>
-        </button>
-        <button (click)="scaleDown()">
-          <i class="material-icons"> remove </i>
-        </button>
-        <button (click)="reset()">
-          <i class="material-icons"> restart_alt </i>
-        </button>
+      <span class="text-secondary text-center">
+        {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_PP_2' | translate }}
+      </span>
+      <span class="text-secondary text-center">
+        {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_PP_3' | translate }}
       </span>
     </div>
+    <div *ngIf="data.type === 'create-chat'" class="col-center">
+      <span class="text-secondary text-center">
+        {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_CC_1' | translate }}
+      </span>
+      <span class="text-secondary text-center">
+        {{ 'MAIN.UPLOAD_PHOTO.DESCRIPTION_CC_2' | translate }}
+      </span>
+    </div>
 
-    <div #cropper>
+    <!-- The Cropped Image -->
+    <div class="cropper-container margin-v-md" #cropper>
       <image-cropper
         [imageChangedEvent]="imageChangedEvent"
         [maintainAspectRatio]="true"
@@ -42,17 +45,39 @@
         (cropperReady)="cropperReady()"
         (loadImageFailed)="loadImageFailed()"
       ></image-cropper>
+      <!-- Crop controls -->
+      <div
+        *ngIf="croppedImage"
+        class="cropper-controls row-center justify-content-end"
+      >
+        <button class="button-transparent" (click)="scaleUp()">
+          <span class="material-icons button-icon"> zoom_in </span>
+        </button>
+        <button class="button-transparent" (click)="scaleDown()">
+          <span class="material-icons button-icon"> remove </span>
+        </button>
+        <button class="button-transparent" (click)="reset()">
+          <span class="material-icons button-icon"> restart_alt </span>
+        </button>
+      </div>
     </div>
 
-    <div class="preview-container">
-      <div class="button-container">
+    <div class="row-center">
+      <!-- Buttons -->
+      <div class="col-center margin-md">
         <input
           style="display: none"
           type="file"
           (change)="fileChangeEvent($event)"
           #fileInput
         />
-        <button class="upload" (click)="fileInput.click()">
+        <!-- Upload -->
+        <button
+          class="button"
+          [class.button-disabled]="uploadLoading || removeLoading"
+          [class.disabled-background]="uploadLoading || removeLoading"
+          (click)="!uploadLoading && !removeLoading ? fileInput.click() : null"
+        >
           <span *ngIf="!croppedImage" class="text">
             {{ 'MAIN.UPLOAD_PHOTO.UPLOAD' | translate }}
           </span>
@@ -61,10 +86,13 @@
           </span>
           <i class="material-icons photo"> upload </i>
         </button>
-        <div class="response-container">
+
+        <!-- Confirm and Cancel -->
+        <div class="row-center margin-md">
           <button
-            class="confirm"
-            [ngClass]="{ disabled: loading }"
+            class="button-primary margin-r-md"
+            [class.button-loading]="uploadLoading"
+            [class.button-disabled]="removeLoading"
             (click)="confirm()"
           >
             <span class="text">
@@ -72,8 +100,9 @@
             </span>
           </button>
           <button
-            class="remove"
-            [ngClass]="{ disabled: loading }"
+            class="button-cancel"
+            [class.button-disabled]="uploadLoading"
+            [class.button-loading]="removeLoading"
             (click)="remove()"
           >
             <span *ngIf="!confirmRemove" class="text">
@@ -85,28 +114,25 @@
           </button>
         </div>
       </div>
-      <div class="preview">
+
+      <!-- Preview the image -->
+      <div class="preview" [class.no-image]="!croppedImage && !data.imageSrc">
         <img
           *ngIf="croppedImage || data.imageSrc"
           [src]="croppedImage || data.imageSrc"
         />
-        <img
-          class="default"
-          *ngIf="!croppedImage && !data.imageSrc"
-          src="../../../../assets/images/op_large.png"
-        />
       </div>
     </div>
 
-    <div class="confirm-remove" *ngIf="confirmRemove">
-      <span class="text">
-        {{ 'MAIN.UPLOAD_PHOTO.DELETE_MESSAGE' | translate }}</span
-      >
-    </div>
-
-    <div *ngIf="loading" class="loading">
-      <span class="text"> {{ 'MAIN.UPLOAD_PHOTO.LOADING' | translate }} </span>
-      <spot-spinner size="small"></spot-spinner>
-    </div>
+    <!-- Confirm removal message -->
+    <span *ngIf="confirmRemove" class="text-error text-center margin-t-md">
+      {{ 'MAIN.UPLOAD_PHOTO.DELETE_MESSAGE' | translate }}</span
+    >
+    <span *ngIf="errorUploading" class="text-error text-center margin-t-md">
+      {{ 'MAIN.UPLOAD_PHOTO.ERROR_UPLOADING' | translate }}</span
+    >
+    <span *ngIf="errorRemoving" class="text-error text-center margin-t-md">
+      {{ 'MAIN.UPLOAD_PHOTO.ERROR_REMOVING' | translate }}</span
+    >
   </div>
 </div>

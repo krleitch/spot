@@ -32,6 +32,9 @@ export class ChatCreateComponent implements OnInit {
 
   // Is the chat open to others, or invite only
   isPublic = true;
+  // Image
+  image: File;
+  imageSrc: string;
 
   constructor(
     private chatService: ChatService,
@@ -74,6 +77,14 @@ export class ChatCreateComponent implements OnInit {
     }
   }
 
+  private processPhoto(file: File): void {
+    const reader = new FileReader();
+    reader.addEventListener('load', (event) => {
+      this.imageSrc = event.target.result.toString();
+    });
+    reader.readAsDataURL(file);
+  }
+
   openPhotoModal(): void {
     this.modalService
       .open(
@@ -81,13 +92,16 @@ export class ChatCreateComponent implements OnInit {
         'uploadPhoto',
         {
           type: 'create-chat',
-          imageSrc: undefined
+          imageSrc: this.imageSrc
         },
-        { darkenBackground: false, disableClose: true }
+        { disableClose: true, hideModals: true }
       )
       .pipe(take(1))
       .subscribe((result: ModalUploadPhotoResult) => {
-        console.log('got result');
+        // Set the imageSrc
+        if (result.image) {
+          this.processPhoto(result.image);
+        }
       });
   }
 

@@ -192,7 +192,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService
       .open('global', 'uploadPhoto', {
         type: 'profile-picture',
-        imageSrc: this.profilePictureSrc
+        imageSrc:
+          this.profilePictureSrc || '../../../../assets/images/op_large.png'
       })
       .pipe(take(1))
       .subscribe((result: ModalUploadPhotoResult) => {

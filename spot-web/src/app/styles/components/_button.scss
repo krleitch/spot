@@ -26,15 +26,21 @@
   }
 }
 // Loading
-.button.button-loading {
+.button.button-loading,
+.button-primary.button-loading,
+.button-cancel.button-loading {
   color: transparent;
   cursor: wait;
 }
 // Disabled
 .button-disabled {
-  background-color: var(--button-disabled);
   cursor: not-allowed;
 }
+// Add .disabled-background to change the background
+.button-disabled.disabled-background {
+  background-color: var(--button-disabled);
+}
+
 // Loading Animation
 @keyframes button-loading-spinner {
   from {
@@ -70,6 +76,20 @@
   font-size: var(--text-md);
   &:not(.button-disabled):not(.button-loading):hover {
     background-color: var(--primary-highlight);
+  }
+}
+.button-cancel {
+  @extend %button-shared;
+  background-color: var(--button-background-cancel);
+  color: var(--error);
+  padding: 10px 24px;
+  border-radius: 5px;
+  font-size: var(--text-md);
+  .button-icon {
+    color: var(--error);
+  }
+  &:not(.button-disabled):not(.button-loading):hover {
+    background-color: var(--button-background-cancel-highlight);
   }
 }
 

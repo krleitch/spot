@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 
-// TODO: Can lazy load components here
+// TODO: lazy load components
 // Components
 import { ShareComponent } from '@src/app/components/main/social/share/share.component';
 import { ReportComponent } from '@src/app/components/main/social/report/report.component';
@@ -39,6 +39,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() height: number | 'auto';
   @Input() disableClose: boolean;
   @Input() darkenBackground: boolean;
+  @Input() hideModals: boolean;
   @Input() componentName: string;
 
   // All modals must have data and modalId properties
@@ -108,11 +109,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.element.remove();
   }
 
-  setComponent(componentName: string): void {
-    const component = this.componentsMapping[componentName];
-    this.componentRef = this.container.createComponent(component);
-  }
-
   setOptions(options: ModalOptions) {
     // Set the options or reset to the default since reusing modal is possible
     if (options) {
@@ -134,13 +130,25 @@ export class ModalComponent implements OnInit, OnDestroy {
       )
         ? options.darkenBackground
         : true;
+      this.hideModals = Object.prototype.hasOwnProperty.call(
+        options,
+        'hideModals'
+      )
+        ? options.hideModals
+        : false;
     } else {
       // defaults
       this.width = 400;
       this.height = 'auto';
       this.disableClose = false;
       this.darkenBackground = true;
+      this.hideModals = false;
     }
+  }
+
+  setComponent(componentName: string): void {
+    const component = this.componentsMapping[componentName];
+    this.componentRef = this.container.createComponent(component);
   }
 
   removeComponent(): void {
@@ -165,6 +173,14 @@ export class ModalComponent implements OnInit, OnDestroy {
       this.result.complete();
     }
     this.removeComponent();
+  }
+
+  hide(): void {
+    this.element.style.display = 'none';
+  }
+
+  show(): void {
+    this.element.style.display = 'block';
   }
 
   setResult(result: ModalResult): void {

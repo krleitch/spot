@@ -20,9 +20,9 @@
     background: #fff;
 
     position: fixed;
-    top: 30%;
+    top: 100px;
     left: 50%;
-    transform: translate(-50%, -30%);
+    transform: translate(-50%, 0%);
     box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
   }
 }
@@ -40,7 +40,7 @@
   z-index: 999999;
 }
 
-.darken {
+.darken-background {
   /* semi-transparent black  */
   background-color: #000;
   opacity: 20%;

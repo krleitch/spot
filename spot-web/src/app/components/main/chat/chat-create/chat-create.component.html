@@ -1,17 +1,26 @@
 <div class="chat-create">
+  <!-- HEADER -->
   <div class="row-center padding-sm background-header">
     <span class="flex-fill"> {{ 'MAIN.CHAT_CREATE.TITLE' | translate }} </span>
     <span class="material-icons icon-close" (click)="close()"> close </span>
   </div>
+  <!-- BODY -->
   <div class="col-center padding-lg">
-    <div class="row-center photo" (click)="openPhotoModal()">
-      <span class="material-icons icon-md icon-secondary"> add_a_photo </span>
+    <!-- Photo -->
+    <div class="row-center photo" [class.image-selected]="imageSrc" (click)="openPhotoModal()">
+      <span *ngIf="!imageSrc" class="material-icons icon-md icon-secondary"> add_a_photo </span>
+      <img *ngIf="imageSrc" [src]="imageSrc" />
     </div>
+
+    <!-- Description -->
     <div class="padding-v-md text-secondary text-center">
       {{ 'MAIN.CHAT_CREATE.PHOTO_DESCRIPTION' | translate }}
     </div>
+
+    <!-- Form -->
     <form class="form" [formGroup]="createChatForm" autocomplete="off">
       <fieldset class="fieldset">
+        <!-- Name -->
         <div class="col-h-center">
           <div class="form-title">
             {{ 'MAIN.CHAT_CREATE.NAME_TITLE' | translate }}
@@ -29,6 +38,7 @@
               required
             />
           </div>
+          <!-- Name Errors -->
           <div *ngIf="name.invalid && name.dirty && name.touched">
             <div
               *ngIf="name.errors?.['minlength'] || name.errors?.['maxlength']"
@@ -41,6 +51,7 @@
             </div>
           </div>
         </div>
+        <!-- Description -->
         <div class="col-h-center">
           <div class="form-title">
             {{ 'MAIN.CHAT_CREATE.DESCRIPTION_TITLE' | translate }}
@@ -57,6 +68,7 @@
               }}"
             />
           </div>
+          <!-- Description Errors -->
           <div
             *ngIf="
               description.invalid && description.dirty && description.touched
@@ -77,6 +89,8 @@
           </div>
         </div>
       </fieldset>
+
+      <!-- Public / Private -->
       <div class="row-center">
         <button
           class="button-switch left"
@@ -103,9 +117,13 @@
           </div>
         </button>
       </div>
+
+      <!-- Form error message -->
       <div class="padding-v-md text-error text-center">
         {{ errorMessage }}
       </div>
+
+      <!-- Create Button -->
       <div class="align-right">
         <button
           class="button"

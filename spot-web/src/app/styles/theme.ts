@@ -20,6 +20,8 @@ export const LightTheme: Theme = {
 
     '--button-background': '#212121',
     '--button-background-highlight': '#484848',
+    '--button-background-cancel': 'rgba(255, 235, 238, 0.5)',
+    '--button-background-cancel-highlight': 'rgba(255, 235, 238, 0.8)',
     '--button-disabled': '#9E9E9E',
     '--button-text': '#FFFFFF',
     '--item-highlight': '#E0FFFB',
@@ -62,6 +64,8 @@ export const DarkTheme: Theme = {
 
     '--button-background': '#000000',
     '--button-background-highlight': '#484848',
+    '--button-background-cancel': 'rgba(255, 235, 238, 0.5)',
+    '--button-background-cancel-highlight': 'rgba(255, 235, 238, 0.8)',
     '--button-disabled': '#37474f',
     '--button-text': '#FFFFFF',
     '--item-highlight': '#E0FFFB',

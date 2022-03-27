@@ -26,11 +26,28 @@ import { ModalUploadPhotoData, ModalUploadPhotoResult } from '@models/modal';
   styleUrls: ['./upload-photo.component.scss']
 })
 export class UploadPhotoComponent implements OnInit, AfterViewInit {
+  // Modal properties
   modalId: string;
-  data: ModalUploadPhotoData = { type: undefined, imageSrc: undefined }; // Your current profile picture
+  // imageSrc is your current photo
+  data: ModalUploadPhotoData = { type: undefined, imageSrc: undefined };
+
+  // Cropper properties
   @ViewChild('cropper') imageCropper: ElementRef<HTMLElement>;
   isMouseDown = false;
+  imageChangedEvent = '';
+  croppedImage = '';
+  transform = {
+    scale: 1,
+    translateH: 0,
+    translateV: 0
+  };
+
+  // Status flags
+  uploadLoading = false;
+  errorUploading = false;
   confirmRemove = false;
+  removeLoading = false;
+  errorRemoving = false;
 
   constructor(
     private modalService: ModalService,
@@ -55,40 +72,30 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
           // left
           this.transform = {
             ...this.transform,
-            translateH: this.transform.translateH - 5
+            translateH: this.transform.translateH + 5
           };
         } else if (offsetX > rect.width - 15) {
           // right
           this.transform = {
             ...this.transform,
-            translateH: this.transform.translateH + 5
+            translateH: this.transform.translateH - 5
           };
         } else if (offsetY < 15) {
           // up
           this.transform = {
             ...this.transform,
-            translateV: this.transform.translateV - 5
+            translateV: this.transform.translateV + 5
           };
         } else if (offsetY > rect.height - 15) {
           // down
           this.transform = {
             ...this.transform,
-            translateV: this.transform.translateV + 5
+            translateV: this.transform.translateV - 5
           };
         }
       }
     });
   }
-
-  imageChangedEvent = '';
-  croppedImage = '';
-  errorUploading = false;
-  loading = false;
-  transform = {
-    scale: 1,
-    translateH: 0,
-    translateV: 0
-  };
 
   fileChangeEvent(event: string): void {
     this.imageChangedEvent = event;
@@ -106,21 +113,21 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
     // show message
   }
 
-  scaleUp() {
+  scaleUp(): void {
     this.transform = {
       ...this.transform,
       scale: this.transform.scale + 1
     };
   }
 
-  scaleDown() {
+  scaleDown(): void {
     this.transform = {
       ...this.transform,
       scale: Math.max(this.transform.scale - 1, 1)
     };
   }
 
-  reset() {
+  reset(): void {
     this.transform = {
       scale: 1,
       translateH: 0,
@@ -142,71 +149,99 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
     return new File([buff], filename, { type: mime });
   }
 
-  confirm() {
-    if (this.loading) {
+  confirm(): void {
+    if (this.uploadLoading) {
       return;
     }
 
     this.errorUploading = false;
     this.confirmRemove = false;
+    this.uploadLoading = true;
     const file = this.dataUrlToFile(this.croppedImage, 'photo');
     const request: UpdateProfilePictureRequest = {
       image: file
     };
-    this.loading = true;
 
-    this.userService
-      .updateProfilePicture(request)
-      .pipe(take(1))
-      .subscribe(
-        (response: UpdateProfilePictureResponse) => {
-          this.loading = false;
-          const result: ModalUploadPhotoResult = {
-            imageSrc: response.user.profilePictureSrc
-          };
-          this.modalService.setResult(this.modalId, result);
-          this.close();
-        },
-        (_err) => {
-          this.loading = false;
-          this.errorUploading = true;
-        }
-      );
-  }
-
-  remove() {
-    if (!this.confirmRemove) {
-      this.confirmRemove = true;
-    } else {
-      if (this.loading) {
-        return;
-      }
-      this.errorUploading = false;
-      this.confirmRemove = false;
-      const request: DeleteProfilePictureRequest = {};
-      this.loading = true;
-
+    if (this.data.type === 'profile-picture') {
       this.userService
-        .deleteProfilePicture(request)
+        .updateProfilePicture(request)
         .pipe(take(1))
         .subscribe(
-          (_response: UpdateProfilePictureResponse) => {
-            this.loading = false;
+          (response: UpdateProfilePictureResponse) => {
+            this.uploadLoading = false;
             const result: ModalUploadPhotoResult = {
-              imageSrc: undefined
+              imageSrc: response.user.profilePictureSrc
             };
             this.modalService.setResult(this.modalId, result);
             this.close();
           },
           (_err) => {
-            this.loading = false;
+            this.uploadLoading = false;
             this.errorUploading = true;
           }
         );
+    } else if (this.data.type === 'create-chat') {
+      const file = this.dataUrlToFile(this.croppedImage, 'photo');
+      const result: ModalUploadPhotoResult = {
+        image: file
+      };
+      this.uploadLoading = false;
+      this.errorUploading = true;
+      this.modalService.setResult(this.modalId, result);
+      this.close();
     }
   }
 
-  close() {
+  remove(): void {
+    if (this.uploadLoading) {
+      return;
+    }
+    // Remove the cropped image if it exists first
+    if (this.croppedImage) {
+      this.croppedImage = '';
+      return;
+    }
+    if (this.data.type === 'create-chat' && this.data.imageSrc) {
+      this.data.imageSrc = undefined;
+      return;
+    }
+    // Show confirm message first
+    if (!this.confirmRemove && this.data.type !== 'create-chat') {
+      // We dont need to confirm for create-chat since nothing to delete
+      this.confirmRemove = true;
+    } else {
+      this.errorRemoving = false;
+      this.confirmRemove = false;
+      this.removeLoading = true;
+      if (this.data.type === 'profile-picture') {
+        const request: DeleteProfilePictureRequest = {};
+        this.userService
+          .deleteProfilePicture(request)
+          .pipe(take(1))
+          .subscribe(
+            (_response: UpdateProfilePictureResponse) => {
+              this.removeLoading = false;
+              const result: ModalUploadPhotoResult = {
+                imageSrc: undefined
+              };
+              this.modalService.setResult(this.modalId, result);
+              this.close();
+            },
+            (_err) => {
+              this.removeLoading = false;
+              this.errorRemoving = true;
+            }
+          );
+      } else if (this.data.type === 'create-chat') {
+        this.removeLoading = false;
+        // We have nothing to remove if we are still creating the chat
+        // No image has been uploaded yet
+      }
+      // TODO: update-chat
+    }
+  }
+
+  close(): void {
     this.modalService.close(this.modalId);
   }
 }

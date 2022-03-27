@@ -313,9 +313,9 @@ spot-main-nav {
   position: absolute;
   top: 0;
   right: 0;
-  margin: 5px 25px 5px 5px;
-  height: 125px;
-  width: 125px;
+  margin: 25px 25px 5px 5px;
+  height: 100px;
+  width: 100px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -327,8 +327,8 @@ spot-main-nav {
     position: absolute;
     top: 0;
     left: 0;
-    height: 125px;
-    width: 125px;
+    height: 100px;
+    width: 100px;
     border-radius: 50%;
     opacity: 0%;
 
@@ -337,8 +337,8 @@ spot-main-nav {
       top: 0;
       left: 0;
       background-color: black;
-      height: 125px;
-      width: 125px;
+      height: 100px;
+      width: 100px;
       border-radius: 50%;
       opacity: 15%;
     }
@@ -350,8 +350,8 @@ spot-main-nav {
       justify-content: center;
       top: 0;
       left: 0;
-      height: 125px;
-      width: 125px;
+      height: 100px;
+      width: 100px;
       background: transparent;
       border-radius: 50%;
 
@@ -368,8 +368,8 @@ spot-main-nav {
 }
 
 img {
-  width: 125px;
-  height: 125px;
+  width: 100px;
+  height: 100px;
 }
 
 img.op {
