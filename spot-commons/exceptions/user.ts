@@ -157,15 +157,28 @@ export class ConfirmVerify extends SpotError {
     }
 }
 
-export class CreateProfilePhoto extends SpotError {
+export class UploadProfilePicture extends SpotError {
     constructor(statusCode: number = 500) {
-      super(USER_ERROR_MESSAGES.CREATE_PROFILE_PHOTO, statusCode);
-      this.name = "CreateProfilePhoto";
+      super(USER_ERROR_MESSAGES.UPLOAD_PROFILE_PICTURE, statusCode);
+      this.name = "UploadProfilePicture";
     }
 }
-export class DeleteProfilePhoto extends SpotError {
+export class DeleteProfilePicture extends SpotError {
     constructor(statusCode: number = 500) {
-      super(USER_ERROR_MESSAGES.DELETE_PROFILE_PHOTO, statusCode);
-      this.name = "DeleteProfilePhoto";
+      super(USER_ERROR_MESSAGES.DELETE_PROFILE_PICTURE, statusCode);
+      this.name = "DeleteProfilePicture";
+    }
+}
+
+export class UploadChatRoomPhoto extends SpotError {
+    constructor(statusCode: number = 500) {
+      super(USER_ERROR_MESSAGES.UPLOAD_CHAT_ROOM_PHOTO, statusCode);
+      this.name = "UploadChatRoomPhoto";
+    }
+}
+export class DeleteChatRoomPhoto extends SpotError {
+    constructor(statusCode: number = 500) {
+      super(USER_ERROR_MESSAGES.DELETE_CHAT_ROOM_PHOTO, statusCode);
+      this.name = "DeleteChatRoomPhoto";
     }
 }

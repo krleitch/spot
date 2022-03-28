@@ -4,6 +4,9 @@ const router = express.Router();
 // db
 import prismaUser from '@db/prisma/user.js';
 
+// services
+import imageService from '@services/image.js';
+
 // exceptions
 import * as userError from '@exceptions/user.js';
 import ErrorHandler from '@helpers/errorHandler.js';

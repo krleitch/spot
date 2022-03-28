@@ -37,9 +37,20 @@ export interface ChatRoom {
   name: string;
 }
 
+// Upload the chat room image to the spot-server
+export interface UploadChatRoomImageRequest {
+  image: File
+}
+export interface UploadChatRoomImageResponse {
+  imageSrc: string;
+}
+
+// Chat-Server Requests
 export interface CreateChatRoomRequest {
-  topic: string;
   name: string;
+  description: string;
+  public: boolean;
+  imageSrc: string;
 }
 
 export interface findAllChatRooms {

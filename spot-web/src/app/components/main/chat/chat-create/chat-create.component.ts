@@ -72,6 +72,8 @@ export class ChatCreateComponent implements OnInit {
   createRoom(): void {
     if (this.createChatForm.valid) {
       console.log('submit form');
+
+      // upload the image first
     } else {
       validateAllFormFields(this.createChatForm);
     }
@@ -99,6 +101,7 @@ export class ChatCreateComponent implements OnInit {
       .pipe(take(1))
       .subscribe((result: ModalUploadPhotoResult) => {
         // Set the imageSrc
+        // If result.image is null then we know the user didnt delete their original image
         if (result.image) {
           this.processPhoto(result.image);
         } else if (result.image === undefined) {

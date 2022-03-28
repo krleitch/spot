@@ -51,6 +51,7 @@ model User {
   UserLocation         UserLocation[]
   CommentTag           CommentTag[]
   CommentTagger        CommentTag[]    @relation("Tagger")
+  UserImage            UserImage[]
 }
 
 enum UnitSystem {
@@ -263,4 +264,19 @@ model CommentTag {
   commentId       String   @db.Uuid
   commentParent   Comment? @relation("TagCommentParent", fields: [commentParentId], references: [commentId])
   commentParentId String?  @db.Uuid
+}
+
+enum ImageType {
+  PROFILE_PICTURE
+  CHAT_ROOM
+}
+
+model UserImage {
+  userImageId String    @id @default(uuid()) @db.Uuid
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  imageSrc    String
+  user        User      @relation(fields: [userId], references: [userId])
+  userId      String    @db.Uuid
+  type        ImageType
 }

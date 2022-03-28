@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Socket as PhoenixSocket } from 'phoenix';
 
+import { Observable } from 'rxjs';
+
 // models
 import { CreateChatRoomRequest } from '@models/chat';
 
@@ -36,6 +38,7 @@ export class ChatService {
   //   });
   // }
 
+  // Requests to Spot-Chat-Server
   getRooms(): any {
     return this.http.get<any>(`${this.chatBaseUrl}/rooms`);
   }

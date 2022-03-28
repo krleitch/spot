@@ -120,8 +120,11 @@ export const ERROR_MESSAGES = {
       SEND_VERIFY: "Error sending verification email",
       CONFIRM_VERIFY: "Error confirming email verification",
 
-      CREATE_PROFILE_PHOTO: "Error creating profile photo",
-      DELETE_PROFILE_PHOTO: "Error deleting profile photo",
+      UPLOAD_PROFILE_PICTURE: "Error creating profile picture",
+      DELETE_PROFILE_PICTURE: "Error deleting profile picture",
+
+      UPLOAD_CHAT_ROOM_PHOTO: "Error uploading chat room photo",
+      DELETE_CHAT_ROOM_PHOTO: "Error deleting chat room photo"
     },
 
     AUTHORIZATION: {

@@ -8,18 +8,28 @@ import aws from '@services/aws.js';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 
-// Only allow png
-const profilePhotoFileFilter = (
+const chatRoomPhotoFileFilter = (
   req: Request,
   file: Express.MulterS3.File,
   cb: (err: any, valid: boolean) => void
 ) => {
-  if (
-    file.mimetype === 'image/png'
-  ) {
+  if (file.mimetype === 'image/png') {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type, Jpeg, Png, Gif, WebP allowed'), false);
+    cb(new Error('Invalid file type, only png allowed'), false);
+  }
+};
+
+// Only allow png
+const profilePictureFileFilter = (
+  req: Request,
+  file: Express.MulterS3.File,
+  cb: (err: any, valid: boolean) => void
+) => {
+  if (file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type, only png allowed'), false);
   }
 };
 
@@ -42,14 +52,14 @@ const fileFilter = (
 };
 
 interface CreateRequestWithFile {
-  spotId?: string,
-  commentId?: string,
-  filename: string
+  spotId?: string;
+  commentId?: string;
+  filename: string;
 }
 
 // upload files to s3
 const upload = multer({
-  fileFilter,
+  fileFilter: fileFilter,
   storage: multerS3({
     acl: 'public-read',
     s3: aws.s3,
@@ -88,7 +98,7 @@ const upload = multer({
 
 // Upload profile photo to s3
 const uploadProfilePicture = multer({
-  fileFilter,
+  fileFilter: profilePictureFileFilter,
   storage: multerS3({
     acl: 'public-read',
     s3: aws.s3,
@@ -111,14 +121,41 @@ const uploadProfilePicture = multer({
   })
 });
 
+// Upload profile photo to s3
+const uploadChatRoomPhoto = multer({
+  fileFilter: chatRoomPhotoFileFilter,
+  storage: multerS3({
+    acl: 'public-read',
+    s3: aws.s3,
+    bucket: 'spottables',
+    metadata: function (
+      req: Request,
+      file: Express.Multer.File,
+      cb: (err: any, metadata?: any) => void
+    ) {
+      cb(null, { originalname: file.originalname.substring(0, 255) });
+    },
+    key: function (
+      req: Request,
+      file: Express.MulterS3.File,
+      cb: (err: any, key?: string | undefined) => void
+    ) {
+      const filename = uuid.v4();
+      cb(null, `chatRoomPhotos/${filename}`);
+    }
+  })
+});
+
 // predict if image is nsfw before the spot is made locally on the server
 const predictNsfwLocal = async (imgUrl: string): Promise<boolean> => {
   // Currently not useable
   return false;
-}
+};
 
 //  predict if image is nsfw, using aws lambda after the spot is already made
-const predictNsfwLambda = async (imgUrl: string): Promise<AWS.Lambda.InvocationResponse> => {
+const predictNsfwLambda = async (
+  imgUrl: string
+): Promise<AWS.Lambda.InvocationResponse> => {
   const params: AWS.Lambda.InvocationRequest = {
     FunctionName: 'nsfw-image-prediction',
     Payload: JSON.stringify({
@@ -126,6 +163,12 @@ const predictNsfwLambda = async (imgUrl: string): Promise<AWS.Lambda.InvocationR
     })
   };
   return aws.lambda.invoke(params).promise();
-}
+};
 
-export default { upload, uploadProfilePicture, predictNsfwLocal, predictNsfwLambda };
+export default {
+  upload,
+  uploadProfilePicture,
+  uploadChatRoomPhoto,
+  predictNsfwLocal,
+  predictNsfwLambda
+};

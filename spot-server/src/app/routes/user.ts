@@ -7,6 +7,7 @@ import { pbkdf2Sync } from 'crypto';
 import prismaUser from '@db/prisma/user.js';
 import prismaUserMetadata from '@db/prisma/userMetadata.js';
 import prismaUserVerify from '@db/prisma/userVerify.js';
+import prismaUserImage from '@db/prisma/userImage.js';
 
 // services
 import authenticationService from '@services/authentication/authentication.js';
@@ -15,6 +16,7 @@ import friendsService from '@services/friends.js';
 import mail from '@services/mail.js';
 import imageService from '@services/image.js';
 const uploadProfilePicture = imageService.uploadProfilePicture.single('image');
+const uploadChatRoomPhoto = imageService.uploadChatRoomPhoto.single('image');
 
 // exceptions
 import * as authenticationError from '@exceptions/authentication.js';
@@ -40,9 +42,7 @@ import {
   GoogleDisconnectResponse,
   VerifyConfirmRequest,
   VerifyConfirmResponse,
-  VerifyResponse,
-  UpdateProfilePictureResponse,
-  DeleteProfilePictureResponse
+  VerifyResponse
 } from '@models/user.js';
 import {
   UserMetadata,
@@ -50,6 +50,13 @@ import {
   UpdateUserMetadataRequest,
   UpdateUserMetadataResponse
 } from '@models/userMetadata.js';
+import {
+  UserImageType,
+  UploadProfilePictureResponse,
+  DeleteProfilePictureResponse,
+  UploadChatRoomPhotoResponse,
+  DeleteChatRoomPhotoResponse
+} from '@models/image.js';
 
 router.use((req: Request, res: Response, next: NextFunction) => {
   next();
@@ -597,38 +604,46 @@ router.post(
   )
 );
 
-// Update profile picture
+// Upload profile picture
 router.put(
-  '/picture',
+  'upload/profile',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       if (
         !req.user ||
         authorization.checkUserHasRole(req.user, [UserRole.GUEST])
       ) {
-        return next(new userError.CreateProfilePhoto());
+        return next(new userError.UploadProfilePicture());
       }
 
       // Upload the file
       uploadProfilePicture(req, res, async (err: any) => {
         // error uploading image
         if (err || !req.user) {
-          return next(new userError.CreateProfilePhoto(422));
+          return next(new userError.UploadProfilePicture(422));
         }
 
         // @ts-ignore
         // Location is defined on the multers3 file type
         const imageSrc: string = req.file ? req.file.location : undefined;
+        const userImage = await prismaUserImage.createUserImage(
+          req.user.userId,
+          imageSrc,
+          UserImageType.PROFILE_PICTURE
+        );
+        if (!userImage) {
+          return next(new userError.UploadProfilePicture());
+        }
 
         const user = await prismaUser.updateProfilePicture(
           req.user.userId,
-          imageSrc
+          userImage.imageSrc
         );
         if (!user) {
-          return next(new userError.CreateProfilePhoto());
+          return next(new userError.UploadProfilePicture());
         }
 
-        const response: UpdateProfilePictureResponse = { user: user };
+        const response: UploadProfilePictureResponse = { user: user };
         res.status(200).send(response);
       });
     }
@@ -637,26 +652,83 @@ router.put(
 
 // Delete a profile picture
 router.delete(
-  '/picture',
+  '/upload/profile',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-
       if (
         !req.user ||
         authorization.checkUserHasRole(req.user, [UserRole.GUEST])
       ) {
-        return next(new userError.DeleteProfilePhoto());
+        return next(new userError.DeleteProfilePicture());
       }
 
-      const user = await prismaUser.updateProfilePicture(
-        req.user.userId,
-        null
-      );
+      const user = await prismaUser.updateProfilePicture(req.user.userId, null);
       if (!user) {
-        return next(new userError.DeleteProfilePhoto());
+        return next(new userError.DeleteProfilePicture());
       }
 
       const response: DeleteProfilePictureResponse = { user: user };
+      res.status(200).send(response);
+    }
+  )
+);
+
+// Upload an image
+router.post(
+  '/upload/chat',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) {
+        return next(new userError.UploadChatRoomPhoto());
+      }
+
+      // Upload the file
+      uploadChatRoomPhoto(req, res, async (err: any) => {
+        // error uploading image
+        if (err || !req.user) {
+          return next(new userError.UploadChatRoomPhoto(422));
+        }
+
+        // @ts-ignore
+        // Location is defined on the multers3 file type
+        const imageSrc: string = req.file ? req.file.location : undefined;
+
+        const userImage = await prismaUserImage.createUserImage(
+          req.user.userId,
+          imageSrc,
+          UserImageType.CHAT_ROOM
+        );
+        if (!userImage) {
+          return next(new userError.UploadChatRoomPhoto());
+        }
+
+        const response: UploadChatRoomPhotoResponse = {
+          imageSrc: userImage.imageSrc
+        };
+        res.status(200).send(response);
+      });
+    }
+  )
+);
+
+// Delete a chat room photo
+router.delete(
+  '/upload/chat',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (
+        !req.user ||
+        authorization.checkUserHasRole(req.user, [UserRole.GUEST])
+      ) {
+        return next(new userError.DeleteChatRoomPhoto());
+      }
+
+      // const user = await prismaUserImage.deleteUserImage(id);
+      // if (!user) {
+        // return next(new userError.DeleteProfilePhoto());
+      // }
+
+      const response: DeleteChatRoomPhotoResponse = {};
       res.status(200).send(response);
     }
   )

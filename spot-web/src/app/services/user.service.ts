@@ -30,11 +30,7 @@ import {
   VerifyConfirmRequest,
   VerifyConfirmResponse,
   VerifyRequest,
-  VerifyResponse,
-  UpdateProfilePictureRequest,
-  UpdateProfilePictureResponse,
-  DeleteProfilePictureRequest,
-  DeleteProfilePictureResponse
+  VerifyResponse
 } from '@models/user';
 import {
   GetUserMetadataRequest,
@@ -42,6 +38,16 @@ import {
   UpdateUserMetadataRequest,
   UpdateUserMetadataResponse
 } from '@models/userMetadata';
+import {
+  UploadProfilePictureRequest,
+  UploadProfilePictureResponse,
+  DeleteProfilePictureRequest,
+  DeleteProfilePictureResponse,
+  UploadChatRoomPhotoRequest,
+  UploadChatRoomPhotoResponse,
+  DeleteChatRoomPhotoRequest,
+  DeleteChatRoomPhotoResponse
+} from '@models/image';
 
 // Assets
 import { environment } from 'src/environments/environment';
@@ -167,26 +173,50 @@ export class UserService {
     );
   }
 
-  updateProfilePicture(
-    request: UpdateProfilePictureRequest
-  ): Observable<UpdateProfilePictureResponse> {
+  // Profile picture
+  uploadProfilePicture(
+    request: UploadProfilePictureRequest
+  ): Observable<UploadProfilePictureResponse> {
     const formData = new FormData();
     formData.append('json', JSON.stringify(request));
 
     if (request.image) {
       formData.append('image', request.image);
     }
-    return this.http.put<UpdateProfilePictureResponse>(
-      `${this.baseUrl}/user/picture`,
+    return this.http.put<UploadProfilePictureResponse>(
+      `${this.baseUrl}/user/upload/profile`,
       formData
     );
   }
-
   deleteProfilePicture(
     request: DeleteProfilePictureRequest
   ): Observable<DeleteProfilePictureResponse> {
     return this.http.delete<DeleteProfilePictureResponse>(
-      `${this.baseUrl}/user/picture`,
+      `${this.baseUrl}/user/upload/profile`,
+      request
+    );
+  }
+
+  // Chat Room Photo
+  uploadChatRoomPhoto(
+    request: UploadChatRoomPhotoRequest
+  ): Observable<UploadChatRoomPhotoResponse> {
+    const formData = new FormData();
+    formData.append('json', JSON.stringify(request));
+
+    if (request.image) {
+      formData.append('image', request.image);
+    }
+    return this.http.post<UploadChatRoomPhotoResponse>(
+      `${this.baseUrl}/user/upload/chat`,
+      formData
+    );
+  }
+  deleteChatRoomPhoto(
+    request: DeleteChatRoomPhotoRequest
+  ): Observable<DeleteChatRoomPhotoResponse> {
+    return this.http.delete<DeleteChatRoomPhotoResponse>(
+      `${this.baseUrl}/user/upload/chat`,
       request
     );
   }

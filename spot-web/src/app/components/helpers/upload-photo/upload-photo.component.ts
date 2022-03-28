@@ -15,10 +15,11 @@ import { UserService } from '@services/user.service';
 
 // Models
 import {
-  UpdateProfilePictureRequest,
-  UpdateProfilePictureResponse,
-  DeleteProfilePictureRequest
-} from '@models/user';
+  UploadProfilePictureRequest,
+  UploadProfilePictureResponse,
+  DeleteProfilePictureRequest,
+  DeleteProfilePictureResponse
+} from '@models/image';
 import { ModalUploadPhotoData, ModalUploadPhotoResult } from '@models/modal';
 @Component({
   selector: 'spot-upload-photo',
@@ -153,7 +154,7 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
   }
 
   confirm(): void {
-    if (this.uploadLoading) {
+    if (this.uploadLoading || this.removeLoading) {
       return;
     }
 
@@ -162,14 +163,14 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
     this.uploadLoading = true;
     if (this.data.type === 'profile-picture') {
       const file = this.dataUrlToFile(this.croppedImage, 'photo');
-      const request: UpdateProfilePictureRequest = {
+      const request: UploadProfilePictureRequest = {
         image: file
       };
       this.userService
-        .updateProfilePicture(request)
+        .uploadProfilePicture(request)
         .pipe(take(1))
         .subscribe(
-          (response: UpdateProfilePictureResponse) => {
+          (response: UploadProfilePictureResponse) => {
             this.uploadLoading = false;
             const result: ModalUploadPhotoResult = {
               imageSrc: response.user.profilePictureSrc
@@ -205,7 +206,7 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
   }
 
   remove(): void {
-    if (this.uploadLoading) {
+    if (this.uploadLoading || this.removeLoading) {
       return;
     }
     // Remove the cropped image if it exists first
@@ -231,7 +232,7 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
           .deleteProfilePicture(request)
           .pipe(take(1))
           .subscribe(
-            (_response: UpdateProfilePictureResponse) => {
+            (_response: DeleteProfilePictureResponse) => {
               this.removeLoading = false;
               const result: ModalUploadPhotoResult = {
                 imageSrc: undefined

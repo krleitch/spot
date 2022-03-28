@@ -90,18 +90,6 @@ export interface VerifyConfirmResponse {
   user: User;
 }
 
-// Profile Photo
-export interface UpdateProfilePictureRequest {
-  image: File;
-}
-export interface UpdateProfilePictureResponse {
-  user: User;
-}
-export interface DeleteProfilePictureRequest {}
-export interface DeleteProfilePictureResponse {
-  user: User;
-}
-
 // Store
 export interface SetUserStore {
   user: Partial<User>; // Give properties you want to update
