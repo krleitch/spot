@@ -1,16 +1,16 @@
 <div class="tab">
-  <div class="header">
-    <span class="title">{{tab.name}}</span>
-    <div class="icons">
-      <button (click)="minimizeTab()">
-        <i class="material-icons">remove</i>
+  <div
+    class="row-h-center justify-content-between background-primary full-width padding-v-xs padding-h-sm border-box"
+  >
+    <span class="text-md text-white">{{ tab.name }}</span>
+    <div class="row-center">
+      <button class="tab-button margin-l-sm" (click)="minimizeTab()">
+        <span class="material-icons">remove</span>
       </button>
-      <button (click)="closeTab()">
-        <i class="material-icons">close</i>
+      <button class="tab-button margin-l-sm" (click)="closeTab()">
+        <span class="material-icons">close</span>
       </button>
     </div>
   </div>
-  <div class="body">
-    <ng-content></ng-content>
-  </div>
+  <ng-content></ng-content>
 </div>

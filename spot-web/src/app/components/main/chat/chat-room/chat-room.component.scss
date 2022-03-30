@@ -1,134 +1,23 @@
-@import '../../../../../styles/profiles';
-
-// CHAT ROOM
-
-.chat-room-container {
-  display: flex;
-  flex-direction: column;
+.chat-room {
   width: 500px;
   height: 600px;
-  background-color: var(--background-container);
 }
 
-.chat-header {
-  font-size: 12px;
-  display: flex;
-  flex-direction: row;
-  margin: 2px 5px;
-
-  .location {
-    color: var(--text-secondary);
-    margin-right: 4px;
-    flex: 1;
-  }
-
-  .count-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-right: 4px;
-
-    .icon {
-      color: var(--icon-secondary);
-      font-size: 18px;
-    }
-
-    .count {
-      color: var(--text-secondary);
-      margin-left: 3px;
-      font-size: 12px;
-    }
-  }
-
-  .settings-icon {
-    color: var(--icon-secondary);
-    font-size: 18px;
-  }
-}
-
-.messages-container {
+// Content Editable
+.chat {
   flex: 1;
-  padding: 5px 5px;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-
-  .message {
-    display: flex;
-    align-items: center;
-    margin: 3px 0px;
-
-    .image-info {
-      width: 20px;
-      height: 20px;
-    }
-
-    .content {
-      margin-left: 5px;
-      flex: 1;
-      font-size: 12px;
-    }
-
-    .content-info {
-      color: var(--text-secondary);
-    }
-
-    .time {
-      font-size: 10px;
-      color: var(--text-secondary);
-    }
-  }
-
-  .message-info {
-    justify-content: center;
-  }
+  display: block;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: var(--background-primary);
+  border: 0;
+  outline: 0;
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
-
-.chat-bar {
-  display: flex;
-  margin: auto 10px 10px 10px;
-
-  .chat {
-    flex: 1;
-    display: block;
-    padding: 8px;
-    border-radius: 10px;
-    background-color: var(--background-primary);
-    border: 0;
-    outline: 0;
-    white-space: pre-wrap; /* css-3 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
-  }
-
-  button {
-    border: none;
-    text-decoration: none;
-    outline: none;
-    cursor: pointer;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--primary);
-    color: var(--button-text);
-    padding: 8px;
-    font-size: var(--text-regular);
-    height: 30;
-    border-radius: 3px;
-
-    &:hover {
-      background-color: var(--primary-highlight);
-    }
-  }
-
-  .submit {
-    margin-left: 5px;
-  }
-}
-
 // include a placeholder for the chat
 [contenteditable='true']:empty:not(:focus):before {
   content: attr(ph);
@@ -136,7 +25,6 @@
   font-style: italic;
   cursor: text;
 }
-
 [contenteditable='true']:empty:focus:before {
   content: attr(ph);
   color: var(--input-text-ph-light);

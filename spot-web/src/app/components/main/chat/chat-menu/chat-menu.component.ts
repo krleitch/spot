@@ -32,7 +32,7 @@ export class ChatMenuComponent implements OnInit {
   eMenuStatus = MenuStatus;
   eChatType = ChatType;
 
-  menuStatus = this.eMenuStatus.HIDDEN;
+  menuStatus = this.eMenuStatus.EXPANDED_FULL;
   selectedChatOption = this.eChatType.ROOM;
 
   // Search

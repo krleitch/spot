@@ -1,45 +1,55 @@
-<div class="container">
+<div class="chat-menu">
   <div
-    class="menu-expander-container"
+    class="container"
     [class.expanded-full]="menuStatus === eMenuStatus.EXPANDED_FULL"
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
-    <button class="expander" (click)="toggleMenu()">
-      <i class="material-icons icon">comment</i>
+    <!-- Expander -->
+    <button class="expander row-center background-page" (click)="toggleMenu()">
+      <span class="material-icons expander-icon">comment</span>
     </button>
+
+    <!-- Menu -->
     <div
-      class="menu"
+      class="menu col background-container full-height"
       [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
       [class.expanded-full]="menuStatus === eMenuStatus.EXPANDED_FULL"
     >
+      <!-- Menu Buttons -->
       <div
-        class="list-header"
+        class="header col-center full-width"
         [class.expanded-full]="menuStatus === eMenuStatus.EXPANDED_FULL"
       >
         <button
-          class="rooms"
-          [ngClass]="{ selected: selectedChatOption === eChatType.ROOM }"
+          class="menu-button"
+          [class.selected]="selectedChatOption === eChatType.ROOM"
           (click)="selectRooms()"
         >
-          <i class="material-icons">groups</i>
-          <span class="text" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
+          <i class="material-icons button-icon"> groups </i>
+          <span class="margin-l-sm" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
             'MAIN.CHAT_MENU.ROOMS' | translate
           }}</span>
         </button>
         <button
-          class="friends"
-          [ngClass]="{ selected: selectedChatOption === eChatType.FRIEND }"
+          class="menu-button"
+          [class.selected]="selectedChatOption === eChatType.FRIEND"
           (click)="selectFriends()"
         >
-          <i class="material-icons">forum</i>
-          <span class="text" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
+          <span class="material-icons button-icon"> forum </span>
+          <span class="margin-l-sm" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
             'MAIN.CHAT_MENU.FRIENDS' | translate
           }}</span>
         </button>
       </div>
-      <div *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL" class="search">
-        <span class="material-icons icon"> search </span>
+
+      <!-- Search -->
+      <div
+        *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+        class="row-center padding-md"
+      >
+        <span class="material-icons padding-r-md"> search </span>
         <input
+          class="input-border-bottom"
           [(ngModel)]="search"
           placeholder="{{ 'MAIN.CHAT_MENU.SEARCH_PLACEHOLDER' | translate }}"
           type="text"
@@ -47,70 +57,72 @@
       </div>
 
       <!-- Chat Rooms -->
-      <div *ngIf="selectedChatOption === eChatType.ROOM" class="list-body">
-        <div class="button-container">
-          <button (click)="searchRooms()">
+      <div *ngIf="selectedChatOption === eChatType.ROOM" class="flex-fill">
+        <!-- Room Buttons -->
+        <div class="col-center padding-sm">
+          <button class="button full-width margin-b-md" (click)="searchRooms()">
             <span
               *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
               class="text"
               >{{ 'MAIN.CHAT_MENU.DISCOVER_ROOMS' | translate }}</span
             >
-            <i class="material-icons">travel_explore</i>
+            <i class="material-icons button-icon">travel_explore</i>
           </button>
-          <button (click)="createRoom()">
+          <button class="button full-width margin-b-md" (click)="createRoom()">
             <span
               *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
               class="text"
               >{{ 'MAIN.CHAT_MENU.CREATE_ROOM' | translate }}</span
             >
-            <i class="material-icons">add_circle_outline</i>
+            <i class="material-icons button-icon">add_circle_outline</i>
           </button>
         </div>
+
+        <!-- Rooms -->
         <div *ngIf="chatRooms$ | async as chatRooms">
           <div *ngIf="chatRooms.length > 0; else noRooms">
             <div
-              class="room"
+              class="menu-item row-center padding-md"
               *ngFor="let chatRoom of chatRooms"
-              (click)="createRoomTab(eChatType.ROOM, room)"
+              (click)="createRoomTab(eChatType.ROOM, chatRoom)"
             >
               <span class="image">
-                <span *ngIf="!chatRoom.imageSrc">{{
+                <span *ngIf="!chatRoom.imageSrc" class="row-center full-size">{{
                   getMinimizedName(chatRoom.name)
                 }}</span>
-                <img
-                  *ngIf="chatRoom.imageSrc"
-                  [src]="chatRoom.imageSrc"
-                />
+                <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
               </span>
               <span
                 *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
-                class="text-container"
+                class="col flex-fill margin-l-md"
               >
-                <span class="name">{{ chatRoom.name }}</span>
-                <span class="last-message">testing</span>
+                <span class="text">{{ chatRoom.name }}</span>
+                <span class="text-secondary">testing</span>
               </span>
             </div>
           </div>
           <ng-template #noRooms>
-            <div class="empty">
-              <span>{{ 'MAIN.CHAT_MENU.ADD_ROOMS' | translate }}</span>
-              <i class="material-icons">group_add</i>
+            <div class="col-center margin-t-xl">
+              <span class="text-center text-secondary">{{
+                'MAIN.CHAT_MENU.ADD_ROOMS' | translate
+              }}</span>
+              <span class="material-icons"> group_add </span>
             </div>
           </ng-template>
         </div>
       </div>
 
       <!-- Friends -->
-      <div *ngIf="selectedChatOption === eChatType.FRIEND" class="list-body">
+      <div *ngIf="selectedChatOption === eChatType.FRIEND" class="flex-fill">
         <div *ngIf="friends$ | async as friends">
           <div *ngIf="friends.length > 0; else noFriends">
             <div
-              class="friend"
+              class="menu-item row-center padding-md"
               *ngFor="let friend of friends"
               (click)="createFriendTab(eChatType.FRIEND, friend.username)"
             >
-              <span class="profile">
-                <span *ngIf="!friend.profilePictureSrc">{{
+              <span class="row-center image">
+                <span *ngIf="!friend.profilePictureSrc" class="row-center full-size">{{
                   getMinimizedName(friend.username)
                 }}</span>
                 <img
@@ -120,30 +132,34 @@
               </span>
               <span
                 *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
-                class="text-container"
+                class="col flex-fill margin-l-md"
               >
-                <span class="username">{{ friend.username }}</span>
-                <span class="last-message">testing</span>
+                <span class="text">{{ friend.username }}</span>
+                <span class="text-secondary">testing</span>
               </span>
             </div>
           </div>
           <ng-template #noFriends>
-            <div class="empty">
-              <span>{{ 'MAIN.CHAT_MENU.ADD_FRIENDS' | translate }}</span>
-              <i class="material-icons">person_add</i>
+            <div class="col-center margin-t-xl">
+              <span class="text-center text-secondary">{{
+                'MAIN.CHAT_MENU.ADD_FRIENDS' | translate
+              }}</span>
+              <span class="material-icons"> person_add </span>
             </div>
           </ng-template>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Mini Tabs -->
   <div
-    class="mini-tabs"
+    class="mini-tabs col justify-content-end"
     [class.expanded-full]="menuStatus === eMenuStatus.EXPANDED_FULL"
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
     <div
-      class="mini-tab"
+      class="mini-tab row-center"
       *ngFor="let mtab of minimizedTabs"
       (click)="openTab(mtab.id)"
     >
@@ -152,12 +168,13 @@
       </div>
     </div>
   </div>
+  <!-- Tabs -->
   <div
-    class="tabs"
+    class="tabs row justify-content-end align-items-end"
     [class.expanded-full]="menuStatus === eMenuStatus.EXPANDED_FULL"
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
-    <div class="tab" *ngFor="let tab of tabs">
+    <div class="margin-r-xl" *ngFor="let tab of tabs">
       <spot-chat-tab [tab]="tab" [close]="closeTab" [minimize]="minimizeTab">
         <spot-chat-room
           *ngIf="tab.type === eChatType.ROOM"

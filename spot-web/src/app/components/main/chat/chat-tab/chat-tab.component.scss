@@ -1,47 +1,23 @@
 .tab {
   border: 1px solid var(--background-primary);
+}
 
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 25px;
-    background-color: var(--primary);
-    padding: 5px 5px;
-    box-sizing: border-box;
+.tab-button {
+  display: flex;
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  background-color: var(--primary);
+  border: none;
+  padding: 0;
+  color: white;
 
-    .title {
-      color: white;
-    }
-
-    .icons {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      button {
-        cursor: pointer;
-        outline: none;
-        text-decoration: none;
-        background-color: var(--primary);
-        border: none;
-        margin-left: 3px;
-        padding: 0;
-        color: white;
-
-        &:hover {
-          color: darken(white, 20%);
-          cursor: pointer;
-        }
-
-        i {
-          font-size: var(--icon-regular);
-        }
-      }
-    }
+  span {
+    font-size: 15px;
   }
 
-  .body {
+  &:hover {
+    color: darken(white, 20%);
+    cursor: pointer;
   }
 }

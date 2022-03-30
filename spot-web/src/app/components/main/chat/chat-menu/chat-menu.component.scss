@@ -1,4 +1,4 @@
-.container {
+.chat-menu {
   position: fixed;
   top: 60px;
   right: 0px;
@@ -6,26 +6,23 @@
   border-top: 1px solid var(--background-primary);
 }
 
-.menu-expander-container {
+// Container
+.container {
   position: absolute;
   height: 100%;
   display: flex;
   right: -230px;
   transition: all 0.75s ease;
 }
-
-.menu-expander-container.expanded-semi {
+.container.expanded-semi {
+  right: 0px;
+}
+.container.expanded-full {
   right: 0px;
 }
 
-.menu-expander-container.expanded-full {
-  right: 0px;
-}
-
+// Expander
 .expander {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: none;
   text-decoration: none;
   outline: none;
@@ -35,8 +32,7 @@
   height: 55px;
   border-right: 25px solid var(--background-container);
   border-bottom: 15px solid var(--background-page);
-  background-color: var(--background-page);
-  .icon {
+  .expander-icon {
     color: var(--icon-primary);
     position: absolute;
     left: 15px;
@@ -44,254 +40,84 @@
     font-size: 18px;
   }
   &:hover {
-    .icon {
+    .expander-icon {
       color: var(--primary);
     }
   }
 }
 
 // MENU
-
 .menu.expanded-semi {
   width: 70px;
 }
-
 .menu.expanded-full {
   width: 230px;
 }
-
 .menu {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--background-container);
   width: 230px;
-  height: 100%;
   transition: all 0.75s ease;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 
-  .list-header.expanded-full {
+  .header {
+    margin-top: 8px;
+  }
+  .header.expanded-full {
     flex-direction: row;
   }
-
-  .list-header {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
-    button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: none;
-      text-decoration: none;
-      outline: none;
-      cursor: pointer;
-      background-color: var(--background-container);
-      margin: 0;
-      padding: 15px 10px;
-      flex: 1;
-      font-size: var(--text-regular);
-
-      &:hover {
-        .text {
-          color: var(--primary);
-        }
-        i {
-          color: var(--primary);
-        }
-      }
-
-      .text {
-        margin-right: 3px;
-      }
-
-      i {
-        margin-right: 3px;
-      }
-    }
-
-    button.selected {
-      color: var(--primary);
-    }
-  }
-
-  .search {
-    display: flex;
-    align-items: center;
-    padding: 5px 5px;
-
-    .icon {
-      margin-right: 3px;
-    }
-
-    input {
-      padding: 5px;
-      width: 100%;
-      border: none;
-      outline: none;
-      color: var(--button-text);
-      background-color: var(--background-container);
-      border-bottom: 1px solid var(--input-border);
-    }
-  }
-
-  .list-body {
-    flex: 1;
-
-    .empty {
-      margin-top: 50px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: var(--text-secondary);
-    }
-  }
 }
-
-// FRIENDS
-
-.friend {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  padding: 5px 5px;
+.menu-button {
+  border: none;
+  text-decoration: none;
+  outline: none;
   cursor: pointer;
-
-  .profile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--background-primary);
-
-    img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-    }
-  }
-
-  .text-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-left: 5px;
-
-    .username {
-    }
-
-    .last-message {
-      color: var(--text-secondary);
-    }
-  }
-
-  &:hover .text-container .username {
-    color: var(--primary);
-  }
-}
-
-// ROOMS
-
-.button-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 5px;
-
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    text-decoration: none;
-    outline: none;
-    cursor: pointer;
-    width: 100%;
-    margin: 5px;
-    padding: 10px;
-    background-color: var(--button-background);
-
-    &:hover {
-      background-color: var(--button-background-highlight);
-    }
-
-    .text {
-      color: var(--button-text);
-      margin-right: 3px;
-    }
-
-    i {
-      color: var(--button-text);
-    }
-  }
-}
-
-.room {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  padding: 5px 5px;
-  cursor: pointer;
-
-  .image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--background-primary);
-  }
-
-  .text-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-left: 5px;
-
-    .name {
-    }
-
-    .last-message {
-      color: var(--text-secondary);
-    }
-  }
-
-  &:hover .text-container .name {
+  background: transparent;
+  box-sizing: border-box;
+  margin: 5px;
+  &:hover {
     color: var(--primary);
   }
 }
+.menu-button.selected {
+  color: var(--primary);
+}
+.menu-item {
+  cursor: pointer;
+  &:hover .text {
+    color: var(--primary)
+  }
+}
 
-// TABS
+// IMAGE
+.image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--background-primary);
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+}
 
+// MINI TABS
 .mini-tabs {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   position: absolute;
   transition: all 0.75s ease;
   bottom: 5px;
   right: 5px;
 }
-
 .mini-tabs.expanded-full {
   right: 235px;
 }
-
 .mini-tabs.expanded-semi {
   right: 75px;
 }
-
 .mini-tab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 60px;
   height: 60px;
   border-radius: 30px;
@@ -300,24 +126,16 @@
   cursor: pointer;
 }
 
+// TABS
 .tabs {
   position: absolute;
   bottom: 0px;
   right: 35px;
   transition: all 0.75s ease;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
 }
-
 .tabs.expanded-full {
   right: 265px;
 }
-
 .tabs.expanded-semi {
   right: 105px;
-}
-
-.tab {
-  margin-right: 35px;
 }

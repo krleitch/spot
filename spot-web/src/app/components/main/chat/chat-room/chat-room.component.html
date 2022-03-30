@@ -1,22 +1,22 @@
-<div class="chat-room-container">
-  <div class="chat-header">
-    <span class="count-container">
-      <i class="material-icons icon"> person </i>
-      <span class="count">4 -</span>
+<div class="chat-room col background-container">
+  <div class="row-h-center margin-md">
+    <span class="row-center margin-r-md">
+      <i class="material-icons icon-secondary"> person </i>
+      <span class="text-secondary maring-l-sm">4 -</span>
     </span>
-    <span class="location">QNC (0.5km)</span>
-    <i class="material-icons settings-icon"> settings </i>
+    <span class="flex-fill">QNC (0.5km)</span>
+    <i class="material-icons icon-secondary"> settings </i>
   </div>
-  <div class="messages-container">
-    <div *ngFor="let message of messages" class="message">
+  <div class="col flex-fill padding-md">
+    <div *ngFor="let message of messages" class="row-v-center margin-v-sm">
       <div [class]="getProfilePictureClass('op.png')">
         <img src="../../../../../assets/images/profile/op.png" />
       </div>
-      <span class="content">{{ message.text }}</span>
-      <span class="time">{{ formatTimestamp(message.inserted_at) }}</span>
+      <span class="margin-l-md flex-fill">{{ message.text }}</span>
+      <span class="text-secondary text-sm">{{ formatTimestamp(message.inserted_at) }}</span>
     </div>
   </div>
-  <div class="chat-bar">
+  <div class="row-center margin-lg">
     <span
       #chat
       contenteditable="true"
@@ -24,7 +24,7 @@
       class="chat"
       (input)="onTextInput($event)"
     ></span>
-    <button class="submit" (click)="submit()">
+    <button class="button-primary margin-l-md" (click)="submit()">
       {{ 'MAIN.CHAT_ROOM.SUBMIT' | translate }}
     </button>
   </div>
