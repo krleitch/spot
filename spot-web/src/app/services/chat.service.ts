@@ -5,7 +5,11 @@ import { Socket as PhoenixSocket } from 'phoenix';
 import { Observable } from 'rxjs';
 
 // models
-import { CreateChatRoomRequest } from '@models/chat';
+import {
+  CreateChatRoomRequest,
+  GetChatRoomsRequest,
+  GetChatRoomsResponse
+} from '@models/chat';
 
 // env
 import { environment } from 'src/environments/environment';
@@ -39,15 +43,17 @@ export class ChatService {
   // }
 
   // Requests to Spot-Chat-Server
-  getRooms(): any {
-    return this.http.get<any>(`${this.chatBaseUrl}/rooms`);
+  getChatRooms(
+    _request: GetChatRoomsRequest
+  ): Observable<GetChatRoomsResponse> {
+    return this.http.get<GetChatRoomsResponse>(`${this.chatBaseUrl}/rooms`);
   }
 
   createChatRoom(request: CreateChatRoomRequest) {
     return this.http.post<any>(`${this.chatBaseUrl}/rooms`, request);
   }
 
-  connectToChannel(roomId: number): any {
+  connectToChannel(roomId: string): any {
     if (!this.phoenixSocket) {
       return;
     }

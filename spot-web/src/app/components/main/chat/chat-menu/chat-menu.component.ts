@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
+import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
 
 // Services
 import { ChatService } from '@services/chat.service';
@@ -14,7 +15,7 @@ import { ModalService } from '@services/modal.service';
 
 // Models
 import { Friend } from '@models/friend';
-import { ChatType, Tab, ChatRoom, CreateChatRoomRequest } from '@models/chat';
+import { ChatType, Tab, ChatRoom, GetChatRoomsRequest } from '@models/chat';
 
 enum MenuStatus {
   HIDDEN = 'HIDDEN',
@@ -43,7 +44,7 @@ export class ChatMenuComponent implements OnInit {
   // Tabs
   tabs: Tab[] = [];
   minimizedTabs: Tab[] = [];
-  rooms: ChatRoom[] = [];
+  chatRooms$: Observable<ChatRoom[]>;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -54,6 +55,15 @@ export class ChatMenuComponent implements OnInit {
   ngOnInit(): void {
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
+    );
+
+    this.chatRooms$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectChatRooms)
+    );
+
+    const getChatRoomsRequest: GetChatRoomsRequest = {};
+    this.store$.dispatch(
+      new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
     );
   }
 
@@ -144,12 +154,7 @@ export class ChatMenuComponent implements OnInit {
     }
   }
 
-  searchRooms() {
-    this.chatService.getRooms().subscribe((result) => {
-      console.log(result);
-      this.rooms = result.data;
-    });
-  }
+  searchRooms() {}
 
   createRoom() {
     this.modalService

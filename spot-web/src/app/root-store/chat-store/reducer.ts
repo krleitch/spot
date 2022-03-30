@@ -8,6 +8,31 @@ export function featureReducer(state = initialState, action: Actions): State {
         ...initialState
       };
     }
+    case ActionTypes.ADD_CHAT_ROOM_STORE: {
+      return {
+        ...state,
+        chatRooms: state.chatRooms.concat(action.request.chatRoom)
+      };
+    }
+    case ActionTypes.GET_CHAT_ROOMS_REQUEST: {
+      return {
+        ...state,
+        loadingChatRooms: true
+      };
+    }
+    case ActionTypes.GET_CHAT_ROOMS_SUCCESS: {
+      return {
+        ...state,
+        chatRooms: action.response.chatRooms,
+        loadingChatRooms: false
+      };
+    }
+    case ActionTypes.GET_CHAT_ROOMS_FAILURE: {
+      return {
+        ...state,
+        loadingChatRooms: false
+      };
+    }
     default: {
       return state;
     }

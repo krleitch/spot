@@ -673,7 +673,7 @@ router.delete(
   )
 );
 
-// Upload an image
+// Upload a chat room photo
 router.post(
   '/upload/chat',
   ErrorHandler.catchAsync(

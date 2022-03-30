@@ -45,6 +45,8 @@
           type="text"
         />
       </div>
+
+      <!-- Chat Rooms -->
       <div *ngIf="selectedChatOption === eChatType.ROOM" class="list-body">
         <div class="button-container">
           <button (click)="searchRooms()">
@@ -64,32 +66,44 @@
             <i class="material-icons">add_circle_outline</i>
           </button>
         </div>
-        <div *ngIf="rooms.length > 0; else norooms">
-          <div
-            class="room"
-            *ngFor="let room of rooms"
-            (click)="createRoomTab(eChatType.ROOM, room)"
-          >
-            <span class="image">{{ getMinimizedName(room.name) }}</span>
-            <span
-              *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
-              class="text-container"
+        <div *ngIf="chatRooms$ | async as chatRooms">
+          <div *ngIf="chatRooms.length > 0; else noRooms">
+            <div
+              class="room"
+              *ngFor="let chatRoom of chatRooms"
+              (click)="createRoomTab(eChatType.ROOM, room)"
             >
-              <span class="name">{{ room.name }}</span>
-              <span class="last-message">testing</span>
-            </span>
+              <span class="image">
+                <span *ngIf="!chatRoom.imageSrc">{{
+                  getMinimizedName(chatRoom.name)
+                }}</span>
+                <img
+                  *ngIf="chatRoom.imageSrc"
+                  [src]="chatRoom.imageSrc"
+                />
+              </span>
+              <span
+                *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+                class="text-container"
+              >
+                <span class="name">{{ chatRoom.name }}</span>
+                <span class="last-message">testing</span>
+              </span>
+            </div>
           </div>
+          <ng-template #noRooms>
+            <div class="empty">
+              <span>{{ 'MAIN.CHAT_MENU.ADD_ROOMS' | translate }}</span>
+              <i class="material-icons">group_add</i>
+            </div>
+          </ng-template>
         </div>
-        <ng-template #norooms>
-          <div class="empty">
-            <span>{{ 'MAIN.CHAT_MENU.ADD_ROOMS' | translate }}</span>
-            <i class="material-icons">group_add</i>
-          </div>
-        </ng-template>
       </div>
+
+      <!-- Friends -->
       <div *ngIf="selectedChatOption === eChatType.FRIEND" class="list-body">
         <div *ngIf="friends$ | async as friends">
-          <div *ngIf="friends.length > 0; else nofriends">
+          <div *ngIf="friends.length > 0; else noFriends">
             <div
               class="friend"
               *ngFor="let friend of friends"
@@ -113,7 +127,7 @@
               </span>
             </div>
           </div>
-          <ng-template #nofriends>
+          <ng-template #noFriends>
             <div class="empty">
               <span>{{ 'MAIN.CHAT_MENU.ADD_FRIENDS' | translate }}</span>
               <i class="material-icons">person_add</i>

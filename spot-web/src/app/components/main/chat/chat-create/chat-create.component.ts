@@ -2,12 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 
+// store
+import { Store } from '@ngrx/store';
+import { ChatStoreActions } from '@store/chat-store';
+import { RootStoreState } from '@store';
+
 // Services
 import { ChatService } from '@services/chat.service';
+import { UserService } from '@services/user.service';
 import { ModalService } from '@services/modal.service';
 
 // Models
 import { ModalUploadPhotoResult, ModalData } from '@models/modal';
+import {
+  UploadChatRoomPhotoRequest,
+  UploadChatRoomPhotoResponse
+} from '@models/image';
+import {
+  CreateChatRoomRequest,
+  CreateChatRoomResponse,
+  AddChatRoomStore
+} from '@models/chat';
 
 // Validators
 import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
@@ -31,14 +46,16 @@ export class ChatCreateComponent implements OnInit {
   createLoading = false;
 
   // Is the chat open to others, or invite only
-  isPublic = true;
+  isPrivate = false;
   // Image
   image: File;
   imageSrc: string;
 
   constructor(
+    private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -71,9 +88,51 @@ export class ChatCreateComponent implements OnInit {
 
   createRoom(): void {
     if (this.createChatForm.valid) {
-      console.log('submit form');
-
-      // upload the image first
+      // Upload image first, if it exists
+      if (this.image) {
+        const uploadRequest: UploadChatRoomPhotoRequest = {
+          image: this.image
+        };
+        this.userService
+          .uploadChatRoomPhoto(uploadRequest)
+          .pipe(take(1))
+          .subscribe((response: UploadChatRoomPhotoResponse) => {
+            const chatRequest: CreateChatRoomRequest = {
+              name: this.name.value,
+              description: this.description.value,
+              private: this.isPrivate,
+              imageSrc: response.imageSrc
+            };
+            this.chatService
+              .createChatRoom(chatRequest)
+              .pipe(take(1))
+              .subscribe((response: CreateChatRoomResponse) => {
+                const request: AddChatRoomStore = {
+                  chatRoom: response.chatRoom
+                };
+                this.store$.dispatch(
+                  new ChatStoreActions.AddChatRoomStoreAction(request)
+                );
+              });
+          });
+      } else {
+        const chatRequest: CreateChatRoomRequest = {
+          name: this.name.value,
+          description: this.description.value,
+          private: this.isPrivate
+        };
+        this.chatService
+          .createChatRoom(chatRequest)
+          .pipe(take(1))
+          .subscribe((response: CreateChatRoomResponse) => {
+            const request: AddChatRoomStore = {
+              chatRoom: response.chatRoom
+            };
+            this.store$.dispatch(
+              new ChatStoreActions.AddChatRoomStoreAction(request)
+            );
+          });
+      }
     } else {
       validateAllFormFields(this.createChatForm);
     }
@@ -111,8 +170,8 @@ export class ChatCreateComponent implements OnInit {
       });
   }
 
-  toggleIsPublic() {
-    this.isPublic = !this.isPublic;
+  toggleIsPrivate() {
+    this.isPrivate = !this.isPrivate;
   }
 
   close(): void {

@@ -17,7 +17,7 @@ import {
   UserActions,
   UserFacebookActions,
   UserGoogleActions
-} from '@src/app/root-store/user-store';
+} from '@store/user-store';
 import { UserStoreSelectors, RootStoreState } from '@store';
 
 // Services

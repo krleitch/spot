@@ -94,8 +94,8 @@
       <div class="row-center">
         <button
           class="button-switch left"
-          [class.selected]="isPublic"
-          (click)="toggleIsPublic()"
+          [class.selected]="!isPrivate"
+          (click)="toggleIsPrivate()"
         >
           <div class="row-center">
             <span class="material-icons button-icon"> meeting_room </span>
@@ -106,8 +106,8 @@
         </button>
         <button
           class="button-switch right"
-          [class.selected]="!isPublic"
-          (click)="toggleIsPublic()"
+          [class.selected]="isPrivate"
+          (click)="toggleIsPrivate()"
         >
           <div class="row-center">
             <span class="material-icons button-icon"> lock </span>

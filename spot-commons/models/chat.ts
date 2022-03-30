@@ -18,8 +18,8 @@ export interface Message {
   inserted_at: Date;
   text: string;
   user: {
-    id: string
-  }
+    id: string;
+  };
   // timestamp: Date;
   // owned?: boolean;
   // profilePicture?: number; // The enumeration of the image (colour)
@@ -32,27 +32,38 @@ export interface NewMessage {
 }
 
 export interface ChatRoom {
-  id: number;
-  topic: string;
+  id: string;
   name: string;
+  description: string;
+  imageSrc: string;
+  private: boolean;
 }
 
-// Upload the chat room image to the spot-server
-export interface UploadChatRoomImageRequest {
-  image: File
-}
-export interface UploadChatRoomImageResponse {
-  imageSrc: string;
+// Store
+
+export interface AddChatRoomStore {
+  chatRoom: ChatRoom;
 }
 
 // Chat-Server Requests
 export interface CreateChatRoomRequest {
   name: string;
   description: string;
-  public: boolean;
-  imageSrc: string;
+  private: boolean;
+  imageSrc?: string;
+}
+export interface CreateChatRoomResponse {
+  chatRoom: ChatRoom;
 }
 
-export interface findAllChatRooms {
+export interface GetChatRoomsRequest {}
 
+export interface GetChatRoomsResponse {
+  chatRooms: Array<ChatRoom>;
+  pagination: {
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    totalEntries: number;
+  };
 }
