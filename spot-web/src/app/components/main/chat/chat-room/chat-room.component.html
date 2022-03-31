@@ -1,21 +1,42 @@
 <div class="chat-room col background-container">
-  <div class="row-h-center margin-md">
+  <!-- Header -->
+  <div class="header row-h-center margin-md">
     <span class="row-center margin-r-md">
-      <i class="material-icons icon-secondary"> person </i>
-      <span class="text-secondary maring-l-sm">4 -</span>
+      <i class="material-icons icon-md icon-secondary"> person </i>
+      <span class="text-secondary margin-l-sm">4 -</span>
     </span>
     <span class="flex-fill">QNC (0.5km)</span>
-    <i class="material-icons icon-secondary"> settings </i>
   </div>
+  <!-- Body -->
   <div class="col flex-fill padding-md">
-    <div *ngFor="let message of messages" class="row-v-center margin-v-sm">
-      <div [class]="getProfilePictureClass('op.png')">
-        <img src="../../../../../assets/images/profile/op.png" />
+    <div
+      *ngFor="let message of messages"
+      class="row-center margin-v-sm"
+    >
+      <div *ngIf="!message.owned; else owned" class="row-center align-left">
+        <!-- Message -->
+        <div [class]="getProfilePictureClass('op.png')">
+          <img src="../../../../../assets/images/profile/op.png" />
+        </div>
+        <span class="message row-h-center margin-l-md flex-fill">{{
+          message.text
+        }}</span>
       </div>
-      <span class="margin-l-md flex-fill">{{ message.text }}</span>
-      <span class="text-secondary text-sm">{{ formatTimestamp(message.inserted_at) }}</span>
+      <ng-template #owned>
+        <!-- Owned Message -->
+        <div class="row-center align-right">
+          <span
+            class="message row-h-center flex-fill margin-r-md"
+            >{{ message.text }}</span
+          >
+          <div [class]="getProfilePictureClass('op.png')">
+            <img src="../../../../../assets/images/profile/op.png" />
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
+  <!-- Chat Bar -->
   <div class="row-center margin-lg">
     <span
       #chat

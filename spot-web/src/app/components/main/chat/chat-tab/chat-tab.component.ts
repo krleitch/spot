@@ -7,9 +7,9 @@ import { ChatType, Tab } from '@models/chat';
 })
 export class ChatTabComponent implements OnInit {
   chatExpanded = true;
-  @Input('tab') tab: Tab;
-  @Input('close') close: (_id: string) => void;
-  @Input('minimize') minimize: (_id: string) => void;
+  @Input() tab: Tab;
+  @Input() close: (_id: string) => void;
+  @Input() minimize: (_id: string) => void;
 
   constructor() {}
 

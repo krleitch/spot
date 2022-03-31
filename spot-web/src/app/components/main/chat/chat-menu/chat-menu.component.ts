@@ -93,22 +93,24 @@ export class ChatMenuComponent implements OnInit {
     // if we add a new tab minimize the lru
   }
 
-  createFriendTab(type: ChatType, name: string) {
+  createFriendTab(friend: Friend) {
     // check if the tab exists already
     const newTab: Tab = {
       id: uuidv4(),
-      name: name,
-      type: type
+      name: friend.username,
+      imageSrc: friend.profilePictureSrc,
+      type: ChatType.FRIEND
     };
     this.tabs.push(newTab);
   }
 
-  createRoomTab(type: ChatType, room: ChatRoom) {
+  createRoomTab(room: ChatRoom) {
     // check if the tab exists already
     const newTab: Tab = {
       id: uuidv4(),
       name: room.name,
-      type: type,
+      imageSrc: room.imageSrc,
+      type: ChatType.ROOM,
       data: room
     };
     this.tabs.push(newTab);
@@ -163,12 +165,5 @@ export class ChatMenuComponent implements OnInit {
       .subscribe((result) => {
         // Open the room, if a room was created
       });
-    // const request: CreateChatRoomRequest = {
-    // topic: 'lobby',
-    // name: 'test room'
-    // };
-    // this.chatService.createChatRoom(request).subscribe((result) => {
-    // this.rooms.push(result);
-    // });
   }
 }

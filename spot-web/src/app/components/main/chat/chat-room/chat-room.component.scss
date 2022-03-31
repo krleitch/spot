@@ -3,6 +3,16 @@
   height: 600px;
 }
 
+.header {
+  margin-left: 55px;
+}
+
+.message {
+  background-color: var(--background-page);
+  border-radius: 10px;
+  padding: 5px;
+}
+
 // Content Editable
 .chat {
   flex: 1;

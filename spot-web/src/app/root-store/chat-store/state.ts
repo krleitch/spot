@@ -8,9 +8,11 @@ import { ChatRoom, Message } from '@models/chat';
 export interface State {
   loadingChatRooms: boolean;
   chatRooms: ChatRoom[];
+  openChatRooms: string[];
 }
 
 export const initialState: State = {
   loadingChatRooms: false,
-  chatRooms: []
+  chatRooms: [],
+  openChatRooms: []
 };

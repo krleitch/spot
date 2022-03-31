@@ -63,7 +63,7 @@
           <button class="button full-width margin-b-md" (click)="searchRooms()">
             <span
               *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
-              class="text"
+              class="text margin-r-sm"
               >{{ 'MAIN.CHAT_MENU.DISCOVER_ROOMS' | translate }}</span
             >
             <i class="material-icons button-icon">travel_explore</i>
@@ -71,7 +71,7 @@
           <button class="button full-width margin-b-md" (click)="createRoom()">
             <span
               *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
-              class="text"
+              class="text margin-r-sm"
               >{{ 'MAIN.CHAT_MENU.CREATE_ROOM' | translate }}</span
             >
             <i class="material-icons button-icon">add_circle_outline</i>
@@ -84,7 +84,7 @@
             <div
               class="menu-item row-center padding-md"
               *ngFor="let chatRoom of chatRooms"
-              (click)="createRoomTab(eChatType.ROOM, chatRoom)"
+              (click)="createRoomTab(chatRoom)"
             >
               <span class="image">
                 <span *ngIf="!chatRoom.imageSrc" class="row-center full-size">{{
@@ -119,7 +119,7 @@
             <div
               class="menu-item row-center padding-md"
               *ngFor="let friend of friends"
-              (click)="createFriendTab(eChatType.FRIEND, friend.username)"
+              (click)="createFriendTab(friend)"
             >
               <span class="row-center image">
                 <span *ngIf="!friend.profilePictureSrc" class="row-center full-size">{{

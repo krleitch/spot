@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 import { ChatService } from '@services/chat.service';
 
 // Assets
-import { Message, NewMessage, ChatRoom } from '@models/chat';
+import { Message, CreateMessage, ChatRoom } from '@models/chat';
 
 @Component({
   selector: 'spot-chat-room',
@@ -59,7 +59,7 @@ export class ChatRoomComponent implements OnInit {
 
   submit(): void {
     const content = this.chat.nativeElement.innerHTML;
-    const newMessage: NewMessage = {
+    const newMessage: CreateMessage = {
       text: content
     };
     this.channel
@@ -78,9 +78,8 @@ export class ChatRoomComponent implements OnInit {
   joinRoom(): void {
     this.channel
       .join()
-      .receive('ok', ({ messages }) => {
-        console.log('catching up', messages);
-        this.messages = messages;
+      .receive('ok', ({ messages }: { messages: Message[] }) => {
+        this.messages = messages.reverse();
       })
       .receive('error', ({ reason }) => {
         console.log('failed join', reason);

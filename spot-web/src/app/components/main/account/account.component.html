@@ -22,23 +22,15 @@
                 <span class="material-icons icon"> add_a_photo </span>
               </div>
             </div>
-            <img class="op"
+            <img
+              class="op"
               *ngIf="!profilePictureSrc"
               src="../../../../assets/images/op_large.png"
             />
-            <img
-              *ngIf="profilePictureSrc"
-              [src]="profilePictureSrc"
-            />
-
+            <img *ngIf="profilePictureSrc" [src]="profilePictureSrc" />
           </div>
-          <!-- Age -->
-          <div class="age">
-            <span class="material-icons icon"> cake </span>
-            <span class="text">
-              {{ formatBirthday(user.createdAt) }}
-            </span>
-          </div>
+        </div>
+        <div class="body">
           <!-- Verification -->
           <div *ngIf="user.verifiedAt === null; else verified">
             <div *ngIf="user.email">
@@ -70,8 +62,13 @@
               </span>
             </div>
           </ng-template>
-        </div>
-        <div class="body">
+          <!-- Age -->
+          <div class="row-h-center">
+            <span class="material-icons icon-primary"> cake </span>
+            <span class="margin-l-sm">
+              {{ formatBirthday(user.createdAt) }}
+            </span>
+          </div>
           <!-- Email -->
           <div class="info-container">
             <span class="subheader">

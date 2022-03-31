@@ -1,5 +1,33 @@
 .tab {
   border: 1px solid var(--background-primary);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.header {
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--background-page);
+  img {
+    width: 50px;
+    height: 50px;
+
+  }
+}
+
+.name {
+  margin-left: 55px;
 }
 
 .tab-button {

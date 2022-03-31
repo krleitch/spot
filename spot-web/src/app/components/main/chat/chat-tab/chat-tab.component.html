@@ -1,8 +1,12 @@
 <div class="tab">
   <div
-    class="row-h-center justify-content-between background-primary full-width padding-v-xs padding-h-sm border-box"
+    class="header row-h-center justify-content-between background-primary full-width padding-v-xs padding-h-sm border-box"
   >
-    <span class="text-md text-white">{{ tab.name }}</span>
+    <span class="image row-center margin-sm">
+      <img *ngIf="tab.imageSrc" [src]="tab.imageSrc" />
+      <span *ngIf="!tab.imageSrc"> T </span>
+    </span>
+    <span class="name text-md text-white">{{ tab.name }}</span>
     <div class="row-center">
       <button class="tab-button margin-l-sm" (click)="minimizeTab()">
         <span class="material-icons">remove</span>
