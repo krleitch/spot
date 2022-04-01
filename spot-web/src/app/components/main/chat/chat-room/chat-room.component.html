@@ -9,14 +9,16 @@
   </div>
   <!-- Body -->
   <div class="col flex-fill padding-md">
-    <div
-      *ngFor="let message of messages"
-      class="row-center margin-v-sm"
-    >
+    <div *ngFor="let message of messages" class="row-center margin-v-sm">
       <div *ngIf="!message.owned; else owned" class="row-center align-left">
         <!-- Message -->
-        <div [class]="getProfilePictureClass('op.png')">
-          <img src="../../../../../assets/images/profile/op.png" />
+        <div [class]="getProfilePictureClass(message.profilePictureNum)">
+          <img
+            [src]="
+              '../../../../../assets/images/profile/' +
+              message.profilePictureSrc
+            "
+          />
         </div>
         <span class="message row-h-center margin-l-md flex-fill">{{
           message.text
@@ -25,12 +27,16 @@
       <ng-template #owned>
         <!-- Owned Message -->
         <div class="row-center align-right">
-          <span
-            class="message row-h-center flex-fill margin-r-md"
-            >{{ message.text }}</span
-          >
-          <div [class]="getProfilePictureClass('op.png')">
-            <img src="../../../../../assets/images/profile/op.png" />
+          <span class="message row-h-center flex-fill margin-r-md">{{
+            message.text
+          }}</span>
+          <div [class]="getProfilePictureClass(message.profilePictureNum)">
+            <img
+              [src]="
+                '../../../../../assets/images/profile/' +
+                message.profilePictureSrc
+              "
+            />
           </div>
         </div>
       </ng-template>

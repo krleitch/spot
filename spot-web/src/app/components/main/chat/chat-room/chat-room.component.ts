@@ -89,7 +89,6 @@ export class ChatRoomComponent implements OnInit {
       });
 
     this.channel.on('message_created', (message) => {
-      console.log('got message', message);
       this.messages.push(message);
     });
   }

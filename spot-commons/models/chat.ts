@@ -19,6 +19,8 @@ export interface Message {
   insertedAt: Date;
   text: string;
   owned: boolean;
+  profilePictureNum: Number;
+  profilePictureSrc: string;
   // timestamp: Date;
   // owned?: boolean;
   // profilePicture?: number; // The enumeration of the image (colour)
