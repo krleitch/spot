@@ -1,23 +1,46 @@
-import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  AfterViewInit,
+  AfterViewChecked,
+  ViewChild,
+  Input
+} from '@angular/core';
+import { take } from 'rxjs/operators';
 
 import { ChatService } from '@services/chat.service';
 
 // Assets
-import { Message, CreateMessage, ChatRoom } from '@models/chat';
+import {
+  Message,
+  CreateMessage,
+  ChatRoom,
+  GetMessagesRequest,
+  GetMessagesResponse,
+  ChatPagination
+} from '@models/chat';
 
 @Component({
   selector: 'spot-chat-room',
   templateUrl: './chat-room.component.html',
   styleUrls: ['./chat-room.component.scss']
 })
-export class ChatRoomComponent implements OnInit {
+export class ChatRoomComponent
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   // Chat Text Content
-  @ViewChild('chat') chat: ElementRef;
+  @ViewChild('chat') chat: ElementRef<HTMLElement>;
+  @ViewChild('create') create: ElementRef;
+  @ViewChild('anchor') anchor: ElementRef<HTMLElement>;
   @Input() chatRoom: ChatRoom;
+
+  private observer: IntersectionObserver;
 
   currentLength = 0;
   channel: any;
   messages: Message[] = [];
+  beforeCursor: string = null;
 
   constructor(private chatService: ChatService) {}
 
@@ -29,6 +52,29 @@ export class ChatRoomComponent implements OnInit {
     });
     this.joinRoom();
   }
+
+  ngAfterViewInit() {
+    this.observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && this.beforeCursor) {
+        const request: GetMessagesRequest = {
+          roomId: this.chatRoom.id,
+          before: this.beforeCursor
+        };
+        this.chatService
+          .getMessages(request)
+          .pipe(take(1))
+          .subscribe((response: GetMessagesResponse) => {
+            // null
+          });
+      } else {
+        // none
+      }
+    });
+    this.observer.observe(this.anchor.nativeElement);
+    this.chat.nativeElement.scrollTop = this.chat.nativeElement.scrollHeight;
+  }
+
+  ngAfterViewChecked() {}
 
   formatTimestamp(timestamp): string {
     const time = new Date(timestamp);
@@ -48,7 +94,7 @@ export class ChatRoomComponent implements OnInit {
   onTextInput(event): void {
     // remove <br> if empty
     if (event.target.textContent.length === 0) {
-      this.chat.nativeElement.innerHTML = '';
+      this.create.nativeElement.innerHTML = '';
     }
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(
@@ -58,7 +104,7 @@ export class ChatRoomComponent implements OnInit {
   }
 
   submit(): void {
-    const content = this.chat.nativeElement.innerHTML;
+    const content = this.create.nativeElement.innerHTML;
     const newMessage: CreateMessage = {
       text: content
     };
@@ -78,9 +124,19 @@ export class ChatRoomComponent implements OnInit {
   joinRoom(): void {
     this.channel
       .join()
-      .receive('ok', ({ messages }: { messages: Message[] }) => {
-        this.messages = messages.reverse();
-      })
+      .receive(
+        'ok',
+        ({
+          messages,
+          pagination
+        }: {
+          messages: Message[];
+          pagination: ChatPagination;
+        }) => {
+          this.messages = messages.reverse();
+          this.beforeCursor = pagination.before;
+        }
+      )
       .receive('error', ({ reason }) => {
         console.log('failed join', reason);
       })

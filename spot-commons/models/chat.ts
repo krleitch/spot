@@ -58,13 +58,24 @@ export interface CreateMessage {
 export interface GetChatRoomsRequest {}
 
 export interface ChatPagination {
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  totalEntries: number;
+  before: string;
+  after: string;
+  total_count: number;
+  limit: number;
 }
 
 export interface GetChatRoomsResponse {
   chatRooms: Array<ChatRoom>;
   pagination: ChatPagination;
 }
+
+export interface GetMessagesRequest {
+  roomId: string;
+  before: string;
+}
+
+export interface GetMessagesResponse {
+  messages: Message[];
+}
+
+

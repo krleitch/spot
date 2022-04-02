@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Socket as PhoenixSocket } from 'phoenix';
 
 import { Observable } from 'rxjs';
@@ -8,7 +8,9 @@ import { Observable } from 'rxjs';
 import {
   CreateChatRoomRequest,
   GetChatRoomsRequest,
-  GetChatRoomsResponse
+  GetChatRoomsResponse,
+  GetMessagesRequest,
+  GetMessagesResponse
 } from '@models/chat';
 
 // env
@@ -47,6 +49,17 @@ export class ChatService {
     _request: GetChatRoomsRequest
   ): Observable<GetChatRoomsResponse> {
     return this.http.get<GetChatRoomsResponse>(`${this.chatBaseUrl}/rooms`);
+  }
+
+  getMessages(request: GetMessagesRequest): Observable<GetMessagesResponse> {
+    let params = new HttpParams();
+    if (request.before) {
+      params = params.append('before', request.before);
+    }
+    return this.http.get<GetMessagesResponse>(
+      `${this.chatBaseUrl}/rooms/${request.roomId}/messages`,
+      { params }
+    );
   }
 
   createChatRoom(request: CreateChatRoomRequest) {

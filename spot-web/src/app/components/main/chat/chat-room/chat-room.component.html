@@ -8,7 +8,8 @@
     <span class="flex-fill">QNC (0.5km)</span>
   </div>
   <!-- Body -->
-  <div class="col flex-fill padding-md">
+  <div #chat class="col flex-fill padding-md overflow-auto">
+    <div #anchor></div>
     <div *ngFor="let message of messages" class="row-center margin-v-sm">
       <div *ngIf="!message.owned; else owned" class="row-center align-left">
         <!-- Message -->
@@ -45,7 +46,7 @@
   <!-- Chat Bar -->
   <div class="row-center margin-lg">
     <span
-      #chat
+      #create
       contenteditable="true"
       attr.ph="{{ 'MAIN.CHAT_ROOM.CHAT_PLACEHOLDER' | translate }}"
       class="chat"
