@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChatType, Tab } from '@models/chat';
+import { ChatType, ChatTab } from '@models/chat';
 @Component({
   selector: 'spot-chat-tab',
   templateUrl: './chat-tab.component.html',
@@ -7,7 +7,7 @@ import { ChatType, Tab } from '@models/chat';
 })
 export class ChatTabComponent implements OnInit {
   chatExpanded = true;
-  @Input() tab: Tab;
+  @Input() tab: ChatTab;
   @Input() close: (_id: string) => void;
   @Input() minimize: (_id: string) => void;
 

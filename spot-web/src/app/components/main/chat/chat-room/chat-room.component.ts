@@ -8,7 +8,9 @@ import {
   Input
 } from '@angular/core';
 import { take } from 'rxjs/operators';
+import { Channel as PhoenixChannel } from 'phoenix';
 
+// Services
 import { ChatService } from '@services/chat.service';
 
 // Assets
@@ -30,17 +32,18 @@ export class ChatRoomComponent
   implements OnInit, AfterViewInit, AfterViewChecked
 {
   // Chat Text Content
-  @ViewChild('chat') chat: ElementRef<HTMLElement>;
-  @ViewChild('create') create: ElementRef;
-  @ViewChild('anchor') anchor: ElementRef<HTMLElement>;
+  @ViewChild('chat') chat: ElementRef<HTMLElement>; // chat messages container
+  @ViewChild('create') create: ElementRef; // editable content
+  @ViewChild('anchor') anchor: ElementRef<HTMLElement>; // On scroll trigger
   @Input() chatRoom: ChatRoom;
 
   private observer: IntersectionObserver;
 
   currentLength = 0;
-  channel: any;
+  channel: PhoenixChannel;
   messages: Message[] = [];
   beforeCursor: string = null;
+  disableScrollToBottom = false;
 
   constructor(private chatService: ChatService) {}
 
@@ -64,31 +67,62 @@ export class ChatRoomComponent
           .getMessages(request)
           .pipe(take(1))
           .subscribe((response: GetMessagesResponse) => {
-            // null
+            this.messages = response.messages.reverse().concat(this.messages);
+            this.beforeCursor = response.pagination.before;
           });
       } else {
         // none
       }
     });
     this.observer.observe(this.anchor.nativeElement);
-    this.chat.nativeElement.scrollTop = this.chat.nativeElement.scrollHeight;
   }
 
-  ngAfterViewChecked() {}
+  scrollChatToBottom() {
+    if (this.disableScrollToBottom) {
+      return;
+    }
+    try {
+      this.chat.nativeElement.scrollTop = this.chat.nativeElement.scrollHeight;
+    } catch (err) {
+      // None
+    }
+  }
+
+  ngAfterViewChecked() {
+    this.scrollChatToBottom();
+  }
+
+  onScroll() {
+    const element = this.chat.nativeElement;
+    const atBottom =
+      element.scrollHeight - element.scrollTop === element.clientHeight;
+    if (this.disableScrollToBottom && atBottom) {
+      this.disableScrollToBottom = false;
+    } else {
+      this.disableScrollToBottom = true;
+    }
+  }
 
   formatTimestamp(timestamp): string {
+    const days = ['Sun', 'Mon', 'Tue', 'Web', 'Thu', 'Fri', 'Sat'];
     const time = new Date(timestamp);
     return (
-      time.getHours().toString() +
+      days[time.getDay()] +
+      ' ' +
+      ((time.getHours() % 12) + 1).toString() +
       ':' +
       time.getMinutes().toString() +
-      ':' +
-      time.getSeconds().toString()
+      ' ' +
+      (time.getHours() >= 12 ? 'PM' : 'AM')
     );
   }
 
   getProfilePictureClass(index): string {
-    return this.chatService.getProfilePictureClass(index);
+    if (index === -1) {
+      return 'profile-sm profile-position-owned profile-op';
+    }
+    // the index should already be in the proper range, but this is just for safety
+    return 'profile-sm profile-position profile-' + index;
   }
 
   onTextInput(event): void {
@@ -151,5 +185,37 @@ export class ChatRoomComponent
 
   leaveRoom(): void {
     this.chatService.disconnectFromChannel(this.channel);
+  }
+
+  showProfilePicture(index: number, owned: boolean): boolean {
+    // Last message should show
+    if (index + 1 >= this.messages.length) {
+      return true;
+    }
+    // If its of the same owned status dont show it
+    // But if its seperated by a date cahnge then show
+    const message = this.messages[index];
+    const nextMessage = this.messages[index + 1];
+    return (
+      owned !== nextMessage.owned ||
+      new Date(nextMessage.insertedAt).getTime() -
+        new Date(message.insertedAt).getTime() >
+        300000
+    );
+  }
+
+  showDate(index: number): boolean {
+    // If its the first message
+    if (index === 0) {
+      return true;
+    }
+    const message = this.messages[index];
+    const previousMessage = this.messages[index - 1];
+    // if time difference is greater than 5 minutes
+    return (
+      new Date(message.insertedAt).getTime() -
+        new Date(previousMessage.insertedAt).getTime() >
+      300000
+    );
   }
 }

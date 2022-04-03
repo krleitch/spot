@@ -4,6 +4,8 @@ import { Action } from '@ngrx/store';
 import { SpotError } from '@exceptions/error';
 import {
   AddChatRoomStore,
+  AddOpenChatStore,
+  RemoveOpenChatStore,
   GetChatRoomsRequest,
   GetChatRoomsResponse
 } from '@models/chat';
@@ -14,7 +16,9 @@ export enum ActionTypes {
   GET_CHAT_ROOMS_REQUEST = '[Chat] Get Chat Rooms Request',
   GET_CHAT_ROOMS_SUCCESS = '[Chat] Get Chat Rooms Success',
   GET_CHAT_ROOMS_FAILURE = '[Chat] Get Chat Rooms Failure',
-  ADD_CHAT_ROOM_STORE = ' [Chat] Add Chat Room Store'
+  ADD_CHAT_ROOM_STORE = '[Chat] Add Chat Room Store',
+  ADD_OPEN_CHAT_STORE = '[Chat] Add Open Chat Store',
+  REMOVE_OPEN_CHAT_STORE = '[Chat] Remove Open Chat Store'
 }
 
 // Generic Actions
@@ -46,6 +50,14 @@ export class AddChatRoomStoreAction implements Action {
   readonly type = ActionTypes.ADD_CHAT_ROOM_STORE;
   constructor(public request: AddChatRoomStore) {}
 }
+export class AddOpenChatStoreAction implements Action {
+  readonly type = ActionTypes.ADD_OPEN_CHAT_STORE;
+  constructor(public request: AddOpenChatStore) {}
+}
+export class RemoveOpenChatStoreAction implements Action {
+  readonly type = ActionTypes.REMOVE_OPEN_CHAT_STORE;
+  constructor(public request: RemoveOpenChatStore) {}
+}
 
 export type Actions =
   | GenericFailureAction
@@ -53,4 +65,6 @@ export type Actions =
   | GetChatRoomsRequestAction
   | GetChatRoomsFailureAction
   | GetChatRoomsSuccessAction
-  | AddChatRoomStoreAction;
+  | AddChatRoomStoreAction
+  | AddOpenChatStoreAction
+  | RemoveOpenChatStoreAction;

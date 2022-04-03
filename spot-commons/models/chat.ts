@@ -7,12 +7,19 @@ export enum ChatType {
   ROOM = "ROOM",
   FRIEND = "FRIEND",
 }
-export interface Tab {
+export interface ChatTab {
   id: string;
   type: ChatType;
   name: string;
   imageSrc: string;
-  data?: ChatRoom; // topic is on ChatType Room
+  data: ChatRoom; // topic is on ChatType Room
+}
+export interface ChatRoom {
+  id: string;
+  name: string;
+  description: string;
+  imageSrc: string;
+  private: boolean;
 }
 export interface Message {
   id: string;
@@ -21,24 +28,24 @@ export interface Message {
   owned: boolean;
   profilePictureNum: Number;
   profilePictureSrc: string;
-  // timestamp: Date;
-  // owned?: boolean;
-  // profilePicture?: number; // The enumeration of the image (colour)
-  // profilePictureSrc?: number; // The image
-  // type: MessageType;
+  // type
+}
+export interface ChatPagination {
+  before: string;
+  after: string;
+  total_count: number;
+  limit: number;
 }
 
-export interface ChatRoom {
-  id: string;
-  name: string;
-  description: string;
-  imageSrc: string;
-  private: boolean;
-}
-
-// Store
+// Store Requests
 export interface AddChatRoomStore {
   chatRoom: ChatRoom;
+}
+export interface AddOpenChatStore {
+  chat: ChatTab;
+}
+export interface RemoveOpenChatStore {
+  chatId: string;
 }
 
 // Chat-Server Requests
@@ -57,13 +64,6 @@ export interface CreateMessage {
 
 export interface GetChatRoomsRequest {}
 
-export interface ChatPagination {
-  before: string;
-  after: string;
-  total_count: number;
-  limit: number;
-}
-
 export interface GetChatRoomsResponse {
   chatRooms: Array<ChatRoom>;
   pagination: ChatPagination;
@@ -76,6 +76,5 @@ export interface GetMessagesRequest {
 
 export interface GetMessagesResponse {
   messages: Message[];
+  pagination: ChatPagination;
 }
-
-

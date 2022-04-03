@@ -8,12 +8,28 @@
     <span class="flex-fill">QNC (0.5km)</span>
   </div>
   <!-- Body -->
-  <div #chat class="col flex-fill padding-md overflow-auto">
+  <div
+    #chat
+    class="col flex-fill padding-md overflow-auto"
+    (scroll)="onScroll()"
+  >
+    <div *ngIf="!beforeCursor" class="row-center text-secondary text-sm">
+      {{ 'MAIN.CHAT_ROOM.CHAT_HISTORY_START' | translate }}
+    </div>
     <div #anchor></div>
-    <div *ngFor="let message of messages" class="row-center margin-v-sm">
-      <div *ngIf="!message.owned; else owned" class="row-center align-left">
+    <div *ngFor="let message of messages; let i = index" class="col-center">
+      <div *ngIf="showDate(i)" class="row-center text-secondary text-sm padding-v-sm">
+        {{ formatTimestamp(message.insertedAt) }}
+      </div>
+      <div
+        *ngIf="!message.owned; else owned"
+        class="message row-center align-left"
+      >
         <!-- Message -->
-        <div [class]="getProfilePictureClass(message.profilePictureNum)">
+        <div
+          *ngIf="showProfilePicture(i, message.owned)"
+          [class]="getProfilePictureClass(message.profilePictureNum)"
+        >
           <img
             [src]="
               '../../../../../assets/images/profile/' +
@@ -21,17 +37,20 @@
             "
           />
         </div>
-        <span class="message row-h-center margin-l-md flex-fill">{{
+        <span class="message-text row-h-center flex-fill margin-t-sm">{{
           message.text
         }}</span>
       </div>
       <ng-template #owned>
         <!-- Owned Message -->
-        <div class="row-center align-right">
-          <span class="message row-h-center flex-fill margin-r-md">{{
+        <div class="message row-center align-right">
+          <span class="message-text-owned row-h-center flex-fill margin-t-sm">{{
             message.text
           }}</span>
-          <div [class]="getProfilePictureClass(message.profilePictureNum)">
+          <div
+            *ngIf="showProfilePicture(i, message.owned)"
+            [class]="getProfilePictureClass(message.profilePictureNum)"
+          >
             <img
               [src]="
                 '../../../../../assets/images/profile/' +

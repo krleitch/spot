@@ -1,18 +1,16 @@
 // Models
-import { ChatRoom, Message } from '@models/chat';
-
-// interface ChatRoomStore extends ChatRoom {
-// messages: Message[];
-// }
+import { ChatRoom, Message, ChatTab } from '@models/chat';
 
 export interface State {
   loadingChatRooms: boolean;
   chatRooms: ChatRoom[];
-  openChatRooms: string[];
+  openChats: ChatTab[];
+  messages: { [key: string]: Message[] };
 }
 
 export const initialState: State = {
   loadingChatRooms: false,
   chatRooms: [],
-  openChatRooms: []
+  openChats: [],
+  messages: {}
 };

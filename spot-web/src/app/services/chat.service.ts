@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Socket as PhoenixSocket } from 'phoenix';
+import { Socket as PhoenixSocket, Channel as PhoenixChannel } from 'phoenix';
 
 import { Observable } from 'rxjs';
 
 // models
 import {
   CreateChatRoomRequest,
+  CreateChatRoomResponse,
   GetChatRoomsRequest,
   GetChatRoomsResponse,
   GetMessagesRequest,
@@ -38,12 +39,6 @@ export class ChatService {
     this.phoenixSocket.connect();
   }
 
-  // getSession(token: string): any {
-  //   return this.http.post<any>(`${this.chatBaseUrl}/sessions`, {
-  //     token: token
-  //   });
-  // }
-
   // Requests to Spot-Chat-Server
   getChatRooms(
     _request: GetChatRoomsRequest
@@ -62,11 +57,17 @@ export class ChatService {
     );
   }
 
-  createChatRoom(request: CreateChatRoomRequest) {
-    return this.http.post<any>(`${this.chatBaseUrl}/rooms`, request);
+  createChatRoom(
+    request: CreateChatRoomRequest
+  ): Observable<CreateChatRoomResponse> {
+    return this.http.post<CreateChatRoomResponse>(
+      `${this.chatBaseUrl}/rooms`,
+      request
+    );
   }
 
-  connectToChannel(roomId: string): any {
+  // Channels
+  connectToChannel(roomId: string): PhoenixChannel {
     if (!this.phoenixSocket) {
       return;
     }
@@ -82,6 +83,7 @@ export class ChatService {
     }
   }
 
+  // Service functions
   getProfilePictureClass(index): string {
     if (index === -1) {
       return 'profile pop';
