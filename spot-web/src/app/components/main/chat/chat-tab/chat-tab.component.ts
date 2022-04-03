@@ -16,10 +16,10 @@ export class ChatTabComponent implements OnInit {
   ngOnInit(): void {}
 
   minimizeTab() {
-    this.minimize(this.tab.id);
+    this.minimize(this.tab.tabId);
   }
 
   closeTab() {
-    this.close(this.tab.id);
+    this.close(this.tab.tabId);
   }
 }

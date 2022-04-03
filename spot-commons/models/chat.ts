@@ -8,11 +8,11 @@ export enum ChatType {
   FRIEND = "FRIEND",
 }
 export interface ChatTab {
-  id: string;
+  tabId: string;
   type: ChatType;
   name: string;
   imageSrc: string;
-  data: ChatRoom; // topic is on ChatType Room
+  chat: ChatRoom; // topic is on ChatType Room
 }
 export interface ChatRoom {
   id: string;
@@ -23,7 +23,7 @@ export interface ChatRoom {
 }
 export interface Message {
   id: string;
-  insertedAt: Date;
+  insertedAt: string;
   text: string;
   owned: boolean;
   profilePictureNum: Number;
@@ -42,10 +42,16 @@ export interface AddChatRoomStore {
   chatRoom: ChatRoom;
 }
 export interface AddOpenChatStore {
-  chat: ChatTab;
+  tab: ChatTab;
 }
 export interface RemoveOpenChatStore {
-  chatId: string;
+  tabId: string;
+}
+export interface AddMinimizedChatStore {
+  tab: ChatTab;
+}
+export interface RemoveMinimizedChatStore {
+  tabId: string;
 }
 
 // Chat-Server Requests

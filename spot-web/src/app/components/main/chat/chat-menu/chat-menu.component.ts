@@ -21,7 +21,9 @@ import {
   ChatRoom,
   GetChatRoomsRequest,
   AddOpenChatStore,
-  RemoveOpenChatStore
+  RemoveOpenChatStore,
+  AddMinimizedChatStore,
+  RemoveMinimizedChatStore
 } from '@models/chat';
 
 enum MenuStatus {
@@ -50,10 +52,11 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   friends$: Observable<Friend[]>;
 
   // Tabs
+  openChats$: Observable<ChatTab[]>;
   tabs: ChatTab[] = [];
+  minimizedChats$: Observable<ChatTab[]>;
   minimizedTabs: ChatTab[] = [];
   chatRooms$: Observable<ChatRoom[]>;
-  openChats$: Observable<ChatTab[]>;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -65,11 +68,9 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
-
     this.chatRooms$ = this.store$.pipe(
       select(ChatStoreSelectors.selectChatRooms)
     );
-
     this.openChats$ = this.store$.pipe(
       select(ChatStoreSelectors.selectOpenChats)
     );
@@ -78,7 +79,16 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
       .subscribe((tabs: ChatTab[]) => {
         this.tabs = tabs;
       });
+    this.minimizedChats$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectMinimizedChats)
+    );
+    this.minimizedChats$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((tabs: ChatTab[]) => {
+        this.minimizedTabs = tabs;
+      });
 
+    // Get All Rooms
     const getChatRoomsRequest: GetChatRoomsRequest = {};
     this.store$.dispatch(
       new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
@@ -89,11 +99,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
-  setMenuStatus(menuStatus: MenuStatus) {
-    this.menuStatus = menuStatus;
-  }
-
-  toggleMenu() {
+  toggleMenu(): void {
     if (this.menuStatus === MenuStatus.HIDDEN) {
       this.menuStatus = MenuStatus.EXPANDED_FULL;
     } else if (this.menuStatus === MenuStatus.EXPANDED_SEMI) {
@@ -103,94 +109,131 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectRooms() {
+  selectRooms(): void {
     this.selectedChatOption = this.eChatType.ROOM;
   }
 
-  selectFriends() {
+  selectFriends(): void {
     this.selectedChatOption = this.eChatType.FRIEND;
   }
 
-  checkMinimizeTabs() {
-    // if we add a new tab minimize the lru
+  // TABS
+
+  // Close the lru if too many tabs
+  checkTooManyTabs() {
+    if (this.tabs.length >= 3) {
+      const firstTab = this.tabs[0];
+      this.minimizeTab(firstTab.tabId);
+    }
+  }
+
+  // Check the inner chat id, as the tabId will be diff
+  tabExists(chatId: string): boolean {
+    // If already open do nothing // TODO: select it
+    const tab = this.tabs.filter((t) => t.chat?.id === chatId);
+    if (tab.length > 0) {
+      return true;
+    }
+    // Check the minimized tabs
+    const mtab = this.minimizedTabs.filter((t) => t.chat?.id === chatId);
+    if (mtab.length > 0) {
+      this.checkTooManyTabs();
+      this.openMinimizedTab(mtab[0].tabId);
+      return true;
+    }
+    return false;
   }
 
   createFriendTab(friend: Friend) {
     // check if the tab exists already
+    if (this.tabExists(null)) {
+      return;
+    }
+    this.checkTooManyTabs();
     const newTab: ChatTab = {
-      id: uuidv4(),
+      tabId: uuidv4(),
       name: friend.username,
       imageSrc: friend.profilePictureSrc,
       type: ChatType.FRIEND,
-      data: null
+      chat: null
     };
     const request: AddOpenChatStore = {
-      chat: newTab
+      tab: newTab
     };
     this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
   createRoomTab(room: ChatRoom) {
     // check if the tab exists already
+    if (this.tabExists(room.id)) {
+      return;
+    }
+    this.checkTooManyTabs();
     const newTab: ChatTab = {
-      id: uuidv4(),
+      tabId: uuidv4(),
       name: room.name,
       imageSrc: room.imageSrc,
       type: ChatType.ROOM,
-      data: room
+      chat: room
     };
     const request: AddOpenChatStore = {
-      chat: newTab
+      tab: newTab
     };
     this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
-  openTab(id: string) {
+  openMinimizedTab(id: string) {
     // get the tab
-    const tab = this.minimizedTabs.filter((elem: ChatTab) => elem.id === id);
+    const tab = this.minimizedTabs.filter((elem: ChatTab) => elem.tabId === id);
     if (!tab) {
       return;
     }
-    // add to minimized and remove
-    const request: AddOpenChatStore = {
-      chat: tab[0]
+    // add to open
+    const addRequest: AddOpenChatStore = {
+      tab: tab[0]
     };
-    this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
-    this.minimizedTabs = this.minimizedTabs.filter(
-      (elem: ChatTab) => elem.id !== id
+    this.store$.dispatch(
+      new ChatStoreActions.AddOpenChatStoreAction(addRequest)
+    );
+    // remove from minimized
+    const removeRequest: RemoveMinimizedChatStore = {
+      tabId: id
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.RemoveMinimizedChatStoreAction(removeRequest)
     );
   }
 
   minimizeTab = (id: string) => {
     // get the tab
-    const tab = this.tabs.filter((elem: ChatTab) => elem.id === id);
+    const tab = this.tabs.filter((elem: ChatTab) => elem.tabId === id);
     if (!tab) {
       return;
     }
-    // add to minimized and remove
-    this.minimizedTabs.push(tab[0]);
-    const request: RemoveOpenChatStore = {
-      chatId: id
+    // add to minimized
+    const addRequest: AddMinimizedChatStore = {
+      tab: tab[0]
     };
     this.store$.dispatch(
-      new ChatStoreActions.RemoveOpenChatStoreAction(request)
+      new ChatStoreActions.AddMinimizedChatStoreAction(addRequest)
+    );
+    // Remove from open
+    const removeRequest: RemoveOpenChatStore = {
+      tabId: id
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.RemoveOpenChatStoreAction(removeRequest)
     );
   };
 
   closeTab = (id: string) => {
     const request: RemoveOpenChatStore = {
-      chatId: id
+      tabId: id
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveOpenChatStoreAction(request)
     );
   };
-
-  closeMinimizedTab(id: string) {
-    this.minimizedTabs = this.minimizedTabs.filter(
-      (elem: ChatTab) => elem.id !== id
-    );
-  }
 
   getMinimizedName(name: string) {
     if (name) {

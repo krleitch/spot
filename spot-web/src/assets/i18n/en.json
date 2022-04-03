@@ -300,7 +300,7 @@
 
     "CHAT_ROOM": {
       "CHAT_PLACEHOLDER": "Type to chat...",
-      "SUBMIT": "Submit",
+      "SEND": "Send",
       "CHAT_HISTORY_START": "This is the start of your chat history"
     },
 

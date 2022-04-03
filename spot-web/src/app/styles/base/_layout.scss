@@ -68,7 +68,7 @@
   justify-content: space-between;
 }
 
-// Other
+// alignment
 .align-right {
   margin-left: auto;
 }
@@ -83,6 +83,8 @@
 .text-wrap {
   word-wrap: break-word;
 }
+
+// box sizing
 .border-box {
   box-sizing: border-box;
 }
@@ -90,6 +92,12 @@
 // overflow
 .overflow-auto {
   overflow: auto;
+}
+.overflow-scroll {
+  overflow: scroll;
+}
+.overflow-hidden {
+  overflow: hidden;
 }
 
 // sizes
@@ -105,4 +113,12 @@
 }
 .full-height {
   height: 100%;
+}
+
+// position
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
 }

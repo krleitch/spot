@@ -7,7 +7,9 @@ import {
   AddOpenChatStore,
   RemoveOpenChatStore,
   GetChatRoomsRequest,
-  GetChatRoomsResponse
+  GetChatRoomsResponse,
+  AddMinimizedChatStore,
+  RemoveMinimizedChatStore
 } from '@models/chat';
 
 export enum ActionTypes {
@@ -18,7 +20,9 @@ export enum ActionTypes {
   GET_CHAT_ROOMS_FAILURE = '[Chat] Get Chat Rooms Failure',
   ADD_CHAT_ROOM_STORE = '[Chat] Add Chat Room Store',
   ADD_OPEN_CHAT_STORE = '[Chat] Add Open Chat Store',
-  REMOVE_OPEN_CHAT_STORE = '[Chat] Remove Open Chat Store'
+  REMOVE_OPEN_CHAT_STORE = '[Chat] Remove Open Chat Store',
+  ADD_MINIMIZED_CHAT_STORE = '[Chat] Add Minimized Chat Store',
+  REMOVE_MINIMIZED_CHAT_STORE = '[Chat] Remove Minimized Chat Store'
 }
 
 // Generic Actions
@@ -58,6 +62,14 @@ export class RemoveOpenChatStoreAction implements Action {
   readonly type = ActionTypes.REMOVE_OPEN_CHAT_STORE;
   constructor(public request: RemoveOpenChatStore) {}
 }
+export class AddMinimizedChatStoreAction implements Action {
+  readonly type = ActionTypes.ADD_MINIMIZED_CHAT_STORE;
+  constructor(public request: AddMinimizedChatStore) {}
+}
+export class RemoveMinimizedChatStoreAction implements Action {
+  readonly type = ActionTypes.REMOVE_MINIMIZED_CHAT_STORE;
+  constructor(public request: RemoveMinimizedChatStore) {}
+}
 
 export type Actions =
   | GenericFailureAction
@@ -67,4 +79,6 @@ export type Actions =
   | GetChatRoomsSuccessAction
   | AddChatRoomStoreAction
   | AddOpenChatStoreAction
-  | RemoveOpenChatStoreAction;
+  | RemoveOpenChatStoreAction
+  | AddMinimizedChatStoreAction
+  | RemoveMinimizedChatStoreAction;

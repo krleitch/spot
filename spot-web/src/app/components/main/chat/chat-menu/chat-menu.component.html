@@ -161,7 +161,7 @@
     <div
       class="mini-tab row-center"
       *ngFor="let mtab of minimizedTabs"
-      (click)="openTab(mtab.id)"
+      (click)="openMinimizedTab(mtab.tabId)"
     >
       <div class="mtab">
         <span>{{ getMinimizedName(mtab.name) }}</span>
@@ -178,7 +178,7 @@
       <spot-chat-tab [tab]="tab" [close]="closeTab" [minimize]="minimizeTab">
         <spot-chat-room
           *ngIf="tab.type === eChatType.ROOM"
-          [chatRoom]="tab.data"
+          [chatRoom]="tab.chat"
         ></spot-chat-room>
         <spot-chat-friend
           *ngIf="tab.type === eChatType.FRIEND"

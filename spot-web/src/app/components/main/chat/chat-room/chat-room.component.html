@@ -7,61 +7,70 @@
     </span>
     <span class="flex-fill">QNC (0.5km)</span>
   </div>
+
   <!-- Body -->
   <div
     #chat
     class="col flex-fill padding-md overflow-auto"
     (scroll)="onScroll()"
   >
+    <!-- Chat Start -->
     <div *ngIf="!beforeCursor" class="row-center text-secondary text-sm">
       {{ 'MAIN.CHAT_ROOM.CHAT_HISTORY_START' | translate }}
     </div>
     <div #anchor></div>
     <div *ngFor="let message of messages; let i = index" class="col-center">
-      <div *ngIf="showDate(i)" class="row-center text-secondary text-sm padding-v-sm">
+      <!-- Date -->
+      <div
+        *ngIf="showDate(i)"
+        class="row-center text-secondary text-sm padding-v-sm"
+      >
         {{ formatTimestamp(message.insertedAt) }}
       </div>
+
+      <!-- Message -->
       <div
         *ngIf="!message.owned; else owned"
-        class="message row-center align-left"
+        class="row-center relative align-left"
       >
-        <!-- Message -->
+        <!-- Profile Picture -->
         <div
           *ngIf="showProfilePicture(i, message.owned)"
           [class]="getProfilePictureClass(message.profilePictureNum)"
         >
-          <img
-            [src]="
-              '../../../../../assets/images/profile/' +
-              message.profilePictureSrc
-            "
-          />
+          <img [src]="'assets/images/profile/' + message.profilePictureSrc" />
         </div>
-        <span class="message-text row-h-center flex-fill margin-t-sm">{{
+        <!-- Text -->
+        <span class="message-text row-h-center flex-fill">{{
           message.text
         }}</span>
+        <span class="hover-text padding-sm">
+          {{ formatTimestamp(message.insertedAt) }}
+        </span>
       </div>
+
+      <!-- Owned Message -->
       <ng-template #owned>
-        <!-- Owned Message -->
-        <div class="message row-center align-right">
-          <span class="message-text-owned row-h-center flex-fill margin-t-sm">{{
+        <div class="row-center relative align-right">
+          <!-- Text -->
+          <span class="message-text owned row-h-center flex-fill">{{
             message.text
           }}</span>
+          <span class="hover-text owned padding-sm">
+            {{ formatTimestamp(message.insertedAt) }}
+          </span>
+          <!-- Profile Picture -->
           <div
             *ngIf="showProfilePicture(i, message.owned)"
             [class]="getProfilePictureClass(message.profilePictureNum)"
           >
-            <img
-              [src]="
-                '../../../../../assets/images/profile/' +
-                message.profilePictureSrc
-              "
-            />
+            <img [src]="'assets/images/profile/' + message.profilePictureSrc" />
           </div>
         </div>
       </ng-template>
     </div>
   </div>
+
   <!-- Chat Bar -->
   <div class="row-center margin-lg">
     <span
@@ -72,7 +81,7 @@
       (input)="onTextInput($event)"
     ></span>
     <button class="button-primary margin-l-md" (click)="submit()">
-      {{ 'MAIN.CHAT_ROOM.SUBMIT' | translate }}
+      {{ 'MAIN.CHAT_ROOM.SEND' | translate }}
     </button>
   </div>
 </div>

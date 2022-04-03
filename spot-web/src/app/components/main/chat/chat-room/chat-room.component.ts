@@ -103,25 +103,23 @@ export class ChatRoomComponent
     }
   }
 
-  formatTimestamp(timestamp): string {
-    const days = ['Sun', 'Mon', 'Tue', 'Web', 'Thu', 'Fri', 'Sat'];
+  formatTimestamp(timestamp: string): string {
     const time = new Date(timestamp);
-    return (
-      days[time.getDay()] +
-      ' ' +
-      ((time.getHours() % 12) + 1).toString() +
-      ':' +
-      time.getMinutes().toString() +
-      ' ' +
-      (time.getHours() >= 12 ? 'PM' : 'AM')
-    );
+    const days = ['Sun', 'Mon', 'Tue', 'Web', 'Thu', 'Fri', 'Sat'];
+    const minutes = time.getMinutes();
+    const hours = time.getHours();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const daysStr = days[time.getDay()];
+    const hoursStr = hours % 12 ? (hours % 12).toString() : '12'; // 0 hour should be 12
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes.toString();
+    const strTime = daysStr + ' ' + hoursStr + ':' + minutesStr + ' ' + ampm;
+    return strTime;
   }
 
   getProfilePictureClass(index): string {
     if (index === -1) {
-      return 'profile-sm profile-position-owned profile-op';
+      return 'profile-sm profile-position owned profile-op';
     }
-    // the index should already be in the proper range, but this is just for safety
     return 'profile-sm profile-position profile-' + index;
   }
 
