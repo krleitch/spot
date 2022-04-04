@@ -49,9 +49,8 @@ export class ChatRoomComponent
 
   ngOnInit(): void {
     this.channel = this.chatService.connectToChannel(this.chatRoom.id);
-    this.channel.on('new_message', (payload: Message) => {
+    this.channel.on('message_created', (payload: Message) => {
       this.messages.push(payload);
-      // scroll to top
     });
     this.joinRoom();
   }

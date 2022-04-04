@@ -82,13 +82,4 @@ export class ChatService {
       channel.leave();
     }
   }
-
-  // Service functions
-  getProfilePictureClass(index): string {
-    if (index === -1) {
-      return 'profile pop';
-    }
-    // the index should already be in the proper range, but this is just for safety
-    return 'profile p' + index;
-  }
 }

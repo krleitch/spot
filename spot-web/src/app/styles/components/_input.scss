@@ -35,3 +35,30 @@
   color: var(--error);
   border-bottom: 1px solid var(--error);
 }
+.input-border-bottom-sm {
+  @extend %input-shared;
+  width: 150px;
+  padding: 8px 2px 2px 2px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--input-text);
+  background-color: var(--container-background);
+  color: var(--input-text);
+}
+// touched, dirty and invalid
+.input-border-bottom-sm.ng-dirty.ng-invalid.ng-touched {
+  color: var(--error);
+  border-bottom: 1px solid var(--error);
+}
+
+// borderless
+.input-borderless {
+  @extend %input-shared;
+  padding: 8px 2px 2px 2px;
+  margin-bottom: 6px;
+  background-color: var(--container-background);
+  color: var(--input-text);
+}
+// touched, dirty and invalid
+.input-border-less.ng-dirty.ng-invalid.ng-touched {
+  color: var(--error);
+}

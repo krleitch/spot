@@ -94,6 +94,24 @@
 }
 
 // Social Media button
+.button-facebook {
+  @extend %button-shared;
+  background-color: var(--facebook);
+  color: white;
+  font-size: var(--text-md);
+  padding: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 240px;
+  .icon-facebook {
+    width: 26px;
+    height: 26px;
+    margin-right: 5px;
+  }
+  .text-facebook {
+    color: white;
+  }
+}
 
 // Button Switch with 2 options (left and right)
 .button-switch {

@@ -275,7 +275,6 @@
     },
 
     "FRIENDS": {
-      "TITLE": "Friends",
 
       "PENDING": "Pending Requests",
       "CANCEL": "Cancel",
@@ -284,9 +283,9 @@
       "FRIEND_REQUEST_PLACEHOLDER": "Enter username",
       "FRIEND_REQUEST_ACCEPT": "Accept",
       "FRIEND_REQUEST_DECLINE": "Decline",
-      "ADD": "Add Friends",
+      "ADD": "Add a Friend",
 
-      "FRIENDS_LIST": "Friends List",
+      "FRIENDS": "Friends",
       "FRIEND_SEARCH_PLACEHOLDER": "Search username",
       "REMOVE": "Remove",
 

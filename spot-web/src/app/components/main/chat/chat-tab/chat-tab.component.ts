@@ -15,6 +15,12 @@ export class ChatTabComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  getMinimizedName(name: string) {
+    if (name) {
+      return name.substring(0, 1).toUpperCase();
+    }
+  }
+
   minimizeTab() {
     this.minimize(this.tab.tabId);
   }

@@ -4,7 +4,7 @@
   >
     <span class="image row-center margin-sm">
       <img *ngIf="tab.imageSrc" [src]="tab.imageSrc" />
-      <span *ngIf="!tab.imageSrc"> T </span>
+      <span *ngIf="!tab.imageSrc"> {{ getMinimizedName(tab.name) }} </span>
     </span>
     <span class="name text-md text-white">{{ tab.name }}</span>
     <div class="row-center">

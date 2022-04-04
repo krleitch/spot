@@ -9,19 +9,11 @@ spot-main-nav {
   z-index: 99;
 }
 
-.friends-container {
-  display: flex;
-  justify-content: center;
+.friends {
   min-height: 100%;
-  width: 100%;
   padding-top: 60px;
-  background-color: var(--background-page);
-  box-sizing: border-box;
 }
-
 .friends-content {
-  display: flex;
-  flex-flow: column;
   width: 70%;
   max-width: 650px;
   margin-top: 25px;
@@ -31,234 +23,24 @@ spot-main-nav {
   }
 }
 
+// Main Title
 .title-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
   @include mq.mq($until: tablet) {
     flex-flow: column;
     align-items: flex-start;
   }
-
-  .friends-title {
-    display: flex;
-    align-items: center;
-
-    font-size: 32px;
-    margin-bottom: 5px;
-
-    .people {
-      font-size: 32px;
-      margin-right: 8px;
-      padding-top: 3px;
-    }
-  }
-
-  .facebook {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--facebook);
-    color: white;
-    font-size: 14px;
-    padding: 10px 8px;
-    box-sizing: border-box;
-    cursor: pointer;
-    width: 240px;
-    @include mq.mq($until: tablet) {
-      margin-bottom: var(--gutter-sm);
-    }
-  }
-
-  .facebook-logo {
-    width: 26px;
-    height: 26px;
-    margin-right: 18px;
-  }
 }
 
-.friends-subtitle {
-  font-size: 20px;
-  background-color: var(--background-header);
-  box-sizing: border-box;
-  padding: 5px;
-}
-
-.friend-content-section {
-  width: 100%;
-  padding: 5px 5px;
-  box-sizing: border-box;
-  background-color: var(--background-container);
-  margin-bottom: 10px;
-}
-
-.min {
-  min-height: 64px;
-}
-
-// Requests
-
-.friend-button {
-  background: none;
-  color: inherit;
-  border: none;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 70px;
-  height: 30px;
-  padding: 3px;
-  box-sizing: border-box;
-  color: white;
-}
-
-.friend-request-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  padding: 5px;
-  margin-top: 7px;
-  margin-bottom: 7px;
-}
-
-.friend-name {
-  color: var(--info);
-  margin-left: 7px;
-}
-
-.friend-request-options {
-  display: flex;
-}
-
-.accept {
-  background-color: var(--primary);
-  margin-right: 5px;
-}
-
-.accept:hover {
-  background-color: var(--primary-highlight);
-}
-
-.decline {
-  background-color: var(--error-light);
-}
-
-.decline:hover {
-  background-color: var(--error-light-highlight);
-}
-
-// Send Friend Requests
-
-.friend-request-input-container {
-  color: black;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: auto;
-  margin: 3px 15px;
-  box-sizing: border-box;
-}
-
-.send-container {
-  display: flex;
-  align-items: center;
-}
-
-input {
-  padding: 5px;
-  width: 100%;
-  border: none;
-  outline: none;
-  background-color: var(--background-container);
-}
-
-.send {
-  color: var(--icon-primary);
-}
-
-.send:hover {
-  color: var(--primary);
-  cursor: pointer;
-}
-
-.add-friends-error {
-  color: var(--error);
-  margin-bottom: 10px;
-}
-
-.add-friends-success {
-  color: var(--success);
-  margin-bottom: 10px;
-}
-
-// Friends list
-
+// Friends list Search
 .friends-search {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--background-header);
-  padding: 5px;
   @include mq.mq($until: tablet) {
     flex-flow: column;
     align-items: flex-start;
   }
-
   .subtitle {
     font-size: 20px;
     @include mq.mq($until: tablet) {
       margin-bottom: var(--gutter-sm);
     }
-  }
-
-  .search {
-    display: flex;
-    align-items: center;
-
-    .icon {
-      margin-right: 3px;
-    }
-
-    input {
-      background-color: var(--background-header);
-      border-bottom: 1px solid var(--input-border);
-    }
-  }
-}
-
-.friend-list-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  padding: 5px;
-  margin-top: 7px;
-  margin-bottom: 7px;
-}
-
-.remove {
-  background-color: var(--error-light);
-
-  &:hover {
-    background-color: var(--error-light-highlight);
-  }
-}
-
-.no-friends {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  box-sizing: border-box;
-  min-height: 54px;
-
-  .icon {
-    margin-right: 8px;
   }
 }

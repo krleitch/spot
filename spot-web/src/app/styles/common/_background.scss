@@ -19,3 +19,8 @@
 .background-reset {
   background-color: transparent;
 }
+
+// Shadows
+.container-shadow {
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
