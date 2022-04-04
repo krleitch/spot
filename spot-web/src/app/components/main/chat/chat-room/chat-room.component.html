@@ -18,7 +18,7 @@
     <div *ngIf="!beforeCursor" class="row-center text-secondary text-sm">
       {{ 'MAIN.CHAT_ROOM.CHAT_HISTORY_START' | translate }}
     </div>
-    <div #anchor></div>
+    <div class="observer" #anchor></div>
     <div *ngFor="let message of messages; let i = index" class="col-center">
       <!-- Date -->
       <div
@@ -36,7 +36,7 @@
         <!-- Profile Picture -->
         <div
           *ngIf="showProfilePicture(i, message.owned)"
-          [class]="getProfilePictureClass(message.profilePictureNum)"
+          [class]="getProfilePictureClass(message.profilePictureNum, message.owned)"
         >
           <img [src]="'assets/images/profile/' + message.profilePictureSrc" />
         </div>
@@ -62,7 +62,7 @@
           <!-- Profile Picture -->
           <div
             *ngIf="showProfilePicture(i, message.owned)"
-            [class]="getProfilePictureClass(message.profilePictureNum)"
+            [class]="getProfilePictureClass(message.profilePictureNum, message.owned)"
           >
             <img [src]="'assets/images/profile/' + message.profilePictureSrc" />
           </div>

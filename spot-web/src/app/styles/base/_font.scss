@@ -110,3 +110,10 @@ $title-sizes: (
     color: var(--primary);
   }
 }
+.icon-submit {
+  color: var(--primary);
+  &:hover {
+    cursor: pointer;
+    color: var(--primary-highlight);
+  }
+}

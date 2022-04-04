@@ -5,7 +5,8 @@ import {
   AfterViewInit,
   AfterViewChecked,
   ViewChild,
-  Input
+  Input,
+  ChangeDetectorRef
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Channel as PhoenixChannel } from 'phoenix';
@@ -43,21 +44,26 @@ export class ChatRoomComponent
   channel: PhoenixChannel;
   messages: Message[] = [];
   beforeCursor: string = null;
-  disableScrollToBottom = false;
+  disableScrollDown = false;
+  ignoreInitialObserver = true;
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.channel = this.chatService.connectToChannel(this.chatRoom.id);
-    this.channel.on('message_created', (payload: Message) => {
-      this.messages.push(payload);
-    });
     this.joinRoom();
   }
 
   ngAfterViewInit() {
     this.observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && this.beforeCursor) {
+      if (
+        entry.isIntersecting &&
+        this.beforeCursor &&
+        !this.ignoreInitialObserver
+      ) {
         const request: GetMessagesRequest = {
           roomId: this.chatRoom.id,
           before: this.beforeCursor
@@ -66,18 +72,39 @@ export class ChatRoomComponent
           .getMessages(request)
           .pipe(take(1))
           .subscribe((response: GetMessagesResponse) => {
+            // save old offsets
+            const preScrollHeight = this.chat.nativeElement.scrollHeight;
+            const preScrollOffset = this.chat.nativeElement.scrollTop;
+
+            // update data
             this.messages = response.messages.reverse().concat(this.messages);
-            this.beforeCursor = response.pagination.before;
+            this.beforeCursor = response.pagination.after;
+
+            // update so we can get the new offsets
+            this.changeDetectorRef.detectChanges();
+
+            // check if we need to fix the scroll
+            // firefox and chrome are smart, safari not so much
+            const postScrollOffset = this.chat.nativeElement.scrollTop;
+
+            if (preScrollOffset === postScrollOffset) {
+              // the browser didnt help us
+              const postScrollHeight = this.chat.nativeElement.scrollHeight;
+              const deltaHeight = postScrollHeight - preScrollHeight;
+
+              this.chat.nativeElement.scrollTop =
+                postScrollOffset + deltaHeight;
+            }
           });
       } else {
-        // none
+        this.ignoreInitialObserver = false;
       }
     });
     this.observer.observe(this.anchor.nativeElement);
   }
 
   scrollChatToBottom() {
-    if (this.disableScrollToBottom) {
+    if (this.disableScrollDown) {
       return;
     }
     try {
@@ -93,12 +120,14 @@ export class ChatRoomComponent
 
   onScroll() {
     const element = this.chat.nativeElement;
+    const threshold = 0;
     const atBottom =
-      element.scrollHeight - element.scrollTop === element.clientHeight;
-    if (this.disableScrollToBottom && atBottom) {
-      this.disableScrollToBottom = false;
+      element.scrollHeight - element.scrollTop - threshold <=
+      element.clientHeight;
+    if (atBottom) {
+      this.disableScrollDown = false;
     } else {
-      this.disableScrollToBottom = true;
+      this.disableScrollDown = true;
     }
   }
 
@@ -115,11 +144,17 @@ export class ChatRoomComponent
     return strTime;
   }
 
-  getProfilePictureClass(index): string {
+  getProfilePictureClass(index, owned: boolean): string {
+    let str = '';
     if (index === -1) {
-      return 'profile-sm profile-position owned profile-op';
+      str += 'profile-sm profile-position profile-op';
+    } else {
+      str += 'profile-sm profile-position profile-' + index;
     }
-    return 'profile-sm profile-position profile-' + index;
+    if (owned) {
+      str += ' owned';
+    }
+    return str;
   }
 
   onTextInput(event): void {
@@ -141,8 +176,8 @@ export class ChatRoomComponent
     };
     this.channel
       .push('new_message', newMessage, 10000)
-      .receive('ok', (msg) => {
-        console.log('created message', msg);
+      .receive('ok', (_msg) => {
+        // console.log('created message', msg);
       })
       .receive('error', (reasons) => {
         console.log('create failed', reasons);
@@ -165,7 +200,7 @@ export class ChatRoomComponent
           pagination: ChatPagination;
         }) => {
           this.messages = messages.reverse();
-          this.beforeCursor = pagination.before;
+          this.beforeCursor = pagination.after;
         }
       )
       .receive('error', ({ reason }) => {
@@ -176,6 +211,7 @@ export class ChatRoomComponent
       });
 
     this.channel.on('message_created', (message) => {
+      // add the messages
       this.messages.push(message);
     });
   }
