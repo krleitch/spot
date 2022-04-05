@@ -16,6 +16,7 @@ import { ChatService } from '@services/chat.service';
 
 // Assets
 import {
+  MessageBlock,
   Message,
   CreateMessage,
   ChatRoom,
@@ -42,7 +43,7 @@ export class ChatRoomComponent
 
   currentLength = 0;
   channel: PhoenixChannel;
-  messages: Message[] = [];
+  messageBlocks: MessageBlock[] = [];
   beforeCursor: string = null;
   disableScrollDown = false;
   ignoreInitialObserver = true;
@@ -77,7 +78,7 @@ export class ChatRoomComponent
             const preScrollOffset = this.chat.nativeElement.scrollTop;
 
             // update data
-            this.messages = response.messages.reverse().concat(this.messages);
+            this.messageBlocks = response.messages.concat(this.messageBlocks);
             this.beforeCursor = response.pagination.after;
 
             // update so we can get the new offsets
@@ -169,8 +170,14 @@ export class ChatRoomComponent
     );
   }
 
+  onEnter(): boolean {
+    this.submit();
+    return false;
+  }
+
   submit(): void {
     const content = this.create.nativeElement.innerHTML;
+
     const newMessage: CreateMessage = {
       text: content
     };
@@ -178,6 +185,7 @@ export class ChatRoomComponent
       .push('new_message', newMessage, 10000)
       .receive('ok', (_msg) => {
         // console.log('created message', msg);
+        this.create.nativeElement.innerHTML = '';
       })
       .receive('error', (reasons) => {
         console.log('create failed', reasons);
@@ -196,10 +204,11 @@ export class ChatRoomComponent
           messages,
           pagination
         }: {
-          messages: Message[];
+          messages: MessageBlock[];
           pagination: ChatPagination;
         }) => {
-          this.messages = messages.reverse();
+          console.log(messages);
+          this.messageBlocks = messages;
           this.beforeCursor = pagination.after;
         }
       )
@@ -210,9 +219,58 @@ export class ChatRoomComponent
         console.log('Networking issue. Still waiting...');
       });
 
-    this.channel.on('message_created', (message) => {
-      // add the messages
-      this.messages.push(message);
+    this.channel.on('message_created', (message: Message) => {
+      // determine if we need to add a new block or append to last block
+      if (this.messageBlocks.length > 0) {
+        const lastBlock = this.messageBlocks[this.messageBlocks.length - 1];
+        const tooLate =
+          new Date(message.insertedAt).getTime() -
+            new Date(
+              lastBlock.messages[lastBlock.messages.length - 1].insertedAt
+            ).getTime() >
+          300000;
+        if (lastBlock.chatProfileId === message.chatProfileId && !tooLate) {
+          // Append to this block
+          this.messageBlocks[this.messageBlocks.length - 1].messages =
+            lastBlock.messages.concat({
+              id: message.id,
+              text: message.text,
+              insertedAt: message.insertedAt
+            });
+        } else {
+          // create a new block
+          this.messageBlocks.push({
+            insertedAt: message.insertedAt,
+            owned: message.owned,
+            profilePictureNum: message.profilePictureNum,
+            profilePictureSrc: message.profilePictureSrc,
+            chatProfileId: message.chatProfileId,
+            messages: [
+              {
+                id: message.id,
+                text: message.text,
+                insertedAt: message.insertedAt
+              }
+            ]
+          });
+        }
+      } else {
+        // create the first block
+        this.messageBlocks.push({
+          insertedAt: message.insertedAt,
+          owned: message.owned,
+          profilePictureNum: message.profilePictureNum,
+          profilePictureSrc: message.profilePictureSrc,
+          chatProfileId: message.chatProfileId,
+          messages: [
+            {
+              id: message.id,
+              text: message.text,
+              insertedAt: message.insertedAt
+            }
+          ]
+        });
+      }
     });
   }
 
@@ -220,34 +278,17 @@ export class ChatRoomComponent
     this.chatService.disconnectFromChannel(this.channel);
   }
 
-  showProfilePicture(index: number, owned: boolean): boolean {
-    // Last message should show
-    if (index + 1 >= this.messages.length) {
-      return true;
-    }
-    // If its of the same owned status dont show it
-    // But if its seperated by a date cahnge then show
-    const message = this.messages[index];
-    const nextMessage = this.messages[index + 1];
-    return (
-      owned !== nextMessage.owned ||
-      new Date(nextMessage.insertedAt).getTime() -
-        new Date(message.insertedAt).getTime() >
-        300000
-    );
-  }
-
   showDate(index: number): boolean {
     // If its the first message
     if (index === 0) {
       return true;
     }
-    const message = this.messages[index];
-    const previousMessage = this.messages[index - 1];
+    const messageBlock = this.messageBlocks[index];
+    const previousMessageBlock = this.messageBlocks[index - 1];
     // if time difference is greater than 5 minutes
     return (
-      new Date(message.insertedAt).getTime() -
-        new Date(previousMessage.insertedAt).getTime() >
+      new Date(messageBlock.insertedAt).getTime() -
+        new Date(previousMessageBlock.insertedAt).getTime() >
       300000
     );
   }

@@ -21,14 +21,26 @@ export interface ChatRoom {
   imageSrc: string;
   private: boolean;
 }
+
+// A Message block is seperated by different users
+// or different times
+export interface MessageBlock {
+  insertedAt: string; // the time of the first message
+  owned: boolean;
+  profilePictureNum: Number;
+  profilePictureSrc: string;
+  chatProfileId: string; // The chat identifier for the user // is not the userId
+  messages: Array<{ id: string; text: string; insertedAt: string }>;
+}
+
 export interface Message {
   id: string;
   insertedAt: string;
   text: string;
   owned: boolean;
+  chatProfileId: string; // The chat identifier for the user // is not the userId
   profilePictureNum: Number;
   profilePictureSrc: string;
-  // type
 }
 export interface ChatPagination {
   before: string;
@@ -81,6 +93,6 @@ export interface GetMessagesRequest {
 }
 
 export interface GetMessagesResponse {
-  messages: Message[];
+  messages: MessageBlock[];
   pagination: ChatPagination;
 }
