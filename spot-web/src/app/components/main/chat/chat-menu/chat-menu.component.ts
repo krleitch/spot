@@ -42,7 +42,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   eMenuStatus = MenuStatus;
   eChatType = ChatType;
 
-  menuStatus = this.eMenuStatus.EXPANDED_FULL;
+  menuStatus = this.eMenuStatus.EXPANDED_SEMI;
   selectedChatOption = this.eChatType.ROOM;
 
   // Search

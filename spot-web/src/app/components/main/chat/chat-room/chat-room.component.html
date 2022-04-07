@@ -22,12 +22,12 @@
 
     <!-- Message Blocks -->
     <div
-      *ngFor="let messageBlock of messageBlocks; let i = index"
+      *ngFor="let messageBlock of messageBlocks"
       class="col-center padding-v-sm"
     >
       <!-- Date -->
       <div
-        *ngIf="showDate(i)"
+        *ngIf="messageBlock.showDate"
         class="row-center text-secondary text-sm padding-v-sm"
       >
         {{ formatTimestamp(messageBlock.insertedAt) }}
@@ -73,7 +73,7 @@
   </div>
 
   <!-- Chat Bar -->
-  <div class="row-center margin-lg">
+  <div class="row-v-center align-items-end margin-lg">
     <span
       #create
       contenteditable="true"

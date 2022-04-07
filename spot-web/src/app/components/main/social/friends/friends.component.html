@@ -3,14 +3,17 @@
   <div class="friends-content col">
     <!-- Pending Friends -->
     <div *ngIf="pendingFriendRequests.length > 0">
-      <div class="text-lg background-header border-box padding-md">
-        {{ 'MAIN.FRIENDS.PENDING' | translate }}
+      <div class="row-h-center background-header padding-md">
+        <span class="material-icons icon-lg icon-primary"> hourglass_top </span>
+        <span class="title-sm margin-l-md">
+          {{ 'MAIN.FRIENDS.PENDING' | translate }}
+        </span>
       </div>
       <div
         class="full-width padding-md border-box background-container margin-b-lg"
       >
         <div
-          class="row-h-center justify-content-between padding-md margin-v-lg container-shadow"
+          class="row-h-center justify-content-between padding-sm margin-v-lg container-shadow"
           *ngFor="let pendingFriendRequest of pendingFriendRequests"
         >
           <div>
@@ -20,12 +23,15 @@
           </div>
           <div class="row">
             <button
-              class="button-cancel"
+              class="button-cancel mobile-button"
               (click)="
                 deletePendingFriendRequest(pendingFriendRequest.friendId)
               "
             >
-              {{ 'MAIN.FRIENDS.CANCEL' | translate }}
+              <span class="mobile-hide">{{
+                'MAIN.FRIENDS.CANCEL' | translate
+              }}</span>
+              <span class="material-icons mobile-show"> close </span>
             </button>
           </div>
         </div>
@@ -34,14 +40,17 @@
 
     <!-- Friend Requests -->
     <div *ngIf="friendRequests.length > 0">
-      <div class="text-lg background-header border-box padding-md">
-        {{ 'MAIN.FRIENDS.REQUESTS' | translate }}
+      <div class="row-h-center background-header padding-md">
+        <span class="material-icons icon-lg icon-primary"> flaky </span>
+        <span class="title-sm margin-l-md">
+          {{ 'MAIN.FRIENDS.REQUESTS' | translate }}
+        </span>
       </div>
       <div
         class="full-width padding-md border-box background-container margin-b-lg"
       >
         <div
-          class="row-h-center justify-content-between padding-md margin-v-lg container-shadow"
+          class="row-h-center justify-content-between padding-sm margin-v-lg container-shadow"
           *ngFor="let friendRequest of friendRequests"
         >
           <div>
@@ -51,16 +60,22 @@
           </div>
           <div class="row">
             <button
-              class="button-primary"
+              class="button-primary margin-r-md mobile-button"
               (click)="acceptFriendRequest(friendRequest.friendId)"
             >
-              {{ 'MAIN.FRIENDS.FRIEND_REQUEST_ACCEPT' | translate }}
+              <span class="mobile-hide"
+                >{{ 'MAIN.FRIENDS.FRIEND_REQUEST_ACCEPT' | translate }}
+              </span>
+              <span class="material-icons mobile-show"> done </span>
             </button>
             <button
-              class="button-cancel"
+              class="button-cancel mobile-button"
               (click)="declineFriendRequest(friendRequest.friendId)"
             >
-              {{ 'MAIN.FRIENDS.FRIEND_REQUEST_DECLINE' | translate }}
+              <span class="mobile-hide"
+                >{{ 'MAIN.FRIENDS.FRIEND_REQUEST_DECLINE' | translate }}
+              </span>
+              <span class="material-icons mobile-show"> close </span>
             </button>
           </div>
         </div>
@@ -69,11 +84,11 @@
 
     <!-- Add Friends -->
     <div
-      class="row-h-center justify-content-between text-lg background-header border-box padding-sm"
+      class="row-h-center justify-content-between background-header padding-sm"
     >
       <div class="row-center">
         <span class="material-icons icon-lg icon-primary"> person_add </span>
-        <div class="text-lg margin-l-md">
+        <div class="title-sm margin-l-md">
           {{ 'MAIN.FRIENDS.ADD' | translate }}
         </div>
       </div>
@@ -91,9 +106,7 @@
         </span>
       </button>
     </div>
-    <div
-      class="full-width border-box background-container margin-b-lg"
-    >
+    <div class="full-width border-box background-container margin-b-lg">
       <div
         class="row-h-center justify-content-between border-box margin-v-sm margin-h-xl"
       >
@@ -120,16 +133,16 @@
 
     <!-- Friends List Header w/ Search -->
     <div
-      class="friends-search row-h-center justify-content-between background-header padding-sm"
+      class="row-h-center justify-content-between background-header padding-sm"
     >
       <div class="row-center">
         <span class="material-icons icon-lg icon-primary"> people_alt </span>
-        <div class="subtitle text-lg margin-l-md">
+        <div class="title-sm margin-l-md">
           {{ 'MAIN.FRIENDS.FRIENDS' | translate }}
         </div>
       </div>
       <div class="row-h-center">
-        <span class="material-icons icon-secondary"> search </span>
+        <span class="material-icons icon-lg icon-primary"> search </span>
         <input
           [(ngModel)]="friendSearch"
           class="input-border-bottom-sm margin-l-sm"
@@ -158,10 +171,13 @@
           >
             <span class="text-info margin-l-lg"> {{ friend.username }} </span>
             <button
-              class="button-cancel"
+              class="button-cancel mobile-button"
               (click)="deleteFriend(friend.friendId)"
             >
-              {{ 'MAIN.FRIENDS.REMOVE' | translate }}
+              <span class="mobile-hide">{{
+                'MAIN.FRIENDS.REMOVE' | translate
+              }}</span>
+              <span class="material-icons mobile-show"> delete_outline </span>
             </button>
           </div>
         </div>
@@ -169,16 +185,21 @@
         <!-- No Friends -->
         <ng-template #noFriends>
           <div *ngIf="friendSearch; else addFriends">
-            <span class="row-center padding-lg border-box">
+            <span class="row-center text-center flex-wrap padding-lg overflow-hidden">
               <span class="material-icons icon"> search_off </span>
               {{ 'MAIN.FRIENDS.NO_FRIENDS_FOUND' | translate }}
               {{ friendSearch }}
             </span>
           </div>
           <ng-template #addFriends>
-            <span *ngIf="showNoFriendsIndicator$ | async" class="no-friends">
-              <span class="material-icons icon"> person_add </span>
-              {{ 'MAIN.FRIENDS.NO_FRIENDS' | translate }}
+            <span
+              *ngIf="showNoFriendsIndicator$ | async"
+              class="row-center padding-lg"
+            >
+              <span class="material-icons icon-lg"> person_add </span>
+              <span class="margin-l-md">
+                {{ 'MAIN.FRIENDS.NO_FRIENDS' | translate }}
+              </span>
             </span>
           </ng-template>
         </ng-template>

@@ -23,24 +23,9 @@ spot-main-nav {
   }
 }
 
-// Main Title
-.title-wrapper {
+// Make the mobile button smaller padding
+.mobile-button {
   @include mq.mq($until: tablet) {
-    flex-flow: column;
-    align-items: flex-start;
-  }
-}
-
-// Friends list Search
-.friends-search {
-  @include mq.mq($until: tablet) {
-    flex-flow: column;
-    align-items: flex-start;
-  }
-  .subtitle {
-    font-size: 20px;
-    @include mq.mq($until: tablet) {
-      margin-bottom: var(--gutter-sm);
-    }
+    padding: 5px;
   }
 }

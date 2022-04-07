@@ -22,11 +22,11 @@ export interface ChatRoom {
   private: boolean;
 }
 
-// A Message block is seperated by different users
-// or different times
+// A Message block is seperated by different users or time
 export interface MessageBlock {
   insertedAt: string; // the time of the first message
   owned: boolean;
+  showDate: boolean; // should the block show a date before it
   profilePictureNum: Number;
   profilePictureSrc: string;
   chatProfileId: string; // The chat identifier for the user // is not the userId

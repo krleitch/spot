@@ -1,21 +1,25 @@
-<div class="spot-confirm">
-  <div class="header">
+<div class="col">
+  <div class="padding-md background-header full-width margin-b-lg border-box">
     {{ 'MAIN.CONFIRM.TITLE' | translate }}
   </div>
 
-  <div *ngIf="data; else default">
-    <div class="message">
+  <div *ngIf="data.message; else default">
+    <div class="flex-fill padding-lg text-center">
       {{ data.message }}
     </div>
   </div>
   <ng-template #default>
-    <div class="message">
+    <div class="flex-fill padding-lg text-center">
       {{ 'MAIN.CONFIRM.MESSAGE' | translate }}
     </div>
   </ng-template>
 
-  <div class="buttons-container">
-    <button class="confirm" (click)="confirm()">{{ 'MAIN.CONFIRM.CONFIRM' | translate }}</button>
-    <button class="cancel" (click)="cancel()">{{ 'MAIN.CONFIRM.CANCEL' | translate }}</button>
+  <div class="row-v-center justify-content-end margin-md">
+    <button class="button-primary" (click)="confirm()">
+      {{ 'MAIN.CONFIRM.CONFIRM' | translate }}
+    </button>
+    <button class="button-cancel margin-l-md" (click)="cancel()">
+      {{ 'MAIN.CONFIRM.CANCEL' | translate }}
+    </button>
   </div>
 </div>

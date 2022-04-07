@@ -21,3 +21,15 @@ $show-breakpoints: (mobile, mobileLandscape, tablet, desktop, wide);
   $breakpoints: $breakpoints,
   // $show-breakpoints: $show-breakpoints
 );
+
+// show mobile
+.mobile-hide {
+  @include mq.mq($until: tablet) {
+    display: none;
+  }
+}
+.mobile-show {
+  @include mq.mq($from: tablet) {
+    display: none;
+  }
+}

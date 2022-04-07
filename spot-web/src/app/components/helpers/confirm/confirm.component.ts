@@ -18,7 +18,7 @@ import {
 export class ConfirmComponent implements OnInit {
   // MODAL
   modalId: string;
-  data: ModalConfirmData = { message: '' };
+  data: ModalConfirmData = { message: null };
 
   constructor(private modalService: ModalService) {}
 

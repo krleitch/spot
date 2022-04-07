@@ -216,7 +216,7 @@ router.get(
       // Add username and delete the friendUserId
       const friendRequestsWithUsername = await Promise.all(
         friendRequests.map(async (friend) => {
-          const friendUser = await prismaUser.findUserById(friend.friendUserId);
+          const friendUser = await prismaUser.findUserById(friend.userId);
           const newFriend: Friend = {
             friendId: friend.friendId,
             createdAt: friend.createdAt,

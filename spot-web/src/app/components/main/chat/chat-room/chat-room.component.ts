@@ -239,57 +239,34 @@ export class ChatRoomComponent
             });
         } else {
           // create a new block
-          this.messageBlocks.push({
-            insertedAt: message.insertedAt,
-            owned: message.owned,
-            profilePictureNum: message.profilePictureNum,
-            profilePictureSrc: message.profilePictureSrc,
-            chatProfileId: message.chatProfileId,
-            messages: [
-              {
-                id: message.id,
-                text: message.text,
-                insertedAt: message.insertedAt
-              }
-            ]
-          });
+          this.pushMessageBlock(message, tooLate);
         }
       } else {
         // create the first block
-        this.messageBlocks.push({
-          insertedAt: message.insertedAt,
-          owned: message.owned,
-          profilePictureNum: message.profilePictureNum,
-          profilePictureSrc: message.profilePictureSrc,
-          chatProfileId: message.chatProfileId,
-          messages: [
-            {
-              id: message.id,
-              text: message.text,
-              insertedAt: message.insertedAt
-            }
-          ]
-        });
+        this.pushMessageBlock(message, true);
       }
+    });
+  }
+
+  private pushMessageBlock(message: Message, showDate: boolean): void {
+    this.messageBlocks.push({
+      insertedAt: message.insertedAt,
+      owned: message.owned,
+      profilePictureNum: message.profilePictureNum,
+      profilePictureSrc: message.profilePictureSrc,
+      chatProfileId: message.chatProfileId,
+      showDate: showDate,
+      messages: [
+        {
+          id: message.id,
+          text: message.text,
+          insertedAt: message.insertedAt
+        }
+      ]
     });
   }
 
   leaveRoom(): void {
     this.chatService.disconnectFromChannel(this.channel);
-  }
-
-  showDate(index: number): boolean {
-    // If its the first message
-    if (index === 0) {
-      return true;
-    }
-    const messageBlock = this.messageBlocks[index];
-    const previousMessageBlock = this.messageBlocks[index - 1];
-    // if time difference is greater than 5 minutes
-    return (
-      new Date(messageBlock.insertedAt).getTime() -
-        new Date(previousMessageBlock.insertedAt).getTime() >
-      300000
-    );
   }
 }

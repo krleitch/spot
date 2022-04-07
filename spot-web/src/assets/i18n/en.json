@@ -279,10 +279,11 @@
       "PENDING": "Pending Requests",
       "CANCEL": "Cancel",
 
-      "REQUESTS": "Requests",
+      "REQUESTS": "Friend Requests",
       "FRIEND_REQUEST_PLACEHOLDER": "Enter username",
       "FRIEND_REQUEST_ACCEPT": "Accept",
       "FRIEND_REQUEST_DECLINE": "Decline",
+      "FRIEND_REQUEST_ERROR": "Error. Please try again.",
       "ADD": "Add a Friend",
 
       "FRIENDS": "Friends",
