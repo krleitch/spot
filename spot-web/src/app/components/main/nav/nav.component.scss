@@ -1,27 +1,13 @@
-@import '../../../styles/sizes';
-
 .nav {
   height: 50px;
   background-color: var(--background-container);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 10px 5px 10px;
+  padding: 5px;
 }
 
-.highlight {
-  color: var(--primary);
-}
-
-.title-link {
-  display: flex;
-  height: 100%;
-  cursor: pointer;
-  box-sizing: border-box;
-  position: relative;
-}
-
-.title-image {
+.spot-logo {
   position: absolute;
   top: 50%;
   left: 0;
@@ -34,53 +20,8 @@
   cursor: pointer;
 }
 
-.login {
-  font-size: 18px;
-  margin-right: 10px;
-  cursor: pointer;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
-// FEATURES
-
-.features {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.score {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  margin-right: 15px;
-}
-
-.hot {
-  color: var(--error-light);
-  margin-right: 3px;
-}
-
-.notifications {
-  position: relative;
-  display: flex;
-  font-size: 18px;
-  color: var(--icon-primary);
-  margin-right: 15px;
-  cursor: pointer;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
 .unread {
   position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   top: 14px;
   right: -5px;
   font-size: 9px;
@@ -91,29 +32,7 @@
   border-radius: 7px;
 }
 
-.user {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  font-size: 18px;
-  color: var(--icon-primary);
-  cursor: pointer;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
-.icon {
-  margin-right: 5px;
-}
-
-.username {
-  font-size: 14px;
-}
-
 // DROPDOWN
-
 .dropdown-content {
   display: none;
   position: absolute;
@@ -123,7 +42,7 @@
   box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
-.dropdown-content .button {
+.dropdown-content .dropdown-button {
   background-color: var(--background-container);
   color: var(--text-primary);
   padding: 12px 8px;
@@ -137,39 +56,13 @@
   &:hover {
     background: var(--background-primary);
     color: var(--primary);
-  }
 
-  .icon {
-    margin-right: 6px;
+    span {
+      color: var(--primary);
+    }
   }
 }
 
-.show {
+.show-dropdown {
   display: block;
-}
-
-// Mobile stylings
-
-// Special nav only
-@media screen and (max-width: 950px) {
-  .username {
-    max-width: 60px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .score {
-    display: none;
-  }
-}
-
-@media screen and (max-width: $mobile-width) {
-  .score {
-    display: none;
-  }
-  .username {
-    display: none;
-  }
 }

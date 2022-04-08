@@ -33,3 +33,13 @@ $show-breakpoints: (mobile, mobileLandscape, tablet, desktop, wide);
     display: none;
   }
 }
+.tablet-hide {
+  @include mq.mq($until: desktop) {
+    display: none;
+  }
+}
+.tablet-show {
+  @include mq.mq($from: desktop) {
+    display: none;
+  }
+}

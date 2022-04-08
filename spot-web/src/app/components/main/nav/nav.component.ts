@@ -42,7 +42,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   // user
   @ViewChild('user') userView;
-  userShowDropdown = false;
+  showDropdown = false;
   user$: Observable<User>;
   userLoading$: Observable<boolean>;
   loading: boolean;
@@ -136,9 +136,8 @@ export class NavComponent implements OnInit, OnDestroy {
   offClickHandler(event: MouseEvent): void {
     // Hide the dropdown if you click outside
     if (this.userView && !this.userView.nativeElement.contains(event.target)) {
-      this.userSetDropdown(false);
+      this.showDropdown = false;
     }
-
     if (
       this.notificationsView &&
       !this.notificationsView.nativeElement.contains(event.target)
@@ -147,8 +146,8 @@ export class NavComponent implements OnInit, OnDestroy {
     }
   }
 
-  userSetDropdown(value: boolean): void {
-    this.userShowDropdown = value;
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
   }
 
   logout(): void {

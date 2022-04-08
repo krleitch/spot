@@ -1,43 +1,60 @@
 <div class="nav">
-  <div (click)="navigateHome()" class="title-link">
-    <div class="title-image"></div>
+  <div (click)="navigateHome()" class="row full-height border-box relative">
+    <div class="spot-logo"></div>
   </div>
-  <div *ngIf="user$ | async as myuser; else noUser" class="features">
-    <div *ngIf="userMetadata$ | async as userMetadata" class="score">
-      <i class="material-icons hot"> whatshot </i>
+  <div *ngIf="user$ | async as myuser; else noUser" class="row-center">
+    <span
+      class="material-icons-outlined mobile-show icon-lg margin-r-lg margin-t-sm icon-primary-highlight"
+    >
+      chat
+    </span>
+    <div
+      *ngIf="userMetadata$ | async as userMetadata"
+      class="row-center margin-r-lg tablet-hide"
+    >
+      <i class="material-icons icon-error icon-lg"> whatshot </i>
       <span> {{ userMetadata.score }} </span>
     </div>
-    <div class="notifications" #notifications>
-      <i class="material-icons" (click)="toggleNotifications()">
+    <div class="row relative margin-r-lg" #notifications>
+      <i
+        class="material-icons icon-lg icon-primary-highlight"
+        (click)="toggleNotifications()"
+      >
         notifications_none
       </i>
       <div
         *ngIf="unreadNotifications !== '0'"
-        class="unread"
+        class="unread row-center"
         (click)="toggleNotifications()"
       >
         {{ unreadNotifications }}
       </div>
       <spot-notifications *ngIf="showNotifications"></spot-notifications>
     </div>
-    <div #user class="user" (click)="userSetDropdown(true)">
-      <i class="material-icons icon"> person_outline </i>
-      <span class="username"> {{ myuser.username }} </span>
-      <div class="dropdown-content" [ngClass]="{ show: userShowDropdown }">
-        <a class="button" [routerLink]="'/activity'">
-          <span class="material-icons icon"> show_chart </span>
+    <div #user class="row-center relative text-primary-highlight" (click)="toggleDropdown()">
+      <i class="material-icons icon-lg icon-primary-highlight">
+        person_outline
+      </i>
+      <span class="mobile-hide">
+        {{ myuser.username }}
+      </span>
+      <div class="dropdown-content" [class.show-dropdown]="showDropdown">
+        <a class="dropdown-button" [routerLink]="'/activity'">
+          <span class="material-icons-outlined icon-md margin-r-md"> insights </span>
           {{ 'MAIN.NAV.ACTIVITY' | translate }}
         </a>
-        <a class="button" [routerLink]="'/friends'">
-          <span class="material-icons icon"> people_alt </span>
+        <a class="dropdown-button" [routerLink]="'/friends'">
+          <span class="material-icons-outlined icon-md margin-r-md"> people_alt </span>
           {{ 'MAIN.NAV.FRIENDS' | translate }}
         </a>
-        <a class="button" [routerLink]="'/account'">
-          <span class="material-icons icon"> settings </span>
+        <a class="dropdown-button" [routerLink]="'/account'">
+          <span class="material-icons-outlined icon-md margin-r-md"> manage_accounts </span>
           {{ 'MAIN.NAV.ACCOUNT' | translate }}
         </a>
-        <div class="button" (click)="logout()">
-          <span class="material-icons icon"> directions_run </span>
+        <div class="dropdown-button" (click)="logout()">
+          <span class="material-icons icon-md margin-r-md">
+            directions_run
+          </span>
           {{ 'MAIN.NAV.LOGOUT' | translate }}
         </div>
       </div>
@@ -45,7 +62,7 @@
   </div>
   <ng-template #noUser>
     <div *ngIf="!loading || (showUserIndicator$ | async)">
-      <div class="login" (click)="openAuthModal()">
+      <div class="text-primary-highlight margin-r-md" (click)="openAuthModal()">
         {{ 'MAIN.NAV.LOGIN_REGISTER' | translate }}
       </div>
     </div>

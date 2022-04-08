@@ -117,18 +117,15 @@
           }}"
           type="text"
           class="input-borderless full-width"
-          (keyup.enter)="addFriendRequest()"
+          (keyup.enter)="createFriendRequest()"
         />
-        <span class="row-h-center margin-l-lg" (click)="addFriendRequest()">
+        <span class="row-h-center margin-l-lg" (click)="createFriendRequest()">
           <i class="material-icons icon-submit"> send </i>
         </span>
       </div>
     </div>
     <div *ngIf="friendRequestsError" class="text-sm text-error margin-b-md">
       {{ friendRequestsError }}
-    </div>
-    <div *ngIf="friendRequestsSuccess" class="text-sm text-success margin-b-md">
-      {{ friendRequestsSuccess }}
     </div>
 
     <!-- Friends List Header w/ Search -->

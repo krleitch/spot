@@ -1,9 +1,11 @@
 /* eslint-disable prefer-const */
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 // Store
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { UserActions, RootStoreState } from '@store';
+import { UserStoreSelectors } from '@store/user-store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
@@ -29,7 +31,7 @@ export class AppComponent implements OnInit {
   title = 'spot';
 
   // TODO: this is wrong, subscribe to the $auth observable
-  isAuth = this.authenticationService.isAuthenticated();
+  isAuthenticated$: Observable<boolean>;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -45,6 +47,10 @@ export class AppComponent implements OnInit {
     // load translations
     this.translateService.setDefaultLang('en');
     this.translateService.use('en');
+    // get auth status
+    this.isAuthenticated$ = this.store$.pipe(
+      select(UserStoreSelectors.selectIsAuthenticated)
+    );
     // For when gapi is loaded since it is async defer
     window.addEventListener(
       'gapi-loaded',

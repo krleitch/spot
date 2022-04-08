@@ -82,6 +82,20 @@ $title-sizes: (
 .text-black {
   color: black;
 }
+.text-primary-highlight {
+  color: var(--text-priamry);
+  &:hover {
+    cursor: pointer;
+    color: var(--primary);
+  }
+}
+.text-secondary-highlight {
+  color: var(--text-secondary);
+  &:hover {
+    cursor: pointer;
+    color: var(--primary);
+  }
+}
 
 // Icon Colors
 .icon-success {
@@ -103,7 +117,14 @@ $title-sizes: (
     color: var(--error);
   }
 }
-.icon-highlight {
+.icon-primary-highlight {
+  color: var(--icon-priamry);
+  &:hover {
+    cursor: pointer;
+    color: var(--primary);
+  }
+}
+.icon-secondary-highlight {
   color: var(--icon-secondary);
   &:hover {
     cursor: pointer;
