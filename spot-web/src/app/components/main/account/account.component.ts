@@ -501,38 +501,48 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  public setUnit(unit: UnitSystem): void {
-    const request: UpdateUserMetadataRequest = {
-      unitSystem: unit
-    };
-
-    this.store$.dispatch(
-      new UserActions.UpdateUserMetadataRequestAction(request)
-    );
-  }
-
-  public setMature(value: boolean): void {
-    const request: UpdateUserMetadataRequest = {
-      matureFilter: value
-    };
-
-    this.store$.dispatch(
-      new UserActions.UpdateUserMetadataRequestAction(request)
-    );
-  }
-
-  public setTheme(theme: ThemeWeb) {
-    if (theme === ThemeWeb.LIGHT) {
-      this.themeService.setLightTheme();
-    } else if (theme === ThemeWeb.DARK) {
-      this.themeService.setDarkTheme();
+  public toggleUnitSystem(): void {
+    let unitSystem: UnitSystem;
+    if (this.userMetadata.unitSystem === UnitSystem.IMPERIAL) {
+      unitSystem = UnitSystem.METRIC;
     } else {
-      return;
+      unitSystem = UnitSystem.IMPERIAL;
     }
     const request: UpdateUserMetadataRequest = {
-      themeWeb: theme
+      unitSystem
     };
+    this.store$.dispatch(
+      new UserActions.UpdateUserMetadataRequestAction(request)
+    );
+  }
 
+  public toggleMatureFilter(): void {
+    let matureFilter: boolean;
+    if (this.userMetadata.matureFilter) {
+      matureFilter = false;
+    } else {
+      matureFilter = true;
+    }
+    const request: UpdateUserMetadataRequest = {
+      matureFilter
+    };
+    this.store$.dispatch(
+      new UserActions.UpdateUserMetadataRequestAction(request)
+    );
+  }
+
+  public toggleTheme() {
+    let themeWeb: ThemeWeb;
+    if (this.userMetadata.themeWeb === ThemeWeb.LIGHT) {
+      this.themeService.setDarkTheme();
+      themeWeb = ThemeWeb.DARK;
+    } else {
+      this.themeService.setLightTheme();
+      themeWeb = ThemeWeb.LIGHT;
+    }
+    const request: UpdateUserMetadataRequest = {
+      themeWeb
+    };
     this.store$.dispatch(
       new UserActions.UpdateUserMetadataRequestAction(request)
     );

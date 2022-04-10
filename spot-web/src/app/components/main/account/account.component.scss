@@ -23,447 +23,58 @@ spot-main-nav {
     max-width: 650px;
     padding-bottom: 50px;
   }
-
-  .mobile-column {
-    display: flex;
-  }
-
-  .no-account {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-flow: column;
-    text-align: center;
-
-    .icon {
-      font-size: 42px;
-      color: var(--primary);
-    }
-
-    .text {
-      font-size: 18px;
-    }
-  }
-
-  .guest {
-    color: var(--error);
-    margin-bottom: 10px;
-  }
 }
 
-.section {
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-
-  .header {
-    display: flex;
-    align-items: center;
-    background-color: var(--background-header);
-    padding: 5px;
-
-    .title {
-      font-size: var(--text-huge);
-    }
-
-    .title-icon {
-      font-size: 32px;
-      margin-right: 5px;
-      color: var(--primary);
-    }
-  }
-
-  .body {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    background-color: var(--background-container);
-
-    .social-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 10px;
-      background-color: var(--background-container);
-      margin-bottom: 5px;
-
-      .social-button {
-        margin: 0px 15px;
-      }
-    }
-
-    .info-container {
-      display: flex;
-      align-items: center;
-      margin: 3px 0px;
-
-      .subheader {
-        font-size: var(--text-regular);
-      }
-
-      input {
-        border: none;
-        outline: none;
-        color: var(--input-text);
-        padding: 0px 0px;
-        font-size: 14px;
-        background-color: var(--background-input);
-        flex: 1;
-        margin-right: 10px;
-      }
-
-      button {
-        border: none;
-        outline: none;
-        text-decoration: none;
-        color: var(--input-text);
-        background-color: var(--background-primary);
-        padding: 8px 10px;
-        cursor: pointer;
-        transition: all 1s ease;
-      }
-
-      button.left {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        background: linear-gradient(
-          to right,
-          var(--background-primary) 50%,
-          var(--primary) 50%
-        );
-        background-size: 200% 100%;
-        background-position: left bottom;
-      }
-
-      button.right {
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-        background: linear-gradient(
-          to left,
-          var(--background-primary) 50%,
-          var(--primary) 50%
-        );
-        background-size: 200% 100%;
-        background-position: right bottom;
-      }
-
-      .button-selected {
-        color: white;
-        background-color: var(--primary);
-      }
-
-      .button-selected.left {
-        background-position: right bottom;
-      }
-
-      .button-selected.right {
-        background-position: left bottom;
-      }
-
-      .value {
-        display: flex;
-        flex: 1;
-        margin-top: 3px;
-        align-items: center;
-        padding: 5px 0px 5px 5px;
-        background-color: var(--background-container);
-        .no-value {
-          color: var(--text-secondary);
-        }
-        .hot {
-          color: var(--error-light);
-          margin-right: 5px;
-        }
-      }
-
-      .editable {
-        justify-content: space-between;
-      }
-
-      .edit-icon {
-        font-size: 18px;
-        color: var(--text-secondary);
-        cursor: pointer;
-        &:hover {
-          color: var(--primary);
-        }
-      }
-
-      .link {
-        font-size: 14px;
-        color: var(--text-secondary);
-        margin-right: 5px;
-        cursor: pointer;
-        &:hover {
-          color: var(--primary);
-        }
-      }
-    }
-    .error {
-      color: var(--error);
-    }
-
-    .success {
-      color: var(--success);
-    }
-    .description {
-      color: var(--text-secondary);
-      margin-bottom: 5px;
-    }
-  }
-}
-
-// Facebook
-
-.facebook {
-  border: none;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--facebook);
-  color: white;
-  font-size: 14px;
-  padding: 12px 8px;
-  box-sizing: border-box;
-  cursor: pointer;
-  width: 240px;
-  font-family: inherit;
-}
-
-.facebook-logo {
-  width: 30px;
-  height: 30px;
-  margin-right: 18px;
-}
-
-.facebook-connected {
-  display: flex;
-  align-items: center;
-  margin: 5px;
-
-  .facebook-logo {
-    margin-right: 8px;
-    margin-left: 8px;
-  }
-
-  .text {
-    text-align: center;
-    margin-right: 8px;
-  }
-
-  button {
-    outline: none;
-    border: none;
-    background-color: var(--facebook);
-    color: white;
-    padding: 10px 15px;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
+.profile-margin {
+  margin-left: 60px;
+  margin-right: 60px;
 }
 
 // Google
-
-.google-connected {
-  display: flex;
-  align-items: center;
-  margin: 5px;
-
-  .google-logo {
-    width: 30px;
-    height: 30px;
-    margin-right: 8px;
-    margin-left: 8px;
-  }
-
-  .text {
-    text-align: center;
-    margin-right: 8px;
-  }
-
-  button {
-    outline: none;
-    border: none;
-    background-color: var(--background-page);
-    color: black;
-    padding: 10px 15px;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
+// .google-logo {
+//   width: 30px;
+//   height: 30px;
+//   margin-right: 8px;
+//   margin-left: 8px;
+// }
 
 // Profile
 
-.section .header.profile {
-  position: relative;
-  flex-direction: column;
-  align-items: flex-start;
-  .title-container {
-    display: flex;
-    align-items: center;
-  }
-}
+// .profile-position {
+//   position: absolute;
+//   top: 0;
+//   right: 0;
 
-.photo {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 10px 30px 5px 5px;
-  height: 100px;
-  width: 100px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--background-primary);
-  border-radius: 50%;
+//   .mask {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     opacity: 0%;
 
-  .mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    opacity: 0%;
+//     .background {
+//       position: absolute;
+//       top: 0;
+//       left: 0;
+//       background-color: black;
+//       height: 100px;
+//       width: 100px;
+//       border-radius: 50%;
+//       opacity: 15%;
+//     }
 
-    .background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: black;
-      height: 100px;
-      width: 100px;
-      border-radius: 50%;
-      opacity: 15%;
-    }
+//     // icon
+//     span {
+//       color: white;
+//     }
 
-    .mask-icon {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      top: 0;
-      left: 0;
-      height: 100px;
-      width: 100px;
-      background: transparent;
-      border-radius: 50%;
+//     &:hover {
 
-      .icon {
-        color: white;
-      }
-    }
+//     }
 
-    &:hover {
-      opacity: 100%;
-      cursor: pointer;
-    }
-  }
-}
-
-img {
-  width: 100px;
-  height: 100px;
-}
-
-img.op {
-  width: 100px;
-  height: 100px;
-}
-
-.age {
-  display: flex;
-  align-items: center;
-  padding: 5px 3px;
-
-  .icon {
-    font-size: 20px;
-    color: var(--primary);
-  }
-
-  .text {
-    margin-left: 5px;
-  }
-}
-
-// Verification
-
-.verify-container {
-  display: flex;
-  align-items: center;
-  padding: 5px 3px;
-
-  .text {
-    margin-left: 5px;
-  }
-
-  .icon {
-    font-size: 20px;
-    color: var(--primary);
-  }
-}
-
-.verify-container.clickable {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: var(--text-secondary);
-  &:hover {
-    color: var(--primary);
-  }
-}
-
-// Options
-
-.options {
-  justify-content: space-between;
-
-  .options-title-container {
-    display: flex;
-    align-items: center;
-  }
-}
-
-.delete {
-  background: none;
-  color: inherit;
-  border: none;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-
-  background-color: var(--button-background);
-  border: none;
-  color: var(--button-text);
-  padding: 12px 12px;
-  text-decoration: none;
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 200px;
-
-  &:hover {
-    background-color: var(--button-background-highlight);
-  }
-}
-
-.disabled {
-  background-color: var(--button-disabled);
-  cursor: not-allowed;
-  &:hover {
-    background-color: var(--button-disabled);
-  }
-}
+//   }
+// }
 
 // Checkbox
-
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -538,47 +149,12 @@ img.op {
   transform: rotate(45deg);
 }
 
-.enable-text {
-  &:hover {
-    color: var(--primary);
-  }
-}
-
 // For Mobile
-@media screen and (max-width: $mobile-width) {
-  .account {
-    .account-content {
-      width: 95%;
-      min-width: 0;
-    }
-  }
-
-  .description {
-    text-align: center;
-  }
-
-  .guest {
-    text-align: center;
-  }
-
-  .mobile-column {
-    flex-flow: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
-
-  .delete {
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-@media screen and (max-width: 800px) {
-  .social {
-    flex-flow: column;
-  }
-
-  .social-button {
-    margin: 5px 5px;
-  }
-}
+// @media screen and (max-width: $mobile-width) {
+//   .account {
+//     .account-content {
+//       width: 95%;
+//       min-width: 0;
+//     }
+//   }
+// }

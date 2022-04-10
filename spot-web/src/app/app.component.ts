@@ -55,7 +55,9 @@ export class AppComponent implements OnInit {
     window.addEventListener(
       'gapi-loaded',
       () => {
-        this.authenticationService.sendSocialServiceReady('google');
+        gapi.load('auth2', () => {
+          this.authenticationService.sendSocialServiceReady('google');
+        });
       },
       { once: true }
     );

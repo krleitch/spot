@@ -5,9 +5,15 @@
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
     <!-- Expander -->
-    <button class="expander row-center background-page" (click)="toggleMenu()">
-      <span class="material-icons expander-icon">comment</span>
-    </button>
+    <div class="col">
+      <button
+        class="expander row-center background-page"
+        (click)="toggleMenu()"
+      >
+        <span class="material-icons expander-icon">insert_comment</span>
+      </button>
+      <div class="flex-fill background-page"></div>
+    </div>
 
     <!-- Menu -->
     <div
@@ -26,9 +32,11 @@
           (click)="selectRooms()"
         >
           <i class="material-icons button-icon"> groups </i>
-          <span class="margin-l-sm" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
-            'MAIN.CHAT_MENU.ROOMS' | translate
-          }}</span>
+          <span
+            class="margin-l-sm"
+            *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+            >{{ 'MAIN.CHAT_MENU.ROOMS' | translate }}</span
+          >
         </button>
         <button
           class="menu-button"
@@ -36,9 +44,11 @@
           (click)="selectFriends()"
         >
           <span class="material-icons button-icon"> forum </span>
-          <span class="margin-l-sm" *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL">{{
-            'MAIN.CHAT_MENU.FRIENDS' | translate
-          }}</span>
+          <span
+            class="margin-l-sm"
+            *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+            >{{ 'MAIN.CHAT_MENU.FRIENDS' | translate }}</span
+          >
         </button>
       </div>
 
@@ -122,9 +132,11 @@
               (click)="createFriendTab(friend)"
             >
               <span class="row-center image">
-                <span *ngIf="!friend.profilePictureSrc" class="row-center full-size">{{
-                  getMinimizedName(friend.username)
-                }}</span>
+                <span
+                  *ngIf="!friend.profilePictureSrc"
+                  class="row-center full-size"
+                  >{{ getMinimizedName(friend.username) }}</span
+                >
                 <img
                   *ngIf="friend.profilePictureSrc"
                   [src]="friend.profilePictureSrc"

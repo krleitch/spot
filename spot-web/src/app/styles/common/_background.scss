@@ -24,3 +24,16 @@
 .container-shadow {
   box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
+
+// Radius
+.container-rounded {
+  border-radius: 5px;
+}
+.container-t-rounded {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.container-b-rounded {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}

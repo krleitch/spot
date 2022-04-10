@@ -53,8 +53,7 @@
 // borderless
 .input-borderless {
   @extend %input-shared;
-  padding: 8px 2px 2px 2px;
-  margin-bottom: 6px;
+  padding: 2px;
   background-color: var(--container-background);
   color: var(--input-text);
 }
