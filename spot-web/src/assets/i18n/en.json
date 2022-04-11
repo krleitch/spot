@@ -55,36 +55,21 @@
       "EMAIL": "Email",
       "VERIFY": "Send verification email",
       "VERIFY_SENT": "Verification email sent",
-      "VERIFY_RESEND": "Resend",
       "VERIFY_CHECK": "Your account has been verified",
       "EMAIL_VERIFY_DESCRIPTION": "You will need to verify your email to start making spots.",
-      "EMAIL_ERROR": "Email is required",
-      "EMAIL_INVALID": "Invalid email",
-      "EMAIL_CONFIRM": "If you change your email you will need to verify your email again. Are you sure you would like to continue?",
-      "EMAIL_SUCCESS": "Email was succesfully changed",
 
       "USERNAME": "Username",
-      "USERNAME_CONFIRM": "You can only change your username once every 24 hours. Are you sure you would like to continue?",
-      "USERNAME_ERROR": "Username is required",
-      "USERNAME_SUCCESS": "Username was succesfully changed",
-
+      
       "NO_PHONE": "None",
       "PHONE": "Phone",
-      "PHONE_ERROR": "Phone is required",
-      "PHONE_INVALID": "Invalid phone number",
-      "PHONE_CONFIRM": "You can only change your phone once every 24 hours. Are you sure you would like to continue?",
-      "PHONE_SUCCESS": "Phone was succesfully changed",
-
-      "SETTINGS": "Settings",
-
-      "SCORE": "Spot Score",
 
       "CHANGE": "Change",
-      "ADD": "Add",
-      "EDIT": "Edit",
-      "SUBMIT": "Submit",
+      "CHANGE_PASSWORD": "Change Password",
+      "CHANGE_USERNAME": "Change Username",
+      "CHANGE_EMAIL": "Change Email",
+      "CHANGE_PHONE": "Change Phone",
 
-      "SCORE_DESCRIPTION": "Gain score by creating spots and comments.",
+      "SETTINGS": "Settings",
 
       "UNIT": "Preferred Unit",
       "IMPERIAL": "Imperial",
@@ -102,10 +87,27 @@
       "ENABLE_OPTIONS": "Enable Options",
       "DELETE": "Delete Account",
 
-      "SOCIAL": "Social",
       "FACEBOOK_CONNECT": "Connect With Facebook",
-      "FACEBOOK_CONNECT_SUCCESS": "Disconnect",
-      "FACEBOOK_CONNECT_DESCRIPTION": "Connect with facebook to share spots with all your facebook friends"
+      "FACEBOOK_DESCRIPTION": "Connect with facebook to share spots with all your facebook friends",
+      "FACEBOOK_CONNECTED": "Connected with Facebook",
+      "GOOGLE_CONNECTED": "Connected with Google",
+      "DISCONNECT": "Disconnect"
+    },
+
+    "ACCOUNT_EDIT": {
+      "PHONE_ERROR": "Phone is required",
+      "PHONE_INVALID": "Invalid phone number",
+      "PHONE_CONFIRM": "You can only change your phone once every 24 hours. Are you sure you would like to continue?",
+      "PHONE_SUCCESS": "Phone was succesfully changed",
+
+      "USERNAME_CONFIRM": "You can only change your username once every 24 hours. Are you sure you would like to continue?",
+      "USERNAME_ERROR": "Username is required",
+      "USERNAME_SUCCESS": "Username was succesfully changed",
+
+      "EMAIL_ERROR": "Email is required",
+      "EMAIL_INVALID": "Invalid email",
+      "EMAIL_CONFIRM": "If you change your email you will need to verify your email again. Are you sure you would like to continue?",
+      "EMAIL_SUCCESS": "Email was succesfully changed"
     },
 
     "CREATE": {
@@ -275,7 +277,6 @@
     },
 
     "FRIENDS": {
-
       "PENDING": "Pending Requests",
       "CANCEL": "Cancel",
 

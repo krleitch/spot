@@ -1,5 +1,4 @@
 @use '~sass-mq/mq';
-@import '../../../styles/sizes';
 
 spot-main-nav {
   position: fixed;
@@ -30,6 +29,7 @@ spot-main-nav {
   }
 }
 
+// profile
 .profile-margin {
   margin-left: 60px;
   margin-right: 60px;
@@ -39,64 +39,34 @@ spot-main-nav {
     margin-right: 30px;
   }
 }
-.settings-margin {
-  margin-left: 60px;
-  margin-right: 60px;
-  margin-top: 15px;
+
+// settings
+.settings-margin-left {
+  margin-left: 50px;
   @include mq.mq($until: tablet) {
     margin-left: 15px;
+  }
+}
+.settings-margin-right {
+  margin-right: 50px;
+  @include mq.mq($until: tablet) {
     margin-right: 15px;
   }
 }
 .facebook-description {
   max-width: 300px;
 }
-
-// Google
-// .google-logo {
-//   width: 30px;
-//   height: 30px;
-//   margin-right: 8px;
-//   margin-left: 8px;
-// }
-
-// Profile
-
-// .profile-position {
-//   position: absolute;
-//   top: 0;
-//   right: 0;
-
-//   .mask {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     opacity: 0%;
-
-//     .background {
-//       position: absolute;
-//       top: 0;
-//       left: 0;
-//       background-color: black;
-//       height: 100px;
-//       width: 100px;
-//       border-radius: 50%;
-//       opacity: 15%;
-//     }
-
-//     // icon
-//     span {
-//       color: white;
-//     }
-
-//     &:hover {
-
-//     }
-
-//   }
-// }
+.facebook-logo {
+  width: 30px;
+  height: 30px;
+}
+.google-logo {
+  width: 25px;
+  height: 25px;
+}
 
 // Checkbox
+
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -170,13 +140,3 @@ spot-main-nav {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-
-// For Mobile
-// @media screen and (max-width: $mobile-width) {
-//   .account {
-//     .account-content {
-//       width: 95%;
-//       min-width: 0;
-//     }
-//   }
-// }

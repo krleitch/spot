@@ -2,6 +2,14 @@ import { Component, OnInit } from '@angular/core';
 
 // models
 import { ModalAccountEditData } from '@models/modal';
+import {
+  UpdateEmailRequest,
+  UpdateEmailResponse,
+  UpdatePhoneRequest,
+  UpdatePhoneResponse,
+  UpdateUsernameRequest,
+  UpdateUsernameResponse
+} from '@models/user';
 
 @Component({
   selector: 'spot-account-edit',

@@ -206,220 +206,14 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  changePhone(): void {
-    this.modalService
-      .open('global', 'accountEdit', {
-        type: 'phone',
-        data: this.STRINGS.USERNAME_CONFIRM
-      })
-      .pipe(take(1))
-      .subscribe((result: ModalConfirmResult) => {
-        if (result.status === ModalConfirmResultTypes.CONFIRM) {
-          this.editEmailEnabled = true;
-          this.editUsernameEnabled = true;
-          this.usernameErrorMessage = '';
-          this.usernameSuccessMessage = '';
-
-          setTimeout(() => {
-            this.editUsernameInput.nativeElement.focus();
-          }, 0);
-        }
-      });
-
-  }
-
-  enableEditUsername(): void {
-    this.modalService
-      .open('global', 'confirm', {
-        message: this.STRINGS.USERNAME_CONFIRM
-      })
-      .pipe(take(1))
-      .subscribe((result: ModalConfirmResult) => {
-        if (result.status === ModalConfirmResultTypes.CONFIRM) {
-          this.editEmailEnabled = true;
-          this.editUsernameEnabled = true;
-          this.usernameErrorMessage = '';
-          this.usernameSuccessMessage = '';
-
-          setTimeout(() => {
-            this.editUsernameInput.nativeElement.focus();
-          }, 0);
-        }
-      });
-  }
-
-  enableEditEmail(): void {
-    if (this.email) {
-      this.modalService
-        .open('global', 'confirm', {
-          message: this.STRINGS.EMAIL_CONFIRM
-        })
-        .pipe(take(1))
-        .subscribe((result: ModalConfirmResult) => {
-          if (result.status === ModalConfirmResultTypes.CONFIRM) {
-            this.editEmailEnabled = true;
-            this.emailErrorMessage = '';
-            this.emailSuccessMessage = '';
-            setTimeout(() => {
-              this.editEmailInput.nativeElement.focus();
-            }, 0);
-          }
-        });
-    } else {
-      this.editEmailEnabled = true;
-      this.emailErrorMessage = '';
-      this.emailSuccessMessage = '';
-      setTimeout(() => {
-        this.editEmailInput.nativeElement.focus();
-      }, 0);
-    }
-  }
-
-  enableEditPhone(): void {
-    if (this.phone) {
-      this.modalService
-        .open('global', 'confirm', {
-          message: this.STRINGS.PHONE_CONFIRM
-        })
-        .pipe(take(1))
-        .subscribe((result: ModalConfirmResult) => {
-          if (result.status === ModalConfirmResultTypes.CONFIRM) {
-            this.editPhoneEnabled = true;
-            this.phoneErrorMessage = '';
-            this.phoneSuccessMessage = '';
-            setTimeout(() => {
-              this.editPhoneInput.nativeElement.focus();
-            }, 0);
-          }
-        });
-    } else {
-      this.editPhoneEnabled = true;
-      setTimeout(() => {
-        this.editPhoneInput.nativeElement.focus();
-      }, 0);
-    }
-  }
-
-  submitEditUsername(): void {
-    this.usernameSuccessMessage = '';
-    this.usernameErrorMessage = '';
-
-    if (!this.username) {
-      this.usernameErrorMessage = this.STRINGS.USERNAME_ERROR;
-      return;
-    }
-
-    const validUsername = this.authenticationService.validateUsername(
-      this.username
-    );
-    if (validUsername !== null) {
-      this.usernameErrorMessage = validUsername;
-      return;
-    }
-
-    const request: UpdateUsernameRequest = {
-      username: this.username
-    };
-
-    this.userService
-      .updateUsername(request)
-      .pipe(take(1))
-      .subscribe(
-        (response: UpdateUsernameResponse) => {
-          this.usernameSuccessMessage = this.STRINGS.USERNAME_SUCCESS;
-          this.editUsernameEnabled = false;
-
-          const request: SetUserStore = {
-            user: { username: response.user.username }
-          };
-          // Update the store
-          this.store$.dispatch(new UserActions.SetUserAction(request));
-        },
-        (err: { error: SpotError }) => {
-          if (err.error.name === 'RateLimitError') {
-            this.usernameErrorMessage =
-              'You can only change your username once every 24 hours';
-          } else {
-            this.usernameErrorMessage = err.error.message;
-          }
-        }
-      );
-  }
-
-  submitEditEmail(): void {
-    this.emailSuccessMessage = '';
-    this.emailErrorMessage = '';
-
-    if (!this.email) {
-      this.emailErrorMessage = this.STRINGS.EMAIL_ERROR;
-      return;
-    }
-
-    const validEmail = this.authenticationService.validateEmail(this.email);
-    if (!validEmail) {
-      this.emailErrorMessage = this.STRINGS.EMAIL_INVALID;
-      return;
-    }
-
-    const request: UpdateEmailRequest = {
-      email: this.email
-    };
-
-    this.userService
-      .updateEmail(request)
-      .pipe(take(1))
-      .subscribe(
-        (response: UpdateEmailResponse) => {
-          this.emailSuccessMessage = this.STRINGS.EMAIL_SUCCESS;
-          this.editEmailEnabled = false;
-
-          const request: SetUserStore = {
-            user: { email: response.user.email }
-          };
-          this.store$.dispatch(new UserActions.SetUserAction(request));
-        },
-        (err: { error: SpotError }) => {
-          this.emailErrorMessage = err.error.message;
-        }
-      );
-  }
-
-  submitEditPhone(): void {
-    this.phoneSuccessMessage = '';
-    this.phoneErrorMessage = '';
-
-    if (!this.phone) {
-      this.phoneErrorMessage = this.STRINGS.PHONE_ERROR;
-      return;
-    }
-
-    const validEmail = this.authenticationService.validatePhone(this.phone);
-    if (!validEmail) {
-      this.phoneErrorMessage = this.STRINGS.PHONE_INVALID;
-      return;
-    }
-
-    const request: UpdatePhoneRequest = {
-      phone: this.phone
-    };
-
-    this.userService
-      .updatePhone(request)
-      .pipe(take(1))
-      .subscribe(
-        (response: UpdatePhoneResponse) => {
-          this.phoneSuccessMessage = this.STRINGS.PHONE_SUCCESS;
-          this.editPhoneEnabled = false;
-
-          const request: SetUserStore = {
-            user: { phone: response.user.phone }
-          };
-          this.store$.dispatch(new UserActions.SetUserAction(request));
-        },
-        (err: { error: SpotError }) => {
-          this.phoneErrorMessage = err.error.message;
-        }
-      );
+  changeAccountDetail(
+    type: 'username' | 'phone' | 'email',
+    data: string
+  ): void {
+    this.modalService.open('global', 'accountEdit', {
+      type: type,
+      data: data
+    });
   }
 
   deleteUser(): void {
@@ -436,6 +230,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  // verify
+
   verifyUser(): void {
     if (this.email === '') {
       // give a warning probably
@@ -446,11 +242,13 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userService
         .verifyUser(request)
         .pipe(take(1))
-        .subscribe((response: VerifyResponse) => {
+        .subscribe((_response: VerifyResponse) => {
           this.verificationSent = true;
         });
     }
   }
+
+  // facebook
 
   facebookConnect(): void {
     window['FB'].getLoginStatus((statusResponse) => {
@@ -492,6 +290,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  // Google
+
   googleConnect(googleUser): void {
     // profile.getId(), getName(), getImageUrl(), getEmail()
     // const profile = googleUser.getBasicProfile();
@@ -523,6 +323,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  // Settings
+
   public toggleUnitSystem(): void {
     let unitSystem: UnitSystem;
     if (this.userMetadata.unitSystem === UnitSystem.IMPERIAL) {
@@ -553,7 +355,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  public toggleTheme() {
+  public toggleTheme(): void {
     let themeWeb: ThemeWeb;
     if (this.userMetadata.themeWeb === ThemeWeb.LIGHT) {
       this.themeService.setDarkTheme();

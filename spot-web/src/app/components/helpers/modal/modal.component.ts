@@ -21,7 +21,7 @@ import { AuthModalComponent } from '@src/app/components/pre-auth/auth-modal/auth
 import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.component';
 import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/upload-photo.component';
 import { ChatCreateComponent } from '@src/app/components/main/chat/chat-create/chat-create.component';
-import { AccountEditComponent } from '@src/app/components/main/account-edit/account-edit.component'
+import { AccountEditComponent } from '@src/app/components/main/account-edit/account-edit.component';
 
 // Services
 import { ModalService } from '@services/modal.service';

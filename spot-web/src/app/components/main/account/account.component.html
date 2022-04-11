@@ -35,7 +35,7 @@
                 class="text-secondary-highlight margin-b-md"
                 (click)="openUploadPhotoModal()"
               >
-                Change
+                {{ 'MAIN.ACCOUNT.CHANGE' | translate }}
               </div>
               <!-- Age -->
               <div class="row-h-center margin-b-md">
@@ -103,19 +103,28 @@
           <!-- Update Account Options -->
           <div class="row-center padding-xl">
             <span class="text-secondary-highlight text-center margin-r-xl">
-              Change Password
+              {{ 'MAIN.ACCOUNT.CHANGE_PASSWORD' | translate }}
             </span>
             |
-            <span class="text-secondary-highlight text-center margin-h-xl">
-              Change Username
+            <span
+              class="text-secondary-highlight text-center margin-h-xl"
+              (click)="changeAccountDetail('username', user.username)"
+            >
+              {{ 'MAIN.ACCOUNT.CHANGE_USERNAME' | translate }}
             </span>
             |
-            <span class="text-secondary-highlight text-center margin-h-xl">
-              Change Email
+            <span
+              class="text-secondary-highlight text-center margin-h-xl"
+              (click)="changeAccountDetail('email', user.email)"
+            >
+              {{ 'MAIN.ACCOUNT.CHANGE_EMAIL' | translate }}
             </span>
             |
-            <span class="text-secondary-highlight text-center margin-l-xl">
-              Change Phone
+            <span
+              class="text-secondary-highlight text-center margin-l-xl"
+              (click)="changeAccountDetail('phone', user.phone)"
+            >
+              {{ 'MAIN.ACCOUNT.CHANGE_PHONE' | translate }}
             </span>
           </div>
         </div>
@@ -135,83 +144,88 @@
           class="row-v-center background-container container-b-rounded mobile-col"
         >
           <!-- Settings -->
-          <div *ngIf="userMetadata" class="col padding-xl settings-margin flex-fill">
+          <div
+            *ngIf="userMetadata"
+            class="col-center padding-xl settings-margin-left flex-fill"
+          >
             <!-- Unit -->
-            <div class="margin-b-sm">
-              {{ 'MAIN.ACCOUNT.UNIT' | translate }}:
-            </div>
-            <div class="row-h-center margin-b-md">
-              <div class="row-center">
-                <button
-                  class="button-switch left"
-                  [class.selected]="
-                    userMetadata.unitSystem === eUnitSystem.IMPERIAL
-                  "
-                  (click)="toggleUnitSystem()"
-                >
-                  {{ 'MAIN.ACCOUNT.IMPERIAL' | translate }}
-                </button>
-                <button
-                  class="button-switch right"
-                  [class.selected]="
-                    userMetadata.unitSystem === eUnitSystem.METRIC
-                  "
-                  (click)="toggleUnitSystem()"
-                >
-                  {{ 'MAIN.ACCOUNT.METRIC' | translate }}
-                </button>
+            <div class="col">
+              <div class="margin-b-sm">
+                {{ 'MAIN.ACCOUNT.UNIT' | translate }}:
               </div>
-            </div>
-
-            <!-- Mature Filter -->
-            <div class="margin-b-sm">
-              {{ 'MAIN.ACCOUNT.MATURE' | translate }}:
-            </div>
-            <div class="row-h-center margin-b-md">
-              <div class="row-center">
-                <button
-                  class="button-switch left"
-                  [class.selected]="userMetadata.matureFilter === true"
-                  (click)="toggleMatureFilter()"
-                >
-                  {{ 'MAIN.ACCOUNT.MATURE_TRUE' | translate }}
-                </button>
-                <button
-                  class="button-switch right"
-                  [class.selected]="userMetadata.matureFilter === false"
-                  (click)="toggleMatureFilter()"
-                >
-                  {{ 'MAIN.ACCOUNT.MATURE_FALSE' | translate }}
-                </button>
+              <div class="row-h-center margin-b-md">
+                <div class="row-center">
+                  <button
+                    class="button-switch left"
+                    [class.selected]="
+                      userMetadata.unitSystem === eUnitSystem.IMPERIAL
+                    "
+                    (click)="toggleUnitSystem()"
+                  >
+                    {{ 'MAIN.ACCOUNT.IMPERIAL' | translate }}
+                  </button>
+                  <button
+                    class="button-switch right"
+                    [class.selected]="
+                      userMetadata.unitSystem === eUnitSystem.METRIC
+                    "
+                    (click)="toggleUnitSystem()"
+                  >
+                    {{ 'MAIN.ACCOUNT.METRIC' | translate }}
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <!-- Web Theme -->
-            <div class="margin-b-sm">
-              {{ 'MAIN.ACCOUNT.THEME' | translate }}:
-            </div>
-            <div class="row-h-center">
-              <div class="row-center">
-                <button
-                  class="button-switch left"
-                  [class.selected]="userMetadata.themeWeb === eThemeWeb.LIGHT"
-                  (click)="toggleTheme()"
-                >
-                  {{ 'MAIN.ACCOUNT.LIGHT' | translate }}
-                </button>
-                <button
-                  class="button-switch right"
-                  [class.selected]="userMetadata.themeWeb === eThemeWeb.DARK"
-                  (click)="toggleTheme()"
-                >
-                  {{ 'MAIN.ACCOUNT.DARK' | translate }}
-                </button>
+              <!-- Mature Filter -->
+              <div class="margin-b-sm">
+                {{ 'MAIN.ACCOUNT.MATURE' | translate }}:
+              </div>
+              <div class="row-h-center margin-b-md">
+                <div class="row-center">
+                  <button
+                    class="button-switch left"
+                    [class.selected]="userMetadata.matureFilter === true"
+                    (click)="toggleMatureFilter()"
+                  >
+                    {{ 'MAIN.ACCOUNT.MATURE_TRUE' | translate }}
+                  </button>
+                  <button
+                    class="button-switch right"
+                    [class.selected]="userMetadata.matureFilter === false"
+                    (click)="toggleMatureFilter()"
+                  >
+                    {{ 'MAIN.ACCOUNT.MATURE_FALSE' | translate }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Web Theme -->
+              <div class="margin-b-sm">
+                {{ 'MAIN.ACCOUNT.THEME' | translate }}:
+              </div>
+              <div class="row-h-center">
+                <div class="row-center">
+                  <button
+                    class="button-switch left"
+                    [class.selected]="userMetadata.themeWeb === eThemeWeb.LIGHT"
+                    (click)="toggleTheme()"
+                  >
+                    {{ 'MAIN.ACCOUNT.LIGHT' | translate }}
+                  </button>
+                  <button
+                    class="button-switch right"
+                    [class.selected]="userMetadata.themeWeb === eThemeWeb.DARK"
+                    (click)="toggleTheme()"
+                  >
+                    {{ 'MAIN.ACCOUNT.DARK' | translate }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Social -->
-          <div class="col-center padding-xl">
+          <div class="col-center padding-xl settings-margin-right">
             <!-- Facebook -->
             <div
               *ngIf="
@@ -234,38 +248,46 @@
                 }}</span>
               </button>
               <div class="text-secondary text-center facebook-description">
-                {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_DESCRIPTION' | translate }}
+                {{ 'MAIN.ACCOUNT.FACEBOOK_DESCRIPTION' | translate }}
               </div>
             </div>
             <ng-template #facebookConnected>
-              <img
-                src="assets/images/facebook_logo.png"
-                class="facebook-logo"
-              />
-              <span class="text"> Logged in with Facebook </span>
-              <button
-                *ngIf="(facebookLoaded && false) || user.googleId"
-                (click)="facebookDisconnect()"
-              >
-                {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}
-              </button>
+              <div class="row-h-center">
+                <img
+                  src="assets/images/facebook_logo.png"
+                  class="facebook-logo"
+                />
+                <span class="margin-h-sm text-center">
+                  {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECTED' | translate }}
+                </span>
+                <button
+                  *ngIf="user.googleId || user.email"
+                  class="button"
+                  (click)="facebookDisconnect()"
+                >
+                  {{ 'MAIN.ACCOUNT.DISCONNECT' | translate }}
+                </button>
+              </div>
             </ng-template>
             <!-- Google -->
             <div
               *ngIf="(googleConnected$ | async) === false; else googleConnected"
-              class="margin-t-lg"
+              class="margin-t-xl"
             >
               <div id="my-signin2"></div>
             </div>
             <ng-template #googleConnected>
-              <div class="row-h-center">
+              <div class="row-h-center margin-t-md">
                 <img src="assets/images/google_logo.png" class="google-logo" />
-                <span class="text-center"> Logged in with Google </span>
+                <span class="margin-h-sm text-center">
+                  {{ 'MAIN.ACCOUNT.GOOGLE_CONNECTED' | translate }}
+                </span>
                 <button
-                  *ngIf="false || user.facebookId"
+                  *ngIf="user.facebookId || user.email"
+                  class="button"
                   (click)="googleDisconnect()"
                 >
-                  {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}
+                  {{ 'MAIN.ACCOUNT.DISCONNECT' | translate }}
                 </button>
               </div>
             </ng-template>
