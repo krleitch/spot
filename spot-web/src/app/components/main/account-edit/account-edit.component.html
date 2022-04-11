@@ -1,1 +1,52 @@
-<p>account-edit works!</p>
+<div class="account-edit">
+  <!-- HEADER -->
+  <div class="row-center padding-sm background-header container-t-rounded">
+    <span class="flex-fill">
+      {{ 'MAIN.ACCOUNT_EDIT.TITLE' | translate }}
+    </span>
+    <i class="material-icons icon-close" (click)="close()"> close </i>
+  </div>
+  <!-- BODY -->
+  <div class="col-center padding-lg container-b-rounded">
+    <form class="form" [formGroup]="accountEditForm" autocomplete="off">
+      <fieldset class="fieldset">
+        <div class="col">
+          <div class="">{{ propertyTitle }}</div>
+          <input
+            class="input-border-bottom"
+            type="text"
+            id="property"
+            formControlName="property"
+            autocomplete="off"
+            [placeholder]="propertyPlaceholder"
+            required
+          />
+          <!-- Property errors -->
+          <div *ngIf="property.invalid && property.dirty && property.touched">
+            <div
+              *ngIf="property.errors?.['required'] || name.errors?.['maxlength']"
+              class="form-text-error"
+            >
+              {{ 'MAIN.ACCOUNT_EDIT.PROPERTY_REQUIRED' | translate }}
+            </div>
+          </div>
+          <div *ngIf="errorMessage" class="form-text-error">
+            {{ errorMessage }}
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <!-- Submit Button -->
+    <div class="align-right">
+      <button
+        class="button"
+        [class.button-loading]="submitLoading"
+        type="button"
+        (click)="submit()"
+      >
+        {{ 'MAIN.ACCOUNT_EDIT.SUBMIT' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

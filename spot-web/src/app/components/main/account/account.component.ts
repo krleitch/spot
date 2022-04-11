@@ -69,10 +69,6 @@ declare const gapi: any;
 export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  @ViewChild('editUsername') editUsernameInput: ElementRef;
-  @ViewChild('editEmail') editEmailInput: ElementRef;
-  @ViewChild('editPhone') editPhoneInput: ElementRef;
-
   eUserRole = UserRole;
   eUnitSystem = UnitSystem;
   eThemeWeb = ThemeWeb;

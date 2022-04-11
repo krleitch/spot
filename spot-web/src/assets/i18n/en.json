@@ -95,6 +95,17 @@
     },
 
     "ACCOUNT_EDIT": {
+
+      "TITLE": "Edit Account",
+
+      "EMAIL_TITLE": "Enter new email",
+      "USERNAME_TITLE": "Enter new username",
+      "PHONE_TITLE": "Enter new phone",
+
+      "SUBMIT": "Submit",
+
+      "PROPERTY_REQUIRED": "This field is required",
+
       "PHONE_ERROR": "Phone is required",
       "PHONE_INVALID": "Invalid phone number",
       "PHONE_CONFIRM": "You can only change your phone once every 24 hours. Are you sure you would like to continue?",
