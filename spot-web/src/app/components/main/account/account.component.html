@@ -8,23 +8,26 @@
 
       <!-- Account -->
       <div class="col margin-t-lg">
-        <div class="background-header padding-md container-t-rounded">
+        <div
+          class="row-h-center background-header padding-md container-t-rounded"
+        >
           <span class="material-icons icon-lg icon-primary"> person </span>
           <span class="title-sm margin-l-sm">
             {{ 'MAIN.ACCOUNT.MY_ACCOUNT' | translate }}
           </span>
         </div>
         <div class="col background-container container-b-rounded">
-          <div class="row padding-xl">
-            <!-- Profile Picture -->
+          <div class="row padding-xl mobile-col">
+            <!-- Col 1 -->
             <div class="col-center profile-margin">
+              <!-- Profile Picture -->
               <div class="profile-lg margin-b-md">
                 <img
                   *ngIf="user.profilePictureSrc"
                   [src]="user.profilePictureSrc"
                 />
                 <img
-                  *ngIF="!user.profilePictureSrc"
+                  *ngIf="!user.profilePictureSrc"
                   src="/assets/image/op_large.png"
                 />
               </div>
@@ -34,14 +37,48 @@
               >
                 Change
               </div>
-              <div class="row-h-center">
+              <!-- Age -->
+              <div class="row-h-center margin-b-md">
                 <span class="material-icons icon-primary"> cake </span>
                 <span class="margin-l-sm">
                   {{ formatBirthday(user.createdAt) }}
                 </span>
               </div>
+              <!-- Verified Status -->
+              <div *ngIf="user.verifiedAt" class="row-h-center margin-b-md">
+                <span class="material-icons icon-primary"> verified </span>
+                <span class="margin-l-sm text-center">
+                  {{ 'MAIN.ACCOUNT.VERIFY_CHECK' | translate }}
+                </span>
+              </div>
+              <div
+                *ngIf="!user.verifiedAt && verificationSent"
+                class="row-h-center margin-b-md"
+              >
+                <span class="material-icons icon-primary"> check_circle </span>
+                <span class="margin-l-sm text-center">
+                  {{ 'MAIN.ACCOUNT.VERIFY_SENT' | translate }}
+                </span>
+              </div>
+              <div
+                *ngIf="!user.verifiedAt && !verificationSent"
+                class="row-h-center margin-b-md"
+              >
+                <span class="material-icons icon-primary"> email </span>
+                <span class="margin-l-sm text-center">
+                  {{ 'MAIN.ACCOUNT.VERIFY' | translate }}
+                </span>
+              </div>
+              <!-- Spot Score -->
+              <div *ngIf="userMetadata" class="row-h-center margin-b-md">
+                <span class="material-icons icon-lg icon-error">
+                  whatshot
+                </span>
+                <span class="margin-l-sm">{{ userMetadata.score }}</span>
+              </div>
             </div>
-            <!-- Account Details -->
+
+            <!-- Col 2 / Account Details -->
             <div class="col padding-xl flex-fill">
               <span class=""> {{ 'MAIN.ACCOUNT.USERNAME' | translate }}: </span>
               <span
@@ -63,349 +100,129 @@
               </span>
             </div>
           </div>
+          <!-- Update Account Options -->
           <div class="row-center padding-xl">
-            <span class="text-secondary-highlight margin-r-xl">
+            <span class="text-secondary-highlight text-center margin-r-xl">
               Change Password
             </span>
             |
-            <span class="text-secondary-highlight margin-h-xl">
+            <span class="text-secondary-highlight text-center margin-h-xl">
               Change Username
             </span>
             |
-            <span class="text-secondary-highlight margin-h-xl">
+            <span class="text-secondary-highlight text-center margin-h-xl">
               Change Email
             </span>
             |
-            <span class="text-secondary-highlight margin-l-xl">
+            <span class="text-secondary-highlight text-center margin-l-xl">
               Change Phone
             </span>
           </div>
         </div>
       </div>
 
-      <!-- <div class="col margin-t-lg">
-        <div class="row-h-center background-header padding-md relative">
-          <span class="row-center">
-            <span class="material-icons icon-lg icon-primary"> person </span>
-            <span class="title-sm margin-l-sm">
-              {{ 'MAIN.ACCOUNT.MY_ACCOUNT' | translate }}
-            </span>
-          </span>
-          <div class="profile-lg profile-position" (click)="openUploadPhotoModal()">
-            <div class="profile-lg mask">
-              <div class="background"></div>
-                <span class="material-icons icon"> add_a_photo </span>
-            </div>
-            <img
-              *ngIf="!profilePictureSrc"
-              src="../../../../assets/images/op_large.png"
-            />
-            <img *ngIf="profilePictureSrc" [src]="profilePictureSrc" />
-          </div>
-        </div>
-        <div class="col padding-lg background-container">
-          <div *ngIf="user.verifiedAt === null; else verified">
-            <div *ngIf="user.email">
-              <div
-                *ngIf="verificationSent === false; else sent"
-                class="row-h-center text-secondary-highlight"
-                (click)="verifyUser()"
-              >
-                <span class="material-icons icon-lg icon-secondary">
-                  email
-                </span>
-                <span class="text">
-                  {{ 'MAIN.ACCOUNT.VERIFY' | translate }}
-                </span>
-              </div>
-              <ng-template #sent>
-                <div class="row-h-center">
-                  <span class="material-icons icon-primary">
-                    check_circle
-                  </span>
-                  <span class="margin-l-md">
-                    {{ 'MAIN.ACCOUNT.VERIFY_SENT' | translate }}
-                  </span>
-                </div>
-              </ng-template>
-            </div>
-          </div>
-          <ng-template #verified>
-            <div class="row-h-center margin-b-md">
-              <span class="material-icons icon-primary"> verified </span>
-              <span class="margin-l-md">
-                {{ 'MAIN.ACCOUNT.VERIFY_CHECK' | translate }}
-              </span>
-            </div>
-          </ng-template>
-          <div class="row-h-center margin-b-md">
-            <span class="material-icons icon-primary"> cake </span>
-            <span class="margin-l-sm">
-              {{ formatBirthday(user.createdAt) }}
-            </span>
-          </div>
-          <div class="row-center margin-h-sm margin-b-md">
-            <span class="margin-r-sm">
-              {{ 'MAIN.ACCOUNT.EMAIL' | translate }}:
-            </span>
-            <div class="row-v-center justify-content-between flex-fill">
-              <span *ngIf="!email && !editEmailEnabled" class="text-secondary">
-                {{ 'MAIN.ACCOUNT.NO_EMAIL' | translate }}
-              </span>
-              <input
-                #editEmail
-                class="input-borderless"
-                [disabled]="!editEmailEnabled"
-                [(ngModel)]="email"
-                type="text"
-                spellcheck="false"
-              />
-              <div *ngIf="editEmailEnabled; else elseEmailBlock">
-                <span
-                  class="text-secondary-highlight"
-                  (click)="submitEditEmail()"
-                >
-                  {{ 'MAIN.ACCOUNT.SUBMIT' | translate }}
-                </span>
-              </div>
-              <ng-template #elseEmailBlock>
-                <span
-                  *ngIf="email; else add"
-                  class="material-icons icon-sm icon-secondary-highlight"
-                  (click)="enableEditEmail()"
-                >
-                  edit
-                </span>
-                <ng-template #add>
-                  <span
-                    class="text-secondary-highlight"
-                    (click)="enableEditEmail()"
-                  >
-                    {{ 'MAIN.ACCOUNT.ADD' | translate }}
-                  </span>
-                </ng-template>
-              </ng-template>
-            </div>
-          </div>
-          <div *ngIf="emailErrorMessage" class="text-error margin-b-md">
-            {{ emailErrorMessage }}
-          </div>
-          <div *ngIf="emailSuccessMessage" class="text-success margin-b-md">
-            {{ emailSuccessMessage }}
-          </div>
-          <div
-            *ngIf="user.verifiedAt === null"
-            class="text-secondary margin-b-md"
-          >
-            {{ 'MAIN.ACCOUNT.EMAIL_VERIFY_DESCRIPTION' | translate }}
-          </div>
-
-          <div class="row-center margin-h-sm margin-b-md">
-            <div class="margin-r-sm">
-              {{ 'MAIN.ACCOUNT.USERNAME' | translate }}:
-            </div>
-            <div class="row-v-center justify-content-between flex-fill">
-              <input
-                #editUsername
-                class="input-borderless"
-                [disabled]="!editUsernameEnabled"
-                [(ngModel)]="username"
-                type="text"
-                spellcheck="false"
-              />
-              <div *ngIf="editUsernameEnabled; else elseBlock">
-                <span
-                  class="text-secondary-highlight"
-                  (click)="submitEditUsername()"
-                >
-                  {{ 'MAIN.ACCOUNT.SUBMIT' | translate }}
-                </span>
-              </div>
-              <ng-template #elseBlock>
-                <span
-                  class="material-icons icon-sm icon-secondary-highlight"
-                  (click)="enableEditUsername()"
-                >
-                  edit
-                </span>
-              </ng-template>
-            </div>
-          </div>
-          <div *ngIf="usernameErrorMessage" class="text-error margin-b-md">
-            {{ usernameErrorMessage }}
-          </div>
-          <div *ngIf="usernameSuccessMessage" class="text-success margin-b-md">
-            {{ usernameSuccessMessage }}
-          </div>
-
-          <div class="row-center margin-h-sm margin-b-md">
-            <div class="margin-r-sm">
-              {{ 'MAIN.ACCOUNT.PHONE' | translate }}:
-            </div>
-            <div class="row-v-center justify-content-between flex-fill">
-              <span *ngIf="!phone && !editPhoneEnabled" class="text-secondary">
-                {{ 'MAIN.ACCOUNT.NO_PHONE' | translate }}
-              </span>
-              <input
-                #editPhone
-                class="input-borderless"
-                [disabled]="!editPhoneEnabled"
-                [(ngModel)]="phone"
-                type="text"
-                spellcheck="false"
-              />
-              <div *ngIf="editPhoneEnabled; else elsePhoneBlock">
-                <span
-                  class="text-secondary-highlight"
-                  (click)="submitEditPhone()"
-                >
-                  {{ 'MAIN.ACCOUNT.SUBMIT' | translate }}
-                </span>
-              </div>
-              <ng-template #elsePhoneBlock>
-                <div *ngIf="phone; else add">
-                  <span
-                    class="material-icons icon-sm icon-secondary-highlight"
-                    (click)="enableEditPhone()"
-                  >
-                    edit
-                  </span>
-                </div>
-                <ng-template #add>
-                  <span
-                    class="text-secondary-highlight"
-                    (click)="enableEditPhone()"
-                  >
-                    {{ 'MAIN.ACCOUNT.ADD' | translate }}
-                  </span>
-                </ng-template>
-              </ng-template>
-            </div>
-          </div>
-          <div *ngIf="phoneErrorMessage" class="text-error margin-b-md">
-            {{ phoneErrorMessage }}
-          </div>
-          <div *ngIf="phoneSuccessMessage" class="text-success margin-b-md">
-            {{ phoneSuccessMessage }}
-          </div>
-
-          <div
-            *ngIf="userMetadata"
-            class="row-h-center margin-h-sm margin-b-md"
-          >
-            <div class="margin-r-sm">
-              {{ 'MAIN.ACCOUNT.SCORE' | translate }}:
-            </div>
-            <div class="row-center">
-              <i class="material-icons icon-error"> whatshot </i>
-              <span class="margin-l-sm">{{ userMetadata.score }}</span>
-            </div>
-          </div>
-          <div class="text-secondary margin-l-sm">
-            {{ 'MAIN.ACCOUNT.SCORE_DESCRIPTION' | translate }}
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="userMetadata" class="col margin-t-lg">
-        <div class="row-h-center background-header padding-md">
+      <!-- Settings & Social -->
+      <div class="col margin-t-lg">
+        <div
+          class="row-h-center background-header padding-md container-t-rounded"
+        >
           <span class="material-icons icon-lg icon-primary"> settings </span>
           <span class="title-sm margin-l-sm">
             {{ 'MAIN.ACCOUNT.SETTINGS' | translate }}
           </span>
         </div>
-        <div class="col padding-lg background-container">
-          <div class="row-h-center margin-b-md">
-            <div class="margin-h-sm">
+        <div
+          class="row-v-center background-container container-b-rounded mobile-col"
+        >
+          <!-- Settings -->
+          <div *ngIf="userMetadata" class="col padding-xl settings-margin flex-fill">
+            <!-- Unit -->
+            <div class="margin-b-sm">
               {{ 'MAIN.ACCOUNT.UNIT' | translate }}:
             </div>
-            <div class="row-center">
-              <button
-                class="button-switch left"
-                [class.selected]="
-                  userMetadata.unitSystem === eUnitSystem.IMPERIAL
-                "
-                (click)="toggleUnitSystem()"
-              >
-                {{ 'MAIN.ACCOUNT.IMPERIAL' | translate }}
-              </button>
-              <button
-                class="button-switch right"
-                [class.selected]="
-                  userMetadata.unitSystem === eUnitSystem.METRIC
-                "
-                (click)="toggleUnitSystem()"
-              >
-                {{ 'MAIN.ACCOUNT.METRIC' | translate }}
-              </button>
+            <div class="row-h-center margin-b-md">
+              <div class="row-center">
+                <button
+                  class="button-switch left"
+                  [class.selected]="
+                    userMetadata.unitSystem === eUnitSystem.IMPERIAL
+                  "
+                  (click)="toggleUnitSystem()"
+                >
+                  {{ 'MAIN.ACCOUNT.IMPERIAL' | translate }}
+                </button>
+                <button
+                  class="button-switch right"
+                  [class.selected]="
+                    userMetadata.unitSystem === eUnitSystem.METRIC
+                  "
+                  (click)="toggleUnitSystem()"
+                >
+                  {{ 'MAIN.ACCOUNT.METRIC' | translate }}
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div class="row-h-center margin-b-md">
-            <div class="margin-h-sm">
+            <!-- Mature Filter -->
+            <div class="margin-b-sm">
               {{ 'MAIN.ACCOUNT.MATURE' | translate }}:
             </div>
-            <div class="row-center">
-              <button
-                class="button-switch left"
-                [class.selected]="userMetadata.matureFilter === true"
-                (click)="toggleMatureFilter()"
-              >
-                {{ 'MAIN.ACCOUNT.MATURE_TRUE' | translate }}
-              </button>
-              <button
-                class="button-switch right"
-                [class.selected]="userMetadata.matureFilter === false"
-                (click)="toggleMatureFilter()"
-              >
-                {{ 'MAIN.ACCOUNT.MATURE_FALSE' | translate }}
-              </button>
+            <div class="row-h-center margin-b-md">
+              <div class="row-center">
+                <button
+                  class="button-switch left"
+                  [class.selected]="userMetadata.matureFilter === true"
+                  (click)="toggleMatureFilter()"
+                >
+                  {{ 'MAIN.ACCOUNT.MATURE_TRUE' | translate }}
+                </button>
+                <button
+                  class="button-switch right"
+                  [class.selected]="userMetadata.matureFilter === false"
+                  (click)="toggleMatureFilter()"
+                >
+                  {{ 'MAIN.ACCOUNT.MATURE_FALSE' | translate }}
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div class="row-h-center">
-            <div class="margin-h-sm">
+            <!-- Web Theme -->
+            <div class="margin-b-sm">
               {{ 'MAIN.ACCOUNT.THEME' | translate }}:
             </div>
-            <div class="row-center">
-              <button
-                class="button-switch left"
-                [class.selected]="userMetadata.themeWeb === eThemeWeb.LIGHT"
-                (click)="toggleTheme()"
-              >
-                {{ 'MAIN.ACCOUNT.LIGHT' | translate }}
-              </button>
-              <button
-                class="button-switch right"
-                [class.selected]="userMetadata.themeWeb === eThemeWeb.DARK"
-                (click)="toggleTheme()"
-              >
-                {{ 'MAIN.ACCOUNT.DARK' | translate }}
-              </button>
+            <div class="row-h-center">
+              <div class="row-center">
+                <button
+                  class="button-switch left"
+                  [class.selected]="userMetadata.themeWeb === eThemeWeb.LIGHT"
+                  (click)="toggleTheme()"
+                >
+                  {{ 'MAIN.ACCOUNT.LIGHT' | translate }}
+                </button>
+                <button
+                  class="button-switch right"
+                  [class.selected]="userMetadata.themeWeb === eThemeWeb.DARK"
+                  (click)="toggleTheme()"
+                >
+                  {{ 'MAIN.ACCOUNT.DARK' | translate }}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="col margin-t-lg">
-        <div class="row-h-center background-header padding-md">
-          <span class="material-icons icon-lg icon-primary"> people_alt </span>
-          <span class="margin-l-sm">
-            {{ 'MAIN.ACCOUNT.SOCIAL' | translate }}
-          </span>
-        </div>
-        <div class="col padding-lg background-container">
-          <div class="row-center margin-b-lg">
+          <!-- Social -->
+          <div class="col-center padding-xl">
+            <!-- Facebook -->
             <div
-              class="margin-r-lg"
               *ngIf="
                 (facebookConnected$ | async) === false;
-                else facebookconnected
+                else facebookConnected
               "
+              class="col-center"
             >
               <button
                 *ngIf="facebookLoaded"
-                class="button-facebook"
+                class="button-facebook margin-b-sm"
                 (click)="facebookConnect()"
               >
                 <img
@@ -416,29 +233,31 @@
                   'MAIN.ACCOUNT.FACEBOOK_CONNECT' | translate
                 }}</span>
               </button>
-            </div>
-            <ng-template #facebookconnected>
-              <div class="facebook-connected">
-                <img
-                  src="assets/images/facebook_logo.png"
-                  class="facebook-logo"
-                />
-                <span class="text"> Logged in with Facebook </span>
-                <button
-                  *ngIf="(facebookLoaded && false) || user.googleId"
-                  (click)="facebookDisconnect()"
-                >
-                  {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}
-                </button>
+              <div class="text-secondary text-center facebook-description">
+                {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_DESCRIPTION' | translate }}
               </div>
+            </div>
+            <ng-template #facebookConnected>
+              <img
+                src="assets/images/facebook_logo.png"
+                class="facebook-logo"
+              />
+              <span class="text"> Logged in with Facebook </span>
+              <button
+                *ngIf="(facebookLoaded && false) || user.googleId"
+                (click)="facebookDisconnect()"
+              >
+                {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_SUCCESS' | translate }}
+              </button>
             </ng-template>
+            <!-- Google -->
             <div
-              class="margin-l-lg"
-              *ngIf="(googleConnected$ | async) === false; else googleconnected"
+              *ngIf="(googleConnected$ | async) === false; else googleConnected"
+              class="margin-t-lg"
             >
               <div id="my-signin2"></div>
             </div>
-            <ng-template #googleconnected>
+            <ng-template #googleConnected>
               <div class="row-h-center">
                 <img src="assets/images/google_logo.png" class="google-logo" />
                 <span class="text-center"> Logged in with Google </span>
@@ -451,19 +270,16 @@
               </div>
             </ng-template>
           </div>
-          <div *ngIf="facebookLoaded" class="text-secondary text-center">
-            {{ 'MAIN.ACCOUNT.FACEBOOK_CONNECT_DESCRIPTION' | translate }}
-          </div>
         </div>
       </div>
 
       <div class="col margin-t-lg">
         <div
-          class="row-h-center justify-content-between background-header padding-md"
+          class="row-h-center justify-content-between background-header padding-md container-t-rounded"
         >
           <span class="row-center">
             <span class="material-icons icon-lg icon-primary"> security </span>
-            <span class="margin-l-sm">
+            <span class="title-sm margin-l-sm">
               {{ 'MAIN.ACCOUNT.ACCOUNT_OPTIONS' | translate }}
             </span>
           </span>
@@ -477,7 +293,7 @@
             </span>
           </label>
         </div>
-        <div class="background-container padding-lg">
+        <div class="background-container container-b-rounded padding-xl">
           <button
             class="button"
             [class.button-disabled]="!userOptionsEnabled"
@@ -487,7 +303,7 @@
             {{ 'MAIN.ACCOUNT.DELETE' | translate }}
           </button>
         </div>
-      </div> -->
+      </div>
     </div>
 
     <!-- No User -->

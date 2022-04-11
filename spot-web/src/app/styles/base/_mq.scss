@@ -43,3 +43,15 @@ $show-breakpoints: (mobile, mobileLandscape, tablet, desktop, wide);
     display: none;
   }
 }
+
+// flex mobile
+.mobile-col {
+  @include mq.mq($until: tablet) {
+    flex-direction: column;
+  }
+}
+.mobile-row {
+  @include mq.mq($from: tablet) {
+    flex-direction: row;
+  }
+}

@@ -21,6 +21,7 @@ import { AuthModalComponent } from '@src/app/components/pre-auth/auth-modal/auth
 import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.component';
 import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/upload-photo.component';
 import { ChatCreateComponent } from '@src/app/components/main/chat/chat-create/chat-create.component';
+import { AccountEditComponent } from '@src/app/components/main/account-edit/account-edit.component'
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -53,6 +54,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     | WelcomeComponent
     | UploadPhotoComponent
     | ChatCreateComponent
+    | AccountEditComponent
   >;
 
   // Element used for clicking and closing background
@@ -71,7 +73,8 @@ export class ModalComponent implements OnInit, OnDestroy {
       | typeof AuthModalComponent
       | typeof WelcomeComponent
       | typeof UploadPhotoComponent
-      | typeof ChatCreateComponent;
+      | typeof ChatCreateComponent
+      | typeof AccountEditComponent;
   } = {
     share: ShareComponent,
     report: ReportComponent,
@@ -81,7 +84,8 @@ export class ModalComponent implements OnInit, OnDestroy {
     auth: AuthModalComponent,
     welcome: WelcomeComponent,
     uploadPhoto: UploadPhotoComponent,
-    chatCreate: ChatCreateComponent
+    chatCreate: ChatCreateComponent,
+    accountEdit: AccountEditComponent
   };
 
   isOpen: boolean;

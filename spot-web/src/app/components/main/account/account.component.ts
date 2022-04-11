@@ -206,6 +206,28 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  changePhone(): void {
+    this.modalService
+      .open('global', 'accountEdit', {
+        type: 'phone',
+        data: this.STRINGS.USERNAME_CONFIRM
+      })
+      .pipe(take(1))
+      .subscribe((result: ModalConfirmResult) => {
+        if (result.status === ModalConfirmResultTypes.CONFIRM) {
+          this.editEmailEnabled = true;
+          this.editUsernameEnabled = true;
+          this.usernameErrorMessage = '';
+          this.usernameSuccessMessage = '';
+
+          setTimeout(() => {
+            this.editUsernameInput.nativeElement.focus();
+          }, 0);
+        }
+      });
+
+  }
+
   enableEditUsername(): void {
     this.modalService
       .open('global', 'confirm', {

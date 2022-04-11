@@ -15,7 +15,8 @@ export type ModalComponents =
   | "auth"
   | "welcome"
   | "uploadPhoto"
-  | "chatCreate";
+  | "chatCreate"
+  | "accountEdit";
 
 // ********************
 // DATA
@@ -26,7 +27,8 @@ export type ModalData =
   | ModalConfirmData
   | ModalReportData
   | ModalImageData
-  | ModalUploadPhotoData;
+  | ModalUploadPhotoData
+  | ModalAccountEditData;
 
 export interface ModalShareData {
   spotId: string;
@@ -51,6 +53,10 @@ export interface ModalImageData {
 export interface ModalUploadPhotoData {
   type?: 'profile-picture' | 'create-chat';
   imageSrc?: string; // The current photo to show, or no photo
+}
+export interface ModalAccountEditData {
+  type: 'username' | 'email' | 'phone';
+  data: string;
 }
 
 // ********************

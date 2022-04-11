@@ -63,6 +63,7 @@ import { ChatFriendComponent } from './components/main/chat/chat-friend/chat-fri
 import { ChatJoinComponent } from './components/main/chat/chat-join/chat-join.component';
 import { UploadPhotoComponent } from './components/helpers/upload-photo/upload-photo.component';
 import { ChatCreateComponent } from './components/main/chat/chat-create/chat-create.component';
+import { AccountEditComponent } from './components/main/account-edit/account-edit.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -117,7 +118,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ChatFriendComponent,
     ChatJoinComponent,
     UploadPhotoComponent,
-    ChatCreateComponent
+    ChatCreateComponent,
+    AccountEditComponent
   ],
   imports: [
     BrowserModule,
