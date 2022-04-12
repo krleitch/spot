@@ -8,10 +8,13 @@
   </div>
   <!-- BODY -->
   <div class="col-center padding-lg container-b-rounded">
+    <div class="text-center text-secondary margin-h-xl">
+      {{ propertyDescription }}
+    </div>
     <form class="form" [formGroup]="accountEditForm" autocomplete="off">
       <fieldset class="fieldset">
         <div class="col">
-          <div class="">{{ propertyTitle }}</div>
+          <div class="margin-t-xl">{{ propertyTitle }}</div>
           <input
             class="input-border-bottom"
             type="text"

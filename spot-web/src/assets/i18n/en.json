@@ -59,7 +59,7 @@
       "EMAIL_VERIFY_DESCRIPTION": "You will need to verify your email to start making spots.",
 
       "USERNAME": "Username",
-      
+
       "NO_PHONE": "None",
       "PHONE": "Phone",
 
@@ -95,7 +95,6 @@
     },
 
     "ACCOUNT_EDIT": {
-
       "TITLE": "Edit Account",
 
       "EMAIL_TITLE": "Enter new email",
@@ -106,19 +105,14 @@
 
       "PROPERTY_REQUIRED": "This field is required",
 
-      "PHONE_ERROR": "Phone is required",
+      "PHONE_DESCRIPTION": "You can only change your phone once every 24 hours. Are you sure you would like to continue?",
       "PHONE_INVALID": "Invalid phone number",
-      "PHONE_CONFIRM": "You can only change your phone once every 24 hours. Are you sure you would like to continue?",
-      "PHONE_SUCCESS": "Phone was succesfully changed",
 
-      "USERNAME_CONFIRM": "You can only change your username once every 24 hours. Are you sure you would like to continue?",
-      "USERNAME_ERROR": "Username is required",
+      "USERNAME_DESCRIPTION": "You can only change your username once every 24 hours. Are you sure you would like to continue?",
       "USERNAME_SUCCESS": "Username was succesfully changed",
 
-      "EMAIL_ERROR": "Email is required",
-      "EMAIL_INVALID": "Invalid email",
-      "EMAIL_CONFIRM": "If you change your email you will need to verify your email again. Are you sure you would like to continue?",
-      "EMAIL_SUCCESS": "Email was succesfully changed"
+      "EMAIL_DESCRIPTION": "If you change your email you will need to verify your email again. Are you sure you would like to continue?",
+      "EMAIL_INVALID": "Invalid email"
     },
 
     "CREATE": {

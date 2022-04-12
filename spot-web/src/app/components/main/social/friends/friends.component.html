@@ -3,17 +3,19 @@
   <div class="friends-content col">
     <!-- Pending Friends -->
     <div *ngIf="pendingFriendRequests.length > 0">
-      <div class="row-h-center background-header padding-md">
+      <div
+        class="row-h-center background-header padding-md container-t-rounded margin-t-lg"
+      >
         <span class="material-icons icon-lg icon-primary"> hourglass_top </span>
         <span class="title-sm margin-l-md">
           {{ 'MAIN.FRIENDS.PENDING' | translate }}
         </span>
       </div>
       <div
-        class="full-width padding-md border-box background-container margin-b-lg"
+        class="full-width padding-md border-box background-container margin-b-lg container-b-rounded"
       >
         <div
-          class="row-h-center justify-content-between padding-sm margin-v-lg container-shadow"
+          class="row-h-center justify-content-between padding-sm margin-v-lg container-shadow container-rounded"
           *ngFor="let pendingFriendRequest of pendingFriendRequests"
         >
           <div>
@@ -40,17 +42,19 @@
 
     <!-- Friend Requests -->
     <div *ngIf="friendRequests.length > 0">
-      <div class="row-h-center background-header padding-md">
+      <div
+        class="row-h-center background-header padding-md container-t-rounded margin-t-lg"
+      >
         <span class="material-icons icon-lg icon-primary"> flaky </span>
         <span class="title-sm margin-l-md">
           {{ 'MAIN.FRIENDS.REQUESTS' | translate }}
         </span>
       </div>
       <div
-        class="full-width padding-md border-box background-container margin-b-lg"
+        class="full-width padding-md border-box background-container margin-b-lg container-b-rounded"
       >
         <div
-          class="row-h-center justify-content-between padding-sm margin-v-lg container-shadow"
+          class="row-h-center justify-content-between padding-sm margin-v-lg container-shadow container-rounded"
           *ngFor="let friendRequest of friendRequests"
         >
           <div>
@@ -84,7 +88,7 @@
 
     <!-- Add Friends -->
     <div
-      class="row-h-center justify-content-between background-header padding-sm"
+      class="row-h-center justify-content-between background-header padding-sm container-t-rounded margin-t-lg"
     >
       <div class="row-center">
         <span class="material-icons icon-lg icon-primary"> person_add </span>
@@ -106,7 +110,9 @@
         </span>
       </button>
     </div>
-    <div class="full-width border-box background-container margin-b-lg">
+    <div
+      class="full-width border-box background-container container-b-rounded"
+    >
       <div
         class="row-h-center justify-content-between border-box margin-v-sm margin-h-xl"
       >
@@ -130,7 +136,7 @@
 
     <!-- Friends List Header w/ Search -->
     <div
-      class="row-h-center justify-content-between background-header padding-sm"
+      class="row-h-center justify-content-between background-header padding-sm container-t-rounded margin-t-lg"
     >
       <div class="row-center">
         <span class="material-icons icon-lg icon-primary"> people_alt </span>
@@ -152,7 +158,7 @@
     </div>
     <!-- Friends List -->
     <div
-      class="full-width padding-md border-box background-container margin-b-lg"
+      class="full-width padding-md border-box background-container margin-b-lg container-b-rounded"
     >
       <div
         *ngIf="
@@ -163,7 +169,7 @@
       >
         <div *ngIf="friends.length > 0; else noFriends">
           <div
-            class="row-h-center justify-content-between container-shadow padding-md margin-v-lg"
+            class="row-h-center justify-content-between container-shadow container-rounded padding-md margin-v-lg"
             *ngFor="let friend of friends"
           >
             <span class="text-info margin-l-lg"> {{ friend.username }} </span>
@@ -182,7 +188,9 @@
         <!-- No Friends -->
         <ng-template #noFriends>
           <div *ngIf="friendSearch; else addFriends">
-            <span class="row-center text-center flex-wrap padding-lg overflow-hidden">
+            <span
+              class="row-center text-center flex-wrap padding-lg overflow-hidden"
+            >
               <span class="material-icons icon"> search_off </span>
               {{ 'MAIN.FRIENDS.NO_FRIENDS_FOUND' | translate }}
               {{ friendSearch }}

@@ -44,6 +44,7 @@ export class AccountEditComponent implements OnInit {
   accountEditForm: FormGroup;
 
   propertyTitle: string;
+  propertyDescription: string;
   propertyPlaceholder: string;
   errorMessage: string;
   submitLoading = false;
@@ -67,12 +68,15 @@ export class AccountEditComponent implements OnInit {
     switch (this.data.type) {
       case 'email':
         this.propertyTitle = this.STRINGS.EMAIL_TITLE;
+        this.propertyDescription = this.STRINGS.EMAIL_DESCRIPTION;
         break;
       case 'username':
         this.propertyTitle = this.STRINGS.USERNAME_TITLE;
+        this.propertyDescription = this.STRINGS.USERNAME_DESCRIPTION;
         break;
       case 'phone':
         this.propertyTitle = this.STRINGS.PHONE_TITLE;
+        this.propertyDescription = this.STRINGS.PHONE_DESCRIPTION;
         break;
     }
     this.propertyPlaceholder = this.data.data;
@@ -129,12 +133,7 @@ export class AccountEditComponent implements OnInit {
           this.close();
         },
         (err: { error: SpotError }) => {
-          if (err.error.name === 'RateLimitError') {
-            this.errorMessage =
-              'You can only change your username once every 24 hours';
-          } else {
-            this.errorMessage = err.error.message;
-          }
+          this.errorMessage = err.error.message;
           this.submitLoading = false;
         }
       );

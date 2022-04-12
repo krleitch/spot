@@ -16,7 +16,6 @@ spot-main-nav {
 .friends-content {
   width: 70%;
   max-width: 650px;
-  margin-top: 25px;
   @include mq.mq($until: tablet) {
     width: 95%;
     min-width: 0;
