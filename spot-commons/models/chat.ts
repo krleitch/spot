@@ -20,6 +20,7 @@ export interface ChatRoom {
   description: string;
   imageSrc: string;
   private: boolean;
+  point: any;
 }
 
 // A Message block is seperated by different users or time
@@ -71,6 +72,8 @@ export interface CreateChatRoomRequest {
   name: string;
   description: string;
   private: boolean;
+  lat: number;
+  lng: number;
   imageSrc?: string;
 }
 export interface CreateChatRoomResponse {

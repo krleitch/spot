@@ -207,7 +207,6 @@ export class ChatRoomComponent
           messages: MessageBlock[];
           pagination: ChatPagination;
         }) => {
-          console.log(messages);
           this.messageBlocks = messages;
           this.beforeCursor = pagination.after;
         }

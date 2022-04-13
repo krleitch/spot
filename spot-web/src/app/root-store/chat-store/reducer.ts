@@ -51,6 +51,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     case ActionTypes.GET_CHAT_ROOMS_SUCCESS: {
+      console.log(action.response);
       return {
         ...state,
         chatRooms: action.response.chatRooms,

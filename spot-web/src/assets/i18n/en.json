@@ -51,16 +51,13 @@
 
       "MY_ACCOUNT": "My Account",
 
-      "NO_EMAIL": "Please add an email to your account",
       "EMAIL": "Email",
       "VERIFY": "Send verification email",
       "VERIFY_SENT": "Verification email sent",
       "VERIFY_CHECK": "Your account has been verified",
-      "EMAIL_VERIFY_DESCRIPTION": "You will need to verify your email to start making spots.",
 
       "USERNAME": "Username",
 
-      "NO_PHONE": "None",
       "PHONE": "Phone",
 
       "CHANGE": "Change",

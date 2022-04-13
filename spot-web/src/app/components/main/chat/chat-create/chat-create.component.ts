@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 
 // store
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { ChatStoreActions } from '@store/chat-store';
 import { RootStoreState } from '@store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // Services
 import { ChatService } from '@services/chat.service';
@@ -23,6 +25,7 @@ import {
   CreateChatRoomResponse,
   AddChatRoomStore
 } from '@models/chat';
+import { LocationData } from '@models/location';
 
 // Validators
 import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
@@ -33,7 +36,8 @@ import { validateAllFormFields } from '@helpers/validators/validate-helpers';
   templateUrl: './chat-create.component.html',
   styleUrls: ['./chat-create.component.scss']
 })
-export class ChatCreateComponent implements OnInit {
+export class ChatCreateComponent implements OnInit, OnDestroy {
+  private readonly onDestroy = new Subject<void>();
   // Modal properties
   data: ModalData;
   modalId: string;
@@ -50,6 +54,10 @@ export class ChatCreateComponent implements OnInit {
   // Image
   image: File;
   imageSrc: string;
+
+  // location
+  location$: Observable<LocationData>;
+  location: LocationData;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -77,6 +85,18 @@ export class ChatCreateComponent implements OnInit {
         )
       ])
     });
+    this.location$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocation)
+    );
+    this.location$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((location: LocationData) => {
+        this.location = location;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy.next();
   }
 
   get name() {
@@ -101,7 +121,9 @@ export class ChatCreateComponent implements OnInit {
               name: this.name.value,
               description: this.description.value,
               private: this.isPrivate,
-              imageSrc: response.imageSrc
+              imageSrc: response.imageSrc,
+              lat: this.location.latitude,
+              lng: this.location.longitude
             };
             this.chatService
               .createChatRoom(chatRequest)
@@ -119,7 +141,9 @@ export class ChatCreateComponent implements OnInit {
         const chatRequest: CreateChatRoomRequest = {
           name: this.name.value,
           description: this.description.value,
-          private: this.isPrivate
+          private: this.isPrivate,
+          lat: this.location.latitude,
+          lng: this.location.longitude
         };
         this.chatService
           .createChatRoom(chatRequest)
