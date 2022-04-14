@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
 import { take, takeUntil } from 'rxjs/operators';
 
 // Store
@@ -17,7 +16,6 @@ import { ModalService } from '@services/modal.service';
 import { Friend } from '@models/friend';
 import {
   ChatType,
-  ChatTab,
   ChatRoom,
   GetChatRoomsRequest,
   AddOpenChatStore,
@@ -52,10 +50,10 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   friends$: Observable<Friend[]>;
 
   // Tabs
-  openChats$: Observable<ChatTab[]>;
-  tabs: ChatTab[] = [];
-  minimizedChats$: Observable<ChatTab[]>;
-  minimizedTabs: ChatTab[] = [];
+  openChats$: Observable<ChatRoom[]>;
+  chats: ChatRoom[] = [];
+  minimizedChats$: Observable<ChatRoom[]>;
+  minimizedChats: ChatRoom[] = [];
   chatRooms$: Observable<ChatRoom[]>;
 
   constructor(
@@ -76,16 +74,16 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     );
     this.openChats$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((tabs: ChatTab[]) => {
-        this.tabs = tabs;
+      .subscribe((chats: ChatRoom[]) => {
+        this.chats = chats;
       });
     this.minimizedChats$ = this.store$.pipe(
       select(ChatStoreSelectors.selectMinimizedChats)
     );
     this.minimizedChats$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((tabs: ChatTab[]) => {
-        this.minimizedTabs = tabs;
+      .subscribe((chats: ChatRoom[]) => {
+        this.minimizedChats = chats;
       });
 
     // Get All Rooms
@@ -121,24 +119,24 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   // Close the lru if too many tabs
   checkTooManyTabs() {
-    if (this.tabs.length >= 3) {
-      const firstTab = this.tabs[0];
-      this.minimizeTab(firstTab.tabId);
+    if (this.chats.length >= 3) {
+      const firstTab = this.chats[0];
+      this.minimizeTab(firstTab.id);
     }
   }
 
   // Check the inner chat id, as the tabId will be diff
   tabExists(chatId: string): boolean {
     // If already open do nothing // TODO: select it
-    const tab = this.tabs.filter((t) => t.chat?.id === chatId);
+    const tab = this.chats.filter((t) => t.id === chatId);
     if (tab.length > 0) {
       return true;
     }
     // Check the minimized tabs
-    const mtab = this.minimizedTabs.filter((t) => t.chat?.id === chatId);
+    const mtab = this.minimizedChats.filter((t) => t.id === chatId);
     if (mtab.length > 0) {
       this.checkTooManyTabs();
-      this.openMinimizedTab(mtab[0].tabId);
+      this.openMinimizedTab(mtab[0].id);
       return true;
     }
     return false;
@@ -150,17 +148,17 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
       return;
     }
     this.checkTooManyTabs();
-    const newTab: ChatTab = {
-      tabId: uuidv4(),
-      name: friend.username,
-      imageSrc: friend.profilePictureSrc,
-      type: ChatType.FRIEND,
-      chat: null
-    };
-    const request: AddOpenChatStore = {
-      tab: newTab
-    };
-    this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
+    // const newChat: ChatRoom = {
+    // tabId: uuidv4(),
+    // name: friend.username,
+    // imageSrc: friend.profilePictureSrc,
+    // type: ChatType.FRIEND,
+    // chat: null
+    // };
+    // const request: AddOpenChatStore = {
+    // tab: newTab
+    // };
+    // this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
   createRoomTab(room: ChatRoom) {
@@ -169,35 +167,31 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
       return;
     }
     this.checkTooManyTabs();
-    const newTab: ChatTab = {
-      tabId: uuidv4(),
-      name: room.name,
-      imageSrc: room.imageSrc,
-      type: ChatType.ROOM,
-      chat: room
+    const newChat: ChatRoom = {
+      ...room
     };
     const request: AddOpenChatStore = {
-      tab: newTab
+      chat: newChat
     };
     this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
   openMinimizedTab(id: string) {
     // get the tab
-    const tab = this.minimizedTabs.filter((elem: ChatTab) => elem.tabId === id);
+    const tab = this.minimizedChats.filter((elem: ChatRoom) => elem.id === id);
     if (!tab) {
       return;
     }
     // add to open
     const addRequest: AddOpenChatStore = {
-      tab: tab[0]
+      chat: tab[0]
     };
     this.store$.dispatch(
       new ChatStoreActions.AddOpenChatStoreAction(addRequest)
     );
     // remove from minimized
     const removeRequest: RemoveMinimizedChatStore = {
-      tabId: id
+      chatId: id
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveMinimizedChatStoreAction(removeRequest)
@@ -206,32 +200,23 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   minimizeTab = (id: string) => {
     // get the tab
-    const tab = this.tabs.filter((elem: ChatTab) => elem.tabId === id);
+    const tab = this.chats.filter((elem: ChatRoom) => elem.id === id);
     if (!tab) {
       return;
     }
     // add to minimized
     const addRequest: AddMinimizedChatStore = {
-      tab: tab[0]
+      chat: tab[0]
     };
     this.store$.dispatch(
       new ChatStoreActions.AddMinimizedChatStoreAction(addRequest)
     );
     // Remove from open
     const removeRequest: RemoveOpenChatStore = {
-      tabId: id
+      chatId: id
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveOpenChatStoreAction(removeRequest)
-    );
-  };
-
-  closeTab = (id: string) => {
-    const request: RemoveOpenChatStore = {
-      tabId: id
-    };
-    this.store$.dispatch(
-      new ChatStoreActions.RemoveOpenChatStoreAction(request)
     );
   };
 
@@ -241,13 +226,20 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchRooms() {}
+  discoverRooms() {
+    this.modalService
+      .open('global', 'chatDiscover')
+      .pipe(take(1))
+      .subscribe((_result) => {
+        // Open the room, if a room was created
+      });
+  }
 
   createRoom() {
     this.modalService
       .open('global', 'chatCreate')
       .pipe(take(1))
-      .subscribe((result) => {
+      .subscribe((_result) => {
         // Open the room, if a room was created
       });
   }

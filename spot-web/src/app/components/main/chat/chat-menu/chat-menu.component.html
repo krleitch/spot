@@ -70,7 +70,10 @@
       <div *ngIf="selectedChatOption === eChatType.ROOM" class="flex-fill">
         <!-- Room Buttons -->
         <div class="col-center padding-sm">
-          <button class="button full-width margin-b-md" (click)="searchRooms()">
+          <button
+            class="button full-width margin-b-md"
+            (click)="discoverRooms()"
+          >
             <span
               *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
               class="text margin-r-sm"
@@ -172,11 +175,11 @@
   >
     <div
       class="mini-tab row-center"
-      *ngFor="let mtab of minimizedTabs"
-      (click)="openMinimizedTab(mtab.tabId)"
+      *ngFor="let mchat of minimizedChats"
+      (click)="openMinimizedTab(mchat.id)"
     >
       <div class="mtab">
-        <span>{{ getMinimizedName(mtab.name) }}</span>
+        <span>{{ getMinimizedName(mchat.name) }}</span>
       </div>
     </div>
   </div>
@@ -186,15 +189,8 @@
     [class.expanded-full]="menuStatus === eMenuStatus.EXPANDED_FULL"
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
-    <div class="margin-r-xl" *ngFor="let tab of tabs">
-      <spot-chat-tab [tab]="tab" [close]="closeTab" [minimize]="minimizeTab">
-        <spot-chat-room
-          *ngIf="tab.type === eChatType.ROOM"
-          [chatRoom]="tab.chat"
-        ></spot-chat-room>
-        <spot-chat-friend
-          *ngIf="tab.type === eChatType.FRIEND"
-        ></spot-chat-friend>
+    <div class="margin-r-xl" *ngFor="let chat of chats">
+      <spot-chat-tab [tab]="chat">
       </spot-chat-tab>
     </div>
   </div>

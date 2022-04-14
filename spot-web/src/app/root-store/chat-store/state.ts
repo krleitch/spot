@@ -1,11 +1,11 @@
 // Models
-import { ChatRoom, Message, ChatTab } from '@models/chat';
+import { ChatRoom, Message } from '@models/chat';
 
 export interface State {
   loadingChatRooms: boolean;
   chatRooms: ChatRoom[];
-  openChats: ChatTab[];
-  minimizedChats: ChatTab[];
+  openChats: ChatRoom[];
+  minimizedChats: ChatRoom[];
   messages: { [key: string]: Message[] };
 }
 

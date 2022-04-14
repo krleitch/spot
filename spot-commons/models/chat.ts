@@ -7,13 +7,7 @@ export enum ChatType {
   ROOM = "ROOM",
   FRIEND = "FRIEND",
 }
-export interface ChatTab {
-  tabId: string;
-  type: ChatType;
-  name: string;
-  imageSrc: string;
-  chat: ChatRoom; // topic is on ChatType Room
-}
+
 export interface ChatRoom {
   id: string;
   name: string;
@@ -55,23 +49,23 @@ export interface AddChatRoomStore {
   chatRoom: ChatRoom;
 }
 export interface AddOpenChatStore {
-  tab: ChatTab;
+  chat: ChatRoom;
 }
 export interface RemoveOpenChatStore {
-  tabId: string;
+  chatId: string;
 }
 export interface AddMinimizedChatStore {
-  tab: ChatTab;
+  chat: ChatRoom;
 }
 export interface RemoveMinimizedChatStore {
-  tabId: string;
+  chatId: string;
 }
 
 // Chat-Server Requests
 export interface CreateChatRoomRequest {
   name: string;
   description: string;
-  private: boolean;
+  password: string;
   lat: number;
   lng: number;
   imageSrc?: string;

@@ -22,6 +22,7 @@ import { WelcomeComponent } from '@src/app/components/main/welcome/welcome.compo
 import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/upload-photo.component';
 import { ChatCreateComponent } from '@src/app/components/main/chat/chat-create/chat-create.component';
 import { AccountEditComponent } from '@src/app/components/main/account-edit/account-edit.component';
+import { ChatDiscoverComponent } from '@src/app/components/main/chat/chat-discover/chat-discover.component';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -54,6 +55,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     | WelcomeComponent
     | UploadPhotoComponent
     | ChatCreateComponent
+    | ChatDiscoverComponent
     | AccountEditComponent
   >;
 
@@ -74,6 +76,7 @@ export class ModalComponent implements OnInit, OnDestroy {
       | typeof WelcomeComponent
       | typeof UploadPhotoComponent
       | typeof ChatCreateComponent
+      | typeof ChatDiscoverComponent
       | typeof AccountEditComponent;
   } = {
     share: ShareComponent,
@@ -85,6 +88,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     welcome: WelcomeComponent,
     uploadPhoto: UploadPhotoComponent,
     chatCreate: ChatCreateComponent,
+    chatDiscover: ChatDiscoverComponent,
     accountEdit: AccountEditComponent
   };
 

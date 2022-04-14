@@ -1,5 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ChatType, ChatTab } from '@models/chat';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { ChatType, ChatRoom } from '@models/chat';
+
+// Components
+import { ChatRoomComponent } from '@src/app/components/main/chat/chat-room/chat-room.component';
+
+// Store
+import { Store, select } from '@ngrx/store';
+import { RootStoreState } from '@store';
+import { SocialStoreSelectors } from '@store/social-store';
+import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
+
+// models
+import { RemoveOpenChatStore, AddMinimizedChatStore } from '@models/chat';
 @Component({
   selector: 'spot-chat-tab',
   templateUrl: './chat-tab.component.html',
@@ -7,11 +19,11 @@ import { ChatType, ChatTab } from '@models/chat';
 })
 export class ChatTabComponent implements OnInit {
   chatExpanded = true;
-  @Input() tab: ChatTab;
-  @Input() close: (_id: string) => void;
+  @Input() tab: ChatRoom;
+  @ViewChild(ChatRoomComponent) room: ChatRoomComponent;
   @Input() minimize: (_id: string) => void;
 
-  constructor() {}
+  constructor(private store$: Store<RootStoreState.State>) {}
 
   ngOnInit(): void {}
 
@@ -22,10 +34,35 @@ export class ChatTabComponent implements OnInit {
   }
 
   minimizeTab() {
-    this.minimize(this.tab.tabId);
+    // Call the inner chat close
+    // currently minimized tabs are left
+    this.room.leaveRoom();
+
+    // add to minimized
+    const addRequest: AddMinimizedChatStore = {
+      chat: this.tab
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.AddMinimizedChatStoreAction(addRequest)
+    );
+    // Remove from open
+    const removeRequest: RemoveOpenChatStore = {
+      chatId: this.tab.id
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.RemoveOpenChatStoreAction(removeRequest)
+    );
   }
 
-  closeTab() {
-    this.close(this.tab.tabId);
-  }
+  closeTab = () => {
+    // Call the inner chat close
+    this.room.leaveRoom();
+
+    const request: RemoveOpenChatStore = {
+      chatId: this.tab.id
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.RemoveOpenChatStoreAction(request)
+    );
+  };
 }

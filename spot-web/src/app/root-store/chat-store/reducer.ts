@@ -18,28 +18,26 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.ADD_OPEN_CHAT_STORE: {
       return {
         ...state,
-        openChats: state.openChats.concat(action.request.tab)
+        openChats: state.openChats.concat(action.request.chat)
       };
     }
     case ActionTypes.REMOVE_OPEN_CHAT_STORE: {
       return {
         ...state,
-        openChats: state.openChats.filter(
-          (r) => r.tabId !== action.request.tabId
-        )
+        openChats: state.openChats.filter((r) => r.id !== action.request.chatId)
       };
     }
     case ActionTypes.ADD_MINIMIZED_CHAT_STORE: {
       return {
         ...state,
-        minimizedChats: state.minimizedChats.concat(action.request.tab)
+        minimizedChats: state.minimizedChats.concat(action.request.chat)
       };
     }
     case ActionTypes.REMOVE_MINIMIZED_CHAT_STORE: {
       return {
         ...state,
         minimizedChats: state.minimizedChats.filter(
-          (r) => r.tabId !== action.request.tabId
+          (r) => r.id !== action.request.chatId
         )
       };
     }

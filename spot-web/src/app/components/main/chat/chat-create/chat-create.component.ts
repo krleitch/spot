@@ -80,7 +80,15 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
       description: new FormControl('', [
         Validators.maxLength(256),
         forbiddenNameValidator(
-          /^[a-zA-Z]?[\w!@#$%^&*()_+-=[\]{};':"\\|,.<>/?+\s$]*$/,
+          /^[\w!@#$%^&*()_+-=[\]{};':"\\|,.<>/?+\s$]*$/,
+          'allow'
+        )
+      ]),
+      password: new FormControl('', [
+        Validators.minLength(3),
+        Validators.maxLength(64),
+        forbiddenNameValidator(
+          /^[\w!@#$%^&*()_+-=[\]{};':"\\|,.<>/?+\s$]*$/,
           'allow'
         )
       ])
@@ -106,8 +114,17 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
     return this.createChatForm.get('description');
   }
 
+  get password() {
+    return this.createChatForm.get('password');
+  }
+
+  // make sure password is required if isPrivate is true
+  passwordRequiredCheck(): boolean {
+    return !(this.isPrivate && this.password.value.length === 0);
+  }
+
   createRoom(): void {
-    if (this.createChatForm.valid) {
+    if (this.createChatForm.valid && this.passwordRequiredCheck()) {
       // Upload image first, if it exists
       if (this.image) {
         const uploadRequest: UploadChatRoomPhotoRequest = {
@@ -120,7 +137,7 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
             const chatRequest: CreateChatRoomRequest = {
               name: this.name.value,
               description: this.description.value,
-              private: this.isPrivate,
+              password: this.isPrivate ? this.password.value : null,
               imageSrc: response.imageSrc,
               lat: this.location.latitude,
               lng: this.location.longitude
@@ -141,7 +158,7 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
         const chatRequest: CreateChatRoomRequest = {
           name: this.name.value,
           description: this.description.value,
-          private: this.isPrivate,
+          password: this.isPrivate ? this.password.value : null,
           lat: this.location.latitude,
           lng: this.location.longitude
         };
@@ -158,6 +175,10 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
           });
       }
     } else {
+      // set password required
+      if (this.isPrivate && this.password.value.length === 0) {
+        this.password.setErrors({ required: true });
+      }
       validateAllFormFields(this.createChatForm);
     }
   }

@@ -328,9 +328,17 @@
       "DESCRIPTION_PLACEHOLDER": "What are you chatting about?",
       "DESCRIPTION_INVALID_LENGTH": "Must be less than 256 characters",
       "DESCRIPTION_INVALID_TEXT": "Must start with a letter",
+      "PASSWORD_TITLE": "Password",
+      "PASSWORD_PLACEHOLDER": "Whats others will enter to join your room",
+      "PASSWORD_INVALID_LENGTH": "Must be in range [3,64] characters",
+      "PASSWORD_INVALID_TEXT": "Invalid password",
       "PUBLIC": "Public",
       "PRIVATE": "Private",
       "CREATE": "Create"
+    },
+
+    "CHAT_DISCOVER": {
+      "TITLE": "Discover rooms"
     },
 
     "ACTIVITY": {

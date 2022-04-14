@@ -9,7 +9,9 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { take } from 'rxjs/operators';
-import { Channel as PhoenixChannel } from 'phoenix';
+
+// phoenix
+import { Channel as PhoenixChannel, Presence } from 'phoenix';
 
 // Services
 import { ChatService } from '@services/chat.service';
@@ -47,6 +49,7 @@ export class ChatRoomComponent
   beforeCursor: string = null;
   disableScrollDown = false;
   ignoreInitialObserver = true;
+  userCount = 0;
 
   constructor(
     private chatService: ChatService,
@@ -195,6 +198,14 @@ export class ChatRoomComponent
       });
   }
 
+  syncPresentCount = (presences) => {
+    let count = 0;
+    Presence.list(presences, (_id, { metas: [_first, ..._rest] }) => {
+      count += 1;
+    });
+    this.userCount = count;
+  };
+
   joinRoom(): void {
     this.channel
       .join()
@@ -217,6 +228,17 @@ export class ChatRoomComponent
       .receive('timeout', () => {
         console.log('Networking issue. Still waiting...');
       });
+
+    let presences = {};
+    this.channel.on('presence_state', (state) => {
+      presences = Presence.syncState(presences, state);
+      this.syncPresentCount(presences);
+    });
+
+    this.channel.on('presence_diff', (diff) => {
+      presences = Presence.syncDiff(presences, diff);
+      this.syncPresentCount(presences);
+    });
 
     this.channel.on('message_created', (message: Message) => {
       // determine if we need to add a new block or append to last block

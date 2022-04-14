@@ -16,6 +16,7 @@ export type ModalComponents =
   | "welcome"
   | "uploadPhoto"
   | "chatCreate"
+  | "chatDiscover"
   | "accountEdit";
 
 // ********************

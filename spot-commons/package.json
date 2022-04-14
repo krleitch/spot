@@ -8,7 +8,6 @@
     "tslint": "^5.20.1",
     "typescript": "^3.9.5"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +16,8 @@
     "url": "git@github.com:krleitch/spot.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/phoenix": "^1.5.4"
+  }
 }

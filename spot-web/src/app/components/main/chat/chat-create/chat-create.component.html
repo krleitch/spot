@@ -1,14 +1,20 @@
 <div class="chat-create">
   <!-- HEADER -->
-  <div class="row-center padding-sm background-header">
+  <div class="row-center padding-sm background-header container-t-rounded">
     <span class="flex-fill"> {{ 'MAIN.CHAT_CREATE.TITLE' | translate }} </span>
     <span class="material-icons icon-close" (click)="close()"> close </span>
   </div>
   <!-- BODY -->
-  <div class="col-center background-container padding-lg">
+  <div class="col-center background-container padding-lg container-b-rounded">
     <!-- Photo -->
-    <div class="row-center photo" [class.image-selected]="imageSrc" (click)="openPhotoModal()">
-      <span *ngIf="!imageSrc" class="material-icons icon-md icon-secondary"> add_a_photo </span>
+    <div
+      class="row-center photo"
+      [class.image-selected]="imageSrc"
+      (click)="openPhotoModal()"
+    >
+      <span *ngIf="!imageSrc" class="material-icons icon-md icon-secondary">
+        add_a_photo
+      </span>
       <img *ngIf="imageSrc" [src]="imageSrc" />
     </div>
 
@@ -46,7 +52,10 @@
             >
               {{ 'MAIN.CHAT_CREATE.NAME_INVALID_LENGTH' | translate }}
             </div>
-            <div *ngIf="name.errors?.['forbiddenName']" class="form-text-error">
+            <div
+              *ngIf="name.errors?.['forbiddenName'] || name.errors?.['required']"
+              class="form-text-error"
+            >
               {{ 'MAIN.CHAT_CREATE.NAME_INVALID_TEXT' | translate }}
             </div>
           </div>
@@ -85,6 +94,40 @@
               class="form-text-error"
             >
               {{ 'MAIN.CHAT_CREATE.DESCRIPTION_INVALID_TEXT' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div *ngIf="isPrivate" class="col-h-center">
+          <div class="form-title">
+            {{ 'MAIN.CHAT_CREATE.PASSWORD_TITLE' | translate }}
+          </div>
+          <div class="form-field">
+            <input
+              class="input-border-bottom"
+              type="text"
+              id="password"
+              formControlName="password"
+              autocomplete="off"
+              placeholder="{{
+                'MAIN.CHAT_CREATE.PASSWORD_PLACEHOLDER' | translate
+              }}"
+            />
+          </div>
+          <!-- Password Errors -->
+          <div *ngIf="password.invalid && password.dirty && password.touched">
+            <div
+              *ngIf="password.errors?.['minlength'] || password.errors?.['maxlength']"
+              class="form-text-error"
+            >
+              {{ 'MAIN.CHAT_CREATE.PASSWORD_INVALID_LENGTH' | translate }}
+            </div>
+            <div
+              *ngIf="password.errors?.['forbiddenName'] || password.errors?.['required']"
+              class="form-text-error"
+            >
+              {{ 'MAIN.CHAT_CREATE.PASSWORD_INVALID_TEXT' | translate }}
             </div>
           </div>
         </div>
