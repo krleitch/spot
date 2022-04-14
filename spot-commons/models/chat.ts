@@ -15,6 +15,7 @@ export interface ChatRoom {
   imageSrc: string;
   private: boolean;
   point: any;
+  geolocation: string;
 }
 
 // A Message block is seperated by different users or time
