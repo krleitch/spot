@@ -7,6 +7,7 @@ import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import { SocialStoreSelectors } from '@store/social-store';
 import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // Services
 import { ChatService } from '@services/chat.service';
@@ -23,6 +24,7 @@ import {
   AddMinimizedChatStore,
   RemoveMinimizedChatStore
 } from '@models/chat';
+import { LocationData } from '@models/location';
 
 enum MenuStatus {
   HIDDEN = 'HIDDEN',
@@ -48,6 +50,10 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   // Friends
   friends$: Observable<Friend[]>;
+
+  // location
+  location$: Observable<LocationData>;
+  location: LocationData;
 
   // Tabs
   openChats$: Observable<ChatRoom[]>;
@@ -85,12 +91,24 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
       .subscribe((chats: ChatRoom[]) => {
         this.minimizedChats = chats;
       });
-
-    // Get All Rooms
-    const getChatRoomsRequest: GetChatRoomsRequest = {};
-    this.store$.dispatch(
-      new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
+    this.location$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocation)
     );
+    this.location$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((location: LocationData) => {
+        this.location = location;
+        if (this.location) {
+          // Get All Rooms
+          const getChatRoomsRequest: GetChatRoomsRequest = {
+            lat: this.location.latitude,
+            lng: this.location.longitude
+          };
+          this.store$.dispatch(
+            new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
+          );
+        }
+      });
   }
 
   ngOnDestroy(): void {

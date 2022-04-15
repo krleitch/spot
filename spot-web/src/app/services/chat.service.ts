@@ -40,10 +40,13 @@ export class ChatService {
   }
 
   // Requests to Spot-Chat-Server
-  getChatRooms(
-    _request: GetChatRoomsRequest
-  ): Observable<GetChatRoomsResponse> {
-    return this.http.get<GetChatRoomsResponse>(`${this.chatBaseUrl}/rooms`);
+  getChatRooms(request: GetChatRoomsRequest): Observable<GetChatRoomsResponse> {
+    let params = new HttpParams();
+    params = params.append('lat', request.lat);
+    params = params.append('lng', request.lng);
+    return this.http.get<GetChatRoomsResponse>(`${this.chatBaseUrl}/rooms`, {
+      params
+    });
   }
 
   getMessages(request: GetMessagesRequest): Observable<GetMessagesResponse> {
