@@ -1,24 +1,120 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+
+// Store
+import { Store, select } from '@ngrx/store';
+import { RootStoreState } from '@store';
+// import { SocialStoreSelectors } from '@store/social-store';
+// import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
+import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // services
+import { ChatService } from '@services/chat.service';
 import { ModalService } from '@services/modal.service';
 
 // models
 import { ModalData } from '@models/modal';
+import {
+  GetChatRoomsRequest,
+  ChatRoom,
+  GetChatRoomsResponse
+} from '@models/chat';
+import { LocationData } from '@models/location';
+import { UserMetadata, UnitSystem } from '@models/userMetadata';
+
+import { LOCATION_CONSTANTS } from '@constants/location';
 
 @Component({
   selector: 'spot-chat-discover',
   templateUrl: './chat-discover.component.html',
   styleUrls: ['./chat-discover.component.scss']
 })
-export class ChatDiscoverComponent implements OnInit {
+export class ChatDiscoverComponent implements OnInit, OnDestroy {
+  private readonly onDestroy = new Subject<void>();
   // Modal properties
   data: ModalData;
   modalId: string;
 
-  constructor(private modalService: ModalService) {}
+  // Rooms
+  chatRooms: ChatRoom[];
 
-  ngOnInit(): void {}
+  // location
+  location$: Observable<LocationData>;
+  location: LocationData;
+
+  // User Metadata
+  userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
+
+  constructor(
+    private modalService: ModalService,
+    private chatService: ChatService,
+    private store$: Store<RootStoreState.State>
+  ) {}
+
+  ngOnInit(): void {
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
+    );
+
+    this.userMetadata$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((userMetadata: UserMetadata) => {
+        this.userMetadata = userMetadata;
+      });
+
+    this.location$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocation)
+    );
+    this.location$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((location: LocationData) => {
+        this.location = location;
+        if (this.location) {
+          // Get All Rooms
+          const getChatRoomsRequest: GetChatRoomsRequest = {
+            lat: this.location.latitude,
+            lng: this.location.longitude
+          };
+          this.chatService
+            .getChatRooms(getChatRoomsRequest)
+            .pipe(take(1))
+            .subscribe((response: GetChatRoomsResponse) => {
+              this.chatRooms = response.chatRooms;
+              console.log(response);
+              // todo: cursor scroll
+            });
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy.next();
+  }
+
+  getDistance(distance: number): string {
+    let unit;
+    if (this.userMetadata) {
+      unit = this.userMetadata.unitSystem;
+    } else {
+      unit = UnitSystem.IMPERIAL;
+    }
+
+    let distanceString = '';
+
+    if (distance <= LOCATION_CONSTANTS.MIN_DISTANCE) {
+      distanceString += '< ';
+    }
+
+    if (unit === UnitSystem.METRIC) {
+      distanceString += (distance * 1.60934).toFixed(1) + ' km';
+    } else {
+      distanceString += distance.toFixed(1) + ' m';
+    }
+
+    return distanceString;
+  }
 
   close(): void {
     this.modalService.close(this.modalId);

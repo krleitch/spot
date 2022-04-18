@@ -1,11 +1,65 @@
 <div class="chat-discover">
   <!-- HEADER -->
   <div class="row-center padding-sm background-header container-t-rounded">
-    <span class="flex-fill"> {{ 'MAIN.CHAT_DISCOVER.TITLE' | translate }} </span>
+    <span class="flex-fill">
+      {{ 'MAIN.CHAT_DISCOVER.TITLE' | translate }}
+    </span>
     <span class="material-icons icon-close" (click)="close()"> close </span>
   </div>
   <!-- BODY -->
   <div class="col-center background-container padding-lg container-b-rounded">
-
+    <table class="full-width">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th
+            scope="col"
+            [spotSort]="chatRooms"
+            data-order="desc"
+            data-name="name"
+          >
+            Name
+          </th>
+          <th
+            scope="col"
+            [spotSort]="chatRooms"
+            data-order="desc"
+            data-name="distance"
+          >
+            Location
+          </th>
+          <th
+            scope="col"
+            [spotSort]="chatRooms"
+            data-order="desc"
+            data-name="numUsers"
+          >
+            Capacity
+          </th>
+          <th scope="col">Search</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let chatRoom of chatRooms">
+          <tr>
+            <td rowspan="2">
+              <div class="profile-sm background-page row-center">
+                <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
+                <span *ngIf="!chatRoom.imageSrc"> C </span>
+              </div>
+            </td>
+            <td>{{ chatRoom.name }}</td>
+            <td>
+              {{ chatRoom.geolocation }} {{ getDistance(chatRoom.distance) }}
+            </td>
+            <td>{{ chatRoom.numUsers }} / {{ chatRoom.capacity }}</td>
+            <td rowspan="2"><button class="button">Join</button></td>
+          </tr>
+          <tr>
+            <td colspan="3">{{ chatRoom.description }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
   </div>
 </div>

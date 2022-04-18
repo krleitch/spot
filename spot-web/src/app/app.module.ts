@@ -65,6 +65,7 @@ import { UploadPhotoComponent } from './components/helpers/upload-photo/upload-p
 import { ChatCreateComponent } from './components/main/chat/chat-create/chat-create.component';
 import { AccountEditComponent } from './components/main/account-edit/account-edit.component';
 import { ChatDiscoverComponent } from './components/main/chat/chat-discover/chat-discover.component';
+import { SortDirective } from './directives/sort.directive';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -121,7 +122,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     UploadPhotoComponent,
     ChatCreateComponent,
     AccountEditComponent,
-    ChatDiscoverComponent
+    ChatDiscoverComponent,
+    SortDirective
   ],
   imports: [
     BrowserModule,

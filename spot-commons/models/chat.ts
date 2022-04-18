@@ -18,6 +18,7 @@ export interface ChatRoom {
   geolocation: string;
   capacity: number;
   numUsers: number;
+  insertedAt: string;
 }
 
 // A Message block is seperated by different users or time
