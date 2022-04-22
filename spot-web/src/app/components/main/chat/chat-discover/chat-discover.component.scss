@@ -1,4 +1,17 @@
 th {
   text-align: left;
-  font-weight: normal;
+  // font-weight: normal;
+}
+
+tr:nth-child(even) {
+  background: var(--background-page);
+  td .profile-sm {
+    background-color: var(--background-container);
+  }
+}
+tr:nth-child(odd) {
+  background: var(--background-container);
+  td .profile-sm {
+    background-color: var(--background-page);
+  }
 }

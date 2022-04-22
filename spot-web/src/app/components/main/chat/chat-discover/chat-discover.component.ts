@@ -6,7 +6,7 @@ import { take, takeUntil } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
 // import { SocialStoreSelectors } from '@store/social-store';
-// import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
+import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // services
@@ -18,7 +18,10 @@ import { ModalData } from '@models/modal';
 import {
   GetChatRoomsRequest,
   ChatRoom,
-  GetChatRoomsResponse
+  GetChatRoomsResponse,
+  JoinChatRoomRequest,
+  JoinChatRoomResponse,
+  AddOpenChatStore
 } from '@models/chat';
 import { LocationData } from '@models/location';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
@@ -43,6 +46,8 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   location$: Observable<LocationData>;
   location: LocationData;
 
+  search: string;
+
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
@@ -51,7 +56,9 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private chatService: ChatService,
     private store$: Store<RootStoreState.State>
-  ) {}
+  ) {
+    //empty
+  }
 
   ngOnInit(): void {
     this.userMetadata$ = this.store$.pipe(
@@ -94,7 +101,7 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   }
 
   getDistance(distance: number): string {
-    let unit;
+    let unit: UnitSystem;
     if (this.userMetadata) {
       unit = this.userMetadata.unitSystem;
     } else {
@@ -103,10 +110,6 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
 
     let distanceString = '';
 
-    if (distance <= LOCATION_CONSTANTS.MIN_DISTANCE) {
-      distanceString += '< ';
-    }
-
     if (unit === UnitSystem.METRIC) {
       distanceString += (distance * 1.60934).toFixed(1) + ' km';
     } else {
@@ -114,6 +117,26 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     }
 
     return distanceString;
+  }
+
+  joinChatRoom(id: string): void {
+    const joinChatRoom: JoinChatRoomRequest = {
+      lat: this.location.latitude,
+      lng: this.location.longitude,
+      chatRoomId: id
+    };
+    this.chatService
+      .joinChatRoom(joinChatRoom)
+      .pipe(take(1))
+      .subscribe((response: JoinChatRoomResponse) => {
+        // add to open
+        const addRequest: AddOpenChatStore = {
+          chat: response.chatRoom
+        };
+        this.store$.dispatch(
+          new ChatStoreActions.AddOpenChatStoreAction(addRequest)
+        );
+      });
   }
 
   close(): void {

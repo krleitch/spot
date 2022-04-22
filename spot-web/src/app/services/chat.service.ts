@@ -11,7 +11,9 @@ import {
   GetChatRoomsRequest,
   GetChatRoomsResponse,
   GetMessagesRequest,
-  GetMessagesResponse
+  GetMessagesResponse,
+  JoinChatRoomRequest,
+  JoinChatRoomResponse
 } from '@models/chat';
 
 // env
@@ -47,6 +49,13 @@ export class ChatService {
     return this.http.get<GetChatRoomsResponse>(`${this.chatBaseUrl}/rooms`, {
       params
     });
+  }
+
+  joinChatRoom(request: JoinChatRoomRequest): Observable<JoinChatRoomResponse> {
+    return this.http.post<JoinChatRoomResponse>(
+      `${this.chatBaseUrl}/rooms/${request.chatRoomId}/join`,
+      request
+    );
   }
 
   getMessages(request: GetMessagesRequest): Observable<GetMessagesResponse> {

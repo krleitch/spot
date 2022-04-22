@@ -77,10 +77,8 @@ export interface CreateChatRoomRequest {
 export interface CreateChatRoomResponse {
   chatRoom: ChatRoom;
 }
-export interface CreateMessage {
-  text: string;
-}
 
+// Chat Rooms
 export interface GetChatRoomsRequest {
   lat: number;
   lng: number;
@@ -90,12 +88,23 @@ export interface GetChatRoomsResponse {
   chatRooms: Array<ChatRoom>;
   pagination: ChatPagination;
 }
+export interface JoinChatRoomRequest {
+  lat: number;
+  lng: number;
+  chatRoomId: string;
+}
+export interface JoinChatRoomResponse {
+  chatRoom: ChatRoom;
+}
 
+// Messages
+export interface CreateMessage {
+  text: string;
+}
 export interface GetMessagesRequest {
   roomId: string;
   before: string;
 }
-
 export interface GetMessagesResponse {
   messages: MessageBlock[];
   pagination: ChatPagination;
