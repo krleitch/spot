@@ -88,6 +88,14 @@ export interface GetChatRoomsResponse {
   chatRooms: Array<ChatRoom>;
   pagination: ChatPagination;
 }
+export interface GetUserChatRoomsRequest {
+  lat: number;
+  lng: number;
+}
+export interface GetUserChatRoomsResponse {
+  chatRooms: Array<ChatRoom>;
+  pagination: ChatPagination;
+}
 export interface JoinChatRoomRequest {
   lat: number;
   lng: number;

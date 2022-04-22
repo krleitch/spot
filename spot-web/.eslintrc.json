@@ -50,7 +50,10 @@
     {
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
-      "rules": {}
+      "rules": {
+        "max-len": ["error", { "code": 80 }],
+        "tabWidth": 2
+      }
     }
   ]
 }

@@ -61,6 +61,25 @@ export function featureReducer(state = initialState, action: Actions): State {
         loadingChatRooms: false
       };
     }
+    case ActionTypes.GET_USER_CHAT_ROOMS_REQUEST: {
+      return {
+        ...state,
+        loadingUserChatRooms: true
+      };
+    }
+    case ActionTypes.GET_USER_CHAT_ROOMS_SUCCESS: {
+      return {
+        ...state,
+        userChatRooms: action.response.chatRooms,
+        loadingUserChatRooms: false
+      };
+    }
+    case ActionTypes.GET_USER_CHAT_ROOMS_FAILURE: {
+      return {
+        ...state,
+        loadingUserChatRooms: false
+      };
+    }
     default: {
       return state;
     }

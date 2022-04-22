@@ -9,7 +9,9 @@ import {
   GetChatRoomsRequest,
   GetChatRoomsResponse,
   AddMinimizedChatStore,
-  RemoveMinimizedChatStore
+  RemoveMinimizedChatStore,
+  GetUserChatRoomsRequest,
+  GetUserChatRoomsResponse
 } from '@models/chat';
 
 export enum ActionTypes {
@@ -18,6 +20,9 @@ export enum ActionTypes {
   GET_CHAT_ROOMS_REQUEST = '[Chat] Get Chat Rooms Request',
   GET_CHAT_ROOMS_SUCCESS = '[Chat] Get Chat Rooms Success',
   GET_CHAT_ROOMS_FAILURE = '[Chat] Get Chat Rooms Failure',
+  GET_USER_CHAT_ROOMS_REQUEST = '[Chat] Get User Chat Rooms Request',
+  GET_USER_CHAT_ROOMS_SUCCESS = '[Chat] Get User Chat Rooms Success',
+  GET_USER_CHAT_ROOMS_FAILURE = '[Chat] Get User Chat Rooms Failure',
   ADD_CHAT_ROOM_STORE = '[Chat] Add Chat Room Store',
   ADD_OPEN_CHAT_STORE = '[Chat] Add Open Chat Store',
   REMOVE_OPEN_CHAT_STORE = '[Chat] Remove Open Chat Store',
@@ -46,6 +51,18 @@ export class GetChatRoomsSuccessAction implements Action {
 }
 export class GetChatRoomsFailureAction implements Action {
   readonly type = ActionTypes.GET_CHAT_ROOMS_FAILURE;
+  constructor(public error: SpotError) {}
+}
+export class GetUserChatRoomsRequestAction implements Action {
+  readonly type = ActionTypes.GET_USER_CHAT_ROOMS_REQUEST;
+  constructor(public request: GetUserChatRoomsRequest) {}
+}
+export class GetUserChatRoomsSuccessAction implements Action {
+  readonly type = ActionTypes.GET_USER_CHAT_ROOMS_SUCCESS;
+  constructor(public response: GetUserChatRoomsResponse) {}
+}
+export class GetUserChatRoomsFailureAction implements Action {
+  readonly type = ActionTypes.GET_USER_CHAT_ROOMS_FAILURE;
   constructor(public error: SpotError) {}
 }
 
@@ -81,4 +98,7 @@ export type Actions =
   | AddOpenChatStoreAction
   | RemoveOpenChatStoreAction
   | AddMinimizedChatStoreAction
-  | RemoveMinimizedChatStoreAction;
+  | RemoveMinimizedChatStoreAction
+  | GetUserChatRoomsRequestAction
+  | GetUserChatRoomsSuccessAction
+  | GetUserChatRoomsFailureAction;

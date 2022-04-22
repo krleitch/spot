@@ -18,11 +18,11 @@ import { Friend } from '@models/friend';
 import {
   ChatType,
   ChatRoom,
-  GetChatRoomsRequest,
   AddOpenChatStore,
   RemoveOpenChatStore,
   AddMinimizedChatStore,
-  RemoveMinimizedChatStore
+  RemoveMinimizedChatStore,
+  GetUserChatRoomsRequest,
 } from '@models/chat';
 import { LocationData } from '@models/location';
 
@@ -60,20 +60,20 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   chats: ChatRoom[] = [];
   minimizedChats$: Observable<ChatRoom[]>;
   minimizedChats: ChatRoom[] = [];
-  chatRooms$: Observable<ChatRoom[]>;
+  userChatRooms$: Observable<ChatRoom[]>;
 
   constructor(
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private modalService: ModalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
-    this.chatRooms$ = this.store$.pipe(
-      select(ChatStoreSelectors.selectChatRooms)
+    this.userChatRooms$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectUserChatRooms)
     );
     this.openChats$ = this.store$.pipe(
       select(ChatStoreSelectors.selectOpenChats)
@@ -100,12 +100,14 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
         this.location = location;
         if (this.location) {
           // Get All Rooms
-          const getChatRoomsRequest: GetChatRoomsRequest = {
+          const getUserChatRoomsRequest: GetUserChatRoomsRequest = {
             lat: this.location.latitude,
             lng: this.location.longitude
           };
           this.store$.dispatch(
-            new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
+            new ChatStoreActions.GetUserChatRoomsRequestAction(
+              getUserChatRoomsRequest
+            )
           );
         }
       });

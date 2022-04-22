@@ -13,7 +13,9 @@ import {
   GetMessagesRequest,
   GetMessagesResponse,
   JoinChatRoomRequest,
-  JoinChatRoomResponse
+  JoinChatRoomResponse,
+  GetUserChatRoomsRequest,
+  GetUserChatRoomsResponse
 } from '@models/chat';
 
 // env
@@ -49,6 +51,20 @@ export class ChatService {
     return this.http.get<GetChatRoomsResponse>(`${this.chatBaseUrl}/rooms`, {
       params
     });
+  }
+
+  getUserChatRooms(
+    request: GetUserChatRoomsRequest
+  ): Observable<GetUserChatRoomsResponse> {
+    let params = new HttpParams();
+    params = params.append('lat', request.lat);
+    params = params.append('lng', request.lng);
+    return this.http.get<GetUserChatRoomsResponse>(
+      `${this.chatBaseUrl}/rooms/user`,
+      {
+        params
+      }
+    );
   }
 
   joinChatRoom(request: JoinChatRoomRequest): Observable<JoinChatRoomResponse> {
@@ -89,7 +105,7 @@ export class ChatService {
     return channel;
   }
 
-  disconnectFromChannel(channel) {
+  disconnectFromChannel(channel: PhoenixChannel) {
     if (channel) {
       channel.leave();
     }

@@ -92,11 +92,11 @@
         </div>
 
         <!-- Rooms -->
-        <div *ngIf="chatRooms$ | async as chatRooms">
-          <div *ngIf="chatRooms.length > 0; else noRooms">
+        <div *ngIf="userChatRooms$ | async as userChatRooms">
+          <div *ngIf="userChatRooms.length > 0; else noRooms">
             <div
               class="menu-item row-center padding-md"
-              *ngFor="let chatRoom of chatRooms"
+              *ngFor="let chatRoom of userChatRooms"
               (click)="createRoomTab(chatRoom)"
             >
               <span class="image">
@@ -190,8 +190,7 @@
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
     <div class="margin-r-xl" *ngFor="let chat of chats">
-      <spot-chat-tab [tab]="chat">
-      </spot-chat-tab>
+      <spot-chat-tab [tab]="chat"> </spot-chat-tab>
     </div>
   </div>
 </div>
