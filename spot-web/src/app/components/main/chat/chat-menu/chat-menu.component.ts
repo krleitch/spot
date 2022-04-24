@@ -22,7 +22,7 @@ import {
   RemoveOpenChatStore,
   AddMinimizedChatStore,
   RemoveMinimizedChatStore,
-  GetUserChatRoomsRequest,
+  GetUserChatRoomsRequest
 } from '@models/chat';
 import { LocationData } from '@models/location';
 
@@ -66,7 +66,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private modalService: ModalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.friends$ = this.store$.pipe(

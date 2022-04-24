@@ -338,7 +338,12 @@
     },
 
     "CHAT_DISCOVER": {
-      "TITLE": "Discover rooms"
+      "TITLE": "Discover rooms",
+      "SEARCH_PLACEHOLDER": "Search name",
+      "REFRESH": "Refresh",
+      "LOADING": "Loading Rooms",
+      "NO_ROOMS": "There are no chats in your area",
+      "NO_LOCATION": "Location is required to discover rooms"
     },
 
     "ACTIVITY": {

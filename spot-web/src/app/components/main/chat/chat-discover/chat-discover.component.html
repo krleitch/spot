@@ -8,53 +8,70 @@
   </div>
 
   <!-- BODY -->
-  <div class="col-center background-container padding-lg container-b-rounded">
-    <div class="row-v-center align-right">
-      <span class="material-icons icon-lg icon-primary"> search </span>
-      <input
-        [(ngModel)]="search"
-        class="input-border-bottom-sm margin-l-sm"
-        placeholder="{{ 'MAIN.FRIENDS.FRIEND_SEARCH_PLACEHOLDER' | translate }}"
-        type="text"
-      />
+  <div class="col background-container padding-lg container-b-rounded">
+    <div class="row-h-center justify-content-between">
+      <div class="row-h-center">
+        <span class="material-icons icon-lg icon-primary"> search </span>
+        <input
+          [(ngModel)]="search"
+          class="input-border-bottom-sm margin-l-sm"
+          placeholder="{{
+            'MAIN.CHAT_DISCOVER.SEARCH_PLACEHOLDER' | translate
+          }}"
+          type="text"
+        />
+      </div>
+      <div
+        *ngIf="!loadingChatRooms"
+        class="row-h-center text-secondary-highlight"
+        (click)="refresh()"
+      >
+        <span class="material-icons icon-sm"> refresh </span>
+        <span class="margin-l-xs"
+          >{{ 'MAIN.CHAT_DISCOVER.REFRESH' | translate }}
+        </span>
+      </div>
     </div>
-    <table class="full-width" cellSpacing="0" cellPadding="0">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th
-            scope="col"
-            [spotSort]="chatRooms"
-            data-order="desc"
-            data-name="name"
-          >
-            Name
-          </th>
-          <th
-            scope="col"
-            [spotSort]="chatRooms"
-            data-order="desc"
-            data-name="distance"
-          >
-            Location
-          </th>
-          <th
-            scope="col"
-            [spotSort]="chatRooms"
-            data-order="desc"
-            data-name="numUsers"
-          >
-            Users
-          </th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container
-          *ngIf="
-            chatRooms | filter: { filter: search, field: 'name' } as chatRooms
-          "
-        >
+    <ng-container
+      *ngIf="chatRooms | filter: { filter: search, field: 'name' } as chatRooms"
+    >
+      <table
+        *ngIf="chatRooms.length > 0; else noChatRooms"
+        class="full-width"
+        cellSpacing="0"
+        cellPadding="0"
+      >
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th
+              scope="col"
+              [spotSort]="chatRooms"
+              data-order="desc"
+              data-name="name"
+            >
+              Name
+            </th>
+            <th
+              scope="col"
+              [spotSort]="chatRooms"
+              data-order="desc"
+              data-name="distance"
+            >
+              Location
+            </th>
+            <th
+              scope="col"
+              [spotSort]="chatRooms"
+              data-order="desc"
+              data-name="numUsers"
+            >
+              Users
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
           <ng-container *ngFor="let chatRoom of chatRooms">
             <tr>
               <td>
@@ -78,8 +95,28 @@
               </td>
             </tr>
           </ng-container>
-        </ng-container>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+
+      <!-- No Chats // Loading Chats -->
+      <ng-template #noChatRooms>
+        <div
+          *ngIf="!loadingChatRooms; else loading"
+          class="col-center margin-xl"
+        >
+          <span class="text-secondary">
+            {{ 'MAIN.CHAT_DISCOVER.NO_ROOMS' | translate }}
+          </span>
+        </div>
+        <ng-template #loading>
+          <div class="row-center margin-xl">
+            <div class="margin-b-md text-secondary">
+              {{ 'MAIN.CHAT_DISCOVER.LOADING' | translate }}
+            </div>
+            <spot-spinner type="dot"> </spot-spinner>
+          </div>
+        </ng-template>
+      </ng-template>
+    </ng-container>
   </div>
 </div>

@@ -40,12 +40,16 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   modalId: string;
 
   // Rooms
+  chatRooms$: Observable<ChatRoom[]>;
   chatRooms: ChatRoom[];
+  loadingChatRooms$: Observable<boolean>;
+  loadingChatRooms: boolean;
 
   // location
   location$: Observable<LocationData>;
   location: LocationData;
 
+  // search string
   search: string;
 
   // User Metadata
@@ -61,16 +65,17 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // metadata
     this.userMetadata$ = this.store$.pipe(
       select(UserStoreSelectors.selectUserMetadata)
     );
-
     this.userMetadata$
       .pipe(takeUntil(this.onDestroy))
       .subscribe((userMetadata: UserMetadata) => {
         this.userMetadata = userMetadata;
       });
 
+    // location
     this.location$ = this.store$.pipe(
       select(UserStoreSelectors.selectLocation)
     );
@@ -84,15 +89,28 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
             lat: this.location.latitude,
             lng: this.location.longitude
           };
-          this.chatService
-            .getChatRooms(getChatRoomsRequest)
-            .pipe(take(1))
-            .subscribe((response: GetChatRoomsResponse) => {
-              this.chatRooms = response.chatRooms;
-              console.log(response);
-              // todo: cursor scroll
-            });
+          this.store$.dispatch(
+            new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
+          );
         }
+      });
+
+    // Chat rooms
+    this.chatRooms$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectChatRooms)
+    );
+    this.chatRooms$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((chats: ChatRoom[]) => {
+        this.chatRooms = chats;
+      });
+    this.loadingChatRooms$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectLoadingChatRooms)
+    );
+    this.loadingChatRooms$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((loading: boolean) => {
+        this.loadingChatRooms = loading;
       });
   }
 
@@ -137,6 +155,18 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
           new ChatStoreActions.AddOpenChatStoreAction(addRequest)
         );
       });
+  }
+
+  refresh(): void {
+    if (this.location) {
+      const getChatRoomsRequest: GetChatRoomsRequest = {
+        lat: this.location.latitude,
+        lng: this.location.longitude
+      };
+      this.store$.dispatch(
+        new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
+      );
+    }
   }
 
   close(): void {
