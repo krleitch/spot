@@ -69,9 +69,12 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // friends
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
+
+    // chat rooms
     this.userChatRooms$ = this.store$.pipe(
       select(ChatStoreSelectors.selectUserChatRooms)
     );
@@ -91,6 +94,8 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
       .subscribe((chats: ChatRoom[]) => {
         this.minimizedChats = chats;
       });
+
+    // location
     this.location$ = this.store$.pipe(
       select(UserStoreSelectors.selectLocation)
     );
@@ -248,7 +253,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   discoverRooms() {
     this.modalService
-      .open('global', 'chatDiscover')
+      .open('global', 'chatDiscover', {}, { width: 700, height: 'auto' })
       .pipe(take(1))
       .subscribe((_result) => {
         // Open the room, if a room was created

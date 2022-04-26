@@ -6,13 +6,19 @@ import {
 import { State } from './state';
 
 // Models
-import { ChatRoom } from '@models/chat';
+import { ChatRoom, ChatPagination } from '@models/chat';
 
 // Store selectors
 export const selectChatRoomsFromStore = (state: State): ChatRoom[] =>
   state.chatRooms;
+export const selectChatRoomsPaginationFromStore = (
+  state: State
+): ChatPagination => state.chatRoomsPagination;
 export const selectUserChatRoomsFromStore = (state: State): ChatRoom[] =>
   state.userChatRooms;
+export const selectUserChatRoomsPaginationFromStore = (
+  state: State
+): ChatPagination => state.userChatRoomsPagination;
 export const selectOpenChatsFromStore = (state: State): ChatRoom[] =>
   state.openChats;
 export const selectMinimizedChatsFromStore = (state: State): ChatRoom[] =>
@@ -28,8 +34,18 @@ export const selectChatState: MemoizedSelector<object, State> =
 export const selectChatRooms: MemoizedSelector<object, ChatRoom[]> =
   createSelector(selectChatState, selectChatRoomsFromStore);
 
+export const selectChatRoomsPagination: MemoizedSelector<
+  object,
+  ChatPagination
+> = createSelector(selectChatState, selectChatRoomsPaginationFromStore);
+
 export const selectUserChatRooms: MemoizedSelector<object, ChatRoom[]> =
   createSelector(selectChatState, selectUserChatRoomsFromStore);
+
+export const selectUserChatRoomsPagination: MemoizedSelector<
+  object,
+  ChatPagination
+> = createSelector(selectChatState, selectUserChatRoomsPaginationFromStore);
 
 export const selectOpenChats: MemoizedSelector<object, ChatRoom[]> =
   createSelector(selectChatState, selectOpenChatsFromStore);

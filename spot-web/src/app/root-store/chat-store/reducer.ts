@@ -52,6 +52,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       return {
         ...state,
         chatRooms: action.response.chatRooms,
+        chatRoomsPagination: action.response.pagination,
         loadingChatRooms: false
       };
     }
@@ -71,6 +72,7 @@ export function featureReducer(state = initialState, action: Actions): State {
       return {
         ...state,
         userChatRooms: action.response.chatRooms,
+        userChatRoomsPagination: action.response.pagination,
         loadingUserChatRooms: false
       };
     }

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { take, takeUntil, mapTo, startWith, takeWhile } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -12,21 +12,20 @@ import { UserStoreSelectors } from '@src/app/root-store/user-store';
 // services
 import { ChatService } from '@services/chat.service';
 import { ModalService } from '@services/modal.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // models
 import { ModalData } from '@models/modal';
 import {
   GetChatRoomsRequest,
   ChatRoom,
-  GetChatRoomsResponse,
   JoinChatRoomRequest,
   JoinChatRoomResponse,
-  AddOpenChatStore
+  AddOpenChatStore,
+  AddChatRoomStore
 } from '@models/chat';
 import { LocationData } from '@models/location';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
-
-import { LOCATION_CONSTANTS } from '@constants/location';
 
 @Component({
   selector: 'spot-chat-discover',
@@ -56,12 +55,23 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
 
+  // state
+  errorMessage: string;
+  showLoadingIndicator: Observable<boolean>;
+  selectedRow: number;
+  selectedChat: ChatRoom;
+
+  STRINGS;
+
   constructor(
     private modalService: ModalService,
     private chatService: ChatService,
-    private store$: Store<RootStoreState.State>
+    private store$: Store<RootStoreState.State>,
+    private translateService: TranslateService
   ) {
-    //empty
+    this.translateService.get('MAIN.CHAT_DISCOVER').subscribe((res: any) => {
+      this.STRINGS = res;
+    });
   }
 
   ngOnInit(): void {
@@ -102,7 +112,8 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     this.chatRooms$
       .pipe(takeUntil(this.onDestroy))
       .subscribe((chats: ChatRoom[]) => {
-        this.chatRooms = chats;
+        // Make a copy so its not read only and the sort directive can edit it
+        this.chatRooms = [...chats];
       });
     this.loadingChatRooms$ = this.store$.pipe(
       select(ChatStoreSelectors.selectLoadingChatRooms)
@@ -111,6 +122,12 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy))
       .subscribe((loading: boolean) => {
         this.loadingChatRooms = loading;
+        this.showLoadingIndicator = timer(500)
+          .pipe(
+            mapTo(true),
+            takeWhile(() => this.loadingChatRooms)
+          )
+          .pipe(startWith(false));
       });
   }
 
@@ -146,19 +163,43 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     this.chatService
       .joinChatRoom(joinChatRoom)
       .pipe(take(1))
-      .subscribe((response: JoinChatRoomResponse) => {
-        // add to open
-        const addRequest: AddOpenChatStore = {
-          chat: response.chatRoom
-        };
-        this.store$.dispatch(
-          new ChatStoreActions.AddOpenChatStoreAction(addRequest)
-        );
-      });
+      .subscribe(
+        (response: JoinChatRoomResponse) => {
+          // add to open
+          const addRequest: AddOpenChatStore = {
+            chat: response.chatRoom
+          };
+          this.store$.dispatch(
+            new ChatStoreActions.AddOpenChatStoreAction(addRequest)
+          );
+          // add to menu
+          const request: AddChatRoomStore = {
+            chatRoom: response.chatRoom
+          };
+          this.store$.dispatch(
+            new ChatStoreActions.AddChatRoomStoreAction(request)
+          );
+          this.close();
+        },
+        (err) => {
+          console.log(err.error.errors);
+          if (
+            Object.prototype.hasOwnProperty.call(
+              err.error.errors,
+              'user_id_room_id'
+            )
+          ) {
+            this.errorMessage = this.STRINGS.ERROR_JOINED;
+          } else {
+            this.errorMessage = this.STRINGS.ERROR;
+          }
+        }
+      );
   }
 
   refresh(): void {
     if (this.location) {
+      this.errorMessage = '';
       const getChatRoomsRequest: GetChatRoomsRequest = {
         lat: this.location.latitude,
         lng: this.location.longitude
@@ -167,6 +208,11 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
         new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
       );
     }
+  }
+
+  selectRow(index: number, chat: ChatRoom): void {
+    this.selectedRow = index;
+    this.selectedChat = chat;
   }
 
   close(): void {

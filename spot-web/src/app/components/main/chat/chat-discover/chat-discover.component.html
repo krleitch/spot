@@ -9,6 +9,7 @@
 
   <!-- BODY -->
   <div class="col background-container padding-lg container-b-rounded">
+    <!-- Search && refresh -->
     <div class="row-h-center justify-content-between">
       <div class="row-h-center">
         <span class="material-icons icon-lg icon-primary"> search </span>
@@ -27,11 +28,45 @@
         (click)="refresh()"
       >
         <span class="material-icons icon-sm"> refresh </span>
-        <span class="margin-l-xs"
-          >{{ 'MAIN.CHAT_DISCOVER.REFRESH' | translate }}
+        <span class="margin-l-xs">
+          {{ 'MAIN.CHAT_DISCOVER.REFRESH' | translate }}
         </span>
       </div>
     </div>
+    <div class="margin-md text-error">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Selected Row -->
+    <div
+      *ngIf="selectedChat"
+      class="row-h-center margin-b-md background-page container-rounded padding-md"
+    >
+      <div class="profile-md background-container row-center">
+        <img *ngIf="selectedChat.imageSrc" [src]="selectedChat.imageSrc" />
+        <span *ngIf="!selectedChat.imageSrc"> C </span>
+      </div>
+      <div class="col-h-center margin-l-md">
+        <span class="row-h-center">
+          <span class="material-icons icon-sm icon-primary"> chat </span>
+          <span class="margin-l-xs">{{ selectedChat.name }} </span>
+        </span>
+        <span class="row-h-center">
+          <span class="material-icons icon-sm icon-primary"> description </span>
+          <span
+            *ngIf="selectedChat.description; else noDesc"
+            class="margin-l-xs text-secondary"
+          >
+            {{ selectedChat.description }}
+          </span>
+          <ng-template #noDesc>
+            <span class="margin-l-xs text-secondary"> None </span>
+          </ng-template>
+        </span>
+      </div>
+    </div>
+
+    <!-- Table -->
     <ng-container
       *ngIf="chatRooms | filter: { filter: search, field: 'name' } as chatRooms"
     >
@@ -43,14 +78,19 @@
       >
         <thead>
           <tr>
-            <th scope="col"></th>
+            <th style="width: 40px" scope="col"></th>
             <th
               scope="col"
               [spotSort]="chatRooms"
               data-order="desc"
               data-name="name"
             >
-              Name
+              <div class="row-h-center">
+                <span class="material-icons icon-sm icon-primary"> chat </span>
+                <span class="margin-l-xs">
+                  {{ 'MAIN.CHAT_DISCOVER.NAME' | translate }}
+                </span>
+              </div>
             </th>
             <th
               scope="col"
@@ -58,38 +98,58 @@
               data-order="desc"
               data-name="distance"
             >
-              Location
+              <div class="row-h-center">
+                <span class="material-icons icon-sm icon-primary"> place </span>
+                <span class="margin-l-xs">
+                  {{ 'MAIN.CHAT_DISCOVER.LOCATION' | translate }}
+                </span>
+              </div>
             </th>
             <th
               scope="col"
               [spotSort]="chatRooms"
               data-order="desc"
               data-name="numUsers"
+              style="width: 65px"
             >
-              Users
+              <div class="row-h-center">
+                <span class="material-icons icon-sm icon-primary"> group </span>
+                <span class="margin-l-xs">
+                  {{ 'MAIN.CHAT_DISCOVER.USERS' | translate }}
+                </span>
+              </div>
             </th>
-            <th scope="col"></th>
+            <th style="width: 80px" scope="col"></th>
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let chatRoom of chatRooms">
-            <tr>
-              <td>
-                <div class="profile-sm row-center margin-h-sm">
+          <ng-container *ngFor="let chatRoom of chatRooms; let i = index">
+            <tr
+              (click)="selectRow(i, chatRoom)"
+              [class.selected]="selectedRow === i"
+            >
+              <td class="padding-sm full-height">
+                <div class="profile-sm row-center">
                   <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
                   <span *ngIf="!chatRoom.imageSrc"> C </span>
                 </div>
               </td>
-              <td>{{ chatRoom.name }}</td>
-              <td>
+              <td class="padding-sm full-height">
+                <div class="row-h-center">
+                  <span class="margin-r-xs"> {{ chatRoom.name }} </span>
+                  <span *ngIf="chatRoom.private" class="material-icons icon-sm">
+                    lock
+                  </span>
+                </div>
+              </td>
+              <td class="padding-sm full-height">
                 {{ chatRoom.geolocation }} {{ getDistance(chatRoom.distance) }}
               </td>
-              <td>{{ chatRoom.numUsers }} / {{ chatRoom.capacity }}</td>
-              <td class="row-h-center justify-content-end">
-                <button
-                  class="button margin-sm"
-                  (click)="joinChatRoom(chatRoom.id)"
-                >
+              <td class="padding-sm full-height">
+                {{ chatRoom.numUsers }} / {{ chatRoom.capacity }}
+              </td>
+              <td class="padding-sm full-height">
+                <button class="button" (click)="joinChatRoom(chatRoom.id)">
                   Join
                 </button>
               </td>
@@ -100,21 +160,30 @@
 
       <!-- No Chats // Loading Chats -->
       <ng-template #noChatRooms>
-        <div
-          *ngIf="!loadingChatRooms; else loading"
-          class="col-center margin-xl"
-        >
+        <div *ngIf="!location; else hasLocation" class="row-center margin-xl">
+          <span class="material-icons icon-primary"> location_off </span>
           <span class="text-secondary">
-            {{ 'MAIN.CHAT_DISCOVER.NO_ROOMS' | translate }}
+            {{ 'MAIN.CHAT_DISCOVER.NO_LOCATION' | translate }}
           </span>
         </div>
-        <ng-template #loading>
-          <div class="row-center margin-xl">
-            <div class="margin-b-md text-secondary">
-              {{ 'MAIN.CHAT_DISCOVER.LOADING' | translate }}
-            </div>
-            <spot-spinner type="dot"> </spot-spinner>
+        <ng-template #hasLocation>
+          <div
+            *ngIf="!loadingChatRooms; else loading"
+            class="row-center margin-xl"
+          >
+            <span class="material-icons icon-primary"> search_off </span>
+            <span class="text-secondary">
+              {{ 'MAIN.CHAT_DISCOVER.NO_ROOMS' | translate }}
+            </span>
           </div>
+          <ng-template #loading>
+            <div class="col-center margin-xl">
+              <spot-spinner type="dot"> </spot-spinner>
+              <div class="margin-t-md text-secondary">
+                {{ 'MAIN.CHAT_DISCOVER.LOADING' | translate }}
+              </div>
+            </div>
+          </ng-template>
         </ng-template>
       </ng-template>
     </ng-container>

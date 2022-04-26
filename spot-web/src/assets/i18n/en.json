@@ -342,8 +342,13 @@
       "SEARCH_PLACEHOLDER": "Search name",
       "REFRESH": "Refresh",
       "LOADING": "Loading Rooms",
-      "NO_ROOMS": "There are no chats in your area",
-      "NO_LOCATION": "Location is required to discover rooms"
+      "NO_ROOMS": "No chats found",
+      "NO_LOCATION": "Location is required to discover chats",
+      "NAME": "Name",
+      "LOCATION": "Location",
+      "USERS": "Users",
+      "ERROR": "Error joining chat. Please try again",
+      "ERROR_JOINED": "You have already joined this chat"
     },
 
     "ACTIVITY": {

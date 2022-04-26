@@ -1,4 +1,4 @@
-@import '../../../styles/sizes';
+@use '~sass-mq/mq';
 
 .spot-modal {
   /* modal container fixed across whole screen */
@@ -8,7 +8,7 @@
   bottom: 0;
   left: 0;
 
-  /* z-index must be higher than .jw-modal-background */
+  /* z-index must be higher than .spot-modal-background */
   z-index: 9999999999999;
   // -webkit-font-smoothing: subpixel-antialiased;
   // -webkit-transform: translateZ(0) scale(1.0, 1.0);
@@ -25,6 +25,12 @@
     left: 50%;
     transform: translate(-50%, 0%);
     box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+    @include mq.mq($until: tablet) {
+      max-width: 95%;
+      top: 65px;
+      transform: translateX(-50%);
+    }
   }
 }
 
@@ -36,8 +42,7 @@
   bottom: 0;
   left: 0;
 
-
-  /* z-index must be below .jw-modal and above everything else  */
+  /* z-index must be below .spot-modal and above everything else  */
   z-index: 999999;
 }
 
@@ -45,15 +50,4 @@
   /* semi-transparent black  */
   background-color: #000;
   opacity: 20%;
-}
-
-// Mobile stylings
-@media screen and (max-width: $mobile-width) {
-  .spot-modal {
-    .spot-modal-body {
-      max-width: 95%;
-      top: 65px;
-      transform: translateX(-50%);
-    }
-  }
 }
