@@ -99,7 +99,7 @@
         </div>
 
         <!-- Password -->
-        <div *ngIf="isPrivate" class="col-h-center">
+        <div class="col-h-center private" [class.private-show]="isPrivate">
           <div class="form-title">
             {{ 'MAIN.CHAT_CREATE.PASSWORD_TITLE' | translate }}
           </div>

@@ -22,7 +22,8 @@ import {
   JoinChatRoomRequest,
   JoinChatRoomResponse,
   AddOpenChatStore,
-  AddChatRoomStore
+  AddChatRoomStore,
+  ChatPagination
 } from '@models/chat';
 import { LocationData } from '@models/location';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
@@ -43,13 +44,18 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   chatRooms: ChatRoom[];
   loadingChatRooms$: Observable<boolean>;
   loadingChatRooms: boolean;
+  chatRoomsPagination$: Observable<ChatPagination>;
+  chatRoomsPagination: ChatPagination;
 
   // location
   location$: Observable<LocationData>;
   location: LocationData;
 
   // search string
-  search: string;
+  search = '';
+
+  // password
+  password = '';
 
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
@@ -61,7 +67,7 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   selectedRow: number;
   selectedChat: ChatRoom;
 
-  STRINGS;
+  STRINGS: Record<string, string>;
 
   constructor(
     private modalService: ModalService,
@@ -69,9 +75,11 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     private store$: Store<RootStoreState.State>,
     private translateService: TranslateService
   ) {
-    this.translateService.get('MAIN.CHAT_DISCOVER').subscribe((res: any) => {
-      this.STRINGS = res;
-    });
+    this.translateService
+      .get('MAIN.CHAT_DISCOVER')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnInit(): void {
@@ -129,6 +137,16 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
           )
           .pipe(startWith(false));
       });
+    this.chatRoomsPagination$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectChatRoomsPagination)
+    );
+    this.chatRoomsPagination$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((pagination: ChatPagination) => {
+        // Make a copy so its not read only and the sort directive can edit it
+        console.log(pagination);
+        this.chatRoomsPagination = pagination;
+      });
   }
 
   ngOnDestroy(): void {
@@ -154,11 +172,39 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     return distanceString;
   }
 
-  joinChatRoom(id: string): void {
+  getAge(timestamp: string): string {
+    const curTime = new Date();
+    const chatTime = new Date(timestamp);
+    const timeDiff = curTime.getTime() - chatTime.getTime();
+    if (timeDiff < 60000) {
+      return 'Now';
+    } else if (timeDiff < 3600000) {
+      const minuteDiff = Math.round(timeDiff / 60000);
+      return minuteDiff + 'm';
+    } else if (timeDiff < 86400000) {
+      const hourDiff = Math.round(timeDiff / 3600000);
+      return hourDiff + 'h';
+    } else if (timeDiff < 31536000000) {
+      const dayDiff = Math.round(timeDiff / 86400000);
+      return dayDiff + 'd';
+    } else {
+      const yearDiff = Math.round(timeDiff / 31536000000);
+      return yearDiff + 'y';
+    }
+  }
+
+  joinChatRoom(chatRoom: ChatRoom): void {
+    if (chatRoom.private) {
+      if (this.password.length === 0) {
+        this.errorMessage = this.STRINGS.ERROR_NO_PASSWORD;
+        return;
+      }
+    }
+
     const joinChatRoom: JoinChatRoomRequest = {
       lat: this.location.latitude,
       lng: this.location.longitude,
-      chatRoomId: id
+      chatRoomId: chatRoom.id
     };
     this.chatService
       .joinChatRoom(joinChatRoom)

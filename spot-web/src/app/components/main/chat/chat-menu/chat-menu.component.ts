@@ -66,7 +66,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private modalService: ModalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // friends
@@ -253,7 +253,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   discoverRooms() {
     this.modalService
-      .open('global', 'chatDiscover', {}, { width: 700, height: 'auto' })
+      .open('global', 'chatDiscover', {}, { width: 600, height: 'auto' })
       .pipe(take(1))
       .subscribe((_result) => {
         // Open the room, if a room was created

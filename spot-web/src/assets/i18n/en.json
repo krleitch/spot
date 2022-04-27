@@ -340,6 +340,7 @@
     "CHAT_DISCOVER": {
       "TITLE": "Discover rooms",
       "SEARCH_PLACEHOLDER": "Search name",
+      "PASSWORD_PLACEHOLDER": "Enter password",
       "REFRESH": "Refresh",
       "LOADING": "Loading Rooms",
       "NO_ROOMS": "No chats found",
@@ -348,7 +349,11 @@
       "LOCATION": "Location",
       "USERS": "Users",
       "ERROR": "Error joining chat. Please try again",
-      "ERROR_JOINED": "You have already joined this chat"
+      "ERROR_JOINED": "You have already joined this chat",
+      "ERROR_NO_PASSWORD": "You must enter a password",
+      "AGE": "Age",
+      "SHOWING_1": "Showing",
+      "SHOWING_2": "chats"
     },
 
     "ACTIVITY": {

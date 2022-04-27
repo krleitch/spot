@@ -9,67 +9,106 @@
 
   <!-- BODY -->
   <div class="col background-container padding-lg container-b-rounded">
-    <!-- Search && refresh -->
-    <div class="row-h-center justify-content-between">
-      <div class="row-h-center">
-        <span class="material-icons icon-lg icon-primary"> search </span>
-        <input
-          [(ngModel)]="search"
-          class="input-border-bottom-sm margin-l-sm"
-          placeholder="{{
-            'MAIN.CHAT_DISCOVER.SEARCH_PLACEHOLDER' | translate
-          }}"
-          type="text"
-        />
-      </div>
-      <div
-        *ngIf="!loadingChatRooms"
-        class="row-h-center text-secondary-highlight"
-        (click)="refresh()"
-      >
-        <span class="material-icons icon-sm"> refresh </span>
-        <span class="margin-l-xs">
-          {{ 'MAIN.CHAT_DISCOVER.REFRESH' | translate }}
-        </span>
-      </div>
-    </div>
-    <div class="margin-md text-error">
-      {{ errorMessage }}
-    </div>
-
-    <!-- Selected Row -->
-    <div
-      *ngIf="selectedChat"
-      class="row-h-center margin-b-md background-page container-rounded padding-md"
-    >
-      <div class="profile-md background-container row-center">
-        <img *ngIf="selectedChat.imageSrc" [src]="selectedChat.imageSrc" />
-        <span *ngIf="!selectedChat.imageSrc"> C </span>
-      </div>
-      <div class="col-h-center margin-l-md">
-        <span class="row-h-center">
-          <span class="material-icons icon-sm icon-primary"> chat </span>
-          <span class="margin-l-xs">{{ selectedChat.name }} </span>
-        </span>
-        <span class="row-h-center">
-          <span class="material-icons icon-sm icon-primary"> description </span>
-          <span
-            *ngIf="selectedChat.description; else noDesc"
-            class="margin-l-xs text-secondary"
-          >
-            {{ selectedChat.description }}
-          </span>
-          <ng-template #noDesc>
-            <span class="margin-l-xs text-secondary"> None </span>
-          </ng-template>
-        </span>
-      </div>
-    </div>
-
-    <!-- Table -->
     <ng-container
       *ngIf="chatRooms | filter: { filter: search, field: 'name' } as chatRooms"
     >
+      <!-- Search && refresh -->
+      <div class="row-h-center">
+        <div class="row-h-center">
+          <span class="material-icons icon-lg icon-primary"> search </span>
+          <input
+            [(ngModel)]="search"
+            class="input-border-bottom-sm margin-l-sm"
+            placeholder="{{
+              'MAIN.CHAT_DISCOVER.SEARCH_PLACEHOLDER' | translate
+            }}"
+            type="text"
+          />
+        </div>
+        <div *ngIf="chatRooms.length > 0" class="margin-l-md">
+          {{ 'MAIN.CHAT_DISCOVER.SHOWING_1' | translate }}
+          {{ chatRooms.length }} / {{ chatRoomsPagination.totalCount }}
+          {{ 'MAIN.CHAT_DISCOVER.SHOWING_2' | translate }}
+        </div>
+        <div
+          *ngIf="!loadingChatRooms"
+          class="row-h-center text-secondary-highlight align-right"
+          (click)="refresh()"
+        >
+          <span class="material-icons icon-sm"> refresh </span>
+          <span class="margin-l-xs">
+            {{ 'MAIN.CHAT_DISCOVER.REFRESH' | translate }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Selected Row -->
+      <div
+        *ngIf="selectedChat"
+        class="row-h-center margin-b-md background-page container-rounded padding-md"
+      >
+        <!-- Chat Photo -->
+        <div class="profile-md background-container row-center">
+          <img *ngIf="selectedChat.imageSrc" [src]="selectedChat.imageSrc" />
+          <span *ngIf="!selectedChat.imageSrc"> C </span>
+        </div>
+
+        <!-- Properties -->
+        <div class="col-h-center margin-l-md">
+          <div class="row-h-center">
+            <span class="material-icons icon-sm icon-primary"> chat </span>
+            <span class="margin-l-xs">{{ selectedChat.name }} </span>
+          </div>
+          <div class="row-h-center">
+            <span class="material-icons icon-sm icon-primary">
+              location_on
+            </span>
+            <span class="margin-l-xs">
+              {{ selectedChat.geolocation }}
+              {{ getDistance(selectedChat.distance) }}
+            </span>
+          </div>
+          <div class="row-h-center">
+            <span class="material-icons icon-sm icon-primary">
+              description
+            </span>
+            <span
+              *ngIf="selectedChat.description; else noDesc"
+              class="margin-l-xs"
+            >
+              {{ selectedChat.description }}
+            </span>
+            <ng-template #noDesc>
+              <span class="margin-l-xs"> - </span>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Join Button -->
+        <div class="row-h-center align-right mobile-col">
+          <div *ngIf="selectedChat.private" class="row-center margin-r-md">
+            <span class="material-icons icon-sm"> lock </span>
+            <input
+              [(ngModel)]="password"
+              class="input-border-bottom-sm margin-l-sm"
+              placeholder="{{
+                'MAIN.CHAT_DISCOVER.PASSWORD_PLACEHOLDER' | translate
+              }}"
+              type="text"
+            />
+          </div>
+          <button class="button" (click)="joinChatRoom(selectedChat)">
+            Join
+          </button>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="margin-md text-error">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Table -->
       <table
         *ngIf="chatRooms.length > 0; else noChatRooms"
         class="full-width"
@@ -109,6 +148,23 @@
               scope="col"
               [spotSort]="chatRooms"
               data-order="desc"
+              data-name="insertedAt"
+              data-type="date"
+              style="width: 65px"
+            >
+              <div class="row-h-center">
+                <span class="material-icons icon-sm icon-primary">
+                  schedule
+                </span>
+                <span class="margin-l-xs">
+                  {{ 'MAIN.CHAT_DISCOVER.AGE' | translate }}
+                </span>
+              </div>
+            </th>
+            <th
+              scope="col"
+              [spotSort]="chatRooms"
+              data-order="desc"
               data-name="numUsers"
               style="width: 65px"
             >
@@ -119,7 +175,6 @@
                 </span>
               </div>
             </th>
-            <th style="width: 80px" scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -146,12 +201,10 @@
                 {{ chatRoom.geolocation }} {{ getDistance(chatRoom.distance) }}
               </td>
               <td class="padding-sm full-height">
-                {{ chatRoom.numUsers }} / {{ chatRoom.capacity }}
+                {{ getAge(chatRoom.insertedAt) }}
               </td>
               <td class="padding-sm full-height">
-                <button class="button" (click)="joinChatRoom(chatRoom.id)">
-                  Join
-                </button>
+                {{ chatRoom.numUsers }} / {{ chatRoom.capacity }}
               </td>
             </tr>
           </ng-container>

@@ -44,7 +44,7 @@ export interface Message {
 export interface ChatPagination {
   before: string;
   after: string;
-  total_count: number;
+  totalCount: number;
   limit: number;
 }
 
@@ -100,6 +100,7 @@ export interface JoinChatRoomRequest {
   lat: number;
   lng: number;
   chatRoomId: string;
+  password?: string;
 }
 export interface JoinChatRoomResponse {
   chatRoom: ChatRoom;

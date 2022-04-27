@@ -30,6 +30,7 @@ $profile-colors: (
 
 .profile-lg {
   width: 100px;
+  min-width: 100px;
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
@@ -40,6 +41,7 @@ $profile-colors: (
 }
 .profile-md {
   width: 60px;
+  min-width: 60px;
   height: 60px;
   border-radius: 50%;
   overflow: hidden;
@@ -50,6 +52,7 @@ $profile-colors: (
 }
 .profile-sm {
   width: 30px;
+  min-width: 30px;
   height: 30px;
   border-radius: 50%;
   overflow: hidden;

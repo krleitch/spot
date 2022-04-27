@@ -21,14 +21,14 @@
             <!-- Col 1 -->
             <div class="col-center profile-margin">
               <!-- Profile Picture -->
-              <div class="profile-lg margin-b-md">
+              <div class="profile-lg margin-b-md background-page">
                 <img
                   *ngIf="user.profilePictureSrc"
                   [src]="user.profilePictureSrc"
                 />
                 <img
                   *ngIf="!user.profilePictureSrc"
-                  src="/assets/image/op_large.png"
+                  src="assets/images/op_large.png"
                 />
               </div>
               <div
@@ -103,7 +103,7 @@
           <!-- Update Account Options -->
           <div class="row-center padding-xl">
             <!-- <span class="text-secondary-highlight text-center margin-r-xl"> -->
-              <!-- {{ 'MAIN.ACCOUNT.CHANGE_PASSWORD' | translate }} -->
+            <!-- {{ 'MAIN.ACCOUNT.CHANGE_PASSWORD' | translate }} -->
             <!-- </span> -->
             <!-- | -->
             <span

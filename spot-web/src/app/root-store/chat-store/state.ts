@@ -21,14 +21,14 @@ export const initialState: State = {
   chatRoomsPagination: {
     after: null,
     before: null,
-    total_count: 0,
+    totalCount: 0,
     limit: 0
   },
   userChatRooms: [],
   userChatRoomsPagination: {
     after: null,
     before: null,
-    total_count: 0,
+    totalCount: 0,
     limit: 0
   },
   minimizedChats: [],
