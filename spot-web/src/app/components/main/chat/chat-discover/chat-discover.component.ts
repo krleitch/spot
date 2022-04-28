@@ -22,7 +22,7 @@ import {
   JoinChatRoomRequest,
   JoinChatRoomResponse,
   AddOpenChatStore,
-  AddChatRoomStore,
+  AddUserChatRoomStore,
   ChatPagination
 } from '@models/chat';
 import { LocationData } from '@models/location';
@@ -144,7 +144,6 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy))
       .subscribe((pagination: ChatPagination) => {
         // Make a copy so its not read only and the sort directive can edit it
-        console.log(pagination);
         this.chatRoomsPagination = pagination;
       });
   }
@@ -168,7 +167,6 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     } else {
       distanceString += distance.toFixed(1) + ' m';
     }
-
     return distanceString;
   }
 
@@ -193,6 +191,12 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     }
   }
 
+  getMinimizedName(name: string) {
+    if (name) {
+      return name.substring(0, 1).toUpperCase();
+    }
+  }
+
   joinChatRoom(chatRoom: ChatRoom): void {
     if (chatRoom.private) {
       if (this.password.length === 0) {
@@ -204,6 +208,7 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     const joinChatRoom: JoinChatRoomRequest = {
       lat: this.location.latitude,
       lng: this.location.longitude,
+      password: this.password.length > 0 ? this.password : undefined,
       chatRoomId: chatRoom.id
     };
     this.chatService
@@ -219,16 +224,15 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
             new ChatStoreActions.AddOpenChatStoreAction(addRequest)
           );
           // add to menu
-          const request: AddChatRoomStore = {
+          const request: AddUserChatRoomStore = {
             chatRoom: response.chatRoom
           };
           this.store$.dispatch(
-            new ChatStoreActions.AddChatRoomStoreAction(request)
+            new ChatStoreActions.AddUserChatRoomStoreAction(request)
           );
           this.close();
         },
         (err) => {
-          console.log(err.error.errors);
           if (
             Object.prototype.hasOwnProperty.call(
               err.error.errors,

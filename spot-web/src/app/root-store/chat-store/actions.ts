@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 // Models
 import { SpotError } from '@exceptions/error';
 import {
-  AddChatRoomStore,
+  AddUserChatRoomStore,
   AddOpenChatStore,
   RemoveOpenChatStore,
   GetChatRoomsRequest,
@@ -11,7 +11,8 @@ import {
   AddMinimizedChatStore,
   RemoveMinimizedChatStore,
   GetUserChatRoomsRequest,
-  GetUserChatRoomsResponse
+  GetUserChatRoomsResponse,
+  RemoveUserChatRoomStore
 } from '@models/chat';
 
 export enum ActionTypes {
@@ -23,7 +24,8 @@ export enum ActionTypes {
   GET_USER_CHAT_ROOMS_REQUEST = '[Chat] Get User Chat Rooms Request',
   GET_USER_CHAT_ROOMS_SUCCESS = '[Chat] Get User Chat Rooms Success',
   GET_USER_CHAT_ROOMS_FAILURE = '[Chat] Get User Chat Rooms Failure',
-  ADD_CHAT_ROOM_STORE = '[Chat] Add Chat Room Store',
+  ADD_USER_CHAT_ROOM_STORE = '[Chat] Add User Chat Room Store',
+  REMOVE_USER_CHAT_ROOM_STORE = '[Chat] Remove User Chat Room Store',
   ADD_OPEN_CHAT_STORE = '[Chat] Add Open Chat Store',
   REMOVE_OPEN_CHAT_STORE = '[Chat] Remove Open Chat Store',
   ADD_MINIMIZED_CHAT_STORE = '[Chat] Add Minimized Chat Store',
@@ -67,9 +69,13 @@ export class GetUserChatRoomsFailureAction implements Action {
 }
 
 // Store Add/Set Actions
-export class AddChatRoomStoreAction implements Action {
-  readonly type = ActionTypes.ADD_CHAT_ROOM_STORE;
-  constructor(public request: AddChatRoomStore) {}
+export class AddUserChatRoomStoreAction implements Action {
+  readonly type = ActionTypes.ADD_USER_CHAT_ROOM_STORE;
+  constructor(public request: AddUserChatRoomStore) {}
+}
+export class RemoveUserChatRoomStoreAction implements Action {
+  readonly type = ActionTypes.REMOVE_USER_CHAT_ROOM_STORE;
+  constructor(public request: RemoveUserChatRoomStore) {}
 }
 export class AddOpenChatStoreAction implements Action {
   readonly type = ActionTypes.ADD_OPEN_CHAT_STORE;
@@ -94,7 +100,8 @@ export type Actions =
   | GetChatRoomsRequestAction
   | GetChatRoomsFailureAction
   | GetChatRoomsSuccessAction
-  | AddChatRoomStoreAction
+  | AddUserChatRoomStoreAction
+  | RemoveUserChatRoomStoreAction
   | AddOpenChatStoreAction
   | RemoveOpenChatStoreAction
   | AddMinimizedChatStoreAction

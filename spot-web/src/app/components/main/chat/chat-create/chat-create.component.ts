@@ -23,7 +23,7 @@ import {
 import {
   CreateChatRoomRequest,
   CreateChatRoomResponse,
-  AddChatRoomStore
+  AddUserChatRoomStore
 } from '@models/chat';
 import { LocationData } from '@models/location';
 
@@ -64,7 +64,7 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     private modalService: ModalService,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.createChatForm = new FormGroup({
@@ -146,11 +146,11 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
               .createChatRoom(chatRequest)
               .pipe(take(1))
               .subscribe((response: CreateChatRoomResponse) => {
-                const request: AddChatRoomStore = {
+                const request: AddUserChatRoomStore = {
                   chatRoom: response.chatRoom
                 };
                 this.store$.dispatch(
-                  new ChatStoreActions.AddChatRoomStoreAction(request)
+                  new ChatStoreActions.AddUserChatRoomStoreAction(request)
                 );
               });
           });
@@ -166,11 +166,11 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
           .createChatRoom(chatRequest)
           .pipe(take(1))
           .subscribe((response: CreateChatRoomResponse) => {
-            const request: AddChatRoomStore = {
+            const request: AddUserChatRoomStore = {
               chatRoom: response.chatRoom
             };
             this.store$.dispatch(
-              new ChatStoreActions.AddChatRoomStoreAction(request)
+              new ChatStoreActions.AddUserChatRoomStoreAction(request)
             );
           });
       }

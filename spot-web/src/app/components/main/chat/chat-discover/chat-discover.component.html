@@ -45,12 +45,14 @@
       <!-- Selected Row -->
       <div
         *ngIf="selectedChat"
-        class="row-h-center margin-b-md background-page container-rounded padding-md"
+        class="row-h-center background-page container-rounded padding-md"
       >
         <!-- Chat Photo -->
         <div class="profile-md background-container row-center">
           <img *ngIf="selectedChat.imageSrc" [src]="selectedChat.imageSrc" />
-          <span *ngIf="!selectedChat.imageSrc"> C </span>
+          <span *ngIf="!selectedChat.imageSrc">
+            {{ getMinimizedName(selectedChat.name) }}
+          </span>
         </div>
 
         <!-- Properties -->
@@ -109,107 +111,121 @@
       </div>
 
       <!-- Table -->
-      <table
-        *ngIf="chatRooms.length > 0; else noChatRooms"
-        class="full-width"
-        cellSpacing="0"
-        cellPadding="0"
-      >
-        <thead>
-          <tr>
-            <th style="width: 40px" scope="col"></th>
-            <th
-              scope="col"
-              [spotSort]="chatRooms"
-              data-order="desc"
-              data-name="name"
-            >
-              <div class="row-h-center">
-                <span class="material-icons icon-sm icon-primary"> chat </span>
-                <span class="margin-l-xs">
-                  {{ 'MAIN.CHAT_DISCOVER.NAME' | translate }}
-                </span>
-              </div>
-            </th>
-            <th
-              scope="col"
-              [spotSort]="chatRooms"
-              data-order="desc"
-              data-name="distance"
-            >
-              <div class="row-h-center">
-                <span class="material-icons icon-sm icon-primary"> place </span>
-                <span class="margin-l-xs">
-                  {{ 'MAIN.CHAT_DISCOVER.LOCATION' | translate }}
-                </span>
-              </div>
-            </th>
-            <th
-              scope="col"
-              [spotSort]="chatRooms"
-              data-order="desc"
-              data-name="insertedAt"
-              data-type="date"
-              style="width: 65px"
-            >
-              <div class="row-h-center">
-                <span class="material-icons icon-sm icon-primary">
-                  schedule
-                </span>
-                <span class="margin-l-xs">
-                  {{ 'MAIN.CHAT_DISCOVER.AGE' | translate }}
-                </span>
-              </div>
-            </th>
-            <th
-              scope="col"
-              [spotSort]="chatRooms"
-              data-order="desc"
-              data-name="numUsers"
-              style="width: 65px"
-            >
-              <div class="row-h-center">
-                <span class="material-icons icon-sm icon-primary"> group </span>
-                <span class="margin-l-xs">
-                  {{ 'MAIN.CHAT_DISCOVER.USERS' | translate }}
-                </span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let chatRoom of chatRooms; let i = index">
-            <tr
-              (click)="selectRow(i, chatRoom)"
-              [class.selected]="selectedRow === i"
-            >
-              <td class="padding-sm full-height">
-                <div class="profile-sm row-center">
-                  <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
-                  <span *ngIf="!chatRoom.imageSrc"> C </span>
-                </div>
-              </td>
-              <td class="padding-sm full-height">
+      <div class="table-scroll">
+        <table
+          *ngIf="chatRooms.length > 0; else noChatRooms"
+          class="full-width"
+          cellSpacing="0"
+          cellPadding="0"
+        >
+          <thead>
+            <tr>
+              <th style="width: 40px" scope="col"></th>
+              <th
+                scope="col"
+                [spotSort]="chatRooms"
+                data-order="desc"
+                data-name="name"
+              >
                 <div class="row-h-center">
-                  <span class="margin-r-xs"> {{ chatRoom.name }} </span>
-                  <span *ngIf="chatRoom.private" class="material-icons icon-sm">
-                    lock
+                  <span class="material-icons icon-sm icon-primary">
+                    chat
+                  </span>
+                  <span class="margin-l-xs">
+                    {{ 'MAIN.CHAT_DISCOVER.NAME' | translate }}
                   </span>
                 </div>
-              </td>
-              <td class="padding-sm full-height">
-                {{ chatRoom.geolocation }} {{ getDistance(chatRoom.distance) }}
-              </td>
-              <td class="padding-sm full-height">
-                {{ getAge(chatRoom.insertedAt) }}
-              </td>
-              <td class="padding-sm full-height">
-                {{ chatRoom.numUsers }} / {{ chatRoom.capacity }}
-              </td>
+              </th>
+              <th
+                scope="col"
+                [spotSort]="chatRooms"
+                data-order="desc"
+                data-name="distance"
+              >
+                <div class="row-h-center">
+                  <span class="material-icons icon-sm icon-primary">
+                    place
+                  </span>
+                  <span class="margin-l-xs">
+                    {{ 'MAIN.CHAT_DISCOVER.LOCATION' | translate }}
+                  </span>
+                </div>
+              </th>
+              <th
+                scope="col"
+                [spotSort]="chatRooms"
+                data-order="desc"
+                data-name="insertedAt"
+                data-type="date"
+                style="width: 65px"
+              >
+                <div class="row-h-center">
+                  <span class="material-icons icon-sm icon-primary">
+                    schedule
+                  </span>
+                  <span class="margin-l-xs">
+                    {{ 'MAIN.CHAT_DISCOVER.AGE' | translate }}
+                  </span>
+                </div>
+              </th>
+              <th
+                scope="col"
+                [spotSort]="chatRooms"
+                data-order="desc"
+                data-name="numUsers"
+                style="width: 65px"
+              >
+                <div class="row-h-center">
+                  <span class="material-icons icon-sm icon-primary">
+                    group
+                  </span>
+                  <span class="margin-l-xs">
+                    {{ 'MAIN.CHAT_DISCOVER.USERS' | translate }}
+                  </span>
+                </div>
+              </th>
             </tr>
-          </ng-container>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let chatRoom of chatRooms; let i = index">
+              <tr
+                (click)="selectRow(i, chatRoom)"
+                [class.selected]="selectedRow === i"
+              >
+                <td class="padding-sm full-height">
+                  <div class="profile-sm row-center">
+                    <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
+                    <span *ngIf="!chatRoom.imageSrc">
+                      {{ getMinimizedName(chatRoom.name) }}
+                    </span>
+                  </div>
+                </td>
+                <td class="padding-sm full-height">
+                  <div class="row-h-center">
+                    <span class="margin-r-xs"> {{ chatRoom.name }} </span>
+                    <span
+                      *ngIf="chatRoom.private"
+                      class="material-icons icon-sm"
+                    >
+                      lock
+                    </span>
+                  </div>
+                </td>
+                <td class="padding-sm full-height">
+                  {{ chatRoom.geolocation }}
+                  {{ getDistance(chatRoom.distance) }}
+                </td>
+                <td class="padding-sm full-height">
+                  {{ getAge(chatRoom.insertedAt) }}
+                </td>
+                <td class="padding-sm full-height">
+                  {{ chatRoom.numUsers }} / {{ chatRoom.capacity }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
 
       <!-- No Chats // Loading Chats -->
       <ng-template #noChatRooms>

@@ -49,8 +49,11 @@ export interface ChatPagination {
 }
 
 // Store Requests
-export interface AddChatRoomStore {
+export interface AddUserChatRoomStore {
   chatRoom: ChatRoom;
+}
+export interface RemoveUserChatRoomStore {
+  chatId: string;
 }
 export interface AddOpenChatStore {
   chat: ChatRoom;
@@ -103,6 +106,12 @@ export interface JoinChatRoomRequest {
   password?: string;
 }
 export interface JoinChatRoomResponse {
+  chatRoom: ChatRoom;
+}
+export interface LeaveChatRoomRequest {
+  chatRoomId: string;
+}
+export interface LeaveChatRoomResponse {
   chatRoom: ChatRoom;
 }
 

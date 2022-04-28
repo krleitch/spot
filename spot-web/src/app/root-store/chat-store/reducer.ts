@@ -9,10 +9,24 @@ export function featureReducer(state = initialState, action: Actions): State {
       };
     }
     // Store requests
-    case ActionTypes.ADD_CHAT_ROOM_STORE: {
+    case ActionTypes.ADD_USER_CHAT_ROOM_STORE: {
       return {
         ...state,
-        chatRooms: state.chatRooms.concat(action.request.chatRoom)
+        userChatRooms: state.userChatRooms.concat(action.request.chatRoom)
+      };
+    }
+    case ActionTypes.REMOVE_USER_CHAT_ROOM_STORE: {
+      return {
+        ...state,
+        userChatRooms: state.userChatRooms.filter(
+          (r) => r.id !== action.request.chatId
+        ),
+        openChats: state.openChats.filter(
+          (r) => r.id !== action.request.chatId
+        ),
+        minimizedChats: state.minimizedChats.filter(
+          (r) => r.id !== action.request.chatId
+        )
       };
     }
     case ActionTypes.ADD_OPEN_CHAT_STORE: {

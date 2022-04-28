@@ -15,7 +15,9 @@ import {
   JoinChatRoomRequest,
   JoinChatRoomResponse,
   GetUserChatRoomsRequest,
-  GetUserChatRoomsResponse
+  GetUserChatRoomsResponse,
+  LeaveChatRoomRequest,
+  LeaveChatRoomResponse
 } from '@models/chat';
 
 // env
@@ -70,6 +72,15 @@ export class ChatService {
   joinChatRoom(request: JoinChatRoomRequest): Observable<JoinChatRoomResponse> {
     return this.http.post<JoinChatRoomResponse>(
       `${this.chatBaseUrl}/rooms/${request.chatRoomId}/join`,
+      request
+    );
+  }
+
+  leaveChatRoom(
+    request: LeaveChatRoomRequest
+  ): Observable<LeaveChatRoomResponse> {
+    return this.http.post<LeaveChatRoomResponse>(
+      `${this.chatBaseUrl}/rooms/${request.chatRoomId}/leave`,
       request
     );
   }

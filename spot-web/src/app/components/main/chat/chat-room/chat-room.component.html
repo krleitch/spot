@@ -5,7 +5,12 @@
       <i class="material-icons icon-md icon-secondary"> person </i>
       <span class="text-secondary margin-l-sm">{{ userCount }} -</span>
     </span>
-    <span class="flex-fill"> {{ chatRoom.geolocation }} {{ chatRoom.distance }} </span>
+    <span class="flex-fill">
+      {{ chatRoom.geolocation }} {{ chatRoom.distance }}
+    </span>
+    <span class="text-secondary-highlight" (click)="leaveChatRoom()">
+      Leave
+    </span>
   </div>
 
   <!-- Body -->
@@ -43,7 +48,10 @@
           [class.align-items-start]="!messageBlock.owned"
           [class.align-items-end]="messageBlock.owned"
         >
-          <div *ngFor="let message of messageBlock.messages" class="row-center relative">
+          <div
+            *ngFor="let message of messageBlock.messages"
+            class="row-center relative"
+          >
             <div class="message-text" [class.owned]="messageBlock.owned">
               {{ message.text }}
             </div>
