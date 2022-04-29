@@ -13,6 +13,8 @@ export interface ChatRoom {
   name: string;
   description: string;
   imageSrc: string;
+  defaultImageSrc: string;
+  defaultImageNum: number;
   private: boolean;
   distance: number;
   geolocation: string;

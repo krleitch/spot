@@ -2,9 +2,15 @@
   <div
     class="header row-h-center justify-content-between background-primary full-width padding-v-xs padding-h-sm border-box"
   >
-    <span class="image row-center margin-sm">
+    <span
+      class="image margin-sm"
+      [ngClass]="tab.imageSrc ? '' : 'chat-' + tab.defaultImageNum"
+    >
       <img *ngIf="tab.imageSrc" [src]="tab.imageSrc" />
-      <span *ngIf="!tab.imageSrc"> {{ getMinimizedName(tab.name) }} </span>
+      <img
+        *ngIf="!tab.imageSrc"
+        [src]="'/assets/images/chat/' + tab.defaultImageSrc"
+      />
     </span>
     <span class="name text-md text-white">{{ tab.name }}</span>
     <div class="row-center">

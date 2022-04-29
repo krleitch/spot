@@ -28,6 +28,35 @@ $profile-colors: (
   '25': #fbb3b6
 );
 
+$chat-colors: (
+  '0': #d2c3c3,
+  '1': #cfafaf,
+  '2': #e9d2d2,
+  '3': #e7c4c4,
+  '4': #ffad99,
+  '5': #f5ac8e,
+  '6': #ffb86d,
+  '7': #ffd199,
+  '8': #ffe9cd,
+  '9': #fef0ad,
+  '10': #e2e095,
+  '11': #e0e9bb,
+  '12': #c2d6a1,
+  '13': #ccff99,
+  '14': #bdd6a9,
+  '15': #afcfaf,
+  '16': #accfb9,
+  '17': #b5ffd5,
+  '18': #b8d5d5,
+  '19': #c6eaea,
+  '20': #a6c3d3,
+  '21': #aab3dc,
+  '22': #aaaaff,
+  '23': #c5bdf8,
+  '24': #d8c4ff,
+  '25': #fbb3b6
+);
+
 .profile-lg {
   width: 100px;
   min-width: 100px;
@@ -66,9 +95,16 @@ $profile-colors: (
   border: 3px solid var(--primary);
 }
 
-// backgrounds
+// backgrounds for profile
 @each $key, $value in $profile-colors {
   .profile-#{$key} {
+    background-color: $value;
+  }
+}
+
+// backgrounds for chat photo
+@each $key, $value in $chat-colors {
+  .chat-#{$key} {
     background-color: $value;
   }
 }

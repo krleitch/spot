@@ -48,11 +48,17 @@
         class="row-h-center background-page container-rounded padding-md"
       >
         <!-- Chat Photo -->
-        <div class="profile-md background-container row-center">
+        <div
+          class="profile-md"
+          [ngClass]="
+            selectedChat.imageSrc ? '' : 'chat-' + selectedChat.defaultImageNum
+          "
+        >
           <img *ngIf="selectedChat.imageSrc" [src]="selectedChat.imageSrc" />
-          <span *ngIf="!selectedChat.imageSrc">
-            {{ getMinimizedName(selectedChat.name) }}
-          </span>
+          <img
+            *ngIf="!selectedChat.imageSrc"
+            [src]="'/assets/images/chat/' + selectedChat.defaultImageSrc"
+          />
         </div>
 
         <!-- Properties -->
@@ -193,11 +199,19 @@
                 [class.selected]="selectedRow === i"
               >
                 <td class="padding-sm full-height">
-                  <div class="profile-sm row-center">
+                  <div
+                    class="profile-sm"
+                    [ngClass]="
+                      chatRoom.imageSrc
+                        ? ''
+                        : 'chat-' + chatRoom.defaultImageNum
+                    "
+                  >
                     <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
-                    <span *ngIf="!chatRoom.imageSrc">
-                      {{ getMinimizedName(chatRoom.name) }}
-                    </span>
+                    <img
+                      *ngIf="!chatRoom.imageSrc"
+                      [src]="'/assets/images/chat/' + chatRoom.defaultImageSrc"
+                    />
                   </div>
                 </td>
                 <td class="padding-sm full-height">

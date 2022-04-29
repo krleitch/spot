@@ -20,20 +20,10 @@ th {
 
 tr:nth-child(even) {
   background: var(--background-page);
-  td .profile-sm {
-    background-color: var(--background-container);
-  }
 }
 tr:nth-child(odd) {
   background: var(--background-container);
-  td .profile-sm {
-    background-color: var(--background-page);
-  }
 }
-
 tr.selected {
   background: var(--background-header);
-  td .profile-sm {
-    background-color: var(--background-container);
-  }
 }

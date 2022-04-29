@@ -99,10 +99,16 @@
               *ngFor="let chatRoom of userChatRooms"
               (click)="createRoomTab(chatRoom)"
             >
-              <span class="image">
-                <span *ngIf="!chatRoom.imageSrc" class="row-center full-size">{{
-                  getMinimizedName(chatRoom.name)
-                }}</span>
+              <span
+                class="profile-md"
+                [ngClass]="
+                  chatRoom.imageSrc ? '' : 'chat-' + chatRoom.defaultImageNum
+                "
+              >
+                <img
+                  *ngIf="!chatRoom.imageSrc"
+                  [src]="'/assets/images/chat/' + chatRoom.defaultImageSrc"
+                />
                 <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
               </span>
               <span
