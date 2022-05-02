@@ -42,7 +42,8 @@ import {
   styleUrls: ['./chat-room.component.scss']
 })
 export class ChatRoomComponent
-  implements OnInit, AfterViewInit, AfterViewChecked {
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   // Chat Text Content
   @ViewChild('chat') chat: ElementRef<HTMLElement>; // chat messages container
   @ViewChild('create') create: ElementRef; // editable content
@@ -63,7 +64,7 @@ export class ChatRoomComponent
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.channel = this.chatService.connectToChannel(this.chatRoom.id);
@@ -255,9 +256,9 @@ export class ChatRoomComponent
         const lastBlock = this.messageBlocks[this.messageBlocks.length - 1];
         const tooLate =
           new Date(message.insertedAt).getTime() -
-          new Date(
-            lastBlock.messages[lastBlock.messages.length - 1].insertedAt
-          ).getTime() >
+            new Date(
+              lastBlock.messages[lastBlock.messages.length - 1].insertedAt
+            ).getTime() >
           300000;
         if (lastBlock.chatProfileId === message.chatProfileId && !tooLate) {
           // Append to this block

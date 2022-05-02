@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { take } from 'rxjs/operators';
-import { Buffer } from 'buffer';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -54,9 +53,9 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
   constructor(
     private modalService: ModalService,
     private userService: UserService
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.imageCropper.nativeElement.addEventListener('mousedown', (_e) => {

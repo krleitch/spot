@@ -184,8 +184,15 @@
       *ngFor="let mchat of minimizedChats"
       (click)="openMinimizedTab(mchat.id)"
     >
-      <div class="mtab">
-        <span>{{ getMinimizedName(mchat.name) }}</span>
+      <div
+        class="profile-md"
+        [ngClass]="mchat.imageSrc ? '' : 'chat-' + mchat.defaultImageNum"
+      >
+        <img *ngIf="mchat.imageSrc" [src]="mchat.imageSrc" />
+        <img
+          *ngIf="!mchat.imageSrc"
+          [src]="'/assets/images/chat/' + mchat.defaultImageSrc"
+        />
       </div>
     </div>
   </div>
