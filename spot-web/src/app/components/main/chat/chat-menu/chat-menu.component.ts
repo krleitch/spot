@@ -66,7 +66,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private modalService: ModalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // friends

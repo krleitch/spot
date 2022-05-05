@@ -37,6 +37,7 @@
               >
                 {{ 'MAIN.ACCOUNT.CHANGE' | translate }}
               </div>
+
               <!-- Age -->
               <div class="row-h-center margin-b-md">
                 <span class="material-icons icon-primary"> cake </span>
@@ -44,6 +45,7 @@
                   {{ formatBirthday(user.createdAt) }}
                 </span>
               </div>
+
               <!-- Verified Status -->
               <div *ngIf="user.verifiedAt" class="row-h-center margin-b-md">
                 <span class="material-icons icon-primary"> verified </span>
@@ -63,12 +65,14 @@
               <div
                 *ngIf="!user.verifiedAt && !verificationSent"
                 class="row-h-center margin-b-md"
+                (click)="verifyUser()"
               >
                 <span class="material-icons icon-primary"> email </span>
-                <span class="margin-l-sm text-center">
+                <span class="margin-l-sm text-secondary-highlight text-center">
                   {{ 'MAIN.ACCOUNT.VERIFY' | translate }}
                 </span>
               </div>
+
               <!-- Spot Score -->
               <div *ngIf="userMetadata" class="row-h-center margin-b-md">
                 <span class="material-icons icon-lg icon-error">

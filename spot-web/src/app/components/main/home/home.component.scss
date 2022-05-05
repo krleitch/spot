@@ -1,4 +1,4 @@
-@import '../../../styles/sizes';
+@use '~sass-mq/mq';
 @import url('https://fonts.googleapis.com/css2?family=Mada&display=swap');
 
 spot-main-nav {
@@ -10,7 +10,7 @@ spot-main-nav {
   z-index: 9999999;
 }
 
-.container {
+.home {
   display: flex;
   justify-content: center;
   min-height: 100%;
@@ -36,101 +36,15 @@ spot-main-nav {
     max-width: 750px;
     min-width: 450px;
     padding-top: 20px;
+    @include mq.mq($until: tablet) {
+      width: 95%;
+      min-width: 0;
+    }
   }
 }
 
-// options
-
-.locationToggle {
-  position: fixed;
-  display: flex;
-  top: 18px;
-  left: 125px;
-  z-index: 999999999;
-}
-
-.global {
-  cursor: pointer;
-  .icon {
-    font-size: 26px;
-  }
-}
-
-.local {
-  cursor: pointer;
-  margin-right: 12px;
-  .icon {
-    font-size: 26px;
-  }
-}
-
-.selectedLocation {
-  color: var(--primary);
-}
-
-.postFilterToggle {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  width: 80px;
-  top: 12px;
-  left: calc(50% - 33px);
-  z-index: 999999999;
-  font-family: 'Mada', sans-serif;
-}
-
-.icon {
-  margin-right: 3px;
-}
-
-.new {
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-  padding: 8px 8px;
-  min-width: 66px;
-  background: linear-gradient(
-    to left,
-    var(--background-primary) 50%,
-    var(--primary) 50%
-  );
-  background-size: 200% 100%;
-  background-position: right bottom;
-  transition: all 1s ease;
-  font-size: 18px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
-.hot {
-  display: flex;
-  justify-content: center;
-  min-width: 66px;
-  cursor: pointer;
-  padding: 8px 8px;
-  background: linear-gradient(
-    to right,
-    var(--background-primary) 50%,
-    var(--primary) 50%
-  );
-  background-size: 200% 100%;
-  background-position: left bottom;
-  transition: all 1s ease;
-  font-size: 18px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
-
-.hot.selectedSort {
-  color: white;
-  background-position: right bottom;
-  transition: all 1s ease;
-}
-
-.new.selectedSort {
-  color: white;
-  background-position: left bottom;
-  transition: all 1s ease;
+spot-chat-join {
+  width: 100%;
 }
 
 spot-create {
@@ -170,7 +84,7 @@ spot-create {
       width: 65px;
       height: 65px;
       border-radius: 50%;
-      background-color: #08C7AD;
+      background-color: #08c7ad;
     }
 
     .c2 {
@@ -180,7 +94,7 @@ spot-create {
       width: 65px;
       height: 65px;
       border-radius: 50%;
-      background-color: #00B79D;
+      background-color: #00b79d;
     }
 
     .c3 {
@@ -190,7 +104,7 @@ spot-create {
       width: 65px;
       height: 65px;
       border-radius: 50%;
-      background-color: #00BFA5;
+      background-color: #00bfa5;
     }
 
     .icon {
@@ -329,34 +243,42 @@ spot-create {
   }
 }
 
-// mobile dropdowns
+// options
+.locationToggle {
+  position: fixed;
+  top: 18px;
+  left: 125px;
+  z-index: 999999999;
+  cursor: pointer;
+}
+.locationToggleMobile {
+  position: fixed;
+  height: 24px;
+  top: 18px;
+  left: 130px;
+  z-index: 999999999;
+  cursor: pointer;
+}
 
+.postFilterToggle {
+  position: fixed;
+  width: 80px;
+  top: 12px;
+  left: calc(50% - 33px);
+  z-index: 999999999;
+  font-family: 'Mada', sans-serif;
+}
 .postFilterToggleMobile {
   position: fixed;
-  display: flex;
-  justify-content: center;
   height: 24px;
   top: 18px;
   left: 190px;
   z-index: 999999999;
   font-size: 18px;
-}
-
-.locationToggleMobile {
-  position: fixed;
-  display: flex;
-  height: 24px;
-  top: 18px;
-  left: 130px;
-  z-index: 999999999;
-}
-
-.mobile-dropdown-container {
   cursor: pointer;
-  display: flex;
-  align-items: center;
 }
 
+// mobile dropdowns
 .dropdown {
   position: relative;
   display: flex;
@@ -386,7 +308,7 @@ spot-create {
     z-index: 1;
   }
 
-  .button {
+  .dropdown-button {
     background-color: #efefef;
     color: black;
     height: 45px;
@@ -404,44 +326,9 @@ spot-create {
       background: var(--background-primary);
       color: var(--primary);
     }
-
-    .dropdown-icon {
-      font-size: 21px;
-    }
   }
 
-  .show {
+  .dropdown-show {
     display: block;
-  }
-
-  .selected-highlight {
-    color: var(--primary);
-  }
-}
-
-spot-chat-join {
-  width: 100%;
-}
-
-.mobile {
-  display: none;
-}
-
-// mobile
-
-@media screen and (max-width: 540px) {
-  .mobile {
-    display: flex;
-  }
-
-  .desktop {
-    display: none;
-  }
-
-  .container {
-    .content {
-      width: 95%;
-      min-width: 0;
-    }
   }
 }

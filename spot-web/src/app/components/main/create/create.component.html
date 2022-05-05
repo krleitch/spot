@@ -1,5 +1,14 @@
 <meta charset="UTF-8" />
-<div class="create">
+<div
+  *ngIf="
+    user &&
+      user.verifiedAt !== null &&
+      user.role !== eUserRole.GUEST &&
+      location;
+    else hide
+  "
+  class="create"
+>
   <div class="editor">
     <span
       #create
@@ -18,7 +27,9 @@
 
   <div class="option-bar">
     <div class="file-options" *ngIf="imgSrc !== null">
-      <span class="file-title"> {{ 'MAIN.CREATE.FILE_TITLE' | translate }} </span>
+      <span class="file-title">
+        {{ 'MAIN.CREATE.FILE_TITLE' | translate }}
+      </span>
       <span class="file-name"> {{ imageFile.name }} </span>
       <span class="file-remove" (click)="removeFile()">
         <i class="material-icons"> delete </i>
@@ -47,3 +58,87 @@
     </ng-template>
   </div>
 </div>
+
+<!-- All the reasons why create might be hidden -->
+<!-- Priority is user -> guest -> verify -> location -->
+<ng-template #hide>
+  <!-- No user -->
+  <div *ngIf="!user; else guest"></div>
+
+  <!-- User is a guest -->
+  <ng-template #guest>
+    <div
+      *ngIf="user.role === eUserRole.GUEST; else verify"
+      class="col-center background-container container-rounded padding-lg"
+    >
+      <span class="material-icons icon-xl icon-primary"> account_circle </span>
+      <div class="text-center">
+        {{ 'MAIN.HOME.GUEST' | translate }}
+      </div>
+    </div>
+
+    <!-- User is not verified -->
+    <ng-template #verify>
+      <div
+        *ngIf="user.verifiedAt == null; else location"
+        class="col-center background-container container-rounded padding-lg"
+      >
+        <span class="material-icons icon-xl icon-primary"> email </span>
+        <div *ngIf="user.email; else email" class="col-center">
+          <span class="text-center">
+            {{ 'MAIN.HOME.VERIFY' | translate }}
+          </span>
+          <div *ngIf="!verificationSent; else sent">
+            <div
+              class="text-secondary-highlight text-center"
+              (click)="verifyUser()"
+            >
+              {{ 'MAIN.HOME.VERIFY_SEND' | translate }}
+            </div>
+            <span class="text-sm">
+              {{ user.email }} (
+              <a
+                class="text-secondary-highlight text-sm"
+                [routerLink]="'/account'"
+              >
+                Change Email
+              </a>
+              )
+            </span>
+          </div>
+          <ng-template #sent>
+            <span class="text-sm">
+              {{ 'MAIN.HOME.VERIFY_SENT' | translate }}
+              {{ user.email }}
+            </span>
+          </ng-template>
+        </div>
+        <ng-template #email>
+          <span class="text-center">
+            {{ 'MAIN.HOME.NO_EMAIL' | translate }}
+          </span>
+          <a class="text-secondary-highlight text-sm" [routerLink]="'/account'">
+            {{ 'MAIN.HOME.ADD_EMAIL' | translate }}
+          </a>
+        </ng-template>
+      </div>
+
+      <!-- No location -->
+      <ng-template #location>
+        <div
+          *ngIf="locationLoading; else loaded"
+          class="col-center background-container container-rounded padding-lg"
+        >
+          <spot-spinner type="dot"></spot-spinner>
+          <span class=""> Loading your location </span>
+        </div>
+        <ng-template #loaded>
+          <div>
+            <span class="material-icons icon-xl icon-primary"> email </span>
+            <span class=""> Location is required </span>
+          </div>
+        </ng-template>
+      </ng-template>
+    </ng-template>
+  </ng-template>
+</ng-template>

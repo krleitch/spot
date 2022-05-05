@@ -10,7 +10,6 @@ $text-sizes: (
 @each $key, $value in $text-sizes {
   .text-#{$key} {
     font-size: $value;
-    color: var(--text-primary);
   }
 }
 
@@ -41,7 +40,6 @@ $title-sizes: (
 @each $key, $value in $title-sizes {
   .title-#{$key} {
     font-size: $value;
-    color: var(--text-primary);
   }
 }
 
@@ -137,4 +135,3 @@ $title-sizes: (
     color: var(--primary-highlight);
   }
 }
-

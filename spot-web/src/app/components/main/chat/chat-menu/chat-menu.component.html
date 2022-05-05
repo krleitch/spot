@@ -180,20 +180,16 @@
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
     <div
-      class="mini-tab row-center"
+      class="mini-tab profile-md"
+      [ngClass]="mchat.imageSrc ? '' : 'chat-' + mchat.defaultImageNum"
       *ngFor="let mchat of minimizedChats"
       (click)="openMinimizedTab(mchat.id)"
     >
-      <div
-        class="profile-md"
-        [ngClass]="mchat.imageSrc ? '' : 'chat-' + mchat.defaultImageNum"
-      >
-        <img *ngIf="mchat.imageSrc" [src]="mchat.imageSrc" />
-        <img
-          *ngIf="!mchat.imageSrc"
-          [src]="'/assets/images/chat/' + mchat.defaultImageSrc"
-        />
-      </div>
+      <img *ngIf="mchat.imageSrc" [src]="mchat.imageSrc" />
+      <img
+        *ngIf="!mchat.imageSrc"
+        [src]="'/assets/images/chat/' + mchat.defaultImageSrc"
+      />
     </div>
   </div>
   <!-- Tabs -->

@@ -6,7 +6,7 @@
       <span class="text-secondary margin-l-sm">{{ userCount }} -</span>
     </span>
     <span class="flex-fill">
-      {{ chatRoom.geolocation }} {{ chatRoom.distance }}
+      {{ chatRoom.geolocation }} {{ getDistance(chatRoom.distance) }}
     </span>
     <span class="text-secondary-highlight" (click)="leaveChatRoom()">
       Leave

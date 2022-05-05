@@ -6,14 +6,16 @@ import {
   AfterViewChecked,
   ViewChild,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
-import { take } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 
 // Store
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
-// import { SocialStoreSelectors } from '@store/social-store';
+import { UserStoreSelectors } from '@store/user-store';
 import { ChatStoreActions } from '@store/chat-store';
 
 // phoenix
@@ -35,6 +37,7 @@ import {
   LeaveChatRoomResponse,
   RemoveUserChatRoomStore
 } from '@models/chat';
+import { UserMetadata, UnitSystem } from '@models/userMetadata';
 
 @Component({
   selector: 'spot-chat-room',
@@ -42,8 +45,9 @@ import {
   styleUrls: ['./chat-room.component.scss']
 })
 export class ChatRoomComponent
-  implements OnInit, AfterViewInit, AfterViewChecked
+  implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy
 {
+  private readonly onDestroy = new Subject<void>();
   // Chat Text Content
   @ViewChild('chat') chat: ElementRef<HTMLElement>; // chat messages container
   @ViewChild('create') create: ElementRef; // editable content
@@ -60,6 +64,10 @@ export class ChatRoomComponent
   ignoreInitialObserver = true;
   userCount = 0;
 
+  // User Metadata
+  userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
+
   constructor(
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
@@ -69,6 +77,16 @@ export class ChatRoomComponent
   ngOnInit(): void {
     this.channel = this.chatService.connectToChannel(this.chatRoom.id);
     this.joinRoom();
+
+    // metadata
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
+    );
+    this.userMetadata$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((userMetadata: UserMetadata) => {
+        this.userMetadata = userMetadata;
+      });
   }
 
   ngAfterViewInit() {
@@ -117,6 +135,10 @@ export class ChatRoomComponent
     this.observer.observe(this.anchor.nativeElement);
   }
 
+  ngOnDestroy(): void {
+    this.onDestroy.next();
+  }
+
   scrollChatToBottom() {
     if (this.disableScrollDown) {
       return;
@@ -156,6 +178,24 @@ export class ChatRoomComponent
     const minutesStr = minutes < 10 ? '0' + minutes : minutes.toString();
     const strTime = daysStr + ' ' + hoursStr + ':' + minutesStr + ' ' + ampm;
     return strTime;
+  }
+
+  getDistance(distance: number): string {
+    let unit: UnitSystem;
+    if (this.userMetadata) {
+      unit = this.userMetadata.unitSystem;
+    } else {
+      unit = UnitSystem.IMPERIAL;
+    }
+
+    let distanceString = '';
+
+    if (unit === UnitSystem.METRIC) {
+      distanceString += (distance * 1.60934).toFixed(1) + ' km';
+    } else {
+      distanceString += distance.toFixed(1) + ' m';
+    }
+    return distanceString;
   }
 
   getProfilePictureClass(index, owned: boolean): string {

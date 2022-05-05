@@ -1,80 +1,91 @@
 <spot-main-nav (titleEvent)="refresh()"></spot-main-nav>
 
 <!-- Location -->
-<div class="locationToggle desktop">
-  <div
-    class="local"
-    [ngClass]="{ selectedLocation: isSelectedLocation(eLocationType.LOCAL) }"
+<div class="locationToggle row-center mobile-hide">
+  <span
+    class="material-icons icon-lg margin-r-lg"
+    [class.icon-primary]="isSelectedLocation(eLocationType.LOCAL)"
     (click)="setLocal()"
   >
-    <i class="material-icons icon"> home </i>
-  </div>
-  <div
-    class="global"
-    [ngClass]="{ selectedLocation: isSelectedLocation(eLocationType.GLOBAL) }"
+    home
+  </span>
+  <span
+    class="material-icons icon-lg"
+    [class.icon-primary]="isSelectedLocation(eLocationType.GLOBAL)"
     (click)="setGlobal()"
   >
-    <i class="material-icons icon"> public </i>
-  </div>
+    public
+  </span>
 </div>
-<div #mobiledropdownlocation class="locationToggleMobile mobile">
-  <div class="mobile-dropdown-container" (click)="dropdownLocation(true)">
-    <i *ngIf="isSelectedLocation(eLocationType.LOCAL)" class="material-icons">
+
+<!-- Mobile Location -->
+<div
+  #mobiledropdownlocation
+  class="locationToggleMobile row-center mobile-show"
+>
+  <div class="row-h-center" (click)="dropdownLocation(true)">
+    <span
+      *ngIf="isSelectedLocation(eLocationType.LOCAL)"
+      class="material-icons"
+    >
       home
-    </i>
-    <i *ngIf="isSelectedLocation(eLocationType.GLOBAL)" class="material-icons">
+    </span>
+    <span
+      *ngIf="isSelectedLocation(eLocationType.GLOBAL)"
+      class="material-icons"
+    >
       public
-    </i>
+    </span>
     <span class="material-icons"> expand_more </span>
   </div>
   <div class="dropdown">
     <div
       class="dropdown-content-location"
-      [ngClass]="{ show: dropdownLocationEnabled }"
+      [class.dropdown-show]="dropdownLocationEnabled"
     >
-      <div
-        class="button"
-        [ngClass]="{
-          'selected-highlight': isSelectedLocation(eLocationType.LOCAL)
-        }"
-        (click)="setLocal()"
-      >
-        <i class="material-icons dropdown-icon"> home </i>
+      <div class="dropdown-button" (click)="setLocal()">
+        <span
+          class="material-icons icon-lg"
+          [class.icon-primary]="isSelectedLocation(eLocationType.LOCAL)"
+        >
+          home
+        </span>
       </div>
-      <div
-        class="button"
-        [ngClass]="{
-          'selected-highlight': isSelectedLocation(eLocationType.GLOBAL)
-        }"
-        (click)="setGlobal()"
-      >
-        <i class="material-icons dropdown-icon"> public </i>
+      <div class="dropdown-button" (click)="setGlobal()">
+        <span
+          class="material-icons icon-lg"
+          [class.icon-primary]="isSelectedLocation(eLocationType.GLOBAL)"
+        >
+          public
+        </span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Sort -->
-<div class="postFilterToggle desktop">
+<div class="postFilterToggle row-center mobile-hide">
   <div
-    class="hot"
-    [ngClass]="{ selectedSort: isSelectedSpotSort(eSearchType.HOT) }"
+    class="button-switch left row-center"
+    [class.selected]="isSelectedSpotSort(eSearchType.HOT)"
     (click)="setHot()"
   >
-    <span class="material-icons icon"> rocket_launch </span>
-    {{ 'MAIN.HOME.HOT' | translate }}
+    <span class="material-icons icon-lg"> rocket_launch </span>
+    <span class="margin-l-sm text-lg">{{ 'MAIN.HOME.HOT' | translate }}</span>
   </div>
   <div
-    class="new"
-    [ngClass]="{ selectedSort: isSelectedSpotSort(eSearchType.NEW) }"
+    class="button-switch right row-center"
+    [class.selected]="isSelectedSpotSort(eSearchType.NEW)"
     (click)="setNew()"
   >
-    <span class="material-icons icon"> local_florist </span>
-    {{ 'MAIN.HOME.NEW' | translate }}
+    <span class="material-icons icon-lg"> local_florist </span>
+    <span class="margin-l-sm text-lg">{{ 'MAIN.HOME.NEW' | translate }}</span>
   </div>
 </div>
-<div #mobiledropdownsort class="postFilterToggleMobile mobile">
-  <div class="mobile-dropdown-container" (click)="dropdownSort(true)">
+
+<!-- Sort Mobile -->
+<div #mobiledropdownsort class="postFilterToggleMobile row-center mobile-show">
+  <div class="row-h-center" (click)="dropdownSort(true)">
     <div *ngIf="isSelectedSpotSort(eSearchType.HOT)">
       {{ 'MAIN.HOME.HOT' | translate }}
     </div>
@@ -86,22 +97,18 @@
   <div class="dropdown">
     <div
       class="dropdown-content-sort"
-      [ngClass]="{ show: dropdownSortEnabled }"
+      [class.dropdown-show]="dropdownSortEnabled"
     >
       <div
-        class="button"
-        [ngClass]="{
-          'selected-highlight': isSelectedSpotSort(eSearchType.HOT)
-        }"
+        class="dropdown-button"
+        [class.text-primary]="isSelectedSpotSort(eSearchType.HOT)"
         (click)="setHot()"
       >
         {{ 'MAIN.HOME.HOT' | translate }}
       </div>
       <div
-        class="button"
-        [ngClass]="{
-          'selected-highlight': isSelectedSpotSort(eSearchType.NEW)
-        }"
+        class="dropdown-button"
+        [class.text-primary]="isSelectedSpotSort(eSearchType.NEW)"
         (click)="setNew()"
       >
         {{ 'MAIN.HOME.NEW' | translate }}
@@ -110,7 +117,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="home">
   <!-- If we need to prompt for location, show this first -->
   <div
     *ngIf="locationFailure !== 'prompt' || bypassLocation; else prompt"
@@ -126,145 +133,7 @@
         "
         class="content"
       >
-        <div *ngIf="user" class="fit-container">
-          <!-- You still need location -->
-          <div *ngIf="location; else createlocation" class="fit-container">
-            <div
-              *ngIf="user.role !== eUserRole.GUEST; else guest"
-              class="fit-container"
-            >
-              <!-- Need a verified user -->
-              <spot-create
-                *ngIf="user.verifiedAt !== null; else verify"
-              ></spot-create>
-              <ng-template #verify>
-                <div class="info-container">
-                  <span class="material-icons icon"> email </span>
-                  <div *ngIf="user.email; else noEmail">
-                    <span class="text">
-                      {{ 'MAIN.HOME.VERIFY' | translate }}
-                    </span>
-                    <div *ngIf="verificationSent === false; else sentverify">
-                      <div class="text clickable" (click)="verifyUser()">
-                        {{ 'MAIN.HOME.VERIFY_SEND' | translate }}
-                      </div>
-                      <span class="small-text">
-                        {{ user.email }} (
-                        <a
-                          class="clickable small-text"
-                          [routerLink]="'/account'"
-                        >
-                          Change Email
-                        </a>
-                        )
-                      </span>
-                    </div>
-                    <ng-template #sentverify>
-                      <span class="small-text">
-                        {{ 'MAIN.HOME.VERIFY_SENT' | translate }}
-                        {{ user.email }}
-                      </span>
-                    </ng-template>
-                  </div>
-                  <ng-template #noEmail>
-                    <span class="text">
-                      {{ 'MAIN.HOME.NO_EMAIL' | translate }}
-                    </span>
-                    <span class="small-text">
-                      <a class="clickable small-text" [routerLink]="'/account'">
-                        {{ 'MAIN.HOME.ADD_EMAIL' | translate }}
-                      </a>
-                    </span>
-                  </ng-template>
-                </div>
-              </ng-template>
-            </div>
-            <ng-template #guest>
-              <div class="info-container">
-                <span class="material-icons icon"> account_circle </span>
-                <div class="text">
-                  {{ 'MAIN.HOME.GUEST' | translate }}
-                </div>
-              </div>
-            </ng-template>
-          </div>
-
-          <!-- You need Location -->
-          <ng-template #createlocation>
-            <!-- location is still loading -->
-            <div
-              *ngIf="
-                locationLoading && (showLocationIndicator$ | async);
-                else enableLocationCreate
-              "
-              class="info-container"
-            >
-              <spot-spinner type="dot"></spot-spinner>
-              <span class="text">
-                {{ 'MAIN.HOME.LOADING_LOCATION' | translate }}
-              </span>
-              <span
-                *ngIf="bypassLocation === true; else loadglobalblock"
-                class="text"
-              >
-                {{ 'MAIN.HOME.LOCATION_REQUIRED' | translate }}
-              </span>
-              <ng-template #loadglobalblock>
-                <span class="text clickable" (click)="loadLocationBackground()">
-                  {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
-                  <i class="material-icons inline-icon"> public </i>
-                  {{ 'MAIN.HOME.LOCATION_BACKGROUND_2' | translate }}
-                </span>
-              </ng-template>
-            </div>
-            <ng-template #enableLocationCreate>
-              <!-- location is not enabled -->
-              <div *ngIf="locationFailure === 'browser'" class="info-container">
-                <span class="material-icons icon"> location_off </span>
-                <span class="text">
-                  {{ 'MAIN.HOME.LOCATION_BROWSER' | translate }}</span
-                >
-              </div>
-              <div
-                *ngIf="
-                  locationFailure === 'permission' ||
-                  locationFailure === 'prompt'
-                "
-                class="info-container"
-              >
-                <span class="material-icons icon"> location_off </span>
-                <span class="text">
-                  {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_1' | translate }}
-                  <i class="material-icons inline-icon"> home </i>
-                  {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_2' | translate }}
-                </span>
-                <span class="text">
-                  {{ 'MAIN.HOME.LOCATION_SAFE' | translate }}
-                </span>
-                <span class="line"></span>
-                <span class="text">
-                  {{ 'MAIN.HOME.LOCATION_ENABLE' | translate }}
-                </span>
-                <button
-                  *ngIf="locationFailure === 'prompt'"
-                  class="enable-location-button"
-                  (click)="askLocationPermission()"
-                >
-                  Enable Location
-                </button>
-              </div>
-              <div *ngIf="locationFailure === 'general'" class="info-container">
-                <span class="material-icons icon"> location_off </span>
-                <span class="text">
-                  {{ 'MAIN.HOME.LOCATION_ERROR' | translate }}
-                </span>
-                <span class="text">
-                  {{ 'MAIN.HOME.LOCATION_REFRESH' | translate }}
-                </span>
-              </div>
-            </ng-template>
-          </ng-template>
-        </div>
+        <spot-create></spot-create>
 
         <!-- CHAT ROOM TEST -->
         <spot-chat-join></spot-chat-join>

@@ -27,7 +27,7 @@ export class UserStoreEffects {
     private userService: UserService,
     private themeService: ThemeService,
     private actions$: Actions
-  ) {}
+  ) { }
 
   GenericFailureEffect$ = createEffect(
     () =>

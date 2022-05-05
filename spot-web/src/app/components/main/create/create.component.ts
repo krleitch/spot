@@ -9,7 +9,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil, take } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 
 // Services
 import { TranslateService } from '@ngx-translate/core';
@@ -19,10 +19,7 @@ import { SpotService } from '@services/spot.service';
 import { Store, select } from '@ngrx/store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { RootStoreState } from '@store';
-import {
-  SpotStoreActions,
-  SpotStoreSelectors
-} from '@src/app/root-store/spot-store';
+import { SpotStoreActions } from '@src/app/root-store/spot-store';
 
 // Models
 import {
@@ -32,6 +29,7 @@ import {
 } from '@models/spot';
 import { LocationData } from '@models/location';
 import { SpotError } from '@exceptions/error';
+import { User, UserRole } from '@models/user';
 
 // Assets
 import { SPOT_CONSTANTS } from '@constants/spot';
@@ -46,12 +44,19 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('create') create: ElementRef;
 
-  STRINGS;
+  STRINGS: Record<string, string>;
   SPOT_CONSTANTS = SPOT_CONSTANTS;
 
   // Location
   location$: Observable<LocationData>;
   location: LocationData;
+  locationLoading$: Observable<boolean>;
+  locationLoading: boolean;
+
+  // User
+  eUserRole = UserRole;
+  user$: Observable<User>;
+  user: User;
 
   // Content
   currentLength = 0;
@@ -88,6 +93,23 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((location: LocationData) => {
         this.location = location;
       });
+
+    this.locationLoading$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocationLoading)
+    );
+
+    this.locationLoading$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((locationLoading: boolean) => {
+        this.locationLoading = locationLoading;
+      });
+
+    // User
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
+
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      this.user = user;
+    });
   }
 
   ngAfterViewInit(): void {
