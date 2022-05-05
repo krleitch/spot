@@ -1,8 +1,8 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
+  AfterViewChecked,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -39,10 +39,11 @@ import { SPOT_CONSTANTS } from '@constants/spot';
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss']
 })
-export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CreateComponent implements OnInit, OnDestroy, AfterViewChecked {
   private readonly onDestroy = new Subject<void>();
 
   @ViewChild('create') create: ElementRef;
+  createEventSet = false;
 
   STRINGS: Record<string, string>;
   SPOT_CONSTANTS = SPOT_CONSTANTS;
@@ -77,9 +78,11 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateService: TranslateService,
     private spotService: SpotService
   ) {
-    this.translateService.get('MAIN.CREATE').subscribe((res: any) => {
-      this.STRINGS = res;
-    });
+    this.translateService
+      .get('MAIN.CREATE')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnInit(): void {
@@ -112,12 +115,16 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.create.nativeElement.addEventListener('paste', (event: any) => {
-      event.preventDefault();
-      const text = event.clipboardData.getData('text/plain');
-      document.execCommand('insertText', false, text);
-    });
+  ngAfterViewChecked(): void {
+    // Fix paste events
+    if (!this.createEventSet && this.create) {
+      this.create.nativeElement.addEventListener('paste', (event) => {
+        event.preventDefault();
+        const text = event.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+      });
+      this.createEventSet = true;
+    }
   }
 
   ngOnDestroy(): void {

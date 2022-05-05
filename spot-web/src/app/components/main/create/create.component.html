@@ -9,53 +9,78 @@
   "
   class="create"
 >
-  <div class="editor">
+  <!-- Editor -->
+  <div class="editor container-t-rounded background-container">
     <span
       #create
       contenteditable="true"
       attr.ph="{{ 'MAIN.CREATE.CREATE_PLACEHOLDER' | translate }}"
-      class="content"
+      class="content padding-lg"
       (input)="onTextInput($event)"
     ></span>
-    <div class="image" *ngIf="imgSrc !== null">
+    <div
+      *ngIf="imgSrc !== null"
+      class="row-v-center padding-h-lg padding-v-md border-box"
+    >
       <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
     </div>
   </div>
-  <span *ngIf="createError" class="create-error">
+
+  <!-- Error message -->
+  <span
+    *ngIf="createError"
+    class="row-h-center background-container border-box padding-h-lg text-error"
+  >
     {{ createError }}
   </span>
 
-  <div class="option-bar">
-    <div class="file-options" *ngIf="imgSrc !== null">
-      <span class="file-title">
+  <!-- Options Bar -->
+  <div
+    class="row-h-center justify-content-between padding-lg background-container container-b-rounded"
+  >
+    <!-- File props -->
+    <div class="file-options row-h-center flex-fill" *ngIf="imgSrc !== null">
+      <span class="margin-r-md">
         {{ 'MAIN.CREATE.FILE_TITLE' | translate }}
       </span>
       <span class="file-name"> {{ imageFile.name }} </span>
-      <span class="file-remove" (click)="removeFile()">
-        <i class="material-icons"> delete </i>
+      <span
+        class="row-h-center text-secondary-highlight margin-r-lg"
+        (click)="removeFile()"
+      >
+        <span class="material-icons icon-md icon-primary"> delete </span>
         {{ 'MAIN.CREATE.FILE_DELETE' | translate }}
       </span>
     </div>
-    <input
-      style="display: none"
-      type="file"
-      (change)="onFileChanged($event)"
-      #fileInput
-    />
-    <span class="counter" [ngClass]="{ 'counter-error': invalidLength() }">
-      {{ SPOT_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
-    </span>
-    <i class="material-icons photo" (click)="fileInput.click()">
-      insert_photo
-    </i>
-    <span class="loading" *ngIf="createLoading; else showsubmit">
-      <spot-spinner size="small"> </spot-spinner>
-    </span>
-    <ng-template #showsubmit>
-      <span class="submit" (click)="submit()">
+
+    <!-- Counter, Upload and Submit -->
+    <div class="row-h-center align-right">
+      <input
+        style="display: none"
+        type="file"
+        (change)="onFileChanged($event)"
+        #fileInput
+      />
+      <span
+        class="text-secondary margin-r-md"
+        [class.text-error]="invalidLength()"
+      >
+        {{ SPOT_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
+      </span>
+      <span
+        class="material-icons icon-secondary-highlight margin-r-md"
+        (click)="fileInput.click()"
+      >
+        insert_photo
+      </span>
+      <span
+        class="button-primary"
+        [class.loading]="createLoading"
+        (click)="submit()"
+      >
         {{ 'MAIN.CREATE.SUBMIT' | translate }}
       </span>
-    </ng-template>
+    </div>
   </div>
 </div>
 
@@ -69,7 +94,7 @@
   <ng-template #guest>
     <div
       *ngIf="user.role === eUserRole.GUEST; else verify"
-      class="col-center background-container container-rounded padding-lg"
+      class="col-center background-container container-rounded padding-xl"
     >
       <span class="material-icons icon-xl icon-primary"> account_circle </span>
       <div class="text-center">
@@ -81,19 +106,19 @@
     <ng-template #verify>
       <div
         *ngIf="user.verifiedAt == null; else location"
-        class="col-center background-container container-rounded padding-lg"
+        class="col-center background-container container-rounded padding-xl"
       >
         <span class="material-icons icon-xl icon-primary"> email </span>
         <div *ngIf="user.email; else email" class="col-center">
           <span class="text-center">
-            {{ 'MAIN.HOME.VERIFY' | translate }}
+            {{ 'MAIN.CREATE.VERIFY' | translate }}
           </span>
           <div *ngIf="!verificationSent; else sent">
             <div
               class="text-secondary-highlight text-center"
               (click)="verifyUser()"
             >
-              {{ 'MAIN.HOME.VERIFY_SEND' | translate }}
+              {{ 'MAIN.CREATE.VERIFY_SEND' | translate }}
             </div>
             <span class="text-sm">
               {{ user.email }} (
@@ -101,24 +126,24 @@
                 class="text-secondary-highlight text-sm"
                 [routerLink]="'/account'"
               >
-                Change Email
+                {{ 'MAIN.CREATE.CHANGE_EMAIL' | translate }}
               </a>
               )
             </span>
           </div>
           <ng-template #sent>
             <span class="text-sm">
-              {{ 'MAIN.HOME.VERIFY_SENT' | translate }}
+              {{ 'MAIN.CREATE.VERIFY_SENT' | translate }}
               {{ user.email }}
             </span>
           </ng-template>
         </div>
         <ng-template #email>
           <span class="text-center">
-            {{ 'MAIN.HOME.NO_EMAIL' | translate }}
+            {{ 'MAIN.CREATE.NO_EMAIL' | translate }}
           </span>
           <a class="text-secondary-highlight text-sm" [routerLink]="'/account'">
-            {{ 'MAIN.HOME.ADD_EMAIL' | translate }}
+            {{ 'MAIN.CREATE.ADD_EMAIL' | translate }}
           </a>
         </ng-template>
       </div>
@@ -127,15 +152,23 @@
       <ng-template #location>
         <div
           *ngIf="locationLoading; else loaded"
-          class="col-center background-container container-rounded padding-lg"
+          class="col-center background-container container-rounded padding-xl"
         >
           <spot-spinner type="dot"></spot-spinner>
-          <span class=""> Loading your location </span>
+          <span class="margin-t-md">
+            {{ 'MAIN.CREATE.LOCATION_LOADING' | translate }}
+          </span>
         </div>
         <ng-template #loaded>
-          <div>
-            <span class="material-icons icon-xl icon-primary"> email </span>
-            <span class=""> Location is required </span>
+          <div
+            class="col-center background-container container-rounded padding-xl"
+          >
+            <span class="material-icons icon-xl icon-primary">
+              location_off
+            </span>
+            <span class="margin-t-md">
+              {{ 'MAIN.CREATE.NO_LOCATION' | translate }}
+            </span>
           </div>
         </ng-template>
       </ng-template>

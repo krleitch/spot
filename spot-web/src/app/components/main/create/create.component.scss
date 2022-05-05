@@ -2,16 +2,13 @@
   height: auto;
 }
 
-// EDITOR
-
+// Editor
 .editor {
-  background-color: var(--background-container);
   max-height: 500px;
   overflow: auto;
 
   .content {
     display: block;
-    padding: 12px 12px;
     border: 0;
     outline: 0;
     white-space: pre-wrap; /* css-3 */
@@ -37,102 +34,25 @@
   }
 }
 
-.create-error {
-  display: flex;
-  box-sizing: border-box;
-  padding: 0px 12px;
-  color: var(--error);
-  background-color: var(--background-container);
-}
-
-.image {
-  display: flex;
-  justify-content: center;
-  padding: 6px 12px;
-  box-sizing: border-box;
-}
-
 img {
   max-width: 100%;
   max-height: 500px;
 }
 
-// OPTION BAR
-
-.highlight {
-  color: var(--primary);
-}
-
-.option-bar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 12px 12px;
-  background-color: var(--background-container);
-}
-
 .file-options {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  max-width: calc(100% - 120px);
-
-  .file-title {
-    margin-right: 5px;
-  }
-
-  .file-name {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: var(--info);
-    flex: 1;
-  }
-
-  .file-remove {
-    color: var(--icon-secondary);
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    margin-right: 10px;
-    &:hover {
-      color: var(--error);
-    }
-  }
+  max-width: calc(100% - 150px);
 }
 
-.counter {
-  color: var(--text-secondary);
-  margin-right: 7px;
+.file-name {
+  max-width: calc(100% - 150px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.counter-error {
-  color: var(--error);
+.button-primary {
+  padding: 5px 10px;
 }
 
-.photo {
-  cursor: pointer;
-  color: var(--icon-secondary);
-  margin-right: 7px;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
-.submit {
-  font-size: 14px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  min-width: 50px;
-  &:hover {
-    @extend .highlight;
-  }
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 50px;
+a {
+  text-decoration: none;
 }

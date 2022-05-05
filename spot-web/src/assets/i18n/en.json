@@ -27,8 +27,6 @@
       "LOCATION_BACKGROUND_3": "Spots without location",
       "LOADING_LOCATION": "Loading your location",
 
-      "GUEST": "You are logged in on a guest account. Create an account to make and interact with Spots.",
-
       "NO_POSTS": "There are no Spots in this area",
       "NO_MORE_POSTS": "You're all caught up!",
       "FIRST_POST_1": "Be First",
@@ -36,6 +34,8 @@
 
       "NEW": "New",
       "HOT": "Hot",
+
+      "GUEST": "You are logged in on a guest account. Create an account to create and interact with spots.",
 
       "VERIFY": "You must verify your email before you can make spots",
       "VERIFY_SEND": "Send email verification",
@@ -125,7 +125,17 @@
       "ERROR_MAX_CONTENT": "Spot must be less than %MAX% characters",
       "ERROR_INVALID_CONTENT": "Invalid spot content ",
       "ERROR_LOCATION": "Location needed to create spot",
-      "ERROR_PROFANITY": "You cannot use profanity: ' %PROFANITY% '"
+      "ERROR_PROFANITY": "You cannot use profanity: ' %PROFANITY% '",
+
+      "VERIFY": "You must verify your email before you can make spots",
+      "VERIFY_SEND": "Send email verification",
+      "VERIFY_SENT": "Verification email sent to",
+      "NO_EMAIL": "You must add and verify an email before you can make spots",
+      "ADD_EMAIL": "Add an email to your account",
+      "CHANGE_EMAIL": "Change Email",
+
+      "LOCATION_LOADING": "Loading your location",
+      "NO_LOCATION": "Location is required to create spots"
     },
 
     "POST": {
