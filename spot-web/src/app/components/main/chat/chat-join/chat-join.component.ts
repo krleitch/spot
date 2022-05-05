@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
+
+// models
+import { ChatRoom } from '@models/chat';
 
 @Component({
   selector: 'spot-chat-join',
@@ -6,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat-join.component.scss']
 })
 export class ChatJoinComponent implements OnInit {
+  @Input() chatRoom: ChatRoom;
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.chatRoom);
+  }
 
   joinRoom() {}
 }

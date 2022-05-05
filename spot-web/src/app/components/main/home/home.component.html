@@ -136,7 +136,10 @@
         <spot-create></spot-create>
 
         <!-- CHAT ROOM TEST -->
-        <spot-chat-join></spot-chat-join>
+        <spot-chat-join
+          *ngIf="chatRooms.length > 0"
+          [chatRoom]="chatRooms[0]"
+        ></spot-chat-join>
 
         <!-- Spots -->
         <div class="posts">
