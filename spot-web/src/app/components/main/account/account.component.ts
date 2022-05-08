@@ -231,7 +231,6 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   verifyUser(): void {
     if (this.email === '') {
       // give a warning probably
-      // just should show maybe
       return;
     } else {
       const request: VerifyRequest = {};

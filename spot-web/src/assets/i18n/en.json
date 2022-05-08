@@ -26,6 +26,7 @@
       "LOCATION_BACKGROUND_2": "Spots while your location loads",
       "LOCATION_BACKGROUND_3": "Spots without location",
       "LOADING_LOCATION": "Loading your location",
+      "LOCATION_ENABLE_BUTTON": "Enable Location",
 
       "NO_POSTS": "There are no Spots in this area",
       "NO_MORE_POSTS": "You're all caught up!",
@@ -345,6 +346,13 @@
       "PUBLIC": "Public",
       "PRIVATE": "Private",
       "CREATE": "Create"
+    },
+
+    "CHAT_JOIN": {
+      "JOIN_ROOM": "Join Room",
+      "CHATTING_NOW": "chatting now",
+      "ERROR": "Error joining chat. Please try again",
+      "ERROR_JOINED": "You have already joined this chat"
     },
 
     "CHAT_DISCOVER": {

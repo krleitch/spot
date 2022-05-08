@@ -121,40 +121,42 @@
   <!-- If we need to prompt for location, show this first -->
   <div
     *ngIf="locationFailure !== 'prompt' || bypassLocation; else prompt"
-    class="fit-container"
+    class="full-size col-v-center"
   >
     <!-- Don't show anything until we get the metadata -->
-    <div *ngIf="locationType && searchType" class="fit-container">
+    <div *ngIf="locationType && searchType" class="full-size col-v-center">
       <!-- Determine if we need location -->
       <div
         *ngIf="
           location || locationType === eLocationType.GLOBAL;
           else noLocation
         "
-        class="content"
+        class="content col-v-center padding-t-xl"
       >
-        <spot-create></spot-create>
+        <!-- Create a Spot -->
+        <spot-create class="full-width"></spot-create>
 
-        <!-- CHAT ROOM TEST -->
+        <!-- Featured Chat Room -->
         <spot-chat-join
           *ngIf="chatRooms.length > 0"
           [chatRoom]="chatRooms[0]"
+          class="full-width"
         ></spot-chat-join>
 
         <!-- Spots -->
-        <div class="posts">
+        <div class="full-width margin-t-xl">
           <spot-infinite-scroll (scrolled)="onScroll()">
             <div *ngIf="spots.length > 0; else empty">
               <div *ngFor="let spot of spots">
                 <spot-post [spot]="spot" [detailed]="false"></spot-post>
               </div>
             </div>
-            <div #bottom class="empty-placeholder">
+            <div #bottom class="full-height">
               <ng-template #empty>
                 <!-- no spots in the area -->
                 <div
                   *ngIf="noSpots && !loading && (showSpotsIndicator$ | async)"
-                  class="empty-container"
+                  class="col-center"
                 >
                   <div class="empty-image">
                     <span class="c1"></span>
@@ -170,22 +172,29 @@
                   </span>
                 </div>
               </ng-template>
+
               <!-- There are no more spots -->
               <div
                 *ngIf="
                   noSpots && spots.length !== 0 && (showSpotsIndicator$ | async)
                 "
-                class="empty-container"
+                class="col-center margin-b-xl"
               >
-                <span class="material-icons icon"> done_all </span>
-                <span class="text">
+                  <div class="empty-image">
+                    <span class="c1"></span>
+                    <span class="c2"></span>
+                    <span class="c3"></span>
+                    <span class="material-icons icon"> done_all </span>
+                  </div>
+                  <span class="empty-text">
                   {{ 'MAIN.HOME.NO_MORE_POSTS' | translate }}
-                </span>
+                  </span>
               </div>
+
               <!-- Loading spots -->
               <div
                 *ngIf="loading && (showSpotsIndicator$ | async)"
-                class="empty-container"
+                class="col-center margin-b-xl"
               >
                 <spot-spinner type="dot"></spot-spinner>
               </div>
@@ -202,55 +211,60 @@
               locationLoading && (showLocationIndicator$ | async);
               else enableLocation
             "
-            class="info-container"
+            class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl"
           >
-            <spot-spinner type="dot"></spot-spinner>
-            <span class="text">
+            <spot-spinner type="dot" class="margin-b-md"></spot-spinner>
+            <span class="text-center margin-h-sm">
               {{ 'MAIN.HOME.LOADING_LOCATION' | translate }}
             </span>
-            <span class="text clickable" (click)="loadLocationBackground()">
+            <span class="row-center text-center text-secondary-highlight" (click)="loadLocationBackground()">
               {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
-              <i class="material-icons inline-icon"> public </i>
+              <span class="material-icons margin-h-xs"> public </span>
               {{ 'MAIN.HOME.LOCATION_BACKGROUND_2' | translate }}
             </span>
           </div>
+
           <!-- Location was explicitly denied, an error occurred or not supported by browser -->
           <ng-template #enableLocation>
-            <div *ngIf="locationFailure === 'browser'" class="info-container">
-              <span class="material-icons icon"> location_off </span>
-              <span class="text">
+            <div *ngIf="locationFailure === 'browser'" class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl">
+              <span class="material-icons margin-h-sm icon-xl icon-primary"> location_off </span>
+              <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_BROWSER' | translate }}</span
               >
             </div>
+
+            <!-- Permission error, we cannot prompt -->
             <div
               *ngIf="locationFailure === 'permission'"
-              class="info-container"
+              class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl"
             >
-              <span class="material-icons icon"> location_off </span>
-              <span class="text">
+              <span class="material-icons icon-primary icon-xl margin-h-sm"> location_off </span>
+              <span class="row-center text-center margin-h-sm flex-wrap">
                 {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_1' | translate }}
-                <i class="material-icons inline-icon"> home </i>
+                <span class="material-icons margin-h-xs"> home </span>
                 {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_2' | translate }}
               </span>
-              <span class="text">
+              <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_SAFE' | translate }}
               </span>
               <span class="line"></span>
-              <span class="text">
+              <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_ENABLE' | translate }}
               </span>
-              <span class="text clickable" (click)="continueWithGlobal()">
+              <span class="row-center text-center text-secondary-highlight flex-wrap" (click)="continueWithGlobal()">
                 {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
-                <i class="material-icons inline-icon"> public </i>
+                <span class="material-icons margin-h-xs"> public </span>
                 {{ 'MAIN.HOME.LOCATION_BACKGROUND_3' | translate }}
               </span>
             </div>
-            <div *ngIf="locationFailure === 'general'" class="info-container">
-              <span class="material-icons icon"> location_off </span>
-              <span class="text">
+
+            <!-- Something went wrong -->
+            <div *ngIf="locationFailure === 'general'" class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl">
+              <span class="material-icons icon-primary icon-xl"> location_off </span>
+              <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_ERROR' | translate }}
               </span>
-              <span class="text">
+              <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_REFRESH' | translate }}
               </span>
             </div>
@@ -259,28 +273,29 @@
       </ng-template>
     </div>
   </div>
+
   <!-- User needs to be prompted for location -->
   <ng-template #prompt>
     <div class="content">
-      <div class="info-container">
-        <span class="material-icons icon"> location_off </span>
-        <span class="text">
+      <div class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl">
+        <span class="material-icons margin-h-sm icon-xl icon-primary"> location_off </span>
+        <span class="row-center text-center margin-h-sm flex-wrap">
           {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_1' | translate }}
-          <i class="material-icons text-icon"> home </i>
+          <span class="material-icons margin-h-xs"> home </span>
           {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_2' | translate }}
         </span>
-        <span class="text clickable" (click)="continueWithGlobal()">
+        <span class="row-center text-center text-secondary-highlight flex-wrap" (click)="continueWithGlobal()">
           {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
-          <i class="material-icons text-icon"> public </i>
+          <span class="material-icons margin-h-xs"> public </span>
           {{ 'MAIN.HOME.LOCATION_BACKGROUND_3' | translate }}
         </span>
         <span class="line"></span>
-        <span class="text"> {{ 'MAIN.HOME.LOCATION_SAFE' | translate }} </span>
+        <span class="text-center margin-h-sm margin-b-md"> {{ 'MAIN.HOME.LOCATION_SAFE' | translate }} </span>
         <button
-          class="enable-location-button"
+          class="button"
           (click)="askLocationPermission()"
         >
-          Enable Location
+          {{ 'MAIN.HOME.LOCATION_ENABLE_BUTTON' | translate }}
         </button>
       </div>
     </div>

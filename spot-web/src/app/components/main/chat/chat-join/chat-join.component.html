@@ -1,13 +1,58 @@
-<div class="row-h-center full-size margin-t-xl background-container border-box">
-  <div class="col-center margin-lg flex-fill">
-    <span class="text-center"> There is a spot chat near you</span>
-    <span class="text-center text-secondary">Location: QNC (0.5 km)</span>
+<div
+  class="col-h-center full-size margin-t-xl padding-md background-container container-rounded border-box"
+>
+  <div class="row-center">
+    <div class="row-center margin-h-xl">
+      <!-- Chat photo -->
+      <span
+        class="profile-md margin-r-sm"
+        [ngClass]="chatRoom.imageSrc ? '' : 'chat-' + chatRoom.defaultImageNum"
+      >
+        <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
+        <img
+          *ngIf="!chatRoom.imageSrc"
+          [src]="'/assets/images/chat/' + chatRoom.defaultImageSrc"
+        />
+      </span>
+
+      <!-- Chat room information -->
+      <div class="col-h-center margin-h-xl">
+        <span class="row-h-center">
+          <span class="material-icons icon-sm icon-primary"> chat </span>
+          <span class="margin-l-sm"> {{ chatRoom.name }} </span>
+        </span>
+        <span class="row-h-center">
+          <span class="material-icons icon-sm icon-primary"> location_on </span>
+          <span class="text-center margin-l-sm">
+            {{ chatRoom.geolocation }}
+            {{ getDistance(chatRoom.distance) }}</span
+          >
+        </span>
+        <span class="row-h-center">
+          <span class="material-icons icon-sm icon-primary"> description </span>
+          <span *ngIf="chatRoom.description.length > 0" class="margin-l-sm">
+            {{ chatRoom.description }}
+          </span>
+          <span *ngIf="chatRoom.description.length === 0" class="margin-l-sm">
+            -
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Join room -->
+    <div class="col-center margin-l-xl flex-fill">
+      <button class="button" (click)="joinChatRoom()">
+        {{ 'MAIN.CHAT_JOIN.JOIN_ROOM' | translate }}
+      </button>
+      <span class="row-center margin-t-sm">
+        <span class="material-icons icon-sm icon-primary"> person </span>
+        <span class="margin-l-sm">
+          {{ chatRoom.numUsers }} / {{ chatRoom.capacity }}
+          {{ 'MAIN.CHAT_JOIN.CHATTING_NOW' | translate }}
+        </span>
+      </span>
+    </div>
   </div>
-  <div class="col-center margin-lg flex-fill">
-    <button class="button" (click)="joinRoom()">Join Room</button>
-    <span class="row-center margin-t-sm">
-      <span class="material-icons icon-secondary"> person </span>
-      <span class="text-secondary margin-l-sm">4 chatting now</span>
-    </span>
-  </div>
+  <div class="text-error text-center margin-t-sm">{{ errorMessage }}</div>
 </div>
