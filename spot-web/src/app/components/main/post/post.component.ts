@@ -200,10 +200,6 @@ export class PostComponent implements OnInit, OnDestroy {
 
     let distanceString = '';
 
-    if (distance <= LOCATION_CONSTANTS.MIN_DISTANCE) {
-      distanceString += '< ';
-    }
-
     if (unit === UnitSystem.METRIC) {
       distanceString += (distance * 1.60934).toFixed(1) + ' km';
     } else {

@@ -1,38 +1,47 @@
-<div class="container">
-  <div class="post">
-    <div class="left-bar">
-      <i
-        class="material-icons vote"
+<div class="col background-container container-rounded margin-b-xl">
+  <div class="row padding-h-lg padding-t-lg padding-b-md">
+    <div class="left-bar col-v-center margin-r-md">
+      <span
+        class="material-icons icon-primary-highlight"
+        [class.icon-primary]="spot.myRating === eSpotRatingType.LIKE"
         (click)="like()"
-        [ngClass]="{ highlight: spot.myRating === eSpotRatingType.LIKE }"
       >
         keyboard_arrow_up
-      </i>
-      <div class="points">{{ spot.likes - spot.dislikes }}</div>
-      <i
-        class="material-icons vote"
+      </span>
+      <div class="text-center">{{ spot.likes - spot.dislikes }}</div>
+      <span
+        class="material-icons icon-primary-highlight"
+        [class.icon-primary]="spot.myRating === eSpotRatingType.DISLIKE"
         (click)="dislike()"
-        [ngClass]="{ highlight: spot.myRating === eSpotRatingType.DISLIKE }"
       >
         keyboard_arrow_down
-      </i>
-      <a class="time" [routerLink]="'/spot/' + spot.link">
+      </span>
+      <a
+        class="text-sm text-secondary-highlight"
+        [routerLink]="'/spot/' + spot.link"
+      >
         {{ time }}
       </a>
     </div>
 
-    <div class="content-container">
+    <div class="col justify-content-between flex-fill padding-t-md">
       <!-- places beside to avoid extra space since style is whitespace: pre-wrap -->
-      <div class="text">
+      <div class="text-content">
         {{ getContent() }}
         <span *ngIf="isExpandable">
           <span *ngIf="expanded; else notExpanded">
-            <span class="expand" (click)="setExpanded(false)">
+            <span
+              class="text-secondary-highlight text-center flex-fill"
+              (click)="setExpanded(false)"
+            >
               {{ 'MAIN.POST.SEE_LESS' | translate }}
             </span>
           </span>
           <ng-template #notExpanded>
-            <span class="expand" (click)="setExpanded(true)">
+            <span
+              class="text-secondary-highlight text-center flex-fill"
+              (click)="setExpanded(true)"
+            >
               {{ 'MAIN.POST.SEE_MORE' | translate }}
             </span>
           </ng-template>
@@ -48,11 +57,10 @@
         <img
           #spotimage
           [src]="spot.imageSrc"
-          [ngClass]="{
-            'image-blur':
-              (userMetadata === null && imageBlurred) ||
-              (imageBlurred && userMetadata.matureFilter)
-          }"
+          [class.image-blur]="
+            (userMetadata === null && imageBlurred) ||
+            (imageBlurred && userMetadata.matureFilter)
+          "
         />
         <div
           *ngIf="
@@ -62,15 +70,17 @@
           class="image-blur-text"
         >
           <span class="material-icons icon"> error_outline </span>
-          <span class="text"> {{ 'MAIN.POST.MATURE_CONTENT' | translate }} </span>
-          <span class="text highlight">
+          <span class="text-center">
+            {{ 'MAIN.POST.MATURE_CONTENT' | translate }}
+          </span>
+          <span class="text-center text-secondary">
             {{ 'MAIN.POST.MATURE_CONTENT_SHOW' | translate }}
           </span>
         </div>
       </div>
 
-      <div class="options">
-        <span class="comment-number">
+      <div class="row-h-center justify-content-between padding-t-md flex-wrap">
+        <span class="text-secondary align-left">
           {{ spot.totalComments }}
           <span *ngIf="spot.totalComments === 1; else plural">
             {{ 'MAIN.POST.COMMENTS_SINGLE' | translate }}
@@ -79,36 +89,40 @@
             {{ 'MAIN.POST.COMMENTS' | translate }}
           </ng-template>
         </span>
-        <div class="distance">
-          <span *ngIf="spot.distance">
-            {{ getDistance(spot.distance) }} -
-          </span>
+        <div class="text-secondary">
           {{ spot.geolocation }}
+          <span *ngIf="spot.distance">
+            {{ getDistance(spot.distance) }}
+          </span>
         </div>
       </div>
     </div>
 
-    <div class="right-bar">
+    <!-- Settings Dropdown -->
+    <div class="col-v-center justify-content-between margin-l-md">
       <div #options>
-        <i class="material-icons icon-size" (click)="setOptions(true)">
+        <span
+          class="material-icons icon-primary-highlight"
+          (click)="setOptions(true)"
+        >
           more_horiz
-        </i>
+        </span>
         <div class="dropdown align-bottom">
-          <div class="dropdown-content" [ngClass]="{ show: optionsEnabled }">
+          <div class="dropdown-content" [class.dropdown-show]="optionsEnabled">
             <a
               *ngIf="!detailed"
-              class="button"
+              class="dropdown-button"
               [routerLink]="'/spot/' + spot.link"
             >
               <span class="material-icons icon"> chevron_right </span>
               {{ 'MAIN.POST.OPEN_POST' | translate }}
             </a>
-            <div class="button" (click)="openReportModal(spot.spotId)">
+            <div class="dropdown-button" (click)="openReportModal(spot.spotId)">
               <span class="material-icons icon"> outlined_flag </span>
               {{ 'MAIN.POST.REPORT' | translate }}
             </div>
             <div
-              class="button"
+              class="dropdown-button"
               (click)="openShareModal(spot.spotId, spot.link)"
             >
               <span class="material-icons icon"> share </span>
@@ -120,10 +134,10 @@
                 user.role === eUserRole.ADMIN ||
                 user.role === eUserRole.OWNER
               "
-              class="button"
+              class="dropdown-button"
               (click)="deleteSpot()"
             >
-              <span class="material-icons icon"> delete </span>
+              <span class="material-icons-outlined icon"> delete </span>
               {{ 'MAIN.POST.DELETE' | translate }}
             </div>
           </div>
@@ -131,17 +145,17 @@
       </div>
 
       <div>
-        <i
-          class="material-icons share"
+        <span
+          class="material-icons icon-primary-highlight"
           (click)="openShareModal(spot.spotId, spot.link)"
         >
           share
-        </i>
+        </span>
       </div>
     </div>
   </div>
 
-  <div class="bar-container">
+  <div class="row-v-center">
     <div class="bar"></div>
   </div>
 
