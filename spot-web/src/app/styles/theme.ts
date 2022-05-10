@@ -109,8 +109,8 @@ export const RegularSizeTheme: Theme = {
     '--gutter-lg': '10px',
     '--gutter-xl': '15px',
 
-    '--text-xs': '8px',
-    '--text-sm': '10px',
+    '--text-xs': '10px',
+    '--text-sm': '12px',
     '--text-md': '14px',
     '--text-lg': '18px',
     '--text-xl': '22px',

@@ -1,7 +1,8 @@
-<div class="container">
+<div class="padding-h-lg padding-b-lg">
+  <!-- Tags popup container -->
   <span class="tag-relative" #tag>
     <spot-tag
-      [ngClass]="{ 'tag-bottom': showTagBottom }"
+      [class.tag-bottom]="showTagBottom"
       #tagelem
       *ngIf="showTag"
       [name]="tagName"
@@ -10,10 +11,10 @@
     ></spot-tag>
   </span>
 
-  <!-- Add -->
+  <!-- Add a comment -->
   <div *ngIf="spot.inRange && location">
     <div *ngIf="isAuthenticated$ | async; else auth">
-      <div class="add" *ngIf="isVerified$ | async; else verify">
+      <div *ngIf="isVerified$ | async; else verify" class="col-center margin-t-lg">
         <div class="editor">
           <span
             #comment
@@ -27,18 +28,18 @@
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
 
-          <div class="file-options" *ngIf="imgSrc !== null">
-            <span class="file-title"> {{ 'MAIN.COMMENTS_CONTAINER.FILE_TITLE' | translate }} </span>
-            <span class="file-name"> {{ imageFile.name }} </span>
-            <span class="file-remove" (click)="removeFile()">
-              <i class="material-icons"> delete </i>
+          <div class="row-h-center flex-fill" *ngIf="imgSrc !== null">
+            <span class="margin-h-md"> {{ 'MAIN.COMMENTS_CONTAINER.FILE_TITLE' | translate }} </span>
+            <span class=""> {{ imageFile.name }} </span>
+            <span class="text-secondary-highlight" (click)="removeFile()">
+              <span class="material-icons"> delete </span>
             </span>
           </div>
 
           <div class="comment-options">
             <span
-              class="counter"
-              [ngClass]="{ 'counter-error': invalidLength() }"
+              class="text-secondary margin-r-sm"
+              [class.text-error]="invalidLength()"
             >
               {{ COMMENT_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
             </span>
@@ -48,9 +49,9 @@
               (change)="onFileChanged($event)"
               #fileInput
             />
-            <i class="material-icons photo" (click)="fileInput.click()">
+            <span class="material-icons icon-secondary-highlight margin-r-sm" (click)="fileInput.click()">
               insert_photo
-            </i>
+            </span>
             <span class="loading" *ngIf="addCommentLoading; else showsend">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
@@ -84,18 +85,18 @@
     </ng-template>
   </div>
 
-  <span *ngIf="addCommentError" class="add-comment-error">
+  <span *ngIf="addCommentError" class="row border-box padding-t-sm text-error background-container">
     {{ addCommentError }}
   </span>
 
-  <!-- Comments -->
-  <div class="comments-container">
-    <div class="load-recent">
+  <!-- Load Recent/Refresh comments -->
+  <div class="col background-container">
+    <div class="row-center relative margin-t-md">
       <div
         *ngIf="totalCommentsAfter > 0; else refresh"
-        class="load-recent__position"
+        class="relative"
       >
-        <span (click)="loadRecentComments()" class="load-recent__recent">
+        <span (click)="loadRecentComments()" class="text-secondary-highlight">
           {{ 'MAIN.COMMENTS_CONTAINER.LOAD' | translate }}
           {{ loadRecentCommentsNum() }}
           {{
@@ -104,31 +105,25 @@
               : STRINGS.RECENT_COMMENTS_SINGULAR
           }}
         </span>
-        <div *ngIf="loadingCommentsAfter" class="load-recent__loading">
+        <div *ngIf="loadingCommentsAfter" class="load-recent-loading">
           <spot-spinner size="small"></spot-spinner>
         </div>
       </div>
       <ng-template #refresh>
-        <span class="load-recent__refresh load-recent__position">
+        <span class="relative full-width row-h-center justify-content-between">
           <!-- Dummy element to help position elements, is always visibilty: hidden -->
-          <span class="load-recent__dummy">
-            <i class="material-icons load-recent__icon"> refresh </i>
+          <span class="load-recent-dummy">
+            <span class="material-icons icon-secondary-highlight icon-sm"> refresh </span>
           </span>
           <span
-            class="load-recent__text"
-            [ngClass]="{ 'load-recent__text--hide': refreshed }"
+            class="load-recent-hidden text-sm text-secondary"
+            [class.load-recent-show]="refreshed"
           >
             Comments are up to date
           </span>
           <span (click)="loadRecentComments()">
-            <i class="material-icons load-recent__icon"> refresh </i>
+            <span class="material-icons icon-secondary-highlight icon-sm"> refresh </span>
           </span>
-          <div
-            *ngIf="loadingCommentsAfter"
-            class="load-recent__loading-refresh"
-          >
-            <spot-spinner size="small"></spot-spinner>
-          </div>
         </span>
       </ng-template>
     </div>
@@ -144,25 +139,25 @@
       </div>
     </div>
     <ng-template #noComments>
-      <div *ngIf="loadingCommentsBefore; else none" class="no-comments-loading">
+      <div *ngIf="loadingCommentsBefore; else none" class="col-center">
         <div *ngIf="showLoadingCommentsIndicator$ | async">
           <span> {{ 'MAIN.COMMENTS_CONTAINER.LOADING_COMMENTS' | translate }} </span>
-          <div *ngIf="loadingCommentsBefore" class="loading">
+          <div *ngIf="loadingCommentsBefore" class="margin-lg">
             <spot-spinner size="small" type="dot"></spot-spinner>
           </div>
         </div>
       </div>
       <ng-template #none>
-        <div class="no-comments">
-          <span class="material-icons icon"> chat </span>
-          {{ 'MAIN.COMMENTS_CONTAINER.NO_COMMENTS' | translate }}
+        <div class="row-center margin-t-md">
+          <span class="material-icons margin-r-md margin-t-sm icon-sm"> chat </span>
+          <span class="text-sm">{{ 'MAIN.COMMENTS_CONTAINER.NO_COMMENTS' | translate }}</span>
         </div>
       </ng-template>
     </ng-template>
 
     <!-- Load More -->
-    <div class="load-more-container" *ngIf="totalCommentsBefore > 0">
-      <div class="load-more" (click)="loadMoreComments()">
+    <div class="row-center padding-b-md" *ngIf="totalCommentsBefore > 0">
+      <div class="relative row-v-center text-secondary-highlight margin-r-md" (click)="loadMoreComments()">
         {{ 'MAIN.COMMENTS_CONTAINER.LOAD' | translate }}
         {{ loadMoreCommentsNum() }}
         {{
@@ -185,7 +180,7 @@
       spot.inRange &&
       location
     "
-    class="comment-reminder"
+    class="margin-t-md text-secondary-highlight"
     (click)="scrollToComment()"
   >
     {{ 'MAIN.COMMENTS_CONTAINER.MAKE_COMMENT' | translate }}

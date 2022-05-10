@@ -25,7 +25,6 @@ import { SpotStoreActions } from '@src/app/root-store/spot-store';
 
 // Assets
 import { SPOT_CONSTANTS } from '@constants/spot';
-import { LOCATION_CONSTANTS } from '@constants/location';
 import {
   DeleteSpotRequest,
   RateSpotRequest,

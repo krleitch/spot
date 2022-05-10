@@ -1,144 +1,39 @@
 // Comments container
 
-.container {
-  padding: 0px 12px 6px 12px;
-}
-
-.comments-container {
-  display: flex;
-  flex-flow: column;
-  background-color: var(--background-container);
-
-  .no-comments {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-top: 5px;
-
-    .icon {
-      font-size: 18px;
-      margin-right: 5px;
-      padding-top: 3px;
-    }
-  }
-}
-
 .highlight {
   color: var(--primary);
 }
 
-.load-recent {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5px;
-  position: relative;
-
-  .load-recent__position {
-    position: relative;
-  }
-
-  .load-recent__recent {
-    cursor: pointer;
-    color: var(--text-secondary);
-    &:hover {
-      color: var(--primary);
-    }
-  }
-
-  .load-recent__refresh {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .load-recent__dummy {
-    visibility: hidden;
-  }
-
-  .load-recent__text {
-    visibility: hidden;
-    font-size: 14px;
-    color: var(--text-secondary);
-    opacity: 1;
-  }
-
-  .load-recent__text--hide {
-    visibility: visible;
-    opacity: 0;
-    transition: opacity 2000ms;
-    transition-timing-function: ease-in;
-  }
-
-  .load-recent__icon {
-    font-size: 20px;
-    cursor: pointer;
-    &:hover {
-      color: var(--primary);
-    }
-  }
-
-  .load-recent__loading {
-    position: absolute;
-    right: -22px;
-    top: 3px;
-  }
-
-  .load-recent__loading-refresh {
-    position: absolute;
-    right: 23px;
-    top: 3px;
-  }
+// load recent
+.load-recent-dummy {
+  visibility: hidden;
 }
 
-.load-more-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 5px;
+.load-recent-hidden {
+  visibility: hidden;
+  opacity: 1;
 }
 
-.load-more {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  color: var(--text-secondary);
-  margin-right: 5px;
-  cursor: pointer;
-  &:hover {
-    @extend .highlight;
-  }
-
-  .load-comments-before {
-    position: absolute;
-    top: 0px;
-    right: -20px;
-  }
+.load-recent-show {
+  visibility: visible;
+  opacity: 0;
+  transition: opacity 2s ease-in;
 }
 
-.no-comments-loading {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
+.load-recent-loading {
+  position: absolute;
+  right: -22px;
+  top: 3px;
+}
 
-  .loading {
-    margin: 10px 0px;
-  }
+// load-more
+.load-comments-before {
+  position: absolute;
+  top: 0px;
+  right: -20px;
 }
 
 // Add a comment
-
-.add {
-  display: flex;
-  flex-flow: column;
-  margin-top: 10px;
-  justify-content: center;
-  align-items: center;
-}
-
 .send {
   display: flex;
   align-items: center;
@@ -166,17 +61,7 @@
   }
 }
 
-.counter {
-  color: var(--text-secondary);
-  margin-right: 3px;
-}
-
-.counter-error {
-  color: var(--error);
-}
-
 // the content
-
 :host ::ng-deep .tag-inline {
   background-color: var(--item-highlight);
   font-weight: bold;
@@ -261,25 +146,6 @@ img {
   padding: 0px 6px;
 }
 
-.file-options {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.file-title {
-  margin-right: 5px;
-  margin-left: 5px;
-}
-
-.file-remove {
-  color: var(--text-secondary);
-  cursor: pointer;
-  &:hover {
-    color: var(--error);
-  }
-}
-
 .auth-message {
   display: flex;
   justify-content: space-between;
@@ -308,23 +174,4 @@ img {
       cursor: not-allowed;
     }
   }
-}
-
-.comment-reminder {
-  margin-top: 5px;
-  color: var(--text-secondary);
-  &:hover {
-    cursor: pointer;
-    color: var(--primary);
-  }
-}
-
-// error
-
-.add-comment-error {
-  display: flex;
-  box-sizing: border-box;
-  padding-top: 2px;
-  color: var(--error);
-  background-color: var(--background-container);
 }
