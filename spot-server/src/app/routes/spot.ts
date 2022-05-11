@@ -160,10 +160,11 @@ router.post(
         }
 
         const body: CreateSpotRequest = JSON.parse(req.body.json);
-        // @ts-ignore
         // Location is defined on the multers3 file type
+        // @ts-ignore
         const imageSrc: string = req.file ? req.file.location : null;
-        const spotId = req.file?.filename.split('.')[0] || uuid.v4();
+        // @ts-ignore
+        const spotId = req.file?.key.split('/').at(-1) || uuid.v4();
 
         // remove leading and trailing whitespaces
         body.content = body.content.trim();
@@ -269,7 +270,7 @@ router.post(
 );
 
 // Rate a spot (like/dislike)
-router.put(
+router.post(
   '/:spotId/rating/:rating',
   rateLimiter.genericSpotLimiter,
   ErrorHandler.catchAsync(
@@ -284,9 +285,9 @@ router.put(
       }
 
       let spotRating: SpotRatingType;
-      if (req.params.rating === 'like') {
+      if (req.params.rating === 'LIKE') {
         spotRating = SpotRatingType.LIKE;
-      } else if (req.params.rating === 'dislike') {
+      } else if (req.params.rating === 'DISLIKE') {
         spotRating = SpotRatingType.DISLIKE;
       } else {
         spotRating = SpotRatingType.NONE;

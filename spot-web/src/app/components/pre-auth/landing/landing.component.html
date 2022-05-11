@@ -1,7 +1,7 @@
 <spot-nav></spot-nav>
-<div class="landing">
+<div class="landing relative">
   <!-- Background Image set in css -->
-  <img class="image" />
+  <img class="background-image" />
 
   <div class="signup-wrapper">
     <div class="showcase">
@@ -10,10 +10,14 @@
     <div class="mobile-showcase">
       <span> {{ 'PRE_AUTH.LANDING.SHOWCASE_MOBILE_1' | translate }} </span>
       <span> {{ 'PRE_AUTH.LANDING.SHOWCASE_MOBILE_2' | translate }} </span>
-      <span class="highlight"> {{ 'PRE_AUTH.LANDING.SHOWCASE_MOBILE_3' | translate }} </span>
+      <span class="highlight">
+        {{ 'PRE_AUTH.LANDING.SHOWCASE_MOBILE_3' | translate }}
+      </span>
     </div>
 
-    <div class="signup">
+    <div
+      class="signup col-center background-container container-shadow container-rounded"
+    >
       <div class="signup-text">
         {{ 'PRE_AUTH.LANDING.COMMUNITY' | translate }}
       </div>
@@ -23,15 +27,17 @@
           <div
             *ngIf="facebookLoaded"
             type="button"
-            class="facebook"
+            class="button-facebook margin-b-md"
             [ngClass]="{ disabled: buttonsDisabled }"
             (click)="facebookLogin()"
           >
             <img
               src="../../../assets/images/facebook_logo_white.png"
-              class="facebook-logo"
+              class="icon-facebook"
             />
-            {{ 'PRE_AUTH.LANDING.FACEBOOK_LOGIN' | translate }}
+            <span class="text-facebook">
+              {{ 'PRE_AUTH.LANDING.FACEBOOK_LOGIN' | translate }}
+            </span>
           </div>
           <div id="my-signin2"></div>
         </div>
@@ -46,7 +52,9 @@
               name="email"
               formControlName="email"
               autocomplete="off"
-              placeholder="{{ 'PRE_AUTH.LANDING.EMAIL_PLACEHOLDER' | translate }}"
+              placeholder="{{
+                'PRE_AUTH.LANDING.EMAIL_PLACEHOLDER' | translate
+              }}"
               required
             />
           </div>
@@ -55,7 +63,9 @@
               name="username"
               formControlName="username"
               autocomplete="off"
-              placeholder="{{ 'PRE_AUTH.LANDING.USERNAME_PLACEHOLDER' | translate }}"
+              placeholder="{{
+                'PRE_AUTH.LANDING.USERNAME_PLACEHOLDER' | translate
+              }}"
               required
             />
           </div>
@@ -64,7 +74,9 @@
               name="password"
               formControlName="password"
               autocomplete="off"
-              placeholder="{{ 'PRE_AUTH.LANDING.PASSWORD_PLACEHOLDER' | translate }}"
+              placeholder="{{
+                'PRE_AUTH.LANDING.PASSWORD_PLACEHOLDER' | translate
+              }}"
               type="password"
               required
             />
@@ -74,7 +86,9 @@
               name="phone"
               formControlName="phone"
               autocomplete="off"
-              placeholder="{{ 'PRE_AUTH.LANDING.PHONE_PLACEHOLDER' | translate }}"
+              placeholder="{{
+                'PRE_AUTH.LANDING.PHONE_PLACEHOLDER' | translate
+              }}"
               required
             />
           </div>
@@ -91,7 +105,9 @@
               />
               <span class="checkmark"></span>
             </label>
-            <span> {{ 'PRE_AUTH.LANDING.TERMS_AND_CONDITIONS' | translate }} </span>
+            <span>
+              {{ 'PRE_AUTH.LANDING.TERMS_AND_CONDITIONS' | translate }}
+            </span>
           </div>
           <div class="text" (click)="openTerms()">
             {{ 'PRE_AUTH.LANDING.TERMS_AND_CONDITIONS_LINK' | translate }}
@@ -118,7 +134,9 @@
 
       <a class="existing-account" [routerLink]="'/login'">
         <span> {{ 'PRE_AUTH.LANDING.EXISTING_ACCOUNT' | translate }} </span>
-        <span class="sign-in-highlight"> {{ 'PRE_AUTH.LANDING.SIGN_IN' | translate }} </span>
+        <span class="sign-in-highlight">
+          {{ 'PRE_AUTH.LANDING.SIGN_IN' | translate }}
+        </span>
       </a>
     </div>
   </div>
