@@ -110,7 +110,7 @@ app
     console.log(`Spot Server is listening on port ${port}`);
   })
   .on('error', (err: Error) => {
-    console.log(`Error listening`);
+    console.log(`Error listening`, err);
   });
 
 // Make this a module

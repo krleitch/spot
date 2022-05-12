@@ -5,6 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
 
+// Google sign in
+import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
+
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
@@ -27,9 +30,6 @@ import {
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 
-// google api
-declare const gapi: any;
-
 @Component({
   selector: 'spot-landing',
   templateUrl: './landing.component.html',
@@ -40,12 +40,13 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   STRINGS;
 
+  facebookLoaded = false;
+
   form: FormGroup;
   authenticationError$: Observable<SpotError>;
   isAuthenticated$: Observable<boolean>;
   errorMessage: string;
   buttonsDisabled = false;
-  facebookLoaded = false;
 
   constructor(
     private fb: FormBuilder,
@@ -106,30 +107,36 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onDestroy.next();
   }
 
+  handleGoogleLogin(response: CredentialResponse) {
+    // Decoding  JWT token...
+    let decodedToken: any | null = null;
+    try {
+      console.log(response);
+      decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
+    } catch (e) {
+      console.error('Error while trying to decode token', e);
+    }
+    console.log('decodedToken', decodedToken);
+  }
+
   ngAfterViewInit(): void {
     this.authenticationService.socialServiceReady
       .pipe(takeUntil(this.onDestroy))
       .subscribe((service: string) => {
-        if (service === 'google') {
-          gapi.signin2.render('my-signin2', {
-            scope: 'profile email',
-            width: 240,
-            height: 55,
-            longtitle: true,
-            theme: 'light',
-            onsuccess: (param) => this.googleLogin(param)
-          });
-        }
+        console.log('got service: ', service);
         if (service === 'FB') {
           setTimeout(() => {
             this.facebookLoaded = true;
           });
         }
+        if (service === 'google') {
+          window.google.accounts.id.renderButton(
+            document.getElementById('buttonDiv'),
+            { theme: 'outline', size: 'large' } // customization attributes
+          );
+          // window.google.accounts.id.prompt(); // also display the One Tap dialog
+        }
       });
-  }
-
-  handleCredentialResponse() {
-    console.log('test1!');
   }
 
   facebookLogin(): void {
@@ -189,8 +196,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   googleSignOut(): void {
-    const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(() => {});
+    // const auth2 = gapi.auth2.getAuthInstance();
+    // auth2.signOut().then(() => {});
   }
 
   signUp(): void {

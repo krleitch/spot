@@ -8,7 +8,7 @@ import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
 // Store
 import { Store, select } from '@ngrx/store';
 import { UserActions, RootStoreState } from '@store';
-import { UserStoreSelectors } from '@store/user-store';
+import { UserStoreSelectors, UserGoogleActions } from '@store/user-store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
@@ -22,8 +22,7 @@ import {
   SetLocationFailure,
   SetLocation
 } from '@models/location';
-
-declare const gapi: any;
+import { GoogleLoginRequest } from '@models/authentication';
 
 @Component({
   selector: 'spot-root',
@@ -33,7 +32,6 @@ declare const gapi: any;
 export class AppComponent implements OnInit {
   title = 'spot';
 
-  // TODO: this is wrong, subscribe to the $auth observable
   isAuthenticated$: Observable<boolean>;
 
   constructor(
@@ -54,68 +52,15 @@ export class AppComponent implements OnInit {
     this.isAuthenticated$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsAuthenticated)
     );
-    // For when gapi is loaded since it is async defer
-    // window.addEventListener(
-    //   'gapi-loaded',
-    //   () => {
-    //     gapi.load('auth2', () => {
-    //       this.authenticationService.sendSocialServiceReady('google');
-    //     });
-    //   },
-    //   { once: true }
-    // );
-    // (window as any).googleListenerAdded = true;
-    //
-    //
-
-    // @ts-ignore
-    window.onGoogleLibraryLoad = () => {
-      console.log("Google's One-tap sign in script loaded!");
-      this.authenticationService.sendSocialServiceReady('google');
-
-      // @ts-ignore
-      google.accounts.id.initialize({
-        // Ref: https://developers.google.com/identity/gsi/web/reference/js-reference#IdConfiguration
-        client_id:
-          '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com',
-        callback: this.handleCredentialResponse.bind(this), // Whatever function you want to trigger...
-        auto_select: true,
-        cancel_on_tap_outside: false
-      });
-
-      // OPTIONAL: In my case I want to redirect the user to an specific path.
-      // @ts-ignore
-      // google.accounts.id.prompt((notification: PromptMomentNotification) => {
-      //   console.log('Google prompt event triggered...');
-      //
-      //   if (notification.getDismissedReason() === 'credential_returned') {
-      //     this.ngZone.run(() => {
-      //       this.router.navigate(['myapp/somewhere'], { replaceUrl: true });
-      //       console.log('Welcome back!');
-      //     });
-      //   }
-      // });
-    };
 
     // Init third party libaries
-    this.twitterLibrary();
+    this.googleLibrary();
     this.fbLibrary();
+    this.twitterLibrary();
     // Get User if JWT token exists
     this.getUserIfExists();
     // Get Location if permission was already granted
     this.getUserLocationIfPermitted();
-  }
-
-  handleCredentialResponse(response: CredentialResponse) {
-    // Decoding  JWT token...
-    let decodedToken: any | null = null;
-    try {
-      console.log(response);
-      decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
-    } catch (e) {
-      console.error('Error while trying to decode token', e);
-    }
-    console.log('decodedToken', decodedToken);
   }
 
   private twitterLibrary(): void {
@@ -161,6 +106,33 @@ export class AppComponent implements OnInit {
       js.src = 'https://connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
     })(document, 'script', 'facebook-jssdk');
+  }
+
+  private googleLibrary(): void {
+    // @ts-ignore
+    window.onGoogleLibraryLoad = () => {
+      // @ts-ignore
+      google.accounts.id.initialize({
+        // Ref: https://developers.google.com/identity/gsi/web/reference/js-reference#IdConfiguration
+        client_id:
+          '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com',
+        callback: this.handleGoogleCredentialResponse.bind(this),
+        auto_select: true,
+        cancel_on_tap_outside: false
+      });
+      this.authenticationService.sendSocialServiceReady('google');
+    };
+  }
+  private handleGoogleCredentialResponse(response: CredentialResponse) {
+    // Decoding  JWT token...
+      // const decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
+      const request: GoogleLoginRequest = {
+        accessToken: response.credential
+      };
+
+      this.store$.dispatch(
+        new UserGoogleActions.GoogleLoginRequestAction(request)
+      );
   }
 
   private getUserIfExists(): void {
