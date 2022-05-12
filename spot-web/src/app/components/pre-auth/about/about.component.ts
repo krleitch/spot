@@ -14,6 +14,11 @@ export class AboutComponent implements OnInit {
   ngOnInit(): void {}
 
   openTerms(): void {
-    this.modalService.open('global', 'terms');
+    this.modalService.open(
+      'global',
+      'terms',
+      {},
+      { width: 700, disableClose: true }
+    );
   }
 }

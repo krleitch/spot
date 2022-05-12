@@ -1,6 +1,8 @@
 <spot-nav></spot-nav>
 <div class="about">
-  <div class="container">
+  <div
+    class="container background-container container-rounded padding-xl margin-xl"
+  >
     <div class="heading-wrapper">
       <div class="main heading">About</div>
     </div>
@@ -33,10 +35,11 @@
     </div>
     <div class="heading">Icons8 Attribution</div>
     <div class="text">Profile icons provided by icons8.com</div>
-    <button class="link" (click)="openTerms()">
-      <span> Click to view </span>
-      <span> Terms and Condtions & Privacy Policy </span>
-    </button>
+    <div class="row-center">
+      <button class="button" (click)="openTerms()">
+        <span> View Terms and Condtions & Privacy Policy </span>
+      </button>
+    </div>
   </div>
 </div>
 <div class="copyright">

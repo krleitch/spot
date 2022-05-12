@@ -5,9 +5,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
 
-// Google sign in
-import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
-
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
@@ -38,7 +35,7 @@ import { SpotError } from '@exceptions/error';
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS;
+  STRINGS: Record<string, string>;
 
   facebookLoaded = false;
 
@@ -62,9 +59,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       phone: ['', Validators.required],
       terms: [false, Validators.required]
     });
-    this.translateService.get('PRE_AUTH.LANDING').subscribe((res: any) => {
-      this.STRINGS = res;
-    });
+    this.translateService
+      .get('PRE_AUTH.LANDING')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnInit(): void {
@@ -107,23 +106,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onDestroy.next();
   }
 
-  handleGoogleLogin(response: CredentialResponse) {
-    // Decoding  JWT token...
-    let decodedToken: any | null = null;
-    try {
-      console.log(response);
-      decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
-    } catch (e) {
-      console.error('Error while trying to decode token', e);
-    }
-    console.log('decodedToken', decodedToken);
-  }
-
   ngAfterViewInit(): void {
     this.authenticationService.socialServiceReady
       .pipe(takeUntil(this.onDestroy))
       .subscribe((service: string) => {
-        console.log('got service: ', service);
         if (service === 'FB') {
           setTimeout(() => {
             this.facebookLoaded = true;
@@ -131,10 +117,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         if (service === 'google') {
           window.google.accounts.id.renderButton(
-            document.getElementById('buttonDiv'),
+            document.getElementById('googleButtonLanding'),
             { theme: 'outline', size: 'large' } // customization attributes
           );
-          // window.google.accounts.id.prompt(); // also display the One Tap dialog
         }
       });
   }
@@ -170,34 +155,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.buttonsDisabled = true;
       }
     });
-  }
-
-  googleLogin(googleUser): void {
-    if (this.buttonsDisabled) {
-      return;
-    }
-
-    // profile.getId(), getName(), getImageUrl(), getEmail()
-    // const profile = googleUser.getBasicProfile();
-
-    const id_token = googleUser.getAuthResponse().id_token;
-
-    const request: GoogleLoginRequest = {
-      accessToken: id_token
-    };
-
-    this.store$.dispatch(
-      new UserGoogleActions.GoogleLoginRequestAction(request)
-    );
-    this.buttonsDisabled = true;
-
-    // sign out of the instance, so we don't auto login
-    this.googleSignOut();
-  }
-
-  googleSignOut(): void {
-    // const auth2 = gapi.auth2.getAuthInstance();
-    // auth2.signOut().then(() => {});
   }
 
   signUp(): void {
@@ -285,6 +242,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openTerms(): void {
-    this.modalService.open('global', 'terms');
+    this.modalService.open(
+      'global',
+      'terms',
+      {},
+      { width: 700, disableClose: true }
+    );
   }
 }

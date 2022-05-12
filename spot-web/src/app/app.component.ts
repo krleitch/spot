@@ -13,6 +13,7 @@ import { UserStoreSelectors, UserGoogleActions } from '@store/user-store';
 // Services
 import { AuthenticationService } from '@services/authentication.service';
 import { ThemeService } from '@services/theme.service';
+import { ChatService } from '@services/chat.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Models
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
   constructor(
     private store$: Store<RootStoreState.State>,
     private authenticationService: AuthenticationService,
+    private chatService: ChatService,
     private themeService: ThemeService,
     private translateService: TranslateService
   ) {}
@@ -52,6 +54,14 @@ export class AppComponent implements OnInit {
     this.isAuthenticated$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsAuthenticated)
     );
+    this.isAuthenticated$.subscribe((auth) => {
+      if (auth) {
+        this.chatService.connectToWebSocket();
+      } else {
+        this.chatService.disconnectFromWebSocket();
+      }
+    })
+
 
     // Init third party libaries
     this.googleLibrary();

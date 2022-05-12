@@ -47,6 +47,12 @@ export class ChatService {
     this.phoenixSocket.connect();
   }
 
+  disconnectFromWebSocket() {
+    if (this.phoenixSocket) {
+      this.phoenixSocket.disconnect();
+    }
+  }
+
   // Requests to Spot-Chat-Server
   getChatRooms(request: GetChatRoomsRequest): Observable<GetChatRoomsResponse> {
     let params = new HttpParams();

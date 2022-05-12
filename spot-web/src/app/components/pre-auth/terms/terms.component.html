@@ -1,12 +1,11 @@
-<div class="terms">
-  <div class="header">
-    <span class="title"> Terms And Conditions & Privacy Policy </span>
-    <span class="close" (click)="close()">
-      <span class="material-icons"> clear </span>
-    </span>
+<div class="col relative container-rounded">
+  <div
+    class="header row-h-center padding-md background-header full-width border-box container-t-rounded"
+  >
+    <span class=""> Terms And Conditions & Privacy Policy </span>
   </div>
 
-  <div #body class="body">
+  <div #body class="body background-container padding-xl container-b-rounded">
     <div class="heading">Terms and Conditions</div>
 
     <div class="subtitle">Introduction</div>
@@ -155,7 +154,7 @@
     <div class="heading">Privacy Policy</div>
 
     <div class="subtitle">
-      Last Update of This Privacy Policy - April 7, 2021
+      Last Update of This Privacy Policy - May 12, 2022
     </div>
     <div class="text">
       BEFORE USING OUR SITES, PLEASE READ THIS PRIVACY POLICY CAREFULLY.
@@ -322,6 +321,10 @@
       information, you agree that it will be governed by our Privacy Policy.
     </div>
 
-    <button (click)="close()">I understand and agree to the above terms</button>
+    <div class="row-center margin-md">
+      <button class="button" (click)="close()">
+        I understand and agree to the above terms
+      </button>
+    </div>
   </div>
 </div>
