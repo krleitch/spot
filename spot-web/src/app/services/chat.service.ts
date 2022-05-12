@@ -32,7 +32,9 @@ export class ChatService {
   private chatBaseUrl = environment.chatBaseUrl;
   phoenixSocket: PhoenixSocket;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {}
+
+  connectToWebSocket() {
     // Connect to socket
     this.phoenixSocket = new PhoenixSocket(WEBSOCKET_SERVER_URI, {
       params: {

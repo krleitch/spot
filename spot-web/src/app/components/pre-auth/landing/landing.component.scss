@@ -9,7 +9,7 @@
 }
 
 .background-image {
-  background-image: url('../../../../assets/images/landing_v8.jpg');
+  background-image: url('../../../../assets/images/landing_v9.jpg');
   background-repeat: repeat-x;
   background-size: cover;
   position: absolute;
@@ -50,12 +50,12 @@
   border-radius: 5px;
 
   .preview-image {
-    background-image: url('../../../../assets/images/preview_v2.png');
+    background-image: url('../../../../assets/images/preview_v3.jpg');
     background-size: contain;
     background-repeat: no-repeat;
     margin: 5px;
     width: calc(100% - 10px);
-    padding-top: calc(0.5 * (100% - 10px));
+    padding-top: calc(0.6 * (100% - 10px));
     border-radius: 5px;
   }
 }
@@ -329,13 +329,6 @@ input.ng-dirty.ng-invalid {
 
 // Special stylings, Landing only constants since landing is very special
 
-// give less padding on smaller screens
-@media screen and (max-height: 900px) {
-  .signup {
-    padding: 20px 20px;
-  }
-}
-
 // allow vertical scroll when not enough height for singup-wrapper
 @media screen and (max-height: 760px) {
   .landing {
@@ -344,17 +337,11 @@ input.ng-dirty.ng-invalid {
 }
 
 // Use the mobile showcase, enable vertical scroll
-@media screen and (max-width: 1500px) {
-  .showcase {
-    width: 850px;
-  }
-}
-
-// Use the mobile showcase, enable vertical scroll
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 1300px) {
   .signup-wrapper {
     flex-flow: column;
     align-items: center;
+    padding-top: 20px;
   }
 
   .showcase {
@@ -370,13 +357,6 @@ input.ng-dirty.ng-invalid {
 
   .landing {
     overflow-y: auto;
-  }
-
-  .image {
-    position: absolute;
-    top: -25px;
-    left: -45px;
-    min-height: 900px;
   }
 
   .signup {

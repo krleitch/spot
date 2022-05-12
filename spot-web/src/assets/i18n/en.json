@@ -477,21 +477,21 @@
       "FAQ": "FAQ",
       "SUPPORT": "Support",
       "MOBILE_DOWNLOAD": "Download Us",
-      "CONTACT": "Contact Us",
+      "CONTACT": "Contact",
       "LOGIN": "Login",
       "REGISTER": "Register"
     },
 
     "ABOUT": {
-      "COPYRIGHT": "2020 Spot"
+      "COPYRIGHT": "2022 Spot"
     },
 
     "CONTACT": {
-      "COPYRIGHT": "2020 Spot"
+      "COPYRIGHT": "2022 Spot"
     },
 
     "TERMS": {
-      "COPYRIGHT": "2020 Spot"
+      "COPYRIGHT": "2022 Spot"
     },
 
     "LANDING": {
@@ -527,7 +527,7 @@
 
       "TERMS_AND_CONDITIONS": "I agree to the",
       "TERMS_AND_CONDITIONS_LINK": "terms and conditions & privacy policy",
-      "COPYRIGHT": "2020 Spot",
+      "COPYRIGHT": "2022 Spot",
 
       "TERMS_ERROR": "You must agree to the terms and conditions & privacy policy",
       "EMAIL_ERROR": "Email is required",

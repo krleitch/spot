@@ -6,7 +6,10 @@
   <router-outlet></router-outlet>
 
   <!-- Global Chat -->
-  <spot-chat-menu *ngIf="isAuthenticated$ | async" class="mobile-hide"></spot-chat-menu>
+  <spot-chat-menu
+    *ngIf="isAuthenticated$ | async"
+    class="mobile-hide"
+  ></spot-chat-menu>
 
   <!-- Global Modals-->
   <spot-modal [id]="'global'"></spot-modal>

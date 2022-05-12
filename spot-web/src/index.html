@@ -13,28 +13,10 @@
       href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
       rel="stylesheet"
     />
-    <!-- Google api -->
-    <script
-      src="https://apis.google.com/js/platform.js?onload=onLoadCallback"
-      async
-      defer
-    ></script>
-    <script type="text/javascript">
-      function onLoadCallback() {
-        var interval = setInterval(function () {
-          if (window.googleListenerAdded) {
-            window.dispatchEvent(new Event('gapi-loaded'));
-            clearInterval(interval);
-          }
-        }, 500);
-      }
-    </script>
-    <meta
-      name="google-signin-client_id"
-      content="773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com"
-    />
   </head>
   <body>
+    <!-- Google api -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!--  Facebook api -->
     <div id="fb-root"></div>
     <spot-root></spot-root>

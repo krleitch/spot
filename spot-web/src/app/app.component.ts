@@ -2,6 +2,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
+// Google sign in
+import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
+
 // Store
 import { Store, select } from '@ngrx/store';
 import { UserActions, RootStoreState } from '@store';
@@ -52,16 +55,48 @@ export class AppComponent implements OnInit {
       select(UserStoreSelectors.selectIsAuthenticated)
     );
     // For when gapi is loaded since it is async defer
-    window.addEventListener(
-      'gapi-loaded',
-      () => {
-        gapi.load('auth2', () => {
-          this.authenticationService.sendSocialServiceReady('google');
-        });
-      },
-      { once: true }
-    );
-    (window as any).googleListenerAdded = true;
+    // window.addEventListener(
+    //   'gapi-loaded',
+    //   () => {
+    //     gapi.load('auth2', () => {
+    //       this.authenticationService.sendSocialServiceReady('google');
+    //     });
+    //   },
+    //   { once: true }
+    // );
+    // (window as any).googleListenerAdded = true;
+    //
+    //
+
+    // @ts-ignore
+    window.onGoogleLibraryLoad = () => {
+      console.log("Google's One-tap sign in script loaded!");
+      this.authenticationService.sendSocialServiceReady('google');
+
+      // @ts-ignore
+      google.accounts.id.initialize({
+        // Ref: https://developers.google.com/identity/gsi/web/reference/js-reference#IdConfiguration
+        client_id:
+          '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com',
+        callback: this.handleCredentialResponse.bind(this), // Whatever function you want to trigger...
+        auto_select: true,
+        cancel_on_tap_outside: false
+      });
+
+      // OPTIONAL: In my case I want to redirect the user to an specific path.
+      // @ts-ignore
+      // google.accounts.id.prompt((notification: PromptMomentNotification) => {
+      //   console.log('Google prompt event triggered...');
+      //
+      //   if (notification.getDismissedReason() === 'credential_returned') {
+      //     this.ngZone.run(() => {
+      //       this.router.navigate(['myapp/somewhere'], { replaceUrl: true });
+      //       console.log('Welcome back!');
+      //     });
+      //   }
+      // });
+    };
+
     // Init third party libaries
     this.twitterLibrary();
     this.fbLibrary();
@@ -69,6 +104,18 @@ export class AppComponent implements OnInit {
     this.getUserIfExists();
     // Get Location if permission was already granted
     this.getUserLocationIfPermitted();
+  }
+
+  handleCredentialResponse(response: CredentialResponse) {
+    // Decoding  JWT token...
+    let decodedToken: any | null = null;
+    try {
+      console.log(response);
+      decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
+    } catch (e) {
+      console.error('Error while trying to decode token', e);
+    }
+    console.log('decodedToken', decodedToken);
   }
 
   private twitterLibrary(): void {

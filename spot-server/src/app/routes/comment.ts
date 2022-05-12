@@ -189,15 +189,19 @@ router.get(
         req.user?.userId
       );
 
-      const totalCommentsBefore =
-        await prismaComment.findTotalCommentsBeforeDate(
+      let totalCommentsBefore = 0;
+      let totalCommentsAfter = 0;
+      if (commentsWithTags.length > 0) {
+        totalCommentsBefore =
+          await prismaComment.findTotalCommentsBeforeDate(
+            request.spotId,
+            commentsWithTags.at(-1)?.createdAt
+          );
+        totalCommentsAfter = await prismaComment.findTotalCommentsAfterDate(
           request.spotId,
-          commentsWithTags.at(-1)?.createdAt
+          commentsWithTags.at(0)?.createdAt
         );
-      const totalCommentsAfter = await prismaComment.findTotalCommentsAfterDate(
-        request.spotId,
-        commentsWithTags.at(0)?.createdAt
-      );
+      }
 
       const spot = await prismaSpot.findSpotById(request.spotId);
       if (!spot) {
@@ -340,12 +344,15 @@ router.get(
             return newReply;
           })
         );
-
-      const totalRepliesAfter = await prismaComment.findTotalRepliesAfterReply(
-        request.spotId,
-        request.commentId,
-        replies.at(-1)
-      );
+      
+      let totalRepliesAfter = 0;
+      if (replies.length > 0) {
+        totalRepliesAfter = await prismaComment.findTotalRepliesAfterReply(
+          request.spotId,
+          request.commentId,
+          replies.at(-1)
+        );
+      }
 
       const response: GetRepliesResponse = {
         replies: repliesWithTagsAndProfilePictureAndRating,

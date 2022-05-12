@@ -128,6 +128,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  handleCredentialResponse() {
+    console.log('test1!');
+  }
+
   facebookLogin(): void {
     if (this.buttonsDisabled) {
       return;
