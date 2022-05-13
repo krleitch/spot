@@ -495,17 +495,6 @@
     },
 
     "LANDING": {
-      "SHOWCASE_LINE_1_1": "Be",
-      "SHOWCASE_LINE_1_2": "Anonymous",
-      "SHOWCASE_LINE_2_1": "Share",
-      "SHOWCASE_LINE_2_2": "With Friends",
-      "SHOWCASE_LINE_3_1": "See Events In",
-      "SHOWCASE_LINE_3_2": "Your",
-      "SHOWCASE_LINE_3_3": "Area",
-
-      "SHOWCASE_FOOTER_1": "See what those around you are",
-      "SHOWCASE_FOOTER_2": "Really Saying",
-
       "SHOWCASE_MOBILE_1": "See What Those",
       "SHOWCASE_MOBILE_2": "Around You Are ",
       "SHOWCASE_MOBILE_3": "Really Saying",
@@ -514,7 +503,6 @@
       "FACEBOOK_LOGIN": "Continue with Facebook",
 
       "SIGN_UP_ALTERNATE": "Or",
-
       "SIGN_UP": "Sign Up",
 
       "EMAIL_PLACEHOLDER": "Email",
@@ -528,6 +516,9 @@
       "TERMS_AND_CONDITIONS": "I agree to the",
       "TERMS_AND_CONDITIONS_LINK": "terms and conditions & privacy policy",
       "COPYRIGHT": "2022 Spot",
+
+      "USERNAME_LENGTH": "Must be between 3 and 30 characters",
+      "USERNAME_INVALID": "Username must be alpha-numeric starting with a letter",
 
       "TERMS_ERROR": "You must agree to the terms and conditions & privacy policy",
       "EMAIL_ERROR": "Email is required",

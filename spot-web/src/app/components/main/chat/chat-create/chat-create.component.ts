@@ -113,7 +113,6 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
   get description() {
     return this.createChatForm.get('description');
   }
-
   get password() {
     return this.createChatForm.get('password');
   }

@@ -1,7 +1,6 @@
-@import '../../../styles/sizes';
+@use '~sass-mq/mq';
 
 // NAVIGATION
-
 .nav {
   height: 84px;
   display: flex;
@@ -11,57 +10,18 @@
   box-sizing: border-box;
   overflow: hidden;
   background-color: var(--background-container);
-
-  .title-image {
-    height: 50px;
-  }
-
-  .skew {
-    transform: skew(-20deg);
-  }
-
-  a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    margin-right: 35px;
-    font-size: 16px;
-    text-align: center;
-
-    &:hover {
-      color: var(--primary);
-    }
-
-    .skew-fix {
-      display: flex;
-      transform: skew(20deg);
-    }
-  }
-
-  .section {
-    display: flex;
-    align-items: center;
-    border-right: 1px solid var(--background-page);
-    height: 100%;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0px 20px;
-  }
-
-  .start {
-    border-left: 1px solid var(--background-page);
-  }
-
-  .end {
-  }
-
-  .selected {
-    color: var(--primary);
+  @include mq.mq($until: tablet) {
+    justify-content: flex-start;
+    padding: 10px 10px;
   }
 
   .auth-link {
     display: flex;
     margin-right: 35px;
     text-align: center;
+    @include mq.mq($until: tablet) {
+      margin-right: 0px;
+    }
   }
 
   .title-link {
@@ -71,6 +31,10 @@
     height: 100%;
     box-sizing: border-box;
     position: relative;
+    @include mq.mq($until: tablet) {
+      margin-right: 115px;
+      padding: 0px;
+    }
 
     .title-image {
       position: absolute;
@@ -79,75 +43,71 @@
       transform: translateY(-50%);
       width: 150px;
       height: 65px;
-      background-image: url('../../../../assets/images/logo_v7_transparent.png');
+      background-image: url('/assets/images/logo_v7_transparent.png');
       background-size: cover;
-    }
-  }
 
-  .left {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
+      @include mq.mq($until: tablet) {
+        width: 98px;
+        height: 42px;
+        background-image: url('/assets/images/logo_v7_small.png');
+      }
+    }
   }
 }
 
-// Mobile stylings
-@media screen and (max-width: $mobile-width) {
-  .nav {
-    justify-content: flex-start;
-    padding: 10px 10px;
+// Skewed sections
+.skew {
+  transform: skew(-20deg);
+  @include mq.mq($until: tablet) {
+    transform: skew(0);
+  }
+}
 
-    .title-link {
-      margin-right: 115px;
-      padding: 0px;
+a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-right: 35px;
+  font-size: 16px;
+  text-align: center;
 
-      .title-image {
-        width: 100px;
-        height: 42px;
-      }
+  @include mq.mq($until: tablet) {
+    padding: 0;
+    margin-right: 12px;
+  }
+  &:hover {
+    color: var(--primary);
+  }
 
-      .title-image-highlight {
-        width: 100px;
-        height: 42px;
-      }
-    }
-
-    a {
-      padding: 0;
-      margin-right: 12px;
-    }
-
-    .skew {
+  .skew-fix {
+    display: flex;
+    align-items: center;
+    transform: skew(20deg);
+    @include mq.mq($until: tablet) {
       transform: skew(0);
-
-      .skew-fix {
-        transform: skew(0);
-      }
-    }
-
-    .right a {
-      margin: 0px 10px;
-    }
-
-    .section {
-      border: none;
-      margin: 0 10px;
-      padding: 0;
-      display: inline-block;
-      height: auto;
-
-      &:hover {
-        background-color: var(--background-container);
-      }
-    }
-
-    .selected {
-      background-color: var(--background-container);
-    }
-
-    .auth-link {
-      margin-right: 0px;
     }
   }
+}
+.section {
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--background-page);
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0px 20px;
+  @include mq.mq($until: tablet) {
+    border: none;
+    margin: 0 10px;
+    padding: 0;
+    display: inline-block;
+    height: auto;
+  }
+}
+.start {
+  border-left: 1px solid var(--background-page);
+  @include mq.mq($until: tablet) {
+    border: none;
+  }
+}
+.end {
 }

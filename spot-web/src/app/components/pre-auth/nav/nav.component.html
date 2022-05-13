@@ -1,5 +1,5 @@
 <div class="nav">
-  <div class="left">
+  <div class="row-h-center justify-content-between full-height margin-r-lg">
     <a class="title-link" [routerLink]="'/'">
       <div class="title-image"></div>
     </a>
@@ -7,16 +7,26 @@
     <a
       class="skew section start"
       [routerLink]="'/about'"
-      [ngClass]="{ selected: isSelected('about') }"
+      [class.text-primary]="isSelected('about')"
     >
-      <span class="skew-fix"> {{ 'PRE_AUTH.NAV.ABOUT' | translate }} </span>
+      <span class="skew-fix">
+        <span class="material-icons-outlined icon-sm margin-r-xs mobile-hide">
+          info
+        </span>
+        {{ 'PRE_AUTH.NAV.ABOUT' | translate }}
+      </span>
     </a>
     <a
       class="skew section end"
       [routerLink]="'/contact'"
-      [ngClass]="{ selected: isSelected('contact') }"
+      [class.text-primary]="isSelected('contact')"
     >
-      <span class="skew-fix"> {{ 'PRE_AUTH.NAV.CONTACT' | translate }} </span>
+      <span class="skew-fix">
+        <span class="material-icons icon-sm margin-r-xs mobile-hide">
+          alternate_email
+        </span>
+        {{ 'PRE_AUTH.NAV.CONTACT' | translate }}
+      </span>
     </a>
   </div>
 

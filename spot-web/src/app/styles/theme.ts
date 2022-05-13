@@ -26,7 +26,7 @@ export const LightTheme: Theme = {
     '--button-text': '#FFFFFF',
     '--item-highlight': '#E0FFFB',
 
-    '--input-background': '#EEEEEE',
+    '--input-background': '#f5f5f5',
     '--input-border': '#9E9E9E',
     '--input-text': '#000000',
     '--input-text-ph': '#9E9E9E',

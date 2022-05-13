@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
 import { skip, takeUntil } from 'rxjs/operators';
@@ -11,7 +11,6 @@ import { RootStoreState } from '@store';
 import {
   UserActions,
   UserFacebookActions,
-  UserGoogleActions,
   UserStoreSelectors
 } from '@src/app/root-store/user-store';
 
@@ -20,12 +19,11 @@ import { AuthenticationService } from '@services/authentication.service';
 import { ModalService } from '@services/modal.service';
 
 // Models
-import {
-  FacebookLoginRequest,
-  GoogleLoginRequest,
-  RegisterRequest
-} from '@models/authentication';
+import { FacebookLoginRequest, RegisterRequest } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
+
+// Validators
+import { validateAllFormFields, validateEmail, validatePhone, validatePassword, validateUsername } from '@helpers/validators/validate-helpers';
 
 @Component({
   selector: 'spot-landing',
@@ -37,41 +35,52 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   STRINGS: Record<string, string>;
 
-  facebookLoaded = false;
+  // Form controls
+  registerForm: FormGroup;
 
-  form: FormGroup;
+  // State
   authenticationError$: Observable<SpotError>;
   isAuthenticated$: Observable<boolean>;
   errorMessage: string;
   buttonsDisabled = false;
+  facebookLoaded = false;
 
   constructor(
-    private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private modalService: ModalService,
     private store$: Store<RootStoreState.State>,
     private translateService: TranslateService
-  ) {
-    this.form = this.fb.group({
-      email: ['', Validators.required],
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      phone: ['', Validators.required],
-      terms: [false, Validators.required]
+  ) {}
+
+  ngOnInit(): void {
+    // Create form
+    this.registerForm = new FormGroup({
+      email: new FormControl('', [Validators.required]),
+      username: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(30)
+      ]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(256)
+      ]),
+      phone: new FormControl('', [Validators.required]),
+      terms: new FormControl(false, [Validators.required])
     });
+
+    // Get strings
     this.translateService
       .get('PRE_AUTH.LANDING')
       .subscribe((res: Record<string, string>) => {
         this.STRINGS = res;
       });
-  }
 
-  ngOnInit(): void {
-    // FAILURE
+    // ERROR
     this.authenticationError$ = this.store$.pipe(
       select(UserStoreSelectors.selectAuthenticationError)
     );
-
     this.authenticationError$
       .pipe(takeUntil(this.onDestroy), skip(1))
       .subscribe((authenticationError: SpotError) => {
@@ -92,7 +101,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isAuthenticated$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsAuthenticated)
     );
-
     this.isAuthenticated$
       .pipe(takeUntil(this.onDestroy))
       .subscribe((isAuthenticated: boolean) => {
@@ -118,7 +126,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         if (service === 'google') {
           window.google.accounts.id.renderButton(
             document.getElementById('googleButtonLanding'),
-            { theme: 'outline', size: 'large' } // customization attributes
+            { theme: 'outline', size: 'large' }
           );
         }
       });
@@ -157,82 +165,55 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  signUp(): void {
+  // Getters
+  get email() {
+    return this.registerForm.get('email');
+  }
+  get username() {
+    return this.registerForm.get('username');
+  }
+  get password() {
+    return this.registerForm.get('password');
+  }
+  get phone() {
+    return this.registerForm.get('phone');
+  }
+  get terms() {
+    return this.registerForm.get('terms');
+  }
+
+  register(): void {
     if (this.buttonsDisabled) {
       return;
     }
 
-    const val = this.form.value;
+    if (!this.registerForm.valid) {
+      validateAllFormFields(this.registerForm);
+    }
 
-    if (!val.terms) {
-      this.errorMessage = this.STRINGS.TERMS_ERROR;
-      this.form.controls.terms.markAsDirty();
+    // Validate username with regex
+    if (!validateUsername(this.username.value)) {
+      this.username.setErrors({ invald: true });
       return;
     }
 
-    if (!val.email) {
-      this.errorMessage = this.STRINGS.EMAIL_ERROR;
-      this.form.controls.email.markAsDirty();
+    // Validate phone with regex
+    if (!validatePassword(this.password.value)) {
+      this.password.setErrors({ invald: true });
       return;
     }
 
-    const validEmail = this.authenticationService.validateEmail(val.email);
-    if (!validEmail) {
-      this.errorMessage = this.STRINGS.EMAIL_INVALID;
-      this.form.controls.email.markAsDirty();
-      return;
-    }
-
-    if (!val.username) {
-      this.errorMessage = this.STRINGS.USERNAME_ERROR;
-      this.form.controls.username.markAsDirty();
-      return;
-    }
-
-    const validUsername = this.authenticationService.validateUsername(
-      val.username
-    );
-    if (validUsername !== null) {
-      this.errorMessage = validUsername;
-      this.form.controls.username.markAsDirty();
-      return;
-    }
-
-    if (!val.password) {
-      this.errorMessage = this.STRINGS.PASSWORD_ERROR;
-      this.form.controls.password.markAsDirty();
-      return;
-    }
-
-    const validPassword = this.authenticationService.validatePassword(
-      val.password
-    );
-    if (validPassword !== null) {
-      this.errorMessage = validPassword;
-      this.form.controls.password.markAsDirty();
-      return;
-    }
-
-    if (!val.phone) {
-      this.errorMessage = this.STRINGS.PHONE_ERROR;
-      this.form.controls.phone.markAsDirty();
-      return;
-    }
-
-    const validPhone = this.authenticationService.validatePhone(val.phone);
-    if (!validPhone) {
-      this.errorMessage = this.STRINGS.PHONE_INVALID;
-      this.form.controls.email.markAsDirty();
+    if (!validatePhone(this.phone.value)) {
+      this.phone.setErrors({ invald: true });
       return;
     }
 
     this.errorMessage = '';
-
     const registerRequest: RegisterRequest = {
-      email: val.email,
-      username: val.username,
-      password: val.password,
-      phone: val.phone
+      email: this.email.value,
+      username: this.username.value,
+      password: this.password.value,
+      phone: this.phone.value
     };
 
     this.store$.dispatch(

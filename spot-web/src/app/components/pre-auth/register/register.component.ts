@@ -10,7 +10,6 @@ import { RootStoreState } from '@store';
 import {
   UserActions,
   UserFacebookActions,
-  UserGoogleActions,
   UserStoreSelectors
 } from '@src/app/root-store/user-store';
 
@@ -22,12 +21,9 @@ import { TranslateService } from '@ngx-translate/core';
 // Models
 import {
   FacebookLoginRequest,
-  GoogleLoginRequest,
   RegisterRequest
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
-
-declare const gapi: any;
 
 @Component({
   selector: 'spot-register',
@@ -110,14 +106,10 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.onDestroy))
       .subscribe((service: string) => {
         if (service === 'google') {
-          gapi.signin2.render('my-signin2', {
-            scope: 'profile email',
-            width: 240,
-            height: 55,
-            longtitle: true,
-            theme: 'light',
-            onsuccess: (param) => this.googleLogin(param)
-          });
+          window.google.accounts.id.renderButton(
+            document.getElementById('googleButtonRegister'),
+            { theme: 'outline', size: 'large' } // customization attributes
+          );
         }
         if (service === 'FB') {
           setTimeout(() => {
@@ -242,37 +234,6 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
         this.buttonsDisabled = true;
       }
     });
-  }
-
-  googleLogin(googleUser): void {
-    if (this.buttonsDisabled) {
-      return;
-    }
-
-    // profile.getId(), getName(), getImageUrl(), getEmail()
-    // const profile = googleUser.getBasicProfile();
-
-    const id_token = googleUser.getAuthResponse().id_token;
-
-    const request: GoogleLoginRequest = {
-      accessToken: id_token
-    };
-
-    this.store$.dispatch(
-      new UserGoogleActions.GoogleLoginRequestAction(request)
-    );
-    this.buttonsDisabled = true;
-
-    // sign out of the instance, so we don't auto login
-    this.googleSignOut();
-  }
-
-  googleSignOut(): void {
-    const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(
-      () => {},
-      (err: any) => {}
-    );
   }
 
   openTerms(): void {

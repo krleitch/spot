@@ -9,6 +9,7 @@
   @extend %input-shared;
   width: 300px;
   padding: 8px 12px;
+  border-radius: 3px;
   margin: 6px 0px;
   border: 1px solid var(--input-border);
   background-color: var(--input-background);
@@ -60,4 +61,72 @@
 // touched, dirty and invalid
 .input-border-less.ng-dirty.ng-invalid.ng-touched {
   color: var(--error);
+}
+
+/*------------------------------------------------------------------*/
+/*                             Checkbox                             */
+/*------------------------------------------------------------------*/
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 23px;
+  margin-top: 2px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  border: 1px solid var(--input-border);
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  background-color: #eee;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkbox-container input:checked ~ .checkmark {
+  border: 1px solid var(--primary);
+  background-color: var(--primary);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkbox-container .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 2px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
