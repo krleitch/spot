@@ -11,7 +11,6 @@ spot-nav {
   display: flex;
   flex-flow: column;
   align-items: center;
-  background-color: var(--background-page);
   padding-top: 84px;
   min-height: calc(100%);
   box-sizing: border-box;
@@ -20,40 +19,11 @@ spot-nav {
     max-width: 900px;
     min-width: 50%;
   }
-
-  .heading {
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    font-size: 30px;
-  }
-
-  .heading-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-
-  .heading.main {
-    font-size: 50px;
-    color: var(--primary);
-    font-weight: 600;
-    margin-right: 15px;
-  }
-
-  .text {
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    color: var(--text-secondary);
-    margin-bottom: 10px;
-  }
 }
 
 .copyright {
   position: fixed;
   right: 5px;
-  bottom: 5px;
+  bottom: 0px;
   font-size: 14px;
 }
