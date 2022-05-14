@@ -4,8 +4,6 @@ import { Action } from '@ngrx/store';
 import {
   LoginRequest,
   LoginResponse,
-  RegisterRequest,
-  RegisterResponse
 } from '@models/authentication';
 import {
   GetUserRequest,
@@ -34,9 +32,6 @@ export enum ActionTypes {
   LOGIN_REQUEST = '[User] Login Request',
   LOGIN_SUCCESS = '[User] Login Success',
   LOGIN_FAILURE = '[User] Login Failure',
-  REGISTER_REQUEST = '[User] Register Request',
-  REGISTER_SUCCESS = '[User] Register Success',
-  REGISTER_FAILURE = '[User] Register Failure',
   DELETE_REQUEST = '[User] Delete Request',
   DELETE_SUCCESS = '[User] Delete Success',
   DELETE_FAILURE = '[User] Delete Failure',
@@ -79,18 +74,6 @@ export class LoginSuccessAction implements Action {
 }
 export class LoginFailureAction implements Action {
   readonly type = ActionTypes.LOGIN_FAILURE;
-  constructor(public error: SpotError) {}
-}
-export class RegisterRequestAction implements Action {
-  readonly type = ActionTypes.REGISTER_REQUEST;
-  constructor(public request: RegisterRequest) {}
-}
-export class RegisterSuccessAction implements Action {
-  readonly type = ActionTypes.REGISTER_SUCCESS;
-  constructor(public response: RegisterResponse) {}
-}
-export class RegisterFailureAction implements Action {
-  readonly type = ActionTypes.REGISTER_FAILURE;
   constructor(public error: SpotError) {}
 }
 export class DeleteRequestAction implements Action {
@@ -170,9 +153,6 @@ export type Actions =
   | LoginRequestAction
   | LoginSuccessAction
   | LoginFailureAction
-  | RegisterRequestAction
-  | RegisterSuccessAction
-  | RegisterFailureAction
   | DeleteRequestAction
   | DeleteSuccessAction
   | DeleteFailureAction

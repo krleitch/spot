@@ -16,21 +16,7 @@ export function featureReducer(
         ...initialState
       };
     }
-    // User
-    case ActionTypes.REGISTER_SUCCESS: {
-      return {
-        ...state,
-        user: action.response.user,
-        authenticationError: null
-      };
-    }
-    case ActionTypes.REGISTER_FAILURE: {
-      return {
-        ...state,
-        user: null,
-        authenticationError: action.error
-      };
-    }
+    // Auth
     case ActionTypes.LOGIN_SUCCESS: {
       return {
         ...state,

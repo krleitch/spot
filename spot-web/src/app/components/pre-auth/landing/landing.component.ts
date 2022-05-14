@@ -3,15 +3,14 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 
 // Store
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
   UserActions,
-  UserFacebookActions,
-  UserStoreSelectors
+  UserFacebookActions
 } from '@src/app/root-store/user-store';
 
 // Services
@@ -19,11 +18,26 @@ import { AuthenticationService } from '@services/authentication.service';
 import { ModalService } from '@services/modal.service';
 
 // Models
-import { FacebookLoginRequest, RegisterRequest } from '@models/authentication';
+import {
+  FacebookLoginRequest,
+  RegisterRequest,
+  RegisterResponse
+} from '@models/authentication';
+import { SetUserStore } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
+// constants
+import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
+
 // Validators
-import { validateAllFormFields, validateEmail, validatePhone, validatePassword, validateUsername } from '@helpers/validators/validate-helpers';
+import {
+  validateAllFormFields,
+  VALID_PASSWORD_REGEX,
+  VALID_USERNAME_REGEX,
+  VALID_EMAIL_REGEX,
+  VALID_PHONE_REGEX
+} from '@helpers/validators/validate-helpers';
+import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
 
 @Component({
   selector: 'spot-landing',
@@ -42,7 +56,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   authenticationError$: Observable<SpotError>;
   isAuthenticated$: Observable<boolean>;
   errorMessage: string;
-  buttonsDisabled = false;
+  registerLoading = false;
   facebookLoaded = false;
 
   constructor(
@@ -55,18 +69,26 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     // Create form
     this.registerForm = new FormGroup({
-      email: new FormControl('', [Validators.required]),
+      email: new FormControl('', [
+        Validators.required,
+        forbiddenNameValidator(VALID_EMAIL_REGEX, 'allow')
+      ]),
       username: new FormControl('', [
         Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(30)
+        Validators.minLength(AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH),
+        Validators.maxLength(AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH),
+        forbiddenNameValidator(VALID_USERNAME_REGEX, 'allow')
       ]),
       password: new FormControl('', [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(256)
+        Validators.minLength(AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH),
+        Validators.maxLength(AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH),
+        forbiddenNameValidator(VALID_PASSWORD_REGEX, 'allow')
       ]),
-      phone: new FormControl('', [Validators.required]),
+      phone: new FormControl('', [
+        Validators.required,
+        forbiddenNameValidator(VALID_PHONE_REGEX, 'allow')
+      ]),
       terms: new FormControl(false, [Validators.required])
     });
 
@@ -75,38 +97,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       .get('PRE_AUTH.LANDING')
       .subscribe((res: Record<string, string>) => {
         this.STRINGS = res;
-      });
-
-    // ERROR
-    this.authenticationError$ = this.store$.pipe(
-      select(UserStoreSelectors.selectAuthenticationError)
-    );
-    this.authenticationError$
-      .pipe(takeUntil(this.onDestroy), skip(1))
-      .subscribe((authenticationError: SpotError) => {
-        if (authenticationError) {
-          if (authenticationError.name === 'RateLimitError') {
-            this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
-              '%TIMEOUT%',
-              authenticationError.body.timeout
-            );
-          } else {
-            this.errorMessage = authenticationError.message;
-          }
-        }
-        this.buttonsDisabled = false;
-      });
-
-    // SUCCESS
-    this.isAuthenticated$ = this.store$.pipe(
-      select(UserStoreSelectors.selectIsAuthenticated)
-    );
-    this.isAuthenticated$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((isAuthenticated: boolean) => {
-        if (isAuthenticated) {
-          this.buttonsDisabled = false;
-        }
       });
   }
 
@@ -117,13 +107,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.authenticationService.socialServiceReady
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((service: string) => {
+      .subscribe((service) => {
         if (service === 'FB') {
           setTimeout(() => {
             this.facebookLoaded = true;
           });
-        }
-        if (service === 'google') {
+        } else if (service === 'google') {
           window.google.accounts.id.renderButton(
             document.getElementById('googleButtonLanding'),
             { theme: 'outline', size: 'large' }
@@ -133,36 +122,17 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   facebookLogin(): void {
-    if (this.buttonsDisabled) {
+    if (this.registerLoading) {
       return;
     }
 
-    window['FB'].getLoginStatus((statusResponse) => {
-      if (statusResponse.status !== 'connected') {
-        window['FB'].login((loginResponse) => {
-          if (loginResponse.status === 'connected') {
-            const request: FacebookLoginRequest = {
-              accessToken: loginResponse.authResponse.accessToken
-            };
-
-            this.store$.dispatch(
-              new UserFacebookActions.FacebookLoginRequestAction(request)
-            );
-            this.buttonsDisabled = true;
-          }
-        });
-      } else {
-        // already logged in
-        const request: FacebookLoginRequest = {
-          accessToken: statusResponse.authResponse.accessToken
-        };
-
-        this.store$.dispatch(
-          new UserFacebookActions.FacebookLoginRequestAction(request)
-        );
-        this.buttonsDisabled = true;
-      }
-    });
+    const accessToken = this.authenticationService.getFacebookAccessToken();
+    const request: FacebookLoginRequest = {
+      accessToken: accessToken
+    };
+    this.store$.dispatch(
+      new UserFacebookActions.FacebookLoginRequestAction(request)
+    );
   }
 
   // Getters
@@ -183,32 +153,14 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   register(): void {
-    if (this.buttonsDisabled) {
+    if (this.registerLoading) {
       return;
     }
-
     if (!this.registerForm.valid) {
       validateAllFormFields(this.registerForm);
-    }
-
-    // Validate username with regex
-    if (!validateUsername(this.username.value)) {
-      this.username.setErrors({ invald: true });
       return;
     }
 
-    // Validate phone with regex
-    if (!validatePassword(this.password.value)) {
-      this.password.setErrors({ invald: true });
-      return;
-    }
-
-    if (!validatePhone(this.phone.value)) {
-      this.phone.setErrors({ invald: true });
-      return;
-    }
-
-    this.errorMessage = '';
     const registerRequest: RegisterRequest = {
       email: this.email.value,
       username: this.username.value,
@@ -216,10 +168,28 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       phone: this.phone.value
     };
 
-    this.store$.dispatch(
-      new UserActions.RegisterRequestAction(registerRequest)
-    );
-    this.buttonsDisabled = true;
+    this.errorMessage = '';
+    this.registerLoading = true;
+    this.authenticationService
+      .registerUser(registerRequest)
+      .pipe(take(1))
+      .subscribe(
+        (response: RegisterResponse) => {
+          const setUserStore: SetUserStore = {
+            user: response.user
+          };
+          this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
+          this.authenticationService.registerUserSuccess(response);
+        },
+        (err: { error: SpotError }) => {
+          // Displays the servers error message
+          // Errors are kept to validation and generic
+          this.errorMessage = err.error.message;
+        },
+        () => {
+          this.registerLoading = false;
+        }
+      );
   }
 
   openTerms(): void {

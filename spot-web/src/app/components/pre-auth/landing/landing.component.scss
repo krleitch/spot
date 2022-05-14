@@ -78,6 +78,10 @@
   padding: 25px;
 }
 
+.form-text-error {
+  max-width: 300px;
+}
+
 // EXISTING ACCOUNT
 .bar {
   width: 100%;
@@ -123,6 +127,10 @@
 
   .showcase {
     display: none;
+  }
+
+  .background-image {
+    min-height: 1000px;
   }
 
   .mobile-showcase {

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil } from 'rxjs/operators';
+import { skip, takeUntil, take } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -21,8 +21,10 @@ import { TranslateService } from '@ngx-translate/core';
 // Models
 import {
   FacebookLoginRequest,
-  RegisterRequest
+  RegisterRequest,
+  RegisterResponse
 } from '@models/authentication';
+import { SetUserStore } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
 @Component({
@@ -61,41 +63,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {
-    // FAILURE
-    this.authenticationError$ = this.store$.pipe(
-      select(UserStoreSelectors.selectAuthenticationError)
-    );
-
-    this.authenticationError$
-      .pipe(takeUntil(this.onDestroy), skip(1))
-      .subscribe((authenticationError: SpotError) => {
-        if (authenticationError) {
-          if (authenticationError.name === 'RateLimitError') {
-            this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
-              '%TIMEOUT%',
-              authenticationError.body.timeout
-            );
-          } else {
-            this.errorMessage = authenticationError.message;
-          }
-          this.buttonsDisabled = false;
-        }
-      });
-
-    // SUCCESS
-    this.isAuthenticated$ = this.store$.pipe(
-      select(UserStoreSelectors.selectIsAuthenticated)
-    );
-
-    this.isAuthenticated$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((isAuthenticated: boolean) => {
-        if (isAuthenticated) {
-          this.buttonsDisabled = false;
-        }
-      });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.onDestroy.next();
@@ -188,8 +156,6 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    this.errorMessage = '';
-
     const registerRequest: RegisterRequest = {
       email: val.email,
       username: val.username,
@@ -197,10 +163,27 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       phone: val.phone
     };
 
-    this.store$.dispatch(
-      new UserActions.RegisterRequestAction(registerRequest)
-    );
+    this.errorMessage = '';
     this.buttonsDisabled = true;
+    this.authenticationService
+      .registerUser(registerRequest)
+      .pipe(take(1))
+      .subscribe(
+        (response: RegisterResponse) => {
+          const setUserStore: SetUserStore = {
+            user: response.user
+          };
+          this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
+          this.buttonsDisabled = false;
+        },
+
+        (err: { error: SpotError }) => {
+          // Displays the servers erorr message
+          // Errors are kept to validation and generic
+          this.errorMessage = err.error.message;
+          this.buttonsDisabled = false;
+        }
+      );
   }
 
   facebookLogin(): void {

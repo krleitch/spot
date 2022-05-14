@@ -8,7 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil } from 'rxjs/operators';
+import { skip, takeUntil, take } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -30,8 +30,10 @@ import {
   FacebookLoginRequest,
   GoogleLoginRequest,
   LoginRequest,
-  RegisterRequest
+  RegisterRequest,
+  RegisterResponse
 } from '@models/authentication';
+import { SetUserStore } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
 declare const gapi: any;
@@ -244,8 +246,6 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    this.registerErrorMessage = '';
-
     const registerRequest: RegisterRequest = {
       email: val.email,
       username: val.username,
@@ -253,10 +253,28 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
       phone: val.phone
     };
 
-    this.store$.dispatch(
-      new UserActions.RegisterRequestAction(registerRequest)
-    );
+    this.registerErrorMessage = '';
     this.buttonsDisabled = true;
+    this.authenticationService
+      .registerUser(registerRequest)
+      .pipe(take(1))
+      .subscribe(
+        (response: RegisterResponse) => {
+          const setUserStore: SetUserStore = {
+            user: response.user
+          };
+          response
+          this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
+          this.buttonsDisabled = false;
+        },
+
+        (err: { error: SpotError }) => {
+          // Displays the servers erorr message
+          // Errors are kept to validation and generic
+          this.registerErrorMessage = err.error.message;
+          this.buttonsDisabled = false;
+        }
+      );
   }
 
   facebookLogin(): void {

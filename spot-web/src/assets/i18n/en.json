@@ -518,22 +518,12 @@
       "COPYRIGHT": "2022 Spot",
 
       "USERNAME_LENGTH": "Must be between 3 and 30 characters",
-      "USERNAME_INVALID": "Username must be alpha-numeric starting with a letter",
-
-      "TERMS_ERROR": "You must agree to the terms and conditions & privacy policy",
-      "EMAIL_ERROR": "Email is required",
-      "USERNAME_ERROR": "Username is required",
-      "PASSWORD_ERROR": "Password is required",
-      "PHONE_ERROR": "Phone is required",
-
+      "USERNAME_INVALID": "Must be alpha-numeric starting with a letter",
       "EMAIL_INVALID": "Email is invalid",
-      "PHONE_INVALID": "Phone number is invalid",
-
-      "EMAIL_USED": "Email is already in use",
-      "USERNAME_USED": "Username is already in use",
-      "PHONE_USED": "Phone is already in use",
-
-      "RATE_LIMIT": "Too many requests. Please try again in %TIMEOUT% minutes"
+      "PASSWORD_LENGTH": "Must be at least 8 characters",
+      "PASSWORD_INVALID": "Must contain at least one uppercase, number and symbol",
+      "PHONE_INVALID": "Phone is invalid",
+      "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy"
     },
 
     "REGISTER": {

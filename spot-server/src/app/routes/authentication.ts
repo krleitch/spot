@@ -42,7 +42,7 @@ router.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Register a new user
+// Create a new user
 router.post(
   '/register',
   rateLimiter.authenticationLimiter,
@@ -68,7 +68,7 @@ router.post(
         return next(phoneError);
       }
 
-      // Exists already
+      // Db check existance for email, username, phone
       const emailExists = await prismaUser.emailExists(body.email);
       if (emailExists) {
         return next(new authenticationError.EmailTakenError(400));

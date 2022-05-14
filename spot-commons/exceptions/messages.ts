@@ -6,7 +6,9 @@
 // English
 export const ERROR_MESSAGES = {
   RATE_LIMIT: {
-    RATE_LIMIT: "Too many requests",
+    RATE_LIMIT_TIMEOUT: "Too many requests, retry in %TIMEOUT% minutes.",
+    RATE_LMIT_TIMEOUT_SINGLE: "Too many requests, retry in %TIMEOUT% minute.",
+    RATE_LIMIT: "Too many requests.",
   },
 
   // Main Errors for main pages
@@ -124,7 +126,7 @@ export const ERROR_MESSAGES = {
       DELETE_PROFILE_PICTURE: "Error deleting profile picture",
 
       UPLOAD_CHAT_ROOM_PHOTO: "Error uploading chat room photo",
-      DELETE_CHAT_ROOM_PHOTO: "Error deleting chat room photo"
+      DELETE_CHAT_ROOM_PHOTO: "Error deleting chat room photo",
     },
 
     AUTHORIZATION: {

@@ -32,6 +32,12 @@ import { ModalOptions } from '@models/modal';
 import { AlertService } from '@services/alert.service';
 import { ModalService } from '@services/modal.service';
 
+interface FacebookResponse {
+  status: string;
+  authResponse: {accessToken: string };
+};
+type SocialServiceTypes = 'FB' | 'google' | 'twttr';
+
 // TODO: FIX THE TRANSLATIONS HERE
 
 @Injectable({ providedIn: 'root' })
@@ -39,7 +45,7 @@ export class AuthenticationService {
   baseUrl = environment.baseUrl;
   googleProviderId = environment.googleProviderId;
 
-  socialServiceReady = new ReplaySubject<string>();
+  socialServiceReady = new ReplaySubject<SocialServiceTypes>();
 
   constructor(
     private http: HttpClient,
@@ -189,6 +195,26 @@ export class AuthenticationService {
   }
 
   // login / logout
+  getFacebookAccessToken(): string {
+    window['FB'].getLoginStatus(
+      (statusResponse: FacebookResponse) => {
+        if (statusResponse.status !== 'connected') {
+          window['FB'].login(
+            (loginResponse: FacebookResponse) => {
+              if (loginResponse.status === 'connected') {
+                return loginResponse.authResponse.accessToken;
+              }
+            }
+          );
+        } else {
+          // already logged in
+          return statusResponse.authResponse.accessToken;
+        }
+      }
+    );
+    return null;
+  }
+
 
   loginUserSuccess(response: LoginResponse): void {
     this.addIdToken(response.jwt);
@@ -288,8 +314,8 @@ export class AuthenticationService {
     return true;
   }
 
-  sendSocialServiceReady(service: string): void {
-    // used to trigger events in the DOM when social services are connected so they can be async
+  // used to trigger events in the DOM when social services are connected so they can be async
+  sendSocialServiceReady(service: SocialServiceTypes): void {
     this.socialServiceReady.next(service);
   }
 }

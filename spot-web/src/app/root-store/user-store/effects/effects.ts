@@ -42,42 +42,7 @@ export class UserStoreEffects {
     { dispatch: false }
   );
 
-  // User
-  registerUserRequestEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<userActions.RegisterRequestAction>(
-        userActions.ActionTypes.REGISTER_REQUEST
-      ),
-      switchMap((action) =>
-        this.authenticationService.registerUser(action.request).pipe(
-          map((response) => new userActions.RegisterSuccessAction(response)),
-          catchError((errorResponse: { error: SpotError }) =>
-            observableOf(
-              new userActions.RegisterFailureAction(errorResponse.error)
-            )
-          )
-        )
-      )
-    )
-  );
-
-  registerUserSuccessEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<userActions.RegisterSuccessAction>(
-        userActions.ActionTypes.REGISTER_SUCCESS
-      ),
-      tap((action) => {
-        this.authenticationService.registerUserSuccess(action.response);
-      }),
-      switchMap((_action) => [
-        new friendActions.GetFriendsRequestAction({
-          limit: null
-        }),
-        new userActions.GetUserMetadataRequestAction({})
-      ])
-    )
-  );
-
+  // Login
   loginUserRequestEffect$ = createEffect(() =>
     this.actions$.pipe(
       ofType<userActions.LoginRequestAction>(

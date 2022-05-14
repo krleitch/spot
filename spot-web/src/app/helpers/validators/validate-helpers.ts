@@ -19,26 +19,26 @@ export function validateAllFormFields(formGroup: FormGroup) {
 // validation for lengths and required are done in the form
 // these helpers are for keeping the regex consistent between seperate forms
 
+// just check for an @ and a .
+export const VALID_EMAIL_REGEX = /^\S+@\S+\.\S+$/;
+// correct number of digits in either form
+export const VALID_PHONE_REGEX =
+  /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+// alphanumeric starting with a letter (_ and - allowed)
+export const VALID_USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
+// one letter, one number, and one special character
+export const VALID_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 // client side validation for which use regex
 export function validateEmail(email: string): boolean {
-  const regex = /^\S+@\S+\.\S+$/;
-  return email.match(regex) !== null;
+  return email.match(VALID_EMAIL_REGEX) !== null;
 }
-
 export function validatePhone(phone: string): boolean {
-  const regex =
-    /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
-  return phone.match(regex) !== null;
+  return phone.match(VALID_PHONE_REGEX) !== null;
 }
-
 export function validateUsername(username: string): boolean {
-  // alphanumeric starting with a letter (_ and - allowed)
-  const regex = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
-  return username.match(regex) !== null;
+  return username.match(VALID_USERNAME_REGEX) !== null;
 }
-
 export function validatePassword(password: string): boolean {
-  // one letter, one number, and one special character
-  const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])$/;
-  return password.match(regex) !== null;
+  return password.match(VALID_PASSWORD_REGEX) !== null;
 }
