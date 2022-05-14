@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 // Google sign in
-import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
+import { CredentialResponse } from 'google-one-tap';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService
   ) {}
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     // set the default sizings and theme
     this.themeService.setRegularSizeTheme();
     this.themeService.setLightTheme();
@@ -54,19 +54,20 @@ export class AppComponent implements OnInit {
     this.isAuthenticated$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsAuthenticated)
     );
+    // Connect/disconnect to chat network
     this.isAuthenticated$.subscribe((auth) => {
       if (auth) {
         this.chatService.connectToWebSocket();
       } else {
         this.chatService.disconnectFromWebSocket();
       }
-    })
-
+    });
 
     // Init third party libaries
     this.googleLibrary();
     this.fbLibrary();
     this.twitterLibrary();
+
     // Get User if JWT token exists
     this.getUserIfExists();
     // Get Location if permission was already granted
@@ -133,9 +134,11 @@ export class AppComponent implements OnInit {
       this.authenticationService.sendSocialServiceReady('google');
     };
   }
+
   private handleGoogleCredentialResponse(response: CredentialResponse) {
-    // Decoding  JWT token...
-      // const decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
+    // Decode JWT if you need any data, we will verify the token on the server again
+    // const decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
+    if (response.credential) {
       const request: GoogleLoginRequest = {
         accessToken: response.credential
       };
@@ -143,6 +146,7 @@ export class AppComponent implements OnInit {
       this.store$.dispatch(
         new UserGoogleActions.GoogleLoginRequestAction(request)
       );
+    }
   }
 
   private getUserIfExists(): void {
@@ -168,7 +172,6 @@ export class AppComponent implements OnInit {
     //   location: { longitude: -69.3333, latitude: 51.4444 }
     // };
     // this.store$.dispatch(
-    //   // TODO send login location
     //   new UserActions.SetLocationAction(request2)
     // );
 

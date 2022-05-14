@@ -127,12 +127,14 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const accessToken = this.authenticationService.getFacebookAccessToken();
-    const request: FacebookLoginRequest = {
-      accessToken: accessToken
-    };
-    this.store$.dispatch(
-      new UserFacebookActions.FacebookLoginRequestAction(request)
-    );
+    if (accessToken) {
+      const request: FacebookLoginRequest = {
+        accessToken: accessToken
+      };
+      this.store$.dispatch(
+        new UserFacebookActions.FacebookLoginRequestAction(request)
+      );
+    }
   }
 
   // Getters

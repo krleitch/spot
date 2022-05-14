@@ -1,5 +1,5 @@
 <div class="nav">
-  <div class="row-h-center justify-content-between full-height margin-r-lg">
+  <div class="row-h-center justify-content-between full-height">
     <a class="title-link" [routerLink]="'/'">
       <div class="title-image"></div>
     </a>
@@ -10,7 +10,7 @@
       [class.text-primary]="isSelected('about')"
     >
       <span class="skew-fix">
-        <span class="material-icons-outlined icon-sm margin-r-xs mobile-hide">
+        <span class="material-icons-outlined icon-sm margin-r-xs">
           info
         </span>
         {{ 'PRE_AUTH.NAV.ABOUT' | translate }}
@@ -22,7 +22,7 @@
       [class.text-primary]="isSelected('contact')"
     >
       <span class="skew-fix">
-        <span class="material-icons icon-sm margin-r-xs mobile-hide">
+        <span class="material-icons icon-sm margin-r-xs">
           alternate_email
         </span>
         {{ 'PRE_AUTH.NAV.CONTACT' | translate }}
