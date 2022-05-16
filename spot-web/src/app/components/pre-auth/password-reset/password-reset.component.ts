@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { take, finalize } from 'rxjs/operators';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
-import { TranslateService } from '@ngx-translate/core';
 
 // Assets
 import {
@@ -11,87 +12,66 @@ import {
   PasswordResetResponse
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
+
+// Validation
+
+import { validateAllFormFields } from '@helpers/validators/validate-helpers';
 @Component({
   selector: 'spot-password-reset',
   templateUrl: './password-reset.component.html',
   styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent implements OnInit {
-  form: FormGroup;
+  resetForm: FormGroup;
+
+  // state
   errorMessage = '';
-  successMessage = '';
-  buttonsDisabled = false;
+  success = false;
+  resetLoading = false;
 
-  emailLoading = false;
-
-  STRINGS;
-
-  constructor(
-    private fb: FormBuilder,
-    private authenticationService: AuthenticationService,
-    private translateService: TranslateService
-  ) {
-    this.form = this.fb.group({
-      email: ['', Validators.required]
+  constructor(private authenticationService: AuthenticationService) {
+    this.resetForm = new FormGroup({
+      email: new FormControl('', [Validators.required])
     });
-    this.translateService
-      .get('PRE_AUTH.PASSWORD_RESET')
-      .subscribe((res: any) => {
-        this.STRINGS = res;
-      });
   }
 
   ngOnInit(): void {}
 
+  get email() {
+    return this.resetForm.get('email');
+  }
   requestReset(): void {
-    if (this.buttonsDisabled) {
+    if (this.resetLoading) {
       return;
     }
 
-    const val = this.form.value;
-
-    if (!val.email) {
-      this.errorMessage = this.STRINGS.EMAIL_NONE;
-      this.form.controls.email.markAsDirty();
+    if (!this.resetForm.valid) {
+      validateAllFormFields(this.resetForm);
       return;
     }
-
-    const validEmail = this.authenticationService.validateEmail(val.email);
-    if (!validEmail) {
-      this.errorMessage = this.STRINGS.EMAIL_FORMAT;
-      this.form.controls.email.markAsDirty();
-      this.form.controls.email.setErrors([{ incorrect: true }]);
-      return;
-    }
-
-    this.errorMessage = '';
-    this.successMessage = '';
 
     // Send request
     const request: PasswordResetRequest = {
-      email: val.email
+      email: this.email.value
     };
 
-    this.emailLoading = true;
-    this.buttonsDisabled = true;
-    this.authenticationService.passwordReset(request).subscribe(
-      (response: PasswordResetResponse) => {
-        this.buttonsDisabled = false;
-        this.successMessage = this.STRINGS.REQUEST_SUCCESS;
-        this.emailLoading = false;
-      },
-      (errorResponse: { error: SpotError }) => {
-        if (errorResponse.error.name === 'RateLimitError') {
-          this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
-            '%TIMEOUT%',
-            errorResponse.error.body.timeout
-          );
-        } else {
+    this.errorMessage = '';
+    this.resetLoading = true;
+    this.authenticationService
+      .passwordReset(request)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.resetLoading = false;
+        })
+      )
+      .subscribe(
+        (_response: PasswordResetResponse) => {
+          this.success = true;
+        },
+        (errorResponse: { error: SpotError }) => {
           this.errorMessage = errorResponse.error.message;
         }
-        this.buttonsDisabled = false;
-        this.emailLoading = false;
-      }
-    );
+      );
   }
 }

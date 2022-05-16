@@ -593,16 +593,14 @@
 
     "PASSWORD_RESET": {
       "TITLE": "Reset Your Passsword",
-      "DESCRIPTION": "Please enter your email, you will be sent a verification code which you will need to enter to reset your password",
+      "DESCRIPTION": "Enter your email to receive a verification token for your account",
 
       "EMAIL_PLACEHOLDER": "Enter email",
       "REQUEST_RESET": "Request Reset",
 
-      "EMAIL_NONE": "Email is required",
-      "EMAIL_FORMAT": "Invalid email format",
-      "REQUEST_SUCCESS": "An email for recovery has been sent if an account exists under this email",
+      "EMAIL_INVALID": "Email is invalid",
 
-      "RATE_LIMIT": "Too many requests. Please try again in %TIMEOUT% minutes"
+      "COPYRIGHT": "2022 Spot"
     },
 
     "NEW_PASSWORD": {
