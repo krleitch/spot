@@ -53,6 +53,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // State
   errorMessage: string;
+  showPassword = false;
   registerLoading = false;
   facebookLoaded = false;
 
@@ -183,6 +184,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
           this.errorMessage = err.error.message;
         }
       );
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
   }
 
   openTerms(): void {

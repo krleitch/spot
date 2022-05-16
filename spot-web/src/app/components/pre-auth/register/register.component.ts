@@ -49,6 +49,7 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // state
   errorMessage = '';
+  showPassword = false;
   registerLoading = false;
   facebookLoaded = false;
 
@@ -181,7 +182,16 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       );
   }
 
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
   openTerms(): void {
-    this.modalService.open('global', 'terms');
+    this.modalService.open(
+      'global',
+      'terms',
+      {},
+      { width: 700, disableClose: true }
+    );
   }
 }

@@ -105,17 +105,27 @@
 
           <!-- Password -->
           <div class="form-field">
-            <input
-              name="password"
-              class="input-border"
-              formControlName="password"
-              autocomplete="off"
-              placeholder="{{
-                'PRE_AUTH.LANDING.PASSWORD_PLACEHOLDER' | translate
-              }}"
-              type="password"
-              required
-            />
+            <div class="row-h-center">
+              <input
+                name="password"
+                class="input-border remove-right"
+                formControlName="password"
+                autocomplete="off"
+                placeholder="{{
+                  'PRE_AUTH.LANDING.PASSWORD_PLACEHOLDER' | translate
+                }}"
+                [type]="showPassword ? 'text' : 'password'"
+                required
+              />
+              <div
+                class="input-border-icon-right"
+                (click)="toggleShowPassword()"
+              >
+                <span class="material-icons icon-md icon-secondary-highlight">
+                  {{ showPassword ? "visibility" : "visibility_off" }}
+                </span>
+              </div>
+            </div>
           </div>
           <!-- Password errors -->
           <div
@@ -145,7 +155,7 @@
               required
             />
           </div>
-          <!-- Password errors -->
+          <!-- Phone errors -->
           <div
             *ngIf="phone.invalid && phone.dirty && phone.touched"
             class="form-text-error full-width"
