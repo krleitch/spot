@@ -37,6 +37,7 @@ import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.direc
 
 // constants
 import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
+
 @Component({
   selector: 'spot-register',
   templateUrl: './register.component.html',

@@ -43,17 +43,24 @@
 
         <!-- Password -->
         <div class="form-field">
-          <input
-            name="password"
-            formControlName="password"
-            class="input-border"
-            autocomplete="off"
-            placeholder="{{
-              'PRE_AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate
-            }}"
-            type="password"
-            required
-          />
+          <div class="row-h-center">
+            <input
+              name="password"
+              formControlName="password"
+              class="input-border remove-right"
+              autocomplete="off"
+              placeholder="{{
+                'PRE_AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate
+              }}"
+              [type]="showPassword ? 'text' : 'password'"
+              required
+            />
+            <div class="input-border-icon-right" (click)="toggleShowPassword()">
+              <span class="material-icons icon-md icon-secondary-highlight">
+                {{ showPassword ? 'visibility' : 'visibility_off' }}
+              </span>
+            </div>
+          </div>
         </div>
         <!-- Password errors -->
         <div

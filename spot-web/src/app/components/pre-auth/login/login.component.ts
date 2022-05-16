@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // State 
   errorMessage: string;
+  showPassword = false;
   loginLoading = false;
   facebookLoaded = false;
 
@@ -140,5 +141,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           this.errorMessage = err.error.message;
         }
       );
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }

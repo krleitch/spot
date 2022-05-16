@@ -562,7 +562,7 @@
       "FORGOT_PASSWORD": "Forgot Password",
       "SIGN_UP_ALTERNATE": "Or",
 
-      "SIGN_IN": "Sign In",
+      "SIGN_IN": "Login",
 
       "NO_ACCOUNT": "Don't have an account?",
       "SIGN_UP": "Sign Up",
@@ -634,40 +634,34 @@
       "REGISTER": "Sign Up",
 
       "FACEBOOK_LOGIN": "Continue with Facebook",
-      "GOOGLE_LOGIN": "Sign In With Google",
-
-      "PASSWORD_PLACEHOLDER": "Password",
-      "PASSWORD_ERROR": "Password is required",
 
       "FORGOT_PASSWORD": "Forgot Password",
 
-      "EMAIL_OR_USERNAME_PLACEHOLDER": "Email or Username",
+      "EMAIL_OR_USERNAME_PLACEHOLDER": "Email or username",
+      "PASSWORD_PLACEHOLDER": "Password",
 
-      "LOGIN_BUTTON": "Login",
-
-      "EMAIL_OR_USER_ERROR": "Email/Username is required",
-
-      "TERMS_AND_CONDITIONS": "I agree to the",
-      "TERMS_AND_CONDITIONS_LINK": "terms and conditions & privacy policy",
       "REGISTER_BUTTON": "Sign Up",
+      "LOGIN_BUTTON": "Login",
 
       "EMAIL_PLACEHOLDER": "Email",
       "USERNAME_PLACEHOLDER": "Username",
-      "PHONE_PLACEHOLDER": "Phone Number",
-
-      "EMAIL_ERROR": "Email is required",
-      "USERNAME_ERROR": "Username is required",
-      "PHONE_ERROR": "Phone is required",
+      "PHONE_PLACEHOLDER": "Phone number",
+      "TERMS_AND_CONDITIONS": "I agree to the",
+      "TERMS_AND_CONDITIONS_LINK": "terms and conditions & privacy policy",
 
       "EMAIL_INVALID": "Email is invalid",
       "PHONE_INVALID": "Phone number is invalid",
 
-      "EMAIL_USED": "Email is already in use",
-      "USERNAME_USED": "Username is already in use",
-      "PHONE_USED": "Phone is already in use",
-      "TERMS_ERROR": "You must agree to the terms and conditions & privacy policy",
+      "USERNAME_LENGTH": "Must be between 3 and 30 characters",
+      "USERNAME_INVALID": "Must be alpha-numeric starting with a letter",
+      "EMAIL_INVALID": "Email is invalid",
+      "PASSWORD_LENGTH": "Must be at least 8 characters",
+      "PASSWORD_INVALID": "Must contain at least one uppercase, number and symbol",
+      "PHONE_INVALID": "Phone is invalid",
+      "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy",
 
-      "RATE_LIMIT": "Too many requests. Please try again in %TIMEOUT% minutes"
+      "EMAIL_OR_USERNAME_REQUIRED": "Email or username is required",
+      "PASSWORD_REQUIRED": "Password is required"
     }
   }
 }
