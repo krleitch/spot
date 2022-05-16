@@ -47,7 +47,9 @@
           </button>
         </div>
 
-        <span class="margin-b-md"> {{ 'PRE_AUTH.LANDING.SIGN_UP_ALTERNATE' | translate }} </span>
+        <span class="margin-b-md">
+          {{ 'PRE_AUTH.LANDING.SIGN_UP_ALTERNATE' | translate }}
+        </span>
 
         <fieldset class="fieldset">
           <!-- Email -->
@@ -175,14 +177,14 @@
           </div>
         </div>
         <!-- Terms error -->
-          <div
-            *ngIf="terms.invalid && terms.touched"
-            class="form-text-error full-width text-center"
-          >
-            <div *ngIf="terms.errors?.['required']">
-              {{ 'PRE_AUTH.LANDING.TERMS_REQUIRED' | translate }}
-            </div>
+        <div
+          *ngIf="terms.invalid && terms.touched"
+          class="form-text-error full-width text-center"
+        >
+          <div *ngIf="terms.errors?.['required']">
+            {{ 'PRE_AUTH.LANDING.TERMS_REQUIRED' | translate }}
           </div>
+        </div>
 
         <div class="text-error text-center margin-b-lg">
           {{ errorMessage }}
@@ -203,9 +205,9 @@
 
       <div class="bar"></div>
 
-      <a class="existing-account" [routerLink]="'/login'">
+      <a class="text-black" [routerLink]="'/login'">
         <span> {{ 'PRE_AUTH.LANDING.EXISTING_ACCOUNT' | translate }} </span>
-        <span class="sign-in-highlight">
+        <span class="text-primary">
           {{ 'PRE_AUTH.LANDING.SIGN_IN' | translate }}
         </span>
       </a>

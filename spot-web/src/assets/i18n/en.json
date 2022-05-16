@@ -479,7 +479,7 @@
       "MOBILE_DOWNLOAD": "Download Us",
       "CONTACT": "Contact",
       "LOGIN": "Login",
-      "REGISTER": "Register"
+      "REGISTER": "Sign Up"
     },
 
     "ABOUT": {
@@ -527,9 +527,8 @@
     },
 
     "REGISTER": {
-      "TITLE": "Join Your Community",
+      "TITLE": "Create an Account",
       "FACEBOOK_LOGIN": "Continue with Facebook",
-      "GOOGLE_LOGIN": "Sign In With Google",
 
       "SIGN_UP_ALTERNATE": "Or",
 
@@ -538,31 +537,22 @@
       "EMAIL_PLACEHOLDER": "Email",
       "USERNAME_PLACEHOLDER": "Username",
       "PASSWORD_PLACEHOLDER": "Password",
-      "PHONE_PLACEHOLDER": "Phone Number",
+      "PHONE_PLACEHOLDER": "Phone number",
 
       "EXISTING_ACCOUNT": "Already have an account?",
       "SIGN_IN": "Sign in",
 
       "TERMS_AND_CONDITIONS": "I agree to the",
       "TERMS_AND_CONDITIONS_LINK": "terms and conditions & privacy policy",
-      "COPYRIGHT": "2020 Spot",
+      "COPYRIGHT": "2022 Spot",
 
-      "TERMS_ERROR": "You must agree to the terms and conditions & privacy policy",
-
-      "EMAIL_ERROR": "Email is required",
+      "USERNAME_LENGTH": "Must be between 3 and 30 characters",
+      "USERNAME_INVALID": "Must be alpha-numeric starting with a letter",
       "EMAIL_INVALID": "Email is invalid",
-
-      "USERNAME_ERROR": "Username is required",
-      "USERNAME_INVALID_LENGTH": "Username must be between %MIN% and %MAX% characters",
-      "USERNAME_INVALID_CHARACTERS": "Username must be alpha-numeric with non-repeated .-'",
-
-      "PASSWORD_ERROR": "Password is required",
-      "PASSWORD_INVALID_LENGTH": "Password must be between %MIN% and %MAX% characters",
-
-      "PHONE_ERROR": "Phone is required",
-      "PHONE_INVALID": "Phone number is invalid",
-
-      "RATE_LIMIT": "Too many requests. Please try again in %TIMEOUT% minutes"
+      "PASSWORD_LENGTH": "Must be at least 8 characters",
+      "PASSWORD_INVALID": "Must contain at least one uppercase, number and symbol",
+      "PHONE_INVALID": "Phone is invalid",
+      "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy"
     },
 
     "LOGIN": {

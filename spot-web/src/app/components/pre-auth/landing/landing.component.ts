@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, take } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil, take, finalize } from 'rxjs/operators';
 
 // Store
 import { Store } from '@ngrx/store';
@@ -52,8 +52,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   registerForm: FormGroup;
 
   // State
-  authenticationError$: Observable<SpotError>;
-  isAuthenticated$: Observable<boolean>;
   errorMessage: string;
   registerLoading = false;
   facebookLoaded = false;
@@ -165,7 +163,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.registerLoading = true;
     this.authenticationService
       .registerUser(registerRequest)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.registerLoading = false;
+        })
+      )
       .subscribe(
         (response: RegisterResponse) => {
           const setUserStore: SetUserStore = {
@@ -178,9 +181,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
           // Displays the servers error message
           // Errors are kept to validation and generic
           this.errorMessage = err.error.message;
-        },
-        () => {
-          this.registerLoading = false;
         }
       );
   }

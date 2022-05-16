@@ -1,22 +1,20 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil, take } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil, take, finalize } from 'rxjs/operators';
 
 // Store
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
   UserActions,
   UserFacebookActions,
-  UserStoreSelectors
 } from '@src/app/root-store/user-store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
 import { ModalService } from '@services/modal.service';
-import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -27,6 +25,18 @@ import {
 import { SetUserStore } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
+// Validators
+import {
+  validateAllFormFields,
+  VALID_PASSWORD_REGEX,
+  VALID_USERNAME_REGEX,
+  VALID_EMAIL_REGEX,
+  VALID_PHONE_REGEX
+} from '@helpers/validators/validate-helpers';
+import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
+
+// constants
+import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
 @Component({
   selector: 'spot-register',
   templateUrl: './register.component.html',
@@ -35,35 +45,44 @@ import { SpotError } from '@exceptions/error';
 export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  form: FormGroup;
-  authenticationError$: Observable<SpotError>;
-  isAuthenticated$: Observable<boolean>;
+  registerForm: FormGroup;
+
+  // state
   errorMessage = '';
-  buttonsDisabled = false;
+  registerLoading = false;
   facebookLoaded = false;
 
-  STRINGS;
-
   constructor(
-    private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private modalService: ModalService,
-    private store$: Store<RootStoreState.State>,
-    private translateService: TranslateService
-  ) {
-    this.form = this.fb.group({
-      email: ['', Validators.required],
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      phone: ['', Validators.required],
-      terms: [false, Validators.required]
-    });
-    this.translateService.get('PRE_AUTH.REGISTER').subscribe((res: any) => {
-      this.STRINGS = res;
+    private store$: Store<RootStoreState.State>
+  ) {}
+
+  ngOnInit(): void {
+    this.registerForm = new FormGroup({
+      email: new FormControl('', [
+        Validators.required,
+        forbiddenNameValidator(VALID_EMAIL_REGEX, 'allow')
+      ]),
+      username: new FormControl('', [
+        Validators.required,
+        Validators.minLength(AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH),
+        Validators.maxLength(AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH),
+        forbiddenNameValidator(VALID_USERNAME_REGEX, 'allow')
+      ]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH),
+        Validators.maxLength(AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH),
+        forbiddenNameValidator(VALID_PASSWORD_REGEX, 'allow')
+      ]),
+      phone: new FormControl('', [
+        Validators.required,
+        forbiddenNameValidator(VALID_PHONE_REGEX, 'allow')
+      ]),
+      terms: new FormControl(false, [Validators.required])
     });
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.onDestroy.next();
@@ -87,136 +106,79 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  signUp(): void {
-    if (this.buttonsDisabled) {
+  facebookLogin(): void {
+    if (this.registerLoading) {
       return;
     }
 
-    const val = this.form.value;
+    const accessToken = this.authenticationService.getFacebookAccessToken();
+    if (accessToken) {
+      const request: FacebookLoginRequest = {
+        accessToken: accessToken
+      };
+      this.store$.dispatch(
+        new UserFacebookActions.FacebookLoginRequestAction(request)
+      );
+    }
+  }
 
-    if (!val.terms) {
-      this.errorMessage = this.STRINGS.TERMS_ERROR;
-      this.form.controls.terms.markAsDirty();
+  // Getters
+  get email() {
+    return this.registerForm.get('email');
+  }
+  get username() {
+    return this.registerForm.get('username');
+  }
+  get password() {
+    return this.registerForm.get('password');
+  }
+  get phone() {
+    return this.registerForm.get('phone');
+  }
+  get terms() {
+    return this.registerForm.get('terms');
+  }
+
+  register(): void {
+    if (this.registerLoading) {
       return;
     }
-
-    if (!val.email) {
-      this.errorMessage = this.STRINGS.EMAIL_ERROR;
-      this.form.controls.email.markAsDirty();
-      return;
-    }
-
-    const validEmail = this.authenticationService.validateEmail(val.email);
-    if (!validEmail) {
-      this.errorMessage = this.STRINGS.EMAIL_INVALID;
-      this.form.controls.email.markAsDirty();
-      return;
-    }
-
-    if (!val.username) {
-      this.errorMessage = this.STRINGS.USERNAME_ERROR;
-      this.form.controls.username.markAsDirty();
-      return;
-    }
-
-    const validUsername = this.authenticationService.validateUsername(
-      val.username
-    );
-    if (validUsername !== null) {
-      this.errorMessage = validUsername;
-      this.form.controls.username.markAsDirty();
-      return;
-    }
-
-    if (!val.password) {
-      this.errorMessage = this.STRINGS.PASSWORD_ERROR;
-      this.form.controls.password.markAsDirty();
-      return;
-    }
-
-    const validPassword = this.authenticationService.validatePassword(
-      val.password
-    );
-    if (validPassword !== null) {
-      this.errorMessage = validPassword;
-      this.form.controls.password.markAsDirty();
-      return;
-    }
-
-    if (!val.phone) {
-      this.errorMessage = this.STRINGS.PHONE_ERROR;
-      this.form.controls.phone.markAsDirty();
-      return;
-    }
-
-    const validPhone = this.authenticationService.validatePhone(val.phone);
-    if (!validPhone) {
-      this.errorMessage = this.STRINGS.PHONE_INVALID;
-      this.form.controls.email.markAsDirty();
+    if (!this.registerForm.valid) {
+      validateAllFormFields(this.registerForm);
       return;
     }
 
     const registerRequest: RegisterRequest = {
-      email: val.email,
-      username: val.username,
-      password: val.password,
-      phone: val.phone
+      email: this.email.value,
+      username: this.username.value,
+      password: this.password.value,
+      phone: this.phone.value
     };
 
     this.errorMessage = '';
-    this.buttonsDisabled = true;
+    this.registerLoading = true;
     this.authenticationService
       .registerUser(registerRequest)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.registerLoading = false;
+        })
+      )
       .subscribe(
         (response: RegisterResponse) => {
           const setUserStore: SetUserStore = {
             user: response.user
           };
           this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
-          this.buttonsDisabled = false;
+          this.authenticationService.registerUserSuccess(response);
         },
-
         (err: { error: SpotError }) => {
-          // Displays the servers erorr message
+          // Displays the servers error message
           // Errors are kept to validation and generic
           this.errorMessage = err.error.message;
-          this.buttonsDisabled = false;
         }
       );
-  }
-
-  facebookLogin(): void {
-    if (this.buttonsDisabled) {
-      return;
-    }
-
-    window['FB'].getLoginStatus((statusResponse) => {
-      if (statusResponse.status !== 'connected') {
-        window['FB'].login((loginResponse) => {
-          if (loginResponse.status === 'connected') {
-            const request: FacebookLoginRequest = {
-              accessToken: loginResponse.authResponse.accessToken
-            };
-
-            this.store$.dispatch(
-              new UserFacebookActions.FacebookLoginRequestAction(request)
-            );
-            this.buttonsDisabled = true;
-          }
-        });
-      } else {
-        // already logged in
-        const request: FacebookLoginRequest = {
-          accessToken: statusResponse.authResponse.accessToken
-        };
-
-        this.store$.dispatch(
-          new UserFacebookActions.FacebookLoginRequestAction(request)
-        );
-        this.buttonsDisabled = true;
-      }
-    });
   }
 
   openTerms(): void {

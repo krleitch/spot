@@ -1,53 +1,124 @@
 <spot-nav></spot-nav>
 <div class="register">
-  <div class="container">
-    <div class="register-text">
+  <div
+    class="container col-center background-container container-shadow container-rounded border-box relative"
+  >
+    <div class="title-lg margin-b-lg">
       {{ 'PRE_AUTH.REGISTER.TITLE' | translate }}
     </div>
 
-    <form [formGroup]="form" (keyup.enter)="signUp()" autocomplete="off">
-      <fieldset>
+    <form
+      [formGroup]="registerForm"
+      (keyup.enter)="register()"
+      autocomplete="off"
+      class="form"
+    >
+      <fieldset class="fieldset">
         <div class="form-field">
           <input
             name="email"
             formControlName="email"
+            class="input-border"
             autocomplete="off"
-            placeholder="{{ 'PRE_AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate }}"
+            placeholder="{{
+              'PRE_AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate
+            }}"
             required
           />
         </div>
+        <!-- Email errors -->
+        <div
+          *ngIf="email.invalid && email.dirty && email.touched"
+          class="form-text-error full-width"
+        >
+          <div *ngIf="email.errors?.['forbiddenName']">
+            {{ 'PRE_AUTH.LANDING.EMAIL_INVALID' | translate }}
+          </div>
+        </div>
+
+        <!-- Username -->
         <div class="form-field">
           <input
             name="username"
             formControlName="username"
+            class="input-border"
             autocomplete="off"
-            placeholder="{{ 'PRE_AUTH.REGISTER.USERNAME_PLACEHOLDER' | translate }}"
+            placeholder="{{
+              'PRE_AUTH.REGISTER.USERNAME_PLACEHOLDER' | translate
+            }}"
             required
           />
         </div>
+        <!-- Username errors -->
+        <div
+          *ngIf="username.invalid && username.dirty && username.touched"
+          class="form-text-error full-width"
+        >
+          <div
+            *ngIf="username.errors?.['minlength'] || username.errors?.['maxlength']"
+          >
+            {{ 'PRE_AUTH.LANDING.USERNAME_LENGTH' | translate }}
+          </div>
+          <div *ngIf="username.errors?.['forbiddenName']">
+            {{ 'PRE_AUTH.LANDING.USERNAME_INVALID' | translate }}
+          </div>
+        </div>
+
+        <!-- Password -->
         <div class="form-field">
           <input
             name="password"
             formControlName="password"
+            class="input-border"
             autocomplete="off"
-            placeholder="{{ 'PRE_AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate }}"
+            placeholder="{{
+              'PRE_AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate
+            }}"
             type="password"
             required
           />
         </div>
+        <!-- Password errors -->
+        <div
+          *ngIf="password.invalid && password.dirty && password.touched"
+          class="form-text-error full-width"
+        >
+          <div
+            *ngIf="password.errors?.['minlength'] || password.errors?.['maxlength']"
+          >
+            {{ 'PRE_AUTH.LANDING.PASSWORD_LENGTH' | translate }}
+          </div>
+          <div *ngIf="password.errors?.['forbiddenName']">
+            {{ 'PRE_AUTH.LANDING.PASSWORD_INVALID' | translate }}
+          </div>
+        </div>
+
+        <!-- Phone -->
         <div class="form-field">
           <input
             name="phone"
             formControlName="phone"
+            class="input-border"
             autocomplete="off"
-            placeholder="{{ 'PRE_AUTH.REGISTER.PHONE_PLACEHOLDER' | translate }}"
+            placeholder="{{
+              'PRE_AUTH.REGISTER.PHONE_PLACEHOLDER' | translate
+            }}"
             required
           />
         </div>
+        <!-- Phone errors -->
+        <div
+          *ngIf="phone.invalid && phone.dirty && phone.touched"
+          class="form-text-error full-width"
+        >
+          <div *ngIf="phone.errors?.['forbiddenName']">
+            {{ 'PRE_AUTH.LANDING.PHONE_INVALID' | translate }}
+          </div>
+        </div>
       </fieldset>
 
-      <div class="terms-and-conditions">
-        <div class="checkbox-text">
+      <div class="col-center margin-t-md margin-b-lg text-center">
+        <div class="row-v-center full-width">
           <label class="checkbox-container">
             <input
               name="terms"
@@ -57,54 +128,70 @@
             />
             <span class="checkmark"></span>
           </label>
-          <span> {{ 'PRE_AUTH.REGISTER.TERMS_AND_CONDITIONS' | translate }} </span>
+          <span>
+            {{ 'PRE_AUTH.REGISTER.TERMS_AND_CONDITIONS' | translate }}
+          </span>
         </div>
-        <div class="text" (click)="openTerms()">
+        <div class="text-secondary-highlight" (click)="openTerms()">
           {{ 'PRE_AUTH.REGISTER.TERMS_AND_CONDITIONS_LINK' | translate }}
         </div>
       </div>
+      <!-- Terms error -->
+      <div
+        *ngIf="terms.invalid && terms.touched"
+        class="form-text-error full-width text-center"
+      >
+        <div *ngIf="terms.errors?.['required']">
+          {{ 'PRE_AUTH.LANDING.TERMS_REQUIRED' | translate }}
+        </div>
+      </div>
 
-      <div class="error-message">
+      <div class="text-error text-center margin-b-lg">
         {{ errorMessage }}
       </div>
 
-      <div class="form-buttons">
+      <div class="col-center full-width margin-b-lg">
         <button
-          type="button"
-          (click)="signUp()"
-          [ngClass]="{ disabled: buttonsDisabled }"
+          class="button"
+          [class.button-loading]="registerLoading"
+          [class.button-disabled]="registerLoading"
+          (click)="register()"
         >
           {{ 'PRE_AUTH.REGISTER.SIGN_UP' | translate }}
         </button>
       </div>
-      <div class="sign-up-alternate">
+      <div class="margin-b-lg">
         <span> {{ 'PRE_AUTH.REGISTER.SIGN_UP_ALTERNATE' | translate }} </span>
       </div>
 
-      <div class="login-options">
-        <div
+      <!-- facebook and google login -->
+      <div class="col-center full-width margin-b-lg">
+        <!-- Google Signin button -->
+        <div id="googleButtonRegister"></div>
+        <!-- Facebook -->
+        <button
           *ngIf="facebookLoaded"
-          type="button"
-          class="facebook"
-          [ngClass]="{ disabled: buttonsDisabled }"
+          class="button-facebook margin-t-md"
           (click)="facebookLogin()"
         >
           <img
-            src="../../../assets/images/facebook_logo_white.png"
-            class="facebook-logo"
+            src="/assets/images/facebook_logo_white.png"
+            class="icon-facebook"
           />
-          {{ 'PRE_AUTH.REGISTER.FACEBOOK_LOGIN' | translate }}
-        </div>
-        <!-- Google Signin button -->
-        <div id="googleButtonRegister"></div>
+          <span class="text-facebook">{{
+            'PRE_AUTH.REGISTER.FACEBOOK_LOGIN' | translate
+          }}</span>
+        </button>
       </div>
     </form>
 
     <div class="bar"></div>
 
-    <a class="existing-account" [routerLink]="'/login'">
+    <a class="text-black" [routerLink]="'/login'">
       <span> {{ 'PRE_AUTH.REGISTER.EXISTING_ACCOUNT' | translate }} </span>
-      <span class="sign-in-highlight"> {{ 'PRE_AUTH.REGISTER.SIGN_IN' | translate }} </span>
+      <span class="text-primary">
+        {{ 'PRE_AUTH.REGISTER.SIGN_IN' | translate }}
+      </span>
     </a>
   </div>
 </div>

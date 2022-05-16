@@ -88,18 +88,9 @@
   border-bottom: 1px solid var(--button-background);
   margin-bottom: 10px;
 }
-.existing-account {
-  text-decoration: none;
-  color: black;
-  text-align: center;
-  cursor: pointer;
 
-  .sign-in-highlight {
-    color: var(--primary);
-  }
-}
-.existing-account:hover .sign-in-highlight {
-  color: var(--primary-highlight);
+a {
+  text-decoration: none;
 }
 
 // COPYRIGHT

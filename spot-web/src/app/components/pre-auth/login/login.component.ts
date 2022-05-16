@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 // rxjs
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, take } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil, take, finalize } from 'rxjs/operators';
 
 // Store
 import { Store } from '@ngrx/store';
@@ -40,9 +40,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loginForm: FormGroup;
 
-  // State
-  authenticationError$: Observable<SpotError>;
-  isAuthenticated$: Observable<boolean>;
+  // State 
   errorMessage: string;
   loginLoading = false;
   facebookLoaded = false;
@@ -122,7 +120,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loginLoading = true;
     this.authenticationService
       .loginUser(loginRequest)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loginLoading = false;
+        })
+      )
       .subscribe(
         (response: LoginResponse) => {
           const setUserStore: SetUserStore = {
@@ -135,9 +138,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           // Displays the servers error message
           // Errors are kept to validation and generic
           this.errorMessage = err.error.message;
-        },
-        () => {
-          this.loginLoading = false;
         }
       );
   }
