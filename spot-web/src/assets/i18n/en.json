@@ -508,7 +508,7 @@
       "EMAIL_PLACEHOLDER": "Email",
       "USERNAME_PLACEHOLDER": "Username",
       "PASSWORD_PLACEHOLDER": "Password",
-      "PHONE_PLACEHOLDER": "Phone Number",
+      "PHONE_PLACEHOLDER": "Phone number",
 
       "EXISTING_ACCOUNT": "Already have an account?",
       "SIGN_IN": "Sign in",
@@ -568,7 +568,6 @@
     "LOGIN": {
       "TITLE": "Welcome Back",
       "FACEBOOK_LOGIN": "Continue with Facebook",
-      "GOOGLE_LOGIN": "Sign In With Google",
 
       "FORGOT_PASSWORD": "Forgot Password",
       "SIGN_UP_ALTERNATE": "Or",
@@ -581,12 +580,11 @@
       "EMAIL_OR_USERNAME_PLACEHOLDER": "Email or Username",
       "PASSWORD_PLACEHOLDER": "Password",
 
-      "TERMS_AND_CONDITIONS": "By joining, you agree to the terms and conditions",
-      "COPYRIGHT": "2020 Spot",
+      "EMAIL_OR_USERNAME_REQUIRED": "Email or username is required",
+      "PASSWORD_REQUIRED": "Password is required",
 
-      "EMAIL_OR_USER_ERROR": "Email / Username is required",
-      "PASSWORD_ERROR": "Password is required",
-      "RATE_LIMIT": "Too many requests. Please try again in %TIMEOUT% minutes"
+      "TERMS_AND_CONDITIONS": "By joining, you agree to the terms and conditions",
+      "COPYRIGHT": "2022 Spot"
     },
 
     "USERNAME": {

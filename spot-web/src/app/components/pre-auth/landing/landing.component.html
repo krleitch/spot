@@ -29,10 +29,12 @@
         autocomplete="off"
       >
         <div class="col-center full-width margin-b-lg">
+          <!-- Google Signin button -->
+          <div id="googleButtonLanding"></div>
           <!-- Facebook button -->
           <button
             *ngIf="facebookLoaded"
-            class="button-facebook margin-b-md"
+            class="button-facebook margin-t-md"
             (click)="facebookLogin()"
           >
             <img
@@ -43,8 +45,6 @@
               {{ 'PRE_AUTH.LANDING.FACEBOOK_LOGIN' | translate }}
             </span>
           </button>
-          <!-- Google Signin button -->
-          <div id="googleButtonLanding"></div>
         </div>
 
         <span class="margin-b-md"> {{ 'PRE_AUTH.LANDING.SIGN_UP_ALTERNATE' | translate }} </span>

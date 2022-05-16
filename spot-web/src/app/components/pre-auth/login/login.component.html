@@ -1,76 +1,126 @@
 <spot-nav></spot-nav>
 <div class="login">
-  <div class="container">
-    <div class="login-text">
+  <div
+    class="container col-center background-container container-shadow container-rounded border-box relative"
+  >
+    <div class="title-lg margin-b-lg">
       {{ 'PRE_AUTH.LOGIN.TITLE' | translate }}
     </div>
 
-    <form [formGroup]="form" (keyup.enter)="signIn()" autocomplete="off">
-      <fieldset>
+    <form
+      [formGroup]="loginForm"
+      (keyup.enter)="login()"
+      autocomplete="off"
+      class="form"
+    >
+      <fieldset class="fieldset">
+        <!-- Email or username -->
         <div class="form-field">
           <input
             name="emailOrUsername"
             formControlName="emailOrUsername"
+            class="input-border"
             autocomplete="off"
-            placeholder="{{ 'PRE_AUTH.LOGIN.EMAIL_OR_USERNAME_PLACEHOLDER' | translate }}"
+            placeholder="{{
+              'PRE_AUTH.LOGIN.EMAIL_OR_USERNAME_PLACEHOLDER' | translate
+            }}"
             required
           />
         </div>
+        <!-- Email or username errors -->
+        <div
+          *ngIf="
+            emailOrUsername.invalid &&
+            emailOrUsername.dirty &&
+            emailOrUsername.touched
+          "
+          class="form-text-error full-width"
+        >
+          <div *ngIf="emailOrUsername.errors?.['required']">
+            {{ 'PRE_AUTH.LOGIN.EMAIL_OR_USERNAME_REQUIRED' | translate }}
+          </div>
+        </div>
+
+        <!-- Password -->
         <div class="form-field">
           <input
             name="password"
             formControlName="password"
+            class="input-border"
             autocomplete="off"
-            placeholder="{{ 'PRE_AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate }}"
+            placeholder="{{
+              'PRE_AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate
+            }}"
             type="password"
             required
           />
         </div>
+        <!-- Password errors -->
+        <div
+          *ngIf="password.invalid && password.dirty && password.touched"
+          class="form-text-error full-width"
+        >
+          <div *ngIf="password.errors?.['required']">
+            {{ 'PRE_AUTH.LOGIN.PASSWORD_REQUIRED' | translate }}
+          </div>
+        </div>
       </fieldset>
 
-      <div class="error-message">
+      <!-- Login button -->
+      <div class="text-error text-center margin-b-lg">
         {{ errorMessage }}
       </div>
-      <div class="form-buttons">
+      <div class="col-center full-width margin-b-lg">
         <button
-          type="button"
-          (click)="signIn()"
-          [ngClass]="{ disabled: buttonsDisabled }"
+          class="button"
+          [class.button-loading]="loginLoading"
+          [class.button-disabled]="loginLoading"
+          (click)="login()"
         >
           {{ 'PRE_AUTH.LOGIN.SIGN_IN' | translate }}
         </button>
       </div>
-      <a class="forgot-password" [routerLink]="'/password-reset'">
+
+      <!-- Forgot password -->
+      <a
+        class="text-secondary-highlight margin-b-lg"
+        [routerLink]="'/password-reset'"
+      >
         <span> {{ 'PRE_AUTH.LOGIN.FORGOT_PASSWORD' | translate }} </span>
       </a>
-      <div class="sign-up-alternate">
+      <div class="margin-b-lg">
         <span> {{ 'PRE_AUTH.LOGIN.SIGN_UP_ALTERNATE' | translate }} </span>
       </div>
 
-      <div class="login-options">
-        <div
+      <!-- Facebook and google buttons -->
+      <div class="col-center full-width margin-b-lg">
+        <!-- Google Signin button -->
+        <div id="googleButtonLogin"></div>
+        <!-- Facebook -->
+        <button
           *ngIf="facebookLoaded"
           type="button"
-          class="facebook"
-          [ngClass]="{ disabled: buttonsDisabled }"
+          class="button-facebook margin-t-md"
           (click)="facebookLogin()"
         >
           <img
-            src="../../../assets/images/facebook_logo_white.png"
-            class="facebook-logo"
+            src="/assets/images/facebook_logo_white.png"
+            class="icon-facebook"
           />
-          {{ 'PRE_AUTH.LOGIN.FACEBOOK_LOGIN' | translate }}
-        </div>
-        <!-- Google Signin button -->
-        <div id="googleButtonLogin"></div>
+          <span class="text-facebook">{{
+            'PRE_AUTH.LOGIN.FACEBOOK_LOGIN' | translate
+          }}</span>
+        </button>
       </div>
     </form>
 
     <div class="bar"></div>
 
-    <a class="existing-account" [routerLink]="'/register'">
+    <a class="text-black" [routerLink]="'/register'">
       <span> {{ 'PRE_AUTH.LOGIN.NO_ACCOUNT' | translate }} </span>
-      <span class="sign-in-highlight"> {{ 'PRE_AUTH.LOGIN.SIGN_UP' | translate }} </span>
+      <span class="text-primary">
+        {{ 'PRE_AUTH.LOGIN.SIGN_UP' | translate }}
+      </span>
     </a>
   </div>
 </div>

@@ -1,4 +1,3 @@
-import { TranslateService } from '@ngx-translate/core';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -62,8 +61,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private authenticationService: AuthenticationService,
     private modalService: ModalService,
-    private store$: Store<RootStoreState.State>,
-    private translateService: TranslateService
+    private store$: Store<RootStoreState.State>
   ) {}
 
   ngOnInit(): void {
@@ -91,13 +89,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       ]),
       terms: new FormControl(false, [Validators.required])
     });
-
-    // Get strings
-    this.translateService
-      .get('PRE_AUTH.LANDING')
-      .subscribe((res: Record<string, string>) => {
-        this.STRINGS = res;
-      });
   }
 
   ngOnDestroy(): void {

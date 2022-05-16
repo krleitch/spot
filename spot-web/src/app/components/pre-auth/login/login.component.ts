@@ -1,29 +1,32 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 // rxjs
 import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 
 // Store
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
 import {
   UserActions,
-  UserFacebookActions,
-  UserStoreSelectors
+  UserFacebookActions
 } from '@src/app/root-store/user-store';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
-import { TranslateService } from '@ngx-translate/core';
 
 // Assets
 import { SpotError } from '@exceptions/error';
 import {
   FacebookLoginRequest,
-  LoginRequest
+  LoginRequest,
+  LoginResponse
 } from '@models/authentication';
+import { SetUserStore } from '@models/user';
+
+// Validators
+import { validateAllFormFields } from '@helpers/validators/validate-helpers';
 
 @Component({
   selector: 'spot-login',
@@ -33,64 +36,27 @@ import {
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS;
+  STRINGS: Record<string, string>;
 
-  form: FormGroup;
+  loginForm: FormGroup;
+
+  // State
   authenticationError$: Observable<SpotError>;
   isAuthenticated$: Observable<boolean>;
   errorMessage: string;
-  buttonsDisabled = false;
+  loginLoading = false;
   facebookLoaded = false;
 
   constructor(
-    private fb: FormBuilder,
     private authenticationService: AuthenticationService,
-    private store$: Store<RootStoreState.State>,
-    private translateService: TranslateService
-  ) {
-    this.form = this.fb.group({
-      emailOrUsername: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-    this.translateService.get('PRE_AUTH.LOGIN').subscribe((res: any) => {
-      this.STRINGS = res;
-    });
-  }
+    private store$: Store<RootStoreState.State>
+  ) {}
 
   ngOnInit(): void {
-    // SUCCESS
-    this.isAuthenticated$ = this.store$.pipe(
-      select(UserStoreSelectors.selectIsAuthenticated)
-    );
-
-    this.isAuthenticated$
-      .pipe(takeUntil(this.onDestroy), skip(1))
-      .subscribe((isAuthenticated: boolean) => {
-        if (isAuthenticated) {
-          this.buttonsDisabled = false;
-        }
-      });
-
-    // FAILURE
-    this.authenticationError$ = this.store$.pipe(
-      select(UserStoreSelectors.selectAuthenticationError)
-    );
-
-    this.authenticationError$
-      .pipe(takeUntil(this.onDestroy), skip(1))
-      .subscribe((authenticationError: SpotError) => {
-        if (authenticationError) {
-          if (authenticationError.name === 'RateLimitError') {
-            this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
-              '%TIMEOUT%',
-              authenticationError.body.timeout
-            );
-          } else {
-            this.errorMessage = authenticationError.message;
-          }
-          this.buttonsDisabled = false;
-        }
-      });
+    this.loginForm = new FormGroup({
+      emailOrUsername: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required])
+    });
   }
 
   ngOnDestroy(): void {
@@ -100,11 +66,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.authenticationService.socialServiceReady
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((service: string) => {
+      .subscribe((service) => {
         if (service === 'google') {
           window.google.accounts.id.renderButton(
             document.getElementById('googleButtonLogin'),
-            { theme: 'outline', size: 'large' } // customization attributes
+            { theme: 'outline', size: 'large' }
           );
         }
         if (service === 'FB') {
@@ -115,66 +81,64 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  signIn(): void {
-    if (this.buttonsDisabled) {
+  facebookLogin(): void {
+    if (this.loginLoading) {
       return;
     }
 
-    const val = this.form.value;
+    const accessToken = this.authenticationService.getFacebookAccessToken();
+    if (accessToken) {
+      const request: FacebookLoginRequest = {
+        accessToken: accessToken
+      };
+      this.store$.dispatch(
+        new UserFacebookActions.FacebookLoginRequestAction(request)
+      );
+    }
+  }
 
-    if (!val.emailOrUsername) {
-      this.errorMessage = this.STRINGS.EMAIL_OR_USER_ERROR;
-      this.form.controls.emailOrUsername.markAsDirty();
+  get emailOrUsername() {
+    return this.loginForm.get('emailOrUsername');
+  }
+  get password() {
+    return this.loginForm.get('password');
+  }
+
+  login(): void {
+    if (this.loginLoading) {
       return;
     }
-
-    if (!val.password) {
-      this.errorMessage = this.STRINGS.PASSWORD_ERROR;
-      this.form.controls.password.markAsDirty();
+    if (!this.loginForm.valid) {
+      validateAllFormFields(this.loginForm);
       return;
     }
-
-    this.errorMessage = '';
 
     const loginRequest: LoginRequest = {
-      emailOrUsername: val.emailOrUsername,
-      password: val.password
+      emailOrUsername: this.emailOrUsername.value,
+      password: this.password.value
     };
 
-    this.store$.dispatch(new UserActions.LoginRequestAction(loginRequest));
-
-    this.buttonsDisabled = true;
+    this.errorMessage = '';
+    this.loginLoading = true;
+    this.authenticationService
+      .loginUser(loginRequest)
+      .pipe(take(1))
+      .subscribe(
+        (response: LoginResponse) => {
+          const setUserStore: SetUserStore = {
+            user: response.user
+          };
+          this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
+          this.authenticationService.loginUserSuccess(response);
+        },
+        (err: { error: SpotError }) => {
+          // Displays the servers error message
+          // Errors are kept to validation and generic
+          this.errorMessage = err.error.message;
+        },
+        () => {
+          this.loginLoading = false;
+        }
+      );
   }
-
-  facebookLogin(): void {
-    if (this.buttonsDisabled) {
-      return;
-    }
-
-    window['FB'].getLoginStatus((statusResponse) => {
-      if (statusResponse.status !== 'connected') {
-        window['FB'].login((loginResponse) => {
-          if (loginResponse.status === 'connected') {
-            const request: FacebookLoginRequest = {
-              accessToken: loginResponse.authResponse.accessToken
-            };
-            this.store$.dispatch(
-              new UserFacebookActions.FacebookLoginRequestAction(request)
-            );
-            this.buttonsDisabled = true;
-          }
-        });
-      } else {
-        // already logged in
-        const request: FacebookLoginRequest = {
-          accessToken: statusResponse.authResponse.accessToken
-        };
-        this.store$.dispatch(
-          new UserFacebookActions.FacebookLoginRequestAction(request)
-        );
-        this.buttonsDisabled = true;
-      }
-    });
-  }
-
 }
