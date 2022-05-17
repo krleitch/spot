@@ -32,6 +32,16 @@ import { User } from '@models/user.js';
 // Validation
 // *************************
 
+// just check for an @ and a .
+const VALID_EMAIL_REGEX = /^\S+@\S+\.\S+$/;
+// correct number of digits in either form
+const VALID_PHONE_REGEX =
+  /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+// alphanumeric starting with a letter (_ and - and . allowed)
+const VALID_USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9_\-\.]*$/;
+// one letter, one number, and one special character
+const VALID_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
 const validUsername = (username: string): SpotError | null => {
   // Check length
   if (
@@ -45,18 +55,15 @@ const validUsername = (username: string): SpotError | null => {
     );
   }
 
-  // start with alphanumeric_ word with . - ' singular no repetition and not at end
-  const PATTERN = /^\w(?:\w*(?:['.-]\w+)?)*$/;
-
   // Check characters
-  if (username.match(PATTERN) == null) {
+  if (!username.match(VALID_USERNAME_REGEX)) {
     return new authenticationError.UsernameCharacterError(400);
   }
 
   return null;
 };
 
-const validPassword = (password: string): Error | null => {
+const validPassword = (password: string): SpotError | null => {
   // Check length
   if (
     password.length < AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH ||
@@ -69,13 +76,17 @@ const validPassword = (password: string): Error | null => {
     );
   }
 
+  // Check characters
+  if (!password.match(VALID_PASSWORD_REGEX)) {
+    return new authenticationError.PasswordCharacterError(400);
+  }
+
   return null;
 };
 
 const validEmail = (email: string): SpotError | null => {
-  const regex = /^\S+@\S+\.\S+$/;
 
-  if (email.match(regex) == null) {
+  if (!email.match(VALID_EMAIL_REGEX)) {
     return new authenticationError.EmailInvalidError(400);
   }
 
@@ -83,10 +94,8 @@ const validEmail = (email: string): SpotError | null => {
 };
 
 const validPhone = (phone: string): SpotError | null => {
-  const regex =
-    /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 
-  if (phone.match(regex) == null) {
+  if (!phone.match(VALID_PHONE_REGEX)) {
     return new authenticationError.PhoneInvalidError(400);
   }
 
@@ -167,7 +176,7 @@ const validatePassword = (
 };
 
 const generateJwtFromUser = (user: User): string => {
-  return jwt.sign({ id: user }, secret.secret, { expiresIn: '7d' });
+  return jwt.sign({ id: user }, secret.secret, { expiresIn: '30d' });
 };
 
 // *************************
@@ -187,7 +196,7 @@ const createUsernameFromEmail = async (
   // Try using the email first
   let username;
   if (email) {
-    const index = email.indexOf('@');
+    const index = Math.min(email.indexOf('@'), 25);
     username = email.substring(0, index);
   } else {
     username = null;

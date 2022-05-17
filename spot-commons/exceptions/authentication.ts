@@ -60,6 +60,13 @@ export class PasswordLengthError extends SpotError {
   }
 }
 
+export class PasswordCharacterError extends SpotError {
+  constructor(statusCode: number = 500) {
+    super(AUTHENTICATION_ERROR_MESSAGES.PASSWORD_CHARACTER, statusCode);
+    this.name = "PasswordCharacterError";
+  }
+}
+
 export class EmailTakenError extends SpotError {
   constructor(statusCode: number = 500) {
     super(AUTHENTICATION_ERROR_MESSAGES.EMAIL_TAKEN, statusCode);

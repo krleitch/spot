@@ -521,9 +521,15 @@
       "USERNAME_INVALID": "Must be alpha-numeric starting with a letter",
       "EMAIL_INVALID": "Email is invalid",
       "PASSWORD_LENGTH": "Must be at least 8 characters",
-      "PASSWORD_INVALID": "Must contain at least one uppercase, number and symbol",
+      "PASSWORD_INVALID": "Must contain at least one uppercase, lowercase, number and symbol",
       "PHONE_INVALID": "Phone is invalid",
-      "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy"
+      "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy",
+
+      "USERNAME_TAKEN": "This username has already been taken",
+      "EMAIL_TAKEN": "This email has already been taken",
+      "PHONE_TAKEN": "This phone number has already been taken",
+      "RATE_LIMIT": "Too many requests. Try again in {{timeout}} minutes.",
+      "GENERIC_ERROR": "Something went wrong, please try again."
     },
 
     "REGISTER": {
@@ -552,7 +558,13 @@
       "PASSWORD_LENGTH": "Must be at least 8 characters",
       "PASSWORD_INVALID": "Must contain at least one uppercase, number and symbol",
       "PHONE_INVALID": "Phone is invalid",
-      "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy"
+      "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy",
+
+      "USERNAME_TAKEN": "This username has already been taken",
+      "EMAIL_TAKEN": "This email has already been taken",
+      "PHONE_TAKEN": "This phone number has already been taken",
+      "RATE_LIMIT": "Too many requests. Try again in {{timeout}} minutes.",
+      "GENERIC_ERROR": "Something went wrong, please try again."
     },
 
     "LOGIN": {
@@ -572,6 +584,8 @@
 
       "EMAIL_OR_USERNAME_REQUIRED": "Email or username is required",
       "PASSWORD_REQUIRED": "Password is required",
+
+      "LOGIN_ERROR": "Email / Username or password is invalid.",
 
       "TERMS_AND_CONDITIONS": "By joining, you agree to the terms and conditions",
       "COPYRIGHT": "2022 Spot"

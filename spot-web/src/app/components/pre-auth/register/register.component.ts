@@ -15,6 +15,7 @@ import {
 // Services
 import { AuthenticationService } from '@services/authentication.service';
 import { ModalService } from '@services/modal.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -46,6 +47,8 @@ import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
 export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
+  STRINGS: Record<string, string>;
+
   registerForm: FormGroup;
 
   // state
@@ -57,7 +60,8 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private authenticationService: AuthenticationService,
     private modalService: ModalService,
-    private store$: Store<RootStoreState.State>
+    private store$: Store<RootStoreState.State>,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +88,11 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
       ]),
       terms: new FormControl(false, [Validators.required])
     });
+    this.translateService
+      .get('PRE_AUTH.REGISTER')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnDestroy(): void {
@@ -175,10 +184,27 @@ export class RegisterComponent implements OnInit, OnDestroy, AfterViewInit {
           this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
           this.authenticationService.registerUserSuccess(response);
         },
-        (err: { error: SpotError }) => {
-          // Displays the servers error message
-          // Errors are kept to validation and generic
-          this.errorMessage = err.error.message;
+        (errorResponse: { error: SpotError }) => {
+          switch (errorResponse.error.name) {
+            case 'UsernameTakenError':
+              this.errorMessage = this.STRINGS.USERNAME_TAKEN;
+              break;
+            case 'EmailTakenError':
+              this.errorMessage = this.STRINGS.EMAIL_TAKEN;
+              break;
+            case 'PhoneTakenError':
+              this.errorMessage = this.STRINGS.PHONE_TAKEN;
+              break;
+            case 'RateLimitError':
+              this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
+                '{{timeout}}',
+                errorResponse.error.body.timeout
+              );
+              break;
+            default:
+              this.errorMessage = this.STRINGS.GENERIC_ERROR;
+              break;
+          }
         }
       );
   }

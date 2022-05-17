@@ -102,7 +102,7 @@ router.post(
 
       const token = authenticationService.generateJwtFromUser(user);
       const response: RegisterResponse = {
-        jwt: { token: token, expiresIn: 7 },
+        jwt: { token: token, expiresIn: 30 },
         user: user
       };
       res.status(200).json(response);
@@ -123,7 +123,7 @@ router.post(
 
     const token = authenticationService.generateJwtFromUser(user);
     const response: LoginResponse = {
-      jwt: { token: token, expiresIn: 7 },
+      jwt: { token: token, expiresIn: 30 },
       user: user
     };
     res.status(200).json(response);
@@ -176,7 +176,7 @@ router.post(
         const token = authenticationService.generateJwtFromUser(createdUser);
         const response: FacebookLoginResponse = {
           created: true,
-          jwt: { token: token, expiresIn: 7 },
+          jwt: { token: token, expiresIn: 30 },
           user: createdUser
         };
         res.status(200).json(response);
@@ -185,7 +185,7 @@ router.post(
         const token = authenticationService.generateJwtFromUser(facebookUser);
         const response: FacebookLoginResponse = {
           created: false,
-          jwt: { token: token, expiresIn: 7 },
+          jwt: { token: token, expiresIn: 30 },
           user: facebookUser
         };
         res.status(200).json(response);
@@ -235,7 +235,7 @@ router.post(
           const token = authenticationService.generateJwtFromUser(createdUser);
           const response: GoogleLoginResponse = {
             created: true,
-            jwt: { token: token, expiresIn: 7 },
+            jwt: { token: token, expiresIn: 30 },
             user: createdUser
           };
           res.status(200).json(response);
@@ -244,7 +244,7 @@ router.post(
           const token = authenticationService.generateJwtFromUser(googleUser);
           const response: GoogleLoginResponse = {
             created: false,
-            jwt: { token: token, expiresIn: 7 },
+            jwt: { token: token, expiresIn: 30 },
             user: googleUser
           };
           res.status(200).json(response);

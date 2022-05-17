@@ -154,6 +154,7 @@ export const ERROR_MESSAGES = {
 
       // Password
       PASSWORD_LENGTH: "Password length invalid",
+      PASSWORD_CHARACTER: "Password must contain one uppercase, lowercase, number, and symbol",
 
       // Email
       EMAIL_TAKEN: "Email is not available",

@@ -15,6 +15,7 @@ import {
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Assets
 import { SpotError } from '@exceptions/error';
@@ -48,7 +49,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private store$: Store<RootStoreState.State>
+    private store$: Store<RootStoreState.State>,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +58,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       emailOrUsername: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
+    this.translateService
+      .get('PRE_AUTH.LOGIN')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnDestroy(): void {
@@ -135,10 +142,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
           this.authenticationService.loginUserSuccess(response);
         },
-        (err: { error: SpotError }) => {
-          // Displays the servers error message
-          // Errors are kept to validation and generic
-          this.errorMessage = err.error.message;
+        (errorResponse: { error: SpotError }) => {
+          switch (errorResponse.error.name) {
+            case 'LoginError':
+              this.errorMessage = this.STRINGS.LOGIN_ERROR;
+              break;
+            default:
+              this.errorMessage = this.STRINGS.LOGIN_ERROR;
+              break;
+          }
         }
       );
   }
