@@ -271,24 +271,29 @@ router.post(
       // generate the token
       const token = shortid.generate();
 
-      // Send email with nodemailer and aws ses transport
-      await mailService.email.send({
-        template: 'password',
-        message: {
-          from: 'spottables.app@gmail.com',
-          to: user.email
-        },
-        locals: {
-          link: 'https://spottables.com/new-password',
-          token: token.toString(),
-          username: user.username
-        }
-      });
-
       const passwordReset = await prismaPasswordReset.createPasswordReset(
         user.userId,
         token
       );
+
+      // Send email with nodemailer and aws ses transport
+      try {
+        await mailService.email.send({
+          template: 'password',
+          message: {
+            from: 'spottables.app@gmail.com',
+            to: user.email
+          },
+          locals: {
+            link: `https://spottables.com/new-password/${passwordReset.link}`,
+            token: passwordReset.token,
+            username: user.username
+          }
+        });
+      } catch (e) {
+        return next(new authenticationError.PasswordReset());
+      }
+
       if (!passwordReset) {
         return next(new authenticationError.PasswordReset());
       }
@@ -306,7 +311,10 @@ router.post(
     async (req: Request, res: Response, next: NextFunction) => {
       const body: ValidateTokenRequest = req.body;
 
-      const passwordReset = await prismaPasswordReset.findByToken(body.token);
+      const passwordReset = await prismaPasswordReset.findByTokenAndLink(
+        body.token,
+        body.link
+      );
       if (!passwordReset) {
         return next(new authenticationError.PasswordResetValidate());
       }
@@ -333,7 +341,10 @@ router.post(
     async (req: Request, res: Response, next: NextFunction) => {
       const body: NewPasswordRequest = req.body;
 
-      const passwordReset = await prismaPasswordReset.findByToken(body.token);
+      const passwordReset = await prismaPasswordReset.findByTokenAndLink(
+        body.token,
+        body.link
+      );
       if (!passwordReset) {
         return next(new authenticationError.NewPassword());
       }

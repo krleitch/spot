@@ -86,7 +86,7 @@ export const routes: Routes = [
     component: PasswordResetComponent
   },
   {
-    path: 'new-password',
+    path: 'new-password/:link',
     component: NewPasswordComponent
   }
 ];

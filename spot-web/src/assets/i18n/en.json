@@ -596,34 +596,38 @@
       "DESCRIPTION": "Enter your email to receive a verification token for your account",
 
       "EMAIL_PLACEHOLDER": "Enter email",
-      "REQUEST_RESET": "Request Reset",
+      "REQUEST_RESET": "Reset Password",
 
       "EMAIL_INVALID": "Email is invalid",
+
+      "REQUEST_SUCCESS": "A reset token has been sent to your email",
 
       "COPYRIGHT": "2022 Spot"
     },
 
     "NEW_PASSWORD": {
       "TITLE": "Change Your Password",
-      "DESCRIPTION": "Please enter the token that was emailed to you",
+      "DESCRIPTION": "Enter the token you received in your email",
 
       "TOKEN_PLACEHOLDER": "Enter token",
       "VALIDATE": "Validate",
-      "TOKEN_NONE": "Token is required",
+
+      "TOKEN_REQUIRED": "Token is required",
       "INVALID_TOKEN": "The token has expired or is invalid",
 
       "PASSWORD_PLACEHOLDER": "Enter password",
       "CONFIRM_PLACEHOLDER": "Re-enter password",
       "RESET_PASSWORD": "Reset Password",
-      "PASSWORD_NONE": "Password is required",
-      "CONFIRM_NONE": "Password confirmation is required",
-      "INVALID_MATCH": "Passwords must match",
 
       "CREATE_PASSWORD": "Please create a new password ",
       "NEW_PASSWORD_SUCCESS": "Your password has been reset. Please login to continue",
       "CONTINUE_TO_SPOT": "Login",
 
-      "RATE_LIMIT": "Too many requests. Please try again in %TIMEOUT% minutes"
+      "PASSWORD_LENGTH": "Must be at least 8 characters",
+      "PASSWORD_INVALID": "Must contain at least one uppercase, number and symbol",
+      "CONFIRM_INVALID": "Passwords must match",
+
+      "COPYRIGHT": "2022 Spot"
     },
 
     "AUTH_MODAL": {

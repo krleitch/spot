@@ -14,8 +14,12 @@ import {
 import { SpotError } from '@exceptions/error';
 
 // Validation
+import {
+  validateAllFormFields,
+  VALID_EMAIL_REGEX
+} from '@helpers/validators/validate-helpers';
+import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
 
-import { validateAllFormFields } from '@helpers/validators/validate-helpers';
 @Component({
   selector: 'spot-password-reset',
   templateUrl: './password-reset.component.html',
@@ -31,7 +35,10 @@ export class PasswordResetComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService) {
     this.resetForm = new FormGroup({
-      email: new FormControl('', [Validators.required])
+      email: new FormControl('', [
+        Validators.required,
+        forbiddenNameValidator(VALID_EMAIL_REGEX, 'allow')
+      ])
     });
   }
 
@@ -40,7 +47,8 @@ export class PasswordResetComponent implements OnInit {
   get email() {
     return this.resetForm.get('email');
   }
-  requestReset(): void {
+
+  passwordReset(): void {
     if (this.resetLoading) {
       return;
     }

@@ -51,10 +51,12 @@ export interface PasswordResetRequest {
 export interface PasswordResetResponse {}
 export interface ValidateTokenRequest {
     token: string;
+    link: string;
 }
 export interface ValidateTokenResponse {}
 export interface NewPasswordRequest {
     token: string;
+    link: string;
     password: string;
 }
 export interface NewPasswordResponse {}

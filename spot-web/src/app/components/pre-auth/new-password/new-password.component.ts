@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+// rxjs
+import { Subject } from 'rxjs';
+import { take, finalize, takeUntil } from 'rxjs/operators';
 
 // Services
 import { AuthenticationService } from '@services/authentication.service';
@@ -15,155 +19,170 @@ import {
 } from '@models/authentication';
 import { SpotError } from '@exceptions/error';
 
+// Validators
+import {
+  validateAllFormFields,
+  VALID_PASSWORD_REGEX
+} from '@helpers/validators/validate-helpers';
+import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
+
+// Constants
+import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
+
 @Component({
   selector: 'spot-new-password',
   templateUrl: './new-password.component.html',
   styleUrls: ['./new-password.component.scss']
 })
-export class NewPasswordComponent implements OnInit {
-  STRINGS;
+export class NewPasswordComponent implements OnInit, OnDestroy {
+  private readonly onDestroy = new Subject<void>();
+  STRINGS: Record<string, string>;
 
-  formToken: FormGroup;
-  formPassword: FormGroup;
-  errorMessage = '';
-  successMessage = '';
-  token = '';
+  tokenForm: FormGroup;
+  passwordForm: FormGroup;
 
+  // token state
+  link: string;
+  validToken: string = '';
   tokenLoading = false;
+  tokenError = '';
+
+  // new password state
+  showPassword = false;
+  showConfirmPassword = false;
   passwordLoading = false;
-  buttonsDisabled = false;
+  passwordError = '';
+  passwordSuccess = false;
 
   constructor(
-    private fb: FormBuilder,
+    private route: ActivatedRoute,
     private authenticationService: AuthenticationService,
-    private router: Router,
     private translateService: TranslateService
-  ) {
-    this.formToken = this.fb.group({
-      token: ['', Validators.required]
+  ) {}
+
+  ngOnInit(): void {
+    this.tokenForm = new FormGroup({
+      token: new FormControl('', [Validators.required])
     });
 
-    this.formPassword = this.fb.group({
-      password: ['', Validators.required],
-      confirm: ['', Validators.required]
+    this.passwordForm = new FormGroup({
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH),
+        Validators.maxLength(AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH),
+        forbiddenNameValidator(VALID_PASSWORD_REGEX, 'allow')
+      ]),
+      confirm: new FormControl('', [Validators.required])
     });
-    this.translateService.get('PRE_AUTH.NEW_PASSWORD').subscribe((res: any) => {
-      this.STRINGS = res;
+    this.translateService
+      .get('PRE_AUTH.NEW_PASSWORD')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
+    // params
+    this.route.paramMap.pipe(takeUntil(this.onDestroy)).subscribe((p: any) => {
+      this.link = p.get('link');
     });
   }
 
-  ngOnInit(): void {}
+  ngOnDestroy(): void {
+    this.onDestroy.next();
+  }
+
+  // Getters
+  get token() {
+    return this.tokenForm.get('token');
+  }
 
   validateToken(): void {
-    if (this.buttonsDisabled) {
+    if (this.tokenLoading) {
       return;
     }
-
-    const val = this.formToken.value;
-
-    if (!val.token) {
-      this.errorMessage = this.STRINGS.TOKEN_NONE;
-      this.formToken.controls.token.markAsDirty();
+    if (!this.tokenForm.valid) {
+      validateAllFormFields(this.tokenForm);
       return;
     }
-
-    this.errorMessage = '';
-    this.successMessage = '';
 
     // Send request
-
     this.tokenLoading = true;
-    this.buttonsDisabled = true;
 
     const request: ValidateTokenRequest = {
-      token: val.token
+      link: this.link,
+      token: this.token.value
     };
 
-    this.authenticationService.validateToken(request).subscribe(
-      (response: ValidateTokenResponse) => {
-        // if (response) {
-        this.token = val.token;
-        // } else {
-        //   this.errorMessage = this.STRINGS.INVALID_TOKEN;
-        // }
-        this.buttonsDisabled = false;
-        this.tokenLoading = false;
-      },
-      (errorResponse: any) => {
-        if (errorResponse.error.name === 'RateLimitError') {
-          this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
-            '%TIMEOUT%',
-            errorResponse.error.body.timeout
-          );
-        } else {
-          this.errorMessage = this.STRINGS.INVALID_TOKEN;
+    this.authenticationService
+      .validateToken(request)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.tokenLoading = false;
+        })
+      )
+      .subscribe(
+        (response: ValidateTokenResponse) => {
+          this.validToken = this.token.value;
+        },
+        (errorResponse: { error: SpotError }) => {
+          this.tokenError = '';
         }
-        this.buttonsDisabled = false;
-        this.tokenLoading = false;
-      }
-    );
+      );
+  }
+
+  // Getters
+  get password() {
+    return this.passwordForm.get('password');
+  }
+  get confirm() {
+    return this.passwordForm.get('confirm');
   }
 
   resetPassword(): void {
-    if (this.buttonsDisabled) {
+    if (this.passwordLoading) {
+      return;
+    }
+    if (!this.passwordForm.valid) {
+      validateAllFormFields(this.passwordForm);
       return;
     }
 
-    const val = this.formPassword.value;
-
-    if (!val.password) {
-      this.errorMessage = this.STRINGS.PASSWORD_NONE;
-      this.formPassword.controls.password.markAsDirty();
+    if (this.password.value !== this.confirm.value) {
+      this.confirm.setErrors({ 'forbiddenName': true });
       return;
     }
 
-    if (!val.confirm) {
-      this.errorMessage = this.STRINGS.CONFIRM_NONE;
-      this.formPassword.controls.confirm.markAsDirty();
-      return;
-    }
-
-    if (val.password !== val.confirm) {
-      this.errorMessage = this.STRINGS.INVALID_MATCH;
-      this.formPassword.controls.password.markAsDirty();
-      this.formPassword.controls.password.setErrors([{ incorrect: true }]);
-      this.formPassword.controls.confirm.markAsDirty();
-      this.formPassword.controls.confirm.setErrors([{ incorrect: true }]);
-      return;
-    }
-
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.passwordError = '';
+    this.passwordSuccess = false;
 
     // Send request
-
-    this.passwordLoading = true;
-    this.buttonsDisabled = true;
-
     const request: NewPasswordRequest = {
-      token: this.token,
-      password: val.password
+      link: this.link,
+      token: this.validToken,
+      password: this.password.value
     };
 
-    this.authenticationService.newPassword(request).subscribe(
-      (response: NewPasswordResponse) => {
-        this.passwordLoading = false;
-        this.buttonsDisabled = false;
-        this.successMessage = this.STRINGS.NEW_PASSWORD_SUCCESS;
-      },
-      (errorResponse: { error: SpotError }) => {
-        if (errorResponse.error.name === 'RateLimitError') {
-          this.errorMessage = this.STRINGS.RATE_LIMIT.replace(
-            '%TIMEOUT%',
-            errorResponse.error.body.timeout
-          );
-        } else {
-          this.errorMessage = errorResponse.error.message;
+    this.authenticationService
+      .newPassword(request)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.passwordLoading = false;
+        })
+      )
+      .subscribe(
+        (response: NewPasswordResponse) => {
+          this.passwordSuccess = true;
+        },
+        (errorResponse: { error: SpotError }) => {
+          this.passwordError = '';
         }
-        this.errorMessage = this.STRINGS.INVALID_TOKEN;
-        this.passwordLoading = false;
-        this.buttonsDisabled = false;
-      }
-    );
+      );
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+  toggleShowConfirmPassword(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

@@ -16,9 +16,10 @@ const createPasswordReset = async (
   return createdPasswordReset;
 };
 
-const findByToken = async (token: string): Promise<P.PasswordReset | null> => {
-  const foundToken = await prisma.passwordReset.findUnique({
+const findByTokenAndLink = async (token: string, link: string): Promise<P.PasswordReset | null> => {
+  const foundToken = await prisma.passwordReset.findFirst({
     where: {
+      link: link,
       token: token
     }
   });
@@ -27,5 +28,5 @@ const findByToken = async (token: string): Promise<P.PasswordReset | null> => {
 
 export default {
   createPasswordReset,
-  findByToken
+  findByTokenAndLink
 };
