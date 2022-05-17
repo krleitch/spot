@@ -11,9 +11,6 @@ const __dirname = path.dirname(__filename)
 // config
 import awsconfig from '@config/awskey.js';
 
-// TODO: move out of sandbox
-// https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html?icmpid=docs_ses_console
-
 aws.config.update({
   secretAccessKey: awsconfig.SecretAccessKey,
   accessKeyId: awsconfig.AccessKeyID,

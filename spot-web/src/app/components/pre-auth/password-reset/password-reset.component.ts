@@ -29,8 +29,7 @@ export class PasswordResetComponent implements OnInit {
   resetForm: FormGroup;
 
   // state
-  errorMessage = '';
-  success = false;
+  showMessage = false;
   resetLoading = false;
 
   constructor(private authenticationService: AuthenticationService) {
@@ -63,7 +62,6 @@ export class PasswordResetComponent implements OnInit {
       email: this.email.value
     };
 
-    this.errorMessage = '';
     this.resetLoading = true;
     this.authenticationService
       .passwordReset(request)
@@ -71,14 +69,15 @@ export class PasswordResetComponent implements OnInit {
         take(1),
         finalize(() => {
           this.resetLoading = false;
+          this.showMessage = true;
         })
       )
       .subscribe(
         (_response: PasswordResetResponse) => {
-          this.success = true;
+          // none
         },
-        (errorResponse: { error: SpotError }) => {
-          this.errorMessage = errorResponse.error.message;
+        (_errorResponse: { error: SpotError }) => {
+          // none
         }
       );
   }

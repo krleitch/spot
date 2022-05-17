@@ -600,7 +600,7 @@
 
       "EMAIL_INVALID": "Email is invalid",
 
-      "REQUEST_SUCCESS": "A reset token has been sent to your email",
+      "MESSAGE": "A reset token has been sent to your email. It may take up to 5 minutes to arrive.",
 
       "COPYRIGHT": "2022 Spot"
     },
@@ -613,7 +613,7 @@
       "VALIDATE": "Validate",
 
       "TOKEN_REQUIRED": "Token is required",
-      "INVALID_TOKEN": "The token has expired or is invalid",
+      "INVALID_TOKEN": "Your token has expired or is invalid",
 
       "PASSWORD_PLACEHOLDER": "Enter password",
       "CONFIRM_PLACEHOLDER": "Re-enter password",
@@ -626,6 +626,8 @@
       "PASSWORD_LENGTH": "Must be at least 8 characters",
       "PASSWORD_INVALID": "Must contain at least one uppercase, number and symbol",
       "CONFIRM_INVALID": "Passwords must match",
+
+      "RATE_LIMIT": "Too many requests. Try again in {{timeout}} minutes.",
 
       "COPYRIGHT": "2022 Spot"
     },

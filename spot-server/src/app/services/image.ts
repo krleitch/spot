@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 // aws
 import aws from '@services/aws.js';
@@ -78,7 +78,7 @@ const upload = multer({
     ) {
       const json: CreateRequestWithFile = JSON.parse(req.body.json);
       let prefix = '';
-      const filename = uuid.v4();
+      const filename = uuidv4();
       // filename contains the id for the new spot/comment/reply
       if (json.spotId && json.commentId && filename) {
         // reply
@@ -115,7 +115,7 @@ const uploadProfilePicture = multer({
       file: Express.MulterS3.File,
       cb: (err: any, key?: string | undefined) => void
     ) {
-      const filename = uuid.v4();
+      const filename = uuidv4();
       cb(null, `profilePictures/${filename}`);
     }
   })
@@ -140,7 +140,7 @@ const uploadChatRoomPhoto = multer({
       file: Express.MulterS3.File,
       cb: (err: any, key?: string | undefined) => void
     ) {
-      const filename = uuid.v4();
+      const filename = uuidv4();
       cb(null, `chatRoomPhotos/${filename}`);
     }
   })

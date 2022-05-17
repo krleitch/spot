@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
 import shortid from 'shortid';
+import { validate as validateUuid }  from 'uuid';
 
 // exceptions
 import * as authenticationError from '@exceptions/authentication.js';
@@ -260,45 +261,39 @@ router.post(
   '/password-reset',
   rateLimiter.passwordResetLimiter,
   ErrorHandler.catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, _next: NextFunction) => {
       const body: PasswordResetRequest = req.body;
 
-      const user = await prismaUser.findUserByEmail(body.email);
-      if (!user || !user.email) {
-        return next(new authenticationError.PasswordReset());
-      }
-
-      // generate the token
-      const token = shortid.generate();
-
-      const passwordReset = await prismaPasswordReset.createPasswordReset(
-        user.userId,
-        token
-      );
-
-      // Send email with nodemailer and aws ses transport
-      try {
-        await mailService.email.send({
-          template: 'password',
-          message: {
-            from: 'spottables.app@gmail.com',
-            to: user.email
-          },
-          locals: {
-            link: `https://spottables.com/new-password/${passwordReset.link}`,
-            token: passwordReset.token,
-            username: user.username
-          }
-        });
-      } catch (e) {
-        return next(new authenticationError.PasswordReset());
-      }
-
-      if (!passwordReset) {
-        return next(new authenticationError.PasswordReset());
-      }
+      // return immediately so we give no information on what emails exist
       const response: PasswordResetResponse = {};
       res.status(200).send(response);
+
+      const user = await prismaUser.findUserByEmail(body.email);
+      if (user && user.email) {
+        // generate the token
+        const token = shortid.generate();
+
+        const passwordReset = await prismaPasswordReset.createPasswordReset(
+          user.userId,
+          token
+        );
+
+        // Send email with nodemailer and aws ses transport
+        try {
+          await mailService.email.send({
+            template: 'password',
+            message: {
+              from: 'spottables.app@gmail.com',
+              to: user.email
+            },
+            locals: {
+              link: `https://spottables.com/new-password/${passwordReset.link}`,
+              token: passwordReset.token,
+              username: user.username
+            }
+          });
+        } catch (e) {}
+      }
     }
   )
 );
@@ -310,6 +305,10 @@ router.post(
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const body: ValidateTokenRequest = req.body;
+
+      if (!validateUuid(body.link)) {
+        return next(new authenticationError.PasswordResetValidate());
+      }
 
       const passwordReset = await prismaPasswordReset.findByTokenAndLink(
         body.token,
@@ -340,6 +339,10 @@ router.post(
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       const body: NewPasswordRequest = req.body;
+
+      if (!validateUuid(body.link)) {
+        return next(new authenticationError.NewPassword());
+      }
 
       const passwordReset = await prismaPasswordReset.findByTokenAndLink(
         body.token,

@@ -120,11 +120,23 @@ export class NewPasswordComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        (response: ValidateTokenResponse) => {
+        (_response: ValidateTokenResponse) => {
           this.validToken = this.token.value;
         },
         (errorResponse: { error: SpotError }) => {
-          this.tokenError = '';
+          switch (errorResponse.error.name) {
+            case 'PasswordResetValidate':
+              this.tokenError = this.STRINGS.INVALID_TOKEN;
+              break;
+            case 'RateLimitError':
+              this.tokenError = this.STRINGS.RATE_LIMIT.replace(
+                '{{timeout}}',
+                errorResponse.error.body.timeout
+              );
+              break;
+            default:
+              break;
+          }
         }
       );
   }
@@ -147,7 +159,7 @@ export class NewPasswordComponent implements OnInit, OnDestroy {
     }
 
     if (this.password.value !== this.confirm.value) {
-      this.confirm.setErrors({ 'forbiddenName': true });
+      this.confirm.setErrors({ forbiddenName: true });
       return;
     }
 
@@ -170,11 +182,23 @@ export class NewPasswordComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        (response: NewPasswordResponse) => {
+        (_response: NewPasswordResponse) => {
           this.passwordSuccess = true;
         },
         (errorResponse: { error: SpotError }) => {
-          this.passwordError = '';
+          switch (errorResponse.error.name) {
+            case 'NewPassword':
+              this.passwordError = this.STRINGS.INVALID_TOKEN;
+              break;
+            case 'RateLimitError':
+              this.passwordError = this.STRINGS.RATE_LIMIT.replace(
+                '{{timeout}}',
+                errorResponse.error.body.timeout
+              );
+              break;
+            default:
+              break;
+          }
         }
       );
   }

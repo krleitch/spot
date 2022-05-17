@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 // db
 import prismaSpot from '@db/prisma/spot.js';
@@ -399,7 +399,7 @@ router.post(
         // @ts-ignore
         // Location is defined on the multers3 file type
         const imageSrc: string = req.file ? req.file.location : null;
-        const commentId = req.file?.filename.split('.')[0] || uuid.v4();
+        const commentId = req.file?.filename.split('.')[0] || uuidv4();
 
         // Check you are in range of the spot
         const inRange = await commentService.userInRangeForComment(
@@ -560,7 +560,7 @@ router.post(
         // @ts-ignore
         // Location is defined on the multers3 file type
         const imageSrc: string = req.file ? req.file.location : null;
-        const replyId = req.file?.filename.split('.')[0] || uuid.v4();
+        const replyId = req.file?.filename.split('.')[0] || uuidv4();
 
         // Check you are either in range, or were tagged in the comment chain
         const inRange = await commentService.userInRangeForComment(

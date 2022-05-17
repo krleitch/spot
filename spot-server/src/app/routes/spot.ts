@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 // db
 import prismaSpot from '@db/prisma/spot.js';
@@ -164,7 +164,7 @@ router.post(
         // @ts-ignore
         const imageSrc: string = req.file ? req.file.location : null;
         // @ts-ignore
-        const spotId = req.file?.key.split('/').at(-1) || uuid.v4();
+        const spotId = req.file?.key.split('/').at(-1) || uuidv4();
 
         // remove leading and trailing whitespaces
         body.content = body.content.trim();
