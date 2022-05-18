@@ -94,3 +94,4 @@ export interface VerifyConfirmResponse {
 export interface SetUserStore {
   user: Partial<User>; // Give properties you want to update
 }
+export interface DeleteUserStore {}

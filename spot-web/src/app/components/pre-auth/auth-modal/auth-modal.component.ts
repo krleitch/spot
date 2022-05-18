@@ -15,6 +15,7 @@ import {
 // Services
 import { ModalService } from '@services/modal.service';
 import { AuthenticationService } from '@services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
@@ -52,6 +53,8 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   modalId: string;
   data; // unused
 
+  STRINGS: Record<string, string>;
+
   selectedTab: 'login' | 'register' = 'login';
 
   // Login state
@@ -72,7 +75,8 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -104,6 +108,11 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
       ]),
       terms: new FormControl(false, [Validators.required])
     });
+    this.translateService
+      .get('PRE_AUTH.AUTH_MODAL')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnDestroy(): void {
@@ -187,10 +196,15 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
           this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
           this.authenticationService.loginUserSuccess(response);
         },
-        (err: { error: SpotError }) => {
-          // Displays the servers error message
-          // Errors are kept to validation and generic
-          this.loginErrorMessage = err.error.message;
+        (errorResponse: { error: SpotError }) => {
+          switch (errorResponse.error.name) {
+            case 'LoginError':
+              this.loginErrorMessage = this.STRINGS.LOGIN_ERROR;
+              break;
+            default:
+              this.loginErrorMessage = this.STRINGS.LOGIN_ERROR;
+              break;
+          }
         }
       );
   }
@@ -250,10 +264,27 @@ export class AuthModalComponent implements OnInit, OnDestroy, AfterViewInit {
           this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
           this.authenticationService.registerUserSuccess(response);
         },
-        (err: { error: SpotError }) => {
-          // Displays the servers error message
-          // Errors are kept to validation and generic
-          this.registerErrorMessage = err.error.message;
+        (errorResponse: { error: SpotError }) => {
+          switch (errorResponse.error.name) {
+            case 'UsernameTakenError':
+              this.registerErrorMessage = this.STRINGS.USERNAME_TAKEN;
+              break;
+            case 'EmailTakenError':
+              this.registerErrorMessage = this.STRINGS.EMAIL_TAKEN;
+              break;
+            case 'PhoneTakenError':
+              this.registerErrorMessage = this.STRINGS.PHONE_TAKEN;
+              break;
+            case 'RateLimitError':
+              this.registerErrorMessage = this.STRINGS.RATE_LIMIT.replace(
+                '{{timeout}}',
+                errorResponse.error.body.timeout
+              );
+              break;
+            default:
+              this.registerErrorMessage = this.STRINGS.GENERIC_ERROR;
+              break;
+          }
         }
       );
   }

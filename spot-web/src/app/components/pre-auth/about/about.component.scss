@@ -17,7 +17,8 @@ spot-nav {
 
   .container {
     max-width: 500px;
-    min-width: 50%;
+    min-width: min(90%, 600px);
+    box-sizing: border-box;
     margin-bottom: 50px;
     z-index: 9;
   }

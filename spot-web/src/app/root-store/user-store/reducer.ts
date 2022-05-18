@@ -16,31 +16,28 @@ export function featureReducer(
         ...initialState
       };
     }
-    // Auth
-    case ActionTypes.LOGIN_SUCCESS: {
-      return {
-        ...state,
-        user: action.response.user,
-        authenticationError: null
-      };
-    }
-    case ActionTypes.LOGIN_FAILURE: {
+    // User
+    case ActionTypes.DELETE_USER: {
       return {
         ...state,
         user: null,
-        authenticationError: action.error
+        userMetadata: null
+      };
+    }
+    case ActionTypes.SET_USER: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.request.user
+        }
       };
     }
     case ActionTypes.LOGOUT_USER: {
       return {
         ...state,
-        user: null
-      };
-    }
-    case ActionTypes.DELETE_SUCCESS: {
-      return {
-        ...state,
-        user: null
+        user: null,
+        userMetadata: null 
       };
     }
     case ActionTypes.GET_USER_REQUEST: {
@@ -54,15 +51,6 @@ export function featureReducer(
         ...state,
         user: action.response.user,
         userLoading: false
-      };
-    }
-    case ActionTypes.SET_USER: {
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          ...action.request.user
-        }
       };
     }
     // Location

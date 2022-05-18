@@ -2,15 +2,10 @@ import { Action } from '@ngrx/store';
 
 // Models
 import {
-  LoginRequest,
-  LoginResponse,
-} from '@models/authentication';
-import {
   GetUserRequest,
   GetUserResponse,
   SetUserStore,
-  DeleteUserRequest,
-  DeleteUserResponse
+  DeleteUserStore
 } from '@models/user';
 import {
   GetUserMetadataRequest,
@@ -27,19 +22,13 @@ import { SpotError } from '@exceptions/error';
 
 export enum ActionTypes {
   RESET_STORE = '[User] Reset Store',
-  GENERIC_FAILURE = '[User] Generic Failure',
   // USER
-  LOGIN_REQUEST = '[User] Login Request',
-  LOGIN_SUCCESS = '[User] Login Success',
-  LOGIN_FAILURE = '[User] Login Failure',
-  DELETE_REQUEST = '[User] Delete Request',
-  DELETE_SUCCESS = '[User] Delete Success',
-  DELETE_FAILURE = '[User] Delete Failure',
   GET_USER_REQUEST = '[User] Get User Request',
   GET_USER_SUCCESS = '[User] Get User Success',
   GET_USER_FAILURE = '[User] Get User Failure',
   SET_USER = '[User] Set User',
   LOGOUT_USER = '[User] Logout User',
+  DELETE_USER = '[User] Delete User',
   // METADATA
   GET_METADATA_REQUEST = '[User] Get Metadata Request',
   GET_METADATA_SUCCESS = '[User] Get Metadata Success',
@@ -58,36 +47,7 @@ export class ResetStoreAction implements Action {
   constructor() {}
 }
 
-export class GenericFailureAction implements Action {
-  readonly type = ActionTypes.GENERIC_FAILURE;
-  constructor(public error: SpotError) {}
-}
-
 // User
-export class LoginRequestAction implements Action {
-  readonly type = ActionTypes.LOGIN_REQUEST;
-  constructor(public request: LoginRequest) {}
-}
-export class LoginSuccessAction implements Action {
-  readonly type = ActionTypes.LOGIN_SUCCESS;
-  constructor(public response: LoginResponse) {}
-}
-export class LoginFailureAction implements Action {
-  readonly type = ActionTypes.LOGIN_FAILURE;
-  constructor(public error: SpotError) {}
-}
-export class DeleteRequestAction implements Action {
-  readonly type = ActionTypes.DELETE_REQUEST;
-  constructor(public request: DeleteUserRequest) {}
-}
-export class DeleteSuccessAction implements Action {
-  readonly type = ActionTypes.DELETE_SUCCESS;
-  constructor(public response: DeleteUserResponse) {}
-}
-export class DeleteFailureAction implements Action {
-  readonly type = ActionTypes.DELETE_FAILURE;
-  constructor(public error: SpotError) {}
-}
 export class GetUserRequestAction implements Action {
   readonly type = ActionTypes.GET_USER_REQUEST;
   constructor(public request: GetUserRequest) {}
@@ -106,6 +66,10 @@ export class LogoutUserAction implements Action {
 export class SetUserAction implements Action {
   readonly type = ActionTypes.SET_USER;
   constructor(public request: SetUserStore) {}
+}
+export class DeleteUserAction implements Action {
+  readonly type = ActionTypes.DELETE_USER;
+  constructor(public request: DeleteUserStore) {}
 }
 
 // Location
@@ -150,17 +114,12 @@ export class UpdateUserMetadataRequestFailure implements Action {
 
 export type Actions =
   // User
-  | LoginRequestAction
-  | LoginSuccessAction
-  | LoginFailureAction
-  | DeleteRequestAction
-  | DeleteSuccessAction
-  | DeleteFailureAction
   | GetUserRequestAction
   | GetUserSuccessAction
   | GetUserFailureAction
   | LogoutUserAction
   | SetUserAction
+  | DeleteUserAction
   // Location
   | SetLocationAction
   | SetLoadingLocationAction
@@ -173,5 +132,4 @@ export type Actions =
   | GetUserMetadataRequestSuccess
   | GetUserMetadataFailureAction
   // Generic
-  | GenericFailureAction
   | ResetStoreAction;

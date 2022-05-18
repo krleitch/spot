@@ -24,6 +24,7 @@ import {
   SetLocation
 } from '@models/location';
 import { GoogleLoginRequest } from '@models/authentication';
+import { GoogleConnectRequest } from '@models/user';
 
 @Component({
   selector: 'spot-root',
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
   title = 'spot';
 
   isAuthenticated$: Observable<boolean>;
+  isAuthenticated: boolean;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -61,6 +63,7 @@ export class AppComponent implements OnInit {
       } else {
         this.chatService.disconnectFromWebSocket();
       }
+      this.isAuthenticated = auth;
     });
 
     // Init third party libaries
@@ -139,13 +142,25 @@ export class AppComponent implements OnInit {
     // Decode JWT if you need any data, we will verify the token on the server again
     // const decodedToken = JSON.parse(atob(response?.credential.split('.')[1]));
     if (response.credential) {
-      const request: GoogleLoginRequest = {
-        accessToken: response.credential
-      };
+      if (this.isAuthenticated) {
+        // logged in so just connect
+        const request: GoogleConnectRequest = {
+          accessToken: response.credential
+        };
 
-      this.store$.dispatch(
-        new UserGoogleActions.GoogleLoginRequestAction(request)
-      );
+        this.store$.dispatch(
+          new UserGoogleActions.GoogleConnectRequestAction(request)
+        );
+      } else {
+        // log in
+        const request: GoogleLoginRequest = {
+          accessToken: response.credential
+        };
+
+        this.store$.dispatch(
+          new UserGoogleActions.GoogleLoginRequestAction(request)
+        );
+      }
     }
   }
 

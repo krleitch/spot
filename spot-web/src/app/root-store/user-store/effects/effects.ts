@@ -29,87 +29,6 @@ export class UserStoreEffects {
     private actions$: Actions
   ) { }
 
-  GenericFailureEffect$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType<userActions.GenericFailureAction>(
-          userActions.ActionTypes.GENERIC_FAILURE
-        ),
-        tap((_action) => {
-          // none
-        })
-      ),
-    { dispatch: false }
-  );
-
-  // Login
-  loginUserRequestEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<userActions.LoginRequestAction>(
-        userActions.ActionTypes.LOGIN_REQUEST
-      ),
-      switchMap((action) =>
-        this.authenticationService.loginUser(action.request).pipe(
-          map((response) => new userActions.LoginSuccessAction(response)),
-          catchError((errorResponse: { error: SpotError }) =>
-            observableOf(
-              new userActions.LoginFailureAction(errorResponse.error)
-            )
-          )
-        )
-      )
-    )
-  );
-
-  loginUserSuccessEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<userActions.LoginSuccessAction>(
-        userActions.ActionTypes.LOGIN_SUCCESS
-      ),
-      tap((action) => {
-        this.authenticationService.loginUserSuccess(action.response);
-      }),
-      switchMap((_action) => [
-        new friendActions.GetFriendsRequestAction({
-          limit: null
-        }),
-        new userActions.GetUserMetadataRequestAction({})
-      ])
-    )
-  );
-
-  deleteUserRequestEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<userActions.DeleteRequestAction>(
-        userActions.ActionTypes.DELETE_REQUEST
-      ),
-      switchMap((action) =>
-        this.userService.deleteUser(action).pipe(
-          map((response) => {
-            return new userActions.DeleteSuccessAction(response);
-          }),
-          catchError((errorResponse: { error: SpotError }) =>
-            observableOf(
-              new userActions.DeleteFailureAction(errorResponse.error)
-            )
-          )
-        )
-      )
-    )
-  );
-
-  deleteUserSuccessEffect$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType<userActions.DeleteSuccessAction>(
-          userActions.ActionTypes.DELETE_SUCCESS
-        ),
-        tap((_response) => {
-          this.userService.onDeleteUserSuccess();
-        })
-      ),
-    { dispatch: false }
-  );
 
   getUserRequestEffect$ = createEffect(() =>
     this.actions$.pipe(
@@ -203,7 +122,7 @@ export class UserStoreEffects {
           }),
           catchError((errorResponse: { error: SpotError }) =>
             observableOf(
-              new userActions.GenericFailureAction(errorResponse.error)
+              new userActions.UpdateUserMetadataRequestFailure(errorResponse.error)
             )
           )
         )

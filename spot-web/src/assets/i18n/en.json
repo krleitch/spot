@@ -108,6 +108,7 @@
 
       "USERNAME_DESCRIPTION": "You can only change your username once every 24 hours. Are you sure you would like to continue?",
       "USERNAME_SUCCESS": "Username was succesfully changed",
+      "USERNAME_INVALID": "Invalid username",
 
       "EMAIL_DESCRIPTION": "If you change your email you will need to verify your email again. Are you sure you would like to continue?",
       "EMAIL_INVALID": "Invalid email"
@@ -467,6 +468,24 @@
       "DELETE": "Delete",
       "ERROR_UPLOADING": "There was an error uploading your image, please try again.",
       "ERROR_REMOVING": "There was an error removing your image, please try again."
+    },
+
+    "USERNAME": {
+      "HEADING": "Create a username for your account",
+      "DESCRIPTION": "*Your username will not be visible to anyone without your permission. All posts are anonymous",
+
+      "TERMS_AND_CONDITIONS": "I agree to the",
+      "TERMS_AND_CONDITIONS_LINK": "terms and conditions & privacy policy",
+
+      "USERNAME_PLACEHOLDER": "Enter username",
+      "CONTINUE": "Continue to Spot",
+
+      "USERNAME_LENGTH": "Must be between 3 and 30 characters",
+      "USERNAME_INVALID": "Must be alpha-numeric starting with a letter",
+      "TERMS_ERROR": "You must agree to the terms and conditions & privacy policy",
+
+      "USERNAME_TAKEN": "This username has already been taken",
+      "GENERIC_ERROR": "Something went wrong, please try again."
     }
   },
 
@@ -591,20 +610,6 @@
       "COPYRIGHT": "2022 Spot"
     },
 
-    "USERNAME": {
-      "HEADING": "Create a username for your account",
-      "DESCRIPTION": "*Your username will not be visible to anyone without your permission. All posts are anonymous",
-
-      "TERMS_AND_CONDITIONS": "I agree to the",
-      "TERMS_AND_CONDITIONS_LINK": "terms and conditions & privacy policy",
-
-      "USERNAME_PLACEHOLDER": "Enter username",
-      "CONTINUE": "Continue to Spot",
-
-      "USERNAME_ERROR": "Username is required",
-      "TERMS_ERROR": "You must agree to the terms and conditions & privacy policy"
-    },
-
     "PASSWORD_RESET": {
       "TITLE": "Reset Your Passsword",
       "DESCRIPTION": "Enter your email to receive a verification token for your account",
@@ -679,7 +684,16 @@
       "TERMS_REQUIRED": "You must agree to the terms and conditions & privacy policy",
 
       "EMAIL_OR_USERNAME_REQUIRED": "Email or username is required",
-      "PASSWORD_REQUIRED": "Password is required"
+      "PASSWORD_REQUIRED": "Password is required",
+
+      "USERNAME_TAKEN": "This username has already been taken",
+      "EMAIL_TAKEN": "This email has already been taken",
+      "PHONE_TAKEN": "This phone number has already been taken",
+      "RATE_LIMIT": "Too many requests. Try again in {{timeout}} minutes.",
+      "GENERIC_ERROR": "Something went wrong, please try again.",
+
+      "LOGIN_ERROR": "Email / Username or password is invalid.",
+      "RATE_LIMIT": "Too many requests. Try again in {{timeout}} minutes."
     }
   }
 }

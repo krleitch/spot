@@ -116,6 +116,11 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
           );
         }
       });
+
+    const localMenuStatus = localStorage.getItem('menuStatus');
+    if (localMenuStatus) {
+      this.menuStatus = MenuStatus[localMenuStatus];
+    }
   }
 
   ngOnDestroy(): void {
@@ -125,10 +130,13 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   toggleMenu(): void {
     if (this.menuStatus === MenuStatus.HIDDEN) {
       this.menuStatus = MenuStatus.EXPANDED_FULL;
+      localStorage.setItem('menuStatus', MenuStatus.EXPANDED_FULL);
     } else if (this.menuStatus === MenuStatus.EXPANDED_SEMI) {
       this.menuStatus = MenuStatus.HIDDEN;
+      localStorage.setItem('menuStatus', MenuStatus.HIDDEN);
     } else if (this.menuStatus === MenuStatus.EXPANDED_FULL) {
       this.menuStatus = MenuStatus.EXPANDED_SEMI;
+      localStorage.setItem('menuStatus', MenuStatus.EXPANDED_SEMI);
     }
   }
 

@@ -38,8 +38,6 @@ interface FacebookResponse {
 };
 type SocialServiceTypes = 'FB' | 'google' | 'twttr';
 
-// TODO: FIX THE TRANSLATIONS HERE
-
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   baseUrl = environment.baseUrl;
@@ -115,70 +113,6 @@ export class AuthenticationService {
     );
   }
 
-  // client side validation
-  validateEmail(email: string): boolean {
-    const regex = /^\S+@\S+\.\S+$/;
-    return email.match(regex) != null;
-  }
-
-  validatePhone(phone: string): boolean {
-    const regex =
-      /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
-    return phone.match(regex) != null;
-  }
-
-  validateUsername(username: string): string {
-    // Check length
-    if (
-      username.length < AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH ||
-      username.length > AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH
-    ) {
-      return 'Username must be between %MIN% and %MAX% characters'
-        .replace(
-          '%MIN%',
-          AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH.toString()
-        )
-        .replace(
-          '%MAX%',
-          AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH.toString()
-        );
-    }
-
-    // start with alphanumeric_ word with . - ' singular no repetition and not at end
-    const PATTERN = /^\w(?:\w*(?:['.-]\w+)?)*$/;
-
-    // Check characters
-    if (username.match(PATTERN) == null) {
-      return "Username must be alpha-numeric with non-repeated .-'";
-    }
-
-    return null;
-  }
-
-  validatePassword(password: string): string {
-    // Check length
-    if (
-      password.length < AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH ||
-      password.length > AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH
-    ) {
-      return 'Password must be between %MIN% and %MAX% characters'
-        .replace(
-          '%MIN%',
-          AUTHENTICATION_CONSTANTS.PASSWORD_MIN_LENGTH.toString()
-        )
-        .replace(
-          '%MAX%',
-          AUTHENTICATION_CONSTANTS.PASSWORD_MAX_LENGTH.toString()
-        );
-    }
-
-    return null;
-  }
-
-  md5Hash(data: string): string {
-    return Md5.hashStr(data).toString();
-  }
-
   registerUserSuccess(response: LoginResponse): void {
     this.addIdToken(response.jwt);
     // TODO, this just chgecks global modal, should check auth modal
@@ -194,7 +128,18 @@ export class AuthenticationService {
     this.modalService.open('global', 'welcome', undefined, modalOptions);
   }
 
-  // login / logout
+  loginUserSuccess(response: LoginResponse): void {
+    this.addIdToken(response.jwt);
+    if (this.modalService.isOpen('global')) {
+      this.modalService.close('global');
+    } else {
+      this.zone.run(() => {
+        this.router.navigateByUrl('/home');
+      });
+    }
+  }
+
+  // Facebook
   getFacebookAccessToken(): string {
     window['FB'].getLoginStatus(
       (statusResponse: FacebookResponse) => {
@@ -213,18 +158,6 @@ export class AuthenticationService {
       }
     );
     return null;
-  }
-
-
-  loginUserSuccess(response: LoginResponse): void {
-    this.addIdToken(response.jwt);
-    if (this.modalService.isOpen('global')) {
-      this.modalService.close('global');
-    } else {
-      this.zone.run(() => {
-        this.router.navigateByUrl('/home');
-      });
-    }
   }
 
   loginFacebookUserSuccess(response: FacebookLoginResponse): void {

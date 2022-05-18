@@ -100,7 +100,7 @@ export class FacebookStoreEffects {
           facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_SUCCESS
         ),
         tap((_action) => {
-          // empty
+          // none
         })
       ),
     { dispatch: false }
@@ -113,7 +113,7 @@ export class FacebookStoreEffects {
           facebookActions.FacebookActionTypes.FACEBOOK_CONNECT_FAILURE
         ),
         tap((action) => {
-          this.alertService.error(action.error.message);
+          // none
         })
       ),
     { dispatch: false }

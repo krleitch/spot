@@ -30,8 +30,6 @@ const selectFacebookConnectedFromStore = (state: State): boolean =>
   state.user && state.user.facebookId == null ? false : true;
 const selectGoogleConnectedFromStore = (state: State): boolean =>
   state.user && state.user.googleId == null ? false : true;
-const selectAuthenticationErrorFromStore = (state: State): SpotError =>
-  state.authenticationError;
 const selectIsAuthenticatedFromStore = (state: State): boolean =>
   state.user ? true : false;
 const selectIsVerifiedFromStore = (state: State): boolean =>
@@ -56,8 +54,6 @@ export const selectFacebookConnected: MemoizedSelector<object, boolean> =
   createSelector(selectUsersState, selectFacebookConnectedFromStore);
 export const selectGoogleConnected: MemoizedSelector<object, boolean> =
   createSelector(selectUsersState, selectGoogleConnectedFromStore);
-export const selectAuthenticationError: MemoizedSelector<object, SpotError> =
-  createSelector(selectUsersState, selectAuthenticationErrorFromStore);
 export const selectIsAuthenticated: MemoizedSelector<object, boolean> =
   createSelector(selectUsersState, selectIsAuthenticatedFromStore);
 export const selectIsVerified: MemoizedSelector<object, boolean> =

@@ -11,7 +11,6 @@ import { RootStoreState } from '@store';
 import { ModalService } from '@services/modal.service';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from '@services/user.service';
-import { AuthenticationService } from '@services/authentication.service';
 
 // models
 import { ModalAccountEditData } from '@models/modal';
@@ -27,7 +26,12 @@ import { SetUserStore } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
 // validators
-import { validateAllFormFields } from '@helpers/validators/validate-helpers';
+import {
+  validateAllFormFields,
+  VALID_EMAIL_REGEX,
+  VALID_PHONE_REGEX,
+  VALID_USERNAME_REGEX
+} from '@helpers/validators/validate-helpers';
 
 @Component({
   selector: 'spot-account-edit',
@@ -38,7 +42,7 @@ export class AccountEditComponent implements OnInit {
   modalId: string;
   data: ModalAccountEditData;
 
-  STRINGS;
+  STRINGS: Record<string, string>;
 
   // Form
   accountEditForm: FormGroup;
@@ -53,12 +57,8 @@ export class AccountEditComponent implements OnInit {
     private modalService: ModalService,
     private store$: Store<RootStoreState.State>,
     private translateService: TranslateService,
-    private userService: UserService,
-    private authenticationService: AuthenticationService
+    private userService: UserService
   ) {
-    translateService.get('MAIN.ACCOUNT_EDIT').subscribe((res) => {
-      this.STRINGS = res;
-    });
   }
 
   ngOnInit(): void {
@@ -80,6 +80,9 @@ export class AccountEditComponent implements OnInit {
         break;
     }
     this.propertyPlaceholder = this.data.data;
+    this.translateService.get('MAIN.ACCOUNT_EDIT').subscribe((res: Record<string, string>) => {
+      this.STRINGS = res;
+    });
   }
 
   get property() {
@@ -108,9 +111,9 @@ export class AccountEditComponent implements OnInit {
   submitUsername(username: string): void {
     this.errorMessage = '';
 
-    const validUsername = this.authenticationService.validateUsername(username);
-    if (validUsername !== null) {
-      this.errorMessage = validUsername;
+    const validUsername = username.match(VALID_USERNAME_REGEX);
+    if (!validUsername) {
+      this.errorMessage = this.STRINGS.USERNAME_INVALID;
       this.submitLoading = false;
       return;
     }
@@ -140,7 +143,7 @@ export class AccountEditComponent implements OnInit {
   }
 
   submitEmail(email: string): void {
-    const validEmail = this.authenticationService.validateEmail(email);
+    const validEmail = email.match(VALID_EMAIL_REGEX);
     if (!validEmail) {
       this.errorMessage = this.STRINGS.EMAIL_INVALID;
       this.submitLoading = false;
@@ -171,7 +174,7 @@ export class AccountEditComponent implements OnInit {
   }
 
   submitPhone(phone: string): void {
-    const validEmail = this.authenticationService.validatePhone(phone);
+    const validEmail = phone.match(VALID_PHONE_REGEX);
     if (!validEmail) {
       this.errorMessage = this.STRINGS.PHONE_INVALID;
       this.submitLoading = false;

@@ -10,9 +10,6 @@ export interface State {
   userMetadata: UserMetadata;
   userMetadataLoading: boolean;
 
-  // AUTH
-  authenticationError: SpotError;
-
   // LOCATION
   locationLoading: boolean;
   locationFailure: string;
@@ -25,8 +22,6 @@ export const initialState: State = {
   userLoading: false,
   userMetadata: null,
   userMetadataLoading: false,
-
-  authenticationError: null,
 
   locationLoading: false,
   locationFailure: null,

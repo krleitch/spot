@@ -274,11 +274,12 @@
               </div>
             </ng-template>
             <!-- Google -->
+            <!-- TODO: Dont use ngIf here use hidden so it renders -->
             <div
               *ngIf="(googleConnected$ | async) === false; else googleConnected"
               class="margin-t-xl"
             >
-              <div id="my-signin2"></div>
+              <div id="googleButtonAccount"></div>
             </div>
             <ng-template #googleConnected>
               <div class="row-h-center margin-t-md">

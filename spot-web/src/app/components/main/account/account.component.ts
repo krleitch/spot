@@ -1,11 +1,10 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 // rxjs
 import { Observable, Subject, merge, timer } from 'rxjs';
@@ -35,16 +34,12 @@ import {
   FacebookDisconnectRequest,
   GoogleConnectRequest,
   GoogleDisconnectRequest,
-  UpdateEmailRequest,
-  UpdateEmailResponse,
-  UpdatePhoneRequest,
-  UpdatePhoneResponse,
-  UpdateUsernameRequest,
-  UpdateUsernameResponse,
   DeleteUserRequest,
+  DeleteUserResponse,
   VerifyRequest,
   VerifyResponse,
-  SetUserStore
+  SetUserStore,
+  DeleteUserStore
 } from '@models/user';
 import {
   UserMetadata,
@@ -58,8 +53,6 @@ import {
   ModalConfirmResultTypes,
   ModalUploadPhotoResult
 } from '@models/modal';
-
-declare const gapi: any;
 
 @Component({
   selector: 'spot-account',
@@ -102,7 +95,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   userOptionsEnabled: boolean;
   facebookLoaded = false;
 
-  STRINGS;
+  STRINGS: Record<string, string>;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -110,11 +103,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     private userService: UserService,
     private authenticationService: AuthenticationService,
     private translateService: TranslateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private router: Router
   ) {
-    translateService.get('MAIN.ACCOUNT').subscribe((res: any) => {
-      this.STRINGS = res;
-    });
   }
 
   ngOnInit(): void {
@@ -151,6 +142,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         this.profilePictureSrc = user.profilePictureSrc;
       }
     });
+    this.translateService.get('MAIN.ACCOUNT').subscribe((res: Record<string, string>) => {
+      this.STRINGS = res;
+    });
   }
 
   ngOnDestroy(): void {
@@ -162,14 +156,10 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.onDestroy))
       .subscribe((service: string) => {
         if (service === 'google') {
-          gapi.signin2.render('my-signin2', {
-            scope: 'profile email',
-            width: 240,
-            height: 55,
-            longtitle: true,
-            theme: 'light',
-            onsuccess: (param) => this.googleConnect(param)
-          });
+          window.google.accounts.id.renderButton(
+            document.getElementById('googleButtonAccount'),
+            { theme: 'outline', size: 'large' } // customization attributes
+          );
         }
         if (service === 'FB') {
           setTimeout(() => {
@@ -189,7 +179,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       .open('global', 'uploadPhoto', {
         type: 'profile-picture',
         imageSrc:
-          this.profilePictureSrc || '../../../../assets/images/op_large.png'
+          this.profilePictureSrc || '/assets/images/op_large.png'
       })
       .pipe(take(1))
       .subscribe((result: ModalUploadPhotoResult) => {
@@ -219,8 +209,22 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         .pipe(take(1))
         .subscribe((result: ModalConfirmResult) => {
           if (result.status === ModalConfirmResultTypes.CONFIRM) {
-            const request: DeleteUserRequest = {};
-            this.store$.dispatch(new UserActions.DeleteRequestAction(request));
+            const deleteRequest: DeleteUserRequest = {};
+            this.userService
+              .deleteUser(deleteRequest)
+              .pipe(take(1))
+              .subscribe(
+                (_response: DeleteUserResponse) => {
+                  const deleteStoreRequest: DeleteUserStore = {};
+                  this.store$.dispatch(
+                    new UserActions.DeleteUserAction(deleteStoreRequest)
+                  );
+                this.router.navigateByUrl('/');
+                },
+                (_errorResponse: { error: SpotError }) => {
+                  // none
+                }
+              );
           }
         });
     }
@@ -244,37 +248,17 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // facebook
-
   facebookConnect(): void {
-    window['FB'].getLoginStatus((statusResponse) => {
-      if (statusResponse.status !== 'connected') {
-        window['FB'].login((loginResponse) => {
-          if (loginResponse.status === 'connected') {
-            // localStorage.removeItem('fb_access_token');
-            // localStorage.removeItem('fb_expires_in');
+    const accessToken = this.authenticationService.getFacebookAccessToken();
+    if (accessToken) {
+      const request: FacebookConnectRequest = {
+        accessToken: accessToken
+      };
 
-            const request: FacebookConnectRequest = {
-              accessToken: loginResponse.authResponse.accessToken
-            };
-
-            this.store$.dispatch(
-              new UserFacebookActions.FacebookConnectRequestAction(request)
-            );
-          } else {
-            // could not login
-            // TODO some error msg
-          }
-        });
-      } else {
-        const request: FacebookConnectRequest = {
-          accessToken: statusResponse.authResponse.accessToken
-        };
-
-        this.store$.dispatch(
-          new UserFacebookActions.FacebookConnectRequestAction(request)
-        );
-      }
-    });
+      this.store$.dispatch(
+        new UserFacebookActions.FacebookConnectRequestAction(request)
+      );
+    }
   }
 
   facebookDisconnect(): void {
@@ -285,41 +269,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  // Google
-
-  googleConnect(googleUser): void {
-    // profile.getId(), getName(), getImageUrl(), getEmail()
-    // const profile = googleUser.getBasicProfile();
-
-    const id_token = googleUser.getAuthResponse().id_token;
-
-    const request: GoogleConnectRequest = {
-      accessToken: id_token
-    };
-
-    this.store$.dispatch(
-      new UserGoogleActions.GoogleConnectRequestAction(request)
-    );
-
-    // sign out of the instance, so we don't auto login
-    this.googleSignOut();
-  }
-
-  googleSignOut(): void {
-    const auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(() => {});
-  }
-
-  googleDisconnect(): void {
-    const request: GoogleDisconnectRequest = {};
-
-    this.store$.dispatch(
-      new UserGoogleActions.GoogleDisconnectRequestAction(request)
-    );
-  }
-
   // Settings
-
   public toggleUnitSystem(): void {
     let unitSystem: UnitSystem;
     if (this.userMetadata.unitSystem === UnitSystem.IMPERIAL) {

@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 // rxjs
 import { Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil, finalize } from 'rxjs/operators';
 
 // store
 import { Store, select } from '@ngrx/store';
@@ -14,7 +15,6 @@ import {
 } from '@src/app/root-store/user-store';
 
 // services
-import { AuthenticationService } from '@services/authentication.service';
 import { UserService } from '@src/app/services/user.service';
 import { ModalService } from '@services/modal.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,6 +27,16 @@ import {
 } from '@models/user';
 import { SpotError } from '@exceptions/error';
 
+// Validators
+import {
+  validateAllFormFields,
+  VALID_USERNAME_REGEX
+} from '@helpers/validators/validate-helpers';
+import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
+
+// constants
+import { AUTHENTICATION_CONSTANTS } from '@constants/authentication';
+
 @Component({
   selector: 'spot-username',
   templateUrl: './username.component.html',
@@ -35,24 +45,30 @@ import { SpotError } from '@exceptions/error';
 export class UsernameComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
 
-  STRINGS;
+  STRINGS: Record<string, string>;
 
+  usernameForm: FormGroup;
+
+  // state
   user$: Observable<User>;
-  username: string;
-  terms: boolean;
   errorMessage: string;
-  buttonsDisabled = false;
+  usernameLoading = false;
 
   constructor(
     private store$: Store<RootStoreState.State>,
-    private authenticationService: AuthenticationService,
     private userService: UserService,
     private modalService: ModalService,
     private router: Router,
     private translateService: TranslateService
   ) {
-    this.translateService.get('PRE_AUTH.USERNAME').subscribe((res: any) => {
-      this.STRINGS = res;
+    this.usernameForm = new FormGroup({
+      username: new FormControl('', [
+        Validators.required,
+        Validators.minLength(AUTHENTICATION_CONSTANTS.USERNAME_MIN_LENGTH),
+        Validators.maxLength(AUTHENTICATION_CONSTANTS.USERNAME_MAX_LENGTH),
+        forbiddenNameValidator(VALID_USERNAME_REGEX, 'allow')
+      ]),
+      terms: new FormControl(false, [Validators.required])
     });
   }
 
@@ -61,8 +77,11 @@ export class UsernameComponent implements OnInit, OnDestroy {
 
     this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
       if (user) {
-        this.username = user.username;
+        this.username.setValue(user.username);
       }
+    });
+    this.translateService.get('MAIN.USERNAME').subscribe((res: Record<string, string>) => {
+      this.STRINGS = res;
     });
   }
 
@@ -70,57 +89,63 @@ export class UsernameComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
+  get username() {
+    return this.usernameForm.get('username');
+  }
+  get terms() {
+    return this.usernameForm.get('terms');
+  }
+
   // Send the request
   continueToSpot(): void {
-    if (this.buttonsDisabled) {
+    if (this.usernameLoading) {
       return;
     }
-
-    if (!this.terms) {
-      this.errorMessage = this.STRINGS.TERMS_ERROR;
-      return;
-    }
-
-    if (!this.username) {
-      this.errorMessage = this.STRINGS.USERNAME_ERROR;
-      return;
-    }
-
-    const validUsername = this.authenticationService.validateUsername(
-      this.username
-    );
-    if (validUsername !== null) {
-      this.errorMessage = validUsername;
+    if (!this.usernameForm.valid) {
+      validateAllFormFields(this.usernameForm);
       return;
     }
 
     const request: UpdateUsernameRequest = {
-      username: this.username
+      username: this.username.value
     };
 
-    this.buttonsDisabled = true;
+    this.usernameLoading = true;
     this.userService
       .updateUsername(request)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.usernameLoading = false;
+        })
+      )
       .subscribe(
         (response: UpdateUsernameResponse) => {
-          this.buttonsDisabled = false;
-
           const request: SetUserStore = {
             user: { username: response.user.username }
           };
           this.store$.dispatch(new UserActions.SetUserAction(request));
-
           this.router.navigateByUrl('/home');
         },
-        (err: { error: SpotError }) => {
-          this.errorMessage = err.error.message;
-          this.buttonsDisabled = false;
+        (errorResponse: { error: SpotError }) => {
+          switch (errorResponse.error.name) {
+            case 'UsernameTakenError':
+              this.errorMessage = this.STRINGS.USERNAME_TAKEN;
+              break;
+            default:
+              this.errorMessage = this.STRINGS.GENERIC_ERROR;
+              break;
+          }
         }
       );
   }
 
   openTerms(): void {
-    this.modalService.open('global', 'terms');
+    this.modalService.open(
+      'global',
+      'terms',
+      {},
+      { width: 700, disableClose: true }
+    );
   }
 }
