@@ -66,6 +66,7 @@ import { ChatCreateComponent } from './components/main/chat/chat-create/chat-cre
 import { AccountEditComponent } from './components/main/account-edit/account-edit.component';
 import { ChatDiscoverComponent } from './components/main/chat/chat-discover/chat-discover.component';
 import { SortDirective } from './directives/sort.directive';
+import { ChatPageComponent } from './components/main/chat/chat-page/chat-page.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -123,7 +124,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ChatCreateComponent,
     AccountEditComponent,
     ChatDiscoverComponent,
-    SortDirective
+    SortDirective,
+    ChatPageComponent
   ],
   imports: [
     BrowserModule,

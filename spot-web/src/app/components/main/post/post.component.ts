@@ -84,7 +84,6 @@ export class PostComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // User
-    console.log(this.spot);
     this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
 
     this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {

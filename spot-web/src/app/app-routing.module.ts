@@ -19,6 +19,7 @@ import { FriendsComponent } from './components/main/social/friends/friends.compo
 import { ActivityComponent } from './components/main/activity/activity.component';
 import { VerifyComponent } from './components/main/verify/verify.component';
 import { UsernameComponent } from './components/main/username/username.component';
+import { ChatPageComponent } from './components/main/chat/chat-page/chat-page.component';
 
 import { AuthGuardService as AuthGuard } from '@helpers/auth-guard.service';
 
@@ -53,6 +54,11 @@ export const routes: Routes = [
   {
     path: 'activity',
     component: ActivityComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'chat',
+    component: ChatPageComponent,
     canActivate: [AuthGuard]
   },
   {
