@@ -27,6 +27,10 @@ export const selectLoadingChatRoomsFromStore = (state: State): boolean =>
   state.loadingChatRooms;
 export const selectLoadingUserChatRoomsFromStore = (state: State): boolean =>
   state.loadingUserChatRooms;
+export const selectChatPageOpenChatFromStore = (state: State): ChatRoom =>
+  state.chatPageOpenChat;
+export const selectChatPageMinimizedChatsFromStore = (state: State): ChatRoom[] =>
+  state.chatPageMinimizedChats;
 export const selectChatState: MemoizedSelector<object, State> =
   createFeatureSelector<State>('chat');
 
@@ -58,3 +62,9 @@ export const selectLoadingUserChatRooms: MemoizedSelector<object, boolean> =
 
 export const selectMinimizedChats: MemoizedSelector<object, ChatRoom[]> =
   createSelector(selectChatState, selectMinimizedChatsFromStore);
+
+export const selectChatPageOpenChat: MemoizedSelector<object, ChatRoom> =
+  createSelector(selectChatState, selectChatPageOpenChatFromStore);
+
+export const selectChatPageMinimizedChats: MemoizedSelector<object, ChatRoom[]> =
+  createSelector(selectChatState, selectChatPageMinimizedChatsFromStore);

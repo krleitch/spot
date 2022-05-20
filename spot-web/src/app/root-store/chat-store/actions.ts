@@ -12,7 +12,11 @@ import {
   RemoveMinimizedChatStore,
   GetUserChatRoomsRequest,
   GetUserChatRoomsResponse,
-  RemoveUserChatRoomStore
+  RemoveUserChatRoomStore,
+  SetPageOpenChatStore,
+  RemovePageOpenChatStore,
+  AddPageMinimizedChatStore,
+  RemovePageMinimizedChatStore
 } from '@models/chat';
 
 export enum ActionTypes {
@@ -29,7 +33,11 @@ export enum ActionTypes {
   ADD_OPEN_CHAT_STORE = '[Chat] Add Open Chat Store',
   REMOVE_OPEN_CHAT_STORE = '[Chat] Remove Open Chat Store',
   ADD_MINIMIZED_CHAT_STORE = '[Chat] Add Minimized Chat Store',
-  REMOVE_MINIMIZED_CHAT_STORE = '[Chat] Remove Minimized Chat Store'
+  REMOVE_MINIMIZED_CHAT_STORE = '[Chat] Remove Minimized Chat Store',
+  SET_PAGE_OPEN_CHAT_STORE = '[Chat] Set Page Open Chat Store',
+  REMOVE_PAGE_OPEN_CHAT_STORE = '[Chat] Remove Page Open Chat Store',
+  ADD_PAGE_MINIMIZED_CHAT_STORE = '[Chat] Add Page Minimized Chat Store',
+  REMOVE_PAGE_MINIMIZED_CHAT_STORE = '[Chat] Remove Page Minimized Chat Store'
 }
 
 // Generic Actions
@@ -77,6 +85,7 @@ export class RemoveUserChatRoomStoreAction implements Action {
   readonly type = ActionTypes.REMOVE_USER_CHAT_ROOM_STORE;
   constructor(public request: RemoveUserChatRoomStore) {}
 }
+// MENU
 export class AddOpenChatStoreAction implements Action {
   readonly type = ActionTypes.ADD_OPEN_CHAT_STORE;
   constructor(public request: AddOpenChatStore) {}
@@ -93,6 +102,23 @@ export class RemoveMinimizedChatStoreAction implements Action {
   readonly type = ActionTypes.REMOVE_MINIMIZED_CHAT_STORE;
   constructor(public request: RemoveMinimizedChatStore) {}
 }
+// PAGE
+export class SetPageOpenChatStoreAction implements Action {
+  readonly type = ActionTypes.SET_PAGE_OPEN_CHAT_STORE;
+  constructor(public request: SetPageOpenChatStore) {}
+}
+export class RemovePageOpenChatStoreAction implements Action {
+  readonly type = ActionTypes.REMOVE_PAGE_OPEN_CHAT_STORE;
+  constructor(public request: RemovePageOpenChatStore) {}
+}
+export class AddPageMinimizedChatStoreAction implements Action {
+  readonly type = ActionTypes.ADD_PAGE_MINIMIZED_CHAT_STORE;
+  constructor(public request: AddPageMinimizedChatStore) {}
+}
+export class RemovePageMinimizedChatStoreAction implements Action {
+  readonly type = ActionTypes.REMOVE_PAGE_MINIMIZED_CHAT_STORE;
+  constructor(public request: RemovePageMinimizedChatStore) {}
+}
 
 export type Actions =
   | GenericFailureAction
@@ -108,4 +134,8 @@ export type Actions =
   | RemoveMinimizedChatStoreAction
   | GetUserChatRoomsRequestAction
   | GetUserChatRoomsSuccessAction
-  | GetUserChatRoomsFailureAction;
+  | GetUserChatRoomsFailureAction
+  | SetPageOpenChatStoreAction
+  | RemovePageOpenChatStoreAction
+  | AddPageMinimizedChatStoreAction
+  | RemovePageMinimizedChatStoreAction;

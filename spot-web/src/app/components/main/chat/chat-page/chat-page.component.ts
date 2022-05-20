@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subject, concat, interval, of, timer } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -17,6 +17,9 @@ import { SocialStoreSelectors } from '@store/social-store';
 import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
+// Components
+import { ChatRoomComponent } from '@src/app/components/main/chat/chat-room/chat-room.component';
+
 // Services
 import { ChatService } from '@services/chat.service';
 import { ModalService } from '@services/modal.service';
@@ -26,18 +29,14 @@ import { Friend } from '@models/friend';
 import {
   ChatType,
   ChatRoom,
-  AddOpenChatStore,
-  RemoveOpenChatStore,
-  AddMinimizedChatStore,
-  RemoveMinimizedChatStore,
-  GetUserChatRoomsRequest
+  SetPageOpenChatStore,
+  RemovePageOpenChatStore,
+  AddPageMinimizedChatStore,
+  RemovePageMinimizedChatStore,
+  GetUserChatRoomsRequest,
+  RemoveMinimizedChatStore
 } from '@models/chat';
 import { LocationData } from '@models/location';
-
-enum SelectedPage {
-  FRIENDS = 'FRIENDS',
-  CHATS = 'CHATS'
-}
 
 @Component({
   selector: 'spot-chat-page',
@@ -46,26 +45,13 @@ enum SelectedPage {
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
-  eSelectedPage = SelectedPage;
 
-  selectedPage = SelectedPage.CHATS;
+  @ViewChild(ChatRoomComponent) room: ChatRoomComponent;
 
-  // Search
-  search = '';
-
-  // location
-  showLocationIndicator$: Observable<boolean>;
-  location$: Observable<LocationData>;
-  location: LocationData;
-  locationLoading$: Observable<boolean>;
-  locationLoading: boolean;
-
-  // Friends
-  friends$: Observable<Friend[]>;
-
-  // Chats
-  userChatRooms$: Observable<ChatRoom[]>;
-  userChatRooms: ChatRoom[];
+  chatPageOpenChat$: Observable<ChatRoom>;
+  chatPageOpenChat: ChatRoom;
+  chatPageMinimizedChats$: Observable<ChatRoom[]>;
+  chatPageMinimizedChats: ChatRoom[];
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -74,59 +60,21 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // friends
-    this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriends)
+    this.chatPageOpenChat$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectChatPageOpenChat)
     );
-
-    // chat rooms
-    this.userChatRooms$ = this.store$.pipe(
-      select(ChatStoreSelectors.selectUserChatRooms)
+    this.chatPageOpenChat$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((chat: ChatRoom) => {
+        this.chatPageOpenChat = chat;
+      });
+    this.chatPageMinimizedChats$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectChatPageMinimizedChats)
     );
-    this.userChatRooms$
+    this.chatPageMinimizedChats$
       .pipe(takeUntil(this.onDestroy))
       .subscribe((chats: ChatRoom[]) => {
-        // Make a copy so its not read only and the sort directive can edit it
-        this.userChatRooms = [...chats];
-      });
-
-    // location
-    this.location$ = this.store$.pipe(
-      select(UserStoreSelectors.selectLocation)
-    );
-    this.location$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((location: LocationData) => {
-        this.location = location;
-        if (this.location) {
-          // Get All Rooms
-          const getUserChatRoomsRequest: GetUserChatRoomsRequest = {
-            lat: this.location.latitude,
-            lng: this.location.longitude
-          };
-          this.store$.dispatch(
-            new ChatStoreActions.GetUserChatRoomsRequestAction(
-              getUserChatRoomsRequest
-            )
-          );
-        }
-      });
-
-    this.locationLoading$ = this.store$.pipe(
-      select(UserStoreSelectors.selectLocationLoading)
-    );
-    this.locationLoading$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((locationLoading: boolean) => {
-        this.locationLoading = locationLoading;
-        if (this.locationLoading) {
-          this.showLocationIndicator$ = timer(500)
-            .pipe(
-              mapTo(true),
-              takeWhile((_) => this.locationLoading)
-            )
-            .pipe(startWith(false));
-        }
+        this.chatPageMinimizedChats = chats;
       });
   }
 
@@ -134,28 +82,44 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
-  selectChatRooms(): void {
-    this.selectedPage = SelectedPage.CHATS;
-  }
-  selectFriends(): void {
-    this.selectedPage = SelectedPage.FRIENDS;
+  backToMenu(): void {
+    // leave the chat, remove open and add to minimized
+    this.room.leaveRoom();
+    const addRequest: AddPageMinimizedChatStore = {
+      chat: this.chatPageOpenChat
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.AddPageMinimizedChatStoreAction(addRequest)
+    );
+    const removeRequest: RemovePageOpenChatStore = {};
+    this.store$.dispatch(
+      new ChatStoreActions.RemovePageOpenChatStoreAction(removeRequest)
+    );
   }
 
-  discoverRooms() {
-    this.modalService
-      .open('global', 'chatDiscover', {}, { width: 600, height: 'auto' })
-      .pipe(take(1))
-      .subscribe((_result) => {
-        // Open the room, if a room was created
-      });
-  }
-
-  createRoom() {
-    this.modalService
-      .open('global', 'chatCreate')
-      .pipe(take(1))
-      .subscribe((_result) => {
-        // Open the room, if a room was created
-      });
+  openMinimizedChat(chat: ChatRoom): void {
+    // if a chat is open then close it first
+    if (this.chatPageOpenChat) {
+      this.room.leaveRoom();
+      const addRequest: AddPageMinimizedChatStore = {
+        chat: this.chatPageOpenChat
+      };
+      this.store$.dispatch(
+        new ChatStoreActions.AddPageMinimizedChatStoreAction(addRequest)
+      );
+    }
+    // open the chat and remove form minimized
+    const setRequest: SetPageOpenChatStore = {
+      chat: chat
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.SetPageOpenChatStoreAction(setRequest)
+    );
+    const removeRequest: RemoveMinimizedChatStore = {
+      chatId: chat.id
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
+    );
   }
 }

@@ -29,6 +29,7 @@ export function featureReducer(state = initialState, action: Actions): State {
         )
       };
     }
+    // Menu
     case ActionTypes.ADD_OPEN_CHAT_STORE: {
       return {
         ...state,
@@ -51,6 +52,33 @@ export function featureReducer(state = initialState, action: Actions): State {
       return {
         ...state,
         minimizedChats: state.minimizedChats.filter(
+          (r) => r.id !== action.request.chatId
+        )
+      };
+    }
+    // Page
+    case ActionTypes.SET_PAGE_OPEN_CHAT_STORE: {
+      return {
+        ...state,
+        chatPageOpenChat: action.request.chat
+      };
+    }
+    case ActionTypes.REMOVE_PAGE_OPEN_CHAT_STORE: {
+      return {
+        ...state,
+        chatPageOpenChat: null
+      };
+    }
+    case ActionTypes.ADD_PAGE_MINIMIZED_CHAT_STORE: {
+      return {
+        ...state,
+        chatPageMinimizedChats: state.chatPageMinimizedChats.concat(action.request.chat)
+      };
+    }
+    case ActionTypes.REMOVE_PAGE_MINIMIZED_CHAT_STORE: {
+      return {
+        ...state,
+        chatPageMinimizedChats: state.chatPageMinimizedChats.filter(
           (r) => r.id !== action.request.chatId
         )
       };

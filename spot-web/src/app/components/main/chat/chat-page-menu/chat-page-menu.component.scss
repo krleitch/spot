@@ -1,0 +1,39 @@
+spot-main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 99;
+}
+
+.chat-page {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding-top: 60px;
+  min-height: calc(100vh);
+  box-sizing: border-box;
+
+  .container {
+    max-width: 500px;
+    min-width: min(90%, 600px);
+    box-sizing: border-box;
+    margin-bottom: 50px;
+    z-index: 9;
+  }
+}
+
+.top-margin {
+  margin-top: 50px;
+}
+
+.input-borderless-icon-left {
+  border-bottom: 1px solid var(--input-border);
+}
+
+input {
+  width: 120px;
+  margin-top: 1px;
+}
+

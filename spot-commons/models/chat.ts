@@ -57,6 +57,7 @@ export interface AddUserChatRoomStore {
 export interface RemoveUserChatRoomStore {
   chatId: string;
 }
+// Menu
 export interface AddOpenChatStore {
   chat: ChatRoom;
 }
@@ -67,6 +68,18 @@ export interface AddMinimizedChatStore {
   chat: ChatRoom;
 }
 export interface RemoveMinimizedChatStore {
+  chatId: string;
+}
+// Page
+export interface SetPageOpenChatStore {
+  chat: ChatRoom;
+}
+export interface RemovePageOpenChatStore {
+}
+export interface AddPageMinimizedChatStore {
+  chat: ChatRoom;
+}
+export interface RemovePageMinimizedChatStore {
   chatId: string;
 }
 

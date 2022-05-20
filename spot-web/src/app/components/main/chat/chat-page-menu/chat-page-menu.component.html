@@ -1,1 +1,127 @@
-<p>chat-page-menu works!</p>
+<div
+  class="container background-container"
+>
+  <!-- Sticky Header -->
+  <div class="header row-h-center justify-content-between">
+    <div class="row-center">
+      <div
+        class="row-center margin-r-lg"
+        [class.text-primary]="selectedPage === eSelectedPage.CHATS"
+        (click)="selectChatRooms()"
+      >
+        <span class="material-icons icon-md"> groups </span>
+        <span class="row-center margin-l-sm"> Chats </span>
+      </div>
+      <div
+        class="row-center margin-l-lg"
+        [class.text-primary]="selectedPage === eSelectedPage.FRIENDS"
+        (click)="selectFriends()"
+      >
+        <span class="material-icons icon-md"> forum </span>
+        <span class="row-center margin-l-sm"> Friends </span>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="row-h-center">
+      <span
+        class="material-icons icon-md icon-primary input-borderless-icon-left"
+      >
+        search
+      </span>
+      <input
+        [(ngModel)]="search"
+        class="input-border-bottom-sm"
+        placeholder="{{ 'MAIN.FRIENDS.FRIEND_SEARCH_PLACEHOLDER' | translate }}"
+        type="text"
+      />
+    </div>
+  </div>
+
+  <!-- Chat list -->
+  <div *ngIf="selectedPage === eSelectedPage.CHATS; else friends">
+    <!-- Create and discover rooms -->
+    <div class="row-center margin-t-md">
+      <button class="button margin-r-md" (click)="discoverRooms()">
+        <span class="text margin-r-sm"> Discover </span>
+        <i class="material-icons button-icon">travel_explore</i>
+      </button>
+      <button class="button margin-l-md" (click)="createRoom()">
+        <span class="text margin-r-sm"> Create </span>
+        <i class="material-icons button-icon">add_circle_outline</i>
+      </button>
+    </div>
+
+    <!-- Chats need location and are filtered by search -->
+    <div *ngIf="location; else noLocation">
+      <div
+        *ngIf="
+          userChatRooms
+            | filter: { filter: search, field: 'name' } as chatRooms;
+          else noChats
+        "
+      >
+        <div *ngIf="chatRooms.length > 0; else noChats" class="col-h-center">
+          <div
+            *ngFor="let chatRoom of userChatRooms"
+            class="row-h-center margin-t-lg"
+            (click)="openChat(chatRoom)"
+          >
+            <!-- Image -->
+            <span
+              class="profile-md"
+              [ngClass]="
+                chatRoom.imageSrc ? '' : 'chat-' + chatRoom.defaultImageNum
+              "
+            >
+              <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
+              <img
+                *ngIf="!chatRoom.imageSrc"
+                [src]="'/assets/images/chat/' + chatRoom.defaultImageSrc"
+              />
+            </span>
+
+            <!-- Name + Last message -->
+            <div class="col-h-center margin-l-md">
+              <span class="">
+                {{ chatRoom.name }}
+              </span>
+              <span class="text-secondary"> last message </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Chats rooms -->
+        <ng-template #noChats>
+          <div class="top-margin col-center">
+            <span class="material-icons icon-sm icon-primary">
+              comments_disabled
+            </span>
+            <span class="margin-t-sm"> You do not have any active chats </span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Location is loading or is off -->
+    <ng-template #noLocation>
+      <div *ngIf="locationLoading; else locationOff">
+        <div class="top-margin col-center">
+          <spot-spinner type="dot"></spot-spinner>
+          <span class="margin-t-sm"> Loading your location </span>
+        </div>
+      </div>
+      <ng-template #locationOff>
+        <div class="top-margin col-center">
+          <span class="material-icons icon-sm icon-primary">
+            location_off
+          </span>
+          <span class="margin-t-sm"> No Location </span>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+
+  <!-- Friends list -->
+  <ng-template #friends> </ng-template>
+</div>

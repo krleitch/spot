@@ -37,3 +37,14 @@ input {
   margin-top: 1px;
 }
 
+.no-chats-placeholder {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: transparent;
+  border: 2px dashed var(--background-primary);
+}
