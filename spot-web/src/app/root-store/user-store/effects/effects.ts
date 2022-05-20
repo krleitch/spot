@@ -29,7 +29,6 @@ export class UserStoreEffects {
     private actions$: Actions
   ) { }
 
-
   getUserRequestEffect$ = createEffect(() =>
     this.actions$.pipe(
       ofType<userActions.GetUserRequestAction>(

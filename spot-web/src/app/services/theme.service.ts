@@ -17,11 +17,13 @@ export class ThemeService {
 
   setLightTheme(): void {
     this.activeColorTheme = LightTheme;
+    localStorage.setItem('themeWeb', LightTheme.name);
     this.setActiveTheme(LightTheme);
   }
 
   setDarkTheme(): void {
     this.activeColorTheme = DarkTheme;
+    localStorage.setItem('themeWeb', DarkTheme.name);
     this.setActiveTheme(DarkTheme);
   }
 

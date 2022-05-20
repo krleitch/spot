@@ -224,7 +224,6 @@ export class UserService {
   // service functions
 
   onDeleteUserSuccess(): void {
-    this.router.navigateByUrl('/');
   }
 
   failureMessage(message: string): void {

@@ -3,11 +3,11 @@
     <div class="spot-logo"></div>
   </div>
   <div *ngIf="user$ | async as myuser; else noUser" class="row-center">
-    <span
-      class="material-icons-outlined mobile-show icon-lg margin-r-lg margin-t-sm icon-primary-highlight"
-    >
-      insert_comment
-    </span>
+    <a [routerLink]="'/chat'" class="mobile-show margin-r-lg margin-t-sm">
+      <span class="material-icons-outlined icon-lg icon-primary-highlight">
+        insert_comment
+      </span>
+    </a>
     <div
       *ngIf="userMetadata$ | async as userMetadata"
       class="row-center margin-r-lg tablet-hide"
@@ -31,7 +31,11 @@
       </div>
       <spot-notifications *ngIf="showNotifications"></spot-notifications>
     </div>
-    <div #user class="row-center relative text-primary-highlight" (click)="toggleDropdown()">
+    <div
+      #user
+      class="row-center relative text-primary-highlight"
+      (click)="toggleDropdown()"
+    >
       <i class="material-icons icon-lg icon-primary-highlight">
         person_outline
       </i>
@@ -40,15 +44,21 @@
       </span>
       <div class="dropdown-content" [class.show-dropdown]="showDropdown">
         <a class="dropdown-button" [routerLink]="'/activity'">
-          <span class="material-icons-outlined icon-md margin-r-md"> insights </span>
+          <span class="material-icons-outlined icon-md margin-r-md">
+            insights
+          </span>
           {{ 'MAIN.NAV.ACTIVITY' | translate }}
         </a>
         <a class="dropdown-button" [routerLink]="'/friends'">
-          <span class="material-icons-outlined icon-md margin-r-md"> people_alt </span>
+          <span class="material-icons-outlined icon-md margin-r-md">
+            people_alt
+          </span>
           {{ 'MAIN.NAV.FRIENDS' | translate }}
         </a>
         <a class="dropdown-button" [routerLink]="'/account'">
-          <span class="material-icons-outlined icon-md margin-r-md"> manage_accounts </span>
+          <span class="material-icons-outlined icon-md margin-r-md">
+            manage_accounts
+          </span>
           {{ 'MAIN.NAV.ACCOUNT' | translate }}
         </a>
         <div class="dropdown-button" (click)="logout()">

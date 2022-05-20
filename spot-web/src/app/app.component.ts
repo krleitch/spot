@@ -26,6 +26,8 @@ import {
 import { GoogleLoginRequest } from '@models/authentication';
 import { GoogleConnectRequest } from '@models/user';
 
+import { LightTheme, DarkTheme } from '@styles/theme';
+
 @Component({
   selector: 'spot-root',
   templateUrl: './app.component.html',
@@ -46,9 +48,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // set the default sizings and theme
-    this.themeService.setRegularSizeTheme();
-    this.themeService.setLightTheme();
+    this.setTheme();
     // load translations
     this.translateService.setDefaultLang('en');
     this.translateService.use('en');
@@ -162,6 +162,21 @@ export class AppComponent implements OnInit {
         );
       }
     }
+  }
+
+  private setTheme(): void {
+    // set the default sizings and theme
+    const localTheme = localStorage.getItem('themeWeb');
+    if (localTheme) {
+      if (localTheme === LightTheme.name) {
+        this.themeService.setLightTheme();
+      } else if (localTheme === DarkTheme.name) {
+        this.themeService.setDarkTheme();
+      } else {
+        this.themeService.setLightTheme();
+      }
+    }
+    this.themeService.setRegularSizeTheme();
   }
 
   private getUserIfExists(): void {
