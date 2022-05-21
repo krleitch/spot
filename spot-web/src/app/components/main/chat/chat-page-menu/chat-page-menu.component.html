@@ -1,8 +1,8 @@
 <div
-  class="container background-container relative container-b-rounded padding-lg"
+  class="container background-container relative container-b-rounded"
 >
   <!-- Sticky Header -->
-  <div class="header row-h-center justify-content-between">
+  <div class="header background-header row-h-center justify-content-between padding-h-lg">
     <div class="row-center">
       <div
         class="row-center margin-r-lg"
@@ -39,7 +39,7 @@
   </div>
 
   <!-- Chat list -->
-  <div *ngIf="selectedPage === eSelectedPage.CHATS; else friends" class="bot-margin">
+  <div *ngIf="selectedPage === eSelectedPage.CHATS; else friends" class="bot-margin padding-h-lg">
     <!-- Chats need location and are filtered by search -->
     <div *ngIf="location; else noLocation">
       <div

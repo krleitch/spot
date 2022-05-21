@@ -30,6 +30,7 @@ import {
   RemovePageOpenChatStore,
   AddPageMinimizedChatStore,
   RemovePageMinimizedChatStore,
+  RemoveMinimizedChatStore,
   GetUserChatRoomsRequest
 } from '@models/chat';
 import { LocationData } from '@models/location';
@@ -60,6 +61,10 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
   locationLoading$: Observable<boolean>;
   locationLoading: boolean;
 
+  // minimized chats
+  chatPageMinimizedChats$: Observable<ChatRoom[]>;
+  chatPageMinimizedChats: ChatRoom[];
+
   // Friends
   friends$: Observable<Friend[]>;
 
@@ -88,6 +93,16 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
       .subscribe((chats: ChatRoom[]) => {
         // Make a copy so its not read only and the sort directive can edit it
         this.userChatRooms = [...chats];
+      });
+
+    // minimized chats
+    this.chatPageMinimizedChats$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectChatPageMinimizedChats)
+    );
+    this.chatPageMinimizedChats$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((chats: ChatRoom[]) => {
+        this.chatPageMinimizedChats = chats;
       });
 
     // location
@@ -160,6 +175,18 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
   }
 
   openChat(chat: ChatRoom): void {
+    // check if its in minimized first
+    if (
+      this.chatPageMinimizedChats.filter((chat) => chat.id === chat.id).length >
+      0
+    ) {
+      const removeRequest: RemoveMinimizedChatStore = {
+        chatId: chat.id
+      };
+      this.store$.dispatch(
+        new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
+      );
+    }
     const request: SetPageOpenChatStore = {
       chat: chat
     };
