@@ -1,9 +1,14 @@
+// take away the header
+.chat-room-tab {
+  height: calc(100% - 25px);
+}
 .chat-room {
-  width: 500px;
-  height: 600px;
+  height: calc(100%);
 }
 
 .header {
+}
+.header-margin {
   margin-left: 55px;
 }
 
@@ -44,7 +49,21 @@
   display: block;
 }
 
+.body {
+  height: calc(100% - 66px);
+  margin-bottom: 46px;
+  overflow: auto;
+}
 // Content Editable
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .chat {
   flex: 1;
   display: block;
@@ -72,3 +91,4 @@
   font-style: italic;
   cursor: text;
 }
+

@@ -7,21 +7,37 @@ spot-main-nav {
   z-index: 99;
 }
 
+
 .chat-page {
   display: flex;
   flex-flow: column;
   align-items: center;
   padding-top: 60px;
-  min-height: calc(100vh);
+  height: 100%;
   box-sizing: border-box;
 
   .container {
     max-width: 500px;
     min-width: min(90%, 600px);
+    height: calc(100% - 60px);
+    display: flex;
+    flex-flow: column;
+    flex: 1;
     box-sizing: border-box;
-    margin-bottom: 50px;
-    z-index: 9;
   }
+}
+
+.chat-room-container {
+  height: calc(100% - 84px);
+}
+spot-chat-room {
+  height: calc(100% - 34px);
+  box-sizing: border-box;
+}
+
+spot-chat-page-menu {
+  display: flex;
+  flex: 1;
 }
 
 .top-margin {

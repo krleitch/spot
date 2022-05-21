@@ -2,12 +2,16 @@
   border: 1px solid var(--background-primary);
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  width: 500px;
+  height: 600px;
+  box-sizing: border-box;
 }
 
 .header {
   position: relative;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  z-index: 9;
 }
 
 .image {
@@ -47,3 +51,4 @@
     cursor: pointer;
   }
 }
+

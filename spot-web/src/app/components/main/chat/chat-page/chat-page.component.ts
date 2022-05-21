@@ -122,4 +122,21 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
     );
   }
+
+  openMenu(): void {
+    if (this.chatPageOpenChat) {
+      this.room.leaveRoom();
+      const addRequest: AddPageMinimizedChatStore = {
+        chat: this.chatPageOpenChat
+      };
+      this.store$.dispatch(
+        new ChatStoreActions.AddPageMinimizedChatStoreAction(addRequest)
+      );
+      const removeRequest: RemovePageOpenChatStore = {};
+      this.store$.dispatch(
+        new ChatStoreActions.RemovePageOpenChatStoreAction(removeRequest)
+      );
+    }
+  }
+
 }

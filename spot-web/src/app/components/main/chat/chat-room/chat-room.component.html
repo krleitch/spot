@@ -1,6 +1,12 @@
-<div class="chat-room col background-container">
+<div
+  class="col background-container relative"
+  [ngClass]="isTab ? 'chat-room-tab' : 'chat-room'"
+>
   <!-- Header -->
-  <div class="header row-h-center margin-md">
+  <div
+    class="header row-h-center margin-md"
+    [ngClass]="isTab ? 'header-margin' : 'header'"
+  >
     <span class="row-center margin-r-md">
       <i class="material-icons icon-md icon-secondary"> person </i>
       <span class="text-secondary margin-l-sm">{{ userCount }} -</span>
@@ -16,7 +22,7 @@
   <!-- Body -->
   <div
     #chat
-    class="col flex-fill padding-md overflow-auto"
+    class="body col flex-fill padding-lg overflow-auto"
     (scroll)="onScroll()"
   >
     <!-- Chat Start -->
@@ -81,7 +87,7 @@
   </div>
 
   <!-- Chat Bar -->
-  <div class="row-v-center align-items-end margin-lg">
+  <div class="footer row-v-center align-items-end">
     <span
       #create
       contenteditable="true"

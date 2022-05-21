@@ -1,10 +1,16 @@
 <spot-main-nav></spot-main-nav>
 <div class="chat-page background-page">
   <div
-    class="col"
+    class="container background-container container-shadow container-rounded margin-xl"
   >
     <!-- Minimized chat list -->
-    <div class="row-h-center justify-content-end">
+    <div class="row-h-center justify-content-end padding-lg">
+      <!-- No chats -->
+      <div class="no-chats-placeholder" (click)="openMenu()">
+        <span class="material-icons icon-secondary icon-md"> add </span>
+      </div>
+
+      <!-- Minimized chats -->
       <div
         *ngFor="let chatRoom of chatPageMinimizedChats"
         class="row-center margin-l-md"
@@ -43,22 +49,18 @@
           [src]="chatPageOpenChat.imageSrc"
         />
       </div>
-
-      <!-- No chats -->
-      <div *ngIf="!chatPageOpenChat && chatPageMinimizedChats.length === 0">
-        <span class="no-chats-placeholder"></span>
-      </div>
     </div>
 
     <!-- Show the chat or show the menu -->
-    <div class="container background-container container-shadow container-rounded padding-xl margin-xl">
-      <div *ngIf="chatPageOpenChat; else menu" class="col-h-center">
-        <div class="text-secondary-highlight" (click)="backToMenu()">Back</div>
-        <spot-chat-room [chatRoom]="chatPageOpenChat"></spot-chat-room>
-      </div>
-      <ng-template #menu>
-        <spot-chat-page-menu></spot-chat-page-menu>
-      </ng-template>
+    <div *ngIf="chatPageOpenChat; else menu" class="chat-room-container col-h-center">
+      <div class="text-secondary-highlight background-header padding-md" (click)="backToMenu()">Back</div>
+      <spot-chat-room
+        [chatRoom]="chatPageOpenChat"
+        [isTab]="false"
+      ></spot-chat-room>
     </div>
+    <ng-template #menu>
+      <spot-chat-page-menu></spot-chat-page-menu>
+    </ng-template>
   </div>
 </div>

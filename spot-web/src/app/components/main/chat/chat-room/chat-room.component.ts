@@ -7,7 +7,9 @@ import {
   ViewChild,
   Input,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -45,7 +47,7 @@ import { UserMetadata, UnitSystem } from '@models/userMetadata';
   styleUrls: ['./chat-room.component.scss']
 })
 export class ChatRoomComponent
-  implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy
+  implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy, OnChanges
 {
   private readonly onDestroy = new Subject<void>();
   // Chat Text Content
@@ -53,6 +55,7 @@ export class ChatRoomComponent
   @ViewChild('create') create: ElementRef; // editable content
   @ViewChild('anchor') anchor: ElementRef<HTMLElement>; // On scroll trigger
   @Input() chatRoom: ChatRoom;
+  @Input() isTab: boolean;
 
   private observer: IntersectionObserver;
 
@@ -87,6 +90,11 @@ export class ChatRoomComponent
       .subscribe((userMetadata: UserMetadata) => {
         this.userMetadata = userMetadata;
       });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.channel = this.chatService.connectToChannel(this.chatRoom.id);
+    this.joinRoom();
   }
 
   ngAfterViewInit() {
