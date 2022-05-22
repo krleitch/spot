@@ -61,6 +61,12 @@
           </span>
           {{ 'MAIN.NAV.ACCOUNT' | translate }}
         </a>
+        <a class="dropdown-button" [routerLink]="'/chat'">
+          <span class="material-icons-outlined icon-md margin-r-md">
+            chat
+          </span>
+          {{ 'MAIN.NAV.CHAT' | translate }}
+        </a>
         <div class="dropdown-button" (click)="logout()">
           <span class="material-icons icon-md margin-r-md">
             directions_run

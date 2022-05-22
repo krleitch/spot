@@ -4,9 +4,9 @@
     class="container background-container container-shadow container-rounded margin-md"
   >
     <!-- Minimized chat list -->
-    <div class="row-h-center justify-content-end padding-lg">
+    <div #minimized class="row-h-center justify-content-end padding-lg">
       <!-- No chats -->
-      <div class="no-chats-placeholder" (click)="openMenu()">
+      <div *ngIf="chatPageMinimizedChats.length <= (maximumMinimized - 2)" class="no-chats-placeholder" (click)="openMenu()">
         <span class="material-icons icon-secondary icon-md"> add </span>
       </div>
 
@@ -33,7 +33,7 @@
       <!-- Show the open chat on far right -->
       <div
         *ngIf="chatPageOpenChat"
-        class="profile-md margin-l-md"
+        class="profile-md owned margin-l-md"
         [ngClass]="
           chatPageOpenChat.imageSrc
             ? ''
@@ -52,15 +52,47 @@
     </div>
 
     <!-- Show the chat or show the menu -->
-    <div *ngIf="chatPageOpenChat; else menu" class="chat-room-container col-h-center">
-      <div class="text-secondary-highlight background-header padding-md" (click)="backToMenu()">Back</div>
+    <div
+      *ngIf="chatPageOpenChat; else menu"
+      class="chat-room-container col-h-center"
+    >
+      <!-- Chat Header -->
+      <div class="chat-header background-header row-h-center justify-content-between padding-sm">
+        <div class="row-h-center">
+          <span
+            class="material-icons icon-md icon-primary"
+            (click)="backToMenu()"
+          >
+            arrow_back
+          </span>
+          <div class="col-h-center margin-l-md">
+            <span class="text-sm"> {{ chatPageOpenChat.name }}</span>
+            <div class="">
+              <span class="text-xs"> {{ chatPageOpenChat.geolocation }}</span>
+              <span class="text-xs">
+                ({{ getDistance(chatPageOpenChat.distance) }})</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row-h-center">
+          <span class="material-icons icon-secondary icon-md"> person </span>
+          <span class="text-md margin-l-xs margin-r-md">
+            {{ chatPageOpenChat.numUsers }}</span
+          >
+          <span class="material-icons icon-primary icon-md"> settings </span>
+        </div>
+      </div>
+
+      <!-- The chat -->
       <spot-chat-room
         [chatRoom]="chatPageOpenChat"
         [isTab]="false"
+        (scroll)="onScroll($event)"
       ></spot-chat-room>
     </div>
     <ng-template #menu>
-      <spot-chat-page-menu></spot-chat-page-menu>
+      <spot-chat-page-menu (chatSelectedEvent)="openChat($event)"></spot-chat-page-menu>
     </ng-template>
   </div>
 </div>

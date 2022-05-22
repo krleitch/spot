@@ -4,8 +4,8 @@
 >
   <!-- Header -->
   <div
+    *ngIf="isTab"
     class="header row-h-center margin-md"
-    [ngClass]="isTab ? 'header-margin' : 'header'"
   >
     <span class="row-center margin-r-md">
       <i class="material-icons icon-md icon-secondary"> person </i>
@@ -23,7 +23,7 @@
   <div
     #chat
     class="body col flex-fill padding-lg overflow-auto"
-    (scroll)="onScroll()"
+    (scroll)="onScroll($event)"
   >
     <!-- Chat Start -->
     <div *ngIf="!beforeCursor" class="row-center text-secondary text-sm">

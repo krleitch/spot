@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Observable, Subject, concat, interval, of, timer } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -64,6 +64,8 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
   // minimized chats
   chatPageMinimizedChats$: Observable<ChatRoom[]>;
   chatPageMinimizedChats: ChatRoom[];
+
+  @Output() chatSelectedEvent = new EventEmitter<ChatRoom>();
 
   // Friends
   friends$: Observable<Friend[]>;
@@ -175,23 +177,6 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
   }
 
   openChat(chat: ChatRoom): void {
-    // check if its in minimized first
-    if (
-      this.chatPageMinimizedChats.filter((chat) => chat.id === chat.id).length >
-      0
-    ) {
-      const removeRequest: RemoveMinimizedChatStore = {
-        chatId: chat.id
-      };
-      this.store$.dispatch(
-        new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
-      );
-    }
-    const request: SetPageOpenChatStore = {
-      chat: chat
-    };
-    this.store$.dispatch(
-      new ChatStoreActions.SetPageOpenChatStoreAction(request)
-    );
+    this.chatSelectedEvent.emit(chat);
   }
 }

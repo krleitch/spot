@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { Observable, Subject, concat, interval, of, timer } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -37,21 +44,28 @@ import {
   RemoveMinimizedChatStore
 } from '@models/chat';
 import { LocationData } from '@models/location';
+import { UserMetadata, UnitSystem } from '@models/userMetadata';
 
 @Component({
   selector: 'spot-chat-page',
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.scss']
 })
-export class ChatPageComponent implements OnInit, OnDestroy {
+export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
   @ViewChild(ChatRoomComponent) room: ChatRoomComponent;
+  @ViewChild('minimized') minimized: ElementRef;
+  maximumMinimized = 3;
 
   chatPageOpenChat$: Observable<ChatRoom>;
   chatPageOpenChat: ChatRoom;
   chatPageMinimizedChats$: Observable<ChatRoom[]>;
   chatPageMinimizedChats: ChatRoom[];
+
+  // User Metadata
+  userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -60,6 +74,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // chat page
     this.chatPageOpenChat$ = this.store$.pipe(
       select(ChatStoreSelectors.selectChatPageOpenChat)
     );
@@ -76,10 +91,47 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       .subscribe((chats: ChatRoom[]) => {
         this.chatPageMinimizedChats = chats;
       });
+
+    // metadata
+    this.userMetadata$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUserMetadata)
+    );
+    this.userMetadata$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((userMetadata: UserMetadata) => {
+        this.userMetadata = userMetadata;
+      });
+  }
+
+  ngAfterViewInit(): void {
+    // minimized chats allowed
+    // 20px is padding on header, each chat is 60px with a 7px left margin
+    this.maximumMinimized = Math.floor(
+      (this.minimized.nativeElement.offsetWidth - 20) / 67
+    );
+    console.log(this.maximumMinimized);
   }
 
   ngOnDestroy(): void {
     this.onDestroy.next();
+  }
+
+  getDistance(distance: number): string {
+    let unit: UnitSystem;
+    if (this.userMetadata) {
+      unit = this.userMetadata.unitSystem;
+    } else {
+      unit = UnitSystem.IMPERIAL;
+    }
+
+    let distanceString = '';
+
+    if (unit === UnitSystem.METRIC) {
+      distanceString += (distance * 1.60934).toFixed(1) + ' km';
+    } else {
+      distanceString += distance.toFixed(1) + ' m';
+    }
+    return distanceString;
   }
 
   backToMenu(): void {
@@ -97,10 +149,23 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     );
   }
 
+  // check if there is room for a new chat to be added, if there isnt close the lru
+  checkMinimizedRoom(): void {
+    if (this.chatPageMinimizedChats.length >= this.maximumMinimized) {
+      const removeRequest: RemoveMinimizedChatStore = {
+        chatId: this.chatPageMinimizedChats[0].id
+      };
+      this.store$.dispatch(
+        new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
+      );
+    }
+  }
+
   openMinimizedChat(chat: ChatRoom): void {
     // if a chat is open then close it first
     if (this.chatPageOpenChat) {
       this.room.leaveRoom();
+      this.checkMinimizedRoom();
       const addRequest: AddPageMinimizedChatStore = {
         chat: this.chatPageOpenChat
       };
@@ -129,6 +194,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       const addRequest: AddPageMinimizedChatStore = {
         chat: this.chatPageOpenChat
       };
+      this.checkMinimizedRoom();
       this.store$.dispatch(
         new ChatStoreActions.AddPageMinimizedChatStoreAction(addRequest)
       );
@@ -137,6 +203,33 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         new ChatStoreActions.RemovePageOpenChatStoreAction(removeRequest)
       );
     }
+  }
+
+  openChat(chat: ChatRoom) {
+    if (
+      this.chatPageMinimizedChats.filter((chat) => chat.id === chat.id).length >
+      0
+    ) {
+      const removeRequest: RemoveMinimizedChatStore = {
+        chatId: chat.id
+      };
+      this.store$.dispatch(
+        new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
+      );
+    } else {
+      // otherwise we may need to remove
+      this.checkMinimizedRoom();
+    }
+    const request: SetPageOpenChatStore = {
+      chat: chat
+    };
+    this.store$.dispatch(
+      new ChatStoreActions.SetPageOpenChatStoreAction(request)
+    );
+  }
+
+  onScroll(event): void {
+    console.log(event);
   }
 
 }

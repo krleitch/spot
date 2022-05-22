@@ -162,7 +162,7 @@ export class ChatRoomComponent
     this.scrollChatToBottom();
   }
 
-  onScroll() {
+  onScroll(event) {
     const element = this.chat.nativeElement;
     const threshold = 0;
     const atBottom =

@@ -206,6 +206,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
 
     // Spots
+    // remember scrol posiotion
+    // TODO: https://medium.com/angular-in-depth/reactive-scroll-position-restoration-with-rxjs-792577f842c
     this.spots$ = this.store$.pipe(select(SpotStoreSelectors.selectSpots));
 
     this.spots$.pipe(takeUntil(this.onDestroy)).subscribe((spots: Spot[]) => {
