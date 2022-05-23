@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  AfterViewInit,
   ViewChild,
   ElementRef
 } from '@angular/core';
@@ -105,15 +104,6 @@ export class ChatModalComponent implements OnInit {
       .subscribe((userMetadata: UserMetadata) => {
         this.userMetadata = userMetadata;
       });
-  }
-
-  ngAfterViewInit(): void {
-    // minimized chats allowed
-    // 20px is padding on header, each chat is 60px with a 7px left margin
-    this.maximumMinimized = Math.floor(
-      (this.minimized.nativeElement.offsetWidth - 20) / 67
-    );
-    console.log(this.maximumMinimized);
   }
 
   ngOnDestroy(): void {

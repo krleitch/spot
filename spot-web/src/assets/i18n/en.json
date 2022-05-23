@@ -376,6 +376,10 @@
       "SHOWING_2": "chats"
     },
 
+    "CHAT_TAB": {
+      "LEAVE": "Leave"
+    },
+
     "ACTIVITY": {
       "TITLE": "Activity",
 

@@ -2,6 +2,11 @@
   position: absolute;
   top: 5px;
   right: 5px;
+  z-index: 99;
+}
+
+.header-right {
+  margin-right: 26px;
 }
 
 .chat-modal {

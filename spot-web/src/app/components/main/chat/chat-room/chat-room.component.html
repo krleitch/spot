@@ -2,22 +2,6 @@
   class="col background-container relative"
   [ngClass]="isTab ? 'chat-room-tab' : 'chat-room'"
 >
-  <!-- Header -->
-  <div
-    *ngIf="isTab"
-    class="header row-h-center margin-md"
-  >
-    <span class="row-center margin-r-md">
-      <i class="material-icons icon-md icon-secondary"> person </i>
-      <span class="text-secondary margin-l-sm">{{ userCount }} -</span>
-    </span>
-    <span class="flex-fill">
-      {{ chatRoom.geolocation }} {{ getDistance(chatRoom.distance) }}
-    </span>
-    <span class="text-secondary-highlight" (click)="leaveChatRoom()">
-      Leave
-    </span>
-  </div>
 
   <!-- Body -->
   <div

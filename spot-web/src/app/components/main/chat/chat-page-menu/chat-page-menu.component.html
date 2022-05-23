@@ -1,45 +1,46 @@
-<div
-  class="container background-container relative container-b-rounded"
->
+<div class="container background-container relative container-b-rounded">
   <!-- Sticky Header -->
-  <div class="header background-header row-h-center justify-content-between padding-h-lg">
+  <div
+    class="header background-header row-h-center justify-content-between padding-lg"
+  >
     <div class="row-center">
-      <div
-        class="row-center margin-r-lg"
+      <button
+        class="menu-button row-center margin-r-lg"
         [class.text-primary]="selectedPage === eSelectedPage.CHATS"
         (click)="selectChatRooms()"
       >
         <span class="material-icons icon-md"> groups </span>
         <span class="row-center margin-l-sm"> Chats </span>
-      </div>
-      <div
-        class="row-center margin-l-lg"
+      </button>
+      <button
+        class="menu-button row-center margin-l-lg"
         [class.text-primary]="selectedPage === eSelectedPage.FRIENDS"
         (click)="selectFriends()"
       >
         <span class="material-icons icon-md"> forum </span>
         <span class="row-center margin-l-sm"> Friends </span>
-      </div>
-    </div>
-
-    <!-- Search -->
-    <div class="row-h-center">
-      <span
-        class="material-icons icon-md icon-primary input-borderless-icon-left"
-      >
-        search
-      </span>
-      <input
-        [(ngModel)]="search"
-        class="input-border-bottom-sm"
-        placeholder="{{ 'MAIN.FRIENDS.FRIEND_SEARCH_PLACEHOLDER' | translate }}"
-        type="text"
-      />
+      </button>
     </div>
   </div>
 
+  <!-- Search -->
+  <div class="search row-h-center padding-h-md">
+    <span class="material-icons icon-md icon-primary margin-r-xs">
+      search
+    </span>
+    <input
+      [(ngModel)]="search"
+      class="input-search"
+      placeholder="{{ 'MAIN.FRIENDS.FRIEND_SEARCH_PLACEHOLDER' | translate }}"
+      type="text"
+    />
+  </div>
+
   <!-- Chat list -->
-  <div *ngIf="selectedPage === eSelectedPage.CHATS; else friends" class="bot-margin padding-h-lg">
+  <div
+    *ngIf="selectedPage === eSelectedPage.CHATS; else friends"
+    class="bot-margin padding-h-lg"
+  >
     <!-- Chats need location and are filtered by search -->
     <div *ngIf="location; else noLocation">
       <div
@@ -52,7 +53,7 @@
         <div *ngIf="chatRooms.length > 0; else noChats" class="col-h-center">
           <div
             *ngFor="let chatRoom of userChatRooms"
-            class="row-h-center margin-t-lg"
+            class="chat row-h-center margin-b-lg"
             (click)="openChat(chatRoom)"
           >
             <!-- Image -->
@@ -111,20 +112,18 @@
   </div>
 
   <!-- Friends list -->
-  <ng-template #friends> 
+  <ng-template #friends>
     <div class="bot-margin"></div>
   </ng-template>
 
   <div class="footer row-h-center justify-content-around">
-      <button class="footer-button" (click)="discoverRooms()">
-        <i class="material-icons icon-primary">travel_explore</i>
-        <span class="text margin-l-sm"> Discover rooms </span>
-      </button>
-      <button class="footer-button" (click)="createRoom()">
-        <i class="material-icons icon-primary">add_circle_outline</i>
-        <span class="text margin-l-sm"> Create room </span>
-      </button>
-    
+    <button class="footer-button" (click)="discoverRooms()">
+      <i class="material-icons icon-md">travel_explore</i>
+      <span class="text margin-l-sm"> Discover rooms </span>
+    </button>
+    <button class="footer-button" (click)="createRoom()">
+      <i class="material-icons icon-md">add_circle_outline</i>
+      <span class="text margin-l-sm"> Create room </span>
+    </button>
   </div>
-
 </div>

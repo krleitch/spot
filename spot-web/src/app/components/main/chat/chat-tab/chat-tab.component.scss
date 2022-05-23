@@ -29,7 +29,7 @@
 }
 
 .name {
-  margin-left: 55px;
+  line-height: 15px;
 }
 
 .tab-button {
@@ -37,18 +37,43 @@
   cursor: pointer;
   outline: none;
   text-decoration: none;
-  background-color: var(--primary);
+  background-color: var(--background-header);
   border: none;
   padding: 0;
-  color: white;
+}
 
-  span {
-    font-size: 15px;
-  }
+// DROPDOWN
+.dropdown-content {
+  display: none;
+  position: absolute;
+  width: 120px;
+  top: 35px;
+  right: 0;
+  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content .dropdown-button {
+  background-color: var(--background-container);
+  color: var(--text-primary);
+  padding: 12px 8px;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid var(--background-primary);
 
   &:hover {
-    color: darken(white, 20%);
-    cursor: pointer;
+    background: var(--background-primary);
+    color: var(--primary);
+
+    span {
+      color: var(--primary);
+    }
   }
+}
+
+.show-dropdown {
+  display: block;
 }
 

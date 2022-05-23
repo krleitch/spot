@@ -2,56 +2,6 @@
   <span class="material-icons icon-error"> close </span>
 </div>
 <div class="chat-modal background-container">
-  <!-- Minimized chat list -->
-  <div #minimized class="row-h-center justify-content-end padding-lg">
-    <!-- No chats -->
-    <div
-      *ngIf="chatPageMinimizedChats.length <= maximumMinimized - 2"
-      class="no-chats-placeholder"
-      (click)="openMenu()"
-    >
-      <span class="material-icons icon-secondary icon-md"> add </span>
-    </div>
-
-    <!-- Minimized chats -->
-    <div
-      *ngFor="let chatRoom of chatPageMinimizedChats"
-      class="row-center margin-l-md"
-      (click)="openMinimizedChat(chatRoom)"
-    >
-      <span
-        class="profile-md"
-        [ngClass]="chatRoom.imageSrc ? '' : 'chat-' + chatRoom.defaultImageNum"
-      >
-        <img
-          *ngIf="!chatRoom.imageSrc"
-          [src]="'/assets/images/chat/' + chatRoom.defaultImageSrc"
-        />
-        <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
-      </span>
-    </div>
-
-    <!-- Show the open chat on far right -->
-    <div
-      *ngIf="chatPageOpenChat"
-      class="profile-md owned margin-l-md"
-      [ngClass]="
-        chatPageOpenChat.imageSrc
-          ? ''
-          : 'chat-' + chatPageOpenChat.defaultImageNum
-      "
-    >
-      <img
-        *ngIf="!chatPageOpenChat.imageSrc"
-        [src]="'/assets/images/chat/' + chatPageOpenChat.defaultImageSrc"
-      />
-      <img
-        *ngIf="chatPageOpenChat.imageSrc"
-        [src]="chatPageOpenChat.imageSrc"
-      />
-    </div>
-  </div>
-
   <!-- Show the chat or show the menu -->
   <div
     *ngIf="chatPageOpenChat; else menu"
@@ -78,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="row-h-center">
+      <div class="row-h-center header-right">
         <span class="material-icons icon-secondary icon-md"> person </span>
         <span class="text-md margin-l-xs margin-r-md">
           {{ chatPageOpenChat.numUsers }}</span

@@ -15,21 +15,42 @@ spot-main-nav {
   z-index: 9;
 }
 
+.menu-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
 .top-margin {
-  margin-top: 100px;
+  margin-top: 35px;
 }
 
 .bot-margin {
   padding-bottom: 35px;
 }
 
+.chat {
+  cursor: pointer;
+}
+
 .input-borderless-icon-left {
   border-bottom: 1px solid var(--input-border);
 }
 
-input {
-  width: 120px;
-  margin-top: 1px;
+.search {
+  box-sizing: border-box;
+  width: calc(100% - 12px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin: 6px;
+  background-color: var(--input-background);
+  color: var(--input-text);
+}
+
+.input-search {
+  border: none;
+  outline: none;
+  background-color: var(--input-background);
 }
 
 .footer {

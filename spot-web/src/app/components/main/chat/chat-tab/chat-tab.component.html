@@ -1,9 +1,9 @@
 <div class="tab">
   <div
-    class="header row-h-center justify-content-between background-primary full-width padding-v-xs padding-h-sm border-box"
+    class="header row-h-center background-header full-width padding-v-sm padding-h-sm border-box"
   >
     <span
-      class="image margin-sm"
+      class="profile-sm margin-r-md"
       [ngClass]="tab.imageSrc ? '' : 'chat-' + tab.defaultImageNum"
     >
       <img *ngIf="tab.imageSrc" [src]="tab.imageSrc" />
@@ -12,13 +12,39 @@
         [src]="'/assets/images/chat/' + tab.defaultImageSrc"
       />
     </span>
-    <span class="name text-md text-white">{{ tab.name }}</span>
-    <div class="row-center">
+    <div class="name col-h-center">
+      <span class="text-md">{{ tab.name }}</span>
+      <span class="text-xs">
+        {{ tab.geolocation }} ({{ getDistance(tab.distance) }})</span
+      >
+    </div>
+    <div class="row-center align-right">
+      <div class="relative">
+        <button
+          #settings
+          class="tab-button margin-l-sm"
+          (click)="toggleDropdown()"
+        >
+          <span class="material-icons icon-sm icon-secondary-highlight"
+            >settings</span
+          >
+        </button>
+        <div class="dropdown-content" [class.show-dropdown]="showDropdown">
+          <div class="dropdown-button" (click)="leaveChatRoom()">
+            <span class="material-icons icon-md margin-r-md">
+              directions_run
+            </span>
+            {{ 'MAIN.CHAT_TAB.LEAVE' | translate }}
+          </div>
+        </div>
+      </div>
       <button class="tab-button margin-l-sm" (click)="minimizeTab()">
-        <span class="material-icons">remove</span>
+        <span class="material-icons icon-sm icon-secondary-highlight"
+          >remove</span
+        >
       </button>
       <button class="tab-button margin-l-sm" (click)="closeTab()">
-        <span class="material-icons">close</span>
+        <span class="material-icons icon-sm icon-close">close</span>
       </button>
     </div>
   </div>
