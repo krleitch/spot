@@ -228,8 +228,4 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  onScroll(event): void {
-    console.log(event);
-  }
-
 }

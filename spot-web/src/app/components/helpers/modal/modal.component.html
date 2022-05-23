@@ -1,7 +1,8 @@
 <div class="spot-modal">
   <div
     class="spot-modal-body"
-    [ngStyle]="{ 'width.px': width, 'height.px': height }"
+    [ngStyle]="{ 'width.px': fullscreen ? null : width, 'height.px': fullscreen ? null : height }"
+    [class.fullscreen]="fullscreen"
   >
     <div #container></div>
   </div>

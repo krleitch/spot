@@ -23,6 +23,7 @@ import { UploadPhotoComponent } from '@src/app/components/helpers/upload-photo/u
 import { ChatCreateComponent } from '@src/app/components/main/chat/chat-create/chat-create.component';
 import { AccountEditComponent } from '@src/app/components/main/account-edit/account-edit.component';
 import { ChatDiscoverComponent } from '@src/app/components/main/chat/chat-discover/chat-discover.component';
+import { ChatModalComponent } from '@src/app/components/main/chat/chat-modal/chat-modal.component';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -42,6 +43,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() disableClose: boolean;
   @Input() darkenBackground: boolean;
   @Input() hideModals: boolean;
+  @Input() fullscreen: boolean;
   @Input() componentName: string;
 
   // All modals must have data and modalId properties
@@ -57,6 +59,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     | ChatCreateComponent
     | ChatDiscoverComponent
     | AccountEditComponent
+    | ChatModalComponent
   >;
 
   // Element used for clicking and closing background
@@ -77,6 +80,7 @@ export class ModalComponent implements OnInit, OnDestroy {
       | typeof UploadPhotoComponent
       | typeof ChatCreateComponent
       | typeof ChatDiscoverComponent
+      | typeof ChatModalComponent
       | typeof AccountEditComponent;
   } = {
     share: ShareComponent,
@@ -89,6 +93,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     uploadPhoto: UploadPhotoComponent,
     chatCreate: ChatCreateComponent,
     chatDiscover: ChatDiscoverComponent,
+    chatModal: ChatModalComponent,
     accountEdit: AccountEditComponent
   };
 
@@ -144,6 +149,12 @@ export class ModalComponent implements OnInit, OnDestroy {
       )
         ? options.hideModals
         : false;
+      this.fullscreen = Object.prototype.hasOwnProperty.call(
+        options,
+        'fullscreen'
+      )
+        ? options.fullscreen
+        : false;
     } else {
       // defaults
       this.width = 400;
@@ -151,6 +162,7 @@ export class ModalComponent implements OnInit, OnDestroy {
       this.disableClose = false;
       this.darkenBackground = true;
       this.hideModals = false;
+      this.fullscreen = false;
     }
   }
 

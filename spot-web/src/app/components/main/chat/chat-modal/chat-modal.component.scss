@@ -1,0 +1,56 @@
+.modal-header {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.chat-modal {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-flow: column;
+  box-sizing: border-box;
+}
+
+.chat-room-container {
+  height: calc(100% - 84px);
+}
+spot-chat-room {
+  height: calc(100% - 34px);
+  box-sizing: border-box;
+}
+
+spot-chat-page-menu {
+  display: flex;
+  flex: 1;
+}
+
+.top-margin {
+  margin-top: 50px;
+}
+
+.input-borderless-icon-left {
+  border-bottom: 1px solid var(--input-border);
+}
+
+input {
+  width: 120px;
+  margin-top: 1px;
+}
+
+.chat-header {
+  line-height: 15px;
+}
+
+.no-chats-placeholder {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: transparent;
+  border: 2px dashed var(--background-primary);
+}

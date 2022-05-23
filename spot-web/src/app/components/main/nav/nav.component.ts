@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 
 // rxjs
 import { Observable, Subject, timer } from 'rxjs';
-import { mapTo, startWith, takeUntil, takeWhile } from 'rxjs/operators';
+import { mapTo, startWith, takeUntil, takeWhile, take } from 'rxjs/operators';
 
 // store
 import { Store, select } from '@ngrx/store';
@@ -176,5 +176,14 @@ export class NavComponent implements OnInit, OnDestroy {
 
   toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
+  }
+
+  openChatModal() {
+    this.modalService
+      .open('global', 'chatModal', {}, { fullscreen: true })
+      .pipe(take(1))
+      .subscribe((_result) => {
+        // Open the room, if a room was created
+      });
   }
 }

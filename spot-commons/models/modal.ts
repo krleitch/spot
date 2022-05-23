@@ -4,6 +4,7 @@ export interface ModalOptions {
   disableClose?: boolean; // close when the background is clicked
   darkenBackground?: boolean; // does the background change color
   hideModals?: boolean; // hide all other modals when this is open, show when closed
+  fullscreen?: boolean; // cover the entire screen
 }
 
 export type ModalComponents =
@@ -17,6 +18,7 @@ export type ModalComponents =
   | "uploadPhoto"
   | "chatCreate"
   | "chatDiscover"
+  | "chatModal"
   | "accountEdit";
 
 // ********************

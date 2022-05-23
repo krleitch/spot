@@ -3,11 +3,11 @@
     <div class="spot-logo"></div>
   </div>
   <div *ngIf="user$ | async as myuser; else noUser" class="row-center">
-    <a [routerLink]="'/chat'" class="mobile-show margin-r-lg margin-t-sm">
+    <div class="mobile-show margin-r-lg margin-t-sm" (click)="openChatModal()">
       <span class="material-icons-outlined icon-lg icon-primary-highlight">
         insert_comment
       </span>
-    </a>
+    </div>
     <div
       *ngIf="userMetadata$ | async as userMetadata"
       class="row-center margin-r-lg tablet-hide"
