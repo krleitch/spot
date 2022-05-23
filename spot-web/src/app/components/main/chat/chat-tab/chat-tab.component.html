@@ -14,9 +14,12 @@
     </span>
     <div class="name col-h-center">
       <span class="text-md">{{ tab.name }}</span>
-      <span class="text-xs">
-        {{ tab.geolocation }} ({{ getDistance(tab.distance) }})</span
-      >
+      <span class="row-h-center">
+        <span class="material-icons icon-xs icon-primary"> location_on </span>
+        <span class="text-xs">
+          {{ tab.geolocation }} ({{ getDistance(tab.distance) }})</span
+        >
+      </span>
     </div>
     <div class="row-center align-right">
       <div class="relative">
