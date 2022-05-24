@@ -110,9 +110,7 @@
         </span>
       </button>
     </div>
-    <div
-      class="full-width border-box background-container container-b-rounded"
-    >
+    <div class="full-width border-box background-container container-b-rounded">
       <div
         class="row-h-center justify-content-between border-box margin-v-sm margin-h-xl"
       >
@@ -134,32 +132,34 @@
       {{ friendRequestsError }}
     </div>
 
-    <!-- Friends List Header w/ Search -->
+    <!-- Friends List -->
     <div
-      class="row-h-center justify-content-between background-header padding-sm container-t-rounded margin-t-lg"
+      class="row-h-center background-header padding-sm container-t-rounded margin-t-lg"
     >
-      <div class="row-center">
-        <span class="material-icons icon-lg icon-primary"> people_alt </span>
-        <div class="title-sm margin-l-md">
-          {{ 'MAIN.FRIENDS.FRIENDS' | translate }}
-        </div>
-      </div>
-      <div class="row-h-center">
-        <span class="material-icons icon-lg icon-primary"> search </span>
-        <input
-          [(ngModel)]="friendSearch"
-          class="input-border-bottom-sm margin-l-sm"
-          placeholder="{{
-            'MAIN.FRIENDS.FRIEND_SEARCH_PLACEHOLDER' | translate
-          }}"
-          type="text"
-        />
+      <span class="material-icons icon-lg icon-primary"> people_alt </span>
+      <div class="title-sm margin-l-md">
+        {{ 'MAIN.FRIENDS.FRIENDS' | translate }}
       </div>
     </div>
     <!-- Friends List -->
     <div
       class="full-width padding-md border-box background-container margin-b-lg container-b-rounded"
     >
+      <!-- Search -->
+      <div class="input-search-container">
+        <span class="material-icons icon-md icon-primary margin-r-xs">
+          search
+        </span>
+        <input
+          [(ngModel)]="friendSearch"
+          class="input-search"
+          placeholder="{{
+            'MAIN.FRIENDS.FRIEND_SEARCH_PLACEHOLDER' | translate
+          }}"
+          type="text"
+        />
+      </div>
+
       <div
         *ngIf="
           friends$

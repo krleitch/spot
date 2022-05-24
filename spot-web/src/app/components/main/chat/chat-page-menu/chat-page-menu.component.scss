@@ -1,23 +1,17 @@
-spot-main-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  z-index: 99;
-}
-
-.container {
-  max-width: 500px;
-  min-width: 100%;
-  box-sizing: border-box;
-  flex: 1;
-  z-index: 9;
-}
-
 .menu-button {
   border: none;
   background: none;
+  cursor: pointer;
+}
+
+// chat list
+.scroll-list {
+  margin-bottom: 35px;
+  height: calc(100% - 125px);
+  overflow: auto;
+}
+
+.chat {
   cursor: pointer;
 }
 
@@ -25,34 +19,7 @@ spot-main-nav {
   margin-top: 35px;
 }
 
-.bot-margin {
-  padding-bottom: 35px;
-}
-
-.chat {
-  cursor: pointer;
-}
-
-.input-borderless-icon-left {
-  border-bottom: 1px solid var(--input-border);
-}
-
-.search {
-  box-sizing: border-box;
-  width: calc(100% - 12px);
-  padding: 8px 12px;
-  border-radius: 10px;
-  margin: 6px;
-  background-color: var(--input-background);
-  color: var(--input-text);
-}
-
-.input-search {
-  border: none;
-  outline: none;
-  background-color: var(--input-background);
-}
-
+// footer
 .footer {
   position: absolute;
   bottom: 0;

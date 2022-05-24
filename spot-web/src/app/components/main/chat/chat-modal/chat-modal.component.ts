@@ -61,6 +61,10 @@ export class ChatModalComponent implements OnInit {
   @ViewChild('minimized') minimized: ElementRef;
   maximumMinimized = 3;
 
+  // state
+  @ViewChild('settings') settings;
+  showDropdown = false;
+
   chatPageOpenChat$: Observable<ChatRoom>;
   chatPageOpenChat: ChatRoom;
   chatPageMinimizedChats$: Observable<ChatRoom[]>;
@@ -74,7 +78,9 @@ export class ChatModalComponent implements OnInit {
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private modalService: ModalService
-  ) {}
+  ) {
+    document.addEventListener('click', this.offClickHandler.bind(this));
+  }
 
   ngOnInit(): void {
     // chat page
@@ -108,6 +114,17 @@ export class ChatModalComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.onDestroy.next();
+  }
+
+  offClickHandler(event: MouseEvent): void {
+    // Hide the dropdown if you click outside
+    if (this.settings && !this.settings.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
+  }
+
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
   }
 
   getDistance(distance: number): string {
@@ -225,6 +242,4 @@ export class ChatModalComponent implements OnInit {
   close(): void {
     this.modalService.close('global');
   }
-
-
 }

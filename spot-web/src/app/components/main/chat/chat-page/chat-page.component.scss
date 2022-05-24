@@ -30,30 +30,28 @@ spot-main-nav {
 .chat-room-container {
   height: calc(100% - 84px);
 }
+
 spot-chat-room {
-  height: calc(100% - 34px);
+  height: calc(100% - 40px);
   box-sizing: border-box;
 }
 
 spot-chat-page-menu {
+  height: calc(100% - 84px);
   display: flex;
   flex: 1;
+  overflow: hidden;
+}
+
+.minimized-chat {
+  cursor: pointer;
 }
 
 .top-margin {
   margin-top: 50px;
 }
 
-.input-borderless-icon-left {
-  border-bottom: 1px solid var(--input-border);
-}
-
-input {
-  width: 120px;
-  margin-top: 1px;
-}
-
-.chat-header {
+.line-height {
   line-height: 15px;
 }
 
@@ -68,4 +66,18 @@ input {
   background-color: transparent;
   border: 2px dashed var(--background-primary);
   cursor: pointer;
+}
+
+.header-button {
+  display: flex;
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  background-color: var(--background-header);
+  border: none;
+  padding: 0;
+}
+
+.dropdown-content {
+  top: 22px;
 }

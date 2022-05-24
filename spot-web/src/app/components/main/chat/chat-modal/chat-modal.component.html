@@ -9,7 +9,7 @@
   >
     <!-- Chat Header -->
     <div
-      class="chat-header background-header row-h-center justify-content-between padding-sm"
+      class="background-header row-h-center padding-sm"
     >
       <div class="row-h-center">
         <span
@@ -18,22 +18,58 @@
         >
           arrow_back
         </span>
-        <div class="col-h-center margin-l-md">
-          <span class="text-sm"> {{ chatPageOpenChat.name }}</span>
-          <div class="">
-            <span class="text-xs"> {{ chatPageOpenChat.geolocation }}</span>
+
+        <!-- Chat photo-->
+        <span
+          class="profile-sm margin-h-md"
+          [ngClass]="
+            chatPageOpenChat.imageSrc
+              ? ''
+              : 'chat-' + chatPageOpenChat.defaultImageNum
+          "
+        >
+          <img *ngIf="chatPageOpenChat.imageSrc" [src]="tab.imageSrc" />
+          <img
+            *ngIf="!chatPageOpenChat.imageSrc"
+            [src]="'/assets/images/chat/' + chatPageOpenChat.defaultImageSrc"
+          />
+        </span>
+
+        <!-- Name and location with distance -->
+        <div class="line-height col-h-center margin-r-md">
+          <span class="text-md"> {{ chatPageOpenChat.name }}</span>
+          <div class="row-h-center">
+            <span class="material-icons icon-xs icon-primary">
+              location_on
+            </span>
             <span class="text-xs">
-              ({{ getDistance(chatPageOpenChat.distance) }})</span
+              {{ chatPageOpenChat.geolocation }} ({{
+                getDistance(chatPageOpenChat.distance)
+              }})</span
             >
           </div>
         </div>
-      </div>
-      <div class="row-h-center header-right">
-        <span class="material-icons icon-secondary icon-md"> person </span>
-        <span class="text-md margin-l-xs margin-r-md">
-          {{ chatPageOpenChat.numUsers }}</span
-        >
-        <span class="material-icons icon-primary icon-md"> settings </span>
+
+        <!-- Settings Dropdown -->
+        <div class="relative">
+          <button
+            #settings
+            class="header-button margin-l-md"
+            (click)="toggleDropdown()"
+          >
+            <span class="material-icons icon-md icon-primary"
+              >settings</span
+            >
+          </button>
+          <div class="dropdown-content" [class.show-dropdown]="showDropdown">
+            <div class="dropdown-button" (click)="leaveChatRoom()">
+              <span class="material-icons icon-lg margin-r-md">
+                directions_run
+              </span>
+              {{ 'MAIN.CHAT_TAB.LEAVE' | translate }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

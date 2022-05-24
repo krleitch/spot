@@ -1,6 +1,6 @@
 // take away the header
 .chat-room-tab {
-  height: calc(100% - 25px);
+  height: calc(100% - 40px);
 }
 .chat-room {
   height: calc(100%);
@@ -48,8 +48,7 @@
 }
 
 .body {
-  height: calc(100% - 66px);
-  margin-bottom: 46px;
+  margin-bottom: 42px;
   overflow: auto;
 }
 // Content Editable
@@ -62,31 +61,41 @@
   box-sizing: border-box;
 }
 
-.chat {
-  flex: 1;
-  display: block;
-  padding: 8px;
+.editor {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--input-background);
   border-radius: 5px;
-  background-color: var(--background-primary);
-  border: 0;
-  outline: 0;
-  white-space: pre-wrap; /* css-3 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -pre-wrap; /* Opera 4-6 */
-  white-space: -o-pre-wrap; /* Opera 7 */
-  word-wrap: break-word; /* Internet Explorer 5.5+ */
-}
-// include a placeholder for the chat
-[contenteditable='true']:empty:not(:focus):before {
-  content: attr(ph);
-  color: var(--input-text-ph);
-  font-style: italic;
-  cursor: text;
-}
-[contenteditable='true']:empty:focus:before {
-  content: attr(ph);
-  color: var(--input-text-ph-light);
-  font-style: italic;
-  cursor: text;
-}
 
+  .chat {
+    flex-grow: 1;
+    max-width: 100%;
+    padding: 6px 6px;
+    box-sizing: border-box;
+    border: 0;
+    outline: 0;
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  }
+
+  // include a placeholder for the chat
+  [contenteditable='true']:empty:not(:focus):before {
+    content: attr(ph);
+    color: var(--input-text-ph);
+    font-style: italic;
+    cursor: text;
+  }
+  [contenteditable='true']:empty:focus:before {
+    content: attr(ph);
+    color: var(--input-text-ph-light);
+    font-style: italic;
+    cursor: text;
+  }
+
+}

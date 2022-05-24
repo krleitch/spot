@@ -1,7 +1,9 @@
 <div class="tab">
+  <!-- Header -->
   <div
     class="header row-h-center background-header full-width padding-v-sm padding-h-sm border-box"
   >
+    <!-- Chat photo-->
     <span
       class="profile-sm margin-r-md"
       [ngClass]="tab.imageSrc ? '' : 'chat-' + tab.defaultImageNum"
@@ -12,7 +14,9 @@
         [src]="'/assets/images/chat/' + tab.defaultImageSrc"
       />
     </span>
-    <div class="name col-h-center">
+
+    <!-- Name and locaton with distance -->
+    <div class="line-height col-h-center">
       <span class="text-md">{{ tab.name }}</span>
       <span class="row-h-center">
         <span class="material-icons icon-xs icon-primary"> location_on </span>
@@ -22,10 +26,11 @@
       </span>
     </div>
     <div class="row-center align-right">
+      <!-- Settings Dropdown -->
       <div class="relative">
         <button
           #settings
-          class="tab-button margin-l-sm"
+          class="tab-button margin-l-md"
           (click)="toggleDropdown()"
         >
           <span class="material-icons icon-sm icon-secondary-highlight"
@@ -41,15 +46,21 @@
           </div>
         </div>
       </div>
-      <button class="tab-button margin-l-sm" (click)="minimizeTab()">
+
+      <!-- Minimized -->
+      <button class="tab-button margin-l-md" (click)="minimizeTab()">
         <span class="material-icons icon-sm icon-secondary-highlight"
           >remove</span
         >
       </button>
-      <button class="tab-button margin-l-sm" (click)="closeTab()">
+
+      <!-- Close -->
+      <button class="tab-button margin-l-md" (click)="closeTab()">
         <span class="material-icons icon-sm icon-close">close</span>
       </button>
     </div>
   </div>
+
+  <!-- The chat room -->
   <spot-chat-room [chatRoom]="tab" [isTab]="true"></spot-chat-room>
 </div>

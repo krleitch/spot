@@ -53,14 +53,13 @@
       </div>
 
       <!-- Search -->
-      <div
-        *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
-        class="row-center padding-md"
-      >
-        <span class="material-icons padding-r-md"> search </span>
+      <div *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL" class="input-search-container">
+        <span class="material-icons icon-md icon-primary margin-r-xs">
+          search
+        </span>
         <input
-          class="input-border-bottom"
           [(ngModel)]="search"
+          class="input-search"
           placeholder="{{ 'MAIN.CHAT_MENU.SEARCH_PLACEHOLDER' | translate }}"
           type="text"
         />

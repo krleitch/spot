@@ -41,7 +41,10 @@ import {
   AddPageMinimizedChatStore,
   RemovePageMinimizedChatStore,
   GetUserChatRoomsRequest,
-  RemoveMinimizedChatStore
+  RemoveMinimizedChatStore,
+  RemoveUserChatRoomStore,
+  LeaveChatRoomResponse,
+  LeaveChatRoomRequest
 } from '@models/chat';
 import { LocationData } from '@models/location';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
@@ -58,6 +61,10 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('minimized') minimized: ElementRef;
   maximumMinimized = 3;
 
+  // state
+  @ViewChild('settings') settings;
+  showDropdown = false;
+
   chatPageOpenChat$: Observable<ChatRoom>;
   chatPageOpenChat: ChatRoom;
   chatPageMinimizedChats$: Observable<ChatRoom[]>;
@@ -71,7 +78,9 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private modalService: ModalService
-  ) {}
+  ) {
+    document.addEventListener('click', this.offClickHandler.bind(this));
+  }
 
   ngOnInit(): void {
     // chat page
@@ -114,6 +123,17 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.onDestroy.next();
+  }
+
+  offClickHandler(event: MouseEvent): void {
+    // Hide the dropdown if you click outside
+    if (this.settings && !this.settings.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
+  }
+
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
   }
 
   getDistance(distance: number): string {
@@ -228,4 +248,23 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  leaveChatRoom(): void {
+    const leaveChatRoom: LeaveChatRoomRequest = {
+      chatRoomId: this.chatPageOpenChat.id
+    };
+    this.chatService
+      .leaveChatRoom(leaveChatRoom)
+      .pipe(take(1))
+      .subscribe((response: LeaveChatRoomResponse) => {
+        this.room.leaveRoom();
+        const removeUserChatRoomStore: RemoveUserChatRoomStore = {
+          chatId: response.chatRoom.id
+        };
+        this.store$.dispatch(
+          new ChatStoreActions.RemoveUserChatRoomStoreAction(
+            removeUserChatRoomStore
+          )
+        );
+      });
+  }
 }

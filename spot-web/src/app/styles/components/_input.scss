@@ -89,6 +89,26 @@
   color: var(--error);
 }
 
+// searches
+.input-search-container {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: calc(100% - 12px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin: 6px;
+  background-color: var(--input-background);
+  color: var(--input-text);
+}
+
+.input-search {
+  border: none;
+  outline: none;
+  background-color: var(--input-background);
+  flex: 1;
+}
+
 /*------------------------------------------------------------------*/
 /*                             Checkbox                             */
 /*------------------------------------------------------------------*/

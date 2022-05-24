@@ -1,4 +1,4 @@
-<div class="container background-container relative container-b-rounded">
+<div class="background-container relative container-b-rounded flex-fill">
   <!-- Sticky Header -->
   <div
     class="header background-header row-h-center justify-content-between padding-lg"
@@ -24,7 +24,7 @@
   </div>
 
   <!-- Search -->
-  <div class="search row-h-center padding-h-md">
+  <div class="input-search-container">
     <span class="material-icons icon-md icon-primary margin-r-xs">
       search
     </span>
@@ -39,7 +39,7 @@
   <!-- Chat list -->
   <div
     *ngIf="selectedPage === eSelectedPage.CHATS; else friends"
-    class="bot-margin padding-h-lg"
+    class="scroll-list padding-h-lg"
   >
     <!-- Chats need location and are filtered by search -->
     <div *ngIf="location; else noLocation">
@@ -113,7 +113,7 @@
 
   <!-- Friends list -->
   <ng-template #friends>
-    <div class="bot-margin"></div>
+    <div class="scroll-list"></div>
   </ng-template>
 
   <div class="footer row-h-center justify-content-around">

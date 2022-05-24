@@ -1,8 +1,7 @@
 <div
-  class="col background-container relative"
+  class="col background-container relative container-b-rounded"
   [ngClass]="isTab ? 'chat-room-tab' : 'chat-room'"
 >
-
   <!-- Body -->
   <div
     #chat
@@ -71,17 +70,23 @@
   </div>
 
   <!-- Chat Bar -->
-  <div class="footer row-v-center align-items-end">
-    <span
-      #create
-      contenteditable="true"
-      attr.ph="{{ 'MAIN.CHAT_ROOM.CHAT_PLACEHOLDER' | translate }}"
-      class="chat"
-      (input)="onTextInput($event)"
-      (keydown.enter)="onEnter()"
-    ></span>
-    <button class="button-primary margin-l-md" (click)="submit()">
-      {{ 'MAIN.CHAT_ROOM.SEND' | translate }}
-    </button>
+  <div class="footer row-h-center container-b-rounded">
+    <span class="material-icons icon-primary icon-md"> person </span>
+    <span class="margin-l-sm margin-r-md"> {{ userCount }} </span>
+    <span class="material-icons-outlined icon-primary icon-md"> timer </span>
+    <span class="margin-l-sm margin-r-md"> 43:20 </span>
+    <div class="editor">
+      <span
+        #create
+        contenteditable="true"
+        attr.ph="{{ 'MAIN.CHAT_ROOM.CHAT_PLACEHOLDER' | translate }}"
+        class="chat"
+        (input)="onTextInput($event)"
+        (keydown.enter)="onEnter()"
+      ></span>
+      <span class="material-icons icon-lg icon-secondary-highlight margin-h-md" (click)="submit()">
+        send
+      </span>
+    </div>
   </div>
 </div>

@@ -6,14 +6,18 @@
     <!-- Minimized chat list -->
     <div #minimized class="row-h-center justify-content-end padding-lg">
       <!-- No chats -->
-      <div *ngIf="chatPageMinimizedChats.length <= (maximumMinimized - 2)" class="no-chats-placeholder" (click)="openMenu()">
+      <div
+        *ngIf="chatPageMinimizedChats.length <= maximumMinimized - 2"
+        class="no-chats-placeholder"
+        (click)="openMenu()"
+      >
         <span class="material-icons icon-secondary icon-md"> add </span>
       </div>
 
       <!-- Minimized chats -->
       <div
         *ngFor="let chatRoom of chatPageMinimizedChats"
-        class="row-center margin-l-md"
+        class="minimized-chat row-center margin-l-md"
         (click)="openMinimizedChat(chatRoom)"
       >
         <span
@@ -57,30 +61,67 @@
       class="chat-room-container col-h-center"
     >
       <!-- Chat Header -->
-      <div class="chat-header background-header row-h-center justify-content-between padding-sm">
+      <div
+        class="background-header row-h-center justify-content-between padding-sm"
+      >
         <div class="row-h-center">
           <span
-            class="material-icons icon-md icon-primary"
+            class="material-icons icon-md icon-secondary-highlight"
             (click)="backToMenu()"
           >
             arrow_back
           </span>
-          <div class="col-h-center margin-l-md">
+          <!-- Chat photo-->
+          <span
+            class="profile-sm margin-h-md"
+            [ngClass]="
+              chatPageOpenChat.imageSrc
+                ? ''
+                : 'chat-' + chatPageOpenChat.defaultImageNum
+            "
+          >
+            <img *ngIf="chatPageOpenChat.imageSrc" [src]="tab.imageSrc" />
+            <img
+              *ngIf="!chatPageOpenChat.imageSrc"
+              [src]="'/assets/images/chat/' + chatPageOpenChat.defaultImageSrc"
+            />
+          </span>
+
+          <!-- Name and location with distance -->
+          <div class="line-height col-h-center">
             <span class="text-md"> {{ chatPageOpenChat.name }}</span>
-            <div class="">
-              <span class="text-xs"> {{ chatPageOpenChat.geolocation }}</span>
+            <div class="row-h-center">
+              <span class="material-icons icon-xs icon-primary">
+                location_on
+              </span>
               <span class="text-xs">
-                ({{ getDistance(chatPageOpenChat.distance) }})</span
+                {{ chatPageOpenChat.geolocation }} ({{
+                  getDistance(chatPageOpenChat.distance)
+                }})</span
               >
             </div>
           </div>
         </div>
-        <div class="row-h-center">
-          <span class="material-icons icon-secondary icon-md"> person </span>
-          <span class="text-md margin-l-xs margin-r-md">
-            {{ chatPageOpenChat.numUsers }}</span
+
+        <!-- Settings Dropdown -->
+        <div class="relative">
+          <button
+            #settings
+            class="header-button margin-l-md"
+            (click)="toggleDropdown()"
           >
-          <span class="material-icons icon-primary icon-md"> settings </span>
+            <span class="material-icons icon-sm icon-secondary-highlight"
+              >settings</span
+            >
+          </button>
+          <div class="dropdown-content" [class.show-dropdown]="showDropdown">
+            <div class="dropdown-button" (click)="leaveChatRoom()">
+              <span class="material-icons icon-lg margin-r-md">
+                directions_run
+              </span>
+              {{ 'MAIN.CHAT_TAB.LEAVE' | translate }}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -91,7 +132,9 @@
       ></spot-chat-room>
     </div>
     <ng-template #menu>
-      <spot-chat-page-menu (chatSelectedEvent)="openChat($event)"></spot-chat-page-menu>
+      <spot-chat-page-menu
+        (chatSelectedEvent)="openChat($event)"
+      ></spot-chat-page-menu>
     </ng-template>
   </div>
 </div>
