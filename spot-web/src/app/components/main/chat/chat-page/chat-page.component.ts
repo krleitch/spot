@@ -118,7 +118,6 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.maximumMinimized = Math.floor(
       (this.minimized.nativeElement.offsetWidth - 20) / 67
     );
-    console.log(this.maximumMinimized);
   }
 
   ngOnDestroy(): void {

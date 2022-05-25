@@ -12,19 +12,8 @@
     <ng-container
       *ngIf="chatRooms | filter: { filter: search, field: 'name' } as chatRooms"
     >
-      <!-- Search && refresh -->
+      <!-- info and refresh -->
       <div class="row-h-center">
-        <div class="row-h-center">
-          <span class="material-icons icon-lg icon-primary"> search </span>
-          <input
-            [(ngModel)]="search"
-            class="input-border-bottom-sm margin-l-sm"
-            placeholder="{{
-              'MAIN.CHAT_DISCOVER.SEARCH_PLACEHOLDER' | translate
-            }}"
-            type="text"
-          />
-        </div>
         <div *ngIf="chatRooms.length > 0" class="margin-l-md">
           {{ 'MAIN.CHAT_DISCOVER.SHOWING_1' | translate }}
           {{ chatRooms.length }} / {{ chatRoomsPagination.totalCount }}
@@ -42,11 +31,27 @@
         </div>
       </div>
 
+      <!-- Search -->
+      <div class="input-search-container">
+        <span class="material-icons icon-md icon-primary margin-r-xs">
+          search
+        </span>
+        <input
+          [(ngModel)]="search"
+          class="input-search"
+          placeholder="{{
+            'MAIN.CHAT_DISCOVER.SEARCH_PLACEHOLDER' | translate
+          }}"
+          type="text"
+        />
+      </div>
+
       <!-- Selected Row -->
       <div
         *ngIf="selectedChat"
-        class="row-h-center background-page container-rounded padding-md"
+        class="row background-page container-rounded padding-md mobile-col"
       >
+        <div class="row-h-center">
         <!-- Chat Photo -->
         <div
           class="profile-md"
@@ -92,8 +97,10 @@
           </div>
         </div>
 
+        </div>
+
         <!-- Join Button -->
-        <div class="row-h-center align-right mobile-col">
+        <div class="row-h-center align-right margin-sm">
           <div *ngIf="selectedChat.private" class="row-center margin-r-md">
             <span class="material-icons icon-sm"> lock </span>
             <input
@@ -126,34 +133,20 @@
         >
           <thead>
             <tr>
-              <th style="width: 40px" scope="col"></th>
-              <th
-                scope="col"
-                [spotSort]="chatRooms"
-                data-order="desc"
-                data-name="name"
-              >
-                <div class="row-h-center">
-                  <span class="material-icons icon-sm icon-primary">
-                    chat
-                  </span>
-                  <span class="margin-l-xs">
-                    {{ 'MAIN.CHAT_DISCOVER.NAME' | translate }}
-                  </span>
-                </div>
-              </th>
+              <th style="width: 48px" scope="col"></th>
               <th
                 scope="col"
                 [spotSort]="chatRooms"
                 data-order="desc"
                 data-name="distance"
+                class="padding-h-sm"
               >
                 <div class="row-h-center">
-                  <span class="material-icons icon-sm icon-primary">
-                    place
+                  <span class="material-icons icon-md icon-primary">
+                    groups
                   </span>
-                  <span class="margin-l-xs">
-                    {{ 'MAIN.CHAT_DISCOVER.LOCATION' | translate }}
+                  <span class="margin-l-md">
+                    {{ 'MAIN.CHAT_DISCOVER.NAME_LOCATION' | translate }}
                   </span>
                 </div>
               </th>
@@ -163,7 +156,8 @@
                 data-order="desc"
                 data-name="insertedAt"
                 data-type="date"
-                style="width: 65px"
+                style="width: 45px"
+                class="padding-h-sm"
               >
                 <div class="row-h-center">
                   <span class="material-icons icon-sm icon-primary">
@@ -179,7 +173,8 @@
                 [spotSort]="chatRooms"
                 data-order="desc"
                 data-name="numUsers"
-                style="width: 65px"
+                style="width: 60px"
+                class="padding-h-sm"
               >
                 <div class="row-h-center">
                   <span class="material-icons icon-sm icon-primary">
@@ -216,18 +211,30 @@
                 </td>
                 <td class="padding-sm full-height">
                   <div class="row-h-center">
-                    <span class="margin-r-xs"> {{ chatRoom.name }} </span>
+                    <div class="col-h-center">
+                      <div class="row-h-center">
+                        <span class="material-icons icon-sm icon-primary">
+                          chat
+                        </span>
+                        <span class="margin-h-xs"> {{ chatRoom.name }} </span>
+                      </div>
+                      <div class="row-h-center">
+                        <span class="material-icons icon-sm icon-primary">
+                          place
+                        </span>
+                        <span class="margin-l-xs">
+                          {{ chatRoom.geolocation }}
+                          ({{ getDistance(chatRoom.distance) }})
+                        </span>
+                      </div>
+                    </div>
                     <span
                       *ngIf="chatRoom.private"
-                      class="material-icons icon-sm"
+                      class="material-icons icon-sm margin-l-sm"
                     >
                       lock
                     </span>
                   </div>
-                </td>
-                <td class="padding-sm full-height">
-                  {{ chatRoom.geolocation }}
-                  {{ getDistance(chatRoom.distance) }}
                 </td>
                 <td class="padding-sm full-height">
                   {{ getAge(chatRoom.insertedAt) }}

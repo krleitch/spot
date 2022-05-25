@@ -160,7 +160,7 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
 
   discoverRooms() {
     this.modalService
-      .open('global', 'chatDiscover', {}, { width: 600, height: 'auto' })
+      .open('chat-menu', 'chatDiscover', {}, { width: 600, height: 'auto' })
       .pipe(take(1))
       .subscribe((_result) => {
         // Open the room, if a room was created
@@ -169,7 +169,7 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
 
   createRoom() {
     this.modalService
-      .open('global', 'chatCreate')
+      .open('chat-menu', 'chatCreate')
       .pipe(take(1))
       .subscribe((_result) => {
         // Open the room, if a room was created

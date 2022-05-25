@@ -69,6 +69,7 @@ import { SortDirective } from './directives/sort.directive';
 import { ChatPageComponent } from './components/main/chat/chat-page/chat-page.component';
 import { ChatPageMenuComponent } from './components/main/chat/chat-page-menu/chat-page-menu.component';
 import { ChatModalComponent } from './components/main/chat/chat-modal/chat-modal.component';
+import { ChatPasswordComponent } from './components/main/chat/chat-password/chat-password.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -129,7 +130,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SortDirective,
     ChatPageComponent,
     ChatPageMenuComponent,
-    ChatModalComponent
+    ChatModalComponent,
+    ChatPasswordComponent
   ],
   imports: [
     BrowserModule,

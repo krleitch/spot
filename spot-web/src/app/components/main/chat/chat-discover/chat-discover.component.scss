@@ -27,3 +27,15 @@ tr:nth-child(odd) {
 tr.selected {
   background: var(--background-header);
 }
+
+.profile-sm {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  img {
+    width: 40px;
+    height: 40px;
+  }
+}

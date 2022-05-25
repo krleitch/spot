@@ -3,9 +3,9 @@
     <div class="spot-logo"></div>
   </div>
   <div *ngIf="user$ | async as myuser; else noUser" class="row-center">
-    <div class="mobile-show margin-r-lg margin-t-sm" (click)="openChatModal()">
+    <div class="mobile-show margin-r-lg margin-t-md" (click)="openChatModal()">
       <span class="material-icons-outlined icon-lg icon-primary-highlight">
-        insert_comment
+        chat
       </span>
     </div>
     <div
