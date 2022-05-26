@@ -1,32 +1,99 @@
 <div class="col background-container container-rounded margin-b-xl">
-  <div class="row padding-h-lg padding-t-lg padding-b-md">
-    <div class="left-bar col-v-center margin-r-md">
-      <span
-        class="material-icons icon-primary-highlight"
-        [class.icon-primary]="spot.myRating === eSpotRatingType.LIKE"
-        (click)="like()"
-      >
-        keyboard_arrow_up
-      </span>
-      <div class="text-center">{{ spot.likes - spot.dislikes }}</div>
-      <span
-        class="material-icons icon-primary-highlight"
-        [class.icon-primary]="spot.myRating === eSpotRatingType.DISLIKE"
-        (click)="dislike()"
-      >
-        keyboard_arrow_down
-      </span>
-      <a
-        class="text-sm text-secondary-highlight"
-        [routerLink]="'/spot/' + spot.link"
-      >
-        {{ time }}
-      </a>
+  <div class="col padding-h-lg padding-t-lg padding-b-md">
+    <!-- Top bar -->
+    <div class="row-h-center justify-content-between">
+      <!-- Left -->
+      <div class="row-h-center">
+        <span
+          class="material-icons icon-secondary-highlight margin-r-sm"
+          [class.icon-primary]="spot.myRating === eSpotRatingType.LIKE"
+          (click)="like()"
+        >
+          {{
+            spot.myRating === eSpotRatingType.LIKE
+              ? 'favorite'
+              : 'favorite_border'
+          }}
+        </span>
+        <div class="text-center">{{ spot.likes - spot.dislikes }}</div>
+        <span
+          class="material-icons icon-secondary-highlight margin-l-sm margin-r-lg"
+          [class.icon-primary]="spot.myRating === eSpotRatingType.DISLIKE"
+          (click)="dislike()"
+        >
+          {{
+            spot.myRating === eSpotRatingType.DISLIKE
+              ? 'thumb_down_alt'
+              : 'thumb_down_off_alt'
+          }}
+        </span>
+        <div class="material-icons icon-sm icon-primary"> location_on </div>
+        <div class="text-secondary margin-l-xs">
+          {{ spot.geolocation }}
+          <span *ngIf="spot.distance">
+            ({{ getDistance(spot.distance) }})
+          </span>
+        </div>
+      </div>
+
+      <!-- Right -->
+      <div class="row-h-center">
+        <div #options>
+          <span
+            class="material-icons icon-primary-highlight"
+            (click)="setOptions(true)"
+          >
+            more_horiz
+          </span>
+          <div class="dropdown align-bottom">
+            <div
+              class="dropdown-content"
+              [class.dropdown-show]="optionsEnabled"
+            >
+              <a
+                *ngIf="!detailed"
+                class="dropdown-button"
+                [routerLink]="'/spot/' + spot.link"
+              >
+                <span class="material-icons icon"> chevron_right </span>
+                {{ 'MAIN.POST.OPEN_POST' | translate }}
+              </a>
+              <div
+                class="dropdown-button"
+                (click)="openReportModal(spot.spotId)"
+              >
+                <span class="material-icons icon"> outlined_flag </span>
+                {{ 'MAIN.POST.REPORT' | translate }}
+              </div>
+              <div
+                class="dropdown-button"
+                (click)="openShareModal(spot.spotId, spot.link)"
+              >
+                <span class="material-icons icon"> share </span>
+                {{ 'MAIN.POST.SHARE' | translate }}
+              </div>
+              <div
+                *ngIf="
+                  spot.owned ||
+                  user.role === eUserRole.ADMIN ||
+                  user.role === eUserRole.OWNER
+                "
+                class="dropdown-button"
+                (click)="deleteSpot()"
+              >
+                <span class="material-icons-outlined icon"> delete </span>
+                {{ 'MAIN.POST.DELETE' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="col justify-content-between flex-fill padding-t-md">
+    <!-- Text content and image -->
+    <div class="col justify-content-between flex-fill">
       <!-- places beside to avoid extra space since style is whitespace: pre-wrap -->
-      <div class="text-content">
+      <div *ngIf="spot.content" class="text-content padding-t-md">
         {{ getContent() }}
         <span *ngIf="isExpandable">
           <span *ngIf="expanded; else notExpanded">
@@ -78,9 +145,12 @@
           </span>
         </div>
       </div>
+    </div>
 
-      <div class="row-h-center justify-content-between padding-t-md flex-wrap">
-        <span class="text-secondary align-left">
+    <!-- Bot row -->
+    <div class="row-v-center justify-content-between margin-l-md">
+      <div class="row-h-center">
+        <span class="text-secondary margin-r-lg">
           {{ spot.totalComments }}
           <span *ngIf="spot.totalComments === 1; else plural">
             {{ 'MAIN.POST.COMMENTS_SINGLE' | translate }}
@@ -89,62 +159,14 @@
             {{ 'MAIN.POST.COMMENTS' | translate }}
           </ng-template>
         </span>
-        <div class="text-secondary">
-          {{ spot.geolocation }}
-          <span *ngIf="spot.distance">
-            {{ getDistance(spot.distance) }}
-          </span>
-        </div>
       </div>
-    </div>
-
-    <!-- Settings Dropdown -->
-    <div class="col-v-center justify-content-between margin-l-md">
-      <div #options>
-        <span
-          class="material-icons icon-primary-highlight"
-          (click)="setOptions(true)"
+      <div class="row-h-center">
+        <a
+          class="text-sm text-secondary-highlight margin-r-lg"
+          [routerLink]="'/spot/' + spot.link"
         >
-          more_horiz
-        </span>
-        <div class="dropdown align-bottom">
-          <div class="dropdown-content" [class.dropdown-show]="optionsEnabled">
-            <a
-              *ngIf="!detailed"
-              class="dropdown-button"
-              [routerLink]="'/spot/' + spot.link"
-            >
-              <span class="material-icons icon"> chevron_right </span>
-              {{ 'MAIN.POST.OPEN_POST' | translate }}
-            </a>
-            <div class="dropdown-button" (click)="openReportModal(spot.spotId)">
-              <span class="material-icons icon"> outlined_flag </span>
-              {{ 'MAIN.POST.REPORT' | translate }}
-            </div>
-            <div
-              class="dropdown-button"
-              (click)="openShareModal(spot.spotId, spot.link)"
-            >
-              <span class="material-icons icon"> share </span>
-              {{ 'MAIN.POST.SHARE' | translate }}
-            </div>
-            <div
-              *ngIf="
-                spot.owned ||
-                user.role === eUserRole.ADMIN ||
-                user.role === eUserRole.OWNER
-              "
-              class="dropdown-button"
-              (click)="deleteSpot()"
-            >
-              <span class="material-icons-outlined icon"> delete </span>
-              {{ 'MAIN.POST.DELETE' | translate }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
+          {{ time }}
+        </a>
         <span
           class="material-icons icon-primary-highlight"
           (click)="openShareModal(spot.spotId, spot.link)"
@@ -153,10 +175,6 @@
         </span>
       </div>
     </div>
-  </div>
-
-  <div class="row-v-center">
-    <div class="bar"></div>
   </div>
 
   <spot-comments-container

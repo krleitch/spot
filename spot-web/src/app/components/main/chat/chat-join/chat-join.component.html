@@ -16,7 +16,7 @@
       </span>
 
       <!-- Chat room information -->
-      <div class="col-h-center margin-h-xl">
+      <div class="col-h-center margin-h-md">
         <span class="row-h-center">
           <span class="material-icons icon-sm icon-primary"> chat </span>
           <span class="margin-l-sm"> {{ chatRoom.name }} </span>
@@ -41,17 +41,18 @@
     </div>
 
     <!-- Join room -->
-    <div class="col-center margin-l-xl flex-fill">
-      <button class="button" (click)="joinChatRoom()">
-        {{ 'MAIN.CHAT_JOIN.JOIN_ROOM' | translate }}
-      </button>
-      <span class="row-center margin-t-sm">
-        <span class="material-icons icon-sm icon-primary"> person </span>
-        <span class="margin-l-sm">
-          {{ chatRoom.numUsers }} / {{ chatRoom.capacity }}
-          {{ 'MAIN.CHAT_JOIN.CHATTING_NOW' | translate }}
+    <div class="col-v-center justify-content-end margin-h-md flex-fill">
+      <div class="align-right col-center">
+        <span class="row-center margin-b-sm">
+          <span class="material-icons icon-sm icon-primary"> person </span>
+          <span class="margin-l-sm text-center">
+            {{ chatRoom.numUsers }} {{ 'MAIN.CHAT_JOIN.CHATTING_NOW' | translate }}
+          </span>
         </span>
-      </span>
+        <button class="button" (click)="joinChatRoom()">
+          {{ 'MAIN.CHAT_JOIN.JOIN_ROOM' | translate }}
+        </button>
+      </div>
     </div>
   </div>
   <div class="text-error text-center margin-t-sm">{{ errorMessage }}</div>
