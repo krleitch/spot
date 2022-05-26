@@ -1,39 +1,57 @@
-<div class="notifications">
-  <div class="header">
-    <span class="title"> {{ 'MAIN.NOTIFICATIONS.TITLE' | translate }} </span>
-    <span class="see" (click)="seeAll()">
-      {{ 'MAIN.NOTIFICATIONS.MARK_ALL_AS_SEEN' | translate }}
-      <span class="material-icons check"> check </span>
-    </span>
-    <!-- <span class="clear" (click)="clearAll()"> {{ 'MAIN.NOTIFICATIONS.CLEAR' | translate }} </span> -->
+<div
+  class="notifications background-container container-rounded container-shadow"
+>
+  <!-- Header-->
+  <div
+    class="header row-h-center justify-content-between padding-md background-header"
+  >
+    <div class="row-h-center">
+      <span class="material-icons-outlined icon-primary icon-md">
+        notifications
+      </span>
+      <span class="margin-l-xs">
+        {{ 'MAIN.NOTIFICATIONS.TITLE' | translate }}
+      </span>
+    </div>
+    <div class="row-h-center text-secondary-highlight" (click)="seeAll()">
+      <span class="material-icons icon-md"> check </span>
+      <span class="margin-l-xs"
+        >{{ 'MAIN.NOTIFICATIONS.MARK_ALL_AS_SEEN' | translate }}
+      </span>
+    </div>
   </div>
 
+  <!-- Notifications -->
   <div class="notifications-content">
-    <spot-infinite-scroll (scrolled)="onScroll()">
-      <div *ngIf="notifications.length > 0; else empty">
-        <div *ngFor="let notification of notifications">
-          <spot-notification-item
-            [notification]="notification"
-          ></spot-notification-item>
-        </div>
+    <spot-infinite-scroll
+      *ngIf="notifications.length > 0; else empty"
+      (scrolled)="onScroll()"
+    >
+      <div *ngFor="let notification of notifications">
+        <spot-notification-item
+          [notification]="notification"
+        ></spot-notification-item>
       </div>
-      <!-- We only show loading when first loading notifications now -->
+
+      <!-- Only show loading when first loading notifications -->
       <div
         *ngIf="
           loading &&
           (showNotificationsIndicator$ | async) &&
           notifications.length === 0
         "
-        class="loading"
+        class="col-center margin-v-xl"
       >
-        <span class="text"> {{ 'MAIN.NOTIFICATIONS.LOADING' | translate }} </span>
+        <span class="text-secondary">
+          {{ 'MAIN.NOTIFICATIONS.LOADING' | translate }}
+        </span>
         <spot-spinner size="small" type="dot"></spot-spinner>
       </div>
     </spot-infinite-scroll>
 
     <ng-template #empty>
-      <div *ngIf="!loading" class="no-notifications">
-        <span class="material-icons icon"> done_all </span>
+      <div *ngIf="!loading" class="col-center margin-v-xl">
+        <span class="material-icons icon-md icon-primary"> done_all </span>
         {{ 'MAIN.NOTIFICATIONS.NO_NOTIFICATIONS' | translate }}
       </div>
     </ng-template>

@@ -3,19 +3,19 @@
     <div class="spot-logo"></div>
   </div>
   <div *ngIf="user$ | async as myuser; else noUser" class="row-center">
-    <div class="mobile-show margin-r-lg margin-t-md" (click)="openChatModal()">
+    <div class="mobile-show margin-r-xl margin-t-md" (click)="openChatModal()">
       <span class="material-icons-outlined icon-lg icon-primary-highlight">
         chat
       </span>
     </div>
     <div
       *ngIf="userMetadata$ | async as userMetadata"
-      class="row-center margin-r-lg tablet-hide"
+      class="row-center margin-r-xl tablet-hide"
     >
       <i class="material-icons icon-error icon-lg"> whatshot </i>
       <span> {{ userMetadata.score }} </span>
     </div>
-    <div class="row relative margin-r-lg" #notifications>
+    <div class="row relative margin-r-xl" #notifications>
       <i
         class="material-icons icon-lg icon-primary-highlight"
         (click)="toggleNotifications()"
@@ -36,10 +36,10 @@
       class="row-center relative text-primary-highlight"
       (click)="toggleDropdown()"
     >
-      <i class="material-icons icon-lg icon-primary-highlight">
+      <span class="material-icons icon-lg icon-primary-highlight">
         person_outline
-      </i>
-      <span class="mobile-hide">
+      </span>
+      <span class="margin-l-xs">
         {{ myuser.username }}
       </span>
       <div class="dropdown-content" [class.show-dropdown]="showDropdown">

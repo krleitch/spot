@@ -24,6 +24,7 @@ import { ChatCreateComponent } from '@src/app/components/main/chat/chat-create/c
 import { AccountEditComponent } from '@src/app/components/main/account-edit/account-edit.component';
 import { ChatDiscoverComponent } from '@src/app/components/main/chat/chat-discover/chat-discover.component';
 import { ChatModalComponent } from '@src/app/components/main/chat/chat-modal/chat-modal.component';
+import { ChatPasswordComponent } from '@src/app/components/main/chat/chat-password/chat-password.component';
 
 // Services
 import { ModalService } from '@services/modal.service';
@@ -40,6 +41,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() id: string;
   @Input() width: number | 'auto';
   @Input() height: number | 'auto';
+  @Input() top: number;
   @Input() disableClose: boolean;
   @Input() darkenBackground: boolean;
   @Input() hideModals: boolean;
@@ -59,6 +61,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     | ChatCreateComponent
     | ChatDiscoverComponent
     | AccountEditComponent
+    | ChatPasswordComponent
     | ChatModalComponent
   >;
 
@@ -81,6 +84,7 @@ export class ModalComponent implements OnInit, OnDestroy {
       | typeof ChatCreateComponent
       | typeof ChatDiscoverComponent
       | typeof ChatModalComponent
+      | typeof ChatPasswordComponent
       | typeof AccountEditComponent;
   } = {
     share: ShareComponent,
@@ -94,6 +98,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     chatCreate: ChatCreateComponent,
     chatDiscover: ChatDiscoverComponent,
     chatModal: ChatModalComponent,
+    chatPassword: ChatPasswordComponent,
     accountEdit: AccountEditComponent
   };
 
@@ -131,6 +136,9 @@ export class ModalComponent implements OnInit, OnDestroy {
       this.height = Object.prototype.hasOwnProperty.call(options, 'height')
         ? options.height
         : 'auto';
+      this.top = Object.prototype.hasOwnProperty.call(options, 'top')
+        ? options.top
+        : 100;
       this.disableClose = Object.prototype.hasOwnProperty.call(
         options,
         'disableClose'
@@ -159,6 +167,7 @@ export class ModalComponent implements OnInit, OnDestroy {
       // defaults
       this.width = 400;
       this.height = 'auto';
+      this.top = 100;
       this.disableClose = false;
       this.darkenBackground = true;
       this.hideModals = false;

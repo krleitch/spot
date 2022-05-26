@@ -1,6 +1,7 @@
 export interface ModalOptions {
   width?: number | "auto";
   height?: number | "auto";
+  top?: number;
   disableClose?: boolean; // close when the background is clicked
   darkenBackground?: boolean; // does the background change color
   hideModals?: boolean; // hide all other modals when this is open, show when closed
@@ -19,6 +20,7 @@ export type ModalComponents =
   | "chatCreate"
   | "chatDiscover"
   | "chatModal"
+  | "chatPassword"
   | "accountEdit";
 
 // ********************
@@ -66,7 +68,7 @@ export interface ModalAccountEditData {
 // RESULTS
 // ********************
 
-export type ModalResult = ModalConfirmResult | ModalUploadPhotoResult;
+export type ModalResult = ModalConfirmResult | ModalUploadPhotoResult | ModalChatPasswordResult;
 
 export enum ModalConfirmResultTypes {
   CONFIRM = "CONFIRM",
@@ -82,3 +84,8 @@ export interface ModalUploadPhotoResult {
   // create-chat returns this
   image?: File; // the file, if we didnt create it yet
 }
+
+export interface ModalChatPasswordResult {
+  password: string;
+}
+

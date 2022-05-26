@@ -34,6 +34,8 @@
       "FIRST_POST_1": "Be First",
       "FIRST_POST_2": "to make a spot in this area",
 
+      "HOME": "Home",
+      "GLOBAL": "Global",
       "NEW": "New",
       "HOT": "Hot",
 
@@ -377,6 +379,11 @@
 
     "CHAT_TAB": {
       "LEAVE": "Leave"
+    },
+
+    "CHAT_PASSWORD": {
+      "TITLE": "Enter password",
+      "JOIN": "Join"
     },
 
     "ACTIVITY": {

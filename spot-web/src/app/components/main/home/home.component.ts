@@ -206,7 +206,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
 
     // Spots
-    // remember scrol posiotion
+    // remember scroll posiotion
     // TODO: https://medium.com/angular-in-depth/reactive-scroll-position-restoration-with-rxjs-792577f842c
     this.spots$ = this.store$.pipe(select(SpotStoreSelectors.selectSpots));
 
@@ -253,14 +253,22 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.mobileDropdownLocation &&
       !this.mobileDropdownLocation.nativeElement.contains(event.target)
     ) {
-      this.dropdownLocation(false);
+      this.dropdownLocationEnabled = false;
     }
     if (
       this.mobileDropdownSort &&
       !this.mobileDropdownSort.nativeElement.contains(event.target)
     ) {
-      this.dropdownSort(false);
+      this.dropdownSortEnabled = false;
     }
+  }
+
+  toggleDropdownLocation(): void {
+    this.dropdownLocationEnabled = !this.dropdownLocationEnabled;
+  }
+
+  toggleDropdownSort(): void {
+    this.dropdownSortEnabled = !this.dropdownSortEnabled;
   }
 
   dropdownLocation(value: boolean): void {

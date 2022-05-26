@@ -18,6 +18,9 @@ spot-main-nav {
   padding-top: 60px;
   background-color: var(--background-page);
   box-sizing: border-box;
+  @include mq.mq($until: tablet) {
+    padding-top: 80px;
+  }
 
   .content {
     height: 100%;
@@ -129,57 +132,17 @@ spot-main-nav {
   cursor: pointer;
 }
 
-// mobile dropdowns
-.dropdown {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.mobile-dropdown-header {
+  position: fixed;
+  background: var(--background-page);
+  width: 100%;
+  padding: 5px;
+  top: 60px;
+  left: 0px;
+  z-index: 999999;
+}
 
-  .dropdown-content-sort {
-    display: none;
-    position: absolute;
-    background-color: var(--background-container);
-    width: 60px;
-    top: 32px;
-    left: -52px;
-    box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-    font-size: 18px;
-  }
-
-  .dropdown-content-location {
-    display: none;
-    position: absolute;
-    background-color: var(--background-container);
-    width: 60px;
-    top: 32px;
-    left: -47px;
-    box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-  }
-
-  .dropdown-button {
-    background-color: #efefef;
-    color: black;
-    height: 45px;
-    padding: 12px 8px;
-    font-size: 14px;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid var(--background-primary);
-    box-sizing: border-box;
-    cursor: pointer;
-
-    &:hover {
-      background: var(--background-primary);
-      color: var(--primary);
-    }
-  }
-
-  .dropdown-show {
-    display: block;
-  }
+.dropdown-content {
+  top: 25px;
+  left: 0px;
 }

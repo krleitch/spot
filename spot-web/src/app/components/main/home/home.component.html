@@ -18,51 +18,6 @@
   </span>
 </div>
 
-<!-- Mobile Location -->
-<div
-  #mobiledropdownlocation
-  class="locationToggleMobile row-center mobile-show"
->
-  <div class="row-h-center" (click)="dropdownLocation(true)">
-    <span
-      *ngIf="isSelectedLocation(eLocationType.LOCAL)"
-      class="material-icons"
-    >
-      home
-    </span>
-    <span
-      *ngIf="isSelectedLocation(eLocationType.GLOBAL)"
-      class="material-icons"
-    >
-      public
-    </span>
-    <span class="material-icons"> expand_more </span>
-  </div>
-  <div class="dropdown">
-    <div
-      class="dropdown-content-location"
-      [class.dropdown-show]="dropdownLocationEnabled"
-    >
-      <div class="dropdown-button" (click)="setLocal()">
-        <span
-          class="material-icons icon-lg"
-          [class.icon-primary]="isSelectedLocation(eLocationType.LOCAL)"
-        >
-          home
-        </span>
-      </div>
-      <div class="dropdown-button" (click)="setGlobal()">
-        <span
-          class="material-icons icon-lg"
-          [class.icon-primary]="isSelectedLocation(eLocationType.GLOBAL)"
-        >
-          public
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Sort -->
 <div class="postFilterToggle row-center mobile-hide">
   <div
@@ -83,40 +38,68 @@
   </div>
 </div>
 
-<!-- Sort Mobile -->
-<div #mobiledropdownsort class="postFilterToggleMobile row-center mobile-show">
-  <div class="row-h-center" (click)="dropdownSort(true)">
-    <div *ngIf="isSelectedSpotSort(eSearchType.HOT)">
-      {{ 'MAIN.HOME.HOT' | translate }}
+<div class="mobile-show mobile-dropdown-header row-h-center">
+  <!-- Mobile location -->
+  <div #mobiledropdownlocation class="relative">
+    <div class="row-h-center" (click)="toggleDropdownLocation()">
+      <div *ngIf="locationType === eLocationType.LOCAL">
+        <span class="material-icons icon-sm icon-primary"> home </span>
+        <span class="margin-l-xs"> Home </span>
+      </div>
+
+      <div *ngIf="locationType === eLocationType.GLOBAL">
+        <span class="material-icons icon-sm icon-primary"> public </span>
+        <span class="margin-l-xs"> Global </span>
+      </div>
+
+      <span class="material-icons"> expand_more </span>
     </div>
-    <div *ngIf="isSelectedSpotSort(eSearchType.NEW)">
-      {{ 'MAIN.HOME.NEW' | translate }}
-    </div>
-    <span class="material-icons"> expand_more </span>
-  </div>
-  <div class="dropdown">
+
     <div
-      class="dropdown-content-sort"
-      [class.dropdown-show]="dropdownSortEnabled"
+      class="dropdown-content"
+      [class.show-dropdown]="dropdownLocationEnabled"
     >
-      <div
-        class="dropdown-button"
-        [class.text-primary]="isSelectedSpotSort(eSearchType.HOT)"
-        (click)="setHot()"
-      >
+      <div class="dropdown-button" (click)="setLocal()">
+        <span class="material-icons icon-md margin-r-md"> home </span>
+        {{ 'MAIN.HOME.HOME' | translate }}
+      </div>
+      <div class="dropdown-button" (click)="setGlobal()">
+        <span class="material-icons icon-md margin-r-md"> public </span>
+        {{ 'MAIN.HOME.GLOBAL' | translate }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Sort -->
+  <div #mobiledropdownsort class="relative margin-l-xl">
+    <div class="row-h-center" (click)="toggleDropdownSort()">
+      <div *ngIf="searchType === eSearchType.HOT">
+        <span class="material-icons icon-sm icon-primary"> rocket_launch </span>
+        <span class="margin-l-xs"> Hot </span>
+      </div>
+
+      <div *ngIf="searchType === eSearchType.NEW">
+        <span class="material-icons icon-sm icon-primary"> local_florist </span>
+        <span class="margin-l-xs"> New </span>
+      </div>
+
+      <span class="material-icons"> expand_more </span>
+    </div>
+
+    <div class="dropdown-content" [class.show-dropdown]="dropdownSortEnabled">
+      <div class="dropdown-button" (click)="setHot()">
+        <span class="material-icons icon-md margin-r-md"> rocket_launch </span>
         {{ 'MAIN.HOME.HOT' | translate }}
       </div>
-      <div
-        class="dropdown-button"
-        [class.text-primary]="isSelectedSpotSort(eSearchType.NEW)"
-        (click)="setNew()"
-      >
+      <div class="dropdown-button" (click)="setNew()">
+        <span class="material-icons icon-md margin-r-md"> local_florist </span>
         {{ 'MAIN.HOME.NEW' | translate }}
       </div>
     </div>
   </div>
 </div>
 
+<!-- The home component -->
 <div class="home">
   <!-- If we need to prompt for location, show this first -->
   <div
@@ -180,15 +163,15 @@
                 "
                 class="col-center margin-b-xl"
               >
-                  <div class="empty-image">
-                    <span class="c1"></span>
-                    <span class="c2"></span>
-                    <span class="c3"></span>
-                    <span class="material-icons icon"> done_all </span>
-                  </div>
-                  <span class="empty-text">
+                <div class="empty-image">
+                  <span class="c1"></span>
+                  <span class="c2"></span>
+                  <span class="c3"></span>
+                  <span class="material-icons icon"> done_all </span>
+                </div>
+                <span class="empty-text">
                   {{ 'MAIN.HOME.NO_MORE_POSTS' | translate }}
-                  </span>
+                </span>
               </div>
 
               <!-- Loading spots -->
@@ -217,7 +200,10 @@
             <span class="text-center margin-h-sm margin-t-md">
               {{ 'MAIN.HOME.LOADING_LOCATION' | translate }}
             </span>
-            <span class="row-center text-center text-secondary-highlight" (click)="loadLocationBackground()">
+            <span
+              class="row-center text-center text-secondary-highlight"
+              (click)="loadLocationBackground()"
+            >
               {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
               <span class="material-icons margin-h-xs"> public </span>
               {{ 'MAIN.HOME.LOCATION_BACKGROUND_2' | translate }}
@@ -226,8 +212,13 @@
 
           <!-- Location was explicitly denied, an error occurred or not supported by browser -->
           <ng-template #enableLocation>
-            <div *ngIf="locationFailure === 'browser'" class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl">
-              <span class="material-icons margin-h-sm icon-xl icon-primary"> location_off </span>
+            <div
+              *ngIf="locationFailure === 'browser'"
+              class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl"
+            >
+              <span class="material-icons margin-h-sm icon-xl icon-primary">
+                location_off
+              </span>
               <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_BROWSER' | translate }}</span
               >
@@ -238,7 +229,9 @@
               *ngIf="locationFailure === 'permission'"
               class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl"
             >
-              <span class="material-icons icon-primary icon-xl margin-h-sm"> location_off </span>
+              <span class="material-icons icon-primary icon-xl margin-h-sm">
+                location_off
+              </span>
               <span class="row-center text-center margin-h-sm flex-wrap">
                 {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_1' | translate }}
                 <span class="material-icons margin-h-xs"> home </span>
@@ -251,7 +244,10 @@
               <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_ENABLE' | translate }}
               </span>
-              <span class="row-center text-center text-secondary-highlight flex-wrap" (click)="continueWithGlobal()">
+              <span
+                class="row-center text-center text-secondary-highlight flex-wrap"
+                (click)="continueWithGlobal()"
+              >
                 {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
                 <span class="material-icons margin-h-xs"> public </span>
                 {{ 'MAIN.HOME.LOCATION_BACKGROUND_3' | translate }}
@@ -259,8 +255,13 @@
             </div>
 
             <!-- Something went wrong -->
-            <div *ngIf="locationFailure === 'general'" class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl">
-              <span class="material-icons icon-primary icon-xl"> location_off </span>
+            <div
+              *ngIf="locationFailure === 'general'"
+              class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl"
+            >
+              <span class="material-icons icon-primary icon-xl">
+                location_off
+              </span>
               <span class="text-center margin-h-sm">
                 {{ 'MAIN.HOME.LOCATION_ERROR' | translate }}
               </span>
@@ -277,24 +278,30 @@
   <!-- User needs to be prompted for location -->
   <ng-template #prompt>
     <div class="content">
-      <div class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl">
-        <span class="material-icons margin-h-sm icon-xl icon-primary"> location_off </span>
+      <div
+        class="col-v-center full-width padding-xl background-container container-rounded border-box margin-t-xl"
+      >
+        <span class="material-icons margin-h-sm icon-xl icon-primary">
+          location_off
+        </span>
         <span class="row-center text-center margin-h-sm flex-wrap">
           {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_1' | translate }}
           <span class="material-icons margin-h-xs"> home </span>
           {{ 'MAIN.HOME.LOCATION_REQUIRED_CREATE_2' | translate }}
         </span>
-        <span class="row-center text-center text-secondary-highlight flex-wrap" (click)="continueWithGlobal()">
+        <span
+          class="row-center text-center text-secondary-highlight flex-wrap"
+          (click)="continueWithGlobal()"
+        >
           {{ 'MAIN.HOME.LOCATION_BACKGROUND_1' | translate }}
           <span class="material-icons margin-h-xs"> public </span>
           {{ 'MAIN.HOME.LOCATION_BACKGROUND_3' | translate }}
         </span>
         <span class="line"></span>
-        <span class="text-center margin-h-sm margin-b-md"> {{ 'MAIN.HOME.LOCATION_SAFE' | translate }} </span>
-        <button
-          class="button"
-          (click)="askLocationPermission()"
-        >
+        <span class="text-center margin-h-sm margin-b-md">
+          {{ 'MAIN.HOME.LOCATION_SAFE' | translate }}
+        </span>
+        <button class="button" (click)="askLocationPermission()">
           {{ 'MAIN.HOME.LOCATION_ENABLE_BUTTON' | translate }}
         </button>
       </div>

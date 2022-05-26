@@ -27,6 +27,7 @@ import {
 } from '@models/chat';
 import { LocationData } from '@models/location';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
+import { ModalChatPasswordResult } from '@models/modal';
 
 @Component({
   selector: 'spot-chat-discover',
@@ -53,9 +54,6 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
 
   // search string
   search = '';
-
-  // password
-  password = '';
 
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
@@ -191,24 +189,25 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     }
   }
 
-  getMinimizedName(name: string) {
-    if (name) {
-      return name.substring(0, 1).toUpperCase();
+  joinChatRoom(chatRoom: ChatRoom) {
+    if ( chatRoom.private ) {
+    this.modalService
+      .open('chat-password', 'chatPassword', {}, { disableClose: true, top: 250 })
+      .pipe(take(1))
+      .subscribe((result: ModalChatPasswordResult) => {
+        this.requestJoinRoom(chatRoom, result.password);
+      });
+
+    } else {
+      this.requestJoinRoom(chatRoom);
     }
   }
 
-  joinChatRoom(chatRoom: ChatRoom): void {
-    if (chatRoom.private) {
-      if (this.password.length === 0) {
-        this.errorMessage = this.STRINGS.ERROR_NO_PASSWORD;
-        return;
-      }
-    }
-
+  requestJoinRoom(chatRoom: ChatRoom, password?: string): void {
     const joinChatRoom: JoinChatRoomRequest = {
       lat: this.location.latitude,
       lng: this.location.longitude,
-      password: this.password.length > 0 ? this.password : undefined,
+      password: password ? password : undefined,
       chatRoomId: chatRoom.id
     };
     this.chatService

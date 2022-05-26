@@ -1,102 +1,14 @@
-@import '../../../../styles/sizes';
-
-.highlight {
-  color: var(--primary);
-}
+@use '~sass-mq/mq';
 
 .notifications {
   position: absolute;
   top: 35px;
   right: 0;
-  background-color: var(--background-container);
-  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
   min-width: 400px;
   max-width: 400px;
   height: auto;
 
-  &:hover {
-    cursor: default;
-    color: var(--text-secondary);
-  }
-
-  .header {
-    cursor: default;
-    display: flex;
-    justify-content: space-between;
-    color: var(--text-primary);
-    font-size: 16px;
-    padding: 7px 10px;
-    background-color: var(--background-header);
-
-    .see {
-      display: flex;
-      align-items: center;
-      color: var(--text-secondary);
-      cursor: pointer;
-      &:hover {
-        @extend .highlight;
-      }
-
-      .check {
-        margin-left: 3px;
-        font-size: 24px;
-      }
-    }
-
-    .clear {
-      cursor: pointer;
-      &:hover {
-        @extend .highlight;
-      }
-    }
-  }
-
-  // honestly just change heights , make this the scrollable, and remove the fixed
-  .notifications-content {
-    max-height: 350px;
-    min-height: 74px;
-    overflow-y: auto;
-    overflow-x: none;
-
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-flow: column;
-      min-height: 70px;
-
-      .text {
-        color: var(--text-secondary);
-        font-size: 14px;
-        margin-bottom: 12px;
-      }
-
-      &:hover {
-        cursor: default;
-        color: var(--text-secondary);
-      }
-    }
-  }
-
-  .no-notifications {
-    display: flex;
-    align-items: center;
-    flex-flow: column;
-    justify-content: center;
-    color: var(--text-primary);
-    cursor: default;
-    font-size: 14px;
-    padding: 15px;
-
-    .icon {
-      color: var(--primary);
-    }
-  }
-}
-
-// Mobile stylings
-@media screen and (max-width: $mobile-width) {
-  .notifications {
+  @include mq.mq($until: tablet) {
     min-width: 90%;
     max-width: 90%;
     position: fixed;
@@ -104,4 +16,16 @@
     top: 65px;
     transform: translateX(-50%);
   }
+
+  .header {
+    cursor: default;
+  }
+}
+
+// honestly just change heights , make this the scrollable, and remove the fixed
+.notifications-content {
+  max-height: 350px;
+  min-height: 74px;
+  overflow-y: auto;
+  overflow-x: none;
 }

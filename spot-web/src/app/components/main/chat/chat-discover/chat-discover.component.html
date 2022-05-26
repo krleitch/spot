@@ -49,9 +49,8 @@
       <!-- Selected Row -->
       <div
         *ngIf="selectedChat"
-        class="row background-page container-rounded padding-md mobile-col"
+        class="row-h-center background-page container-rounded padding-md"
       >
-        <div class="row-h-center">
         <!-- Chat Photo -->
         <div
           class="profile-md"
@@ -97,21 +96,8 @@
           </div>
         </div>
 
-        </div>
-
         <!-- Join Button -->
-        <div class="row-h-center align-right margin-sm">
-          <div *ngIf="selectedChat.private" class="row-center margin-r-md">
-            <span class="material-icons icon-sm"> lock </span>
-            <input
-              [(ngModel)]="password"
-              class="input-border-bottom-sm margin-l-sm"
-              placeholder="{{
-                'MAIN.CHAT_DISCOVER.PASSWORD_PLACEHOLDER' | translate
-              }}"
-              type="text"
-            />
-          </div>
+        <div class="row-h-center align-right mobile-col">
           <button class="button" (click)="joinChatRoom(selectedChat)">
             Join
           </button>
@@ -279,3 +265,4 @@
     </ng-container>
   </div>
 </div>
+<spot-modal [id]="'chat-password'"></spot-modal>
