@@ -34,6 +34,11 @@ import { TranslateService } from '@ngx-translate/core';
 
 // helpers
 import { getFormattedTime } from '@helpers/util';
+import {
+  checkWordOnCaret,
+  parseContentHTML,
+  removeWordCreateTag
+} from '@helpers/content';
 
 // Models
 import { Friend } from '@models/friend';
@@ -82,32 +87,44 @@ export class CommentComponent
   @Input() comment: Comment;
   @Input() spot: Spot;
 
-  @ViewChild('options') options;
-  @ViewChild('text') text;
-  @ViewChild('reply') reply;
+  @ViewChild('options') options: ElementRef;
+  @ViewChild('content') content: ElementRef;
+  @ViewChild('reply') reply: ElementRef;
 
   STRINGS: Record<string, string>;
   eCommentRatingType = CommentRatingType;
   COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
-  // For large comments
+  // State
   expanded = false;
   isExpandable = false;
+  timeMessage: string;
+  showAddReply = false;
+  showDropdown = false;
+  // lengths
+  MAX_COMMENT_LENGTH = 300;
+  currentLength = 0;
+  // errors
+  addReplyError = '';
+  addReplyLoading = false;
 
+  // location
   location$: Observable<LocationData>;
   location: LocationData;
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
-  @ViewChild('tag') tag: ElementRef;
-  @ViewChild('tagelem') tagelem: TagComponent;
+  // Tags
+  @ViewChild('tagContainer') tagContainer: ElementRef;
+  @ViewChild('tag') tag: TagComponent;
   showTag = false;
   tagName = '';
-  tagElement;
-  tagCaretPosition;
+  tagElement: Node;
+  tagCaretPosition: number;
 
   replyText: string;
 
+  // Replies
   replies$: Observable<StoreReply>;
   replies: Comment[] = [];
   initialLoad = true;
@@ -116,6 +133,7 @@ export class CommentComponent
   showLoadingRepliesIndicator$: Observable<boolean>;
   totalRepliesAfter = 0;
 
+  // User/Auth/Verify status
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
   userMetadata$: Observable<UserMetadata>;
@@ -128,16 +146,6 @@ export class CommentComponent
   imgSrc: string = null;
   imageBlurred: boolean; // if content flagged nsfw
 
-  // displaying used characters for add comment
-  MAX_COMMENT_LENGTH = 300;
-  currentLength = 0;
-
-  timeMessage: string;
-  showAddReply = false;
-  showDropdown = false;
-
-  addReplyError = '';
-  addReplyLoading = false;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -149,9 +157,11 @@ export class CommentComponent
     private translateService: TranslateService
   ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
-    this.translateService.get('MAIN.COMMENTS').subscribe((res: Record<string, string>) => {
-      this.STRINGS = res;
-    });
+    this.translateService
+      .get('MAIN.COMMENTS')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   offClickHandler(event: MouseEvent): void {
@@ -159,18 +169,17 @@ export class CommentComponent
       this.showDropdown = false;
     }
 
-    if (this.tag && !this.tag.nativeElement.contains(event.target)) {
+    if (this.tag && !this.tagContainer.nativeElement.contains(event.target)) {
       this.showTag = false;
     }
 
     // Check caret position
     if (this.reply && this.reply.nativeElement.contains(event.target)) {
-      this.getAndCheckWordOnCaret();
+      this.setTagState();
     }
   }
 
   ngOnInit(): void {
-
     // replies
     this.replies$ = this.store$.pipe(
       select(CommentStoreSelectors.selectReplies, {
@@ -235,7 +244,6 @@ export class CommentComponent
         }
       });
 
-
     // location
     this.location$ = this.store$.pipe(
       select(UserStoreSelectors.selectLocation)
@@ -254,7 +262,6 @@ export class CommentComponent
     this.isAuthenticated$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsAuthenticated)
     );
-
 
     // user
     this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
@@ -352,134 +359,12 @@ export class CommentComponent
     }
   }
 
-
   onEnter(): boolean {
     // Add tag on enter
     if (this.showTag) {
-      this.tagelem.onEnter();
+      this.tag.onEnter();
       return false;
     }
-  }
-
-  setContentHTML(): void {
-    // Get the content strings
-    const content = this.getContent();
-    const div = document.createElement('div');
-    let lastOffset = 0;
-
-    // Important
-    // Tags must be given in asc order of their offset
-    // Server should do this for you
-    if (this.comment.tag.tags.length > 0) {
-      this.comment.tag.tags.forEach((tag: Tag) => {
-        // check if tag should even be shown
-        if (tag.offset <= content.length || this.expanded) {
-          // create the span that will hold the tag
-          const span = document.createElement('span');
-          // fill with text leading up to the tag
-          const textBefore = document.createTextNode(
-            content.substring(lastOffset, Math.min(tag.offset, content.length))
-          );
-          // create the tag and give the username
-          const inlineTag = document.createElement('span');
-          inlineTag.className = 'tag-inline-comment';
-
-          // <span class="material-icons"> person </span>
-          if (tag.username) {
-            const username = document.createTextNode(
-              tag.username ? tag.username : '???'
-            );
-            inlineTag.appendChild(username);
-          } else {
-            // we don't know the person
-
-            const inlineTagIcon = document.createElement('span');
-
-            inlineTagIcon.textContent = 'person';
-            inlineTagIcon.className = 'material-icons tag-inline-comment-icon';
-
-            const username = document.createTextNode('???');
-
-            inlineTag.appendChild(inlineTagIcon);
-            inlineTag.appendChild(username);
-          }
-
-          // Add them to the span
-          span.appendChild(textBefore);
-          span.appendChild(inlineTag);
-
-          // update the lastOffset
-          lastOffset = Math.min(tag.offset, content.length);
-
-          div.appendChild(span);
-        } else {
-          // fill in the rest of the content from the last tag
-          const textContent = document.createTextNode(
-            content.substring(lastOffset)
-          );
-          div.appendChild(textContent);
-          lastOffset = content.length;
-        }
-      });
-    } else {
-      // No tags, just add the text content
-      const textContent = document.createTextNode(content);
-      div.appendChild(textContent);
-      lastOffset = content.length;
-    }
-
-    // if there is still content left
-    if (lastOffset < content.length) {
-      const after = document.createTextNode(content.substring(lastOffset));
-      div.appendChild(after);
-    }
-
-    // Add ellipsis if its expandable and isnt expanded
-    if (this.isExpandable && !this.expanded) {
-      const ellipsis = document.createTextNode(' ...');
-      div.appendChild(ellipsis);
-    }
-
-    // set the innerHTML
-    this.text.nativeElement.innerHTML = div.innerHTML;
-  }
-
-  // Returns the content that will be shown and truncates if need be
-  getContent(): string {
-    if (this.expanded || !this.isExpandable) {
-      return this.comment.content;
-    }
-
-    const textArrays = this.comment.content.split(/\r\n|\r|\n/);
-    let truncatedContent = '';
-
-    for (
-      let i = 0;
-      i < textArrays.length && i < COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH;
-      i++
-    ) {
-      if (
-        truncatedContent.length + textArrays[i].length >
-        COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH
-      ) {
-        truncatedContent = textArrays[i].substring(
-          0,
-          COMMENT_CONSTANTS.MAX_TRUNCATE_LENGTH - truncatedContent.length
-        );
-        break;
-      } else {
-        truncatedContent += textArrays[i];
-        // Dont add newline for last line or last line before line length reached
-        if (
-          i !== textArrays.length - 1 &&
-          i !== COMMENT_CONSTANTS.MAX_LINE_TRUNCATE_LENGTH - 1
-        ) {
-          truncatedContent += '\n';
-        }
-      }
-    }
-
-    return truncatedContent;
   }
 
   onTextInput(event): void {
@@ -494,55 +379,32 @@ export class CommentComponent
     this.addReplyError = null;
 
     // Check for tag
-    this.getAndCheckWordOnCaret();
+    this.setTagState();
   }
 
-  getAndCheckWordOnCaret(): void {
+  private setTagState() {
     const range = window.getSelection().getRangeAt(0);
-    if (range.collapsed) {
-      if (range.startContainer.parentElement.className === 'tag-inline') {
-        range.setStart(range.startContainer.parentElement.nextSibling, 0);
-        range.collapse(true);
-      } else {
-        this.checkWord(
-          this.getCurrentWord(range.startContainer, range.startOffset),
-          range.startContainer,
-          range.startOffset
-        );
-      }
-    }
-  }
-
-  private getCurrentWord(element, position): string {
-    // Get content of div
-    const content = element.textContent;
-
-    // Check if clicked at the end of word
-    position = content[position] === ' ' ? position - 1 : position;
-
-    // Get the start and end index
-    let startPosition = content.lastIndexOf(' ', position);
-    let endPosition = content.indexOf(' ', position);
-
-    // Special cases
-    startPosition = startPosition === content.length ? 0 : startPosition;
-    endPosition = endPosition === -1 ? content.length : endPosition;
-
-    return content.substring(startPosition + 1, endPosition);
-  }
-
-  private checkWord(word: string, element, position): void {
-    if (word.length > 1 && word[0] === '@') {
+    const word = checkWordOnCaret(range);
+    if (word) {
       this.tagName = word.slice(1);
       this.showTag = true;
-      this.tagElement = element;
-      this.tagCaretPosition = position;
+      this.tagElement = range.startContainer;
+      this.tagCaretPosition = range.startOffset;
     } else {
       this.tagName = '';
       this.showTag = false;
       this.tagElement = null;
       this.tagCaretPosition = null;
     }
+  }
+
+  private setContentHTML(): void {
+    this.content.nativeElement.innerHTML = parseContentHTML(
+      this.comment.content,
+      this.comment.tag.tags,
+      this.isExpandable,
+      this.expanded
+    );
   }
 
   addTag(username: string): void {
@@ -556,8 +418,8 @@ export class CommentComponent
       return;
     }
 
-    // remove the word
-    const tagElement = this.removeWord(
+    // remove the word and create the tag
+    const tagElement = removeWordCreateTag(
       this.tagElement,
       this.tagCaretPosition,
       username
@@ -575,37 +437,15 @@ export class CommentComponent
     this.tagCaretPosition = null;
   }
 
-  private removeWord(element, position, username): HTMLElement {
-    const content = element.textContent;
-
-    // Check if clicked at the end of word
-    position = content[position] === ' ' ? position - 1 : position;
-
-    let startPosition = content.lastIndexOf(' ', position);
-    let endPosition = content.indexOf(' ', position);
-
-    // Special cases
-    startPosition = startPosition === content.length ? 0 : startPosition;
-    endPosition = endPosition === -1 ? content.length : endPosition;
-
-    const parent = element.parentNode;
-
-    const span = document.createElement('span');
-    const beforeText = document.createTextNode(
-      content.substring(0, startPosition + 1)
-    );
-    const tag = document.createElement('span');
-    tag.className = 'tag-inline';
-    tag.contentEditable = 'false';
-    const usernameText = document.createTextNode(username);
-    tag.appendChild(usernameText);
-    const afterText = document.createTextNode(content.substring(endPosition));
-    span.appendChild(beforeText);
-    span.appendChild(tag);
-    span.appendChild(afterText);
-
-    parent.replaceChild(span, element);
-    return tag;
+  toggleShowAddReply(): void {
+    this.showAddReply = !this.showAddReply;
+    setTimeout(() => {
+      if (this.showAddReply === true && this.reply) {
+        this.reply.nativeElement.focus({
+          preventScroll: true
+        });
+      }
+    }, 100);
   }
 
   setExpanded(value: boolean): void {
@@ -670,32 +510,6 @@ export class CommentComponent
 
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
-  }
-
-  getTime(date): void {
-    const curTime = new Date();
-    const postTime = new Date(date);
-    const timeDiff = curTime.getTime() - postTime.getTime();
-    if (timeDiff < 60000) {
-      const secDiff = Math.round(timeDiff / 1000);
-      if (secDiff <= 0) {
-        this.timeMessage = 'Now';
-      } else {
-        this.timeMessage = secDiff + 's';
-      }
-    } else if (timeDiff < 3600000) {
-      const minDiff = Math.round(timeDiff / 60000);
-      this.timeMessage = minDiff + 'm';
-    } else if (timeDiff < 86400000) {
-      const hourDiff = Math.round(timeDiff / 3600000);
-      this.timeMessage = hourDiff + 'h';
-    } else if (timeDiff < 31536000000) {
-      const dayDiff = Math.round(timeDiff / 86400000);
-      this.timeMessage = dayDiff + 'd';
-    } else {
-      const yearDiff = Math.round(timeDiff / 31536000000);
-      this.timeMessage = yearDiff + 'y';
-    }
   }
 
   deleteComment(): void {
@@ -869,16 +683,6 @@ export class CommentComponent
       );
   }
 
-  toggleShowAddReply(): void {
-    this.showAddReply = !this.showAddReply;
-    setTimeout(() => {
-      if (this.showAddReply === true && this.reply) {
-        this.reply.nativeElement.focus({
-          preventScroll: true
-        });
-      }
-    }, 100);
-  }
 
   like(): void {
     if (!this.authenticationService.isAuthenticated()) {
