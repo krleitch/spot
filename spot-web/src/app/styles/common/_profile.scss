@@ -90,8 +90,20 @@ $chat-colors: (
     height: 30px;
   }
 }
+.profile-comment {
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  img {
+    width: 50px;
+    height: 50px;
+  }
+}
 .profile-lg.owned,
-.profile-md.owned {
+.profile-md.owned,
+.profile-comment.owned {
   border: 3px solid var(--primary);
 }
 

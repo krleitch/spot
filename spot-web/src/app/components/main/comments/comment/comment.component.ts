@@ -32,6 +32,9 @@ import { AlertService } from '@services/alert.service';
 import { AuthenticationService } from '@services/authentication.service';
 import { TranslateService } from '@ngx-translate/core';
 
+// helpers
+import { getFormattedTime } from '@helpers/util';
+
 // Models
 import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
@@ -60,7 +63,7 @@ import {
 } from '@models/modal';
 
 // Components
-import { TagComponent } from '../../social/tag/tag.component';
+import { TagComponent } from '@src/app/components/main/social/tag/tag.component';
 
 // Assets
 import { COMMENT_CONSTANTS } from '@constants/comment';
@@ -83,7 +86,7 @@ export class CommentComponent
   @ViewChild('text') text;
   @ViewChild('reply') reply;
 
-  STRINGS;
+  STRINGS: Record<string, string>;
   eCommentRatingType = CommentRatingType;
   COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
@@ -131,7 +134,7 @@ export class CommentComponent
 
   timeMessage: string;
   showAddReply = false;
-  optionsEnabled = false;
+  showDropdown = false;
 
   addReplyError = '';
   addReplyLoading = false;
@@ -146,12 +149,29 @@ export class CommentComponent
     private translateService: TranslateService
   ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
-    this.translateService.get('MAIN.COMMENTS').subscribe((res: any) => {
+    this.translateService.get('MAIN.COMMENTS').subscribe((res: Record<string, string>) => {
       this.STRINGS = res;
     });
   }
 
+  offClickHandler(event: MouseEvent): void {
+    if (this.options && !this.options.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
+
+    if (this.tag && !this.tag.nativeElement.contains(event.target)) {
+      this.showTag = false;
+    }
+
+    // Check caret position
+    if (this.reply && this.reply.nativeElement.contains(event.target)) {
+      this.getAndCheckWordOnCaret();
+    }
+  }
+
   ngOnInit(): void {
+
+    // replies
     this.replies$ = this.store$.pipe(
       select(CommentStoreSelectors.selectReplies, {
         spotId: this.comment.spotId,
@@ -206,7 +226,7 @@ export class CommentComponent
                 this.totalRepliesAfter = replies.totalRepliesAfter;
                 this.loadingReplies = false;
               },
-              (err: SpotError) => {
+              (_errorResponse: { error: SpotError }) => {
                 this.loadingReplies = false;
               }
             );
@@ -215,10 +235,8 @@ export class CommentComponent
         }
       });
 
-    this.isAuthenticated$ = this.store$.pipe(
-      select(UserStoreSelectors.selectIsAuthenticated)
-    );
 
+    // location
     this.location$ = this.store$.pipe(
       select(UserStoreSelectors.selectLocation)
     );
@@ -229,17 +247,14 @@ export class CommentComponent
         this.location = location;
       });
 
+    // Authentication / Verification status
     this.isVerified$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsVerified)
     );
-
-    this.friends$ = this.store$.pipe(
-      select(SocialStoreSelectors.selectFriends)
+    this.isAuthenticated$ = this.store$.pipe(
+      select(UserStoreSelectors.selectIsAuthenticated)
     );
 
-    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe((friends) => {
-      this.friendsList = friends;
-    });
 
     // user
     this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
@@ -252,7 +267,17 @@ export class CommentComponent
       select(UserStoreSelectors.selectUserMetadata)
     );
 
-    this.getTime(this.comment.createdAt);
+    // friends
+    this.friends$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectFriends)
+    );
+
+    this.friends$.pipe(takeUntil(this.onDestroy)).subscribe((friends) => {
+      this.friendsList = friends;
+    });
+
+    // set time, blur nsfw, and check if content is too large
+    this.timeMessage = getFormattedTime(this.comment.createdAt);
     this.imageBlurred = this.comment.imageNsfw;
 
     if (
@@ -265,6 +290,7 @@ export class CommentComponent
   }
 
   ngAfterViewInit(): void {
+    // fix pasting content to just strip plaintext content
     this.setContentHTML();
     this.reply.nativeElement.addEventListener('paste', (event: any) => {
       event.preventDefault();
@@ -319,27 +345,13 @@ export class CommentComponent
             this.totalRepliesAfter = replies.totalRepliesAfter;
             this.loadingReplies = false;
           },
-          (err: SpotError) => {
+          (_errorResponse: { error: SpotError }) => {
             this.loadingReplies = false;
           }
         );
     }
   }
 
-  offClickHandler(event: MouseEvent): void {
-    if (this.options && !this.options.nativeElement.contains(event.target)) {
-      this.setOptions(false);
-    }
-
-    if (this.tag && !this.tag.nativeElement.contains(event.target)) {
-      this.showTag = false;
-    }
-
-    // Check caret position
-    if (this.reply && this.reply.nativeElement.contains(event.target)) {
-      this.getAndCheckWordOnCaret();
-    }
-  }
 
   onEnter(): boolean {
     // Add tag on enter
@@ -656,8 +668,8 @@ export class CommentComponent
       );
   }
 
-  setOptions(value): void {
-    this.optionsEnabled = value;
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
   }
 
   getTime(date): void {
@@ -857,8 +869,8 @@ export class CommentComponent
       );
   }
 
-  setShowAddReply(val: boolean): void {
-    this.showAddReply = val;
+  toggleShowAddReply(): void {
+    this.showAddReply = !this.showAddReply;
     setTimeout(() => {
       if (this.showAddReply === true && this.reply) {
         this.reply.nativeElement.focus({

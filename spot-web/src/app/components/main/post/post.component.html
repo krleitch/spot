@@ -1,11 +1,11 @@
 <div class="col background-container container-rounded margin-b-xl">
-  <div class="col padding-h-lg padding-t-lg padding-b-md">
+  <div class="col padding-h-lg padding-t-lg">
     <!-- Top bar -->
     <div class="row-h-center justify-content-between">
       <!-- Left -->
       <div class="row-h-center">
         <span
-          class="material-icons icon-secondary-highlight margin-r-sm"
+          class="material-icons icon-submit margin-r-sm"
           [class.icon-primary]="spot.myRating === eSpotRatingType.LIKE"
           (click)="like()"
         >
@@ -17,8 +17,8 @@
         </span>
         <div class="text-center">{{ spot.likes - spot.dislikes }}</div>
         <span
-          class="material-icons icon-secondary-highlight margin-l-sm margin-r-lg"
-          [class.icon-primary]="spot.myRating === eSpotRatingType.DISLIKE"
+          class="material-icons icon-close margin-l-sm margin-r-lg"
+          [class.icon-error]="spot.myRating === eSpotRatingType.DISLIKE"
           (click)="dislike()"
         >
           {{
@@ -27,8 +27,8 @@
               : 'thumb_down_off_alt'
           }}
         </span>
-        <div class="material-icons icon-sm icon-primary"> location_on </div>
-        <div class="text-secondary margin-l-xs">
+        <div class="material-icons icon-sm icon-primary">location_on</div>
+        <div class="margin-l-xs">
           {{ spot.geolocation }}
           <span *ngIf="spot.distance">
             ({{ getDistance(spot.distance) }})
@@ -150,7 +150,7 @@
     <!-- Bot row -->
     <div class="row-v-center justify-content-between margin-l-md">
       <div class="row-h-center">
-        <span class="text-secondary margin-r-lg">
+        <span class="margin-r-lg">
           {{ spot.totalComments }}
           <span *ngIf="spot.totalComments === 1; else plural">
             {{ 'MAIN.POST.COMMENTS_SINGLE' | translate }}

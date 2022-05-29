@@ -1,14 +1,5 @@
 @use '~sass-mq/mq';
 
-.bar {
-  width: 90%;
-  border-bottom: 1px solid var(--background-primary);
-}
-
-.left-bar {
-  width: 30px;
-}
-
 a {
   text-decoration: none;
   &:hover {
@@ -29,7 +20,7 @@ a {
   position: relative;
   display: flex;
   justify-content: center;
-  padding: 12px 0px;
+  padding: 5px 0px;
   box-sizing: border-box;
   cursor: pointer;
   min-height: 200px;
@@ -82,46 +73,3 @@ a {
   color: var(--primary);
 }
 
-// Dropdowns
-.dropdown {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  width: 100px;
-  top: 5px;
-  right: 0;
-  z-index: 1;
-}
-
-.dropdown-content .dropdown-button {
-  background-color: var(--background-container);
-  color: black;
-  padding: 12px 8px;
-  font-size: 14px;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid var(--background-primary);
-  cursor: pointer;
-
-  &:hover {
-    background: var(--background-primary);
-    color: var(--primary);
-  }
-
-  .icon {
-    margin-right: 6px;
-  }
-}
-
-.dropdown-show {
-  display: block;
-}

@@ -95,13 +95,6 @@ $title-sizes: (
 }
 
 // Icon Colors
-.icon-close {
-  color: var(--icon-secondary);
-  &:hover {
-    cursor: pointer;
-    color: var(--error);
-  }
-}
 .icon-primary-highlight {
   color: var(--icon-priamry);
   &:hover {
@@ -121,6 +114,13 @@ $title-sizes: (
   &:hover {
     cursor: pointer;
     color: var(--primary-highlight);
+  }
+}
+.icon-close {
+  color: var(--error);
+  &:hover {
+    cursor: pointer;
+    color: var(--error-light);
   }
 }
 .icon-success {

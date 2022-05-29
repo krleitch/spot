@@ -28,7 +28,7 @@ spot-main-nav {
     max-width: 750px;
     min-width: 450px;
     @include mq.mq($until: tablet) {
-      width: 95%;
+      width: 100%;
       min-width: 0;
     }
   }
