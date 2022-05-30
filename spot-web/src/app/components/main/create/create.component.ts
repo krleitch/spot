@@ -14,6 +14,7 @@ import { takeUntil, take } from 'rxjs/operators';
 // Services
 import { TranslateService } from '@ngx-translate/core';
 import { SpotService } from '@services/spot.service';
+import { UserService } from '@services/user.service';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -29,7 +30,7 @@ import {
 } from '@models/spot';
 import { LocationData } from '@models/location';
 import { SpotError } from '@exceptions/error';
-import { User, UserRole } from '@models/user';
+import { User, UserRole, VerifyRequest, VerifyResponse } from '@models/user';
 
 // Assets
 import { SPOT_CONSTANTS } from '@constants/spot';
@@ -62,6 +63,8 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Content
   currentLength = 0;
 
+  verificationSent = false;
+
   // Images
   imageFile: File;
   imgSrc: string = null;
@@ -76,7 +79,8 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewChecked {
     private store$: Store<RootStoreState.State>,
     public domSanitizer: DomSanitizer,
     private translateService: TranslateService,
-    private spotService: SpotService
+    private spotService: SpotService,
+    private userService: UserService
   ) {
     this.translateService
       .get('MAIN.CREATE')
@@ -278,5 +282,15 @@ export class CreateComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.imageFile = null;
     this.imgSrc = null;
     this.createError = '';
+  }
+
+  verifyUser(): void {
+    const request: VerifyRequest = {};
+    this.userService
+      .verifyUser(request)
+      .pipe(take(1))
+      .subscribe((response: VerifyResponse) => {
+        this.verificationSent = true;
+      });
   }
 }

@@ -1,26 +1,15 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 // rxjs
-import { Observable, from } from 'rxjs';
+import { Observable } from 'rxjs';
 
 // Store
 import { RootStoreState } from '@store';
 import { Store, select } from '@ngrx/store';
-import {
-  SocialStoreFriendActions,
-  SocialStoreSelectors
-} from '@store/social-store';
+import { SocialStoreSelectors } from '@store/social-store';
 
 // Assets
-import { Friend, GetFriendsRequest } from '@models/friend';
+import { Friend } from '@models/friend';
 
 @Component({
   selector: 'spot-tag',
@@ -28,8 +17,7 @@ import { Friend, GetFriendsRequest } from '@models/friend';
   styleUrls: ['./tag.component.scss']
 })
 export class TagComponent implements OnInit {
-  @Input() postLink;
-  @Input() name;
+  @Input() username: string;
   @Output() tag = new EventEmitter<string>();
 
   constructor(private store$: Store<RootStoreState.State>) {}
@@ -37,10 +25,8 @@ export class TagComponent implements OnInit {
   friends$: Observable<Friend[]>;
   friends: Friend[] = [];
 
-  link: string;
-
   ngOnInit(): void {
-    // setup observables
+    // friends
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
@@ -48,23 +34,32 @@ export class TagComponent implements OnInit {
     this.friends$.subscribe((friends) => {
       this.friends = friends;
     });
-
-    this.link = window.location.origin + '/posts/' + this.postLink;
   }
 
   sendTag(username: string): void {
     this.tag.emit(username);
   }
 
+  // Called from the parent to get the first name
   onEnter(): boolean {
     const filteredFriendsList = this.friends.filter((friend) => {
       return (
-        friend.username.toUpperCase().indexOf(this.name.toUpperCase()) !== -1
+        friend.username.toUpperCase().indexOf(this.username.toUpperCase()) !==
+        -1
       );
     });
     if (filteredFriendsList.length > 0) {
       this.tag.emit(filteredFriendsList[0].username);
       return false;
+    }
+  }
+
+  // Show if the user does not have a profile picture
+  getDisplayName(name: string): string {
+    if (name.length) {
+      return name[0].toUpperCase();
+    } else {
+      return '';
     }
   }
 }

@@ -1,29 +1,44 @@
 <div class="tag background-container container-shadow container-rounded">
-  <div class="background-header padding-md title-sm">
-    {{ 'MAIN.TAG.TAG' | translate }}
+  <div class="row-h-center background-header padding-md title-sm">
+    <span class="material-icons icon-primary icon-lg"> alternate_email </span>
+    <span class="title-sm margin-l-xs">
+      {{ 'MAIN.TAG.TAG' | translate }}
+    </span>
   </div>
 
   <div class="padding-md">
     <!-- Search -->
-    <div *ngIf="name" class="input-search-container">
+    <div *ngIf="username" class="input-search-container">
       <span class="material-icons icon-md icon-primary margin-r-xs">
         search
       </span>
-      <input [(ngModel)]="name" class="input-search" type="text" />
+      <input [(ngModel)]="username" class="input-search" type="text" (keyup.enter)="onEnter()" />
     </div>
 
     <!-- List of friends matched -->
-    <div *ngIf="friends | filter: { filter: name, field: 'username' } as friends">
-      <div
-        *ngIf="friends.length > 0; else noFriends"
-        class="friend-container"
-      >
+    <div
+      *ngIf="
+        friends | filter: { filter: username, field: 'username' } as friends
+      "
+    >
+      <div *ngIf="friends.length > 0; else noFriends" class="friends">
         <div
           *ngFor="let friend of friends"
           (click)="sendTag(friend.username)"
-          class="name"
+          class="username row-h-center full-width"
         >
-          {{ friend.username }}
+          <div class="profile-sm row-center background-container">
+            <img
+              *ngIf="friend.profilePictureSrc; else noImage"
+              [src]="friend.profilePictureSrc"
+            />
+            <ng-template #noImage>
+              <span> {{ getDisplayName(friend.username) }}</span>
+            </ng-template>
+          </div>
+          <span class="margin-l-sm">
+            {{ friend.username }}
+          </span>
         </div>
       </div>
       <ng-template #noFriends>

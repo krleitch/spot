@@ -247,8 +247,7 @@
     <spot-tag
       #tag
       *ngIf="showTag"
-      [name]="tagName"
-      [postLink]="spot.link"
+      [username]="tagName"
       (tag)="addTag($event)"
     ></spot-tag>
   </span>

@@ -1,26 +1,30 @@
 .tag {
-  width: 235px;
+  min-width: 200px;
+  max-width: 300px;
 }
 
-.friend-container {
+.friends {
   max-height: 156px;
   overflow-y: auto;
 
-  .name {
+  .username {
     cursor: pointer;
     box-sizing: border-box;
-    width: 100%;
-    padding: 3px 5px;
-    background-color: var(--background-primary);
+    background-color: var(--background-page);
+    padding: 2px 5px;
+
+    &:first-child {
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
 
     &:hover {
-      color: white;
-      background-color: var(--primary);
+      background-color: var(--background-header);
     }
   }
-}
-
-.no-friends {
-  margin: 3px 0px;
-  text-align: center;
 }
