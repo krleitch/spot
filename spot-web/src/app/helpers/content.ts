@@ -234,3 +234,63 @@ export const parseContentHTML = (
 
   return div.innerHTML;
 };
+
+/**
+ * @param content - the innerHTML string
+ * @returns the text content and tags seperately
+ */
+export const parseContentWithTags = (
+  content: string
+): { content: string; tags: Tag[] } => {
+  // parse the innerhtml to return a string with newlines instead of innerhtml
+  const parser = new DOMParser();
+  const parsedHtml = parser.parseFromString(content, 'text/html');
+
+  const body = parsedHtml.getElementsByTagName('body');
+
+  const tags: Tag[] = [];
+  let text = '';
+  let offset = 0;
+
+  // Do a dfs on the html tree
+  let stack = [];
+  stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
+
+  while (stack.length > 0) {
+    const elem = stack.pop();
+
+    // A tag
+    if (elem.className === 'tag-inline') {
+      const tag: Tag = {
+        username: elem.textContent,
+        offset
+      };
+      tags.push(tag);
+      // A tag has no children, continue
+      continue;
+    }
+
+    // Push the children
+    // In reverse because we want to parse the from left to right
+    if (elem.childNodes) {
+      stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
+    }
+
+    // Don't add spaces to start
+    if (elem.tagName === 'DIV') {
+      // A new Div
+      text += '\n';
+      offset += 1;
+    } else if (elem.nodeType === 3) {
+      // Text Node
+      text += elem.textContent;
+      offset += elem.textContent.length;
+    }
+  }
+
+  // TODO: cleanup whitespace here if decide to do it
+  // There should already be no spaces at start, this should just remove - check text length 0 before append \n
+  // spaces at the end
+  // tag offsets will be adjusted on the server to never be more than content length
+  return { content: text, tags: tags };
+};

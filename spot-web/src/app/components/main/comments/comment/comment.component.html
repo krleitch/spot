@@ -17,7 +17,6 @@
     <div class="col full-width">
       <!-- Top bar -->
       <div class="header row-h-center justify-content-between">
-
         <!-- like/dislike -->
         <div class="row-h-center">
           <span
@@ -58,12 +57,17 @@
               )
             }"
           >
-            <span class="material-icons icon-md icon-secondary-highlight"> reply </span>
+            <span class="material-icons icon-md icon-secondary-highlight">
+              reply
+            </span>
           </div>
 
           <!-- Dropdown -->
           <div #options class="relative">
-            <span class="material-icons icon-md icon-primary-highlight margin-t-sm" (click)="toggleDropdown()">
+            <span
+              class="material-icons icon-md icon-primary-highlight margin-t-sm"
+              (click)="toggleDropdown()"
+            >
               more_horiz
             </span>
             <div class="dropdown align-bottom">
@@ -113,58 +117,70 @@
       <!-- content -->
       <div class="overflow-hidden flex-fill">
         <div class="row">
+          <!-- show who tagged you -->
           <div class="tagger" *ngIf="comment.tag.tagged">
             <span class="highlight"> {{ comment.tag.tagger }} </span>
             {{ 'MAIN.COMMENTS.TAGGER' | translate }}
           </div>
 
+          <!-- text -->
           <div class="text">
-            <span #text class="text-content"></span>
+            <!-- The element we set the innerHTML -->
+            <span #content class="text-content"></span>
+            <!-- is the content expanded -->
             <span *ngIf="isExpandable">
               <span *ngIf="expanded; else notExpanded">
-                <span class="text-secondary-highlight" (click)="setExpanded(false)">
+                <span
+                  class="text-secondary-highlight"
+                  (click)="setExpanded(false)"
+                >
                   {{ 'MAIN.COMMENTS.SEE_LESS' | translate }}
                 </span>
               </span>
               <ng-template #notExpanded>
-                <span class="text-secondary-highlight" (click)="setExpanded(true)">
+                <span
+                  class="text-secondary-highlight"
+                  (click)="setExpanded(true)"
+                >
                   {{ 'MAIN.COMMENTS.SEE_MORE' | translate }}
                 </span>
               </ng-template>
             </span>
           </div>
 
-          <div *ngIf="userMetadata$ | async as userMetadata">
+          <!-- Image -->
+          <div
+            *ngIf="comment.imageSrc !== null"
+            (click)="imageClicked()"
+            class="image"
+          >
+            <img
+              [src]="comment.imageSrc"
+              [ngClass]="{
+                'image-blur': imageBlurred && userMetadata.matureFilter
+              }"
+            />
             <div
-              *ngIf="comment.imageSrc !== null"
-              (click)="imageClicked()"
-              class="image"
+              *ngIf="imageBlurred && userMetadata.matureFilter"
+              class="image-blur-text"
             >
-              <img
-                [src]="comment.imageSrc"
-                [ngClass]="{
-                  'image-blur': imageBlurred && userMetadata.matureFilter
-                }"
-              />
-              <div
-                *ngIf="imageBlurred && userMetadata.matureFilter"
-                class="image-blur-text"
-              >
-                <span class="material-icons icon"> error_outline </span>
-                <span class="text">
-                  {{ 'MAIN.COMMENTS.MATURE_CONTENT' | translate }}
-                </span>
-                <span class="text highlight">
-                  {{ 'MAIN.COMMENTS.MATURE_CONTENT_SHOW' | translate }}
-                </span>
-              </div>
+              <span class="material-icons icon"> error_outline </span>
+              <span class="text">
+                {{ 'MAIN.COMMENTS.MATURE_CONTENT' | translate }}
+              </span>
+              <span class="text highlight">
+                {{ 'MAIN.COMMENTS.MATURE_CONTENT_SHOW' | translate }}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Add reply -->
-      <div [hidden]="!showAddReply" class="row-center margin-b-md margin-r-md margin-t-md">
+      <div
+        [hidden]="!showAddReply"
+        class="row-center margin-b-md margin-r-md margin-t-md"
+      >
         <div class="editor">
           <span
             #reply
@@ -182,16 +198,20 @@
               {{ 'MAIN.COMMENTS.FILE_TITLE' | translate }}
             </span>
             <span class="file-name">
-              {{ getDisplayFilename(imageFile.name) }}
+              {{ imageFile.name }}
             </span>
-              <span class="material-icons icon-close" (click)="removeFile()"> delete </span>
+            <span class="material-icons icon-close" (click)="removeFile()">
+              delete
+            </span>
           </div>
           <div class="align-right row-h-center margin-h-md">
             <span
               class="text-secondary margin-r-sm"
-              [class.text-error]="invalidLength()"
+              [class.text-error]="
+                currentLength > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH
+              "
             >
-              {{ MAX_COMMENT_LENGTH - currentLength }}
+              {{ COMMENT_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
             </span>
             <input
               style="display: none"
@@ -199,14 +219,19 @@
               (change)="onFileChanged($event)"
               #fileInput
             />
-            <span class="material-icons text-secondary-highlight margin-r-sm" (click)="fileInput.click()">
+            <span
+              class="material-icons text-secondary-highlight margin-r-sm"
+              (click)="fileInput.click()"
+            >
               insert_photo
             </span>
             <span class="loading" *ngIf="addReplyLoading; else showsend">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
             <ng-template #showsend>
-              <span class="material-icons icon-secondary" (click)="addReply()"> send </span>
+              <span class="material-icons icon-secondary" (click)="addReply()">
+                send
+              </span>
             </ng-template>
           </div>
         </div>
@@ -217,7 +242,8 @@
     </div>
   </div>
 
-  <span class="tag-relative">
+  <!-- Floating tag -->
+  <span #tagContainer class="tag-relative">
     <spot-tag
       #tag
       *ngIf="showTag"
@@ -227,11 +253,9 @@
     ></spot-tag>
   </span>
 
+  <!-- Replies -->
   <div *ngIf="loadingReplies; else loadedReplies">
-    <div
-      *ngIf="showLoadingRepliesIndicator$ | async"
-      class="col-center"
-    >
+    <div *ngIf="showLoadingRepliesIndicator$ | async" class="col-center">
       <span> {{ 'MAIN.COMMENTS.LOADING_REPLIES' | translate }} </span>
       <div class="margin-v-lg">
         <spot-spinner size="small" type="dot"></spot-spinner>
@@ -249,8 +273,12 @@
     </div>
   </ng-template>
 
+  <!-- Load more replies -->
   <div *ngIf="totalRepliesAfter > 0" class="row-center padding-b-md">
-    <div class="row-h-center text-secondary-highlight relative" (click)="loadMoreReplies()">
+    <div
+      class="row-h-center text-secondary-highlight relative"
+      (click)="loadMoreReplies()"
+    >
       {{ 'MAIN.COMMENTS.LOAD' | translate }}
       {{ loadMoreRepliesNum() }}
       {{

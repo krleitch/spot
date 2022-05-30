@@ -3,7 +3,7 @@
 
 export const COMMENT_CONSTANTS = {
 
-    // Content length
+    // Content
     MIN_CONTENT_LENGTH: 0,
     MAX_CONTENT_LENGTH: 300,
     MAX_LINE_LENGTH: 7,
@@ -11,7 +11,7 @@ export const COMMENT_CONSTANTS = {
     MAX_TRUNCATE_LENGTH: 125,
     MAX_LINE_TRUNCATE_LENGTH: 3,
  
-    // Limits
+    // Limits for initial comments loaded
     INITIAL_LIMIT: 5,
     DETAILED_INITIAL_LIMIT: 25,
 

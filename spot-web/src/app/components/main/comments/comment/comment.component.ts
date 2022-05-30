@@ -12,7 +12,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
 import { Observable, Subject, timer } from 'rxjs';
-import { mapTo, startWith, take, takeUntil, takeWhile } from 'rxjs/operators';
+import {
+  mapTo,
+  startWith,
+  take,
+  takeUntil,
+  takeWhile,
+  finalize
+} from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -37,7 +44,8 @@ import { getFormattedTime } from '@helpers/util';
 import {
   checkWordOnCaret,
   parseContentHTML,
-  removeWordCreateTag
+  removeWordCreateTag,
+  parseContentWithTags
 } from '@helpers/content';
 
 // Models
@@ -95,14 +103,13 @@ export class CommentComponent
   eCommentRatingType = CommentRatingType;
   COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
-  // State
+  // state
   expanded = false;
   isExpandable = false;
   timeMessage: string;
   showAddReply = false;
   showDropdown = false;
   // lengths
-  MAX_COMMENT_LENGTH = 300;
   currentLength = 0;
   // errors
   addReplyError = '';
@@ -111,6 +118,8 @@ export class CommentComponent
   // location
   location$: Observable<LocationData>;
   location: LocationData;
+
+  // friends
   friends$: Observable<Friend[]>;
   friendsList: Friend[] = [];
 
@@ -137,15 +146,14 @@ export class CommentComponent
   isAuthenticated$: Observable<boolean>;
   isVerified$: Observable<boolean>;
   userMetadata$: Observable<UserMetadata>;
+  userMetadata: UserMetadata;
   user$: Observable<User>;
   user: User;
 
   // Image
-  FILENAME_MAX_SIZE = 25;
   imageFile: File;
   imgSrc: string = null;
   imageBlurred: boolean; // if content flagged nsfw
-
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -159,21 +167,23 @@ export class CommentComponent
     document.addEventListener('click', this.offClickHandler.bind(this));
     this.translateService
       .get('MAIN.COMMENTS')
-      .subscribe((res: Record<string, string>) => {
-        this.STRINGS = res;
+      .subscribe((strings: Record<string, string>) => {
+        this.STRINGS = strings;
       });
   }
 
   offClickHandler(event: MouseEvent): void {
+    // close options if clicked outside
     if (this.options && !this.options.nativeElement.contains(event.target)) {
       this.showDropdown = false;
     }
 
+    // close tags if clicked outside
     if (this.tag && !this.tagContainer.nativeElement.contains(event.target)) {
       this.showTag = false;
     }
 
-    // Check caret position
+    // Check caret position to set tag state
     if (this.reply && this.reply.nativeElement.contains(event.target)) {
       this.setTagState();
     }
@@ -216,7 +226,12 @@ export class CommentComponent
 
           this.commentService
             .getReplies(request)
-            .pipe(take(1))
+            .pipe(
+              take(1),
+              finalize(() => {
+                this.loadingReplies = false;
+              })
+            )
             .subscribe(
               (replies: GetRepliesResponse) => {
                 const storeRequest: SetRepliesStoreRequest = {
@@ -233,11 +248,8 @@ export class CommentComponent
                 );
 
                 this.totalRepliesAfter = replies.totalRepliesAfter;
-                this.loadingReplies = false;
               },
-              (_errorResponse: { error: SpotError }) => {
-                this.loadingReplies = false;
-              }
+              (_errorResponse: { error: SpotError }) => {}
             );
         } else {
           this.initialLoad = false;
@@ -265,7 +277,6 @@ export class CommentComponent
 
     // user
     this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
-
     this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user) => {
       this.user = user;
     });
@@ -273,6 +284,11 @@ export class CommentComponent
     this.userMetadata$ = this.store$.pipe(
       select(UserStoreSelectors.selectUserMetadata)
     );
+    this.userMetadata$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((userMetadata) => {
+        this.userMetadata = userMetadata;
+      });
 
     // friends
     this.friends$ = this.store$.pipe(
@@ -297,8 +313,9 @@ export class CommentComponent
   }
 
   ngAfterViewInit(): void {
-    // fix pasting content to just strip plaintext content
+    // parse and render the html content
     this.setContentHTML();
+    // fix pasting content to just strip plaintext content
     this.reply.nativeElement.addEventListener('paste', (event: any) => {
       event.preventDefault();
       const text = event.clipboardData.getData('text/plain');
@@ -453,6 +470,10 @@ export class CommentComponent
     this.setContentHTML();
   }
 
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+  }
+
   // the number of replies that will be loaded if load more is pressed
   loadMoreRepliesNum(): number {
     return Math.min(
@@ -463,6 +484,7 @@ export class CommentComponent
     );
   }
 
+  // requests
   loadMoreReplies(): void {
     if (this.loadingMoreReplies) {
       return;
@@ -484,7 +506,12 @@ export class CommentComponent
 
     this.commentService
       .getReplies(request)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loadingMoreReplies = false;
+        })
+      )
       .subscribe(
         (replies: GetRepliesResponse) => {
           const storeRequest: SetRepliesStoreRequest = {
@@ -500,16 +527,9 @@ export class CommentComponent
           );
 
           this.totalRepliesAfter = replies.totalRepliesAfter;
-          this.loadingMoreReplies = false;
         },
-        (err: SpotError) => {
-          this.loadingMoreReplies = false;
-        }
+        (_errorResponse: { error: SpotError }) => {}
       );
-  }
-
-  toggleDropdown(): void {
-    this.showDropdown = !this.showDropdown;
   }
 
   deleteComment(): void {
@@ -530,62 +550,13 @@ export class CommentComponent
   }
 
   addReply(): void {
-    let content = this.reply.nativeElement.innerHTML;
-
-    // parse the innerhtml to return a string with newlines instead of innerhtml
-    const parser = new DOMParser();
-    const parsedHtml = parser.parseFromString(content, 'text/html');
-
-    const body = parsedHtml.getElementsByTagName('body');
-
-    const tags: Tag[] = [];
-    let text = '';
-    let offset = 0;
-
-    // Do a dfs on the html tree
-    let stack = [];
-    stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
-
-    while (stack.length > 0) {
-      const elem = stack.pop();
-
-      // A tag
-      if (elem.className === 'tag-inline') {
-        const tag: Tag = {
-          username: elem.textContent,
-          offset
-        };
-        tags.push(tag);
-        // A tag has no children, continue
-        continue;
-      }
-
-      // Push the children
-      // In reverse because we want to parse the from left to right
-      if (elem.childNodes) {
-        stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
-      }
-
-      // Don't add spaces to start
-      if (elem.tagName === 'DIV') {
-        // A new Div
-        text += '\n';
-        offset += 1;
-      } else if (elem.nodeType === 3) {
-        // Text Node
-        text += elem.textContent;
-        offset += elem.textContent.length;
-      }
-    }
-
-    // TODO: cleanup whitespace here if decide to do it
-    // There should already be no spaces at start, this should just remove - check text length 0 before append \n
-    // spaces at the end
-    // tag offsets will be adjusted on the server to never be more than content length
-    content = text;
+    const contentAndTags = parseContentWithTags(
+      this.reply.nativeElement.innerHTML
+    );
+    const content = contentAndTags.content;
+    const tags = contentAndTags.tags;
 
     // Error checking
-
     if (
       content.split(/\r\n|\r|\n/).length > COMMENT_CONSTANTS.MAX_LINE_LENGTH
     ) {
@@ -647,18 +618,23 @@ export class CommentComponent
 
     this.commentService
       .createReply(request)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.addReplyLoading = false;
+        })
+      )
       .subscribe(
         (reply: CreateReplyResponse) => {
+          // add the new reply to the store
           const storeRequest: AddReplyStoreRequest = {
             reply: reply.reply
           };
-
           this.store$.dispatch(
             new CommentStoreActions.AddReplyRequestAction(storeRequest)
           );
 
-          this.addReplyLoading = false;
+          // remove the image and text
           this.removeFile();
           this.reply.nativeElement.innerText = '';
           this.reply.nativeElement.innerHtml = '';
@@ -669,20 +645,18 @@ export class CommentComponent
           this.currentLength = 0;
           this.showAddReply = false;
         },
-        (createError: SpotError) => {
-          this.addReplyLoading = false;
-          if (createError.name === 'InvalidCommentProfanity') {
+        (errorResponse: { error: SpotError }) => {
+          if (errorResponse.error.name === 'InvalidCommentProfanity') {
             this.addReplyError = this.STRINGS.ERROR_PROFANITY.replace(
               '%PROFANITY%',
-              createError.body.word
+              errorResponse.error.body.word
             );
           } else {
-            this.addReplyError = createError.message;
+            this.addReplyError = errorResponse.error.message;
           }
         }
       );
   }
-
 
   like(): void {
     if (!this.authenticationService.isAuthenticated()) {
@@ -730,34 +704,20 @@ export class CommentComponent
     }
   }
 
-  getProfilePictureClass(index): string {
-    return this.commentService.getProfilePictureClass(index);
-  }
-
-  invalidLength(): boolean {
-    return this.currentLength > this.MAX_COMMENT_LENGTH;
-  }
-
-  onFileChanged(event): void {
-    this.imageFile = event.target.files[0];
-    this.imgSrc = window.URL.createObjectURL(this.imageFile);
+  // Images
+  onFileChanged(event: Event): void {
+    if (
+      (event.target as HTMLInputElement).files &&
+      (event.target as HTMLInputElement).files.length
+    ) {
+      this.imageFile = (event.target as HTMLInputElement).files[0];
+      this.imgSrc = window.URL.createObjectURL(this.imageFile);
+    }
   }
 
   removeFile(): void {
     this.imageFile = null;
     this.imgSrc = null;
-  }
-
-  getDisplayFilename(name: string): string {
-    if (name.length > this.FILENAME_MAX_SIZE) {
-      return name.substr(0, this.FILENAME_MAX_SIZE) + '...';
-    } else {
-      return name;
-    }
-  }
-
-  closeModal(id: string): void {
-    this.modalService.close(id);
   }
 
   imageClicked(): void {
@@ -770,6 +730,7 @@ export class CommentComponent
     }
   }
 
+  // Modals
   openReportModal(spotId: string, commentId: string): void {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');

@@ -1,67 +1,26 @@
 .tag {
-  background-color: var(--background-container);
   width: 235px;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
 
-  .header {
-    font-size: 20px;
-    padding: 5px 10px;
-    border-bottom: 1px solid var(--background-primary);
-  }
+.friend-container {
+  max-height: 156px;
+  overflow-y: auto;
 
-  .content {
-    padding: 5px 10px;
+  .name {
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 3px 5px;
+    background-color: var(--background-primary);
 
-    .search {
-      display: flex;
-      align-items: center;
-      margin-bottom: 5px;
-
-      .icon {
-        margin-right: 3px;
-      }
-
-      .search-text {
-        display: flex;
-        flex-flow: column;
-        width: calc(100% - 24px);
-
-        .text {
-          min-width: 0px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .bar {
-          height: 1px;
-          width: 100%;
-          background-color: var(--background-primary);
-        }
-      }
-    }
-
-    .friend-container {
-      max-height: 156px;
-      overflow-y: auto;
-
-      .name {
-        cursor: pointer;
-        box-sizing: border-box;
-        width: 100%;
-        padding: 3px 5px;
-        background-color: var(--background-primary);
-
-        &:hover {
-          color: white;
-          background-color: var(--primary);
-        }
-      }
-    }
-
-    .no-friends {
-      margin: 3px 0px;
-      text-align: center;
+    &:hover {
+      color: white;
+      background-color: var(--primary);
     }
   }
+}
+
+.no-friends {
+  margin: 3px 0px;
+  text-align: center;
 }

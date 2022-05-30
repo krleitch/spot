@@ -27,7 +27,7 @@ import { Friend, GetFriendsRequest } from '@models/friend';
   templateUrl: './tag.component.html',
   styleUrls: ['./tag.component.scss']
 })
-export class TagComponent implements OnInit, OnChanges {
+export class TagComponent implements OnInit {
   @Input() postLink;
   @Input() name;
   @Output() tag = new EventEmitter<string>();
@@ -35,8 +35,7 @@ export class TagComponent implements OnInit, OnChanges {
   constructor(private store$: Store<RootStoreState.State>) {}
 
   friends$: Observable<Friend[]>;
-  friendsList: Friend[] = [];
-  filteredFriendsList: Friend[] = [];
+  friends: Friend[] = [];
 
   link: string;
 
@@ -47,28 +46,10 @@ export class TagComponent implements OnInit, OnChanges {
     );
 
     this.friends$.subscribe((friends) => {
-      this.friendsList = friends;
-      this.filteredFriendsList = friends;
-      this.findFriend();
+      this.friends = friends;
     });
 
     this.link = window.location.origin + '/posts/' + this.postLink;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.findFriend();
-  }
-
-  findFriend(): void {
-    if (this.name) {
-      this.filteredFriendsList = this.friendsList.filter((friend) => {
-        return (
-          friend.username.toUpperCase().indexOf(this.name.toUpperCase()) !== -1
-        );
-      });
-    } else {
-      this.filteredFriendsList = this.friendsList;
-    }
   }
 
   sendTag(username: string): void {
@@ -76,8 +57,13 @@ export class TagComponent implements OnInit, OnChanges {
   }
 
   onEnter(): boolean {
-    if (this.filteredFriendsList.length > 0) {
-      this.tag.emit(this.filteredFriendsList[0].username);
+    const filteredFriendsList = this.friends.filter((friend) => {
+      return (
+        friend.username.toUpperCase().indexOf(this.name.toUpperCase()) !== -1
+      );
+    });
+    if (filteredFriendsList.length > 0) {
+      this.tag.emit(filteredFriendsList[0].username);
       return false;
     }
   }

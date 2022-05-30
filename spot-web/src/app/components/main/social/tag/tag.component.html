@@ -1,31 +1,36 @@
-<div class="tag">
-  <div class="header">
+<div class="tag background-container container-shadow container-rounded">
+  <div class="background-header padding-md title-sm">
     {{ 'MAIN.TAG.TAG' | translate }}
   </div>
 
-  <div class="content">
-    <div class="search" *ngIf="name">
-      <span class="material-icons icon"> search </span>
-      <div class="search-text">
-        <span class="text"> {{ name }} </span>
-        <span class="bar"></span>
-      </div>
+  <div class="padding-md">
+    <!-- Search -->
+    <div *ngIf="name" class="input-search-container">
+      <span class="material-icons icon-md icon-primary margin-r-xs">
+        search
+      </span>
+      <input [(ngModel)]="name" class="input-search" type="text" />
     </div>
 
-    <div
-      class="friend-container"
-      *ngIf="filteredFriendsList.length > 0; else noFriends"
-    >
+    <!-- List of friends matched -->
+    <div *ngIf="friends | filter: { filter: name, field: 'username' } as friends">
       <div
-        class="name"
-        (click)="sendTag(friend.username)"
-        *ngFor="let friend of filteredFriendsList"
+        *ngIf="friends.length > 0; else noFriends"
+        class="friend-container"
       >
-        {{ friend.username }}
+        <div
+          *ngFor="let friend of friends"
+          (click)="sendTag(friend.username)"
+          class="name"
+        >
+          {{ friend.username }}
+        </div>
       </div>
+      <ng-template #noFriends>
+        <div class="margin-md text-center">
+          {{ 'MAIN.TAG.NO_FRIENDS' | translate }}
+        </div>
+      </ng-template>
     </div>
-    <ng-template #noFriends>
-      <div class="no-friends">{{ 'MAIN.TAG.NO_FRIENDS' | translate }}</div>
-    </ng-template>
   </div>
 </div>
