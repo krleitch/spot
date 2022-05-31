@@ -1,12 +1,20 @@
-<div class="report">
-  <div class="report-header">
-    <span class="title"> {{ 'MAIN.REPORT.TITLE' | translate }} </span>
-    <span class="close" (click)="closeReport()">
-      <span class="material-icons"> clear </span>
+<div class="col background-container container-rounded">
+  <!-- Header -->
+  <div
+    class="row-h-center justify-content-between container-t-rounded background-header border-box full-width padding-md"
+  >
+    <div class="row-h-center">
+      <span class="material-icons icon-primary icon-lg"> flag_outlined </span>
+      <span class="margin-l-sm"> {{ 'MAIN.REPORT.TITLE' | translate }} </span>
+    </div>
+    <span class="material-icons icon-close" (click)="closeReport()">
+      clear
     </span>
   </div>
 
-  <div class="report-body">
+  <!-- Body-->
+  <div class="padding-lg container-b-rounded">
+    <!-- Select -->
     <select [(ngModel)]="category" name="category">
       <option value="1">{{ 'MAIN.REPORT.OFFENSIVE' | translate }}</option>
       <option value="2">{{ 'MAIN.REPORT.HATE' | translate }}</option>
@@ -14,19 +22,22 @@
       <option value="4">{{ 'MAIN.REPORT.OTHER' | translate }}</option>
     </select>
 
+    <!-- Text -->
     <textarea
       [(ngModel)]="content"
       placeholder=" {{ 'MAIN.REPORT.REPORT_PLACEHOLDER' | translate }}"
       rows="10"
     ></textarea>
-    <span *ngIf="errorMessage" class="error-message"> {{ errorMessage }} </span>
-    <div class="counter-send-container">
-      <span class="counter" [ngClass]="{ 'counter-error': invalidLength() }">
+    <span *ngIf="errorMessage" class="text-error"> {{ errorMessage }} </span>
+
+    <!-- Submit and word counter -->
+    <div class="row-h-center justify-content-end">
+      <span class="text-secondary" [class.text-error]="invalidLength()">
         {{ REPORT_CONSTANTS.MAX_CONTENT_LENGTH - content.length }}
       </span>
-      <div class="send-report" (click)="sendReport()">
+      <button class="button-primary" (click)="sendReport()">
         {{ 'MAIN.REPORT.REPORT_BUTTON' | translate }}
-      </div>
+      </button>
     </div>
   </div>
 </div>

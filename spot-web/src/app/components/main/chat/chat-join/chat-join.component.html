@@ -1,8 +1,8 @@
 <div
   class="col-h-center full-size margin-t-xl padding-md background-container container-rounded border-box"
 >
-  <div class="row-center">
-    <div class="row-center margin-h-xl">
+  <div class="row-center mobile-col">
+    <div class="row-center margin-md">
       <!-- Chat photo -->
       <span
         class="profile-md margin-r-sm"
@@ -41,15 +41,15 @@
     </div>
 
     <!-- Join room -->
-    <div class="col-v-center justify-content-end margin-h-md flex-fill">
-      <div class="align-right col-center">
+    <div class="col-v-center justify-content-end margin-md">
+      <div class="col-center">
         <span class="row-center margin-b-sm">
           <span class="material-icons icon-sm icon-primary"> person </span>
           <span class="margin-l-sm text-center">
             {{ chatRoom.numUsers }} {{ 'MAIN.CHAT_JOIN.CHATTING_NOW' | translate }}
           </span>
         </span>
-        <button class="button" (click)="joinChatRoom()">
+        <button class="button-primary" (click)="joinChatRoom()">
           {{ 'MAIN.CHAT_JOIN.JOIN_ROOM' | translate }}
         </button>
       </div>

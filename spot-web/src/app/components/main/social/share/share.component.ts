@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   ViewChild
@@ -50,10 +49,10 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
   modalId: string;
   data: ModalShareData = { spotId: null, spotLink: null };
 
-  @ViewChild('usernameinput') usernameinput: ElementRef;
+  // The container holding the social media buttons that need to be rendered
   @ViewChild('social') social: ElementRef;
 
-  STRINGS;
+  STRINGS: Record<string, string>;
 
   authenticated$: Observable<boolean>;
   authenticated: boolean;
@@ -74,9 +73,6 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     private alertService: AlertService,
     private TranslateService: TranslateService
   ) {
-    this.TranslateService.get('MAIN.SHARE').subscribe((res: any) => {
-      this.STRINGS = res;
-    });
   }
 
   ngOnInit(): void {
@@ -115,6 +111,10 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.data.commentLink) {
       this.link += '/comment/' + this.data.commentLink;
     }
+
+    this.TranslateService.get('MAIN.SHARE').subscribe((strings: Record<string, string>) => {
+      this.STRINGS = strings;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -207,11 +207,11 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe(
-        (response: CreateTagNotificationResponse) => {
+        (_response: CreateTagNotificationResponse) => {
           this.successMessage = this.STRINGS.SUCCESS + request.receiver;
         },
-        (error: SpotError) => {
-          this.errorMessage = error.message;
+        (errorResponse: { error: SpotError }) => {
+          this.errorMessage = errorResponse.error.message;
         }
       );
   }
@@ -245,10 +245,10 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe(
-        (response: CreateTagNotificationResponse) => {
+        (_response: CreateTagNotificationResponse) => {
           // none
         },
-        (error: SpotError) => {
+        (_errorResponse: { error: SpotError }) => {
           // none
         }
       );
@@ -270,5 +270,13 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // message
     this.alertService.success(this.STRINGS.COPY_LINK_SUCCESS);
+  }
+
+  getDisplayName(name: string): string {
+    if (name.length) {
+      return name[0].toUpperCase();
+    } else {
+      return '';
+    }
   }
 }

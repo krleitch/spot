@@ -1,15 +1,21 @@
-<div class="share">
-  <div class="header">
-    <span class="title"> {{ 'MAIN.SHARE.TITLE' | translate }} </span>
-    <span class="close" (click)="closeShare()">
-      <span class="material-icons"> clear </span>
+<div class="col background-container container-rounded">
+  <div
+    class="row-h-center justify-content-between padding-md background-header full-width border-box container-t-rounded"
+  >
+    <div class="row-h-center">
+      <span class="material-icons icon-primary icon-md"> share </span>
+      <span class="margin-l-sm"> {{ 'MAIN.SHARE.TITLE' | translate }} </span>
+    </div>
+    <span class="material-icons icon-close" (click)="closeShare()">
+      clear
     </span>
   </div>
 
-  <div class="links">
-    <div #social id="social" class="social-media">
+  <!-- Social links -->
+  <div class="row-h-center justify-content-between margin-lg">
+    <div #social id="social" class="row-h-center">
       <div
-        class="fb-share-button"
+        class="fb-share-button margin-r-md"
         attr.data-href="{{ link }}"
         data-layout="button_count"
         data-size="large"
@@ -24,67 +30,82 @@
       </div>
       <!-- Twitter button generated here from the ts file -->
     </div>
-    <span class="copy" (click)="copyLink()"> {{ 'MAIN.SHARE.COPY_LINK' | translate }} </span>
+    <span class="text-secondary-highlight" (click)="copyLink()">
+      {{ 'MAIN.SHARE.COPY_LINK' | translate }}
+    </span>
   </div>
 
-  <div *ngIf="authenticated; else auth">
-    <div class="input-container">
-      <input
-        #usernameinput
-        [(ngModel)]="username"
-        (keyup.enter)="sendNotification()"
-        placeholder="{{ 'MAIN.SHARE.USERNAME_PLACEHOLDER' | translate }}"
-        type="text"
-      />
-      <span (click)="sendNotification()">
-        <i class="material-icons send"> send </i>
-      </span>
-    </div>
+  <!-- Search -->
+  <div class="input-search-container margin-h-lg">
+    <span class="material-icons icon-md icon-primary margin-r-xs">
+      search
+    </span>
+    <input
+      class="input-search"
+      [(ngModel)]="username"
+      (keyup.enter)="sendNotification()"
+      placeholder="{{ 'MAIN.SHARE.USERNAME_PLACEHOLDER' | translate }}"
+      type="text"
+    />
+  </div>
 
-    <div class="success-message" *ngIf="successMessage">
-      {{ successMessage }}
-    </div>
+  <!-- status messages -->
+  <div *ngIf="successMessage" class="text-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="text-error">
+    {{ errorMessage }}
+  </div>
 
-    <div class="error-message" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </div>
-
-    <div class="friends-title">{{ 'MAIN.SHARE.FRIENDS' | translate }}</div>
-    <div
-      class="share-friend-section"
-      *ngIf="
-        friends | filter: { filter: username, field: 'username' } as friends
-      "
-    >
-      <div *ngIf="friends.length > 0; else noFriends">
-        <div *ngFor="let friend of friends" class="share-friend-container">
-          {{ friend.username }}
-          <div
-            [hidden]="friend.sent"
-            class="share-friend-send"
-            (click)="
-              sendNotificationToFriend(friend.username); friend.sent = true
-            "
-          >
-            {{ 'MAIN.SHARE.SEND' | translate }}
+  <div
+    class="friend-container padding-lg"
+    *ngIf="friends | filter: { filter: username, field: 'username' } as friends"
+  >
+    <!-- Friends list -->
+    <div *ngIf="friends.length > 0; else noFriends">
+      <div
+        *ngFor="let friend of friends"
+        class="row-h-center justify-content-between container-shadow container-rounded padding-md margin-v-md"
+      >
+        <div class="row-h-center">
+          <div class="profile-sm row-center background-header">
+            <img
+              *ngIf="friend.profilePictureSrc; else noImage"
+              [src]="friend.profilePictureSrc"
+            />
+            <ng-template #noImage>
+              <span> {{ getDisplayName(friend.username) }}</span>
+            </ng-template>
           </div>
-          <div [hidden]="!friend.sent" class="share-friend-sent">
-            {{ 'MAIN.SHARE.SENT' | translate }}
-          </div>
+          <span class="margin-l-md">
+            {{ friend.username }}
+          </span>
+        </div>
+
+        <button
+          class="button-primary"
+          [class.disabled-background]="friend.sent"
+          [class.disabled]="friend.sent"
+          (click)="
+            sendNotificationToFriend(friend.username); friend.sent = true
+          "
+        >
+          {{ 'MAIN.SHARE.SEND' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <ng-template #noFriends>
+      <div *ngIf="username; else addFriends">
+        <div class="text-secondary text-center">
+          {{ 'MAIN.SHARE.NO_FRIENDS_FOUND' | translate }}
         </div>
       </div>
-
-      <ng-template #noFriends>
-        <div *ngIf="username; else addFriends">
-          <div class="no-friends">{{ 'MAIN.SHARE.NO_FRIENDS_FOUND' | translate }}</div>
+      <ng-template #addFriends>
+        <div class="text-secondary text-center">
+          {{ 'MAIN.SHARE.NO_FRIENDS' | translate }}
         </div>
-        <ng-template #addFriends>
-          <div class="no-friends">{{ 'MAIN.SHARE.NO_FRIENDS' | translate }}</div>
-        </ng-template>
       </ng-template>
-    </div>
+    </ng-template>
   </div>
-  <ng-template #auth>
-    <span class="login"> {{ 'MAIN.SHARE.LOGIN' | translate }} </span>
-  </ng-template>
 </div>

@@ -252,17 +252,16 @@
     },
 
     "SHARE": {
-      "TITLE": "Share a Spot",
-      "USERNAME_PLACEHOLDER": "Enter Username",
+      "TITLE": "Share",
+      "USERNAME_PLACEHOLDER": "Enter username",
       "COPY_LINK": "Copy link",
       "COPY_LINK_SUCCESS": "Link copied to clipboard",
+
       "SEND": "Send",
       "SENT": "Sent",
 
-      "FRIENDS": "Friends",
       "NO_FRIENDS_FOUND": "No friends found with this name",
       "NO_FRIENDS": "Add Friends to share spots quickly",
-      "LOGIN": "Login to share with friends",
 
       "SUCCESS": "Notification sent to ",
 
