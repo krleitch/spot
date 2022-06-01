@@ -395,22 +395,24 @@ router.post(
         return next(new authenticationError.AuthenticationError());
       }
 
+      // You cannot be a guest
       if (authorizationService.checkUserHasRole(req.user, [UserRole.GUEST])) {
         return next(new reportError.ReportError());
       }
 
       let reportCategory: ReportCategory;
+      console.log(req.body.category);
       switch (req.body.category) {
-        case 'offensive':
+        case ReportCategory.OFFENSIVE:
           reportCategory = ReportCategory.OFFENSIVE;
           break;
-        case 'hate':
+        case ReportCategory.HATE:
           reportCategory = ReportCategory.HATE;
           break;
-        case 'mature':
+        case ReportCategory.MATURE:
           reportCategory = ReportCategory.MATURE;
           break;
-        case 'other':
+        case ReportCategory.OTHER:
           reportCategory = ReportCategory.OTHER;
           break;
         default:

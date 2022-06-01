@@ -93,7 +93,7 @@ export class SpotService {
   }
 
   reportSpot(request: ReportSpotRequest): Observable<ReportSpotResponse> {
-    return this.http.put<ReportSpotResponse>(
+    return this.http.post<ReportSpotResponse>(
       `${this.baseUrl}/spot/${request.spotId}/report`,
       request
     );

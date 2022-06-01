@@ -1,12 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 // rxjs
-import { Observable, Subject, throwError } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
-
-// store
-import { RootStoreState } from '@store';
-import { Store } from '@ngrx/store';
+import { take } from 'rxjs/operators';
 
 // services
 import { ModalService } from '@services/modal.service';
@@ -15,65 +10,70 @@ import { AlertService } from '@services/alert.service';
 import { CommentService } from '@src/app/services/comment.service';
 import { TranslateService } from '@ngx-translate/core';
 
-// assets
+// models
 import { ReportSpotRequest, ReportSpotResponse } from '@models/spot';
 import { ReportCommentRequest } from '@models/comment';
 import { ReportCategory } from '@models/report';
 import { SpotError } from '@exceptions/error';
-import { REPORT_CONSTANTS } from '@constants/report';
 import { ModalReportData } from '@models/modal';
+
+// constants
+import { REPORT_CONSTANTS } from '@constants/report';
 
 @Component({
   selector: 'spot-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']
 })
-export class ReportComponent implements OnInit, OnDestroy {
-  private readonly onDestroy = new Subject<void>();
-
-  // MODAL
+export class ReportComponent implements OnInit {
+  // modal props
   modalId: string;
   data: ModalReportData = {
     spotId: null,
     commentId: null
   };
 
-  STRINGS;
+  // constants
+  STRINGS: Record<string, string>;
   REPORT_CONSTANTS = REPORT_CONSTANTS;
+  eReportCategory = ReportCategory;
 
+  // state
   content = '';
-  category = ReportCategory.OFFENSIVE;
   errorMessage = '';
+  category = ReportCategory.OFFENSIVE;
 
   constructor(
-    private store$: Store<RootStoreState.State>,
     private modalService: ModalService,
     private spotService: SpotService,
     private commentService: CommentService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {
-    this.translateService.get('MAIN.REPORT').subscribe((res: any) => {
-      this.STRINGS = res;
-    });
+    this.translateService
+      .get('MAIN.REPORT')
+      .subscribe((strings: Record<string, string>) => {
+        this.STRINGS = strings;
+      });
   }
 
-  ngOnInit(): void {}
-
-  ngOnDestroy(): void {
-    this.onDestroy.next();
+  ngOnInit(): void {
+    this.content = '';
   }
 
   closeReport(): void {
     this.modalService.close(this.modalId);
   }
 
-  invalidLength(): boolean {
-    return this.content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH;
-  }
-
   sendReport(): void {
+
+    if ( this.content.length > 300 ) {
+      this.errorMessage = this.STRINGS.ERROR_CONTENT_LENGTH;
+      return;
+    }
+
     if (this.data.spotId && this.data.commentId) {
+      // report a comment
       const request: ReportCommentRequest = {
         spotId: this.data.spotId,
         commentId: this.data.commentId,
@@ -83,47 +83,28 @@ export class ReportComponent implements OnInit, OnDestroy {
 
       this.commentService
         .reportComment(request)
-        .pipe(
-          takeUntil(this.onDestroy),
-          catchError((errorResponse) => {
-            return throwError(errorResponse.error);
-          })
-        )
+        .pipe(take(1))
         .subscribe(
-          (response: ReportSpotResponse) => {
-            this.content = '';
-            this.modalService.close(this.modalId);
-            this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
-          },
-          (error: SpotError) => {
-            this.errorMessage = error.message;
-          }
+          (_response: ReportSpotResponse) => {},
+          (_errorResponse: { error: SpotError }) => {}
         );
     } else if (this.data.spotId) {
+      // report a spot
       const request: ReportSpotRequest = {
         spotId: this.data.spotId,
-        content: this.content || '',
+        content: this.content,
         category: this.category
       };
 
       this.spotService
         .reportSpot(request)
-        .pipe(
-          takeUntil(this.onDestroy),
-          catchError((errorResponse) => {
-            return throwError(errorResponse.error);
-          })
-        )
+        .pipe(take(1))
         .subscribe(
-          (response: ReportSpotResponse) => {
-            this.content = '';
-            this.modalService.close(this.modalId);
-            this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
-          },
-          (error: SpotError) => {
-            this.errorMessage = error.message;
-          }
+          (_response: ReportSpotResponse) => {},
+          (_errorResponse: { error: SpotError }) => {}
         );
     }
+    this.modalService.close(this.modalId);
+    this.alertService.success(this.STRINGS.SUCCESS_MESSAGE);
   }
 }

@@ -24,10 +24,12 @@ import rateLimiter from '@helpers/rateLimiter.js';
 // errors
 import * as commentError from '@exceptions/comment.js';
 import * as authenticationError from '@exceptions/authentication.js';
+import * as reportError from '@exceptions/report.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // constants
 import { COMMENT_CONSTANTS } from '@constants/comment.js';
+import { REPORT_CONSTANTS } from '@constants/report.js';
 
 // config
 import config from '@config/config.js';
@@ -192,11 +194,10 @@ router.get(
       let totalCommentsBefore = 0;
       let totalCommentsAfter = 0;
       if (commentsWithTags.length > 0) {
-        totalCommentsBefore =
-          await prismaComment.findTotalCommentsBeforeDate(
-            request.spotId,
-            commentsWithTags.at(-1)?.createdAt
-          );
+        totalCommentsBefore = await prismaComment.findTotalCommentsBeforeDate(
+          request.spotId,
+          commentsWithTags.at(-1)?.createdAt
+        );
         totalCommentsAfter = await prismaComment.findTotalCommentsAfterDate(
           request.spotId,
           commentsWithTags.at(0)?.createdAt
@@ -285,7 +286,7 @@ router.get(
             req.user?.userId
           );
           // Add the reply as the final
-          replies.concat(reply)
+          replies.concat(reply);
         } else {
           replies = await prismaComment.findRepliesForComment(
             request.spotId,
@@ -344,7 +345,7 @@ router.get(
             return newReply;
           })
         );
-      
+
       let totalRepliesAfter = 0;
       if (replies.length > 0) {
         totalRepliesAfter = await prismaComment.findTotalRepliesAfterReply(
@@ -893,21 +894,22 @@ router.put(
 
       let reportCategory: ReportCategory;
       switch (req.body.category) {
-        case 'OFFENSIVE':
+        case ReportCategory.OFFENSIVE:
           reportCategory = ReportCategory.OFFENSIVE;
           break;
-        case 'HATE':
+        case ReportCategory.HATE:
           reportCategory = ReportCategory.HATE;
           break;
-        case 'MATURE':
+        case ReportCategory.MATURE:
           reportCategory = ReportCategory.MATURE;
           break;
-        case 'OTHER':
+        case ReportCategory.OTHER:
           reportCategory = ReportCategory.OTHER;
           break;
         default:
           reportCategory = ReportCategory.OFFENSIVE;
       }
+
       const request: ReportCommentRequest = {
         spotId: req.params.spotId,
         commentId: req.params.commentId,
@@ -915,13 +917,29 @@ router.put(
         category: reportCategory
       };
 
-      await prismaReport.createCommentReport(
+      if (
+        request.content.length < REPORT_CONSTANTS.MIN_CONTENT_LENGTH ||
+        request.content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH
+      ) {
+        return next(
+          new reportError.ReportLengthError(
+            400,
+            REPORT_CONSTANTS.MIN_CONTENT_LENGTH,
+            REPORT_CONSTANTS.MAX_CONTENT_LENGTH
+          )
+        );
+      }
+
+      const report = await prismaReport.createCommentReport(
         request.spotId,
         request.commentId,
         req.user.userId,
         request.content,
         request.category
       );
+      if (!report) {
+        return next(new reportError.ReportError());
+      }
 
       const response: ReportCommentResponse = {};
       res.status(200).send(response);

@@ -71,7 +71,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   eSpotRatingType = SpotRatingType;
   eUserRole = UserRole;
-  optionsEnabled = false;
+  showDropdown = false;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -130,12 +130,12 @@ export class PostComponent implements OnInit, OnDestroy {
 
   offClickHandler(event: MouseEvent): void {
     if (this.options && !this.options.nativeElement.contains(event.target)) {
-      this.setOptions(false);
+      this.showDropdown = false;
     }
   }
 
-  setOptions(value): void {
-    this.optionsEnabled = value;
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
   }
 
   openSpot(): void {

@@ -4,7 +4,7 @@
     class="row-h-center justify-content-between container-t-rounded background-header border-box full-width padding-md"
   >
     <div class="row-h-center">
-      <span class="material-icons icon-primary icon-lg"> flag_outlined </span>
+      <span class="material-icons icon-primary icon-lg"> outlined_flag </span>
       <span class="margin-l-sm"> {{ 'MAIN.REPORT.TITLE' | translate }} </span>
     </div>
     <span class="material-icons icon-close" (click)="closeReport()">
@@ -15,27 +15,45 @@
   <!-- Body-->
   <div class="padding-lg container-b-rounded">
     <!-- Select -->
-    <select [(ngModel)]="category" name="category">
-      <option value="1">{{ 'MAIN.REPORT.OFFENSIVE' | translate }}</option>
-      <option value="2">{{ 'MAIN.REPORT.HATE' | translate }}</option>
-      <option value="3">{{ 'MAIN.REPORT.MATURE' | translate }}</option>
-      <option value="4">{{ 'MAIN.REPORT.OTHER' | translate }}</option>
-    </select>
+    <div class="select margin-b-lg">
+      <select [(ngModel)]="category" name="category">
+        <option [value]="eReportCategory.OFFENSIVE">
+          {{ 'MAIN.REPORT.OFFENSIVE' | translate }}
+        </option>
+        <option [value]="eReportCategory.HATE">
+          {{ 'MAIN.REPORT.HATE' | translate }}
+        </option>
+        <option [value]="eReportCategory.MATURE">
+          {{ 'MAIN.REPORT.MATURE' | translate }}
+        </option>
+        <option [value]="eReportCategory.OTHER">
+          {{ 'MAIN.REPORT.OTHER' | translate }}
+        </option>
+      </select>
+      <span class="focus"></span>
+    </div>
 
     <!-- Text -->
     <textarea
       [(ngModel)]="content"
-      placeholder=" {{ 'MAIN.REPORT.REPORT_PLACEHOLDER' | translate }}"
+      placeholder="{{ 'MAIN.REPORT.REPORT_PLACEHOLDER' | translate }}"
       rows="10"
     ></textarea>
-    <span *ngIf="errorMessage" class="text-error"> {{ errorMessage }} </span>
+
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="text-error margin-v-md">{{ errorMessage }}</div>
 
     <!-- Submit and word counter -->
     <div class="row-h-center justify-content-end">
-      <span class="text-secondary" [class.text-error]="invalidLength()">
+      <span
+        class="text-secondary"
+        [class.text-error]="
+          content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH
+        "
+      >
         {{ REPORT_CONSTANTS.MAX_CONTENT_LENGTH - content.length }}
       </span>
-      <button class="button-primary" (click)="sendReport()">
+      <button class="button-primary margin-l-md" (click)="sendReport()">
         {{ 'MAIN.REPORT.REPORT_BUTTON' | translate }}
       </button>
     </div>

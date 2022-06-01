@@ -37,53 +37,45 @@
       </div>
 
       <!-- Right -->
-      <div class="row-h-center">
-        <div #options>
-          <span
-            class="material-icons icon-primary-highlight"
-            (click)="setOptions(true)"
-          >
-            more_horiz
-          </span>
-          <div class="dropdown align-bottom">
-            <div
-              class="dropdown-content"
-              [class.dropdown-show]="optionsEnabled"
+      <div #options class="relative">
+        <span
+          class="material-icons icon-md icon-primary-highlight"
+          (click)="toggleDropdown()"
+        >
+          more_horiz
+        </span>
+        <div class="dropdown align-bottom">
+          <div class="dropdown-content" [class.show-dropdown]="showDropdown">
+            <a
+              *ngIf="!detailed"
+              class="dropdown-button"
+              [routerLink]="'/spot/' + spot.link"
             >
-              <a
-                *ngIf="!detailed"
-                class="dropdown-button"
-                [routerLink]="'/spot/' + spot.link"
-              >
-                <span class="material-icons icon"> chevron_right </span>
-                {{ 'MAIN.POST.OPEN_POST' | translate }}
-              </a>
-              <div
-                class="dropdown-button"
-                (click)="openReportModal(spot.spotId)"
-              >
-                <span class="material-icons icon"> outlined_flag </span>
-                {{ 'MAIN.POST.REPORT' | translate }}
-              </div>
-              <div
-                class="dropdown-button"
-                (click)="openShareModal(spot.spotId, spot.link)"
-              >
-                <span class="material-icons icon"> share </span>
-                {{ 'MAIN.POST.SHARE' | translate }}
-              </div>
-              <div
-                *ngIf="
-                  spot.owned ||
-                  user.role === eUserRole.ADMIN ||
-                  user.role === eUserRole.OWNER
-                "
-                class="dropdown-button"
-                (click)="deleteSpot()"
-              >
-                <span class="material-icons-outlined icon"> delete </span>
-                {{ 'MAIN.POST.DELETE' | translate }}
-              </div>
+              <span class="material-icons icon"> chevron_right </span>
+              {{ 'MAIN.POST.OPEN_POST' | translate }}
+            </a>
+            <div class="dropdown-button" (click)="openReportModal(spot.spotId)">
+              <span class="material-icons icon"> outlined_flag </span>
+              {{ 'MAIN.POST.REPORT' | translate }}
+            </div>
+            <div
+              class="dropdown-button"
+              (click)="openShareModal(spot.spotId, spot.link)"
+            >
+              <span class="material-icons icon"> share </span>
+              {{ 'MAIN.POST.SHARE' | translate }}
+            </div>
+            <div
+              *ngIf="
+                spot.owned ||
+                user.role === eUserRole.ADMIN ||
+                user.role === eUserRole.OWNER
+              "
+              class="dropdown-button"
+              (click)="deleteSpot()"
+            >
+              <span class="material-icons-outlined icon"> delete </span>
+              {{ 'MAIN.POST.DELETE' | translate }}
             </div>
           </div>
         </div>

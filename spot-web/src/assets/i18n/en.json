@@ -415,9 +415,10 @@
       "TITLE": "Report",
 
       "REPORT_PLACEHOLDER": "What would you like to report?",
-      "REPORT_BUTTON": "Send Report",
+      "REPORT_BUTTON": "Report",
 
       "SUCCESS_MESSAGE": "Your report has been sent",
+      "ERROR_CONTENT_LENGTH": "Report message must be less than 300 chars",
 
       "OFFENSIVE": "Offsensive language, harrassment or negative conduct",
       "HATE": "Racism, sexism, homophobia, or any other hate speech",
