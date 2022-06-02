@@ -15,8 +15,7 @@
 }
 
 .disabled {
-  visibility: hidden !important;
-  cursor: default;
+  display: none;
 }
 
 [hidden] {

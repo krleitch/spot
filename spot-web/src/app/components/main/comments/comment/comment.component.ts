@@ -6,7 +6,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  SimpleChanges
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -51,7 +52,7 @@ import {
 // Models
 import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
-import { User } from '@models/user';
+import { User, UserRole } from '@models/user';
 import { UserMetadata } from '@models/userMetadata';
 import { LocationData } from '@models/location';
 import {
@@ -67,7 +68,6 @@ import {
   CommentRatingType
 } from '@models/comment';
 import { Spot } from '@models/spot';
-import { Tag } from '@models/comment';
 import {
   ModalImageData,
   ModalOptions,
@@ -91,7 +91,7 @@ export class CommentComponent
 {
   private readonly onDestroy = new Subject<void>();
 
-  @Input() detailed: boolean;
+  @Input() detailed: boolean; // show more information on its own page
   @Input() comment: Comment;
   @Input() spot: Spot;
 
@@ -101,6 +101,7 @@ export class CommentComponent
 
   STRINGS: Record<string, string>;
   eCommentRatingType = CommentRatingType;
+  eUserRole = UserRole;
   COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
   // state
@@ -144,7 +145,9 @@ export class CommentComponent
 
   // User/Auth/Verify status
   isAuthenticated$: Observable<boolean>;
+  isAuthenticated: boolean;
   isVerified$: Observable<boolean>;
+  isVerified: boolean;
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
   user$: Observable<User>;
@@ -271,9 +274,19 @@ export class CommentComponent
     this.isVerified$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsVerified)
     );
+    this.isVerified$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((verified: boolean) => {
+        this.isVerified = verified;
+      });
     this.isAuthenticated$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsAuthenticated)
     );
+    this.isAuthenticated$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((authenticated: boolean) => {
+        this.isAuthenticated = authenticated;
+      });
 
     // user
     this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
@@ -327,7 +340,7 @@ export class CommentComponent
     this.onDestroy.next();
   }
 
-  ngOnChanges(changes: any): void {
+  ngOnChanges(_changes: SimpleChanges): void {
     if (!this.initialLoad) {
       // if detailed load more replies
       const initialLimit = this.detailed ? 10 : 1;
@@ -344,7 +357,7 @@ export class CommentComponent
       this.showLoadingRepliesIndicator$ = timer(1500)
         .pipe(
           mapTo(true),
-          takeWhile((val) => this.loadingReplies)
+          takeWhile((_) => this.loadingReplies)
         )
         .pipe(startWith(false));
 
@@ -384,13 +397,15 @@ export class CommentComponent
     }
   }
 
-  onTextInput(event): void {
-    if (event.target.textContent.length === 0) {
+  onTextInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    // delete inner content editable items that are now empty
+    if (target.textContent.length === 0) {
       this.reply.nativeElement.innerHTML = '';
     }
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(
-      event.target.textContent.length + event.target.childNodes.length - 1,
+      target.textContent.length + target.childNodes.length - 1,
       0
     );
     this.addReplyError = null;
@@ -465,8 +480,8 @@ export class CommentComponent
     }, 100);
   }
 
-  setExpanded(value: boolean): void {
-    this.expanded = value;
+  toggleExpanded(): void {
+    this.expanded = !this.expanded;
     this.setContentHTML();
   }
 
@@ -731,34 +746,29 @@ export class CommentComponent
   }
 
   // Modals
-  openReportModal(spotId: string, commentId: string): void {
+  openReportModal(): void {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');
       return;
     }
 
     this.modalService.open('global', 'report', {
-      spotId: spotId,
-      commentId: commentId
+      spotId: this.spot.spotId,
+      commentId: this.comment.commentId
     });
   }
 
-  openShareModal(
-    spotId: string,
-    spotLink: string,
-    commentId: string,
-    commentLink: string
-  ) {
+  openShareModal() {
     if (!this.authenticationService.isAuthenticated()) {
       this.modalService.open('global', 'auth');
       return;
     }
 
     this.modalService.open('global', 'share', {
-      spotId: spotId,
-      commentId: commentId,
-      spotLink: spotLink,
-      commentLink: commentLink
+      spotId: this.spot.spotId,
+      commentId: this.comment.commentId,
+      spotLink: this.spot.link,
+      commentLink: this.comment.link
     });
   }
 }

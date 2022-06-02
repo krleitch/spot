@@ -43,17 +43,16 @@
             {{ timeMessage }}
           </div>
 
-          <!-- Add reply -->
+          <!-- Add reply, hide if not auth/verify or not in range -->
+          <!-- You can tag if not in range only if you were tagged -->
           <div
             class="reply margin-r-md margin-t-sm"
             (click)="toggleShowAddReply()"
             [ngClass]="{
               disabled: !(
-                comment.tag.tagged ||
-                (spot.inRange &&
-                  (isAuthenticated$ | async) &&
-                  (isVerified$ | async) &&
-                  location)
+                location &&
+                (comment.tag.tagged ||
+                  (spot.inRange && isAuthenticated && isVerified))
               )
             }"
           >
@@ -75,38 +74,34 @@
                 class="dropdown-content"
                 [class.show-dropdown]="showDropdown"
               >
-                <div
-                  class="dropdown-button"
-                  (click)="openReportModal(comment.spotId, comment.commentId)"
-                >
+                <!-- Report -->
+                <div class="dropdown-button" (click)="openReportModal()">
                   <span class="material-icons icon"> outlined_flag </span>
-                  {{ 'MAIN.COMMENTS.REPORT' | translate }}
+                  <span class="margin-l-sm">
+                    {{ 'MAIN.COMMENTS.REPORT' | translate }}
+                  </span>
                 </div>
-                <div
-                  class="dropdown-button"
-                  (click)="
-                    openShareModal(
-                      spot.spotId,
-                      spot.link,
-                      comment.commentId,
-                      comment.link
-                    )
-                  "
-                >
+                <!-- Share -->
+                <div class="dropdown-button" (click)="openShareModal()">
                   <span class="material-icons icon"> share </span>
-                  {{ 'MAIN.COMMENTS.SHARE' | translate }}
+                  <span class="margin-l-sm">
+                    {{ 'MAIN.COMMENTS.SHARE' | translate }}
+                  </span>
                 </div>
+                <!-- If you own or have excalated privilege you can delete -->
                 <div
                   *ngIf="
                     comment.owned ||
-                    user.role === 'ADMIN' ||
-                    user.role === 'OWNER'
+                    user.role === eUserRole.ADMIN ||
+                    user.role === eUserRole.GUEST
                   "
                   class="dropdown-button"
                   (click)="deleteComment()"
                 >
                   <span class="material-icons icon"> delete </span>
-                  {{ 'MAIN.COMMENTS.DELETE' | translate }}
+                  <span class="margin-l-sm">
+                    {{ 'MAIN.COMMENTS.DELETE' | translate }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -127,12 +122,12 @@
           <div class="text">
             <!-- The element we set the innerHTML -->
             <span #content class="text-content"></span>
-            <!-- is the content expanded -->
+            <!-- If content is expandable show the correct option -->
             <span *ngIf="isExpandable">
               <span *ngIf="expanded; else notExpanded">
                 <span
                   class="text-secondary-highlight"
-                  (click)="setExpanded(false)"
+                  (click)="toggleExpanded()"
                 >
                   {{ 'MAIN.COMMENTS.SEE_LESS' | translate }}
                 </span>
@@ -140,7 +135,7 @@
               <ng-template #notExpanded>
                 <span
                   class="text-secondary-highlight"
-                  (click)="setExpanded(true)"
+                  (click)="toggleExpanded()"
                 >
                   {{ 'MAIN.COMMENTS.SEE_MORE' | translate }}
                 </span>

@@ -58,17 +58,17 @@ $title-sizes: (
 }
 
 // Text Colors
-.text-success {
-  color: var(--success);
-}
-.text-error {
-  color: var(--error);
-}
 .text-secondary {
   color: var(--text-secondary);
 }
 .text-primary {
   color: var(--primary);
+}
+.text-success {
+  color: var(--success);
+}
+.text-error {
+  color: var(--error);
 }
 .text-info {
   color: var(--info);
@@ -123,15 +123,15 @@ $title-sizes: (
     color: var(--error-light);
   }
 }
-.icon-success {
-  color: var(--success);
-}
-.icon-error {
-  color: var(--error);
-}
 .icon-secondary {
   color: var(--icon-secondary);
 }
 .icon-primary {
   color: var(--primary);
+}
+.icon-success {
+  color: var(--success);
+}
+.icon-error {
+  color: var(--error);
 }

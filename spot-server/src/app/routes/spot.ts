@@ -419,15 +419,15 @@ router.post(
           reportCategory = ReportCategory.OFFENSIVE;
       }
 
-      const params: ReportSpotRequest = {
+      const request: ReportSpotRequest = {
         spotId: req.params.spotId,
         content: req.body.content,
         category: reportCategory
       };
 
       if (
-        params.content.length < REPORT_CONSTANTS.MIN_CONTENT_LENGTH ||
-        params.content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH
+        request.content.length < REPORT_CONSTANTS.MIN_CONTENT_LENGTH ||
+        request.content.length > REPORT_CONSTANTS.MAX_CONTENT_LENGTH
       ) {
         return next(
           new reportError.ReportLengthError(
@@ -439,10 +439,10 @@ router.post(
       }
 
       const report = await prismaReport.createSpotReport(
-        params.spotId,
+        request.spotId,
         req.user.userId,
-        params.content,
-        params.category
+        request.content,
+        request.category
       );
       if (!report) {
         return next(new reportError.ReportError());
