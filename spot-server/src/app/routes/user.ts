@@ -77,9 +77,6 @@ router.get(
         return next(new userError.GetUser());
       }
 
-      // TODO: REMOVE THIS!
-      await prismaUser.verifyUser(userId);
-
       const response: GetUserResponse = { user: foundUser };
       res.status(200).json(response);
     }
