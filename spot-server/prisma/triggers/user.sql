@@ -1,42 +1,41 @@
-DROP TRIGGER IF EXISTS spot_insert_trigger ON Spot;
-DROP TRIGGER IF EXISTS comment_insert_trigger ON Comment;
-DROP TRIGGER IF EXISTS spot_like_insert_trigger ON SpotRating;
-DROP TRIGGER IF EXISTS comment_like_insert_trigger ON CommentRating;
+DROP TRIGGER IF EXISTS spot_insert_trigger ON "Spot";
+DROP TRIGGER IF EXISTS comment_insert_trigger ON "Comment";
+DROP TRIGGER IF EXISTS spot_like_insert_trigger ON "SpotRating";
+DROP TRIGGER IF EXISTS comment_like_insert_trigger ON "CommentRating";
 
 
 CREATE OR REPLACE FUNCTION spot_insert()
-  RETURNS trigger AS
+  RETURNS TRIGGER AS
 $$
 BEGIN
-  UPDATE UserMetadata SET "score" = score + 1
-  WHERE userId = NEW.userId;
+  UPDATE "UserMetadata" SET "score" = "score" + 1
+  WHERE "userId" = NEW."owner";
   RETURN NEW;
 END;
-$$
-LANGUAGE 'plpgsql';
+$$ 
+LANGUAGE plpgsql;
 
 CREATE TRIGGER spot_insert_trigger
   AFTER INSERT
-  ON Spot
+  ON "Spot"
   FOR EACH ROW
   EXECUTE PROCEDURE spot_insert();
-
 
 
 CREATE OR REPLACE FUNCTION comment_insert()
   RETURNS trigger AS
 $$
 BEGIN
-  UPDATE UserMetadata SET "score" = score + 1
-  WHERE userId = NEW.userId;
+  UPDATE "UserMetadata" SET "score" = "score" + 1
+  WHERE "userId" = NEW."owner";
   RETURN NEW;
 END;
 $$
-LANGUAGE 'plpgsql';
+LANGUAGE plpgsql;
 
 CREATE TRIGGER comment_insert_trigger
   AFTER INSERT
-  ON Comment
+  ON "Comment"
   FOR EACH ROW
   EXECUTE PROCEDURE comment_insert();
 
@@ -45,16 +44,16 @@ CREATE OR REPLACE FUNCTION spot_like_insert()
   RETURNS trigger AS
 $$
 BEGIN
-  UPDATE UserMetadata SET "score" = score + 1
-  WHERE userId = (SELECT userId FROM Spot WHERE id = NEW.spotId);
+  UPDATE "UserMetadata" SET "score" = "score" + 1
+  WHERE "userId" = (SELECT "owner" FROM "Spot" WHERE "spotId" = NEW."spotId");
   RETURN NEW;
 END;
 $$
-LANGUAGE 'plpgsql';
+LANGUAGE plpgsql;
 
 CREATE TRIGGER spot_like_insert_trigger
   AFTER INSERT
-  ON SpotRating
+  ON "SpotRating"
   FOR EACH ROW
   EXECUTE PROCEDURE spot_like_insert();
 
@@ -63,16 +62,15 @@ CREATE OR REPLACE FUNCTION comment_like_insert()
   RETURNS trigger AS
 $$
 BEGIN
-  UPDATE UserMetadata SET "score" = score + 1
-  WHERE userId = (SELECT userId FROM Comment WHERE id = NEW.commentId);
+  UPDATE "UserMetadata" SET "score" = "score" + 1
+  WHERE "userId" = (SELECT "owner" FROM "Comment" WHERE "commentId" = NEW."commentId");
   RETURN NEW;
 END;
 $$
-LANGUAGE 'plpgsql';
+LANGUAGE plpgsql;
 
 CREATE TRIGGER comment_like_insert_trigger
   AFTER INSERT
-  ON CommentRating
+  ON "CommentRating"
   FOR EACH ROW
   EXECUTE PROCEDURE comment_like_insert();
-

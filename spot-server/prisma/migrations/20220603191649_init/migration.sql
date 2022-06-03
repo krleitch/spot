@@ -25,21 +25,24 @@ CREATE TYPE "NotificationType" AS ENUM ('INFO', 'TAG', 'ALERT');
 -- CreateEnum
 CREATE TYPE "ReportCategory" AS ENUM ('OFFENSIVE', 'HATE', 'MATURE', 'OTHER');
 
+-- CreateEnum
+CREATE TYPE "ImageType" AS ENUM ('PROFILE_PICTURE', 'CHAT_ROOM');
+
 -- CreateTable
 CREATE TABLE "User" (
     "userId" UUID NOT NULL,
-    "email" VARCHAR(255) NOT NULL,
-    "emailUpdatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "email" VARCHAR(255),
+    "emailUpdatedAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "username" VARCHAR(255) NOT NULL,
     "usernameUpdatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "phone" VARCHAR(255) NOT NULL,
-    "phoneUpdatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "password" VARCHAR(1024) NOT NULL,
-    "salt" VARCHAR(256) NOT NULL,
+    "phone" VARCHAR(255),
+    "phoneUpdatedAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "password" VARCHAR(1024),
+    "salt" VARCHAR(256),
     "role" "UserRole" NOT NULL,
     "profilePictureSrc" VARCHAR(255),
-    "facebookId" VARCHAR(36),
-    "googleId" VARCHAR(36),
+    "facebookId" VARCHAR(255),
+    "googleId" VARCHAR(255),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "verifiedAt" TIMESTAMP(3),
@@ -70,14 +73,15 @@ CREATE TABLE "Spot" (
     "geolocation" VARCHAR(255) NOT NULL,
     "content" VARCHAR(3000) NOT NULL,
     "link" VARCHAR(14) NOT NULL,
-    "imageSrc" VARCHAR(255) NOT NULL,
-    "imageNsfw" BOOLEAN NOT NULL DEFAULT false,
+    "imageSrc" VARCHAR(255),
+    "imageNsfw" BOOLEAN DEFAULT false,
     "likes" INTEGER NOT NULL DEFAULT 0,
     "dislikes" INTEGER NOT NULL DEFAULT 0,
     "totalComments" INTEGER NOT NULL DEFAULT 0,
+    "hotRanking" INTEGER NOT NULL DEFAULT 1,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" TIMESTAMP(3),
-    "userId" UUID NOT NULL,
+    "owner" UUID NOT NULL,
 
     CONSTRAINT "Spot_pkey" PRIMARY KEY ("spotId")
 );
@@ -87,14 +91,15 @@ CREATE TABLE "Comment" (
     "commentId" UUID NOT NULL,
     "content" VARCHAR(400) NOT NULL,
     "link" VARCHAR(14) NOT NULL,
-    "imageSrc" VARCHAR(255) NOT NULL,
-    "imageNsfw" BOOLEAN NOT NULL DEFAULT false,
+    "imageSrc" VARCHAR(255),
+    "imageNsfw" BOOLEAN DEFAULT false,
     "likes" INTEGER NOT NULL DEFAULT 0,
     "dislikes" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" TIMESTAMP(3),
-    "userId" UUID NOT NULL,
-    "parentCommentId" UUID NOT NULL,
+    "owner" UUID NOT NULL,
+    "spotId" UUID NOT NULL,
+    "parentCommentId" UUID,
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("commentId")
 );
@@ -164,19 +169,20 @@ CREATE TABLE "PasswordReset" (
     "passwordResetId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "token" VARCHAR(36) NOT NULL,
+    "link" UUID NOT NULL,
     "userId" UUID NOT NULL,
 
     CONSTRAINT "PasswordReset_pkey" PRIMARY KEY ("passwordResetId")
 );
 
 -- CreateTable
-CREATE TABLE "VerifyUser" (
-    "verifyUserId" UUID NOT NULL,
+CREATE TABLE "UserVerify" (
+    "userVerifyId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "token" VARCHAR(36) NOT NULL,
     "userId" UUID NOT NULL,
 
-    CONSTRAINT "VerifyUser_pkey" PRIMARY KEY ("verifyUserId")
+    CONSTRAINT "UserVerify_pkey" PRIMARY KEY ("userVerifyId")
 );
 
 -- CreateTable
@@ -199,9 +205,21 @@ CREATE TABLE "CommentTag" (
     "taggerId" UUID NOT NULL,
     "spotId" UUID NOT NULL,
     "commentId" UUID NOT NULL,
-    "commentParentId" UUID NOT NULL,
+    "commentParentId" UUID,
 
     CONSTRAINT "CommentTag_pkey" PRIMARY KEY ("tagId")
+);
+
+-- CreateTable
+CREATE TABLE "UserImage" (
+    "userImageId" UUID NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deletedAt" TIMESTAMP(3),
+    "imageSrc" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
+    "type" "ImageType" NOT NULL,
+
+    CONSTRAINT "UserImage_pkey" PRIMARY KEY ("userImageId")
 );
 
 -- CreateIndex
@@ -229,22 +247,37 @@ CREATE UNIQUE INDEX "Spot_link_key" ON "Spot"("link");
 CREATE UNIQUE INDEX "Comment_link_key" ON "Comment"("link");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "SpotRating_userId_spotId_key" ON "SpotRating"("userId", "spotId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CommentRating_userId_commentId_key" ON "CommentRating"("userId", "commentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Friend_userId_friendUserId_key" ON "Friend"("userId", "friendUserId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "PasswordReset_token_key" ON "PasswordReset"("token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "VerifyUser_token_key" ON "VerifyUser"("token");
+CREATE UNIQUE INDEX "PasswordReset_link_key" ON "PasswordReset"("link");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserVerify_token_key" ON "UserVerify"("token");
 
 -- AddForeignKey
 ALTER TABLE "UserMetadata" ADD CONSTRAINT "UserMetadata_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Spot" ADD CONSTRAINT "Spot_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Spot" ADD CONSTRAINT "Spot_owner_fkey" FOREIGN KEY ("owner") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_owner_fkey" FOREIGN KEY ("owner") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_parentCommentId_fkey" FOREIGN KEY ("parentCommentId") REFERENCES "Comment"("commentId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_spotId_fkey" FOREIGN KEY ("spotId") REFERENCES "Spot"("spotId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_parentCommentId_fkey" FOREIGN KEY ("parentCommentId") REFERENCES "Comment"("commentId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SpotRating" ADD CONSTRAINT "SpotRating_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -292,7 +325,7 @@ ALTER TABLE "Friend" ADD CONSTRAINT "Friend_friendUserId_fkey" FOREIGN KEY ("fri
 ALTER TABLE "PasswordReset" ADD CONSTRAINT "PasswordReset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VerifyUser" ADD CONSTRAINT "VerifyUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserVerify" ADD CONSTRAINT "UserVerify_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserLocation" ADD CONSTRAINT "UserLocation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -310,4 +343,7 @@ ALTER TABLE "CommentTag" ADD CONSTRAINT "CommentTag_spotId_fkey" FOREIGN KEY ("s
 ALTER TABLE "CommentTag" ADD CONSTRAINT "CommentTag_commentId_fkey" FOREIGN KEY ("commentId") REFERENCES "Comment"("commentId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CommentTag" ADD CONSTRAINT "CommentTag_commentParentId_fkey" FOREIGN KEY ("commentParentId") REFERENCES "Comment"("commentId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CommentTag" ADD CONSTRAINT "CommentTag_commentParentId_fkey" FOREIGN KEY ("commentParentId") REFERENCES "Comment"("commentId") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserImage" ADD CONSTRAINT "UserImage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;

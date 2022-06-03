@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Spot" ADD COLUMN     "hotRanking" INTEGER NOT NULL DEFAULT 1;

@@ -30,8 +30,8 @@ model User {
   salt                 String?         @db.VarChar(256)
   role                 UserRole
   profilePictureSrc    String?         @db.VarChar(255)
-  facebookId           String?         @unique @db.VarChar(36)
-  googleId             String?         @unique @db.VarChar(36)
+  facebookId           String?         @unique @db.VarChar(255)
+  googleId             String?         @unique @db.VarChar(255)
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
   verifiedAt           DateTime?

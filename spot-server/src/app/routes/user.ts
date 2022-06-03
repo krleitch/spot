@@ -77,6 +77,9 @@ router.get(
         return next(new userError.GetUser());
       }
 
+      // TODO: REMOVE THIS!
+      await prismaUser.verifyUser(userId);
+
       const response: GetUserResponse = { user: foundUser };
       res.status(200).json(response);
     }
@@ -95,6 +98,7 @@ router.delete(
       ) {
         return next(new userError.DeleteUser());
       }
+
       await prismaUser.softDeleteUser(req.user.userId);
       const deleteUserResponse: DeleteUserResponse = {};
       res.status(200).send(deleteUserResponse);
@@ -725,7 +729,7 @@ router.delete(
 
       // const user = await prismaUserImage.deleteUserImage(id);
       // if (!user) {
-        // return next(new userError.DeleteProfilePhoto());
+      // return next(new userError.DeleteProfilePhoto());
       // }
 
       const response: DeleteChatRoomPhotoResponse = {};

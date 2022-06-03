@@ -298,13 +298,17 @@ router.post(
         rating: spotRating
       };
 
-      const rating = await prismaSpotRating.rateSpot(
-        req.user.userId,
-        params.spotId,
-        params.rating
-      );
-      if (!rating) {
-        return next(new spotError.RateSpot());
+      if (spotRating == SpotRatingType.NONE) {
+        await prismaSpotRating.deleteRating(req.user.userId, params.spotId);
+      } else {
+        const rating = await prismaSpotRating.rateSpot(
+          req.user.userId,
+          params.spotId,
+          params.rating
+        );
+        if (!rating) {
+          return next(new spotError.RateSpot());
+        }
       }
 
       const response: RateSpotResponse = {};

@@ -822,11 +822,18 @@ router.put(
         rating: commentRating
       };
 
-      await prismaCommentRating.rateComment(
-        req.user.userId,
-        params.commentId,
-        params.rating
-      );
+      if (commentRating == CommentRatingType.NONE) {
+        await prismaCommentRating.deleteRating(
+          req.user.userId,
+          params.commentId
+        );
+      } else {
+        await prismaCommentRating.rateComment(
+          req.user.userId,
+          params.commentId,
+          params.rating
+        );
+      }
 
       const response: RateCommentResponse = {};
       res.status(200).json(response);
@@ -866,11 +873,15 @@ router.put(
         rating: commentRating
       };
 
-      await prismaCommentRating.rateComment(
-        req.user.userId,
-        params.replyId,
-        params.rating
-      );
+      if (commentRating == CommentRatingType.NONE) {
+        await prismaCommentRating.deleteRating(req.user.userId, params.replyId);
+      } else {
+        await prismaCommentRating.rateComment(
+          req.user.userId,
+          params.replyId,
+          params.rating
+        );
+      }
 
       const response: RateReplyResponse = {};
       res.status(200).json(response);

@@ -1,42 +1,68 @@
-DROP TRIGGER IF EXISTS comment_rating_create;
-DROP TRIGGER IF EXISTS comment_rating_change;
-DROP TRIGGER IF EXISTS comment_rating_delete;
+DROP TRIGGER IF EXISTS comment_rating_create_trigger ON "CommentRating";
+DROP TRIGGER IF EXISTS comment_rating_change_trigger ON "CommentRating";
+DROP TRIGGER IF EXISTS comment_rating_delete_trigger ON "CommentRating";
 
-delimiter $$
 
-create trigger comment_rating_create
-after insert on CommentRating
-for each row
-begin
-IF ( new.rating = CommentRatingType.LIKE ) THEN
-    update Comment set likes = likes + 1 where id = new.commentId;
-ELSE
-    update Comment set dislikes = dislikes + 1 where id = new.commentId;
-END IF;
-end$$
+CREATE OR REPLACE FUNCTION comment_rating_create()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF ( NEW."rating" = 'LIKE' ) THEN
+    UPDATE "Comment" SET "likes" = "likes" + 1 WHERE "commentId" = NEW."commentId";
+  ELSE
+    UPDATE "Comment" SET "dislikes" = "dislikes" + 1 WHERE "commentId" = NEW."commentId";
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
 
-create trigger comment_rating_change
-after update on CommentRating
-for each row
-begin
-IF ( old.rating = CommentRatingType.LIKE ) THEN
-    update Comment set likes = likes - 1 where id = new.commentId;
-    update Comment set dislikes = dislikes + 1 where id = new.commentId;
-ELSE
-    update Comment set dislikes = dislikes - 1 where id = new.commentId;
-    update Comment set likes = likes + 1 where id = new.commentId;
-END IF;
-end$$
+CREATE TRIGGER comment_rating_create_trigger
+  AFTER INSERT
+  ON "CommentRating"
+  FOR EACH ROW
+  EXECUTE PROCEDURE comment_rating_create();
 
-create trigger comment_rating_delete
-after delete on CommentRating
-for each row
-begin
-IF ( old.rating = CommentRatingType.LIKE ) THEN
-    update Comment set likes = likes - 1 where id = old.commentId;
-ELSE
-    update Comment set dislikes = dislikes - 1 where id = old.commentId;
-END IF;
-end$$
 
-delimiter ;
+CREATE OR REPLACE FUNCTION comment_rating_change()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF ( OLD."rating" = 'LIKE' ) THEN
+    UPDATE "Comment" SET "dislikes" = "dislikes" +  1 WHERE "commentId" = NEW."commentId";
+    UPDATE "Comment" SET "likes" = "likes" - 1 WHERE "commentId" = NEW."commentId";
+  ELSE
+    UPDATE "Comment" SET "dislikes" = "dislikes" - 1 WHERE "commentId" = NEW."commentId";
+    UPDATE "Comment" SET "likes" = "likes" + 1 WHERE "commentId" = NEW."commentId";
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER comment_rating_change_trigger
+  AFTER UPDATE
+  ON "CommentRating"
+  FOR EACH ROW
+  EXECUTE PROCEDURE comment_rating_change();
+
+
+CREATE OR REPLACE FUNCTION comment_rating_delete()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF ( OLD."rating" = 'LIKE' ) THEN
+    UPDATE "Comment" SET "likes" = "likes" - 1 WHERE "commentId" = OLD."commentId";
+  ELSE
+    UPDATE "Comment" SET "dislikes" = "dislikes" - 1 WHERE "commentId" = OLD."commentId";
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER comment_rating_delete_trigger
+  AFTER DELETE
+  ON "CommentRating"
+  FOR EACH ROW
+  EXECUTE PROCEDURE comment_rating_delete();

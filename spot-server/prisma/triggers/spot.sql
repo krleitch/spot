@@ -1,60 +1,106 @@
-DROP TRIGGER IF EXISTS spot_rating_create;
-DROP TRIGGER IF EXISTS spot_rating_change;
-DROP TRIGGER IF EXISTS spot_rating_delete;
-DROP TRIGGER IF EXISTS spot_comment_create;
-DROP TRIGGER IF EXISTS spot_comment_delete;
+DROP TRIGGER IF EXISTS spot_rating_create_trigger ON "SpotRating";
+DROP TRIGGER IF EXISTS spot_rating_change_trigger ON "SpotRating";
+DROP TRIGGER IF EXISTS spot_rating_delete_trigger ON "SpotRating";
+DROP TRIGGER IF EXISTS spot_comment_create_trigger ON "Comment";
+DROP TRIGGER IF EXISTS spot_comment_delete_trigger ON "Comment";
 
-delimiter $$
 
-create trigger spot_rating_create
-after insert on SpotRating
-for each row
-begin
-IF ( new.rating = SpotRatingType.LIKE ) THEN
-    update Spot set likes = likes + 1 where id = new.spotId;
-ELSE
-    update Spot set dislikes = dislikes + 1 where id = new.spotId;
-END IF;
-end$$
+CREATE OR REPLACE FUNCTION spot_rating_create()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF ( NEW."rating" = 'LIKE' ) THEN
+    UPDATE "Spot" SET "likes" = "likes" + 1 WHERE "spotId" = NEW."spotId";
+  ELSE
+    UPDATE "Spot" SET "dislikes" = "dislikes" + 1 WHERE "spotId" = NEW."spotId";
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
 
-create trigger spot_rating_change
-after update on SpotRating
-for each row
-begin
-IF ( old.rating = SpotRatingType.LIKE ) THEN
-    update Spot set likes = likes - 1 where id = new.spotId;
-    update Spot set dislikes = dislikes + 1 where id = new.spotId;
-ELSE
-    update Spot set dislikes = dislikes - 1 where id = new.spotId;
-    update Spot set likes = likes + 1 where id = new.spotId;
-END IF;
-end$$
+CREATE TRIGGER spot_rating_create_trigger
+  AFTER INSERT
+  ON "SpotRating"
+  FOR EACH ROW
+  EXECUTE PROCEDURE spot_rating_create();
 
-create trigger spot_rating_delete
-after delete on SpotRating
-for each row
-begin
-IF ( old.rating = SpotRatingType.LIKE ) THEN
-    update Spot set likes = likes - 1 where id = old.spotId;
-ELSE
-    update Spot set dislikes = dislikes - 1 where id = old.spotId;
-END IF;
-end$$
 
-create trigger spot_comment_create
-after insert on Comment
-for each row
-begin
-    update Spot set comments = comments + 1 where id = new.spotId;
-end$$
+CREATE OR REPLACE FUNCTION spot_rating_change()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF ( OLD."rating" = 'LIKE' ) THEN
+    UPDATE "Spot" SET "dislikes" = "dislikes" +  1 WHERE "spotId" = NEW."spotId";
+    UPDATE "Spot" SET "likes" = "likes" - 1 WHERE "spotId" = NEW."spotId";
+  ELSE
+    UPDATE "Spot" SET "dislikes" = "dislikes" - 1 WHERE "spotId" = NEW."spotId";
+    UPDATE "Spot" SET "likes" = "likes" + 1 WHERE "spotId" = NEW."spotId";
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
 
-create trigger spot_comment_delete
-after update on Comment
-for each row
-begin
-IF ( new.deletedAt IS NOT NULL ) THEN
-    update Spot set comments = comments - 1 where id = new.spotId;
-END IF;
-end$$
+CREATE TRIGGER spot_rating_change_trigger
+  AFTER UPDATE
+  ON "SpotRating"
+  FOR EACH ROW
+  EXECUTE PROCEDURE spot_rating_change();
 
-delimiter ;
+
+CREATE OR REPLACE FUNCTION spot_rating_delete()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF ( OLD."rating" = 'LIKE' ) THEN
+    UPDATE "Spot" SET "likes" = "likes" - 1 WHERE "spotId" = OLD."spotId";
+  ELSE
+    UPDATE "Spot" SET "dislikes" = "dislikes" - 1 WHERE "spotId" = OLD."spotId";
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER spot_rating_delete_trigger
+  AFTER DELETE
+  ON "SpotRating"
+  FOR EACH ROW
+  EXECUTE PROCEDURE spot_rating_delete();
+
+
+CREATE OR REPLACE FUNCTION spot_comment_create()
+  RETURNS trigger AS
+$$
+BEGIN
+  UPDATE "Spot" set "totalComments" = "totalComments" + 1 WHERE "spotId" = NEW."spotId";
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER spot_comment_create_trigger
+  AFTER INSERT
+  ON "Comment"
+  FOR EACH ROW
+  EXECUTE PROCEDURE spot_comment_create();
+
+
+CREATE OR REPLACE FUNCTION spot_comment_delete()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF ( NEW."deletedAt" IS NOT NULL ) THEN
+    UPDATE "Spot" set "totalComments" = "totalComments" - 1 WHERE "spotId" = NEW."spotId";
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER spot_comment_delete_trigger
+  AFTER UPDATE
+  ON "Comment"
+  FOR EACH ROW
+  EXECUTE PROCEDURE spot_comment_delete();
