@@ -145,15 +145,13 @@
 
           <!-- Image -->
           <div
-            *ngIf="comment.imageSrc !== null"
+            *ngIf="comment.imageSrc"
             (click)="imageClicked()"
             class="image"
           >
             <img
               [src]="comment.imageSrc"
-              [ngClass]="{
-                'image-blur': imageBlurred && userMetadata.matureFilter
-              }"
+              [class.image-blur]="imageBlurred && userMetadata.matureFilter"
             />
             <div
               *ngIf="imageBlurred && userMetadata.matureFilter"
