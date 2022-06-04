@@ -101,10 +101,35 @@ $chat-colors: (
     height: 50px;
   }
 }
-.profile-lg.owned,
-.profile-md.owned,
+
+// Owned images with indicator
+.profile-lg.owned {
+  border: 3px solid var(--primary);
+  width: 94px;
+  height: 94px;
+  img {
+    width: 94px;
+    height: 94px;
+  }
+}
+.profile-md.owned {
+  border: 3px solid var(--primary);
+  width: 54px;
+  height: 54px;
+  img {
+    width: 54px;
+    height: 54px;
+  }
+}
 .profile-comment.owned {
   border: 3px solid var(--primary);
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  img {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 // backgrounds for profile
