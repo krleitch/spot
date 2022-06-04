@@ -22,7 +22,7 @@
           <span
             class="material-icons icon-sm icon-primary-highlight margin-r-xs"
             (click)="like()"
-            [class.primary]="comment.myRating === eCommentRatingType.LIKE"
+            [class.icon-primary]="comment.myRating === eCommentRatingType.LIKE"
           >
             keyboard_arrow_up
           </span>
@@ -30,7 +30,7 @@
           <span
             class="material-icons icon-sm icon-primary-highlight margin-l-xs"
             (click)="dislike()"
-            [class.error]="comment.myRating === eCommentRatingType.DISLIKE"
+            [class.icon-error]="comment.myRating === eCommentRatingType.DISLIKE"
           >
             keyboard_arrow_down
           </span>

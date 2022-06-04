@@ -212,7 +212,7 @@ router.get(
       const commentsWithTagsAndProfilePicture =
         await commentService.addProfilePicturesToComments(
           commentsWithTags,
-          spot.spotId
+          spot.owner
         );
 
       // Add your rating
