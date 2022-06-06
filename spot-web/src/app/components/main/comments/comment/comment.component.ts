@@ -721,11 +721,12 @@ export class CommentComponent
 
   // Images
   onFileChanged(event: Event): void {
+    const target = event.target as HTMLInputElement;
     if (
-      (event.target as HTMLInputElement).files &&
-      (event.target as HTMLInputElement).files.length
+      target.files &&
+      target.files.length
     ) {
-      this.imageFile = (event.target as HTMLInputElement).files[0];
+      this.imageFile = target.files[0];
       this.imgSrc = window.URL.createObjectURL(this.imageFile);
     }
   }

@@ -65,11 +65,13 @@ import { UploadPhotoComponent } from './components/helpers/upload-photo/upload-p
 import { ChatCreateComponent } from './components/main/chat/chat-create/chat-create.component';
 import { AccountEditComponent } from './components/main/account-edit/account-edit.component';
 import { ChatDiscoverComponent } from './components/main/chat/chat-discover/chat-discover.component';
-import { SortDirective } from './directives/sort.directive';
 import { ChatPageComponent } from './components/main/chat/chat-page/chat-page.component';
 import { ChatPageMenuComponent } from './components/main/chat/chat-page-menu/chat-page-menu.component';
 import { ChatModalComponent } from './components/main/chat/chat-modal/chat-modal.component';
 import { ChatPasswordComponent } from './components/main/chat/chat-password/chat-password.component';
+
+import { SortDirective } from './directives/sort.directive';
+import { PhoneMaskDirective } from './directives/phone-mask.directive';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -128,6 +130,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AccountEditComponent,
     ChatDiscoverComponent,
     SortDirective,
+    PhoneMaskDirective,
     ChatPageComponent,
     ChatPageMenuComponent,
     ChatModalComponent,

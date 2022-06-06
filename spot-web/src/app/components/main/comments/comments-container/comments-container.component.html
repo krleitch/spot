@@ -2,23 +2,22 @@
   <!-- Tags popup container -->
   <span class="tag-relative" #tagContainer>
     <spot-tag
-      [class.tag-bottom]="showTagBottom"
       #tag
       *ngIf="showTag"
       [name]="tagName"
       [postLink]="spot.link"
       (tag)="addTag($event)"
+      [class.tag-bottom]="showTagBottom"
     ></spot-tag>
   </span>
 
   <!-- Add a comment -->
+  <!-- Make sure inRange, has location, auth, and verified -->
   <div *ngIf="spot.inRange && location">
-    <div *ngIf="isAuthenticated$ | async; else auth">
-      <div
-        *ngIf="isVerified$ | async; else verify"
-        class="col-center margin-t-lg"
-      >
+    <div *ngIf="isAuthenticated; else noAuth">
+      <div *ngIf="isVerified; else verify" class="col-center margin-t-lg">
         <div class="comment-editor">
+          <!-- Content editable -->
           <span
             #comment
             contenteditable="true"
@@ -29,11 +28,13 @@
             (input)="onTextInput($event)"
             (keydown.enter)="onEnter()"
           ></span>
-          <div class="image" *ngIf="imgSrc !== null">
+          <!-- Image -->
+          <div class="image" *ngIf="imgSrc">
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
 
-          <div class="row-h-center flex-fill" *ngIf="imgSrc !== null">
+          <!-- Image options -->
+          <div class="row-h-center flex-fill" *ngIf="imgSrc">
             <span class="margin-h-md">
               {{ 'MAIN.COMMENTS_CONTAINER.FILE_TITLE' | translate }}
             </span>
@@ -43,6 +44,7 @@
             </span>
           </div>
 
+          <!-- Options -->
           <div class="row-h-center border-box padding-md">
             <span
               class="text-secondary margin-r-sm"
@@ -64,6 +66,7 @@
             >
               insert_photo
             </span>
+            <!-- Send -->
             <span class="row-center" *ngIf="addCommentLoading; else showsend">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
@@ -75,25 +78,38 @@
           </div>
         </div>
       </div>
+
+      <!-- User is not verified -->
       <ng-template #verify>
-        <div class="row-h-center justify-content-between full-width margin-t-md container-page container-rounded">
-          <i style="visibility: hidden" class="material-icons icon"> send </i>
+        <div
+          class="row-h-center justify-content-between full-width margin-t-md container-page container-rounded"
+        >
+          <span
+            style="visibility: hidden"
+            class="material-icons icon-secondary"
+          >
+            send
+          </span>
           <span *ngIf="user.role !== 'GUEST'; else guest" class="text">
             {{ 'MAIN.COMMENTS_CONTAINER.VERIFY' | translate }}
           </span>
           <ng-template #guest>
-            <span class="text">
+            <span class="text-secondary">
               {{ 'MAIN.COMMENTS_CONTAINER.GUEST' | translate }}
             </span>
           </ng-template>
-          <i class="material-icons icon"> send </i>
+          <span class="material-icons icon-secondary"> send </span>
         </div>
       </ng-template>
     </div>
-    <ng-template #auth>
-      <div class="auth-message">
-        <i style="visibility: hidden" class="material-icons icon"> send </i>
-        <span class="border-box padding-md  text-secondary text-center">
+
+    <!-- User is not authenticated -->
+    <ng-template #noAuth>
+      <div class="text-secondary">
+        <span style="visibility: hidden" class="material-icons text-secondary">
+          send
+        </span>
+        <span class="border-box padding-md text-secondary text-center">
           {{ 'MAIN.COMMENTS_CONTAINER.LOGIN' | translate }}
         </span>
         <span class="material-icons icon-secondary"> send </span>
@@ -101,6 +117,7 @@
     </ng-template>
   </div>
 
+  <!-- Error Message -->
   <span
     *ngIf="addCommentError"
     class="row border-box padding-t-sm text-error background-container"
@@ -128,7 +145,7 @@
       <ng-template #refresh>
         <span class="relative full-width row-h-center justify-content-between">
           <!-- Dummy element to help position elements, is always visibilty: hidden -->
-          <span class="load-recent-dummy">
+          <span style="visibility: hidden">
             <span class="material-icons icon-secondary-highlight icon-sm">
               refresh
             </span>
@@ -201,11 +218,12 @@
     </div>
   </div>
 
+  <!-- Scroll up to make a comment if container is too big -->
   <div
     *ngIf="
-      comments.length >= 5 &&
-      (isAuthenticated$ | async) &&
-      (isVerified$ | async) &&
+      comments.length >= 12 &&
+      isAuthenticated &&
+      isVerified &&
       spot.inRange &&
       location
     "
