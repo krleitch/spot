@@ -1,9 +1,9 @@
 <div class="padding-h-lg padding-b-lg">
   <!-- Tags popup container -->
-  <span class="tag-relative" #tag>
+  <span class="tag-relative" #tagContainer>
     <spot-tag
       [class.tag-bottom]="showTagBottom"
-      #tagelem
+      #tag
       *ngIf="showTag"
       [name]="tagName"
       [postLink]="spot.link"
@@ -14,12 +14,17 @@
   <!-- Add a comment -->
   <div *ngIf="spot.inRange && location">
     <div *ngIf="isAuthenticated$ | async; else auth">
-      <div *ngIf="isVerified$ | async; else verify" class="col-center margin-t-lg">
-        <div class="editor">
+      <div
+        *ngIf="isVerified$ | async; else verify"
+        class="col-center margin-t-lg"
+      >
+        <div class="comment-editor">
           <span
             #comment
             contenteditable="true"
-            attr.ph="{{ 'MAIN.COMMENTS_CONTAINER.ADD_COMMENT_PLACEHOLDER' | translate }}"
+            attr.ph="{{
+              'MAIN.COMMENTS_CONTAINER.ADD_COMMENT_PLACEHOLDER' | translate
+            }}"
             class="comment-content"
             (input)="onTextInput($event)"
             (keydown.enter)="onEnter()"
@@ -29,17 +34,21 @@
           </div>
 
           <div class="row-h-center flex-fill" *ngIf="imgSrc !== null">
-            <span class="margin-h-md"> {{ 'MAIN.COMMENTS_CONTAINER.FILE_TITLE' | translate }} </span>
+            <span class="margin-h-md">
+              {{ 'MAIN.COMMENTS_CONTAINER.FILE_TITLE' | translate }}
+            </span>
             <span class=""> {{ imageFile.name }} </span>
             <span class="text-secondary-highlight" (click)="removeFile()">
               <span class="material-icons"> delete </span>
             </span>
           </div>
 
-          <div class="comment-options">
+          <div class="row-h-center border-box padding-md">
             <span
               class="text-secondary margin-r-sm"
-              [class.text-error]="invalidLength()"
+              [class.text-error]="
+                currentLength > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH
+              "
             >
               {{ COMMENT_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
             </span>
@@ -49,28 +58,33 @@
               (change)="onFileChanged($event)"
               #fileInput
             />
-            <span class="material-icons icon-secondary-highlight margin-r-sm" (click)="fileInput.click()">
+            <span
+              class="material-icons icon-secondary-highlight margin-r-sm"
+              (click)="fileInput.click()"
+            >
               insert_photo
             </span>
-            <span class="loading" *ngIf="addCommentLoading; else showsend">
+            <span class="row-center" *ngIf="addCommentLoading; else showsend">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
             <ng-template #showsend>
-              <span class="send" (click)="addComment()">
-                <i class="material-icons"> send </i>
+              <span class="icon-secondary-highlight" (click)="addComment()">
+                <span class="material-icons"> send </span>
               </span>
             </ng-template>
           </div>
         </div>
       </div>
       <ng-template #verify>
-        <div class="auth-message">
+        <div class="row-h-center justify-content-between full-width margin-t-md container-page container-rounded">
           <i style="visibility: hidden" class="material-icons icon"> send </i>
           <span *ngIf="user.role !== 'GUEST'; else guest" class="text">
             {{ 'MAIN.COMMENTS_CONTAINER.VERIFY' | translate }}
           </span>
           <ng-template #guest>
-            <span class="text"> {{ 'MAIN.COMMENTS_CONTAINER.GUEST' | translate }} </span>
+            <span class="text">
+              {{ 'MAIN.COMMENTS_CONTAINER.GUEST' | translate }}
+            </span>
           </ng-template>
           <i class="material-icons icon"> send </i>
         </div>
@@ -79,23 +93,25 @@
     <ng-template #auth>
       <div class="auth-message">
         <i style="visibility: hidden" class="material-icons icon"> send </i>
-        <span class="text"> {{ 'MAIN.COMMENTS_CONTAINER.LOGIN' | translate }} </span>
-        <i class="material-icons icon"> send </i>
+        <span class="border-box padding-md  text-secondary text-center">
+          {{ 'MAIN.COMMENTS_CONTAINER.LOGIN' | translate }}
+        </span>
+        <span class="material-icons icon-secondary"> send </span>
       </div>
     </ng-template>
   </div>
 
-  <span *ngIf="addCommentError" class="row border-box padding-t-sm text-error background-container">
+  <span
+    *ngIf="addCommentError"
+    class="row border-box padding-t-sm text-error background-container"
+  >
     {{ addCommentError }}
   </span>
 
   <!-- Load Recent/Refresh comments -->
   <div class="col background-container">
     <div class="row-center relative margin-t-md">
-      <div
-        *ngIf="totalCommentsAfter > 0; else refresh"
-        class="relative"
-      >
+      <div *ngIf="totalCommentsAfter > 0; else refresh" class="relative">
         <span (click)="loadRecentComments()" class="text-secondary-highlight">
           {{ 'MAIN.COMMENTS_CONTAINER.LOAD' | translate }}
           {{ loadRecentCommentsNum() }}
@@ -113,7 +129,9 @@
         <span class="relative full-width row-h-center justify-content-between">
           <!-- Dummy element to help position elements, is always visibilty: hidden -->
           <span class="load-recent-dummy">
-            <span class="material-icons icon-secondary-highlight icon-sm"> refresh </span>
+            <span class="material-icons icon-secondary-highlight icon-sm">
+              refresh
+            </span>
           </span>
           <span
             class="load-recent-hidden text-sm text-secondary"
@@ -122,7 +140,9 @@
             Comments are up to date
           </span>
           <span (click)="loadRecentComments()">
-            <span class="material-icons icon-secondary-highlight icon-sm"> refresh </span>
+            <span class="material-icons icon-secondary-highlight icon-sm">
+              refresh
+            </span>
           </span>
         </span>
       </ng-template>
@@ -141,7 +161,9 @@
     <ng-template #noComments>
       <div *ngIf="loadingCommentsBefore; else none" class="col-center">
         <div *ngIf="showLoadingCommentsIndicator$ | async">
-          <span> {{ 'MAIN.COMMENTS_CONTAINER.LOADING_COMMENTS' | translate }} </span>
+          <span>
+            {{ 'MAIN.COMMENTS_CONTAINER.LOADING_COMMENTS' | translate }}
+          </span>
           <div *ngIf="loadingCommentsBefore" class="margin-lg">
             <spot-spinner size="small" type="dot"></spot-spinner>
           </div>
@@ -149,15 +171,22 @@
       </div>
       <ng-template #none>
         <div class="row-center margin-t-md">
-          <span class="material-icons margin-r-md margin-t-sm icon-sm"> chat </span>
-          <span class="text-sm">{{ 'MAIN.COMMENTS_CONTAINER.NO_COMMENTS' | translate }}</span>
+          <span class="material-icons margin-r-md margin-t-sm icon-sm">
+            chat
+          </span>
+          <span class="text-sm">{{
+            'MAIN.COMMENTS_CONTAINER.NO_COMMENTS' | translate
+          }}</span>
         </div>
       </ng-template>
     </ng-template>
 
     <!-- Load More -->
     <div class="row-center padding-b-md" *ngIf="totalCommentsBefore > 0">
-      <div class="relative row-v-center text-secondary-highlight margin-r-md" (click)="loadMoreComments()">
+      <div
+        class="relative row-v-center text-secondary-highlight margin-r-md"
+        (click)="loadMoreComments()"
+      >
         {{ 'MAIN.COMMENTS_CONTAINER.LOAD' | translate }}
         {{ loadMoreCommentsNum() }}
         {{

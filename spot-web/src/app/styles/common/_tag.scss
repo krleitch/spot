@@ -1,0 +1,40 @@
+.content-tag-container {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+
+  .tag-name-container {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 3px 6px;
+    margin: 1px 3px 1px 0px;
+    background-color: var(--background-primary);
+
+    .person {
+      color: var(--text-secondary);
+      font-size: 20px;
+    }
+
+    .highlight {
+      color: var(--primary);
+    }
+  }
+}
+
+:host ::ng-deep .tag-inline-comment {
+  line-height: 1.2em;
+  font-weight: 700;
+}
+
+:host ::ng-deep .tag-inline-comment-icon {
+  line-height: 1.2em;
+  font-size: 1.2em;
+  vertical-align: bottom;
+}

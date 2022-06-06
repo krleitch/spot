@@ -1,0 +1,47 @@
+.image-blur {
+  opacity: 0.4;
+  filter: blur(10px);
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.2s ease-in-out;
+  -webkit-filter: blur(10px);
+}
+
+.image-blur-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 225px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-page);
+  padding: 10px 5px;
+
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+
+  .icon {
+    font-size: 42px;
+    margin-bottom: 5px;
+    color: var(--primary);
+  }
+
+  .text {
+    font-size: 16px;
+    color: black;
+    text-align: center;
+  }
+
+  .text.highlight {
+    color: var(--text-secondary);
+  }
+}
+
+.image:hover .image-blur-text .text.highlight {
+  color: var(--primary);
+}

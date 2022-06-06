@@ -174,18 +174,23 @@
         [hidden]="!showAddReply"
         class="row-center margin-b-md margin-r-md margin-t-md"
       >
-        <div class="editor">
+        <div class="comment-editor">
+          <!-- Input -->
           <span
             #reply
             contenteditable="true"
             attr.ph="{{ 'MAIN.COMMENTS.ADD_REPLY_PLACEHOLDER' | translate }}"
-            class="reply-content"
+            class="comment-content"
             (input)="onTextInput($event)"
             (keydown.enter)="onEnter()"
           ></span>
+
+          <!-- Image -->
           <div *ngIf="imgSrc !== null" class="image">
             <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
           </div>
+
+          <!-- Image Options -->
           <div class="row-h-center flex-fill" *ngIf="imgSrc !== null">
             <span class="margin-h-md">
               {{ 'MAIN.COMMENTS.FILE_TITLE' | translate }}
@@ -197,6 +202,8 @@
               delete
             </span>
           </div>
+
+          <!-- Options -->
           <div class="align-right row-h-center margin-h-md">
             <span
               class="text-secondary margin-r-sm"

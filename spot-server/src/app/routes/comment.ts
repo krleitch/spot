@@ -63,7 +63,7 @@ import {
   ReportCommentResponse
 } from '@models/comment.js';
 
-router.use((req: Request, res: Response, next: NextFunction) => {
+router.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
@@ -148,7 +148,7 @@ router.get(
         commentLink: req.query.comment?.toString(),
         limit: Number(req.query.limit),
         before: req.query?.before?.toString(),
-        after: req.query?.before?.toString()
+        after: req.query?.after?.toString()
       };
 
       let commentsArray: any[] = [];
@@ -181,8 +181,7 @@ router.get(
         request.spotId,
         request.before,
         request.after,
-        request.limit,
-        req.user?.userId
+        request.limit
       );
       commentsArray = commentsArray.concat(comments);
 

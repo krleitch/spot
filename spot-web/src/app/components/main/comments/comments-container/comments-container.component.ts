@@ -6,13 +6,21 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  SimpleChanges
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 // rxjs
 import { Observable, Subject, timer } from 'rxjs';
-import { mapTo, startWith, take, takeUntil, takeWhile } from 'rxjs/operators';
+import {
+  mapTo,
+  startWith,
+  take,
+  takeUntil,
+  takeWhile,
+  finalize
+} from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -30,6 +38,13 @@ import { CommentService } from '@src/app/services/comment.service';
 import { AlertService } from '@services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 
+// Helpers
+import {
+  checkWordOnCaret,
+  removeWordCreateTag,
+  parseContentWithTags
+} from '@helpers/content';
+
 // Models
 import {
   Comment,
@@ -38,8 +53,7 @@ import {
   CreateCommentResponse,
   GetCommentsRequest,
   GetCommentsResponse,
-  SetCommentsStoreRequest,
-  Tag
+  SetCommentsStoreRequest
 } from '@models/comment';
 import { Spot } from '@models/spot';
 import { Friend } from '@models/friend';
@@ -48,7 +62,7 @@ import { User } from '@models/user';
 import { LocationData } from '@models/location';
 
 // Components
-import { TagComponent } from '../../social/tag/tag.component';
+import { TagComponent } from '@src/app/components/main/social/tag/tag.component';
 
 // Assets
 import { COMMENT_CONSTANTS } from '@constants/comment';
@@ -68,14 +82,17 @@ export class CommentsContainerComponent
 
   @ViewChild('comment') comment: ElementRef;
   currentLength = 0;
+  refreshed = false;
+  addCommentLoading = false;
+  addCommentError: string;
 
-  @ViewChild('tag') tag: ElementRef;
-  @ViewChild('tagelem') tagelem: TagComponent;
+  @ViewChild('tagContainer') tag: ElementRef;
+  @ViewChild('tag') tagelem: TagComponent;
   showTag = false;
   showTagBottom = false;
   tagName = '';
   tagElement: Node;
-  tagCaretPosition;
+  tagCaretPosition: number;
 
   comments$: Observable<StoreComment>;
   comments: Array<Comment> = [];
@@ -84,26 +101,24 @@ export class CommentsContainerComponent
   showLoadingCommentsIndicator$: Observable<boolean>;
   loadingCommentsBefore = false;
   loadingCommentsAfter = false;
-  refreshed = false;
-  addCommentLoading = false;
-  addCommentError: string;
+  initialLoad = true;
 
   location$: Observable<LocationData>;
   location: LocationData;
   friends$: Observable<Friend[]>;
   friends: Friend[] = [];
 
-  initialLoad = true;
-
   isAuthenticated$: Observable<boolean>;
+  isAuthenticated: boolean;
   isVerified$: Observable<boolean>;
+  isVerified: boolean;
   user$: Observable<User>;
   user: User;
 
   imageFile: File;
   imgSrc: string = null;
 
-  STRINGS;
+  STRINGS: Record<string, string>;
   COMMENT_CONSTANTS = COMMENT_CONSTANTS;
 
   constructor(
@@ -116,9 +131,19 @@ export class CommentsContainerComponent
     document.addEventListener('click', this.offClickHandler.bind(this));
     this.translateService
       .get('MAIN.COMMENTS_CONTAINER')
-      .subscribe((res: any) => {
-        this.STRINGS = res;
+      .subscribe((strings: Record<string, string>) => {
+        this.STRINGS = strings;
       });
+  }
+
+  offClickHandler(event: MouseEvent): void {
+    if (this.tag && !this.tag.nativeElement.contains(event.target)) {
+      this.showTag = false;
+    }
+
+    if (this.comment && this.comment.nativeElement.contains(event.target)) {
+      this.setTagState();
+    }
   }
 
   ngOnInit(): void {
@@ -204,15 +229,23 @@ export class CommentsContainerComponent
       this.user = user;
     });
 
-    // Authentication
-    this.isAuthenticated$ = this.store$.pipe(
-      select(UserStoreSelectors.selectIsAuthenticated)
-    );
-
-    // Verified
+    // Authentication / Verification status
     this.isVerified$ = this.store$.pipe(
       select(UserStoreSelectors.selectIsVerified)
     );
+    this.isVerified$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((verified: boolean) => {
+        this.isVerified = verified;
+      });
+    this.isAuthenticated$ = this.store$.pipe(
+      select(UserStoreSelectors.selectIsAuthenticated)
+    );
+    this.isAuthenticated$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((authenticated: boolean) => {
+        this.isAuthenticated = authenticated;
+      });
 
     this.location$ = this.store$.pipe(
       select(UserStoreSelectors.selectLocation)
@@ -237,20 +270,18 @@ export class CommentsContainerComponent
   }
 
   ngAfterViewInit(): void {
-    if (this.comment) {
-      this.comment.nativeElement.addEventListener('paste', (event: any) => {
-        event.preventDefault();
-        const text = event.clipboardData.getData('text/plain');
-        document.execCommand('insertText', false, text);
-      });
-    }
+    this.comment.nativeElement.addEventListener('paste', (event: any) => {
+      event.preventDefault();
+      const text = event.clipboardData.getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
   }
 
   ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
-  ngOnChanges(changes: any): void {
+  ngOnChanges(_changes: SimpleChanges): void {
     if (!this.initialLoad) {
       // Get the latest comments
       const request: GetCommentsRequest = {
@@ -299,114 +330,33 @@ export class CommentsContainerComponent
     }
   }
 
-  offClickHandler(event: MouseEvent): void {
-    if (this.tag && !this.tag.nativeElement.contains(event.target)) {
-      this.hideTag();
+  showTagTrue(): void {
+    const distanceToTop = this.tag.nativeElement.getBoundingClientRect().top;
+
+    if (distanceToTop < 200) {
+      this.showTagBottom = true;
+    } else {
+      this.showTagBottom = false;
     }
 
-    if (this.comment && this.comment.nativeElement.contains(event.target)) {
-      this.getAndCheckWordOnCaret();
-    }
+    this.showTag = true;
   }
 
-  onTextInput(event): void {
-    if (event.target.textContent.length === 0) {
+  onTextInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    // delete inner content editable items that are now empty
+    if (target.textContent.length === 0) {
       this.comment.nativeElement.innerHTML = '';
     }
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(
-      event.target.textContent.length + event.target.childNodes.length - 1,
+      target.textContent.length + target.childNodes.length - 1,
       0
     );
     this.addCommentError = null;
+
     // Check for tag
-    this.getAndCheckWordOnCaret();
-  }
-
-  getAndCheckWordOnCaret(): void {
-    const range = window.getSelection().getRangeAt(0);
-    if (range.collapsed) {
-      if (range.startContainer.parentElement.className === 'tag-inline') {
-        range.setStart(range.startContainer.parentElement.nextSibling, 0);
-        range.collapse(true);
-      } else {
-        this.checkWord(
-          this.getCurrentWord(range.startContainer, range.startOffset),
-          range.startContainer,
-          range.startOffset
-        );
-      }
-    }
-  }
-
-  private getCurrentWord(element: Node, position: number): string {
-    // Get content of div
-    const content = element.textContent;
-
-    // Check if clicked at the end of word
-    position = content[position] === ' ' ? position - 1 : position;
-
-    // Get the start and end index
-    let startPosition = content.lastIndexOf(' ', position);
-    let endPosition = content.indexOf(' ', position);
-
-    // Special cases
-    startPosition = startPosition === content.length ? 0 : startPosition;
-    endPosition = endPosition === -1 ? content.length : endPosition;
-
-    return content.substring(startPosition + 1, endPosition);
-  }
-
-  private checkWord(word: string, element: Node, position: number): void {
-    // Check if starts with '@', if it does then show tag
-    if (word.length > 1 && word[0] === '@') {
-      this.tagName = word.slice(1);
-      this.showTagTrue();
-      this.tagElement = element;
-      this.tagCaretPosition = position;
-    } else {
-      this.hideTag();
-      this.tagElement = null;
-      this.tagCaretPosition = null;
-    }
-  }
-
-  // Creates the inline tag and removes the word
-  private removeWord(
-    element: Node,
-    position: number,
-    username: string
-  ): HTMLElement {
-    const content = element.textContent;
-
-    // Check if clicked at the end of word
-    position = content[position] === ' ' ? position - 1 : position;
-
-    let startPosition = content.lastIndexOf(' ', position);
-    let endPosition = content.indexOf(' ', position);
-
-    // Special cases
-    startPosition = startPosition === content.length ? 0 : startPosition;
-    endPosition = endPosition === -1 ? content.length : endPosition;
-
-    const parent = element.parentNode;
-
-    const span = document.createElement('span');
-    const beforeText = document.createTextNode(
-      content.substring(0, startPosition + 1)
-    );
-    const tag = document.createElement('span');
-    tag.className = 'tag-inline';
-    tag.contentEditable = 'false';
-    const usernameText = document.createTextNode(username);
-    tag.appendChild(usernameText);
-    const afterText = document.createTextNode(content.substring(endPosition));
-    span.appendChild(beforeText);
-    span.appendChild(tag);
-    span.appendChild(afterText);
-
-    parent.replaceChild(span, element);
-    return tag;
+    this.setTagState();
   }
 
   onEnter(): boolean {
@@ -414,6 +364,22 @@ export class CommentsContainerComponent
     if (this.showTag) {
       this.tagelem.onEnter();
       return false;
+    }
+  }
+
+  private setTagState() {
+    const range = window.getSelection().getRangeAt(0);
+    const word = checkWordOnCaret(range);
+    if (word) {
+      this.tagName = word.slice(1);
+      this.showTag = true;
+      this.tagElement = range.startContainer;
+      this.tagCaretPosition = range.startOffset;
+    } else {
+      this.tagName = '';
+      this.showTag = false;
+      this.tagElement = null;
+      this.tagCaretPosition = null;
     }
   }
 
@@ -427,8 +393,8 @@ export class CommentsContainerComponent
       return;
     }
 
-    // remove the word, and add the inline tag
-    const tagElement = this.removeWord(
+    // remove the word and create the tag
+    const tagElement = removeWordCreateTag(
       this.tagElement,
       this.tagCaretPosition,
       username
@@ -440,67 +406,18 @@ export class CommentsContainerComponent
     range.collapse(true);
 
     // hide tag menu
-    this.hideTag();
+    this.tagName = '';
+    this.showTag = false;
     this.tagElement = null;
     this.tagCaretPosition = null;
   }
 
   addComment(): void {
-    let content = this.comment.nativeElement.innerHTML;
-
-    // parse the innerhtml to return a string with newlines instead of innerhtml
-    const parser = new DOMParser();
-    const parsedHtml = parser.parseFromString(content, 'text/html');
-
-    const body = parsedHtml.getElementsByTagName('body');
-
-    const tags: Tag[] = [];
-    let text = '';
-    let offset = 0;
-
-    // Do a dfs on the html tree
-    let stack = [];
-    stack = stack.concat([].slice.call(body[0].childNodes, 0).reverse());
-
-    while (stack.length > 0) {
-      const elem = stack.pop();
-
-      // A tag
-      if (elem.className === 'tag-inline') {
-        const tag: Tag = {
-          username: elem.textContent,
-          offset
-        };
-        tags.push(tag);
-        // A tag has no children, continue
-        continue;
-      }
-
-      // Push the children
-      // In reverse because we want to parse the from left to right
-      if (elem.childNodes) {
-        stack = stack.concat([].slice.call(elem.childNodes, 0).reverse());
-      }
-
-      // Don't add spaces to start
-      if (elem.tagName === 'DIV') {
-        // A new Div
-        text += '\n';
-        offset += 1;
-      } else if (elem.nodeType === 3) {
-        // Text Node
-        text += elem.textContent;
-        offset += elem.textContent.length;
-      }
-    }
-
-    // TODO: cleanup whitespace here if decide to do it
-    // There should already be no spaces at start, this should just remove - check text length 0 before append \n
-    // spaces at the end
-    // tag offsets will be adjusted on the server to never be more than content length
-    content = text;
-
-    // Error checking
+    const contentAndTags = parseContentWithTags(
+      this.comment.nativeElement.innerHTML
+    );
+    const content = contentAndTags.content;
+    const tags = contentAndTags.tags;
 
     if (
       content.split(/\r\n|\r|\n/).length > COMMENT_CONSTANTS.MAX_LINE_LENGTH
@@ -561,7 +478,12 @@ export class CommentsContainerComponent
 
     this.commentService
       .createComment(request)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.addCommentLoading = false;
+        })
+      )
       .subscribe(
         (response: CreateCommentResponse) => {
           const storeRequest: AddCommentStoreRequest = {
@@ -572,7 +494,6 @@ export class CommentsContainerComponent
             new CommentStoreActions.AddCommentRequestAction(storeRequest)
           );
 
-          this.addCommentLoading = false;
           this.removeFile();
           this.comment.nativeElement.innerText = '';
           this.comment.nativeElement.innerHtml = '';
@@ -581,15 +502,14 @@ export class CommentsContainerComponent
           );
           this.currentLength = 0;
         },
-        (createError: SpotError) => {
-          this.addCommentLoading = false;
-          if (createError.name === 'InvalidCommentProfanity') {
+        (errorResponse: { error: SpotError }) => {
+          if (errorResponse.error.name === 'InvalidCommentProfanity') {
             this.addCommentError = this.STRINGS.ERROR_PROFANITY.replace(
               '%PROFANITY%',
-              createError.body.word
+              errorResponse.error.body.word
             );
           } else {
-            this.addCommentError = createError.message;
+            this.addCommentError = errorResponse.error.message;
           }
         }
       );
@@ -611,7 +531,9 @@ export class CommentsContainerComponent
     const request: GetCommentsRequest = {
       spotId: this.spot.spotId,
       before: this.comments.length > 0 ? this.comments[0].commentId : undefined,
-      limit: COMMENT_CONSTANTS.RECENT_LIMIT
+      limit: this.detailed
+        ? COMMENT_CONSTANTS.MORE_LIMIT_DETAILED
+        : COMMENT_CONSTANTS.MORE_LIMIT
     };
 
     this.loadingCommentsAfter = true;
@@ -619,10 +541,14 @@ export class CommentsContainerComponent
 
     this.commentService
       .getComments(request)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loadingCommentsAfter = false;
+        })
+      )
       .subscribe(
         (response: GetCommentsResponse) => {
-          this.loadingCommentsAfter = false;
           if (response.comments) {
             const storeRequest: SetCommentsStoreRequest = {
               spotId: this.spot.spotId,
@@ -643,10 +569,7 @@ export class CommentsContainerComponent
             this.totalCommentsAfter = response.totalCommentsAfter;
           }
         },
-        (err: SpotError) => {
-          // Error case
-          this.loadingCommentsAfter = false;
-        }
+        (_errorResponse: { error: SpotError }) => {}
       );
   }
 
@@ -679,10 +602,14 @@ export class CommentsContainerComponent
 
     this.commentService
       .getComments(request)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loadingCommentsBefore = false;
+        })
+      )
       .subscribe(
         (response: GetCommentsResponse) => {
-          this.loadingCommentsBefore = false;
           if (response.comments) {
             const storeRequest: SetCommentsStoreRequest = {
               spotId: this.spot.spotId,
@@ -696,20 +623,17 @@ export class CommentsContainerComponent
             this.totalCommentsBefore = response.totalCommentsBefore;
           }
         },
-        (err: SpotError) => {
+        (_errorResponse: { error: SpotError }) => {
           // Error case
-          this.loadingCommentsBefore = false;
         }
       );
   }
 
-  invalidLength(): boolean {
-    return this.currentLength > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH;
-  }
-
-  onFileChanged(event): void {
-    if (event.target.files.length > 0) {
-      this.imageFile = event.target.files[0];
+  // Images
+  onFileChanged(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length) {
+      this.imageFile = target.files[0];
       this.imgSrc = window.URL.createObjectURL(this.imageFile);
     }
   }
@@ -729,23 +653,5 @@ export class CommentsContainerComponent
     this.comment.nativeElement.focus({
       preventScroll: true
     });
-  }
-
-  showTagTrue(): void {
-    const distanceToTop = this.tag.nativeElement.getBoundingClientRect().top;
-
-    if (distanceToTop < 200) {
-      this.showTagBottom = true;
-    } else {
-      this.showTagBottom = false;
-    }
-
-    this.showTag = true;
-  }
-
-  hideTag(): void {
-    this.showTag = false;
-    this.showTagBottom = false;
-    this.tagName = '';
   }
 }

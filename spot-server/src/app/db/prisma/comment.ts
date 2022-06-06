@@ -59,8 +59,7 @@ const findCommentForSpot = async (
   spotId: string,
   before: string | undefined,
   after: string | undefined,
-  limit: number,
-  userId?: string
+  limit: number
 ): Promise<P.Comment[]> => {
   let comment: P.Comment[];
   if (!after && !before) {

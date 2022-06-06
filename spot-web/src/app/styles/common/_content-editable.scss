@@ -1,13 +1,13 @@
-.editor {
+.comment-editor {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
   box-sizing: border-box;
-  background-color: var(--background-header);
+  background-color: var(--background-page);
   border-radius: 3px;
 
-  .reply-content {
+  .comment-content {
     flex-grow: 1;
     max-width: 100%;
     box-sizing: border-box;
