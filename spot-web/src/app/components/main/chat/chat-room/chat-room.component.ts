@@ -11,7 +11,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, timer } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
 // Store
@@ -67,6 +67,9 @@ export class ChatRoomComponent
   ignoreInitialObserver = true;
   userCount = 0;
 
+  timeLeft = 60;
+  subscribeTimer;
+
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
@@ -90,6 +93,8 @@ export class ChatRoomComponent
       .subscribe((userMetadata: UserMetadata) => {
         this.userMetadata = userMetadata;
       });
+
+    this.startTimer();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -173,6 +178,13 @@ export class ChatRoomComponent
     } else {
       this.disableScrollDown = true;
     }
+  }
+
+  startTimer() {
+    const source = timer(1000, 2000);
+    const abc = source.subscribe(val => {
+      this.subscribeTimer = this.timeLeft - val;
+    });
   }
 
   formatTimestamp(timestamp: string): string {
