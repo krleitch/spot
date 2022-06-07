@@ -1,73 +1,152 @@
-<div class="container">
-  <div
-    class="reply"
-    [ngClass]="{ linked: spot.startCommentLink === reply.link }"
-  >
-    <div class="left-bar">
-      <div class="left-bar-alignment">
-        <div class="column">
-          <i
-            class="material-icons vote"
+<div class="margin-b-md">
+  <div class="row" [class.linked]="spot.startCommentLink === reply.link">
+    <!-- profile picture -->
+    <div
+      class="profile-comment margin-r-md"
+      [class.owned]="reply.owned"
+      [ngClass]="
+        reply.profilePictureNum == -1
+          ? 'profile-op'
+          : 'profile-' + reply.profilePictureNum
+      "
+    >
+      <img [src]="'/assets/images/profile/' + reply.profilePictureSrc" />
+    </div>
+
+    <!-- content -->
+    <div class="col full-width">
+      <!-- Top bar -->
+      <div class="header row-h-center justify-content-between">
+        <!-- like/dislike -->
+        <div class="row-h-center">
+          <span
+            class="material-icons icon-sm icon-primary-highlight margin-r-xs"
             (click)="like()"
-            [ngClass]="{ highlight: reply.myRating === eCommentRatingType.LIKE }"
+            [class.icon-primary]="reply.myRating === eCommentRatingType.LIKE"
           >
             keyboard_arrow_up
-          </i>
+          </span>
           <div class="points">{{ reply.likes - reply.dislikes }}</div>
-          <i
-            class="material-icons vote"
+          <span
+            class="material-icons icon-sm icon-primary-highlight margin-l-xs"
             (click)="dislike()"
-            [ngClass]="{ highlight: reply.myRating === eCommentRatingType.DISLIKE }"
+            [class.icon-error]="reply.myRating === eCommentRatingType.DISLIKE"
           >
             keyboard_arrow_down
-          </i>
-        </div>
-        <div
-          [class]="getProfilePictureClass(reply.profilePictureNum)"
-          [ngClass]="{ 'profile-owned': reply.owned }"
-        >
-          <img
-            [src]="
-              '../../../../../assets/images/profile/' + reply.profilePictureSrc
-            "
-          />
-        </div>
-      </div>
-    </div>
-    <div class="add-wrapper">
-      <div class="content">
-        <div class="tagger" *ngIf="reply.tag.tagged">
-          <span class="highlight"> {{ reply.tag.tagger }} </span>
-          {{ 'MAIN.REPLY.TAGGER' | translate }}
-        </div>
-
-        <div class="text">
-          <span #text class="text-content"></span>
-          <span *ngIf="isExpandable">
-            <span *ngIf="expanded; else notExpanded">
-              <span class="expand" (click)="setExpanded(false)">
-                {{ 'MAIN.REPLY.SEE_LESS' | translate }}
-              </span>
-            </span>
-            <ng-template #notExpanded>
-              <span class="expand" (click)="setExpanded(true)">
-                {{ 'MAIN.REPLY.SEE_MORE' | translate }}
-              </span>
-            </ng-template>
           </span>
         </div>
 
-        <div *ngIf="userMetadata$ | async as userMetadata">
+        <!-- right -->
+        <div class="row-h-center">
+          <!-- time -->
+          <div class="text-sm text-secondary margin-r-md">
+            {{ timeMessage }}
+          </div>
+
+          <!-- Add reply, hide if not auth/verify or not in range -->
+          <!-- You can tag if not in range only if you were tagged -->
           <div
-            *ngIf="reply.imageSrc !== null"
-            (click)="imageClicked()"
-            class="image"
+            class="reply margin-r-md margin-t-sm"
+            (click)="toggleShowAddReply()"
+            [ngClass]="{
+              disabled: !(
+                location &&
+                (comment.tag.tagged ||
+                  tagged ||
+                  (spot.inRange && isAuthenticated && isVerified))
+              )
+            }"
           >
+            <span class="material-icons icon-md icon-secondary-highlight">
+              reply
+            </span>
+          </div>
+
+          <!-- Dropdown -->
+          <div #options class="relative">
+            <span
+              class="material-icons icon-md icon-primary-highlight margin-t-sm"
+              (click)="toggleDropdown()"
+            >
+              more_horiz
+            </span>
+            <div class="dropdown align-bottom">
+              <div
+                class="dropdown-content"
+                [class.show-dropdown]="showDropdown"
+              >
+                <!-- Report -->
+                <div class="dropdown-button" (click)="openReportModal()">
+                  <span class="material-icons icon"> outlined_flag </span>
+                  <span class="margin-l-sm">
+                    {{ 'MAIN.COMMENTS.REPORT' | translate }}
+                  </span>
+                </div>
+                <!-- Share -->
+                <div class="dropdown-button" (click)="openShareModal()">
+                  <span class="material-icons icon"> share </span>
+                  <span class="margin-l-sm">
+                    {{ 'MAIN.COMMENTS.SHARE' | translate }}
+                  </span>
+                </div>
+                <!-- If you own or have excalated privilege you can delete -->
+                <div
+                  *ngIf="
+                    reply.owned ||
+                    user.role === eUserRole.ADMIN ||
+                    user.role === eUserRole.GUEST
+                  "
+                  class="dropdown-button"
+                  (click)="deleteComment()"
+                >
+                  <span class="material-icons icon"> delete </span>
+                  <span class="margin-l-sm">
+                    {{ 'MAIN.COMMENTS.DELETE' | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- content -->
+      <div class="overflow-hidden flex-fill">
+        <div class="row">
+          <!-- show who tagged you -->
+          <div class="tagger" *ngIf="reply.tag.tagged">
+            <span class="highlight"> {{ reply.tag.tagger }} </span>
+            {{ 'MAIN.REPLY.TAGGER' | translate }}
+          </div>
+
+          <!-- text -->
+          <div class="text">
+            <span #content class="text-content"></span>
+            <span *ngIf="isExpandable">
+              <span *ngIf="expanded; else notExpanded">
+                <span
+                  class="text-secondary-highlight"
+                  (click)="toggleExapnded()"
+                >
+                  {{ 'MAIN.REPLY.SEE_LESS' | translate }}
+                </span>
+              </span>
+              <ng-template #notExpanded>
+                <span
+                  class="text-secondary-highlight"
+                  (click)="toggleExpanded()"
+                >
+                  {{ 'MAIN.REPLY.SEE_MORE' | translate }}
+                </span>
+              </ng-template>
+            </span>
+          </div>
+
+          <!-- Image -->
+          <div *ngIf="reply.imageSrc" (click)="imageClicked()" class="image">
             <img
               [src]="reply.imageSrc"
-              [ngClass]="{
-                'image-blur': imageBlurred && userMetadata.matureFilter
-              }"
+              [class.image-blur]="imageBlurred && userMetadata.matureFilter"
             />
             <div
               *ngIf="imageBlurred && userMetadata.matureFilter"
@@ -75,132 +154,96 @@
             >
               <span class="material-icons icon"> error_outline </span>
               <span class="text">
-                {{ 'MAIN.REPLY.MATURE_CONTENT' | translate }}
+                {{ 'MAIN.COMMENTS.MATURE_CONTENT' | translate }}
               </span>
               <span class="text highlight">
-                {{ 'MAIN.REPLY.MATURE_CONTENT_SHOW' | translate }}
+                {{ 'MAIN.COMMENTS.MATURE_CONTENT_SHOW' | translate }}
               </span>
             </div>
           </div>
         </div>
-      </div>
 
-      <div [hidden]="!showAddReply" class="add">
-        <div class="editor">
-          <span
-            #reply2
-            contenteditable="true"
-            attr.ph="{{ 'MAIN.REPLY.ADD_REPLY_PLACEHOLDER' | translate }}"
-            class="reply2-content"
-            (input)="onTextInput($event)"
-            (keydown.enter)="onEnter()"
-          ></span>
-          <div class="image" *ngIf="imgSrc !== null">
-            <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
-          </div>
-          <div class="file-options" *ngIf="imgSrc !== null">
-            <span class="file-title">
-              {{ 'MAIN.REPLY.FILE_TITLE' | translate }}
-            </span>
-            <span class="file-name">
-              {{ getDisplayFilename(imageFile.name) }}
-            </span>
-            <span class="file-remove" (click)="removeFile()">
-              <i class="material-icons"> delete </i>
-            </span>
-          </div>
-          <div class="comment-options">
+        <!-- Add reply -->
+        <div
+          [hidden]="!showAddReply"
+          class="row-center margin-b-md margin-r-md margin-t-md"
+        >
+          <div class="comment-editor">
             <span
-              class="counter"
-              [ngClass]="{ 'counter-error': invalidLength() }"
-            >
-              {{ MAX_REPLY_LENGTH - currentLength }}
-            </span>
-            <input
-              style="display: none"
-              type="file"
-              (change)="onFileChanged($event)"
-              #fileInput
-            />
-            <i class="material-icons photo" (click)="fileInput.click()">
-              insert_photo
-            </i>
-            <span class="loading" *ngIf="addReply2Loading; else showsend">
-              <spot-spinner size="small" light="true"> </spot-spinner>
-            </span>
-            <ng-template #showsend>
-              <span class="send" (click)="addReply()">
-                <i class="material-icons"> send </i>
+              #reply2
+              contenteditable="true"
+              attr.ph="{{ 'MAIN.REPLY.ADD_REPLY_PLACEHOLDER' | translate }}"
+              class="comment-content"
+              (input)="onTextInput($event)"
+              (keydown.enter)="onEnter()"
+            ></span>
+
+            <!-- Image -->
+            <div class="image" *ngIf="imgSrc !== null">
+              <img [src]="domSanitizer.bypassSecurityTrustUrl(imgSrc)" />
+            </div>
+
+            <!-- Image Options -->
+            <div class="row-h-center flex-fill" *ngIf="imgSrc !== null">
+              <span class="margin-h-md">
+                {{ 'MAIN.REPLY.FILE_TITLE' | translate }}
               </span>
-            </ng-template>
+              <span class="file-name">
+                {{ getDisplayFilename(imageFile.name) }}
+              </span>
+              <span class="material-icons icon-close" (click)="removeFile()">
+                delete
+              </span>
+            </div>
+
+            <!-- Options -->
+            <div class="align-right row-h-center margin-h-md">
+              <span
+                class="text-secondary margin-r-sm"
+                [class.text-error]="
+                  currentLength > COMMENT_CONSTANTS.MAX_CONTENT_LENGTH
+                "
+              >
+                {{ COMMENT_CONSTANTS.MAX_CONTENT_LENGTH - currentLength }}
+              </span>
+              <input
+                style="display: none"
+                type="file"
+                (change)="onFileChanged($event)"
+                #fileInput
+              />
+              <span
+                class="material-icons icon-secondary-highlight margin-r-sm"
+                (click)="fileInput.click()"
+              >
+                insert_photo
+              </span>
+              <span class="row-center" *ngIf="addReply2Loading; else send">
+                <spot-spinner size="small" light="true"> </spot-spinner>
+              </span>
+              <ng-template #send>
+                <span
+                  class="material-icons icon-secondary-highlight"
+                  ,
+                  (click)="addReply()"
+                >
+                  send
+                </span>
+              </ng-template>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="error" *ngIf="addReply2Error">
-        {{ addReply2Error }}
-      </div>
-    </div>
-    <div class="right-bar">
-      <div #options>
-        <i class="material-icons icon-size" (click)="setOptions(true)">
-          more_horiz
-        </i>
-        <div class="dropdown align-bottom">
-          <div class="dropdown-content" [ngClass]="{ show: optionsEnabled }">
-            <div
-              class="button"
-              (click)="openReportModal(reply.spotId, reply.commentId)"
-            >
-              <span class="material-icons icon"> outlined_flag </span>
-              {{ 'MAIN.REPLY.REPORT' | translate }}
-            </div>
-            <div
-              class="button"
-              (click)="openShareModal(spot.spotId, spot.link, reply.commentId, reply.link)"
-            >
-              <span class="material-icons icon"> share </span>
-              {{ 'MAIN.REPLY.SHARE' | translate }}
-            </div>
-            <div
-              *ngIf="
-                reply.owned ||
-                user.role === 'ADMIN' ||
-                user.role === 'OWNER'
-              "
-              class="button"
-              (click)="deleteReply()"
-            >
-              <span class="material-icons icon"> delete </span>
-              {{ 'MAIN.REPLY.DELETE' | translate }}
-            </div>
-          </div>
+        <div class="text-error" *ngIf="addReply2Error">
+          {{ addReply2Error }}
         </div>
-      </div>
-      <div class="time">
-        {{ timeMessage }}
-      </div>
-      <div
-        class="reply-icon"
-        (click)="setShowAddReply(true)"
-        [ngClass]="{
-          disabled: !(
-            comment.tag.tagged ||
-            tagged ||
-            (spot.inRange &&
-              (isAuthenticated$ | async) &&
-              (isVerified$ | async) &&
-              location)
-          )
-        }"
-      >
-        <i class="material-icons"> reply </i>
       </div>
     </div>
   </div>
 
-  <span class="tag-relative" #tag>
+  <!-- Floating tag -->
+  <span #tagContainer class="tag-relative">
     <spot-tag
-      #tagelem
+      #tag
       *ngIf="showTag"
       [username]="tagName"
       (tag)="addTag($event)"

@@ -225,11 +225,11 @@
             >
               insert_photo
             </span>
-            <span class="loading" *ngIf="addReplyLoading; else showsend">
+            <span class="row-center" *ngIf="addReplyLoading; else send">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
-            <ng-template #showsend>
-              <span class="material-icons icon-secondary" (click)="addReply()">
+            <ng-template #send>
+              <span class="material-icons icon-secondary-highlight" (click)="addReply()">
                 send
               </span>
             </ng-template>

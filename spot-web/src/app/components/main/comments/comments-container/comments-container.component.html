@@ -45,7 +45,7 @@
           </div>
 
           <!-- Options -->
-          <div class="row-h-center border-box padding-md">
+          <div class="align-right row-h-center margin-h-md">
             <span
               class="text-secondary margin-r-sm"
               [class.text-error]="
@@ -67,12 +67,15 @@
               insert_photo
             </span>
             <!-- Send -->
-            <span class="row-center" *ngIf="addCommentLoading; else showsend">
+            <span class="row-center" *ngIf="addCommentLoading; else send">
               <spot-spinner size="small" light="true"> </spot-spinner>
             </span>
-            <ng-template #showsend>
-              <span class="icon-secondary-highlight" (click)="addComment()">
-                <span class="material-icons"> send </span>
+            <ng-template #send>
+              <span
+                class="material-icons icon-secondary-highlight"
+                (click)="addComment()"
+              >
+                send
               </span>
             </ng-template>
           </div>
