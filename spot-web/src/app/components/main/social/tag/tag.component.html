@@ -27,7 +27,7 @@
           (click)="sendTag(friend.username)"
           class="username row-h-center full-width"
         >
-          <div class="profile-sm row-center background-container">
+          <div class="profile-sm row-center background-container container-shadow">
             <img
               *ngIf="friend.profilePictureSrc; else noImage"
               [src]="friend.profilePictureSrc"

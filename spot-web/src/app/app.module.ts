@@ -54,7 +54,6 @@ import { ConfirmComponent } from './components/helpers/confirm/confirm.component
 import { AuthModalComponent } from './components/pre-auth/auth-modal/auth-modal.component';
 import { VerifyComponent } from './components/main/verify/verify.component';
 import { WelcomeComponent } from './components/main/welcome/welcome.component';
-import { FilterPipe } from './helpers/pipes/filter.pipe';
 import { TermsComponent } from './components/pre-auth/terms/terms.component';
 import { ChatRoomComponent } from './components/main/chat/chat-room/chat-room.component';
 import { ChatMenuComponent } from './components/main/chat/chat-menu/chat-menu.component';
@@ -73,6 +72,9 @@ import { ChatPasswordComponent } from './components/main/chat/chat-password/chat
 import { SortDirective } from './directives/sort.directive';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 
+import { FilterPipe } from './helpers/pipes/filter.pipe';
+import { FormatTimePipe } from './helpers/pipes/format-time.pipe';
+
 // TODO: Seperate Modules and optimize load bundles
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -88,6 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RegisterComponent,
     NavComponent,
     AlertComponent,
+    AboutComponent,
+    ContactComponent,
     // MAIN
     MainNavComponent,
     HomeComponent,
@@ -104,8 +108,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     NotificationItemComponent,
     ImageComponent,
     UsernameComponent,
-    AboutComponent,
-    ContactComponent,
     FriendsComponent,
     ActivityComponent,
     ReportComponent,
@@ -118,7 +120,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthModalComponent,
     VerifyComponent,
     WelcomeComponent,
-    FilterPipe,
     TermsComponent,
     ChatRoomComponent,
     ChatMenuComponent,
@@ -129,12 +130,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     ChatCreateComponent,
     AccountEditComponent,
     ChatDiscoverComponent,
-    SortDirective,
-    PhoneMaskDirective,
     ChatPageComponent,
     ChatPageMenuComponent,
     ChatModalComponent,
-    ChatPasswordComponent
+    ChatPasswordComponent,
+    // PIPE
+    FilterPipe,
+    FormatTimePipe,
+    // DIRECTIVE
+    PhoneMaskDirective,
+    SortDirective
   ],
   imports: [
     BrowserModule,

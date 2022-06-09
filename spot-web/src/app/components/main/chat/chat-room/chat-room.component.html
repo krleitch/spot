@@ -54,11 +54,12 @@
         </div>
         <!-- Profile Picture -->
         <div
-          [class]="
-            getProfilePictureClass(
-              messageBlock.profilePictureNum,
-              messageBlock.owned
-            )
+          class="profile-sm profile-position"
+          [class.owned]="messageBlock.owned"
+          [ngClass]="
+            messageBlock.profilePictureNum == -1
+              ? 'profile-op'
+              : 'profile-' + messageBlock.profilePictureNum
           "
         >
           <img
@@ -74,7 +75,12 @@
     <span class="material-icons icon-primary icon-md"> person </span>
     <span class="margin-l-sm margin-r-md"> {{ userCount }} </span>
     <span class="material-icons-outlined icon-primary icon-md"> timer </span>
-    <span class="margin-l-sm margin-r-md"> {{ subscribeTimer }} </span>
+    <span *ngIf="showCountdown; else time" class="margin-l-sm margin-r-md">
+      {{ counter | formatTime }}
+    </span>
+    <ng-template #time>
+      <span class="margin-l-sm margin-r-md"> {{ timeMessage }} </span>
+    </ng-template>
     <div class="editor">
       <span
         #create
@@ -84,7 +90,10 @@
         (input)="onTextInput($event)"
         (keydown.enter)="onEnter()"
       ></span>
-      <span class="material-icons icon-lg icon-secondary-highlight margin-h-md" (click)="submit()">
+      <span
+        class="material-icons icon-lg icon-secondary-highlight margin-h-md"
+        (click)="submit()"
+      >
         send
       </span>
     </div>

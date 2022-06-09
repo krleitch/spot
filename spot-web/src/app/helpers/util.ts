@@ -1,9 +1,11 @@
+import { UnitSystem } from '@models/userMetadata';
+
 // Common utils across spot-web
 
- /**
-  * @param date - string or date object that will be used for the time message 
-  * @returns string of time with Now/s/m/h/d/y appended 
-  */
+/**
+ * @param date - string or date object that will be used for the time message
+ * @returns string of time with Now/s/m/h/d/y appended
+ */
 export const getFormattedTime = (date: string | Date): string => {
   const curTime = new Date();
   const messageTime = new Date(date);
@@ -30,4 +32,22 @@ export const getFormattedTime = (date: string | Date): string => {
     message = yearDiff + 'y';
   }
   return message;
+};
+
+/**
+ * @param distance - Distance in miles
+ * @param unit - Imperal or Metric to convert
+ * @returns formatted distance string in metric or imperial
+ */
+export const getFormattedDistance = (
+  distance: number,
+  unit: UnitSystem = UnitSystem.IMPERIAL
+): string => {
+  let distanceString = '';
+  if (unit === UnitSystem.METRIC) {
+    distanceString += (distance * 1.60934).toFixed(1) + ' km';
+  } else {
+    distanceString += distance.toFixed(1) + ' m';
+  }
+  return distanceString;
 };

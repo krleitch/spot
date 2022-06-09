@@ -11,7 +11,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { Observable, Subject, timer } from 'rxjs';
+import { Observable, Subject, timer, Subscription } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
 // Store
@@ -25,6 +25,9 @@ import { Channel as PhoenixChannel, Presence } from 'phoenix';
 
 // Services
 import { ChatService } from '@services/chat.service';
+
+// helpers
+import { getFormattedTime } from '@helpers/util';
 
 // Assets
 import {
@@ -67,8 +70,12 @@ export class ChatRoomComponent
   ignoreInitialObserver = true;
   userCount = 0;
 
-  timeLeft = 60;
-  subscribeTimer;
+  // Time
+  showCountdown = false;
+  countDown: Subscription;
+  counter: number;
+  tick = 1000;
+  timeMessage: string;
 
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
@@ -94,7 +101,7 @@ export class ChatRoomComponent
         this.userMetadata = userMetadata;
       });
 
-    this.startTimer();
+    this.timeMessage = getFormattedTime(this.chatRoom.insertedAt);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -181,10 +188,13 @@ export class ChatRoomComponent
   }
 
   startTimer() {
-    const source = timer(1000, 2000);
-    const abc = source.subscribe(val => {
-      this.subscribeTimer = this.timeLeft - val;
-    });
+    this.countDown = timer(0, this.tick)
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        if (this.counter > 0) {
+          --this.counter;
+        }
+      });
   }
 
   formatTimestamp(timestamp: string): string {
@@ -290,6 +300,21 @@ export class ChatRoomComponent
         }) => {
           this.messageBlocks = messages;
           this.beforeCursor = pagination.after;
+
+          // check last message time
+          const lastMessageTime =
+            this.messageBlocks[this.messageBlocks.length - 1].insertedAt;
+          const currentTime = new Date();
+          const timeDiff =
+            currentTime.getTime() - new Date(lastMessageTime).getTime();
+          // If its been over 50 mins show the timer
+          if (timeDiff > 3000000) {
+            this.showCountdown = true;
+            this.counter = Math.max(0, 3600000 - timeDiff) / 1000;
+            this.startTimer();
+          } else {
+            this.showCountdown = false;
+          }
         }
       )
       .receive('error', ({ reason }) => {
