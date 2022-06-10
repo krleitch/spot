@@ -68,6 +68,12 @@
         </div>
       </div>
     </div>
+
+    <!-- Chat Expired -->
+    <div *ngIf="chatExpired" class="row-center text-secondary text-sm">
+      {{ 'MAIN.CHAT_ROOM.CHAT_EXPIRED' | translate }}
+    </div>
+    <div #anchor></div>
   </div>
 
   <!-- Chat Bar -->

@@ -12,7 +12,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { Observable, Subject, timer, Subscription } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil, takeWhile } from 'rxjs/operators';
 
 // Store
 import { select, Store } from '@ngrx/store';
@@ -42,7 +42,7 @@ import {
   LeaveChatRoomResponse,
   RemoveUserChatRoomStore
 } from '@models/chat';
-import { UserMetadata, UnitSystem } from '@models/userMetadata';
+import { UserMetadata } from '@models/userMetadata';
 
 @Component({
   selector: 'spot-chat-room',
@@ -62,20 +62,23 @@ export class ChatRoomComponent
 
   private observer: IntersectionObserver;
 
-  currentLength = 0;
   channel: PhoenixChannel;
   messageBlocks: MessageBlock[] = [];
   beforeCursor: string = null;
+
+  // state
   disableScrollDown = false;
   ignoreInitialObserver = true;
   userCount = 0;
+  currentLength = 0;
 
-  // Time
+  // Time / countdown
   showCountdown = false;
   countDown: Subscription;
   counter: number;
   tick = 1000;
   timeMessage: string;
+  chatExpired = false;
 
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
@@ -104,7 +107,7 @@ export class ChatRoomComponent
     this.timeMessage = getFormattedTime(this.chatRoom.insertedAt);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.channel = this.chatService.connectToChannel(this.chatRoom.id);
     this.joinRoom();
   }
@@ -159,7 +162,11 @@ export class ChatRoomComponent
     this.onDestroy.next();
   }
 
-  scrollChatToBottom() {
+  ngAfterViewChecked() {
+    this.scrollChatToBottom();
+  }
+
+  scrollChatToBottom(): void {
     if (this.disableScrollDown) {
       return;
     }
@@ -170,11 +177,7 @@ export class ChatRoomComponent
     }
   }
 
-  ngAfterViewChecked() {
-    this.scrollChatToBottom();
-  }
-
-  onScroll(event) {
+  onScroll(_event: Event) {
     const element = this.chat.nativeElement;
     const threshold = 0;
     const atBottom =
@@ -188,10 +191,22 @@ export class ChatRoomComponent
   }
 
   startTimer() {
-    this.countDown = timer(0, this.tick)
-      .pipe(takeUntil(this.onDestroy))
+    this.countDown = timer(0, 1000)
+      .pipe(
+        takeUntil(this.onDestroy),
+        takeWhile((_) => {
+          return this.counter >= 0;
+        })
+      )
       .subscribe(() => {
-        if (this.counter > 0) {
+        if (this.counter <= 0) {
+          this.showCountdown = true;
+          this.chatExpired = true;
+        } else if (this.counter <= 600) {
+          // 10 minutes show the timer
+          this.showCountdown = true;
+          --this.counter;
+        } else {
           --this.counter;
         }
       });
@@ -210,46 +225,16 @@ export class ChatRoomComponent
     return strTime;
   }
 
-  getDistance(distance: number): string {
-    let unit: UnitSystem;
-    if (this.userMetadata) {
-      unit = this.userMetadata.unitSystem;
-    } else {
-      unit = UnitSystem.IMPERIAL;
-    }
-
-    let distanceString = '';
-
-    if (unit === UnitSystem.METRIC) {
-      distanceString += (distance * 1.60934).toFixed(1) + ' km';
-    } else {
-      distanceString += distance.toFixed(1) + ' m';
-    }
-    return distanceString;
-  }
-
-  getProfilePictureClass(index, owned: boolean): string {
-    let str = '';
-    if (index === -1) {
-      str += 'profile-sm profile-position profile-op';
-    } else {
-      str += 'profile-sm profile-position profile-' + index;
-    }
-    if (owned) {
-      str += ' owned';
-    }
-    return str;
-  }
-
-  onTextInput(event): void {
+  onTextInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
     // remove <br> if empty
-    if (event.target.textContent.length === 0) {
+    if (target.textContent.length === 0) {
       this.create.nativeElement.innerHTML = '';
     }
     // Need to count newlines as a character, -1 because the first line is free
     this.currentLength = Math.max(
       0,
-      event.target.textContent.length + event.target.childNodes.length - 1
+      target.textContent.length + target.childNodes.length - 1
     );
   }
 
@@ -259,6 +244,11 @@ export class ChatRoomComponent
   }
 
   submit(): void {
+    if (this.chatExpired) {
+      // return;
+    }
+
+
     const content = this.create.nativeElement.innerHTML;
 
     const newMessage: CreateMessage = {
@@ -267,7 +257,6 @@ export class ChatRoomComponent
     this.channel
       .push('new_message', newMessage, 10000)
       .receive('ok', (_msg) => {
-        // console.log('created message', msg);
         this.create.nativeElement.innerHTML = '';
       })
       .receive('error', (reasons) => {
@@ -278,7 +267,7 @@ export class ChatRoomComponent
       });
   }
 
-  syncPresentCount = (presences) => {
+  syncPresentCount = (presences: object): void => {
     let count = 0;
     Presence.list(presences, (_id, { metas: [_first, ..._rest] }) => {
       count += 1;
@@ -301,20 +290,17 @@ export class ChatRoomComponent
           this.messageBlocks = messages;
           this.beforeCursor = pagination.after;
 
-          // check last message time
-          const lastMessageTime =
-            this.messageBlocks[this.messageBlocks.length - 1].insertedAt;
+          // check last message time or if no messages when the room is created
+          const lastActiveTime = this.messageBlocks.length
+            ? this.messageBlocks[this.messageBlocks.length - 1].insertedAt
+            : this.chatRoom.insertedAt;
           const currentTime = new Date();
           const timeDiff =
-            currentTime.getTime() - new Date(lastMessageTime).getTime();
-          // If its been over 50 mins show the timer
-          if (timeDiff > 3000000) {
-            this.showCountdown = true;
-            this.counter = Math.max(0, 3600000 - timeDiff) / 1000;
-            this.startTimer();
-          } else {
-            this.showCountdown = false;
-          }
+            currentTime.getTime() - new Date(lastActiveTime).getTime();
+          this.counter = Math.max(0, 3600000 - timeDiff) / 1000;
+
+          // start the timer
+          this.startTimer();
         }
       )
       .receive('error', ({ reason }) => {
@@ -361,6 +347,9 @@ export class ChatRoomComponent
         // create the first block
         this.pushMessageBlock(message, true);
       }
+      // reset the counter on new messages
+      this.counter = 3600;
+      this.showCountdown = false;
     });
   }
 

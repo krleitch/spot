@@ -318,7 +318,8 @@
     "CHAT_ROOM": {
       "CHAT_PLACEHOLDER": "Type to chat...",
       "SEND": "Send",
-      "CHAT_HISTORY_START": "This is the start of your chat history"
+      "CHAT_HISTORY_START": "This is the start of your chat history",
+      "CHAT_EXPIRED": "This chat has expired. No new messages can be created."
     },
 
     "CHAT_MENU": {
