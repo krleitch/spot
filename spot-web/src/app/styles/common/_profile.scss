@@ -115,6 +115,7 @@ $chat-colors: (
 .profile-md.owned {
   border: 3px solid var(--primary);
   width: 54px;
+  min-width: 54px;
   height: 54px;
   img {
     width: 54px;

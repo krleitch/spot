@@ -1,4 +1,4 @@
-<div class="modal-header" (click)="close()">
+<div class="modal-close" (click)="close()">
   <span class="material-icons icon-error"> close </span>
 </div>
 <div class="chat-modal background-container">
@@ -9,8 +9,9 @@
   >
     <!-- Chat Header -->
     <div
-      class="background-header row-h-center padding-sm"
+      class="background-header row-h-center justify-content-between padding-sm"
     >
+      <!-- Left -->
       <div class="row-h-center">
         <span
           class="material-icons icon-md icon-primary"
@@ -49,7 +50,10 @@
             >
           </div>
         </div>
+      </div>
 
+      <!-- right -->
+      <div class="row-h-center right-margin">
         <!-- Settings Dropdown -->
         <div class="relative">
           <button
@@ -57,9 +61,7 @@
             class="header-button margin-l-md"
             (click)="toggleDropdown()"
           >
-            <span class="material-icons icon-md icon-primary"
-              >settings</span
-            >
+            <span class="material-icons icon-md icon-primary">settings</span>
           </button>
           <div class="dropdown-content" [class.show-dropdown]="showDropdown">
             <div class="dropdown-button" (click)="leaveChatRoom()">

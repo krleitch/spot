@@ -1,4 +1,4 @@
-.modal-header {
+.modal-close {
   position: absolute;
   top: 8px;
   right: 5px;
@@ -12,6 +12,10 @@
   display: flex;
   flex-flow: column;
   box-sizing: border-box;
+}
+
+.right-margin {
+  margin-right: 35px;
 }
 
 .chat-room-container {
@@ -59,7 +63,7 @@ spot-chat-page-menu {
   cursor: pointer;
 }
 
+// Change the default top
 .dropdown-content {
   top: 25px;
-  left: 12px;
 }
