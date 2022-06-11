@@ -1,6 +1,25 @@
 <spot-main-nav></spot-main-nav>
 <div class="friends row-v-center full-width background-page border-box">
   <div class="friends-content col">
+    <!-- Facebook -->
+    <div
+      *ngIf="facebookLoaded && (facebookConnected$ | async) === false"
+      class="row-h-center padding-md margin-t-lg mobile-col"
+    >
+      <button class="button-facebook" (click)="facebookConnect()">
+        <img
+          src="assets/images/facebook_logo_white.png"
+          class="icon-facebook"
+        />
+        <span class="text-facebook">
+          {{ 'MAIN.FRIENDS.FACEBOOK_CONNECT' | translate }}
+        </span>
+      </button>
+      <span class="text-secondary margin-h-lg text-center">
+        {{ 'MAIN.FRIENDS.FACEBOOK_DESCRIPTION' | translate }}
+      </span>
+    </div>
+
     <!-- Pending Friends -->
     <div *ngIf="pendingFriendRequests.length > 0">
       <div
@@ -96,19 +115,6 @@
           {{ 'MAIN.FRIENDS.ADD' | translate }}
         </div>
       </div>
-      <button
-        *ngIf="facebookLoaded && (facebookConnected$ | async) === false"
-        class="button-facebook"
-        (click)="facebookConnect()"
-      >
-        <img
-          src="assets/images/facebook_logo_white.png"
-          class="icon-facebook"
-        />
-        <span class="text-facebook">
-          {{ 'MAIN.FRIENDS.FACEBOOK_CONNECT' | translate }}
-        </span>
-      </button>
     </div>
     <div class="full-width border-box background-container container-b-rounded">
       <div

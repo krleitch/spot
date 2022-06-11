@@ -312,7 +312,8 @@
       "NO_FRIENDS": "Add friends to share spots quickly",
       "NO_FRIENDS_FOUND": "No friends found with name",
 
-      "FACEBOOK_CONNECT": "Connect With Facebook"
+      "FACEBOOK_CONNECT": "Connect With Facebook",
+      "FACEBOOK_DESCRIPTION": "Connect with Facebook to find your friends. Share spots and tag them in comments to chat with them while being anonymous to others."
     },
 
     "CHAT_ROOM": {
