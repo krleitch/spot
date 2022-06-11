@@ -58,31 +58,32 @@ export class AccountEditComponent implements OnInit {
     private store$: Store<RootStoreState.State>,
     private translateService: TranslateService,
     private userService: UserService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.accountEditForm = new FormGroup({
       property: new FormControl('', [Validators.required])
     });
-    switch (this.data.type) {
-      case 'email':
-        this.propertyTitle = this.STRINGS.EMAIL_TITLE;
-        this.propertyDescription = this.STRINGS.EMAIL_DESCRIPTION;
-        break;
-      case 'username':
-        this.propertyTitle = this.STRINGS.USERNAME_TITLE;
-        this.propertyDescription = this.STRINGS.USERNAME_DESCRIPTION;
-        break;
-      case 'phone':
-        this.propertyTitle = this.STRINGS.PHONE_TITLE;
-        this.propertyDescription = this.STRINGS.PHONE_DESCRIPTION;
-        break;
-    }
+    this.translateService
+      .get('MAIN.ACCOUNT_EDIT')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+        switch (this.data.type) {
+          case 'email':
+            this.propertyTitle = this.STRINGS.EMAIL_TITLE;
+            this.propertyDescription = this.STRINGS.EMAIL_DESCRIPTION;
+            break;
+          case 'username':
+            this.propertyTitle = this.STRINGS.USERNAME_TITLE;
+            this.propertyDescription = this.STRINGS.USERNAME_DESCRIPTION;
+            break;
+          case 'phone':
+            this.propertyTitle = this.STRINGS.PHONE_TITLE;
+            this.propertyDescription = this.STRINGS.PHONE_DESCRIPTION;
+            break;
+        }
+      });
     this.propertyPlaceholder = this.data.data;
-    this.translateService.get('MAIN.ACCOUNT_EDIT').subscribe((res: Record<string, string>) => {
-      this.STRINGS = res;
-    });
   }
 
   get property() {

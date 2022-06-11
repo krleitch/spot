@@ -1,9 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // rxjs
@@ -12,11 +7,7 @@ import { mapTo, take, takeUntil } from 'rxjs/operators';
 
 // Store
 import { Store, select } from '@ngrx/store';
-import {
-  UserActions,
-  UserFacebookActions,
-  UserGoogleActions
-} from '@store/user-store';
+import { UserActions, UserFacebookActions } from '@store/user-store';
 import { UserStoreSelectors, RootStoreState } from '@store';
 
 // Services
@@ -32,8 +23,6 @@ import {
   UserRole,
   FacebookConnectRequest,
   FacebookDisconnectRequest,
-  GoogleConnectRequest,
-  GoogleDisconnectRequest,
   DeleteUserRequest,
   DeleteUserResponse,
   VerifyRequest,
@@ -67,6 +56,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   eThemeWeb = ThemeWeb;
 
   user$: Observable<User>;
+  user: User;
   showUserIndicator$: Observable<boolean>;
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
@@ -105,8 +95,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateService: TranslateService,
     private themeService: ThemeService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.userMetadata$ = this.store$.pipe(
@@ -128,6 +117,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      this.user = user;
+    });
 
     this.showUserIndicator$ = merge(
       timer(1000).pipe(mapTo(true), takeUntil(this.user$)),
@@ -142,9 +134,11 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
         this.profilePictureSrc = user.profilePictureSrc;
       }
     });
-    this.translateService.get('MAIN.ACCOUNT').subscribe((res: Record<string, string>) => {
-      this.STRINGS = res;
-    });
+    this.translateService
+      .get('MAIN.ACCOUNT')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
+      });
   }
 
   ngOnDestroy(): void {
@@ -178,8 +172,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService
       .open('global', 'uploadPhoto', {
         type: 'profile-picture',
-        imageSrc:
-          this.profilePictureSrc || '/assets/images/op_large.png'
+        imageSrc: this.profilePictureSrc || '/assets/images/op_large.png'
       })
       .pipe(take(1))
       .subscribe((result: ModalUploadPhotoResult) => {
@@ -192,10 +185,19 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  changeAccountDetail(
-    type: 'username' | 'phone' | 'email',
-    data: string
-  ): void {
+  changeAccountDetail(type: 'username' | 'phone' | 'email'): void {
+    let data: string;
+    switch (type) {
+      case 'username':
+        data = this.user.username;
+        break;
+      case 'phone':
+        data = this.user.phone;
+        break;
+      case 'email':
+        data = this.user.email;
+        break;
+    }
     this.modalService.open('global', 'accountEdit', {
       type: type,
       data: data
@@ -219,7 +221,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
                   this.store$.dispatch(
                     new UserActions.DeleteUserAction(deleteStoreRequest)
                   );
-                this.router.navigateByUrl('/');
+                  this.router.navigateByUrl('/');
                 },
                 (_errorResponse: { error: SpotError }) => {
                   // none
@@ -231,7 +233,6 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // verify
-
   verifyUser(): void {
     if (this.email === '') {
       // give a warning probably

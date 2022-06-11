@@ -15,7 +15,9 @@
       <fieldset class="fieldset">
         <div class="col">
           <div class="margin-t-xl">{{ propertyTitle }}</div>
+
           <input
+            *ngIf="data.type !== 'phone'; else phone"
             class="input-border-bottom"
             type="text"
             id="property"
@@ -24,6 +26,19 @@
             [placeholder]="propertyPlaceholder"
             required
           />
+          <!-- We need the phone mask -->
+          <ng-template #phone>
+            <input
+              class="input-border-bottom"
+              type="text"
+              id="property"
+              formControlName="property"
+              spotPhoneMask
+              autocomplete="off"
+              [placeholder]="propertyPlaceholder"
+              required
+            />
+          </ng-template>
           <!-- Property errors -->
           <div *ngIf="property.invalid && property.dirty && property.touched">
             <div

@@ -112,21 +112,21 @@
             <!-- | -->
             <span
               class="text-secondary-highlight text-center margin-r-xl"
-              (click)="changeAccountDetail('username', user.username)"
+              (click)="changeAccountDetail('username')"
             >
               {{ 'MAIN.ACCOUNT.CHANGE_USERNAME' | translate }}
             </span>
             |
             <span
               class="text-secondary-highlight text-center margin-h-xl"
-              (click)="changeAccountDetail('email', user.email)"
+              (click)="changeAccountDetail('email')"
             >
               {{ 'MAIN.ACCOUNT.CHANGE_EMAIL' | translate }}
             </span>
             |
             <span
               class="text-secondary-highlight text-center margin-l-xl"
-              (click)="changeAccountDetail('phone', user.phone)"
+              (click)="changeAccountDetail('phone')"
             >
               {{ 'MAIN.ACCOUNT.CHANGE_PHONE' | translate }}
             </span>
@@ -311,7 +311,7 @@
             </span>
           </span>
           <label class="checkbox-container">
-            <span class="text-secondary-highlight">
+            <span class="text-secondary-highlight text-md">
               {{ 'MAIN.ACCOUNT.ENABLE_OPTIONS' | translate }}
             </span>
             <input type="checkbox" [(ngModel)]="userOptionsEnabled" />
