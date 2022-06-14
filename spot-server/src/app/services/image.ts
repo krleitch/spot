@@ -121,7 +121,7 @@ const uploadProfilePicture = multer({
   })
 });
 
-// Upload profile photo to s3
+// Upload chat photo to s3
 const uploadChatRoomPhoto = multer({
   fileFilter: chatRoomPhotoFileFilter,
   storage: multerS3({

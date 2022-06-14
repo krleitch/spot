@@ -197,7 +197,7 @@ export class CommentComponent
     this.replies$ = this.store$.pipe(
       select(CommentStoreSelectors.selectReplies, {
         spotId: this.comment.spotId,
-        commentId: this.comment.parentCommentId
+        commentId: this.comment.commentId
       })
     );
 
@@ -621,8 +621,7 @@ export class CommentComponent
     // Make the request
     const request: CreateReplyRequest = {
       spotId: this.comment.spotId,
-      commentId: this.comment.parentCommentId,
-      commentParentId: this.comment.commentId,
+      commentId: this.comment.commentId,
       content,
       image: this.imageFile,
       tagsList: tags,
@@ -641,6 +640,7 @@ export class CommentComponent
       )
       .subscribe(
         (reply: CreateReplyResponse) => {
+
           // add the new reply to the store
           const storeRequest: AddReplyStoreRequest = {
             reply: reply.reply

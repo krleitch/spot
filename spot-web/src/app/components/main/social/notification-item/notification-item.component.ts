@@ -37,8 +37,12 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
   @ViewChild('notificationImage') notificationImage: ElementRef;
 
   @Input() notification: Notification;
-  imageBlurred: boolean;
   time: string;
+
+  // image
+  imageSrc: string; // prioritizes reply/comment/spot
+  imageNsfw: boolean;
+  imageBlurred: boolean;
 
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
@@ -59,6 +63,25 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
         this.userMetadata = userMetadata;
       });
 
+
+    this.time = this.getTime();
+
+    // source the image if it exists
+    this.imageSrc = this.notification.replyImageSrc
+      ? this.notification.replyImageSrc
+      : this.notification.commentImageSrc
+      ? this.notification.commentImageSrc
+      : this.notification.imageSrc
+      ? this.notification.imageSrc
+      : null;
+    this.imageNsfw = this.notification.replyImageNsfw
+      ? this.notification.replyImageNsfw
+      : this.notification.commentImageNsfw
+      ? this.notification.commentImageNsfw
+      : this.notification.imageNsfw
+      ? this.notification.imageNsfw
+      : null;
+
     if (this.notification.replyImageSrc)
       this.imageBlurred = this.notification.replyImageNsfw;
     else if (this.notification.commentImageSrc) {
@@ -69,7 +92,6 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
       this.imageBlurred = false;
     }
 
-    this.time = this.getTime();
   }
 
   ngOnDestroy(): void {

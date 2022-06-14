@@ -16,6 +16,7 @@ export function featureReducer(
         ...initialState
       };
     }
+    // Notifications
     case NotificationsActionTypes.GET_NOTIFICATIONS_REQUEST: {
       return {
         ...state,
@@ -28,7 +29,7 @@ export function featureReducer(
         ...state,
         notificationsSuccess: true,
         notificationsLoading: false,
-        notifications: !action.response.initialLoad
+        notifications: action.response.initialLoad
           ? action.response.response.notifications
           : state.notifications.concat(action.response.response.notifications)
       };

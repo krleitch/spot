@@ -22,7 +22,8 @@ import profileImages from '@helpers/profileImages.js';
 
 // models
 import P from '@prisma/client';
-import { Tag, Comment, CommentTag } from '@models/comment.js';
+import { Tag, CommentTag } from '@models/comment.js';
+import { Notification } from '@models/notification.js';
 
 const validCommentContent = (content: string): SpotError | null => {
   if (
@@ -73,7 +74,7 @@ const stringToInt = (str: string, lowerbound: number, upperbound: number) => {
 };
 
 const addProfilePicturesToComments = async (
-  comments: Array<P.Comment & {tag: CommentTag}>,
+  comments: Array<P.Comment & { tag: CommentTag }>,
   spotOwnerId: string
 ) => {
   const commentsWithProfilePicture = await Promise.all(
@@ -145,6 +146,50 @@ const addTagsToComments = async (
   return commentsWithTags;
 };
 
+// Add the tag object to the content, the client takes care of filling the content properly
+const addTagsToNotifications = async (
+  notifications: Notification[],
+  userId: string | undefined
+) => {
+  const notifsWithTags = await Promise.all(
+    notifications.map(async (notif) => {
+      let tags: P.CommentTag[] = [];
+      if (notif.replyId) {
+        tags = await prismaCommentTag.findTagsByCommentId(
+          notif.replyId
+        );
+      } else if (notif.commentId) {
+        tags = await prismaCommentTag.findTagsByCommentId(
+          notif.commentId
+        );
+      }
+
+      // right now only show yourself
+      // TODO: In future show others if proper permissions are met
+      const tagList: Tag[] = [];
+      for (let j = 0; j < tags.length; j++) {
+        if ( userId === tags[j].userId) {
+          const user = await prismaUser.findUserById(tags[j].userId);
+          tagList.push({
+            offset: tags[j].offset,
+            username: user ? user.username : ''
+          });
+        } else {
+          tagList.push({
+            offset: tags[j].offset,
+            username: ''
+          });
+        }
+      }
+      return {
+        ...notif,
+        tags: tagList
+      };
+    })
+  );
+  return notifsWithTags;
+};
+
 // Generate a comment link that is unique
 const generateCommentLink = async (): Promise<string> => {
   let link: string;
@@ -179,6 +224,7 @@ const userInRangeForComment = async (
 export default {
   addProfilePicturesToComments,
   addTagsToComments,
+  addTagsToNotifications,
   generateCommentLink,
   validCommentContent,
   userInRangeForComment

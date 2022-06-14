@@ -19,7 +19,7 @@ export interface CommentTag {
 export interface Comment {
   commentId: string;
   spotId: string;
-  parentCommentId: string | null;
+  parentCommentId: string | null; // null for comments, for replies its the id of the comment the user added on
   createdAt: Date;
   deletedAt: Date | null;
   content: string;
@@ -114,7 +114,6 @@ export interface SetRepliesStoreRequest {
 export interface CreateReplyRequest {
   spotId: string;
   commentId: string;
-  commentParentId: string; // the comment the user added the reply on. it would stil have same parent
   content: string;
   image: File;
   tagsList: Tag[];

@@ -3,130 +3,39 @@
 }
 
 .notification-item {
-  position: relative;
-  width: 100%;
   border-bottom: 1px solid var(--background-primary);
-
-  color: var(--text-secondary);
 
   &:hover .text-preview .prompt {
     color: var(--primary);
   }
-
-  .seen {
-    background-color: var(--item-highlight);
-  }
-
-  .content {
-    display: flex;
-    width: 100%;
-    padding: 12px;
-    box-sizing: border-box;
-    cursor: pointer;
-
-    .image-preview {
-      display: flex;
-      position: relative;
-      justify-content: center;
-      align-items: center;
-      background-color: var(--background-container);
-      width: 50px;
-      height: 50px;
-      border-radius: 25px;
-      box-shadow: 0 2px 26px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-
-      img {
-        max-width: 100px;
-        max-height: 100px;
-      }
-
-      .image-blur {
-        cursor: pointer;
-        opacity: 0.4;
-        -webkit-transition: 0.3s ease-in-out;
-        transition: 0.2s ease-in-out;
-        filter: blur(3px);
-        -webkit-filter: blur(3px);
-      }
-
-      [hidden] {
-        display: none !important;
-      }
-
-      .image-blur-text {
-        cursor: pointer;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 25px;
-        height: 25px;
-        transform: translate(-50%, -50%);
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
-        align-items: center;
-        background-color: var(--background-page);
-        border-radius: 12.5px;
-
-        .icon {
-          font-size: 32px;
-          color: var(--primary);
-        }
-      }
-
-      .no-image-preview {
-        font-size: 20px;
-        color: var(--text-secondary);
-      }
-    }
-
-    .text-preview {
-      flex: 1;
-      padding: 0px 15px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-width: 0;
-
-      .prompt {
-        font-size: 16px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        min-width: 0;
-
-        .username {
-        }
-      }
-
-      .text {
-        font-size: 14px;
-        color: var(--text-secondary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        min-width: 0;
-      }
-    }
-
-    .date {
-      display: flex;
-      align-items: center;
-      font-size: 10px;
-      color: var(--text-secondary);
-    }
-  }
 }
 
-.delete {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  font-size: 14px;
-  color: var(--icon-secondary);
-  cursor: pointer;
-  &:hover {
-    color: var(--error);
+.seen {
+  background-color: var(--item-highlight);
+}
+
+.text-preview {
+  flex: 1;
+  padding: 0px 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+
+  .prompt {
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  .text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 }

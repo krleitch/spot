@@ -292,8 +292,7 @@ router.get(
             request.commentId,
             request.before,
             request.after,
-            request.limit,
-            req.user?.userId
+            request.limit
           );
         }
       } else {
@@ -302,8 +301,7 @@ router.get(
           request.commentId,
           request.before,
           request.after,
-          request.limit,
-          req.user?.userId
+          request.limit
         );
       }
 
@@ -350,7 +348,7 @@ router.get(
         totalRepliesAfter = await prismaComment.findTotalRepliesAfterReply(
           request.spotId,
           request.commentId,
-          replies.at(-1)
+          replies.at(-1).commentId
         );
       }
 
@@ -396,10 +394,11 @@ router.post(
 
         const body: CreateCommentRequest = JSON.parse(req.body.json);
         body.spotId = req.params.spotId.toString();
-        // @ts-ignore
         // Location is defined on the multers3 file type
+        // @ts-ignore
         const imageSrc: string = req.file ? req.file.location : null;
-        const commentId = req.file?.filename.split('.')[0] || uuidv4();
+        // @ts-ignore
+        const commentId = req.file?.key.split('/').at(-1) || uuidv4();
 
         // Check you are in range of the spot
         const inRange = await commentService.userInRangeForComment(
@@ -557,10 +556,11 @@ router.post(
         const body: CreateReplyRequest = JSON.parse(req.body.json);
         body.spotId = req.params.spotId.toString();
         body.commentId = req.params.commentId.toString();
-        // @ts-ignore
         // Location is defined on the multers3 file type
+        // @ts-ignore
         const imageSrc: string = req.file ? req.file.location : null;
-        const replyId = req.file?.filename.split('.')[0] || uuidv4();
+        // @ts-ignore
+        const replyId = req.file?.key.split('/').at(-1) || uuidv4();
 
         // Check you are either in range, or were tagged in the comment chain
         const inRange = await commentService.userInRangeForComment(
@@ -569,7 +569,7 @@ router.post(
           body.location.longitude
         );
         const isTagged = await prismaCommentTag.taggedInCommentChain(
-          body.commentParentId,
+          body.commentId,
           userId
         );
         if (!inRange && !isTagged) {

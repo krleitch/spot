@@ -420,7 +420,6 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     const request: CreateReplyRequest = {
       spotId: this.reply.spotId,
       commentId: this.reply.parentCommentId,
-      commentParentId: this.reply.commentId,
       content,
       image: this.imageFile,
       tagsList: tags,

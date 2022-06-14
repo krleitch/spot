@@ -24,7 +24,7 @@
   <!-- Notifications -->
   <div class="notifications-content">
     <spot-infinite-scroll
-      *ngIf="notifications.length > 0; else empty"
+      *ngIf="notifications.length > 0 || initialLoad; else empty"
       (scrolled)="onScroll()"
     >
       <div *ngFor="let notification of notifications">

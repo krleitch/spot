@@ -4,6 +4,8 @@ const router = express.Router();
 // db
 import prismaNotification from '@db/prisma/notification.js';
 import prismaUser from '@db/prisma/user.js';
+import prismaSpot from '@db/prisma/spot.js';
+import prismaComment from '@db/prisma/comment.js';
 import prismaFriend from '@db/prisma/friend.js';
 
 // services
@@ -18,6 +20,7 @@ import * as notificationError from '@exceptions/notification.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
 // models
+import P from '@prisma/client';
 import { UserRole } from '@models/user.js';
 import {
   Notification,
@@ -65,10 +68,76 @@ router.get(
         request.limit
       );
 
-      // Todo add Tags
+      // Add sender username, spot/comment/reply props
+      const notifsWithProps = await Promise.all(
+        notifications.map(async (notif) => {
+          const newNotif: Notification = {
+            notificationId: notif.notificationId,
+            spotId: notif.spotId,
+            commentId: notif.commentId,
+            replyId: notif.commentId,
+            createdAt: notif.createdAt,
+            content: notif.content,
+            seen: notif.seen,
+            type: notif.type,
+            tags: []
+          };
+          if (notif.senderId) {
+            const user = await prismaUser.findUserById(notif.senderId);
+            if (user) {
+              newNotif.username = user.username;
+            }
+          }
+
+          if (notif.spotId) {
+            const spot = await prismaSpot.findSpotById(notif.spotId);
+            if (spot) {
+              newNotif.imageSrc = spot.imageSrc ? spot.imageSrc : undefined;
+              newNotif.imageNsfw = spot.imageNsfw ? spot.imageNsfw : undefined;
+              newNotif.link = spot.link;
+            }
+          }
+
+          if (notif.commentId) {
+            const comment = await prismaComment.findCommentById(
+              notif.commentId
+            );
+            if (comment) {
+              newNotif.commentImageSrc = comment.imageSrc
+                ? comment.imageSrc
+                : undefined;
+              newNotif.commentImageNsfw = comment.imageNsfw
+                ? comment.imageNsfw
+                : undefined;
+              newNotif.commentLink = comment.link;
+            }
+          }
+
+          if (notif.replyId) {
+            const reply = await prismaComment.findCommentById(notif.replyId);
+            if (reply) {
+              newNotif.replyImageSrc = reply.imageSrc
+                ? reply.imageSrc
+                : undefined;
+              newNotif.replyImageNsfw = reply.imageNsfw
+                ? reply.imageNsfw
+                : undefined;
+              newNotif.replyLink = reply.link;
+            }
+          }
+          return newNotif;
+        })
+      );
+
+      // Add the tags
+      const notifsWithPropsAndTags =
+        await commentService.addTagsToNotifications(
+          notifsWithProps,
+          req.user.userId
+        );
 
       const response: GetNotificationsResponse = {
-        notifications: notifications,
+        notifications: notifsWithPropsAndTags,
         cursor: {
           before: notifications.at(0)?.notificationId,
           after: notifications.at(-1)?.notificationId
@@ -135,7 +204,7 @@ router.post(
       if (!friendExists) {
         return next(new notificationError.SendNotification());
       }
-      let createdTagNotification: Notification;
+      let createdTagNotification: P.Notification;
       if (request.replyId && request.commentId) {
         createdTagNotification =
           await prismaNotification.createTagReplyNotification(
@@ -161,8 +230,21 @@ router.post(
             request.spotId
           );
       }
+
+      // Add the tags
+      const notifWithTags = await commentService.addTagsToNotifications(
+        [
+          {
+            ...createdTagNotification,
+            type: NotificationType[createdTagNotification.type],
+            tags: []
+          }
+        ],
+        req.user.userId
+      );
+
       const response: CreateTagNotificationResponse = {
-        notification: createdTagNotification
+        notification: notifWithTags[0]
       };
       res.status(200).json(response);
     }
