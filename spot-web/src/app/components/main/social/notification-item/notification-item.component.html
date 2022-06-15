@@ -1,27 +1,36 @@
 <div class="notification-item full-width relative">
+  <!-- Close -->
+  <span class="material-icons icon-close icon-sm close" (click)="delete()">
+    close
+  </span>
+
   <div
-    class="row full-width padding-lg border-box clickable"
+    class="row full-width padding-md border-box clickable"
     (click)="goToPost($event)"
-    [ngClass]="{ seen: !notification.seen }"
+    [class.unseen]="!notification.seen"
   >
     <!-- Image -->
-    <div #notificationImage class="image-preview" *ngIf="userMetadata">
+    <div
+      #notificationImage
+      class="profile-md"
+      *ngIf="imageSrc && userMetadata; else noImage"
+    >
+      <img
+        [src]="imageSrc"
+        [class.image-blur]="imageblurred && userMetadata.matureFilter"
+      />
       <div
-        class="preview-content"
-        *ngIf="imageSrc"
+        [hidden]="!(imageBlurred && userMetadata.matureFilter)"
+        class="image-blur-text"
       >
-        <img
-          [src]="imageSrc"
-          [class.image-blur]="imageblurred && userMetadata.matureFilter"
-        />
-        <div
-          [hidden]="!(imageBlurred && userMetadata.matureFilter)"
-          class="image-blur-text"
-        >
-          <span class="material-icons icon"> error_outline </span>
-        </div>
+        <span class="material-icons icon"> error_outline </span>
       </div>
     </div>
+    <ng-template #noImage>
+      <div class="profile-md row-center text-secondary background-white">
+        {{ getImagePreview(notification) }}
+      </div>
+    </ng-template>
 
     <!-- Text -->
     <div class="text-preview">
@@ -29,12 +38,16 @@
         <div *ngIf="notification.commentId; else postLink">
           <div *ngIf="notification.commentParentid; else commentLink">
             <span class="username"> {{ notification.username }} </span>
-            <span> {{ 'MAIN.NOTIFICATION_ITEM.REPLY_PROMPT' | translate }} </span>
+            <span>
+              {{ 'MAIN.NOTIFICATION_ITEM.REPLY_PROMPT' | translate }}
+            </span>
             <div class="text">{{ notification.replyContent }}</div>
           </div>
           <ng-template #commentLink>
             <span class="username"> {{ notification.username }} </span>
-            <span> {{ 'MAIN.NOTIFICATION_ITEM.COMMENT_PROMPT' | translate }} </span>
+            <span>
+              {{ 'MAIN.NOTIFICATION_ITEM.COMMENT_PROMPT' | translate }}
+            </span>
             <div class="text">{{ notification.commentContent }}</div>
           </ng-template>
         </div>
@@ -48,5 +61,4 @@
 
     <div class="text-secondary text-sm">{{ time }}</div>
   </div>
-  <span class="material-icons icon-close icon-sm" (click)="delete()"> close </span>
 </div>
