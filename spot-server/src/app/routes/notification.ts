@@ -186,7 +186,8 @@ router.post(
         receiver: req.body.receiver,
         spotId: req.body.spotId,
         commentId: req.body.commentId,
-        replyId: req.body.replyId
+        replyId: req.body.replyId,
+        content: req.body.content
       };
 
       const receiverUser = await prismaUser.findUserByUsername(
@@ -212,7 +213,8 @@ router.post(
             receiverUser.userId,
             request.spotId,
             request.commentId,
-            request.replyId
+            request.replyId,
+            request.content
           );
       } else if (request.commentId) {
         createdTagNotification =
@@ -220,14 +222,16 @@ router.post(
             req.user.userId,
             receiverUser.userId,
             request.spotId,
-            request.commentId
+            request.commentId,
+            request.content
           );
       } else {
         createdTagNotification =
           await prismaNotification.createTagSpotNotification(
             req.user.userId,
             receiverUser.userId,
-            request.spotId
+            request.spotId,
+            request.content
           );
       }
 

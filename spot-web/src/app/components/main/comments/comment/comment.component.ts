@@ -766,10 +766,8 @@ export class CommentComponent
     }
 
     this.modalService.open('global', 'share', {
-      spotId: this.spot.spotId,
-      commentId: this.comment.commentId,
-      spotLink: this.spot.link,
-      commentLink: this.comment.link
+      spot: this.spot,
+      comment: this.comment
     });
   }
 }

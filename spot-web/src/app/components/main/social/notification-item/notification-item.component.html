@@ -27,7 +27,7 @@
       </div>
     </div>
     <ng-template #noImage>
-      <div class="profile-md row-center text-secondary background-white">
+      <div class="profile-md row-center text-secondary background-header">
         {{ getImagePreview(notification) }}
       </div>
     </ng-template>
@@ -35,7 +35,7 @@
     <!-- Text -->
     <div class="text-preview">
       <div class="prompt">
-        <div *ngIf="notification.commentId; else postLink">
+        <div *ngIf="notification.commentId; else spotLink">
           <div *ngIf="notification.commentParentid; else commentLink">
             <span class="username"> {{ notification.username }} </span>
             <span>
@@ -48,10 +48,10 @@
             <span>
               {{ 'MAIN.NOTIFICATION_ITEM.COMMENT_PROMPT' | translate }}
             </span>
-            <div class="text">{{ notification.commentContent }}</div>
+            <div class="text">{{ notification.content }}</div>
           </ng-template>
         </div>
-        <ng-template #postLink>
+        <ng-template #spotLink>
           <span class="username"> {{ notification.username }} </span>
           <span> {{ 'MAIN.NOTIFICATION_ITEM.PROMPT' | translate }} </span>
           <div class="text">{{ notification.content }}</div>
@@ -59,6 +59,6 @@
       </div>
     </div>
 
-    <div class="text-secondary text-sm">{{ time }}</div>
+    <div class="row-h-center text-secondary text-sm">{{ time }}</div>
   </div>
 </div>

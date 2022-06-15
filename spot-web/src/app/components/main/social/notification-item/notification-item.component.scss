@@ -6,7 +6,7 @@
   }
 }
 
-.seen {
+.unseen {
   background-color: var(--item-highlight);
 }
 
@@ -38,6 +38,6 @@
 
 .close {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 5px;
+  right: 5px;
 }

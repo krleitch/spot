@@ -572,10 +572,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.modalService.open('global', 'share', {
-      spotId: this.spot.spotId,
-      commentId: this.reply.commentId,
-      spotLink: this.spot.link,
-      commentLink: this.reply.link
+      spot: this.spot,
+      comment: this.comment
     });
   }
 }

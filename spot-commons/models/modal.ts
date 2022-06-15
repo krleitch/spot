@@ -1,3 +1,6 @@
+import { Spot } from './spot';
+import { Comment } from './comment';
+
 export interface ModalOptions {
   width?: number | "auto";
   height?: number | "auto";
@@ -36,10 +39,8 @@ export type ModalData =
   | ModalAccountEditData;
 
 export interface ModalShareData {
-  spotId: string;
-  spotLink: string;
-  commentId?: string;
-  commentLink?: string;
+  spot: Spot;
+  comment?: Comment;
 }
 
 export interface ModalConfirmData {

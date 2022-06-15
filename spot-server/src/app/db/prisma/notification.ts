@@ -17,14 +17,16 @@ const mapToModelEnum = <T>(
 const createTagSpotNotification = async (
   senderId: string,
   receiverId: string,
-  spotId: string
+  spotId: string,
+  content: string
 ) => {
   const notification = await prisma.notification.create({
     data: {
       senderId: senderId,
       receiverId: receiverId,
       spotId: spotId,
-      type: NotificationType.TAG
+      type: NotificationType.TAG,
+      content: content.substring(0, 255)
     }
   });
   return mapToModelEnum<P.Notification>(notification);
@@ -34,7 +36,8 @@ const createTagCommentNotification = async (
   senderId: string,
   receiverId: string,
   spotId: string,
-  commentId: string
+  commentId: string,
+  content: string
 ) => {
   const notification = await prisma.notification.create({
     data: {
@@ -42,7 +45,8 @@ const createTagCommentNotification = async (
       receiverId: receiverId,
       spotId: spotId,
       commentId: commentId,
-      type: NotificationType.TAG
+      type: NotificationType.TAG,
+      content: content.substring(0, 255)
     }
   });
   return mapToModelEnum<P.Notification>(notification);
@@ -53,7 +57,8 @@ const createTagReplyNotification = async (
   receiverId: string,
   spotId: string,
   commentId: string,
-  replyId: string
+  replyId: string,
+  content: string
 ) => {
   const notification = await prisma.notification.create({
     data: {
@@ -62,7 +67,8 @@ const createTagReplyNotification = async (
       spotId: spotId,
       commentId: commentId,
       replyId: replyId,
-      type: NotificationType.TAG
+      type: NotificationType.TAG,
+      content: content.substring(0, 255)
     }
   });
   return mapToModelEnum<P.Notification>(notification);

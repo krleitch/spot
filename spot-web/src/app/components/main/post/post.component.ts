@@ -190,7 +190,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   getDistance(distance: number): string {
-    let unit;
+    let unit: UnitSystem;
     if (this.userMetadata) {
       unit = this.userMetadata.unitSystem;
     } else {
@@ -324,8 +324,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
   openShareModal(spotId: string, spotLink: string) {
     this.modalService.open('global', 'share', {
-      spotId: spotId,
-      spotLink: spotLink
+      spot : this.spot,
     });
   }
 

@@ -50,6 +50,7 @@ export interface CreateTagNotificationRequest {
   spotId: string;
   commentId?: string;
   replyId?: string;
+  content: string;
 }
 export interface CreateTagNotificationResponse {
   notification: Notification;

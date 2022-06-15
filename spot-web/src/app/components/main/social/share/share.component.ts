@@ -47,7 +47,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // MODAL
   modalId: string;
-  data: ModalShareData = { spotId: null, spotLink: null };
+  data: ModalShareData = { spot: null };
 
   // The container holding the social media buttons that need to be rendered
   @ViewChild('social') social: ElementRef;
@@ -107,9 +107,9 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         this.friends = friends;
       });
 
-    this.link = window.location.origin + '/spot/' + this.data.spotLink;
-    if (this.data.commentLink) {
-      this.link += '/comment/' + this.data.commentLink;
+    this.link = window.location.origin + '/spot/' + this.data.spot.link;
+    if (this.data.comment) {
+      this.link += '/comment/' + this.data.comment.link;
     }
 
     this.TranslateService.get('MAIN.SHARE').subscribe((strings: Record<string, string>) => {
@@ -184,16 +184,18 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
     let request: CreateTagNotificationRequest;
 
-    if (this.data.commentId) {
+    if (this.data.comment) {
       request = {
         receiver: this.username,
-        spotId: this.data.spotId,
-        commentId: this.data.commentId
+        spotId: this.data.spot.spotId,
+        commentId: this.data.comment.commentId,
+        content: this.data.comment.content.substring(0, 255)
       };
     } else {
       request = {
         receiver: this.username,
-        spotId: this.data.spotId
+        spotId: this.data.spot.spotId,
+        content: this.data.spot.content.substring(0, 255)
       };
     }
 
@@ -222,16 +224,18 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
 
     let request: CreateTagNotificationRequest;
 
-    if (this.data.commentId) {
+    if (this.data.comment) {
       request = {
         receiver: username,
-        spotId: this.data.spotId,
-        commentId: this.data.commentId
+        spotId: this.data.spot.spotId,
+        commentId: this.data.comment.commentId,
+        content: this.data.comment.content.substring(0, 255)
       };
     } else {
       request = {
         receiver: username,
-        spotId: this.data.spotId
+        spotId: this.data.spot.spotId,
+        content: this.data.spot.content.substring(0, 255)
       };
     }
 
