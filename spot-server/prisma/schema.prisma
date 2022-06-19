@@ -172,6 +172,7 @@ model CommentRating {
 enum NotificationType {
   INFO
   TAG
+  SHARE
   ALERT
 }
 

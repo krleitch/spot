@@ -68,7 +68,9 @@
         class="row-h-center justify-content-between container-shadow container-rounded padding-md margin-v-md"
       >
         <div class="row-h-center">
-          <div class="profile-sm row-center background-container container-shadow">
+          <div
+            class="profile-sm row-center background-container container-shadow"
+          >
             <img
               *ngIf="friend.profilePictureSrc; else noImage"
               [src]="friend.profilePictureSrc"
@@ -85,12 +87,19 @@
         <button
           class="button-primary"
           [class.disabled-background]="friend.sent"
-          [class.disabled]="friend.sent"
+          [class.button-disabled]="friend.sent"
           (click)="
             sendNotificationToFriend(friend.username); friend.sent = true
           "
         >
-          {{ 'MAIN.SHARE.SEND' | translate }}
+          <span *ngIf="!friend.sent; else sent">
+            {{ 'MAIN.SHARE.SEND' | translate }}
+          </span>
+          <ng-template #sent>
+            <span>
+              {{ 'MAIN.SHARE.SENT' | translate }}
+            </span>
+          </ng-template>
         </button>
       </div>
     </div>

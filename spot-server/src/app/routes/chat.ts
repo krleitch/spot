@@ -3,16 +3,16 @@ const router = express.Router();
 
 // db
 import prismaUser from '@db/prisma/user.js';
+import prismaFriend from '@db/prisma/friend.js';
 
 // services
-import imageService from '@services/image.js';
 import locationService from '@services/location.js';
 
 // exceptions
 import * as userError from '@exceptions/user.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
-router.use((req: Request, res: Response, next: NextFunction) => {
+router.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
@@ -32,6 +32,37 @@ router.get(
       }
 
       const response = { user: foundUser };
+      res.status(200).json(response);
+    }
+  )
+);
+
+// Get a friends information for a friend-friend chat
+router.get(
+  '/friend/:friendId',
+  ErrorHandler.catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = req.user?.userId;
+      const friendId = req.params.friendId;
+      if (!userId || !friendId) {
+        return next(new userError.GetUser());
+      }
+
+      const friend = await prismaFriend.findFriendById(friendId);
+
+      if (!friend) {
+        return next(new userError.GetUser());
+      }
+
+      const userFriendId =
+        userId == friend.userId ? friend.friendId : friend.userId;
+
+      const foundFriend = await prismaUser.findUserByIdChat(userFriendId);
+      if (!foundFriend) {
+        return next(new userError.GetUser());
+      }
+
+      const response = { friend: foundFriend };
       res.status(200).json(response);
     }
   )

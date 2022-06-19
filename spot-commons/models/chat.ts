@@ -43,6 +43,28 @@ export interface Message {
   profilePictureNum: Number;
   profilePictureSrc: string;
 }
+
+// A Message block is seperated by different users or time
+export interface FriendMessageBlock {
+  insertedAt: string; // the time of the first message
+  owned: boolean;
+  showDate: boolean; // should the block show a date before it
+  profilePictureNum: Number;
+  profilePictureSrc: string;
+  chatProfileId: string; // The chat identifier for the user // is not the userId
+  messages: Array<{ id: string; text: string; insertedAt: string }>;
+}
+
+export interface FriendMessage {
+  id: string;
+  insertedAt: string;
+  text: string;
+  owned: boolean;
+  chatProfileId: string; // The chat identifier for the user // is not the userId
+  profilePictureNum: Number;
+  profilePictureSrc: string;
+}
+
 export interface ChatPagination {
   before: string;
   after: string;
@@ -140,5 +162,18 @@ export interface GetMessagesRequest {
 }
 export interface GetMessagesResponse {
   messages: MessageBlock[];
+  pagination: ChatPagination;
+}
+
+// Friend Messages
+export interface CreateFriendMessage {
+  text: string;
+}
+export interface GetFriendMessagesRequest {
+  roomId: string;
+  before: string;
+}
+export interface GetFriendMessagesResponse {
+  messages: FriendMessageBlock[];
   pagination: ChatPagination;
 }

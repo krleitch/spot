@@ -525,7 +525,7 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Images
-  onFileChanged(event): void {
+  onFileChanged(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length) {
       this.imageFile = target.files[0];

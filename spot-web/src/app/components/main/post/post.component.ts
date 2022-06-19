@@ -322,7 +322,7 @@ export class PostComponent implements OnInit, OnDestroy {
     this.modalService.open('global', 'report', { spotId: spotId });
   }
 
-  openShareModal(spotId: string, spotLink: string) {
+  openShareModal() {
     this.modalService.open('global', 'share', {
       spot : this.spot,
     });

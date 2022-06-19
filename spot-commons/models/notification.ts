@@ -3,6 +3,7 @@ import { Tag } from "./comment";
 export enum NotificationType {
   INFO = "INFO",
   TAG = "TAG",
+  SHARE = 'SHARE',
   ALERT = "ALERT",
 }
 
@@ -45,14 +46,15 @@ export interface GetNotificationsResponse {
 }
 
 // Create a notification
-export interface CreateTagNotificationRequest {
+export interface CreateNotificationRequest {
   receiver: string; // username
-  spotId: string;
+  content: string;
+  type: NotificationType;
+  spotId?: string;
   commentId?: string;
   replyId?: string;
-  content: string;
 }
-export interface CreateTagNotificationResponse {
+export interface CreateNotificationResponse {
   notification: Notification;
 }
 

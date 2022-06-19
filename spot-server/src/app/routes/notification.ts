@@ -27,8 +27,8 @@ import {
   NotificationType,
   GetNotificationsRequest,
   GetNotificationsResponse,
-  CreateTagNotificationRequest,
-  CreateTagNotificationResponse,
+  CreateNotificationRequest,
+  CreateNotificationResponse,
   DeleteAllNotificationsRequest,
   DeleteAllNotificationsResponse,
   DeleteNotificationRequest,
@@ -182,12 +182,13 @@ router.post(
         return next(new notificationError.SendNotification());
       }
 
-      const request: CreateTagNotificationRequest = {
+      const request: CreateNotificationRequest = {
         receiver: req.body.receiver,
+        content: req.body.content,
+        type: req.body.type,
         spotId: req.body.spotId,
         commentId: req.body.commentId,
-        replyId: req.body.replyId,
-        content: req.body.content
+        replyId: req.body.replyId
       };
 
       const receiverUser = await prismaUser.findUserByUsername(
@@ -205,49 +206,28 @@ router.post(
       if (!friendExists) {
         return next(new notificationError.SendNotification());
       }
-      let createdTagNotification: P.Notification;
-      if (request.replyId && request.commentId) {
-        createdTagNotification =
-          await prismaNotification.createTagReplyNotification(
-            req.user.userId,
-            receiverUser.userId,
-            request.spotId,
-            request.commentId,
-            request.replyId,
-            request.content
-          );
-      } else if (request.commentId) {
-        createdTagNotification =
-          await prismaNotification.createTagCommentNotification(
-            req.user.userId,
-            receiverUser.userId,
-            request.spotId,
-            request.commentId,
-            request.content
-          );
-      } else {
-        createdTagNotification =
-          await prismaNotification.createTagSpotNotification(
-            req.user.userId,
-            receiverUser.userId,
-            request.spotId,
-            request.content
-          );
-      }
+      let createdTagNotification = await prismaNotification.createNotification(
+        req.user.userId,
+        receiverUser.userId,
+        request.content,
+        request.type,
+        request.spotId ? request.spotId : undefined,
+        request.commentId ? request.commentId : undefined,
+        request.replyId ? request.replyId : undefined
+      );
 
       // Add the tags
       const notifWithTags = await commentService.addTagsToNotifications(
         [
           {
             ...createdTagNotification,
-            type: NotificationType[createdTagNotification.type],
             tags: []
           }
         ],
         req.user.userId
       );
 
-      const response: CreateTagNotificationResponse = {
+      const response: CreateNotificationResponse = {
         notification: notifWithTags[0]
       };
       res.status(200).json(response);

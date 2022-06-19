@@ -12,8 +12,8 @@ import { AlertService } from '@services/alert.service';
 
 // assets
 import {
-  CreateTagNotificationRequest,
-  CreateTagNotificationResponse,
+  CreateNotificationRequest,
+  CreateNotificationResponse,
   DeleteAllNotificationsRequest,
   DeleteAllNotificationsResponse,
   DeleteNotificationRequest,
@@ -54,9 +54,9 @@ export class NotificationService {
   }
 
   createTagNotification(
-    request: CreateTagNotificationRequest
-  ): Observable<CreateTagNotificationResponse> {
-    return this.http.post<CreateTagNotificationResponse>(
+    request: CreateNotificationRequest
+  ): Observable<CreateNotificationResponse> {
+    return this.http.post<CreateNotificationResponse>(
       `${this.baseUrl}/notification`,
       request
     );

@@ -4,8 +4,7 @@
     <spot-tag
       #tag
       *ngIf="showTag"
-      [name]="tagName"
-      [postLink]="spot.link"
+      [username]="tagName"
       (tag)="addTag($event)"
       [class.tag-bottom]="showTagBottom"
     ></spot-tag>

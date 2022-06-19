@@ -14,61 +14,24 @@ const mapToModelEnum = <T>(
   };
 };
 
-const createTagSpotNotification = async (
+const createNotification = async (
   senderId: string,
   receiverId: string,
-  spotId: string,
-  content: string
+  content: string,
+  type: NotificationType,
+  spotId?: string,
+  commentId?: string,
+  replyId?: string
 ) => {
   const notification = await prisma.notification.create({
     data: {
       senderId: senderId,
       receiverId: receiverId,
-      spotId: spotId,
-      type: NotificationType.TAG,
-      content: content.substring(0, 255)
-    }
-  });
-  return mapToModelEnum<P.Notification>(notification);
-};
-
-const createTagCommentNotification = async (
-  senderId: string,
-  receiverId: string,
-  spotId: string,
-  commentId: string,
-  content: string
-) => {
-  const notification = await prisma.notification.create({
-    data: {
-      senderId: senderId,
-      receiverId: receiverId,
-      spotId: spotId,
-      commentId: commentId,
-      type: NotificationType.TAG,
-      content: content.substring(0, 255)
-    }
-  });
-  return mapToModelEnum<P.Notification>(notification);
-};
-
-const createTagReplyNotification = async (
-  senderId: string,
-  receiverId: string,
-  spotId: string,
-  commentId: string,
-  replyId: string,
-  content: string
-) => {
-  const notification = await prisma.notification.create({
-    data: {
-      senderId: senderId,
-      receiverId: receiverId,
-      spotId: spotId,
-      commentId: commentId,
-      replyId: replyId,
-      type: NotificationType.TAG,
-      content: content.substring(0, 255)
+      type: type,
+      content: content.substring(0, 255),
+      spotId: spotId ? spotId : undefined,
+      commentId: commentId ? commentId : undefined,
+      replyId: replyId ? replyId : undefined
     }
   });
   return mapToModelEnum<P.Notification>(notification);
@@ -185,9 +148,7 @@ const deleteAllNotificationForReceiver = async (
 };
 
 export default {
-  createTagSpotNotification,
-  createTagCommentNotification,
-  createTagReplyNotification,
+  createNotification,
   findAllNotification,
   findNotificationById,
   findTotalUnseenForReceiver,

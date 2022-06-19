@@ -60,7 +60,7 @@
             </div>
             <div
               class="dropdown-button"
-              (click)="openShareModal(spot.spotId, spot.link)"
+              (click)="openShareModal()"
             >
               <span class="material-icons icon"> share </span>
               {{ 'MAIN.POST.SHARE' | translate }}
@@ -161,7 +161,7 @@
         </a>
         <span
           class="material-icons icon-primary-highlight"
-          (click)="openShareModal(spot.spotId, spot.link)"
+          (click)="openShareModal()"
         >
           share
         </span>

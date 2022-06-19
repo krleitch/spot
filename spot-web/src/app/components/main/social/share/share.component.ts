@@ -24,8 +24,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import {
-  CreateTagNotificationRequest,
-  CreateTagNotificationResponse
+  CreateNotificationRequest,
+  CreateNotificationResponse,
+  NotificationType
 } from '@models/notification';
 import { Friend } from '@models/friend';
 import { SpotError } from '@exceptions/error';
@@ -182,20 +183,22 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    let request: CreateTagNotificationRequest;
+    let request: CreateNotificationRequest;
 
     if (this.data.comment) {
       request = {
         receiver: this.username,
         spotId: this.data.spot.spotId,
         commentId: this.data.comment.commentId,
-        content: this.data.comment.content.substring(0, 255)
+        content: this.data.comment.content.substring(0, 255),
+        type: NotificationType.SHARE
       };
     } else {
       request = {
         receiver: this.username,
         spotId: this.data.spot.spotId,
-        content: this.data.spot.content.substring(0, 255)
+        content: this.data.spot.content.substring(0, 255),
+        type: NotificationType.SHARE
       };
     }
 
@@ -209,7 +212,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe(
-        (_response: CreateTagNotificationResponse) => {
+        (_response: CreateNotificationResponse) => {
           this.successMessage = this.STRINGS.SUCCESS + request.receiver;
         },
         (errorResponse: { error: SpotError }) => {
@@ -222,20 +225,22 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    let request: CreateTagNotificationRequest;
+    let request: CreateNotificationRequest;
 
     if (this.data.comment) {
       request = {
         receiver: username,
         spotId: this.data.spot.spotId,
         commentId: this.data.comment.commentId,
-        content: this.data.comment.content.substring(0, 255)
+        content: this.data.comment.content.substring(0, 255),
+        type: NotificationType.SHARE
       };
     } else {
       request = {
         receiver: username,
         spotId: this.data.spot.spotId,
-        content: this.data.spot.content.substring(0, 255)
+        content: this.data.spot.content.substring(0, 255),
+        type: NotificationType.SHARE
       };
     }
 
@@ -249,7 +254,7 @@ export class ShareComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe(
-        (_response: CreateTagNotificationResponse) => {
+        (_response: CreateNotificationResponse) => {
           // none
         },
         (_errorResponse: { error: SpotError }) => {

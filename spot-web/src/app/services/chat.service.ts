@@ -17,7 +17,9 @@ import {
   GetUserChatRoomsRequest,
   GetUserChatRoomsResponse,
   LeaveChatRoomRequest,
-  LeaveChatRoomResponse
+  LeaveChatRoomResponse,
+  GetFriendMessagesRequest,
+  GetFriendMessagesResponse
 } from '@models/chat';
 
 // env
@@ -110,6 +112,17 @@ export class ChatService {
     return this.http.post<CreateChatRoomResponse>(
       `${this.chatBaseUrl}/rooms`,
       request
+    );
+  }
+
+  getFriendMessages(request: GetFriendMessagesRequest): Observable<GetFriendMessagesResponse> {
+    let params = new HttpParams();
+    if (request.before) {
+      params = params.append('before', request.before);
+    }
+    return this.http.get<GetFriendMessagesResponse>(
+      `${this.chatBaseUrl}/friend/messages`,
+      { params }
     );
   }
 
