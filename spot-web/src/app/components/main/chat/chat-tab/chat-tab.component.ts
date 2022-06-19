@@ -20,11 +20,13 @@ import { RemoveOpenChatStore, AddMinimizedChatStore } from '@models/chat';
 import {
   ChatType,
   ChatRoom,
+  ChatTab,
   LeaveChatRoomRequest,
   LeaveChatRoomResponse,
   RemoveUserChatRoomStore
 } from '@models/chat';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
+import { Friend } from '@models/friend';
 
 @Component({
   selector: 'spot-chat-tab',
@@ -33,13 +35,15 @@ import { UserMetadata, UnitSystem } from '@models/userMetadata';
 })
 export class ChatTabComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
-  @Input() tab: ChatRoom;
+  @Input() tab: ChatTab;
   @ViewChild(ChatRoomComponent) room: ChatRoomComponent;
   @Input() minimize: (_id: string) => void;
 
   // state
   @ViewChild('settings') settings;
   showDropdown = false;
+  roomData: ChatRoom;
+  friendData: Friend;
 
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
@@ -62,6 +66,13 @@ export class ChatTabComponent implements OnInit, OnDestroy {
       .subscribe((userMetadata: UserMetadata) => {
         this.userMetadata = userMetadata;
       });
+
+    if (this.tab.type === ChatType.ROOM) {
+      this.roomData = (this.tab.data as ChatRoom);
+    } else {
+      this.friendData = (this.tab.data as Friend);
+    }
+
   }
 
   ngOnDestroy(): void {
@@ -110,14 +121,14 @@ export class ChatTabComponent implements OnInit, OnDestroy {
 
     // add to minimized
     const addRequest: AddMinimizedChatStore = {
-      chat: this.tab
+      tab: this.tab
     };
     this.store$.dispatch(
       new ChatStoreActions.AddMinimizedChatStoreAction(addRequest)
     );
     // Remove from open
     const removeRequest: RemoveOpenChatStore = {
-      chatId: this.tab.id
+      tabId: this.tab.tabId
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveOpenChatStoreAction(removeRequest)
@@ -129,7 +140,7 @@ export class ChatTabComponent implements OnInit, OnDestroy {
     this.room.leaveRoom();
 
     const request: RemoveOpenChatStore = {
-      chatId: this.tab.id
+      tabId: this.tab.tabId
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveOpenChatStoreAction(request)
@@ -138,7 +149,7 @@ export class ChatTabComponent implements OnInit, OnDestroy {
 
   leaveChatRoom(): void {
     const leaveChatRoom: LeaveChatRoomRequest = {
-      chatRoomId: this.tab.id
+      chatRoomId: (this.tab.data as ChatRoom).id
     };
     this.chatService
       .leaveChatRoom(leaveChatRoom)

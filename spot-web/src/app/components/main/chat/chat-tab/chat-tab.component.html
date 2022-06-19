@@ -6,22 +6,22 @@
     <!-- Chat photo-->
     <span
       class="profile-sm margin-r-md"
-      [ngClass]="tab.imageSrc ? '' : 'chat-' + tab.defaultImageNum"
+      [ngClass]="roomData.imageSrc ? '' : 'chat-' + roomData.defaultImageNum"
     >
-      <img *ngIf="tab.imageSrc" [src]="tab.imageSrc" />
+      <img *ngIf="roomData.imageSrc" [src]="roomData.imageSrc" />
       <img
-        *ngIf="!tab.imageSrc"
-        [src]="'/assets/images/chat/' + tab.defaultImageSrc"
+        *ngIf="!roomData.imageSrc"
+        [src]="'/assets/images/chat/' + roomData.defaultImageSrc"
       />
     </span>
 
     <!-- Name and locaton with distance -->
     <div class="line-height col-h-center">
-      <span class="text-md">{{ tab.name }}</span>
+      <span class="text-md">{{ roomData.name }}</span>
       <span class="row-h-center">
         <span class="material-icons icon-xs icon-primary"> location_on </span>
         <span class="text-xs">
-          {{ tab.geolocation }} ({{ getDistance(tab.distance) }})</span
+          {{ roomData.geolocation }} ({{ getDistance(roomData.distance) }})</span
         >
       </span>
     </div>
@@ -62,5 +62,5 @@
   </div>
 
   <!-- The chat room -->
-  <spot-chat-room [chatRoom]="tab" [isTab]="true"></spot-chat-room>
+  <spot-chat-room [chatRoom]="roomData" [isTab]="true"></spot-chat-room>
 </div>

@@ -1,3 +1,5 @@
+import { Friend } from './friend';
+
 export enum MessageType {
   MESSAGE = "MESSAGE",
   INFO = "INFO",
@@ -6,6 +8,12 @@ export enum MessageType {
 export enum ChatType {
   ROOM = "ROOM",
   FRIEND = "FRIEND",
+}
+
+export interface ChatTab {
+  tabId: string;
+  type: ChatType;
+  data: ChatRoom | Friend;
 }
 
 export interface ChatRoom {
@@ -81,28 +89,28 @@ export interface RemoveUserChatRoomStore {
 }
 // Menu
 export interface AddOpenChatStore {
-  chat: ChatRoom;
+  tab: ChatTab;
 }
 export interface RemoveOpenChatStore {
-  chatId: string;
+  tabId: string;
 }
 export interface AddMinimizedChatStore {
-  chat: ChatRoom;
+  tab: ChatTab;
 }
 export interface RemoveMinimizedChatStore {
-  chatId: string;
+  tabId: string;
 }
 // Page
 export interface SetPageOpenChatStore {
-  chat: ChatRoom;
+  tab: ChatTab;
 }
 export interface RemovePageOpenChatStore {
 }
 export interface AddPageMinimizedChatStore {
-  chat: ChatRoom;
+  tab: ChatTab;
 }
 export interface RemovePageMinimizedChatStore {
-  chatId: string;
+  tabId: string;
 }
 
 // Chat-Server Requests

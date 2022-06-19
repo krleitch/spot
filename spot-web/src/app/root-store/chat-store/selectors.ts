@@ -6,7 +6,7 @@ import {
 import { State } from './state';
 
 // Models
-import { ChatRoom, ChatPagination } from '@models/chat';
+import { ChatRoom, ChatPagination, ChatTab } from '@models/chat';
 
 // Store selectors
 export const selectChatRoomsFromStore = (state: State): ChatRoom[] =>
@@ -19,17 +19,17 @@ export const selectUserChatRoomsFromStore = (state: State): ChatRoom[] =>
 export const selectUserChatRoomsPaginationFromStore = (
   state: State
 ): ChatPagination => state.userChatRoomsPagination;
-export const selectOpenChatsFromStore = (state: State): ChatRoom[] =>
+export const selectOpenChatsFromStore = (state: State): ChatTab[] =>
   state.openChats;
-export const selectMinimizedChatsFromStore = (state: State): ChatRoom[] =>
+export const selectMinimizedChatsFromStore = (state: State): ChatTab[] =>
   state.minimizedChats;
 export const selectLoadingChatRoomsFromStore = (state: State): boolean =>
   state.loadingChatRooms;
 export const selectLoadingUserChatRoomsFromStore = (state: State): boolean =>
   state.loadingUserChatRooms;
-export const selectChatPageOpenChatFromStore = (state: State): ChatRoom =>
+export const selectChatPageOpenChatFromStore = (state: State): ChatTab =>
   state.chatPageOpenChat;
-export const selectChatPageMinimizedChatsFromStore = (state: State): ChatRoom[] =>
+export const selectChatPageMinimizedChatsFromStore = (state: State): ChatTab[] =>
   state.chatPageMinimizedChats;
 export const selectChatState: MemoizedSelector<object, State> =
   createFeatureSelector<State>('chat');
@@ -51,7 +51,7 @@ export const selectUserChatRoomsPagination: MemoizedSelector<
   ChatPagination
 > = createSelector(selectChatState, selectUserChatRoomsPaginationFromStore);
 
-export const selectOpenChats: MemoizedSelector<object, ChatRoom[]> =
+export const selectOpenChats: MemoizedSelector<object, ChatTab[]> =
   createSelector(selectChatState, selectOpenChatsFromStore);
 
 export const selectLoadingChatRooms: MemoizedSelector<object, boolean> =
@@ -60,11 +60,11 @@ export const selectLoadingChatRooms: MemoizedSelector<object, boolean> =
 export const selectLoadingUserChatRooms: MemoizedSelector<object, boolean> =
   createSelector(selectChatState, selectLoadingUserChatRoomsFromStore);
 
-export const selectMinimizedChats: MemoizedSelector<object, ChatRoom[]> =
+export const selectMinimizedChats: MemoizedSelector<object, ChatTab[]> =
   createSelector(selectChatState, selectMinimizedChatsFromStore);
 
-export const selectChatPageOpenChat: MemoizedSelector<object, ChatRoom> =
+export const selectChatPageOpenChat: MemoizedSelector<object, ChatTab> =
   createSelector(selectChatState, selectChatPageOpenChatFromStore);
 
-export const selectChatPageMinimizedChats: MemoizedSelector<object, ChatRoom[]> =
+export const selectChatPageMinimizedChats: MemoizedSelector<object, ChatTab[]> =
   createSelector(selectChatState, selectChatPageMinimizedChatsFromStore);

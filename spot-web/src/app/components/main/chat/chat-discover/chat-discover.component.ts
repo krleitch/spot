@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject, timer } from 'rxjs';
 import { take, takeUntil, mapTo, startWith, takeWhile } from 'rxjs/operators';
 
+import { v4 as uuidv4 } from 'uuid';
+
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
@@ -19,6 +21,8 @@ import { ModalData } from '@models/modal';
 import {
   GetChatRoomsRequest,
   ChatRoom,
+  ChatTab,
+  ChatType,
   JoinChatRoomRequest,
   JoinChatRoomResponse,
   AddOpenChatStore,
@@ -190,14 +194,18 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   }
 
   joinChatRoom(chatRoom: ChatRoom) {
-    if ( chatRoom.private ) {
-    this.modalService
-      .open('chat-password', 'chatPassword', {}, { disableClose: true, top: 250 })
-      .pipe(take(1))
-      .subscribe((result: ModalChatPasswordResult) => {
-        this.requestJoinRoom(chatRoom, result.password);
-      });
-
+    if (chatRoom.private) {
+      this.modalService
+        .open(
+          'chat-password',
+          'chatPassword',
+          {},
+          { disableClose: true, top: 250 }
+        )
+        .pipe(take(1))
+        .subscribe((result: ModalChatPasswordResult) => {
+          this.requestJoinRoom(chatRoom, result.password);
+        });
     } else {
       this.requestJoinRoom(chatRoom);
     }
@@ -217,7 +225,11 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
         (response: JoinChatRoomResponse) => {
           // add to open
           const addRequest: AddOpenChatStore = {
-            chat: response.chatRoom
+            tab: {
+              tabId: uuidv4(),
+              type: ChatType.ROOM,
+              data: response.chatRoom
+            }
           };
           this.store$.dispatch(
             new ChatStoreActions.AddOpenChatStoreAction(addRequest)

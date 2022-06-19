@@ -1,6 +1,9 @@
 import { ActionTypes, Actions } from './actions';
 import { State, initialState } from './state';
 
+// Models
+import { ChatType, ChatRoom } from '@models/chat';
+
 export function featureReducer(state = initialState, action: Actions): State {
   switch (action.type) {
     case ActionTypes.RESET_STORE: {
@@ -15,17 +18,22 @@ export function featureReducer(state = initialState, action: Actions): State {
         userChatRooms: state.userChatRooms.concat(action.request.chatRoom)
       };
     }
+    // TODO: will also need to remove a friend from chats if he is unfriended
     case ActionTypes.REMOVE_USER_CHAT_ROOM_STORE: {
       return {
         ...state,
         userChatRooms: state.userChatRooms.filter(
           (r) => r.id !== action.request.chatId
         ),
-        openChats: state.openChats.filter(
-          (r) => r.id !== action.request.chatId
+        openChats: state.openChats.filter((r) =>
+          r.type === ChatType.ROOM
+            ? (r.data as ChatRoom).id !== action.request.chatId
+            : true
         ),
-        minimizedChats: state.minimizedChats.filter(
-          (r) => r.id !== action.request.chatId
+        minimizedChats: state.minimizedChats.filter((r) =>
+          r.type === ChatType.ROOM
+            ? (r.data as ChatRoom).id !== action.request.chatId
+            : true
         )
       };
     }
@@ -33,26 +41,26 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.ADD_OPEN_CHAT_STORE: {
       return {
         ...state,
-        openChats: state.openChats.concat(action.request.chat)
+        openChats: state.openChats.concat(action.request.tab)
       };
     }
     case ActionTypes.REMOVE_OPEN_CHAT_STORE: {
       return {
         ...state,
-        openChats: state.openChats.filter((r) => r.id !== action.request.chatId)
+        openChats: state.openChats.filter((r) => r.tabId !== action.request.tabId)
       };
     }
     case ActionTypes.ADD_MINIMIZED_CHAT_STORE: {
       return {
         ...state,
-        minimizedChats: state.minimizedChats.concat(action.request.chat)
+        minimizedChats: state.minimizedChats.concat(action.request.tab)
       };
     }
     case ActionTypes.REMOVE_MINIMIZED_CHAT_STORE: {
       return {
         ...state,
         minimizedChats: state.minimizedChats.filter(
-          (r) => r.id !== action.request.chatId
+          (r) => r.tabId !== action.request.tabId
         )
       };
     }
@@ -60,7 +68,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.SET_PAGE_OPEN_CHAT_STORE: {
       return {
         ...state,
-        chatPageOpenChat: action.request.chat
+        chatPageOpenChat: action.request.tab
       };
     }
     case ActionTypes.REMOVE_PAGE_OPEN_CHAT_STORE: {
@@ -72,14 +80,16 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.ADD_PAGE_MINIMIZED_CHAT_STORE: {
       return {
         ...state,
-        chatPageMinimizedChats: state.chatPageMinimizedChats.concat(action.request.chat)
+        chatPageMinimizedChats: state.chatPageMinimizedChats.concat(
+          action.request.tab
+        )
       };
     }
     case ActionTypes.REMOVE_PAGE_MINIMIZED_CHAT_STORE: {
       return {
         ...state,
         chatPageMinimizedChats: state.chatPageMinimizedChats.filter(
-          (r) => r.id !== action.request.chatId
+          (r) => r.tabId !== action.request.tabId
         )
       };
     }

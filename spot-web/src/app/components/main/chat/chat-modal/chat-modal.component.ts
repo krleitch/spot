@@ -16,6 +16,8 @@ import {
   takeWhile
 } from 'rxjs/operators';
 
+import { v4 as uuidv4 } from 'uuid';
+
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
@@ -35,6 +37,7 @@ import { Friend } from '@models/friend';
 import {
   ChatType,
   ChatRoom,
+  ChatTab,
   SetPageOpenChatStore,
   RemovePageOpenChatStore,
   AddPageMinimizedChatStore,
@@ -65,10 +68,10 @@ export class ChatModalComponent implements OnInit {
   @ViewChild('settings') settings;
   showDropdown = false;
 
-  chatPageOpenChat$: Observable<ChatRoom>;
-  chatPageOpenChat: ChatRoom;
-  chatPageMinimizedChats$: Observable<ChatRoom[]>;
-  chatPageMinimizedChats: ChatRoom[];
+  chatPageOpenChat$: Observable<ChatTab>;
+  chatPageOpenChat: ChatTab;
+  chatPageMinimizedChats$: Observable<ChatTab[]>;
+  chatPageMinimizedChats: ChatTab[];
 
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
@@ -89,7 +92,7 @@ export class ChatModalComponent implements OnInit {
     );
     this.chatPageOpenChat$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((chat: ChatRoom) => {
+      .subscribe((chat: ChatTab) => {
         this.chatPageOpenChat = chat;
       });
     this.chatPageMinimizedChats$ = this.store$.pipe(
@@ -97,7 +100,7 @@ export class ChatModalComponent implements OnInit {
     );
     this.chatPageMinimizedChats$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((chats: ChatRoom[]) => {
+      .subscribe((chats: ChatTab[]) => {
         this.chatPageMinimizedChats = chats;
       });
 
@@ -149,7 +152,7 @@ export class ChatModalComponent implements OnInit {
     // leave the chat, remove open and add to minimized
     this.room.leaveRoom();
     const addRequest: AddPageMinimizedChatStore = {
-      chat: this.chatPageOpenChat
+      tab: this.chatPageOpenChat
     };
     this.store$.dispatch(
       new ChatStoreActions.AddPageMinimizedChatStoreAction(addRequest)
@@ -164,7 +167,7 @@ export class ChatModalComponent implements OnInit {
   checkMinimizedRoom(): void {
     if (this.chatPageMinimizedChats.length >= this.maximumMinimized) {
       const removeRequest: RemoveMinimizedChatStore = {
-        chatId: this.chatPageMinimizedChats[0].id
+        tabId: this.chatPageMinimizedChats[0].tabId
       };
       this.store$.dispatch(
         new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
@@ -172,13 +175,13 @@ export class ChatModalComponent implements OnInit {
     }
   }
 
-  openMinimizedChat(chat: ChatRoom): void {
+  openMinimizedChat(chat: ChatTab): void {
     // if a chat is open then close it first
     if (this.chatPageOpenChat) {
       this.room.leaveRoom();
       this.checkMinimizedRoom();
       const addRequest: AddPageMinimizedChatStore = {
-        chat: this.chatPageOpenChat
+        tab: this.chatPageOpenChat
       };
       this.store$.dispatch(
         new ChatStoreActions.AddPageMinimizedChatStoreAction(addRequest)
@@ -186,13 +189,13 @@ export class ChatModalComponent implements OnInit {
     }
     // open the chat and remove form minimized
     const setRequest: SetPageOpenChatStore = {
-      chat: chat
+      tab: chat
     };
     this.store$.dispatch(
       new ChatStoreActions.SetPageOpenChatStoreAction(setRequest)
     );
     const removeRequest: RemoveMinimizedChatStore = {
-      chatId: chat.id
+      tabId: chat.tabId
     };
     this.store$.dispatch(
       new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
@@ -203,7 +206,7 @@ export class ChatModalComponent implements OnInit {
     if (this.chatPageOpenChat) {
       this.room.leaveRoom();
       const addRequest: AddPageMinimizedChatStore = {
-        chat: this.chatPageOpenChat
+        tab: this.chatPageOpenChat
       };
       this.checkMinimizedRoom();
       this.store$.dispatch(
@@ -217,12 +220,12 @@ export class ChatModalComponent implements OnInit {
   }
 
   openChat(chat: ChatRoom) {
-    if (
-      this.chatPageMinimizedChats.filter((chat) => chat.id === chat.id).length >
-      0
-    ) {
+    const tabs = this.chatPageMinimizedChats.filter(
+      (tab) => (tab.data as ChatRoom).id === chat.id
+    );
+    if (tabs.length > 0) {
       const removeRequest: RemoveMinimizedChatStore = {
-        chatId: chat.id
+        tabId: tabs[0].tabId
       };
       this.store$.dispatch(
         new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
@@ -232,7 +235,10 @@ export class ChatModalComponent implements OnInit {
       this.checkMinimizedRoom();
     }
     const request: SetPageOpenChatStore = {
-      chat: chat
+      tab:
+        tabs.length > 0
+          ? tabs[0]
+          : { tabId: uuidv4(), type: ChatType.ROOM, data: chat }
     };
     this.store$.dispatch(
       new ChatStoreActions.SetPageOpenChatStoreAction(request)

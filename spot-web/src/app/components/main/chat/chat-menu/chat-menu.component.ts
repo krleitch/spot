@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
+import { v4 as uuidv4 } from 'uuid';
+
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
@@ -18,6 +20,7 @@ import { Friend } from '@models/friend';
 import {
   ChatType,
   ChatRoom,
+  ChatTab,
   AddOpenChatStore,
   RemoveOpenChatStore,
   AddMinimizedChatStore,
@@ -56,10 +59,12 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   location: LocationData;
 
   // Tabs
-  openChats$: Observable<ChatRoom[]>;
-  chats: ChatRoom[] = [];
-  minimizedChats$: Observable<ChatRoom[]>;
-  minimizedChats: ChatRoom[] = [];
+  openChats$: Observable<Array<ChatTab>>;
+  chats: Array<ChatTab> = [];
+  minimizedChats$: Observable<Array<ChatTab>>;
+  minimizedChats: Array<ChatTab> = [];
+
+  // Rooms
   userChatRooms$: Observable<ChatRoom[]>;
 
   constructor(
@@ -83,7 +88,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     );
     this.openChats$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((chats: ChatRoom[]) => {
+      .subscribe((chats: ChatTab[]) => {
         this.chats = chats;
       });
     this.minimizedChats$ = this.store$.pipe(
@@ -91,7 +96,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     );
     this.minimizedChats$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((chats: ChatRoom[]) => {
+      .subscribe((chats: ChatTab[]) => {
         this.minimizedChats = chats;
       });
 
@@ -154,22 +159,30 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
   checkTooManyTabs() {
     if (this.chats.length >= 3) {
       const firstTab = this.chats[0];
-      this.minimizeTab(firstTab.id);
+      this.minimizeTab(firstTab.tabId);
     }
   }
 
-  // Check the inner chat id, as the tabId will be diff
-  tabExists(chatId: string): boolean {
+  // Check the inner chat id or friend id, as the tabId will be diff
+  tabExists(id: string, type: ChatType): boolean {
     // If already open do nothing // TODO: select it
-    const tab = this.chats.filter((t) => t.id === chatId);
+    const tab = this.chats.filter((t) =>
+      type === ChatType.ROOM
+        ? (t.data as ChatRoom).id === id
+        : (t.data as Friend).friendId === id
+    );
     if (tab.length > 0) {
       return true;
     }
     // Check the minimized tabs
-    const mtab = this.minimizedChats.filter((t) => t.id === chatId);
+    const mtab = this.minimizedChats.filter((t) =>
+      type === ChatType.ROOM
+        ? (t.data as ChatRoom).id === id
+        : (t.data as Friend).friendId === id
+    );
     if (mtab.length > 0) {
       this.checkTooManyTabs();
-      this.openMinimizedTab(mtab[0].id);
+      this.openMinimizedTab(mtab[0].tabId);
       return true;
     }
     return false;
@@ -177,7 +190,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   createFriendTab(friend: Friend) {
     // check if the tab exists already
-    if (this.tabExists(null)) {
+    if (this.tabExists(friend.friendId, ChatType.FRIEND)) {
       return;
     }
     this.checkTooManyTabs();
@@ -196,7 +209,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   createRoomTab(room: ChatRoom) {
     // check if the tab exists already
-    if (this.tabExists(room.id)) {
+    if (this.tabExists(room.id, ChatType.ROOM )) {
       return;
     }
     this.checkTooManyTabs();
@@ -204,27 +217,31 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
       ...room
     };
     const request: AddOpenChatStore = {
-      chat: newChat
+      tab: {
+        tabId: uuidv4(),
+        type: ChatType.ROOM,
+        data: newChat
+      }
     };
     this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
   openMinimizedTab(id: string) {
     // get the tab
-    const tab = this.minimizedChats.filter((elem: ChatRoom) => elem.id === id);
+    const tab = this.minimizedChats.filter((elem: ChatTab) => elem.tabId === id);
     if (!tab) {
       return;
     }
     // add to open
     const addRequest: AddOpenChatStore = {
-      chat: tab[0]
+      tab: tab[0]
     };
     this.store$.dispatch(
       new ChatStoreActions.AddOpenChatStoreAction(addRequest)
     );
     // remove from minimized
     const removeRequest: RemoveMinimizedChatStore = {
-      chatId: id
+      tabId: id
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveMinimizedChatStoreAction(removeRequest)
@@ -233,20 +250,20 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   minimizeTab = (id: string) => {
     // get the tab
-    const tab = this.chats.filter((elem: ChatRoom) => elem.id === id);
+    const tab = this.chats.filter((elem: ChatTab) => elem.tabId === id);
     if (!tab) {
       return;
     }
     // add to minimized
     const addRequest: AddMinimizedChatStore = {
-      chat: tab[0]
+      tab: tab[0]
     };
     this.store$.dispatch(
       new ChatStoreActions.AddMinimizedChatStoreAction(addRequest)
     );
     // Remove from open
     const removeRequest: RemoveOpenChatStore = {
-      chatId: id
+      tabId: id
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveOpenChatStoreAction(removeRequest)

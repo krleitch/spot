@@ -26,6 +26,7 @@ import { Friend } from '@models/friend';
 import {
   ChatType,
   ChatRoom,
+  ChatTab,
   SetPageOpenChatStore,
   RemovePageOpenChatStore,
   AddPageMinimizedChatStore,
@@ -62,8 +63,8 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
   locationLoading: boolean;
 
   // minimized chats
-  chatPageMinimizedChats$: Observable<ChatRoom[]>;
-  chatPageMinimizedChats: ChatRoom[];
+  chatPageMinimizedChats$: Observable<ChatTab[]>;
+  chatPageMinimizedChats: ChatTab[];
 
   @Output() chatSelectedEvent = new EventEmitter<ChatRoom>();
 
@@ -103,7 +104,7 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
     );
     this.chatPageMinimizedChats$
       .pipe(takeUntil(this.onDestroy))
-      .subscribe((chats: ChatRoom[]) => {
+      .subscribe((chats: ChatTab[]) => {
         this.chatPageMinimizedChats = chats;
       });
 

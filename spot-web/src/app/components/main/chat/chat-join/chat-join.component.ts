@@ -3,6 +3,8 @@ import { Input, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
+import { v4 as uuidv4 } from 'uuid';
+
 // Store
 import { select, Store } from '@ngrx/store';
 import { RootStoreState } from '@store';
@@ -18,6 +20,8 @@ import {
   AddOpenChatStore,
   AddUserChatRoomStore,
   ChatRoom,
+  ChatTab,
+  ChatType,
   JoinChatRoomRequest,
   JoinChatRoomResponse
 } from '@models/chat';
@@ -140,7 +144,11 @@ export class ChatJoinComponent implements OnInit, OnDestroy {
         (response: JoinChatRoomResponse): void => {
           // add to open
           const addRequest: AddOpenChatStore = {
-            chat: response.chatRoom
+            tab: {
+              tabId: uuidv4(),
+              type: ChatType.ROOM,
+              data: response.chatRoom
+            }
           };
           this.store$.dispatch(
             new ChatStoreActions.AddOpenChatStoreAction(addRequest)
