@@ -226,9 +226,9 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
-  openMinimizedTab(id: string) {
+  openMinimizedTab(tabId: string) {
     // get the tab
-    const tab = this.minimizedChats.filter((elem: ChatTab) => elem.tabId === id);
+    const tab = this.minimizedChats.filter((elem: ChatTab) => elem.tabId === tabId);
     if (!tab) {
       return;
     }
@@ -241,7 +241,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     );
     // remove from minimized
     const removeRequest: RemoveMinimizedChatStore = {
-      tabId: id
+      tabId: tabId
     };
     this.store$.dispatch(
       new ChatStoreActions.RemoveMinimizedChatStoreAction(removeRequest)

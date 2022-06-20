@@ -105,6 +105,7 @@ export class ChatRoomComponent
       });
 
     this.timeMessage = getFormattedTime(this.chatRoom.insertedAt);
+
   }
 
   ngOnChanges(_changes: SimpleChanges): void {

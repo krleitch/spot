@@ -23,14 +23,14 @@
         <span
           class="profile-md"
           [ngClass]="
-            chatRoom.imageSrc ? '' : 'chat-' + chatRoom.defaultImageNum
+            chatRoom.data.imageSrc ? '' : 'chat-' + chatRoom.data.defaultImageNum
           "
         >
           <img
-            *ngIf="!chatRoom.imageSrc"
-            [src]="'/assets/images/chat/' + chatRoom.defaultImageSrc"
+            *ngIf="!chatRoom.data.imageSrc"
+            [src]="'/assets/images/chat/' + chatRoom.data.defaultImageSrc"
           />
-          <img *ngIf="chatRoom.imageSrc" [src]="chatRoom.imageSrc" />
+          <img *ngIf="chatRoom.data.imageSrc" [src]="chatRoom.data.imageSrc" />
         </span>
       </div>
 
@@ -39,18 +39,18 @@
         *ngIf="chatPageOpenChat"
         class="profile-md owned margin-l-md"
         [ngClass]="
-          chatPageOpenChat.imageSrc
+          chatPageOpenChat.data.imageSrc
             ? ''
-            : 'chat-' + chatPageOpenChat.defaultImageNum
+            : 'chat-' + chatPageOpenChat.data.defaultImageNum
         "
       >
         <img
-          *ngIf="!chatPageOpenChat.imageSrc"
-          [src]="'/assets/images/chat/' + chatPageOpenChat.defaultImageSrc"
+          *ngIf="!chatPageOpenChat.data.imageSrc"
+          [src]="'/assets/images/chat/' + chatPageOpenChat.data.defaultImageSrc"
         />
         <img
-          *ngIf="chatPageOpenChat.imageSrc"
-          [src]="chatPageOpenChat.imageSrc"
+          *ngIf="chatPageOpenChat.data.imageSrc"
+          [src]="chatPageOpenChat.data.imageSrc"
         />
       </div>
     </div>
@@ -75,28 +75,28 @@
           <span
             class="profile-sm margin-h-md"
             [ngClass]="
-              chatPageOpenChat.imageSrc
+              chatPageOpenChat.data.imageSrc
                 ? ''
-                : 'chat-' + chatPageOpenChat.defaultImageNum
+                : 'chat-' + chatPageOpenChat.data.defaultImageNum
             "
           >
-            <img *ngIf="chatPageOpenChat.imageSrc" [src]="tab.imageSrc" />
+            <img *ngIf="chatPageOpenChat.data.imageSrc" [src]="chatPageOpenChat.data.imageSrc" />
             <img
-              *ngIf="!chatPageOpenChat.imageSrc"
-              [src]="'/assets/images/chat/' + chatPageOpenChat.defaultImageSrc"
+              *ngIf="!chatPageOpenChat.data.imageSrc"
+              [src]="'/assets/images/chat/' + chatPageOpenChat.data.defaultImageSrc"
             />
           </span>
 
           <!-- Name and location with distance -->
           <div class="line-height col-h-center">
-            <span class="text-md"> {{ chatPageOpenChat.name }}</span>
+            <span class="text-md"> {{ chatPageOpenChat.data.name }}</span>
             <div class="row-h-center">
               <span class="material-icons icon-xs icon-primary">
                 location_on
               </span>
               <span class="text-xs">
-                {{ chatPageOpenChat.geolocation }} ({{
-                  getDistance(chatPageOpenChat.distance)
+                {{ chatPageOpenChat.data.geolocation }} ({{
+                  getDistance(chatPageOpenChat.data.distance)
                 }})</span
               >
             </div>
@@ -127,7 +127,7 @@
 
       <!-- The chat -->
       <spot-chat-room
-        [chatRoom]="chatPageOpenChat"
+        [chatRoom]="chatPageOpenChat.data"
         [isTab]="false"
       ></spot-chat-room>
     </div>

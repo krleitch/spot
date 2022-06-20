@@ -180,14 +180,14 @@
   >
     <div
       class="mini-tab profile-md"
-      [ngClass]="mchat.imageSrc ? '' : 'chat-' + mchat.defaultImageNum"
+      [ngClass]="mchat.data.imageSrc ? '' : 'chat-' + mchat.data.defaultImageNum"
       *ngFor="let mchat of minimizedChats"
-      (click)="openMinimizedTab(mchat.id)"
+      (click)="openMinimizedTab(mchat.tabId)"
     >
-      <img *ngIf="mchat.imageSrc" [src]="mchat.imageSrc" />
+      <img *ngIf="mchat.data.imageSrc" [src]="mchat.data.imageSrc" />
       <img
-        *ngIf="!mchat.imageSrc"
-        [src]="'/assets/images/chat/' + mchat.defaultImageSrc"
+        *ngIf="!mchat.data.imageSrc"
+        [src]="'/assets/images/chat/' + mchat.data.defaultImageSrc"
       />
     </div>
   </div>
