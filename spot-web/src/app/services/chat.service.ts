@@ -137,6 +137,16 @@ export class ChatService {
     return channel;
   }
 
+  connectToFriendChannel(roomId: string): PhoenixChannel {
+    if (!this.phoenixSocket) {
+      return;
+    }
+    const channel = this.phoenixSocket.channel(`chat_friend:${roomId}`, {
+      token: localStorage.getItem('id_token')
+    });
+    return channel;
+  }
+
   disconnectFromChannel(channel: PhoenixChannel) {
     if (channel) {
       channel.leave();

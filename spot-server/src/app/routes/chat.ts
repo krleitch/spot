@@ -55,7 +55,7 @@ router.get(
       }
 
       const userFriendId =
-        userId == friend.userId ? friend.friendId : friend.userId;
+        userId == friend.userId ? friend.friendUserId : friend.userId;
 
       const foundFriend = await prismaUser.findUserByIdChat(userFriendId);
       if (!foundFriend) {

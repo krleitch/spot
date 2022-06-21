@@ -26,9 +26,6 @@ import { Channel as PhoenixChannel, Presence } from 'phoenix';
 // Services
 import { ChatService } from '@services/chat.service';
 
-// helpers
-import { getFormattedTime } from '@helpers/util';
-
 // Assets
 import {
   MessageBlock,
@@ -91,7 +88,7 @@ export class ChatFriendComponent
   ) {}
 
   ngOnInit(): void {
-    this.channel = this.chatService.connectToChannel(this.chatFriend.friendId);
+    this.channel = this.chatService.connectToFriendChannel(this.chatFriend.friendId);
     this.joinRoom();
 
     // metadata
@@ -106,7 +103,7 @@ export class ChatFriendComponent
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.channel = this.chatService.connectToChannel(this.chatFriend.friendId);
+    this.channel = this.chatService.connectToFriendChannel(this.chatFriend.friendId);
     this.joinRoom();
   }
 
@@ -354,6 +351,12 @@ export class ChatFriendComponent
         }
       ]
     });
+  }
+
+  getMinimizedName(name: string) {
+    if (name) {
+      return name.substring(0, 1).toUpperCase();
+    }
   }
 
   leaveChatRoom(): void {

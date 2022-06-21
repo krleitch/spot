@@ -53,40 +53,25 @@
           </div>
         </div>
         <!-- Profile Picture -->
-        <div
-          class="profile-sm profile-position"
-          [class.owned]="messageBlock.owned"
-          [ngClass]="
-            messageBlock.profilePictureNum == -1
-              ? 'profile-op'
-              : 'profile-' + messageBlock.profilePictureNum
-          "
-        >
+        <div class="profile-sm profile-position">
           <img
-            [src]="'assets/images/profile/' + messageBlock.profilePictureSrc"
+            *ngIf="chatFriend.profilePictureSrc; else name"
+            [src]="chatFriend.profilePictureSrc"
           />
+          <ng-template #name>
+            <div class="row-center">
+              {{ getMinimizedName(chatFriend.username) }}
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
 
-    <!-- Chat Expired -->
-    <div *ngIf="chatExpired" class="row-center text-secondary text-sm">
-      {{ 'MAIN.CHAT_ROOM.CHAT_EXPIRED' | translate }}
-    </div>
     <div #anchor></div>
   </div>
 
   <!-- Chat Bar -->
   <div class="footer row-h-center container-b-rounded">
-    <span class="material-icons icon-primary icon-md"> person </span>
-    <span class="margin-l-sm margin-r-md"> {{ userCount }} </span>
-    <span class="material-icons-outlined icon-primary icon-md"> timer </span>
-    <span *ngIf="showCountdown; else time" class="margin-l-sm margin-r-md">
-      {{ counter | formatTime }}
-    </span>
-    <ng-template #time>
-      <span class="margin-l-sm margin-r-md"> {{ timeMessage }} </span>
-    </ng-template>
     <div class="editor">
       <span
         #create
