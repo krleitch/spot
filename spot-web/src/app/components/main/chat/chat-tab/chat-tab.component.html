@@ -1,66 +1,133 @@
 <div class="tab">
-  <!-- Header -->
-  <div
-    class="header row-h-center background-header full-width padding-v-sm padding-h-sm border-box"
-  >
-    <!-- Chat photo-->
-    <span
-      class="profile-sm margin-r-md"
-      [ngClass]="roomData.imageSrc ? '' : 'chat-' + roomData.defaultImageNum"
+  <!-- Room -->
+  <div *ngIf="tab.type == eChatType.ROOM; else friend">
+    <!-- Header -->
+    <div
+      class="header row-h-center background-header full-width padding-v-sm padding-h-sm border-box"
     >
-      <img *ngIf="roomData.imageSrc" [src]="roomData.imageSrc" />
-      <img
-        *ngIf="!roomData.imageSrc"
-        [src]="'/assets/images/chat/' + roomData.defaultImageSrc"
-      />
-    </span>
-
-    <!-- Name and locaton with distance -->
-    <div class="line-height col-h-center">
-      <span class="text-md">{{ roomData.name }}</span>
-      <span class="row-h-center">
-        <span class="material-icons icon-xs icon-primary"> location_on </span>
-        <span class="text-xs">
-          {{ roomData.geolocation }} ({{ getDistance(roomData.distance) }})</span
-        >
+      <!-- Chat photo-->
+      <span
+        class="profile-sm margin-r-md"
+        [ngClass]="tab.data.imageSrc ? '' : 'chat-' + tab.data.defaultImageNum"
+      >
+        <img *ngIf="tab.data.imageSrc" [src]="tab.data.imageSrc" />
+        <img
+          *ngIf="!tab.data.imageSrc"
+          [src]="'/assets/images/chat/' + tab.data.defaultImageSrc"
+        />
       </span>
-    </div>
-    <div class="row-center align-right">
-      <!-- Settings Dropdown -->
-      <div class="relative">
-        <button
-          #settings
-          class="tab-button margin-l-md"
-          (click)="toggleDropdown()"
-        >
-          <span class="material-icons icon-sm icon-secondary-highlight"
-            >settings</span
+
+      <!-- Name and locaton with distance -->
+      <div class="line-height col-h-center">
+        <span class="text-md">{{ roomData.name }}</span>
+        <span class="row-h-center">
+          <span class="material-icons icon-xs icon-primary"> location_on </span>
+          <span class="text-xs">
+            {{ tab.data.geolocation }} ({{
+              getDistance(tab.data.distance)
+            }})</span
           >
-        </button>
-        <div class="dropdown-content" [class.show-dropdown]="showDropdown">
-          <div class="dropdown-button" (click)="leaveChatRoom()">
-            <span class="material-icons icon-md margin-r-md">
-              directions_run
-            </span>
-            {{ 'MAIN.CHAT_TAB.LEAVE' | translate }}
+        </span>
+      </div>
+      <div class="row-center align-right">
+        <!-- Settings Dropdown -->
+        <div class="relative">
+          <button
+            #settings
+            class="tab-button margin-l-md"
+            (click)="toggleDropdown()"
+          >
+            <span class="material-icons icon-sm icon-secondary-highlight"
+              >settings</span
+            >
+          </button>
+          <div class="dropdown-content" [class.show-dropdown]="showDropdown">
+            <div class="dropdown-button" (click)="leaveChatRoom()">
+              <span class="material-icons icon-md margin-r-md">
+                directions_run
+              </span>
+              {{ 'MAIN.CHAT_TAB.LEAVE' | translate }}
+            </div>
           </div>
         </div>
+
+        <!-- Minimized -->
+        <button class="tab-button margin-l-md" (click)="minimizeTab()">
+          <span class="material-icons icon-sm icon-secondary-highlight"
+            >remove</span
+          >
+        </button>
+
+        <!-- Close -->
+        <button class="tab-button margin-l-md" (click)="closeTab()">
+          <span class="material-icons icon-sm icon-close">close</span>
+        </button>
       </div>
-
-      <!-- Minimized -->
-      <button class="tab-button margin-l-md" (click)="minimizeTab()">
-        <span class="material-icons icon-sm icon-secondary-highlight"
-          >remove</span
-        >
-      </button>
-
-      <!-- Close -->
-      <button class="tab-button margin-l-md" (click)="closeTab()">
-        <span class="material-icons icon-sm icon-close">close</span>
-      </button>
     </div>
+
+    <!-- The chat room -->
+    <spot-chat-room [chatRoom]="tab.data" [isTab]="true"></spot-chat-room>
   </div>
 
-  <!-- The chat room -->
-  <spot-chat-room [chatRoom]="roomData" [isTab]="true"></spot-chat-room>
+  <!-- Friend -->
+  <ng-template #friend>
+    <!-- Header -->
+    <div
+      class="header row-h-center background-header full-width padding-v-sm padding-h-sm border-box"
+    >
+      <!-- Chat photo-->
+      <span
+        class="profile-sm margin-r-md background-header"
+      >
+        <img *ngIf="tab.data.profilePictureSrc" [src]="tab.data.profilePictureSrc" />
+        <div
+          *ngIf="!tab.data.profilePictureSrc"
+        >
+          {{ getMinimizedName(tab.data.username) }}
+        </div>
+      </span>
+
+      <!-- Name -->
+      <div class="line-height col-h-center">
+        <span class="text-md">{{ tab.data.username }}</span>
+      </div>
+      <div class="row-center align-right">
+        <!-- Settings Dropdown -->
+        <div class="relative">
+          <button
+            #settings
+            class="tab-button margin-l-md"
+            (click)="toggleDropdown()"
+          >
+            <span class="material-icons icon-sm icon-secondary-highlight"
+              >settings</span
+            >
+          </button>
+          <div class="dropdown-content" [class.show-dropdown]="showDropdown">
+            <div class="dropdown-button" (click)="leaveChatRoom()">
+              <span class="material-icons icon-md margin-r-md">
+                directions_run
+              </span>
+              {{ 'MAIN.CHAT_TAB.LEAVE' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Minimized -->
+        <button class="tab-button margin-l-md" (click)="minimizeTab()">
+          <span class="material-icons icon-sm icon-secondary-highlight"
+            >remove</span
+          >
+        </button>
+
+        <!-- Close -->
+        <button class="tab-button margin-l-md" (click)="closeTab()">
+          <span class="material-icons icon-sm icon-close">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- The chat room -->
+    <spot-chat-friend [friend]="tab.data" [isTab]="true"></spot-chat-friend>
+  </ng-template>
 </div>

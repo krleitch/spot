@@ -194,17 +194,17 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
       return;
     }
     this.checkTooManyTabs();
-    // const newChat: ChatRoom = {
-    // tabId: uuidv4(),
-    // name: friend.username,
-    // imageSrc: friend.profilePictureSrc,
-    // type: ChatType.FRIEND,
-    // chat: null
-    // };
-    // const request: AddOpenChatStore = {
-    // tab: newTab
-    // };
-    // this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
+    const newFriend: Friend = {
+      ...friend
+    };
+    const request: AddOpenChatStore = {
+      tab: {
+        tabId: uuidv4(),
+        type: ChatType.FRIEND,
+        data: newFriend
+      }
+    };
+    this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
   createRoomTab(room: ChatRoom) {

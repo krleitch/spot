@@ -150,7 +150,7 @@ export class ChatModalComponent implements OnInit {
 
   backToMenu(): void {
     // leave the chat, remove open and add to minimized
-    this.room.leaveRoom();
+    this.room.disconnectRoom();
     const addRequest: AddPageMinimizedChatStore = {
       tab: this.chatPageOpenChat
     };
@@ -178,7 +178,7 @@ export class ChatModalComponent implements OnInit {
   openMinimizedChat(chat: ChatTab): void {
     // if a chat is open then close it first
     if (this.chatPageOpenChat) {
-      this.room.leaveRoom();
+      this.room.disconnectRoom();
       this.checkMinimizedRoom();
       const addRequest: AddPageMinimizedChatStore = {
         tab: this.chatPageOpenChat
@@ -204,7 +204,7 @@ export class ChatModalComponent implements OnInit {
 
   openMenu(): void {
     if (this.chatPageOpenChat) {
-      this.room.leaveRoom();
+      this.room.disconnectRoom();
       const addRequest: AddPageMinimizedChatStore = {
         tab: this.chatPageOpenChat
       };

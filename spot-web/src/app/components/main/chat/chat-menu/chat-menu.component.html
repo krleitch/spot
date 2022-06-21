@@ -10,7 +10,9 @@
         class="expander row-center background-page"
         (click)="toggleMenu()"
       >
-        <span class="material-icons-outlined expander-icon">insert_comment</span>
+        <span class="material-icons-outlined expander-icon"
+          >insert_comment</span
+        >
       </button>
       <div class="flex-fill background-page"></div>
     </div>
@@ -53,7 +55,10 @@
       </div>
 
       <!-- Search -->
-      <div *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL" class="input-search-container">
+      <div
+        *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+        class="input-search-container"
+      >
         <span class="material-icons icon-md icon-primary margin-r-xs">
           search
         </span>
@@ -178,17 +183,34 @@
     [class.expanded-full]="menuStatus === eMenuStatus.EXPANDED_FULL"
     [class.expanded-semi]="menuStatus === eMenuStatus.EXPANDED_SEMI"
   >
-    <div
-      class="mini-tab profile-md"
-      [ngClass]="mchat.data.imageSrc ? '' : 'chat-' + mchat.data.defaultImageNum"
-      *ngFor="let mchat of minimizedChats"
-      (click)="openMinimizedTab(mchat.tabId)"
-    >
-      <img *ngIf="mchat.data.imageSrc" [src]="mchat.data.imageSrc" />
-      <img
-        *ngIf="!mchat.data.imageSrc"
-        [src]="'/assets/images/chat/' + mchat.data.defaultImageSrc"
-      />
+    <div *ngFor="let mchat of minimizedChats">
+      <div *ngIf="mchat.type === eChatType.ROOM; else friend">
+        <div
+          class="mini-tab profile-md"
+          [ngClass]="
+            mchat.data.imageSrc ? '' : 'chat-' + mchat.data.defaultImageNum
+          "
+          (click)="openMinimizedTab(mchat.tabId)"
+        >
+          <img *ngIf="mchat.data.imageSrc" [src]="mchat.data.imageSrc" />
+          <img
+            *ngIf="!mchat.data.imageSrc"
+            [src]="'/assets/images/chat/' + mchat.data.defaultImageSrc"
+          />
+        </div>
+      </div>
+      <!-- Friends mini tabs -->
+      <ng-template #friend>
+        <div
+          class="mini-tab profile-md background-header"
+          (click)="openMinimizedTab(mchat.tabId)"
+        >
+          <img *ngIf="mchat.data.profilePictureSrc" [src]="mchat.data.profilePictureSrc" />
+          <div *ngIf="!mchat.data.profilePictureSrc">
+            {{ getMinimizedName(mchat.data.username) }}
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
   <!-- Tabs -->

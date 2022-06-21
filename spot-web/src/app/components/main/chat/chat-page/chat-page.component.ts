@@ -6,15 +6,10 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { Observable, Subject, concat, interval, of, timer } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
-  distinctUntilChanged,
-  mapTo,
-  skipWhile,
-  startWith,
   take,
   takeUntil,
-  takeWhile
 } from 'rxjs/operators';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -22,7 +17,6 @@ import { v4 as uuidv4 } from 'uuid';
 // Store
 import { Store, select } from '@ngrx/store';
 import { RootStoreState } from '@store';
-import { SocialStoreSelectors } from '@store/social-store';
 import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
@@ -42,14 +36,11 @@ import {
   SetPageOpenChatStore,
   RemovePageOpenChatStore,
   AddPageMinimizedChatStore,
-  RemovePageMinimizedChatStore,
-  GetUserChatRoomsRequest,
   RemoveMinimizedChatStore,
   RemoveUserChatRoomStore,
   LeaveChatRoomResponse,
   LeaveChatRoomRequest
 } from '@models/chat';
-import { LocationData } from '@models/location';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
 
 @Component({
@@ -158,7 +149,7 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   backToMenu(): void {
     // leave the chat, remove open and add to minimized
-    this.room.leaveRoom();
+    this.room.disconnectRoom();
     const addRequest: AddPageMinimizedChatStore = {
       tab: this.chatPageOpenChat
     };
@@ -186,7 +177,7 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
   openMinimizedChat(chat: ChatTab): void {
     // if a chat is open then close it first
     if (this.chatPageOpenChat) {
-      this.room.leaveRoom();
+      this.room.disconnectRoom();
       this.checkMinimizedRoom();
       const addRequest: AddPageMinimizedChatStore = {
         tab: this.chatPageOpenChat
@@ -212,7 +203,7 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openMenu(): void {
     if (this.chatPageOpenChat) {
-      this.room.leaveRoom();
+      this.room.disconnectRoom();
       const addRequest: AddPageMinimizedChatStore = {
         tab: this.chatPageOpenChat
       };
@@ -261,7 +252,7 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
       .leaveChatRoom(leaveChatRoom)
       .pipe(take(1))
       .subscribe((response: LeaveChatRoomResponse) => {
-        this.room.leaveRoom();
+        this.room.disconnectRoom();
         const removeUserChatRoomStore: RemoveUserChatRoomStore = {
           chatId: response.chatRoom.id
         };

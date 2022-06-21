@@ -380,7 +380,7 @@ export class ChatRoomComponent
       .leaveChatRoom(leaveChatRoom)
       .pipe(take(1))
       .subscribe((response: LeaveChatRoomResponse) => {
-        this.leaveRoom();
+        this.disconnectRoom();
         const removeUserChatRoomStore: RemoveUserChatRoomStore = {
           chatId: response.chatRoom.id
         };
@@ -393,7 +393,7 @@ export class ChatRoomComponent
   }
 
   // Disconnect
-  leaveRoom(): void {
+  disconnectRoom(): void {
     this.chatService.disconnectFromChannel(this.channel);
   }
 }

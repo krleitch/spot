@@ -1,3 +1,107 @@
-<div class="chat-friend">
-    TEST
+<div
+  class="col background-container relative container-b-rounded"
+  [ngClass]="isTab ? 'chat-room-tab' : 'chat-room'"
+>
+  <!-- Body -->
+  <div
+    #chat
+    class="body col flex-fill padding-lg overflow-auto"
+    (scroll)="onScroll($event)"
+  >
+    <!-- Chat Start -->
+    <div *ngIf="!beforeCursor" class="row-center text-secondary text-sm">
+      {{ 'MAIN.CHAT_ROOM.CHAT_HISTORY_START' | translate }}
+    </div>
+    <div #anchor></div>
+
+    <!-- Message Blocks -->
+    <div
+      *ngFor="let messageBlock of messageBlocks"
+      class="col-center padding-v-sm"
+    >
+      <!-- Date -->
+      <div
+        *ngIf="messageBlock.showDate"
+        class="row-center text-secondary text-sm padding-v-sm"
+      >
+        {{ formatTimestamp(messageBlock.insertedAt) }}
+      </div>
+      <div
+        class="row-center relative"
+        [class.align-left]="!messageBlock.owned"
+        [class.align-right]="messageBlock.owned"
+      >
+        <!-- Messages -->
+        <div
+          class="col-h-center align-items-start"
+          [class.align-items-start]="!messageBlock.owned"
+          [class.align-items-end]="messageBlock.owned"
+        >
+          <div
+            *ngFor="let message of messageBlock.messages"
+            class="row-center relative"
+          >
+            <div class="message-text" [class.owned]="messageBlock.owned">
+              {{ message.text }}
+            </div>
+            <span
+              class="hover-text text-secondary text-sm padding-sm"
+              [class.owned]="messageBlock.owned"
+            >
+              {{ formatTimestamp(message.insertedAt) }}
+            </span>
+          </div>
+        </div>
+        <!-- Profile Picture -->
+        <div
+          class="profile-sm profile-position"
+          [class.owned]="messageBlock.owned"
+          [ngClass]="
+            messageBlock.profilePictureNum == -1
+              ? 'profile-op'
+              : 'profile-' + messageBlock.profilePictureNum
+          "
+        >
+          <img
+            [src]="'assets/images/profile/' + messageBlock.profilePictureSrc"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Expired -->
+    <div *ngIf="chatExpired" class="row-center text-secondary text-sm">
+      {{ 'MAIN.CHAT_ROOM.CHAT_EXPIRED' | translate }}
+    </div>
+    <div #anchor></div>
+  </div>
+
+  <!-- Chat Bar -->
+  <div class="footer row-h-center container-b-rounded">
+    <span class="material-icons icon-primary icon-md"> person </span>
+    <span class="margin-l-sm margin-r-md"> {{ userCount }} </span>
+    <span class="material-icons-outlined icon-primary icon-md"> timer </span>
+    <span *ngIf="showCountdown; else time" class="margin-l-sm margin-r-md">
+      {{ counter | formatTime }}
+    </span>
+    <ng-template #time>
+      <span class="margin-l-sm margin-r-md"> {{ timeMessage }} </span>
+    </ng-template>
+    <div class="editor">
+      <span
+        #create
+        contenteditable="true"
+        attr.ph="{{ 'MAIN.CHAT_ROOM.CHAT_PLACEHOLDER' | translate }}"
+        class="chat"
+        (input)="onTextInput($event)"
+        (keydown.enter)="onEnter()"
+      ></span>
+      <span
+        class="material-icons icon-lg icon-secondary-highlight margin-h-md"
+        (click)="submit()"
+      >
+        send
+      </span>
+    </div>
+  </div>
 </div>

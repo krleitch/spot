@@ -7,6 +7,7 @@ import { ChatService } from '@services/chat.service';
 
 // Components
 import { ChatRoomComponent } from '@src/app/components/main/chat/chat-room/chat-room.component';
+import { ChatFriendComponent } from '@src/app/components/main/chat/chat-friend/chat-friend.component';
 
 // Store
 import { Store, select } from '@ngrx/store';
@@ -36,14 +37,15 @@ import { Friend } from '@models/friend';
 export class ChatTabComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
   @Input() tab: ChatTab;
-  @ViewChild(ChatRoomComponent) room: ChatRoomComponent;
+  @ViewChild(ChatRoomComponent) chatRoom: ChatRoomComponent;
+  @ViewChild(ChatFriendComponent) chatFriend: ChatFriendComponent;
   @Input() minimize: (_id: string) => void;
 
   // state
   @ViewChild('settings') settings;
   showDropdown = false;
-  roomData: ChatRoom;
-  friendData: Friend;
+
+  eChatType = ChatType;
 
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
@@ -66,13 +68,6 @@ export class ChatTabComponent implements OnInit, OnDestroy {
       .subscribe((userMetadata: UserMetadata) => {
         this.userMetadata = userMetadata;
       });
-
-    if (this.tab.type === ChatType.ROOM) {
-      this.roomData = (this.tab.data as ChatRoom);
-    } else {
-      this.friendData = (this.tab.data as Friend);
-    }
-
   }
 
   ngOnDestroy(): void {
@@ -117,7 +112,11 @@ export class ChatTabComponent implements OnInit, OnDestroy {
   minimizeTab() {
     // Call the inner chat close
     // currently minimized tabs are left
-    this.room.leaveRoom();
+    if (this.tab.type == ChatType.ROOM) {
+      this.chatRoom.disconnectRoom();
+    } else if (this.tab.type == ChatType.FRIEND) {
+      this.chatFriend.disconnectRoom();
+    }
 
     // add to minimized
     const addRequest: AddMinimizedChatStore = {
@@ -137,7 +136,11 @@ export class ChatTabComponent implements OnInit, OnDestroy {
 
   closeTab = () => {
     // Call the inner chat close
-    this.room.leaveRoom();
+    if (this.tab.type == ChatType.ROOM) {
+      this.chatRoom.disconnectRoom();
+    } else if (this.tab.type == ChatType.FRIEND) {
+      this.chatFriend.disconnectRoom();
+    }
 
     const request: RemoveOpenChatStore = {
       tabId: this.tab.tabId
@@ -155,7 +158,7 @@ export class ChatTabComponent implements OnInit, OnDestroy {
       .leaveChatRoom(leaveChatRoom)
       .pipe(take(1))
       .subscribe((response: LeaveChatRoomResponse) => {
-        this.room.leaveRoom();
+        this.chatRoom.disconnectRoom();
         const removeUserChatRoomStore: RemoveUserChatRoomStore = {
           chatId: response.chatRoom.id
         };
