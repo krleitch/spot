@@ -57,9 +57,6 @@ export interface FriendMessageBlock {
   insertedAt: string; // the time of the first message
   owned: boolean;
   showDate: boolean; // should the block show a date before it
-  profilePictureNum: Number;
-  profilePictureSrc: string;
-  chatProfileId: string; // The chat identifier for the user // is not the userId
   messages: Array<{ id: string; text: string; insertedAt: string }>;
 }
 
@@ -68,9 +65,6 @@ export interface FriendMessage {
   insertedAt: string;
   text: string;
   owned: boolean;
-  chatProfileId: string; // The chat identifier for the user // is not the userId
-  profilePictureNum: Number;
-  profilePictureSrc: string;
 }
 
 export interface ChatPagination {

@@ -121,7 +121,7 @@ export class ChatService {
       params = params.append('before', request.before);
     }
     return this.http.get<GetFriendMessagesResponse>(
-      `${this.chatBaseUrl}/friend/messages`,
+      `${this.chatBaseUrl}/friends/${request.roomId}/messages`,
       { params }
     );
   }

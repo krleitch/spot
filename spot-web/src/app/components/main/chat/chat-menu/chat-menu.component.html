@@ -144,7 +144,7 @@
               *ngFor="let friend of friends"
               (click)="createFriendTab(friend)"
             >
-              <span class="row-center image">
+              <span class="row-center profile-md background-header">
                 <span
                   *ngIf="!friend.profilePictureSrc"
                   class="row-center full-size"
@@ -186,7 +186,7 @@
     <div *ngFor="let mchat of minimizedChats">
       <div *ngIf="mchat.type === eChatType.ROOM; else friend">
         <div
-          class="mini-tab profile-md"
+          class="mini-tab profile-md container-shadow"
           [ngClass]="
             mchat.data.imageSrc ? '' : 'chat-' + mchat.data.defaultImageNum
           "
@@ -202,7 +202,7 @@
       <!-- Friends mini tabs -->
       <ng-template #friend>
         <div
-          class="mini-tab profile-md background-header"
+          class="mini-tab profile-md background-header row-center container-shadow"
           (click)="openMinimizedTab(mchat.tabId)"
         >
           <img *ngIf="mchat.data.profilePictureSrc" [src]="mchat.data.profilePictureSrc" />

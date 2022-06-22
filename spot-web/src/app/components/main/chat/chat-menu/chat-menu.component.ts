@@ -126,6 +126,10 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     if (localMenuStatus) {
       this.menuStatus = MenuStatus[localMenuStatus];
     }
+    const localChatOption = localStorage.getItem('chatOption');
+    if (localChatOption) {
+      this.selectedChatOption = ChatType[localChatOption];
+    }
   }
 
   ngOnDestroy(): void {
@@ -147,10 +151,12 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   selectRooms(): void {
     this.selectedChatOption = this.eChatType.ROOM;
+    localStorage.setItem('chatOption', ChatType.ROOM);
   }
 
   selectFriends(): void {
     this.selectedChatOption = this.eChatType.FRIEND;
+    localStorage.setItem('chatOption', ChatType.FRIEND);
   }
 
   // TABS
@@ -209,7 +215,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   createRoomTab(room: ChatRoom) {
     // check if the tab exists already
-    if (this.tabExists(room.id, ChatType.ROOM )) {
+    if (this.tabExists(room.id, ChatType.ROOM)) {
       return;
     }
     this.checkTooManyTabs();
@@ -228,7 +234,9 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   openMinimizedTab(tabId: string) {
     // get the tab
-    const tab = this.minimizedChats.filter((elem: ChatTab) => elem.tabId === tabId);
+    const tab = this.minimizedChats.filter(
+      (elem: ChatTab) => elem.tabId === tabId
+    );
     if (!tab) {
       return;
     }
@@ -272,7 +280,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   getMinimizedName(name: string) {
     if (name) {
-      return name.substring(0, 1).toUpperCase();
+      return name.substring(0, 1).toUpperCase() + name.substring(1, 2);
     }
   }
 

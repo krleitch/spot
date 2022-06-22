@@ -76,7 +76,7 @@
       class="header row-h-center background-header full-width padding-v-sm padding-h-sm border-box"
     >
       <!-- Chat photo-->
-      <span class="profile-sm margin-r-md background-header">
+      <span class="profile-sm margin-r-md background-container row-center">
         <img
           *ngIf="tab.data.profilePictureSrc"
           [src]="tab.data.profilePictureSrc"
@@ -91,28 +91,7 @@
         <span class="text-md">{{ tab.data.username }}</span>
       </div>
       <div class="row-center align-right">
-        <!-- Settings Dropdown -->
-        <div class="relative">
-          <button
-            #settings
-            class="tab-button margin-l-md"
-            (click)="toggleDropdown()"
-          >
-            <span class="material-icons icon-sm icon-secondary-highlight"
-              >settings</span
-            >
-          </button>
-          <div class="dropdown-content" [class.show-dropdown]="showDropdown">
-            <div class="dropdown-button" (click)="leaveChatRoom()">
-              <span class="material-icons icon-md margin-r-md">
-                directions_run
-              </span>
-              {{ 'MAIN.CHAT_TAB.LEAVE' | translate }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Minimized -->
+        <!-- Minimize -->
         <button class="tab-button margin-l-md" (click)="minimizeTab()">
           <span class="material-icons icon-sm icon-secondary-highlight"
             >remove</span

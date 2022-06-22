@@ -17,7 +17,7 @@
     <!-- Message Blocks -->
     <div
       *ngFor="let messageBlock of messageBlocks"
-      class="col-center padding-v-sm"
+      class="col-center padding-t-sm"
     >
       <!-- Date -->
       <div
@@ -26,34 +26,14 @@
       >
         {{ formatTimestamp(messageBlock.insertedAt) }}
       </div>
+
+      <!-- Unowned messages are formatted on the left -->
       <div
-        class="row-center relative"
-        [class.align-left]="!messageBlock.owned"
-        [class.align-right]="messageBlock.owned"
+        *ngIf="!messageBlock.owned; else owned"
+        class="row-center relative full-width justify-content-start align-items-end"
       >
-        <!-- Messages -->
-        <div
-          class="col-h-center align-items-start"
-          [class.align-items-start]="!messageBlock.owned"
-          [class.align-items-end]="messageBlock.owned"
-        >
-          <div
-            *ngFor="let message of messageBlock.messages"
-            class="row-center relative"
-          >
-            <div class="message-text" [class.owned]="messageBlock.owned">
-              {{ message.text }}
-            </div>
-            <span
-              class="hover-text text-secondary text-sm padding-sm"
-              [class.owned]="messageBlock.owned"
-            >
-              {{ formatTimestamp(message.insertedAt) }}
-            </span>
-          </div>
-        </div>
         <!-- Profile Picture -->
-        <div class="profile-sm profile-position">
+        <div class="profile-sm background-header row-center">
           <img
             *ngIf="chatFriend.profilePictureSrc; else name"
             [src]="chatFriend.profilePictureSrc"
@@ -64,7 +44,58 @@
             </div>
           </ng-template>
         </div>
+        <div class="col-h-center align-items-start margin-l-sm">
+          <div
+            *ngFor="let message of messageBlock.messages"
+            class="row-center relative"
+          >
+            <div class="message-text">
+              {{ message.text }}
+            </div>
+            <span class="hover-text text-secondary text-sm padding-sm">
+              {{ formatTimestamp(message.insertedAt) }}
+            </span>
+          </div>
+        </div>
       </div>
+
+      <!-- owned messages are formatted on the right-->
+      <ng-template #owned>
+        <div
+          class="row-center relative full-width justify-content-end align-items-end"
+        >
+          <!-- Messages -->
+          <div class="col-h-center align-items-end margin-r-sm">
+            <div
+              *ngFor="let message of messageBlock.messages"
+              class="row-center relative"
+            >
+              <div class="message-text owned">
+                {{ message.text }}
+              </div>
+              <span class="hover-text owned text-secondary text-sm padding-sm">
+                {{ formatTimestamp(message.insertedAt) }}
+              </span>
+            </div>
+          </div>
+          <!-- Profile Picture -->
+          <div class="full-height">
+            <div class="profile-sm background-header row-center margin-transition"
+            [style.margin-top.px]="32 * (messageBlock.messages.length-1)"
+            >
+              <img
+                *ngIf="chatFriend.profilePictureSrc; else name"
+                [src]="chatFriend.profilePictureSrc"
+              />
+              <ng-template #name>
+                <div class="row-center">
+                  {{ getMinimizedName(chatFriend.username) }}
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </ng-template>
     </div>
 
     <div #anchor></div>

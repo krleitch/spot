@@ -28,16 +28,14 @@ import { ChatService } from '@services/chat.service';
 
 // Assets
 import {
-  MessageBlock,
-  Message,
-  CreateMessage,
-  GetMessagesRequest,
-  GetMessagesResponse,
-  ChatPagination,
-  LeaveChatRoomRequest,
-  LeaveChatRoomResponse,
-  RemoveUserChatRoomStore
+  FriendMessageBlock,
+  FriendMessage,
+  CreateFriendMessage,
+  GetFriendMessagesRequest,
+  GetFriendMessagesResponse,
+  ChatPagination
 } from '@models/chat';
+import { User } from '@models/user';
 import { UserMetadata } from '@models/userMetadata';
 import { Friend } from '@models/friend';
 
@@ -60,7 +58,7 @@ export class ChatFriendComponent
   private observer: IntersectionObserver;
 
   channel: PhoenixChannel;
-  messageBlocks: MessageBlock[] = [];
+  messageBlocks: FriendMessageBlock[] = [];
   beforeCursor: string = null;
 
   // state
@@ -69,17 +67,11 @@ export class ChatFriendComponent
   userCount = 0;
   currentLength = 0;
 
-  // Time / countdown
-  showCountdown = false;
-  countDown: Subscription;
-  counter: number;
-  tick = 1000;
-  timeMessage: string;
-  chatExpired = false;
-
   // User Metadata
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
+  user$: Observable<User>;
+  user: User;
 
   constructor(
     private store$: Store<RootStoreState.State>,
@@ -90,6 +82,16 @@ export class ChatFriendComponent
   ngOnInit(): void {
     this.channel = this.chatService.connectToFriendChannel(this.chatFriend.friendId);
     this.joinRoom();
+
+    // user
+    this.user$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUser)
+    );
+    this.user$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((user: User) => {
+        this.user = user;
+      });
 
     // metadata
     this.userMetadata$ = this.store$.pipe(
@@ -114,14 +116,14 @@ export class ChatFriendComponent
         this.beforeCursor &&
         !this.ignoreInitialObserver
       ) {
-        const request: GetMessagesRequest = {
+        const request: GetFriendMessagesRequest = {
           roomId: this.chatFriend.friendId,
           before: this.beforeCursor
         };
         this.chatService
-          .getMessages(request)
+          .getFriendMessages(request)
           .pipe(take(1))
-          .subscribe((response: GetMessagesResponse) => {
+          .subscribe((response: GetFriendMessagesResponse) => {
             // save old offsets
             const preScrollHeight = this.chat.nativeElement.scrollHeight;
             const preScrollOffset = this.chat.nativeElement.scrollTop;
@@ -185,31 +187,9 @@ export class ChatFriendComponent
     }
   }
 
-  startTimer() {
-    this.countDown = timer(0, 1000)
-      .pipe(
-        takeUntil(this.onDestroy),
-        takeWhile((_) => {
-          return this.counter >= 0;
-        })
-      )
-      .subscribe(() => {
-        if (this.counter <= 0) {
-          this.showCountdown = true;
-          this.chatExpired = true;
-        } else if (this.counter <= 600) {
-          // 10 minutes show the timer
-          this.showCountdown = true;
-          --this.counter;
-        } else {
-          --this.counter;
-        }
-      });
-  }
-
   formatTimestamp(timestamp: string): string {
     const time = new Date(timestamp);
-    const days = ['Sun', 'Mon', 'Tue', 'Web', 'Thu', 'Fri', 'Sat'];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const minutes = time.getMinutes();
     const hours = time.getHours();
     const ampm = hours >= 12 ? 'pm' : 'am';
@@ -239,13 +219,10 @@ export class ChatFriendComponent
   }
 
   submit(): void {
-    if (this.chatExpired) {
-      // return;
-    }
 
     const content = this.create.nativeElement.innerHTML;
 
-    const newMessage: CreateMessage = {
+    const newMessage: CreateFriendMessage = {
       text: content
     };
     this.channel
@@ -278,7 +255,7 @@ export class ChatFriendComponent
           messages,
           pagination
         }: {
-          messages: MessageBlock[];
+          messages: FriendMessageBlock[];
           pagination: ChatPagination;
         }) => {
           this.messageBlocks = messages;
@@ -303,7 +280,7 @@ export class ChatFriendComponent
       this.syncPresentCount(presences);
     });
 
-    this.channel.on('message_created', (message: Message) => {
+    this.channel.on('message_created', (message: FriendMessage) => {
       // determine if we need to add a new block or append to last block
       if (this.messageBlocks.length > 0) {
         const lastBlock = this.messageBlocks[this.messageBlocks.length - 1];
@@ -313,7 +290,7 @@ export class ChatFriendComponent
               lastBlock.messages[lastBlock.messages.length - 1].insertedAt
             ).getTime() >
           300000;
-        if (lastBlock.chatProfileId === message.chatProfileId && !tooLate) {
+        if (lastBlock.owned === message.owned && !tooLate) {
           // Append to this block
           this.messageBlocks[this.messageBlocks.length - 1].messages =
             lastBlock.messages.concat({
@@ -329,19 +306,13 @@ export class ChatFriendComponent
         // create the first block
         this.pushMessageBlock(message, true);
       }
-      // reset the counter on new messages
-      this.counter = 3600;
-      this.showCountdown = false;
     });
   }
 
-  private pushMessageBlock(message: Message, showDate: boolean): void {
+  private pushMessageBlock(message: FriendMessage, showDate: boolean): void {
     this.messageBlocks.push({
       insertedAt: message.insertedAt,
       owned: message.owned,
-      profilePictureNum: message.profilePictureNum,
-      profilePictureSrc: message.profilePictureSrc,
-      chatProfileId: message.chatProfileId,
       showDate: showDate,
       messages: [
         {
@@ -357,26 +328,6 @@ export class ChatFriendComponent
     if (name) {
       return name.substring(0, 1).toUpperCase();
     }
-  }
-
-  leaveChatRoom(): void {
-    const leaveChatRoom: LeaveChatRoomRequest = {
-      chatRoomId: this.chatFriend.friendId
-    };
-    this.chatService
-      .leaveChatRoom(leaveChatRoom)
-      .pipe(take(1))
-      .subscribe((response: LeaveChatRoomResponse) => {
-        this.disconnectRoom();
-        const removeUserChatRoomStore: RemoveUserChatRoomStore = {
-          chatId: response.chatRoom.id
-        };
-        this.store$.dispatch(
-          new ChatStoreActions.RemoveUserChatRoomStoreAction(
-            removeUserChatRoomStore
-          )
-        );
-      });
   }
 
   // Disconnect
