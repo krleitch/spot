@@ -80,18 +80,16 @@ export class ChatFriendComponent
   ) {}
 
   ngOnInit(): void {
-    this.channel = this.chatService.connectToFriendChannel(this.chatFriend.friendId);
+    this.channel = this.chatService.connectToFriendChannel(
+      this.chatFriend.friendId
+    );
     this.joinRoom();
 
     // user
-    this.user$ = this.store$.pipe(
-      select(UserStoreSelectors.selectUser)
-    );
-    this.user$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((user: User) => {
-        this.user = user;
-      });
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      this.user = user;
+    });
 
     // metadata
     this.userMetadata$ = this.store$.pipe(
@@ -105,7 +103,9 @@ export class ChatFriendComponent
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.channel = this.chatService.connectToFriendChannel(this.chatFriend.friendId);
+    this.channel = this.chatService.connectToFriendChannel(
+      this.chatFriend.friendId
+    );
     this.joinRoom();
   }
 
@@ -219,7 +219,6 @@ export class ChatFriendComponent
   }
 
   submit(): void {
-
     const content = this.create.nativeElement.innerHTML;
 
     const newMessage: CreateFriendMessage = {
@@ -326,7 +325,9 @@ export class ChatFriendComponent
 
   getMinimizedName(name: string) {
     if (name) {
-      return name.substring(0, 1).toUpperCase();
+      return (
+        name.substring(0, 1).toUpperCase() + name.substring(1, 2).toLowerCase()
+      );
     }
   }
 

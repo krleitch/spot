@@ -74,6 +74,8 @@ import { PhoneMaskDirective } from './directives/phone-mask.directive';
 
 import { FilterPipe } from './helpers/pipes/filter.pipe';
 import { FormatTimePipe } from './helpers/pipes/format-time.pipe';
+import { ChatMenuFriendComponent } from './components/main/chat/chat-menu-friend/chat-menu-friend.component';
+import { ChatMenuRoomComponent } from './components/main/chat/chat-menu-room/chat-menu-room.component';
 
 // TODO: Seperate Modules and optimize load bundles
 
@@ -139,7 +141,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormatTimePipe,
     // DIRECTIVE
     PhoneMaskDirective,
-    SortDirective
+    SortDirective,
+    ChatMenuFriendComponent,
+    ChatMenuRoomComponent
   ],
   imports: [
     BrowserModule,

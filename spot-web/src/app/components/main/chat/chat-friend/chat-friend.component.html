@@ -33,7 +33,7 @@
         class="row-center relative full-width justify-content-start align-items-end"
       >
         <!-- Profile Picture -->
-        <div class="profile-sm background-header row-center">
+        <div class="profile-sm background-header container-shadow row-center">
           <img
             *ngIf="chatFriend.profilePictureSrc; else name"
             [src]="chatFriend.profilePictureSrc"
@@ -80,16 +80,16 @@
           </div>
           <!-- Profile Picture -->
           <div class="full-height">
-            <div class="profile-sm background-header row-center margin-transition"
+            <div class="profile-sm background-header container-shadow row-center margin-transition"
             [style.margin-top.px]="32 * (messageBlock.messages.length-1)"
             >
               <img
-                *ngIf="chatFriend.profilePictureSrc; else name"
-                [src]="chatFriend.profilePictureSrc"
+                *ngIf="user.profilePictureSrc; else name"
+                [src]="user.profilePictureSrc"
               />
               <ng-template #name>
                 <div class="row-center">
-                  {{ getMinimizedName(chatFriend.username) }}
+                  {{ getMinimizedName(user.username) }}
                 </div>
               </ng-template>
             </div>
