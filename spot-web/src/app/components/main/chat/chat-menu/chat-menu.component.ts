@@ -192,15 +192,14 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  createFriendTab(friendData: {friend: Friend, channel: PhoenixChannel}) {
-    console.log(friendData)
+  createFriendTab(friend: Friend) {
     // check if the tab exists already
-    if (this.tabExists(friendData.friend.friendId, ChatType.FRIEND)) {
+    if (this.tabExists(friend.friendId, ChatType.FRIEND)) {
       return;
     }
     this.checkTooManyTabs();
     const newFriend: Friend = {
-      ...friendData.friend
+      ...friend
     };
     const request: AddOpenChatStore = {
       tab: {

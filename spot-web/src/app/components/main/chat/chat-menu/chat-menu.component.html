@@ -142,12 +142,26 @@
             <div
               class="menu-item row-h-center padding-md"
               *ngFor="let friend of friends"
+              (click)="createFriendTab(friend)"
             >
-              <spot-chat-menu-friend
-                [friend]="friend"
-                [menuStatus]="menuStatus"
-                (outputFriend)="createFriendTab($event)"
-              ></spot-chat-menu-friend>
+              <span class="row-center profile-md background-header">
+                <span
+                  *ngIf="!friend.profilePictureSrc"
+                  class="row-center full-size"
+                  >{{ getMinimizedName(friend.username) }}</span
+                >
+                <img
+                  *ngIf="friend.profilePictureSrc"
+                  [src]="friend.profilePictureSrc"
+                />
+              </span>
+              <span
+                *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+                class="col flex-fill margin-l-md"
+              >
+                <span class="text">{{ friend.username }}</span>
+                <span class="text-secondary">{{ lastMessage }}</span>
+              </span>
             </div>
           </div>
           <ng-template #noFriends>

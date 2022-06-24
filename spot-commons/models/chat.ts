@@ -1,8 +1,5 @@
 import { Friend } from './friend';
 
-// phoenix
-import { Channel as PhoenixChannel } from 'phoenix';
-
 export enum MessageType {
   MESSAGE = "MESSAGE",
   INFO = "INFO",
@@ -23,7 +20,6 @@ export interface ChatTab {
   tabId: string;
   type: ChatType;
   data: ChatRoom | Friend;
-  channel?: PhoenixChannel;
 }
 
 export interface ChatRoom {
