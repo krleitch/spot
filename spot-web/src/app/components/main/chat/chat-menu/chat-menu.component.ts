@@ -15,10 +15,14 @@ import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { ChatService } from '@services/chat.service';
 import { ModalService } from '@services/modal.service';
 
+// phoenix
+import { Channel as PhoenixChannel } from 'phoenix';
+
 // Models
 import { Friend } from '@models/friend';
 import {
   ChatType,
+  MenuStatus,
   ChatRoom,
   ChatTab,
   AddOpenChatStore,
@@ -28,12 +32,6 @@ import {
   GetUserChatRoomsRequest
 } from '@models/chat';
 import { LocationData } from '@models/location';
-
-enum MenuStatus {
-  HIDDEN = 'HIDDEN',
-  EXPANDED_SEMI = 'EXPANDED_SEMI',
-  EXPANDED_FULL = 'EXPANDED_FULL'
-}
 
 @Component({
   selector: 'spot-chat-menu',
@@ -194,14 +192,15 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  createFriendTab(friend: Friend) {
+  createFriendTab(friendData: {friend: Friend, channel: PhoenixChannel}) {
+    console.log(friendData)
     // check if the tab exists already
-    if (this.tabExists(friend.friendId, ChatType.FRIEND)) {
+    if (this.tabExists(friendData.friend.friendId, ChatType.FRIEND)) {
       return;
     }
     this.checkTooManyTabs();
     const newFriend: Friend = {
-      ...friend
+      ...friendData.friend
     };
     const request: AddOpenChatStore = {
       tab: {

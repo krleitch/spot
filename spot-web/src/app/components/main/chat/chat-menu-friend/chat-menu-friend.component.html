@@ -1,1 +1,15 @@
-<p>chat-menu-friend works!</p>
+<div class="row-h-center" (click)="selectFriend()">
+  <span class="row-center profile-md background-header">
+    <span *ngIf="!friend.profilePictureSrc" class="row-center full-size">{{
+      getMinimizedName(friend.username)
+    }}</span>
+    <img *ngIf="friend.profilePictureSrc" [src]="friend.profilePictureSrc" />
+  </span>
+  <span
+    *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
+    class="col flex-fill margin-l-md"
+  >
+    <span class="text">{{ friend.username }}</span>
+    <span class="text-secondary">{{ lastMessage }}</span>
+  </span>
+</div>

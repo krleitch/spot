@@ -99,7 +99,7 @@
         <div *ngIf="userChatRooms$ | async as userChatRooms">
           <div *ngIf="userChatRooms.length > 0; else noRooms">
             <div
-              class="menu-item row-center padding-md"
+              class="menu-item row-h-center padding-md"
               *ngFor="let chatRoom of userChatRooms"
               (click)="createRoomTab(chatRoom)"
             >
@@ -140,28 +140,14 @@
         <div *ngIf="friends$ | async as friends">
           <div *ngIf="friends.length > 0; else noFriends">
             <div
-              class="menu-item row-center padding-md"
+              class="menu-item row-h-center padding-md"
               *ngFor="let friend of friends"
-              (click)="createFriendTab(friend)"
             >
-              <span class="row-center profile-md background-header">
-                <span
-                  *ngIf="!friend.profilePictureSrc"
-                  class="row-center full-size"
-                  >{{ getMinimizedName(friend.username) }}</span
-                >
-                <img
-                  *ngIf="friend.profilePictureSrc"
-                  [src]="friend.profilePictureSrc"
-                />
-              </span>
-              <span
-                *ngIf="menuStatus === eMenuStatus.EXPANDED_FULL"
-                class="col flex-fill margin-l-md"
-              >
-                <span class="text">{{ friend.username }}</span>
-                <span class="text-secondary">testing</span>
-              </span>
+              <spot-chat-menu-friend
+                [friend]="friend"
+                [menuStatus]="menuStatus"
+                (outputFriend)="createFriendTab($event)"
+              ></spot-chat-menu-friend>
             </div>
           </div>
           <ng-template #noFriends>
@@ -205,7 +191,10 @@
           class="mini-tab profile-md background-header row-center container-shadow"
           (click)="openMinimizedTab(mchat.tabId)"
         >
-          <img *ngIf="mchat.data.profilePictureSrc" [src]="mchat.data.profilePictureSrc" />
+          <img
+            *ngIf="mchat.data.profilePictureSrc"
+            [src]="mchat.data.profilePictureSrc"
+          />
           <div *ngIf="!mchat.data.profilePictureSrc">
             {{ getMinimizedName(mchat.data.username) }}
           </div>

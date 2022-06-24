@@ -53,11 +53,11 @@ export class ChatFriendComponent
   @ViewChild('create') create: ElementRef; // editable content
   @ViewChild('anchor') anchor: ElementRef<HTMLElement>; // On scroll trigger
   @Input() chatFriend: Friend;
+  @Input() channel: PhoenixChannel;
   @Input() isTab: boolean;
 
   private observer: IntersectionObserver;
 
-  channel: PhoenixChannel;
   messageBlocks: FriendMessageBlock[] = [];
   beforeCursor: string = null;
 
@@ -325,9 +325,7 @@ export class ChatFriendComponent
 
   getMinimizedName(name: string) {
     if (name) {
-      return (
-        name.substring(0, 1).toUpperCase() + name.substring(1, 2).toLowerCase()
-      );
+      return name.substring(0, 1).toUpperCase() + name.substring(1,2).toLowerCase();
     }
   }
 

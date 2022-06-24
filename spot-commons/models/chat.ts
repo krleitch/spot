@@ -1,5 +1,8 @@
 import { Friend } from './friend';
 
+// phoenix
+import { Channel as PhoenixChannel } from 'phoenix';
+
 export enum MessageType {
   MESSAGE = "MESSAGE",
   INFO = "INFO",
@@ -10,10 +13,17 @@ export enum ChatType {
   FRIEND = "FRIEND",
 }
 
+export enum MenuStatus {
+  HIDDEN = 'HIDDEN',
+  EXPANDED_SEMI = 'EXPANDED_SEMI',
+  EXPANDED_FULL = 'EXPANDED_FULL'
+}
+
 export interface ChatTab {
   tabId: string;
   type: ChatType;
   data: ChatRoom | Friend;
+  channel?: PhoenixChannel;
 }
 
 export interface ChatRoom {
