@@ -71,7 +71,7 @@
       </div>
 
       <!-- Chat Rooms -->
-      <div *ngIf="selectedChatOption === eChatType.ROOM" class="flex-fill">
+      <div *ngIf="selectedChatOption === eChatType.ROOM" class="hide-scroll flex-fill overflow-auto">
         <!-- Room Buttons -->
         <div class="col-center padding-sm">
           <button
@@ -96,7 +96,13 @@
         </div>
 
         <!-- Rooms -->
-        <div *ngIf="userChatRooms$ | async as userChatRooms">
+        <div
+          *ngIf="
+            userChatRooms$
+              | async
+              | filter: { filter: search, field: 'name' } as userChatRooms
+          "
+        >
           <div *ngIf="userChatRooms.length > 0; else noRooms">
             <div
               class="menu-item row-h-center padding-md"
@@ -120,24 +126,53 @@
                 class="col flex-fill margin-l-md"
               >
                 <span class="text">{{ chatRoom.name }}</span>
-                <span class="text-secondary">testing</span>
               </span>
             </div>
           </div>
           <ng-template #noRooms>
-            <div class="col-center margin-t-xl">
-              <span class="text-center text-secondary">{{
-                'MAIN.CHAT_MENU.ADD_ROOMS' | translate
-              }}</span>
-              <span class="material-icons"> group_add </span>
+            <div
+              *ngIf="
+                !loadingLocation && !loadingUserChatRooms;
+                else loadingRooms
+              "
+            >
+              <div *ngIf="!search; else searchRooms">
+                <div class="col-center margin-t-xl">
+                  <span class="text-center text-secondary">{{
+                    'MAIN.CHAT_MENU.ADD_ROOMS' | translate
+                  }}</span>
+                  <span class="material-icons"> group_add </span>
+                </div>
+              </div>
+              <ng-template #searchRooms>
+                <div class="col-center margin-t-xl">
+                  <span class="material-icons"> search_off </span>
+                  <span class="text-center text-secondary"
+                    >{{ 'MAIN.CHAT_MENU.NO_ROOMS_FOUND' | translate }}
+                    {{ search }}
+                  </span>
+                </div>
+              </ng-template>
             </div>
+            <ng-template #loadingRooms>
+              <span class="row-center margin-t-xl">
+                <spot-spinner type="dot"></spot-spinner>
+              </span>
+            </ng-template>
           </ng-template>
         </div>
       </div>
 
+      <!-- friends | filter: { filter: username, field: 'username' } as friends -->
       <!-- Friends -->
       <div *ngIf="selectedChatOption === eChatType.FRIEND" class="flex-fill">
-        <div *ngIf="friends$ | async as friends">
+        <div
+          *ngIf="
+            friends$
+              | async
+              | filter: { filter: search, field: 'username' } as friends
+          "
+        >
           <div *ngIf="friends.length > 0; else noFriends">
             <div
               class="menu-item row-h-center padding-md"
@@ -165,12 +200,30 @@
             </div>
           </div>
           <ng-template #noFriends>
-            <div class="col-center margin-t-xl">
-              <span class="text-center text-secondary">{{
-                'MAIN.CHAT_MENU.ADD_FRIENDS' | translate
-              }}</span>
-              <span class="material-icons"> person_add </span>
+            <div *ngIf="!friendsLoading; else loadingFriends">
+              <div *ngIf="!search; else searchFriends">
+                <div class="col-center margin-t-xl">
+                  <span class="text-center text-secondary">{{
+                    'MAIN.CHAT_MENU.ADD_FRIENDS' | translate
+                  }}</span>
+                  <span class="material-icons"> person_add </span>
+                </div>
+              </div>
+              <ng-template #searchFriends>
+                <div class="col-center margin-t-xl">
+                  <span class="material-icons"> search_off </span>
+                  <span class="text-center text-secondary"
+                    >{{ 'MAIN.CHAT_MENU.NO_FRIENDS_FOUND' | translate }}
+                    {{ search }}
+                  </span>
+                </div>
+              </ng-template>
             </div>
+            <ng-template #loadingFriends>
+              <span class="row-center margin-t-xl">
+                <spot-spinner type="dot"></spot-spinner>
+              </span>
+            </ng-template>
           </ng-template>
         </div>
       </div>

@@ -60,8 +60,9 @@ import {
   GetCommentActivityRequest,
   GetCommentActivityResponse,
   ReportCommentRequest,
-  ReportCommentResponse
+  ReportCommentResponse,
 } from '@models/comment.js';
+import { NotificationType } from '@models/notification.js';
 
 router.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
@@ -491,9 +492,11 @@ router.post(
             createdComment.parentCommentId || undefined,
             Math.min(body.tagsList[index].offset, body.content.length)
           );
-          await prismaNotification.createTagCommentNotification(
+          await prismaNotification.createNotification(
             userId,
             taggedUser.userId,
+            body.content,
+            NotificationType.TAG,
             createdComment.spotId,
             createdComment.commentId
           );
@@ -660,9 +663,11 @@ router.post(
             createdReply.parentCommentId || undefined,
             Math.min(body.tagsList[index].offset, body.content.length)
           );
-          await prismaNotification.createTagCommentNotification(
+          await prismaNotification.createNotification(
             userId,
             taggedUser.userId,
+            body.content,
+            NotificationType.TAG,
             createdReply.spotId,
             createdReply.commentId
           );

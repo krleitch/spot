@@ -58,6 +58,12 @@
             >
               {{ 'MAIN.CHAT_CREATE.NAME_INVALID_TEXT' | translate }}
             </div>
+            <div
+              *ngIf="name.errors?.['taken']"
+              class="form-text-error"
+            >
+              {{ 'MAIN.CHAT_CREATE.NAME_TAKEN' | translate }}
+            </div>
           </div>
         </div>
         <!-- Description -->
@@ -99,7 +105,7 @@
         </div>
 
         <!-- Password -->
-        <div class="col-h-center private" [class.private-show]="isPrivate">
+        <div class="private" [class.private-show]="isPrivate">
           <div class="form-title">
             {{ 'MAIN.CHAT_CREATE.PASSWORD_TITLE' | translate }}
           </div>

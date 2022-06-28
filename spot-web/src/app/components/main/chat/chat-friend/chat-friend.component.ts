@@ -116,6 +116,9 @@ export class ChatFriendComponent
         this.beforeCursor &&
         !this.ignoreInitialObserver
       ) {
+        // TODO: we are looking up with the friendID again
+        // instead we should use the friend_room_id sent back from the server
+        // to bypass all of this
         const request: GetFriendMessagesRequest = {
           roomId: this.chatFriend.friendId,
           before: this.beforeCursor

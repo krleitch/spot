@@ -168,11 +168,27 @@ export class ChatJoinComponent implements OnInit, OnDestroy {
               'user_id_room_id'
             )
           ) {
+            // already joined this room, open it
             this.errorMessage = this.STRINGS.ERROR_JOINED;
+            this.createRoomTab(this.chatRoom);
           } else {
             this.errorMessage = this.STRINGS.ERROR;
           }
         }
       );
+  }
+
+  createRoomTab(room: ChatRoom) {
+    const newChat: ChatRoom = {
+      ...room
+    };
+    const request: AddOpenChatStore = {
+      tab: {
+        tabId: uuidv4(),
+        type: ChatType.ROOM,
+        data: newChat
+      }
+    };
+    this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 }

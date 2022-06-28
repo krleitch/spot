@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { take } from 'rxjs/operators';
+import {Buffer} from 'buffer';
 
 // Services
 import { ModalService } from '@services/modal.service';

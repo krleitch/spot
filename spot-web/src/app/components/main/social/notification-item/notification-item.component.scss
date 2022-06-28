@@ -7,7 +7,11 @@
 }
 
 .unseen {
-  background-color: var(--item-highlight);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .text-preview {

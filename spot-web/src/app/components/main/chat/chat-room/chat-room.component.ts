@@ -67,6 +67,7 @@ export class ChatRoomComponent
   beforeCursor: string = null;
 
   // state
+  joinError = false; // if there was a problem joining the room
   disableScrollDown = false;
   ignoreInitialObserver = true;
   userCount = 0;
@@ -105,7 +106,6 @@ export class ChatRoomComponent
       });
 
     this.timeMessage = getFormattedTime(this.chatRoom.insertedAt);
-
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -249,7 +249,6 @@ export class ChatRoomComponent
       // return;
     }
 
-
     const content = this.create.nativeElement.innerHTML;
 
     const newMessage: CreateMessage = {
@@ -305,10 +304,13 @@ export class ChatRoomComponent
         }
       )
       .receive('error', ({ reason }) => {
-        console.log('failed join', reason);
+        // TODO: make this error actually mean something
+        // ideally you see the chat is full or out of range before you even click on the room
+        this.joinError = true;
       })
       .receive('timeout', () => {
-        console.log('Networking issue. Still waiting...');
+        // none
+        this.joinError = true;
       });
 
     let presences = {};

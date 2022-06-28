@@ -161,8 +161,13 @@
     },
 
     "POST_DETAILED": {
-      "NO_POST": "No post found with this link",
-      "LOADING": "Loading Spot"
+      "NO_SPOT": "No Spot found with this link",
+      "LOADING": "Loading Spot",
+
+      "LOCATION": "Spot uses your location to help find spots in your area and show location specific details",
+      "RELOAD": "Reload Spot with your location",
+      "LOCATION_LOADING": "Loading your location",
+      "LOCATION_SKIP": "Skip waiting for location"
     },
 
     "COMMENTS_CONTAINER": {
@@ -320,7 +325,9 @@
       "CHAT_PLACEHOLDER": "Type to chat...",
       "SEND": "Send",
       "CHAT_HISTORY_START": "This is the start of your chat history",
-      "CHAT_EXPIRED": "This chat has expired. No new messages can be created."
+      "CHAT_EXPIRED": "This chat has expired. No new messages can be created.",
+
+      "JOIN_ERROR": "Error joining room. It may be full or you are out of range of this room"
     },
 
     "CHAT_MENU": {
@@ -330,7 +337,10 @@
       "ADD_ROOMS": "Join rooms to chat with those around you",
       "SEARCH_PLACEHOLDER": "Search",
       "DISCOVER_ROOMS": "Discover Rooms",
-      "CREATE_ROOM": "Create Room"
+      "CREATE_ROOM": "Create Room",
+
+      "NO_FRIENDS_FOUND": "No friends found with name",
+      "NO_ROOMS_FOUND": " No rooms found with name"
     },
 
     "CHAT_CREATE": {
@@ -340,6 +350,7 @@
       "NAME_PLACEHOLDER": "How others will see your chat",
       "NAME_INVALID_LENGTH": "Must be in range [3,64] characters",
       "NAME_INVALID_TEXT": "Must start with a letter",
+      "NAME_TAKEN": "This name has already been taken",
       "DESCRIPTION_TITLE": "Description (optional)",
       "DESCRIPTION_PLACEHOLDER": "What are you chatting about?",
       "DESCRIPTION_INVALID_LENGTH": "Must be less than 256 characters",
@@ -350,7 +361,9 @@
       "PASSWORD_INVALID_TEXT": "Invalid password",
       "PUBLIC": "Public",
       "PRIVATE": "Private",
-      "CREATE": "Create"
+      "CREATE": "Create",
+
+      "IMAGE_ERROR": "Error uploading image"
     },
 
     "CHAT_JOIN": {

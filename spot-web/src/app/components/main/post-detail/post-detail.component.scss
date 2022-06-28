@@ -1,4 +1,4 @@
-@import '../../../styles/sizes';
+@use '~sass-mq/mq';
 
 spot-main-nav {
   position: fixed;
@@ -9,7 +9,11 @@ spot-main-nav {
   height: 60px;
 }
 
-.post-detailed {
+spot-post {
+  width: 100%;
+}
+
+.post-detail {
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -27,76 +31,9 @@ spot-main-nav {
     width: 70%;
     max-width: 1150px;
     padding-top: 20px;
-  }
-
-  .loading {
-    display: flex;
-    align-items: center;
-    flex-flow: column;
-    padding: 40px;
-    margin: 20px 20px 0px 20px;
-    background-color: var(--background-container);
-    box-sizing: border-box;
-    width: 70%;
-    max-width: 1150px;
-
-    .icon {
-      font-size: 52px;
-      color: var(--primary);
-      margin-bottom: 15px;
-    }
-
-    .text {
-      font-size: 20px;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    .clickable {
-      cursor: pointer;
-      color: var(--text-secondary);
-      margin-bottom: 0px;
-      &:hover {
-        color: var(--primary);
-      }
-    }
-
-    spot-spinner {
-      margin-top: 20px;
-    }
-  }
-
-  .error {
-    display: flex;
-    align-items: center;
-    flex-flow: column;
-    padding-top: 40px;
-
-    .text {
-      padding-top: 5px;
-      font-size: 20px;
-    }
-
-    .icon {
-      color: var(--primary);
-      font-size: 52px;
-    }
-  }
-}
-
-spot-post {
-  width: 100%;
-}
-
-// Mobile stylings
-@media screen and (max-width: $mobile-width) {
-  .post-detailed {
-    .loading {
-      width: 95%;
-    }
-
-    .content {
+    @include mq.mq($until: tablet) {
       width: 95%;
     }
   }
 }
+

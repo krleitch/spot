@@ -1,30 +1,35 @@
 <spot-main-nav></spot-main-nav>
-<div class="post-detailed">
-  <div *ngIf="locationFailure === 'prompt'" class="loading">
-    <span class="material-icons icon"> place </span>
+<div class="post-detail">
+  <!-- Location is denied-->
+  <div *ngIf="locationFailure === 'prompt'" class="col-center margin-v-xl">
+    <span class="material-icons icon-primary"> place </span>
+    <span class="">{{ 'MAIN.POST_DETAILED.LOCATION' | translate }} </span>
+    <span class="text-secondary-highlight" (click)="getLocation()">
+      {{ 'MAIN.POST_DETAILED.RELOAD' | translate }}
+    </span>
+  </div>
+
+  <!-- Location is loading -->  
+  <div *ngIf="locationLoading && !loadingSpot" class="col-center margin-v-xl">
     <span class="text">
-      Spot uses your location to help find spots in your area and show location
-      specefic details
+      {{ 'MAIN.POST_DETAILED.LOCATION_LOADING' | translate }}
     </span>
-    <span class="text clickable" (click)="getLocation()">
-      Reload Spot with Your Location
+    <span class="text-secondary-highlight" (click)="skipLocation()">
+      {{ 'MAIN.POST_DETAILED.LOCATION_SKIP' | translate }}
     </span>
+    <spot-spinner class="margin-t-sm" size="medium" type="dot"></spot-spinner>
   </div>
-  <div *ngIf="locationLoading && !loadingSpot" class="loading">
-    <span class="text"> Loading Your Location </span>
-    <span class="text clickable" (click)="skipLocation()">
-      Skip waiting for location
-    </span>
-    <spot-spinner size="medium" type="dot"></spot-spinner>
-  </div>
+
+  <!-- Loading Spot -->
   <div
-    class="loading"
-    *ngIf="loadingSpot && (showLoadingIndicator$ | async); else spotloaded"
+    class="col-center margin-v-xl"
+    *ngIf="loadingSpot && (showLoadingIndicator$ | async); else loaded"
   >
-    <span class="text"> {{ 'MAIN.POST_DETAILED.LOADING' | translate }} </span>
+    <span class="margin-b-sm"> {{ 'MAIN.POST_DETAILED.LOADING' | translate }} </span>
     <spot-spinner size="medium" type="dot"></spot-spinner>
   </div>
-  <ng-template #spotloaded>
+  <!-- The Spot -->
+  <ng-template #loaded>
     <div class="content" *ngIf="spot && !locationLoading">
       <meta property="og:url" content="{{ getSpotLink(spot) }}" />
       <meta property="og:type" content="website" />
@@ -34,8 +39,10 @@
       <spot-post [spot]="spot" [detailed]="true"></spot-post>
     </div>
   </ng-template>
-  <div class="error" *ngIf="error">
-    <span class="material-icons icon"> error_outline </span>
-    <span class="text"> {{ 'MAIN.POST_DETAILED.NO_POST' | translate }} </span>
+
+  <!-- Error Loading Spot -->
+  <div class="col-center margin-v-xl" *ngIf="error">
+    <span class="material-icons icon-error"> error_outline </span>
+    <span class="padding-t-md"> {{ 'MAIN.POST_DETAILED.NO_SPOT' | translate }} </span>
   </div>
 </div>

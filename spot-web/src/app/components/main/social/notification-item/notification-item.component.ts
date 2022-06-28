@@ -127,6 +127,7 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
   goToPost(event: any): void {
     // if you click on image that is blurred then don't go to post, unblur it
     if (
+      this.notificationImage && 
       this.notificationImage.nativeElement.contains(event.target) &&
       this.imageBlurred
     ) {
@@ -147,20 +148,20 @@ export class NotificationItemComponent implements OnInit, OnDestroy {
 
     if (this.notification.replyLink) {
       this.router.navigateByUrl(
-        '/posts/' +
+        '/spot/' +
           this.notification.link +
-          '/comments/' +
+          '/comment/' +
           this.notification.replyLink
       );
     } else if (this.notification.commentLink) {
       this.router.navigateByUrl(
-        '/posts/' +
+        '/spot/' +
           this.notification.link +
-          '/comments/' +
+          '/comment/' +
           this.notification.commentLink
       );
     } else {
-      this.router.navigateByUrl('/posts/' + this.notification.link);
+      this.router.navigateByUrl('/spot/' + this.notification.link);
     }
   }
 

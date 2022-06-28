@@ -12,11 +12,7 @@ import { ChatStoreSelectors, ChatStoreActions } from '@store/chat-store';
 import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // Services
-import { ChatService } from '@services/chat.service';
 import { ModalService } from '@services/modal.service';
-
-// phoenix
-import { Channel as PhoenixChannel } from 'phoenix';
 
 // Models
 import { Friend } from '@models/friend';
@@ -51,10 +47,14 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   // Friends
   friends$: Observable<Friend[]>;
+  friendsLoading$: Observable<boolean>;
+  friendsLoading: boolean;
 
   // location
   location$: Observable<LocationData>;
   location: LocationData;
+  loadingLocation$: Observable<boolean>;
+  loadingLocation: boolean;
 
   // Tabs
   openChats$: Observable<Array<ChatTab>>;
@@ -64,10 +64,11 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
 
   // Rooms
   userChatRooms$: Observable<ChatRoom[]>;
+  loadingUserChatRooms$: Observable<boolean>;
+  loadingUserChatRooms: boolean;
 
   constructor(
     private store$: Store<RootStoreState.State>,
-    private chatService: ChatService,
     private modalService: ModalService
   ) {}
 
@@ -76,11 +77,29 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     this.friends$ = this.store$.pipe(
       select(SocialStoreSelectors.selectFriends)
     );
+    this.friendsLoading$ = this.store$.pipe(
+      select(SocialStoreSelectors.selectFriendsLoading)
+    )
+    this.friendsLoading$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((loading: boolean) => {
+        this.friendsLoading = loading;
+      });
+
 
     // chat rooms
     this.userChatRooms$ = this.store$.pipe(
       select(ChatStoreSelectors.selectUserChatRooms)
     );
+    this.loadingUserChatRooms$ = this.store$.pipe(
+      select(ChatStoreSelectors.selectLoadingUserChatRooms)
+    );
+    this.loadingUserChatRooms$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((loading: boolean) => {
+        this.loadingUserChatRooms = loading;
+      });
+
     this.openChats$ = this.store$.pipe(
       select(ChatStoreSelectors.selectOpenChats)
     );
@@ -119,6 +138,14 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
           );
         }
       });
+    this.loadingLocation$ = this.store$.pipe(
+      select(UserStoreSelectors.selectLocationLoading)
+    );
+    this.loadingLocation$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((loading: boolean) => {
+        this.loadingLocation = loading;
+      });
 
     const localMenuStatus = localStorage.getItem('menuStatus');
     if (localMenuStatus) {
@@ -144,6 +171,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     } else if (this.menuStatus === MenuStatus.EXPANDED_FULL) {
       this.menuStatus = MenuStatus.EXPANDED_SEMI;
       localStorage.setItem('menuStatus', MenuStatus.EXPANDED_SEMI);
+      this.search = '';
     }
   }
 
@@ -254,7 +282,7 @@ export class ChatMenuComponent implements OnInit, OnDestroy {
     );
   }
 
-  minimizeTab = (id: string) => {
+  minimizeTab(id: string) {
     // get the tab
     const tab = this.chats.filter((elem: ChatTab) => elem.tabId === id);
     if (!tab) {

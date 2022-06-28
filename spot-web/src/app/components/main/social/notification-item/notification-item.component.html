@@ -7,8 +7,9 @@
   <div
     class="row full-width padding-md border-box clickable"
     (click)="goToPost($event)"
-    [class.unseen]="!notification.seen"
   >
+    <div *ngIf="!notification.seen" class="unseen margin-r-sm background-primary"></div>
+
     <!-- Image -->
     <div
       #notificationImage

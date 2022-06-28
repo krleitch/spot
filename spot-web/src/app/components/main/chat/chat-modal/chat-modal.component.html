@@ -29,7 +29,7 @@
               : 'chat-' + chatPageOpenChat.data.defaultImageNum
           "
         >
-          <img *ngIf="chatPageOpenChat.data.imageSrc" [src]="tab.imageSrc" />
+          <img *ngIf="chatPageOpenChat.data.imageSrc" [src]="chatPageOpenChat.data.imageSrc" />
           <img
             *ngIf="!chatPageOpenChat.data.imageSrc"
             [src]="'/assets/images/chat/' + chatPageOpenChat.data.defaultImageSrc"

@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject, Observable } from 'rxjs';
 
+import { v4 as uuidv4 } from 'uuid';
+
 // store
 import { Store, select } from '@ngrx/store';
 import { ChatStoreActions } from '@store/chat-store';
@@ -13,6 +15,7 @@ import { UserStoreSelectors } from '@src/app/root-store/user-store';
 import { ChatService } from '@services/chat.service';
 import { UserService } from '@services/user.service';
 import { ModalService } from '@services/modal.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Models
 import { ModalUploadPhotoResult, ModalData } from '@models/modal';
@@ -20,10 +23,14 @@ import {
   UploadChatRoomPhotoRequest,
   UploadChatRoomPhotoResponse
 } from '@models/image';
+import { SpotError } from '@exceptions/error';
 import {
   CreateChatRoomRequest,
   CreateChatRoomResponse,
-  AddUserChatRoomStore
+  AddUserChatRoomStore,
+  ChatRoom,
+  ChatType,
+  AddOpenChatStore
 } from '@models/chat';
 import { LocationData } from '@models/location';
 
@@ -41,6 +48,8 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
   // Modal properties
   data: ModalData;
   modalId: string;
+
+  STRINGS: Record<string, string>;
 
   // Form
   createChatForm: FormGroup;
@@ -63,8 +72,9 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
     private store$: Store<RootStoreState.State>,
     private chatService: ChatService,
     private modalService: ModalService,
-    private userService: UserService
-  ) { }
+    private userService: UserService,
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.createChatForm = new FormGroup({
@@ -100,6 +110,11 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy))
       .subscribe((location: LocationData) => {
         this.location = location;
+      });
+    this.translateService
+      .get('MAIN.CHAT_CREATE')
+      .subscribe((res: Record<string, string>) => {
+        this.STRINGS = res;
       });
   }
 
@@ -144,15 +159,31 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
             this.chatService
               .createChatRoom(chatRequest)
               .pipe(take(1))
-              .subscribe((response: CreateChatRoomResponse) => {
-                const request: AddUserChatRoomStore = {
-                  chatRoom: response.chatRoom
-                };
-                this.store$.dispatch(
-                  new ChatStoreActions.AddUserChatRoomStoreAction(request)
-                );
-              });
-          });
+              .subscribe(
+                (response: CreateChatRoomResponse) => {
+                  const request: AddUserChatRoomStore = {
+                    chatRoom: response.chatRoom
+                  };
+                  this.store$.dispatch(
+                    new ChatStoreActions.AddUserChatRoomStoreAction(request)
+                  );
+                  this.createRoomTab(response.chatRoom);
+                  this.close();
+                },
+                (err) => {
+                  if (
+                    Object.prototype.hasOwnProperty.call(
+                      err.error.errors,
+                      'name'
+                    )
+                  ) {
+                    this.name.setErrors({ taken: true });
+                  }
+                }
+              );
+          }, (_err: { error: SpotError }) => {
+              this.errorMessage = this.STRINGS.IMAGE_ERROR;
+            });
       } else {
         const chatRequest: CreateChatRoomRequest = {
           name: this.name.value,
@@ -164,14 +195,25 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
         this.chatService
           .createChatRoom(chatRequest)
           .pipe(take(1))
-          .subscribe((response: CreateChatRoomResponse) => {
-            const request: AddUserChatRoomStore = {
-              chatRoom: response.chatRoom
-            };
-            this.store$.dispatch(
-              new ChatStoreActions.AddUserChatRoomStoreAction(request)
-            );
-          });
+          .subscribe(
+            (response: CreateChatRoomResponse) => {
+              const request: AddUserChatRoomStore = {
+                chatRoom: response.chatRoom
+              };
+              this.store$.dispatch(
+                new ChatStoreActions.AddUserChatRoomStoreAction(request)
+              );
+              this.createRoomTab(response.chatRoom);
+              this.close();
+            },
+            (err) => {
+              if (
+                Object.prototype.hasOwnProperty.call(err.error.errors, 'name')
+              ) {
+                this.name.setErrors({ taken: true });
+              }
+            }
+          );
       }
     } else {
       // set password required
@@ -180,6 +222,20 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
       }
       validateAllFormFields(this.createChatForm);
     }
+  }
+
+  createRoomTab(room: ChatRoom) {
+    const newChat: ChatRoom = {
+      ...room
+    };
+    const request: AddOpenChatStore = {
+      tab: {
+        tabId: uuidv4(),
+        type: ChatType.ROOM,
+        data: newChat
+      }
+    };
+    this.store$.dispatch(new ChatStoreActions.AddOpenChatStoreAction(request));
   }
 
   private processPhoto(file: File): void {
@@ -206,6 +262,7 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
         // Set the imageSrc
         // If result.image is null then we know the user didnt delete their original image
         if (result.image) {
+          this.image = result.image;
           this.processPhoto(result.image);
         } else if (result.image === undefined) {
           this.image = null;
