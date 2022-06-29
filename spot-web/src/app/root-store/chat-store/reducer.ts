@@ -15,7 +15,7 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.ADD_USER_CHAT_ROOM_STORE: {
       return {
         ...state,
-        userChatRooms: state.userChatRooms.concat(action.request.chatRoom)
+        userChatRooms: [action.request.chatRoom].concat(state.userChatRooms)
       };
     }
     // TODO: will also need to remove a friend from chats if he is unfriended
@@ -30,6 +30,13 @@ export function featureReducer(state = initialState, action: Actions): State {
             ? (r.data as ChatRoom).id !== action.request.chatId
             : true
         ),
+        chatPageOpenChat:
+          state.chatPageOpenChat.type === ChatType.ROOM
+            ? action.request.chatId ===
+              (state.chatPageOpenChat.data as ChatRoom).id
+              ? null
+              : state.chatPageOpenChat
+            : state.chatPageOpenChat,
         minimizedChats: state.minimizedChats.filter((r) =>
           r.type === ChatType.ROOM
             ? (r.data as ChatRoom).id !== action.request.chatId
@@ -47,7 +54,9 @@ export function featureReducer(state = initialState, action: Actions): State {
     case ActionTypes.REMOVE_OPEN_CHAT_STORE: {
       return {
         ...state,
-        openChats: state.openChats.filter((r) => r.tabId !== action.request.tabId)
+        openChats: state.openChats.filter(
+          (r) => r.tabId !== action.request.tabId
+        )
       };
     }
     case ActionTypes.ADD_MINIMIZED_CHAT_STORE: {

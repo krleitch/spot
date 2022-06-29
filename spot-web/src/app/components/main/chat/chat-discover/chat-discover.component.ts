@@ -154,6 +154,10 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
+  onScroll(): void {
+    // TODO: LOL
+  }
+
   getDistance(distance: number): string {
     let unit: UnitSystem;
     if (this.userMetadata) {

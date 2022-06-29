@@ -147,6 +147,9 @@ const _findHotSpots = async (
   let spots: P.Spot[];
   if (!before && !after) {
     spots = await prisma.spot.findMany({
+      where: {
+        deletedAt: null
+      },
       orderBy: {
         hotRanking: 'desc'
       },
@@ -158,6 +161,9 @@ const _findHotSpots = async (
       return [];
     }
     spots = await prisma.spot.findMany({
+      where: {
+        deletedAt: null
+      },
       orderBy: {
         hotRanking: 'desc'
       },
@@ -179,6 +185,9 @@ const _findNewSpots = async (
   let spots: P.Spot[];
   if (!before && !after) {
     spots = await prisma.spot.findMany({
+      where: {
+        deletedAt: null
+      },
       orderBy: {
         createdAt: 'desc'
       },
@@ -190,6 +199,9 @@ const _findNewSpots = async (
       return [];
     }
     spots = await prisma.spot.findMany({
+      where: {
+        deletedAt: null
+      },
       orderBy: {
         createdAt: 'desc'
       },
@@ -228,9 +240,12 @@ const findSpotByLink = async (
 };
 
 const softDeleteSpot = async (spotId: string): Promise<P.Spot> => {
-  const spot = await prisma.spot.delete({
+  const spot = await prisma.spot.update({
     where: {
       spotId: spotId
+    },
+    data: {
+      deletedAt: new Date()
     }
   });
   return spot;

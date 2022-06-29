@@ -607,7 +607,7 @@ router.post(
 
 // Upload profile picture
 router.put(
-  'upload/profile',
+  '/upload/profile',
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       if (

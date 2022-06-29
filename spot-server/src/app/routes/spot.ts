@@ -542,8 +542,6 @@ router.get(
   ErrorHandler.catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
       // getting individual posts does not need an account
-      const postLink = req.params.postLink;
-
       const query: GetSingleSpotRequest = {
         spotLink: req.params.spotLink,
         // Optional location
@@ -557,7 +555,7 @@ router.get(
         query.spotLink,
         req.user?.userId
       );
-      if (!spot) {
+      if (!spot || spot.deletedAt !== null) {
         return next(new spotError.GetSingleSpot());
       }
       // Add location

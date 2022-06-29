@@ -141,6 +141,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           };
           this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
           this.authenticationService.loginUserSuccess(response);
+          this.store$.dispatch(
+            new UserActions.GetUserMetadataRequestAction({})
+          );
         },
         (errorResponse: { error: SpotError }) => {
           switch (errorResponse.error.name) {

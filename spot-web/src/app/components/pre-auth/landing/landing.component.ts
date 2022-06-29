@@ -184,6 +184,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
           };
           this.store$.dispatch(new UserActions.SetUserAction(setUserStore));
           this.authenticationService.registerUserSuccess(response);
+          this.store$.dispatch(
+            new UserActions.GetUserMetadataRequestAction({})
+          );
         },
         (errorResponse: { error: SpotError }) => {
           switch (errorResponse.error.name) {
