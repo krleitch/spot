@@ -287,8 +287,8 @@ export class ReplyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setContentHTML(): void {
     this.content.nativeElement.innerHTML = parseContentHTML(
-      this.comment.content,
-      this.comment.tag.tags,
+      this.reply.content,
+      this.reply.tag.tags,
       this.isExpandable,
       this.expanded
     );

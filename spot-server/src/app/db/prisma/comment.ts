@@ -82,7 +82,8 @@ const findCommentForSpot = async (
     comment = await prisma.comment.findMany({
       where: {
         spotId: spotId,
-        deletedAt: null
+        deletedAt: null,
+        parentCommentId: null
       },
       orderBy: {
         createdAt: 'desc'
@@ -113,7 +114,7 @@ const findRepliesForComment = async (
         deletedAt: null
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'asc'
       },
       take: limit
     });
@@ -129,7 +130,7 @@ const findRepliesForComment = async (
         deletedAt: null
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'asc'
       },
       cursor: {
         commentId: after ? after : before

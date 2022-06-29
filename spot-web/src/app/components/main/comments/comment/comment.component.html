@@ -34,6 +34,11 @@
           >
             keyboard_arrow_down
           </span>
+          <!-- show who tagged you -->
+          <div class="row margin-h-sm" *ngIf="comment.tag.tagged">
+            <span class="text-primary margin-r-xs"> {{ comment.tag.taggedBy }} </span>
+            {{ 'MAIN.COMMENTS.TAGGER' | translate }}
+          </div>
         </div>
 
         <!-- right -->
@@ -111,13 +116,7 @@
 
       <!-- content -->
       <div class="overflow-hidden flex-fill">
-        <div class="row">
-          <!-- show who tagged you -->
-          <div class="tagger" *ngIf="comment.tag.tagged">
-            <span class="highlight"> {{ comment.tag.tagger }} </span>
-            {{ 'MAIN.COMMENTS.TAGGER' | translate }}
-          </div>
-
+        <div class="col">
           <!-- text -->
           <div class="text">
             <!-- The element we set the innerHTML -->

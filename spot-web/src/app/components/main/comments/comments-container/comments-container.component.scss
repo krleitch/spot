@@ -49,3 +49,15 @@
   }
 }
 
+:host ::ng-deep .tag-inline {
+  line-height: 1.2em;
+  font-weight: 700;
+  background-color: var(--background-header);
+}
+
+:host ::ng-deep .tag-inline-icon {
+  line-height: 1.2em;
+  font-size: 1.2em;
+  vertical-align: bottom;
+}
+

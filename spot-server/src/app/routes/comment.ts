@@ -263,7 +263,7 @@ router.get(
         replyLink: req.query.reply?.toString(),
         limit: Number(req.query.limit),
         before: req.query?.before?.toString(),
-        after: req.query?.before?.toString()
+        after: req.query?.after?.toString()
       };
 
       let replies: any;
