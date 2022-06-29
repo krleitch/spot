@@ -140,6 +140,8 @@ img {
   justify-content: space-between;
   padding: 5px;
   background-color: var(--background-header);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 
   .post-link {
     text-decoration: none;
@@ -172,6 +174,8 @@ img {
     width: 100%;
     box-sizing: border-box;
     background-color: var(--background-container);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 
     .post-info {
       display: flex;
@@ -227,6 +231,8 @@ img {
     width: 100%;
     box-sizing: border-box;
     background-color: var(--background-container);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 
     .content-preview-comment {
       white-space: nowrap;

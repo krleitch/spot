@@ -47,7 +47,7 @@
               <div class="activity-header">
                 <div class="date">
                   {{ 'MAIN.ACTIVITY.DATE_POST_PROMPT' | translate }}
-                  {{ formatDate(activity.creation_date) }}
+                  {{ formatDate(activity.createdAt) }}
                   {{ 'MAIN.ACTIVITY.DATE_PROMPT_END' | translate }}
                 </div>
                 <a class="post-link" [routerLink]="'/spot/' + activity.link">
@@ -138,14 +138,14 @@
                   <ng-template #replyDate>
                     {{ 'MAIN.ACTIVITY.DATE_REPLY_PROMPT' | translate }}
                   </ng-template>
-                  {{ formatDate(activity.creation_date) }}
+                  {{ formatDate(activity.createdAt) }}
                   {{ 'MAIN.ACTIVITY.DATE_PROMPT_END' | translate }}
                 </div>
                 <a
                   class="comment-link"
                   [routerLink]="
                     '/spot/' +
-                    activity.postLink +
+                    activity.spotLink +
                     '/comment/' +
                     activity.link
                   "
