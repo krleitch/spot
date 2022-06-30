@@ -23,22 +23,42 @@
         <!-- Chat photo-->
         <span
           class="profile-sm margin-h-md"
+          *ngIf="chatPageOpenChat.type == eChatType.ROOM"
           [ngClass]="
             chatPageOpenChat.data.imageSrc
               ? ''
               : 'chat-' + chatPageOpenChat.data.defaultImageNum
           "
         >
-          <img *ngIf="chatPageOpenChat.data.imageSrc" [src]="chatPageOpenChat.data.imageSrc" />
+          <img
+            *ngIf="chatPageOpenChat.data.imageSrc"
+            [src]="chatPageOpenChat.data.imageSrc"
+          />
           <img
             *ngIf="!chatPageOpenChat.data.imageSrc"
-            [src]="'/assets/images/chat/' + chatPageOpenChat.data.defaultImageSrc"
+            [src]="
+              '/assets/images/chat/' + chatPageOpenChat.data.defaultImageSrc
+            "
           />
+        </span>
+        <span
+          class="profile-sm margin-h-md"
+          *ngIf="chatPageOpenChat.type == eChatType.FRIEND"
+        >
+          <img
+            *ngIf="chatPageOpenChat.data.profilePictureSrc"
+            [src]="chatPageOpenChat.data.profilePictureSrc"
+          />
+          <div *ngIf="!chatPageOpenChat.data.profilePictureSrc">
+            {{ getMinimizedName(mchat.data.username) }}
+          </div>
         </span>
 
         <!-- Name and location with distance -->
-        <div class="line-height col-h-center margin-r-md">
-          <span class="text-md"> {{ chatPageOpenChat.data.name }}</span>
+        <div *ngIf="chatPageOpenChat.type == eChatType.ROOM" class="line-height col-h-center margin-r-md">
+          <span class="text-md">
+            {{ chatPageOpenChat.data.name }}</span
+          >
           <div class="row-h-center">
             <span class="material-icons icon-xs icon-primary">
               location_on
@@ -53,7 +73,7 @@
       </div>
 
       <!-- right -->
-      <div class="row-h-center right-margin">
+      <div *ngIf="chatPageOpenChat.type == eChatType.ROOM" class="row-h-center right-margin">
         <!-- Settings Dropdown -->
         <div class="relative">
           <button
@@ -77,9 +97,15 @@
 
     <!-- The chat -->
     <spot-chat-room
+      *ngIf="chatPageOpenChat.type == eChatType.ROOM"
       [chatRoom]="chatPageOpenChat.data"
       [isTab]="false"
     ></spot-chat-room>
+    <spot-chat-friend
+      *ngIf="chatPageOpenChat.type == eChatType.FRIEND"
+      [chatFriend]="chatPageOpenChat.data"
+      [isTab]="false"
+    ></spot-chat-friend>
   </div>
   <ng-template #menu>
     <spot-chat-page-menu

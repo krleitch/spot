@@ -27,6 +27,11 @@ spot-chat-room {
   box-sizing: border-box;
 }
 
+spot-chat-friend {
+  height: calc(100% - 41px);
+  box-sizing: border-box;
+}
+
 spot-chat-page-menu {
   display: flex;
   flex: 1;
