@@ -221,14 +221,19 @@ const createUsernameFromEmail = async (
 };
 
 const isValidUserUpdateTime = (updatedTime: Date | null): boolean => {
-  if (!updatedTime) {
-    return true;
-  }
-  // the constant is in number of hours
-  const expire =
-    AUTHENTICATION_CONSTANTS.ACCOUNT_UPDATE_TIMEOUT * 60 * 60 * 1000;
-  const now = new Date();
-  return now.getTime() - updatedTime.getTime() > expire;
+  // TODO: reimplement this
+  // NOTE: if you just created your account with fb you need to chagne username again immediately maybe
+  // if (!updatedTime) {
+  //   return true;
+  // }
+  // // the constant is in number of hours
+  // const expire =
+  //   AUTHENTICATION_CONSTANTS.ACCOUNT_UPDATE_TIMEOUT * 60 * 60 * 1000;
+  // const now = new Date();
+
+
+  // return now.getTime() - updatedTime.getTime() > expire;
+  return true;
 };
 
 // *************************

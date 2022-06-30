@@ -54,7 +54,7 @@
           <div
             *ngFor="let chatRoom of userChatRooms"
             class="chat row-h-center margin-b-lg"
-            (click)="openChat(chatRoom)"
+            (click)="openChat(chatRoom, eChatType.ROOM)"
           >
             <!-- Image -->
             <span
@@ -113,7 +113,67 @@
 
   <!-- Friends list -->
   <ng-template #friends>
-    <div class="scroll-list"></div>
+    <div class="scroll-list">
+      <div
+        *ngIf="
+          friends$
+            | async
+            | filter: { filter: search, field: 'username' } as friends
+        "
+      >
+        <div *ngIf="friends.length > 0; else noFriends">
+          <div
+            class="friend menu-item row-h-center padding-md"
+            *ngFor="let friend of friends"
+            (click)="openChat(friend, eChatType.FRIEND)"
+          >
+            <span class="row-center profile-md background-header">
+              <span
+                *ngIf="!friend.profilePictureSrc"
+                class="row-center full-size"
+                >{{ getMinimizedName(friend.username) }}</span
+              >
+              <img
+                *ngIf="friend.profilePictureSrc"
+                [src]="friend.profilePictureSrc"
+              />
+            </span>
+            <span
+              class="col flex-fill margin-l-md"
+            >
+              <span class="text">{{ friend.username }}</span>
+              <span class="text-secondary">{{ lastMessage }}</span>
+            </span>
+          </div>
+        </div>
+        <ng-template #noFriends>
+          <div *ngIf="!friendsLoading; else loadingFriends">
+            <div *ngIf="!search; else searchFriends">
+              <div class="col-center margin-t-xl">
+                <span class="text-center text-secondary">{{
+                  'MAIN.CHAT_MENU.ADD_FRIENDS' | translate
+                }}</span>
+                <span class="material-icons"> person_add </span>
+              </div>
+            </div>
+            <ng-template #searchFriends>
+              <div class="col-center margin-t-xl">
+                <span class="material-icons"> search_off </span>
+                <span class="text-center text-secondary"
+                  >{{ 'MAIN.CHAT_MENU.NO_FRIENDS_FOUND' | translate }}
+                  {{ search }}
+                </span>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #loadingFriends>
+            <span class="row-center margin-t-xl">
+              <spot-spinner type="dot"></spot-spinner>
+            </span>
+          </ng-template>
+        </ng-template>
+      </div>
+    </div>
   </ng-template>
 
   <div class="footer row-h-center justify-content-around">

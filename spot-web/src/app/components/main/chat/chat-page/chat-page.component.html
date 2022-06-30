@@ -20,23 +20,41 @@
         class="minimized-chat row-center margin-l-md"
         (click)="openMinimizedChat(chatRoom)"
       >
-        <span
-          class="profile-md"
-          [ngClass]="
-            chatRoom.data.imageSrc ? '' : 'chat-' + chatRoom.data.defaultImageNum
-          "
-        >
-          <img
-            *ngIf="!chatRoom.data.imageSrc"
-            [src]="'/assets/images/chat/' + chatRoom.data.defaultImageSrc"
-          />
-          <img *ngIf="chatRoom.data.imageSrc" [src]="chatRoom.data.imageSrc" />
-        </span>
+        <div *ngIf="chatRoom.type === eChatType.ROOM; else friend">
+          <span
+            class="profile-md"
+            [ngClass]="
+              chatRoom.data.imageSrc
+                ? ''
+                : 'chat-' + chatRoom.data.defaultImageNum
+            "
+          >
+            <img
+              *ngIf="!chatRoom.data.imageSrc"
+              [src]="'/assets/images/chat/' + chatRoom.data.defaultImageSrc"
+            />
+            <img
+              *ngIf="chatRoom.data.imageSrc"
+              [src]="chatRoom.data.imageSrc"
+            />
+          </span>
+        </div>
+        <ng-template #friend>
+          <span class="profile-md">
+            <img
+              *ngIf="chatRoom.data.profilePictureSrc"
+              [src]="chatRoom.data.profilePictureSrc"
+            />
+            <div *ngIf="!chatRoom.data.profilePictureSrc">
+              {{ getMinimizedName(mchat.data.username) }}
+            </div>
+          </span>
+        </ng-template>
       </div>
 
       <!-- Show the open chat on far right -->
       <div
-        *ngIf="chatPageOpenChat"
+        *ngIf="chatPageOpenChat && chatPageOpenChat.type == eChatType.ROOM"
         class="profile-md owned margin-l-md"
         [ngClass]="
           chatPageOpenChat.data.imageSrc
@@ -52,6 +70,18 @@
           *ngIf="chatPageOpenChat.data.imageSrc"
           [src]="chatPageOpenChat.data.imageSrc"
         />
+      </div>
+      <div
+        *ngIf="chatPageOpenChat && chatPageOpenChat.type == eChatType.FRIEND"
+        class="profile-md owned margin-l-md"
+      >
+        <img
+          *ngIf="chatPageOpenChat.data.profilePictureSrc"
+          [src]="chatPageOpenChat.data.profilePictureSrc"
+        />
+        <div *ngIf="!chatPageOpenChat.data.profilePictureSrc">
+          {{ getMinimizedName(mchat.data.username) }}
+        </div>
       </div>
     </div>
 
@@ -74,23 +104,52 @@
           <!-- Chat photo-->
           <span
             class="profile-sm margin-h-md"
+            *ngIf="chatPageOpenChat.type == eChatType.ROOM"
             [ngClass]="
               chatPageOpenChat.data.imageSrc
                 ? ''
                 : 'chat-' + chatPageOpenChat.data.defaultImageNum
             "
           >
-            <img *ngIf="chatPageOpenChat.data.imageSrc" [src]="chatPageOpenChat.data.imageSrc" />
+            <img
+              *ngIf="chatPageOpenChat.data.imageSrc"
+              [src]="chatPageOpenChat.data.imageSrc"
+            />
             <img
               *ngIf="!chatPageOpenChat.data.imageSrc"
-              [src]="'/assets/images/chat/' + chatPageOpenChat.data.defaultImageSrc"
+              [src]="
+                '/assets/images/chat/' + chatPageOpenChat.data.defaultImageSrc
+              "
             />
+          </span>
+          <span
+            class="profile-sm margin-h-md"
+            *ngIf="chatPageOpenChat.type == eChatType.FRIEND"
+          >
+            <img
+              *ngIf="chatPageOpenChat.data.profilePictureSrc"
+              [src]="chatPageOpenChat.data.profilePictureSrc"
+            />
+            <div *ngIf="!chatPageOpenChat.data.profilePictureSrc">
+              {{ getMinimizedName(mchat.data.username) }}
+            </div>
           </span>
 
           <!-- Name and location with distance -->
           <div class="line-height col-h-center">
-            <span class="text-md"> {{ chatPageOpenChat.data.name }}</span>
-            <div class="row-h-center">
+            <span
+              *ngIf="chatPageOpenChat.type == eChatType.ROOM"
+              class="text-md"
+            >
+              {{ chatPageOpenChat.data.name }}</span
+            >
+            <span
+              *ngIf="chatPageOpenChat.type == eChatType.FRIEND"
+              class="text-md"
+            >
+              {{ chatPageOpenChat.data.username }}</span
+            >
+            <div *ngIf="chatPageOpenChat.type == eChatType.ROOM" class="row-h-center">
               <span class="material-icons icon-xs icon-primary">
                 location_on
               </span>
@@ -104,7 +163,7 @@
         </div>
 
         <!-- Settings Dropdown -->
-        <div class="relative">
+        <div *ngIf="chatPageOpenChat.type == eChatType.ROOM"  class="relative">
           <button
             #settings
             class="header-button margin-h-md"
@@ -127,9 +186,15 @@
 
       <!-- The chat -->
       <spot-chat-room
+        *ngIf="chatPageOpenChat.type == eChatType.ROOM"
         [chatRoom]="chatPageOpenChat.data"
         [isTab]="false"
       ></spot-chat-room>
+      <spot-chat-friend
+        *ngIf="chatPageOpenChat.type == eChatType.FRIEND"
+        [chatFriend]="chatPageOpenChat.data"
+        [isTab]="false"
+      ></spot-chat-friend>
     </div>
     <ng-template #menu>
       <spot-chat-page-menu

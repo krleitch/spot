@@ -49,6 +49,7 @@ enum SelectedPage {
 export class ChatPageMenuComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<void>();
   eSelectedPage = SelectedPage;
+  eChatType = ChatType;
 
   selectedPage = SelectedPage.CHATS;
 
@@ -66,7 +67,7 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
   chatPageMinimizedChats$: Observable<ChatTab[]>;
   chatPageMinimizedChats: ChatTab[];
 
-  @Output() chatSelectedEvent = new EventEmitter<ChatRoom>();
+  @Output() chatSelectedEvent = new EventEmitter<{ data: ChatRoom | Friend, type: ChatType}>();
 
   // Friends
   friends$: Observable<Friend[]>;
@@ -177,7 +178,7 @@ export class ChatPageMenuComponent implements OnInit, OnDestroy {
       });
   }
 
-  openChat(chat: ChatRoom): void {
-    this.chatSelectedEvent.emit(chat);
+  openChat(chat: ChatRoom | Friend, type: ChatType): void {
+    this.chatSelectedEvent.emit({data: chat, type: type});
   }
 }

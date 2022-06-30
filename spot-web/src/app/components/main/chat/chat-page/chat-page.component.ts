@@ -7,10 +7,7 @@ import {
   ElementRef
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import {
-  take,
-  takeUntil,
-} from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,6 +19,7 @@ import { UserStoreSelectors } from '@src/app/root-store/user-store';
 
 // Components
 import { ChatRoomComponent } from '@src/app/components/main/chat/chat-room/chat-room.component';
+import { ChatFriendComponent } from '@src/app/components/main/chat/chat-friend/chat-friend.component';
 
 // Services
 import { ChatService } from '@services/chat.service';
@@ -51,7 +49,10 @@ import { UserMetadata, UnitSystem } from '@models/userMetadata';
 export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly onDestroy = new Subject<void>();
 
+  eChatType = ChatType;
+
   @ViewChild(ChatRoomComponent) room: ChatRoomComponent;
+  @ViewChild(ChatRoomComponent) friendRoom: ChatFriendComponent;
   @ViewChild('minimized') minimized: ElementRef;
   maximumMinimized = 3;
 
@@ -149,7 +150,12 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   backToMenu(): void {
     // leave the chat, remove open and add to minimized
-    this.room.disconnectRoom();
+    if (this.room) {
+      this.room.disconnectRoom();
+    }
+    if (this.friendRoom) {
+      this.friendRoom.disconnectRoom();
+    }
     const addRequest: AddPageMinimizedChatStore = {
       tab: this.chatPageOpenChat
     };
@@ -177,7 +183,12 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
   openMinimizedChat(chat: ChatTab): void {
     // if a chat is open then close it first
     if (this.chatPageOpenChat) {
-      this.room.disconnectRoom();
+      if (this.room) {
+        this.room.disconnectRoom();
+      }
+      if (this.friendRoom) {
+        this.friendRoom.disconnectRoom();
+      }
       this.checkMinimizedRoom();
       const addRequest: AddPageMinimizedChatStore = {
         tab: this.chatPageOpenChat
@@ -203,7 +214,12 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openMenu(): void {
     if (this.chatPageOpenChat) {
-      this.room.disconnectRoom();
+      if (this.room) {
+        this.room.disconnectRoom();
+      }
+      if (this.friendRoom) {
+        this.friendRoom.disconnectRoom();
+      }
       const addRequest: AddPageMinimizedChatStore = {
         tab: this.chatPageOpenChat
       };
@@ -218,30 +234,58 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  openChat(chat: ChatRoom) {
-    const tabs = this.chatPageMinimizedChats.filter(
-      (tab) => (tab.data as ChatRoom).id === chat.id
-    );
-    if (tabs.length > 0) {
-      const removeRequest: RemoveMinimizedChatStore = {
-        tabId: tabs[0].tabId
+  openChat(data: { data: ChatRoom | Friend; type: ChatType }) {
+    if (data.type == ChatType.ROOM) {
+      const tabs = this.chatPageMinimizedChats.filter(
+        (tab) => (tab.data as ChatRoom).id === (data.data as ChatRoom).id
+      );
+      if (tabs.length > 0) {
+        const removeRequest: RemoveMinimizedChatStore = {
+          tabId: tabs[0].tabId
+        };
+        this.store$.dispatch(
+          new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
+        );
+      } else {
+        // otherwise we may need to remove
+        this.checkMinimizedRoom();
+      }
+      const request: SetPageOpenChatStore = {
+        tab:
+          tabs.length > 0
+            ? tabs[0]
+            : { tabId: uuidv4(), type: ChatType.ROOM, data: data.data }
       };
       this.store$.dispatch(
-        new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
+        new ChatStoreActions.SetPageOpenChatStoreAction(request)
       );
     } else {
-      // otherwise we may need to remove
-      this.checkMinimizedRoom();
+      // friend
+      const tabs = this.chatPageMinimizedChats.filter(
+        (tab) =>
+          (tab.data as Friend).friendId === (data.data as Friend).friendId
+      );
+      if (tabs.length > 0) {
+        const removeRequest: RemoveMinimizedChatStore = {
+          tabId: tabs[0].tabId
+        };
+        this.store$.dispatch(
+          new ChatStoreActions.RemovePageMinimizedChatStoreAction(removeRequest)
+        );
+      } else {
+        // otherwise we may need to remove
+        this.checkMinimizedRoom();
+      }
+      const request: SetPageOpenChatStore = {
+        tab:
+          tabs.length > 0
+            ? tabs[0]
+            : { tabId: uuidv4(), type: ChatType.FRIEND, data: data.data }
+      };
+      this.store$.dispatch(
+        new ChatStoreActions.SetPageOpenChatStoreAction(request)
+      );
     }
-    const request: SetPageOpenChatStore = {
-      tab:
-        tabs.length > 0
-          ? tabs[0]
-          : { tabId: uuidv4(), type: ChatType.ROOM, data: chat }
-    };
-    this.store$.dispatch(
-      new ChatStoreActions.SetPageOpenChatStoreAction(request)
-    );
   }
 
   leaveChatRoom(): void {
@@ -262,5 +306,10 @@ export class ChatPageComponent implements OnInit, OnDestroy, AfterViewInit {
           )
         );
       });
+  }
+  getMinimizedName(name: string) {
+    if (name) {
+      return name.substring(0, 1).toUpperCase() + name.substring(1, 2);
+    }
   }
 }
