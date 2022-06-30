@@ -32,26 +32,6 @@ export class ChatStoreEffects {
     { dispatch: false }
   );
 
-  getChatRoomsEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<featureActions.GetChatRoomsRequestAction>(
-        featureActions.ActionTypes.GET_CHAT_ROOMS_REQUEST
-      ),
-      switchMap((action) =>
-        this.chatService.getChatRooms(action.request).pipe(
-          map((response: GetChatRoomsResponse) => {
-            return new featureActions.GetChatRoomsSuccessAction(response);
-          }),
-          catchError((errorResponse: { error: SpotError }) =>
-            observableOf(
-              new featureActions.GetChatRoomsFailureAction(errorResponse.error)
-            )
-          )
-        )
-      )
-    )
-  );
-
   getUserChatRoomsEffect$ = createEffect(() =>
     this.actions$.pipe(
       ofType<featureActions.GetUserChatRoomsRequestAction>(

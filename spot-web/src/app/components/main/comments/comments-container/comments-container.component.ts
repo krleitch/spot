@@ -270,11 +270,13 @@ export class CommentsContainerComponent
   }
 
   ngAfterViewInit(): void {
-    this.comment.nativeElement.addEventListener('paste', (event: any) => {
-      event.preventDefault();
-      const text = event.clipboardData.getData('text/plain');
-      document.execCommand('insertText', false, text);
-    });
+    if (this.comment) {
+      this.comment.nativeElement.addEventListener('paste', (event: any) => {
+        event.preventDefault();
+        const text = event.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+      });
+    }
   }
 
   ngOnDestroy(): void {

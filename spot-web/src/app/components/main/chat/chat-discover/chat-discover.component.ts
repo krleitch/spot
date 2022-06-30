@@ -1,6 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject, timer } from 'rxjs';
-import { take, takeUntil, mapTo, startWith, takeWhile } from 'rxjs/operators';
+import {
+  take,
+  takeUntil,
+  mapTo,
+  startWith,
+  takeWhile,
+  finalize
+} from 'rxjs/operators';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -27,7 +34,8 @@ import {
   JoinChatRoomResponse,
   AddOpenChatStore,
   AddUserChatRoomStore,
-  ChatPagination
+  ChatPagination,
+  GetChatRoomsResponse
 } from '@models/chat';
 import { LocationData } from '@models/location';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
@@ -45,11 +53,8 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   modalId: string;
 
   // Rooms
-  chatRooms$: Observable<ChatRoom[]>;
   chatRooms: ChatRoom[];
-  loadingChatRooms$: Observable<boolean>;
   loadingChatRooms: boolean;
-  chatRoomsPagination$: Observable<ChatPagination>;
   chatRoomsPagination: ChatPagination;
 
   // location
@@ -109,44 +114,20 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
             lat: this.location.latitude,
             lng: this.location.longitude
           };
-          this.store$.dispatch(
-            new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
-          );
+          this.loadingChatRooms = true;
+          this.chatService
+            .getChatRooms(getChatRoomsRequest)
+            .pipe(
+              take(1),
+              finalize(() => {
+                this.loadingChatRooms = false;
+              })
+            )
+            .subscribe((response: GetChatRoomsResponse) => {
+              this.chatRooms = response.chatRooms;
+              this.chatRoomsPagination = response.pagination;
+            });
         }
-      });
-
-    // Chat rooms
-    this.chatRooms$ = this.store$.pipe(
-      select(ChatStoreSelectors.selectChatRooms)
-    );
-    this.chatRooms$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((chats: ChatRoom[]) => {
-        // Make a copy so its not read only and the sort directive can edit it
-        this.chatRooms = [...chats];
-      });
-    this.loadingChatRooms$ = this.store$.pipe(
-      select(ChatStoreSelectors.selectLoadingChatRooms)
-    );
-    this.loadingChatRooms$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((loading: boolean) => {
-        this.loadingChatRooms = loading;
-        this.showLoadingIndicator = timer(500)
-          .pipe(
-            mapTo(true),
-            takeWhile(() => this.loadingChatRooms)
-          )
-          .pipe(startWith(false));
-      });
-    this.chatRoomsPagination$ = this.store$.pipe(
-      select(ChatStoreSelectors.selectChatRoomsPagination)
-    );
-    this.chatRoomsPagination$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((pagination: ChatPagination) => {
-        // Make a copy so its not read only and the sort directive can edit it
-        this.chatRoomsPagination = pagination;
       });
   }
 
@@ -155,7 +136,26 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   }
 
   onScroll(): void {
-    // TODO: LOL
+    if (this.chatRoomsPagination.after) {
+      const getChatRoomsRequest: GetChatRoomsRequest = {
+        lat: this.location.latitude,
+        lng: this.location.longitude,
+        after: this.chatRoomsPagination.after
+      };
+      this.chatService
+        .getChatRooms(getChatRoomsRequest)
+        .pipe(
+          take(1),
+          finalize(() => {
+            this.loadingChatRooms = false;
+          })
+        )
+        .subscribe((response: GetChatRoomsResponse) => {
+          console.log(response);
+          this.chatRooms = this.chatRooms.concat(response.chatRooms);
+          this.chatRoomsPagination = response.pagination;
+        });
+    }
   }
 
   getDistance(distance: number): string {
@@ -269,9 +269,18 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
         lat: this.location.latitude,
         lng: this.location.longitude
       };
-      this.store$.dispatch(
-        new ChatStoreActions.GetChatRoomsRequestAction(getChatRoomsRequest)
-      );
+      this.chatService
+        .getChatRooms(getChatRoomsRequest)
+        .pipe(
+          take(1),
+          finalize(() => {
+            this.loadingChatRooms = false;
+          })
+        )
+        .subscribe((response: GetChatRoomsResponse) => {
+          this.chatRooms = response.chatRooms;
+          this.chatRoomsPagination = response.pagination;
+        });
     }
   }
 

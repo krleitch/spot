@@ -130,6 +130,7 @@ export interface CreateChatRoomResponse {
 export interface GetChatRoomsRequest {
   lat: number;
   lng: number;
+  after?: string;
 }
 
 export interface GetChatRoomsResponse {

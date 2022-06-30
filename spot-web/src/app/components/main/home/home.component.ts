@@ -37,6 +37,7 @@ import {
 // service
 import { SpotService } from '@services/spot.service';
 import { UserService } from '@services/user.service';
+import { ChatService } from '@services/chat.service';
 
 // Models
 import {
@@ -59,7 +60,11 @@ import {
   SetLocation,
   LocationData
 } from '@models/location';
-import { ChatRoom, GetChatRoomsRequest } from '@models/chat';
+import {
+  ChatRoom,
+  GetChatRoomsRequest,
+  GetChatRoomsResponse
+} from '@models/chat';
 // Assets
 import { LOCATION_CONSTANTS } from '@constants/location';
 import { SPOT_CONSTANTS } from '@constants/spot';
@@ -83,7 +88,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   noSpots: boolean;
 
   // Rooms
-  chatRooms$: Observable<ChatRoom[]>;
   chatRooms: ChatRoom[];
 
   // Location
@@ -126,6 +130,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<RootStoreState.State>,
     private spotService: SpotService,
+    private chatService: ChatService,
     private userService: UserService
   ) {
     document.addEventListener('click', this.offClickHandler.bind(this));
@@ -164,6 +169,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.location = location;
         if (!location) {
           this.getLocation();
+        } else {
         }
       });
 
@@ -223,25 +229,14 @@ export class HomeComponent implements OnInit, OnDestroy {
           bounding.top >= 0 &&
           bounding.left >= 0 &&
           bounding.bottom <=
-          (window.innerHeight || document.documentElement.clientHeight) &&
+            (window.innerHeight || document.documentElement.clientHeight) &&
           bounding.right <=
-          (window.innerWidth || document.documentElement.clientWidth)
+            (window.innerWidth || document.documentElement.clientWidth)
         ) {
           this.onScroll();
         }
       }
     });
-
-    // Rooms
-    this.chatRooms$ = this.store$.pipe(
-      select(ChatStoreSelectors.selectChatRooms)
-    );
-
-    this.chatRooms$
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((chatRooms: ChatRoom[]) => {
-        this.chatRooms = chatRooms;
-      });
   }
 
   ngOnDestroy(): void {
@@ -367,7 +362,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             );
             this.loading = false;
           },
-          (err) => { }
+          (err) => {}
         );
       this.loadedSpots += SPOT_CONSTANTS.INITIAL_LIMIT;
       this.initialLoad = false;
@@ -375,13 +370,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadRooms(): void {
-    const request: GetChatRoomsRequest = {
-      lat: this.location.latitude,
-      lng: this.location.longitude
-    };
-    this.store$.dispatch(
-      new ChatStoreActions.GetChatRoomsRequestAction(request)
-    );
+    // const request: GetChatRoomsRequest = {
+    //   lat: this.location.latitude,
+    //   lng: this.location.longitude
+    // };
+    // // get rooms
+    // this.chatService
+    //   .getChatRooms(request)
+    //   .pipe(take(1))
+    //   .subscribe((response: GetChatRoomsResponse) => {
+    //     this.chatRooms = response.chatRooms;
+    //   });
   }
 
   refresh(): void {

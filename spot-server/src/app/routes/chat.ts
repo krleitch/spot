@@ -12,6 +12,7 @@ import locationService from '@services/location.js';
 import * as userError from '@exceptions/user.js';
 import ErrorHandler from '@helpers/errorHandler.js';
 
+
 router.use((_req: Request, _res: Response, next: NextFunction) => {
   next();
 });
@@ -25,6 +26,7 @@ router.get(
       if (!userId) {
         return next(new userError.GetUser());
       }
+
       const foundUser = await prismaUser.findUserByIdChat(userId);
 
       if (!foundUser) {

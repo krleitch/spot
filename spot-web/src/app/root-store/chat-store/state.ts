@@ -4,10 +4,7 @@ import { Friend } from '@models/friend';
 
 export interface State {
   // Chats rooms and user chat rooms
-  loadingChatRooms: boolean;
   loadingUserChatRooms: boolean;
-  chatRooms: ChatRoom[];
-  chatRoomsPagination: ChatPagination;
   userChatRooms: ChatRoom[];
   userChatRoomsPagination: ChatPagination;
 
@@ -23,15 +20,7 @@ export interface State {
 }
 
 export const initialState: State = {
-  loadingChatRooms: false,
   loadingUserChatRooms: false,
-  chatRooms: [],
-  chatRoomsPagination: {
-    after: null,
-    before: null,
-    totalCount: 0,
-    limit: 0
-  },
   userChatRooms: [],
   userChatRoomsPagination: {
     after: null,

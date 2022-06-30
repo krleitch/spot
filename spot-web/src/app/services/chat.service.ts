@@ -60,6 +60,9 @@ export class ChatService {
     let params = new HttpParams();
     params = params.append('lat', request.lat);
     params = params.append('lng', request.lng);
+    if (request.after) {
+      params = params.append('after', request.after);
+    }
     return this.http.get<GetChatRoomsResponse>(`${this.chatBaseUrl}/rooms`, {
       params
     });

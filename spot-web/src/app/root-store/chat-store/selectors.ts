@@ -9,11 +9,6 @@ import { State } from './state';
 import { ChatRoom, ChatPagination, ChatTab } from '@models/chat';
 
 // Store selectors
-export const selectChatRoomsFromStore = (state: State): ChatRoom[] =>
-  state.chatRooms;
-export const selectChatRoomsPaginationFromStore = (
-  state: State
-): ChatPagination => state.chatRoomsPagination;
 export const selectUserChatRoomsFromStore = (state: State): ChatRoom[] =>
   state.userChatRooms;
 export const selectUserChatRoomsPaginationFromStore = (
@@ -23,8 +18,6 @@ export const selectOpenChatsFromStore = (state: State): ChatTab[] =>
   state.openChats;
 export const selectMinimizedChatsFromStore = (state: State): ChatTab[] =>
   state.minimizedChats;
-export const selectLoadingChatRoomsFromStore = (state: State): boolean =>
-  state.loadingChatRooms;
 export const selectLoadingUserChatRoomsFromStore = (state: State): boolean =>
   state.loadingUserChatRooms;
 export const selectChatPageOpenChatFromStore = (state: State): ChatTab =>
@@ -35,14 +28,6 @@ export const selectChatState: MemoizedSelector<object, State> =
   createFeatureSelector<State>('chat');
 
 // Selectors
-export const selectChatRooms: MemoizedSelector<object, ChatRoom[]> =
-  createSelector(selectChatState, selectChatRoomsFromStore);
-
-export const selectChatRoomsPagination: MemoizedSelector<
-  object,
-  ChatPagination
-> = createSelector(selectChatState, selectChatRoomsPaginationFromStore);
-
 export const selectUserChatRooms: MemoizedSelector<object, ChatRoom[]> =
   createSelector(selectChatState, selectUserChatRoomsFromStore);
 
@@ -53,9 +38,6 @@ export const selectUserChatRoomsPagination: MemoizedSelector<
 
 export const selectOpenChats: MemoizedSelector<object, ChatTab[]> =
   createSelector(selectChatState, selectOpenChatsFromStore);
-
-export const selectLoadingChatRooms: MemoizedSelector<object, boolean> =
-  createSelector(selectChatState, selectLoadingChatRoomsFromStore);
 
 export const selectLoadingUserChatRooms: MemoizedSelector<object, boolean> =
   createSelector(selectChatState, selectLoadingUserChatRoomsFromStore);

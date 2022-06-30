@@ -22,9 +22,6 @@ import {
 export enum ActionTypes {
   RESET_STORE = '[Chat] Reset Store',
   GENERIC_FAILURE = '[Chat] Generic Failure',
-  GET_CHAT_ROOMS_REQUEST = '[Chat] Get Chat Rooms Request',
-  GET_CHAT_ROOMS_SUCCESS = '[Chat] Get Chat Rooms Success',
-  GET_CHAT_ROOMS_FAILURE = '[Chat] Get Chat Rooms Failure',
   GET_USER_CHAT_ROOMS_REQUEST = '[Chat] Get User Chat Rooms Request',
   GET_USER_CHAT_ROOMS_SUCCESS = '[Chat] Get User Chat Rooms Success',
   GET_USER_CHAT_ROOMS_FAILURE = '[Chat] Get User Chat Rooms Failure',
@@ -51,18 +48,6 @@ export class GenericFailureAction implements Action {
 }
 
 // GET ROOMS
-export class GetChatRoomsRequestAction implements Action {
-  readonly type = ActionTypes.GET_CHAT_ROOMS_REQUEST;
-  constructor(public request: GetChatRoomsRequest) {}
-}
-export class GetChatRoomsSuccessAction implements Action {
-  readonly type = ActionTypes.GET_CHAT_ROOMS_SUCCESS;
-  constructor(public response: GetChatRoomsResponse) {}
-}
-export class GetChatRoomsFailureAction implements Action {
-  readonly type = ActionTypes.GET_CHAT_ROOMS_FAILURE;
-  constructor(public error: SpotError) {}
-}
 export class GetUserChatRoomsRequestAction implements Action {
   readonly type = ActionTypes.GET_USER_CHAT_ROOMS_REQUEST;
   constructor(public request: GetUserChatRoomsRequest) {}
@@ -123,9 +108,6 @@ export class RemovePageMinimizedChatStoreAction implements Action {
 export type Actions =
   | GenericFailureAction
   | ResetStoreAction
-  | GetChatRoomsRequestAction
-  | GetChatRoomsFailureAction
-  | GetChatRoomsSuccessAction
   | AddUserChatRoomStoreAction
   | RemoveUserChatRoomStoreAction
   | AddOpenChatStoreAction
