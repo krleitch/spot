@@ -300,7 +300,7 @@ export class ChatRoomComponent
           this.counter = Math.max(0, 3600000 - timeDiff) / 1000;
 
           // start the timer
-          this.startTimer();
+          // this.startTimer();
         }
       )
       .receive('error', ({ reason }) => {

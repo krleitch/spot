@@ -151,7 +151,6 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe((response: GetChatRoomsResponse) => {
-          console.log(response);
           this.chatRooms = this.chatRooms.concat(response.chatRooms);
           this.chatRoomsPagination = response.pagination;
         });
