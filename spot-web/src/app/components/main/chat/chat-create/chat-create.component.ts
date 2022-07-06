@@ -33,6 +33,7 @@ import {
   AddOpenChatStore
 } from '@models/chat';
 import { LocationData } from '@models/location';
+import { User, UserRole } from '@models/user';
 
 // Validators
 import { forbiddenNameValidator } from '@helpers/validators/forbidden-name.directive';
@@ -65,6 +66,8 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
   imageSrc: string;
 
   // location
+  user$: Observable<User>;
+  user: User;
   location$: Observable<LocationData>;
   location: LocationData;
 
@@ -111,6 +114,10 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
       .subscribe((location: LocationData) => {
         this.location = location;
       });
+    this.user$ = this.store$.pipe(select(UserStoreSelectors.selectUser));
+    this.user$.pipe(takeUntil(this.onDestroy)).subscribe((user: User) => {
+      this.user = user;
+    });
     this.translateService
       .get('MAIN.CHAT_CREATE')
       .subscribe((res: Record<string, string>) => {
@@ -147,43 +154,51 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
         this.userService
           .uploadChatRoomPhoto(uploadRequest)
           .pipe(take(1))
-          .subscribe((response: UploadChatRoomPhotoResponse) => {
-            const chatRequest: CreateChatRoomRequest = {
-              name: this.name.value,
-              description: this.description.value,
-              password: this.isPrivate ? this.password.value : null,
-              imageSrc: response.imageSrc,
-              lat: this.location.latitude,
-              lng: this.location.longitude
-            };
-            this.chatService
-              .createChatRoom(chatRequest)
-              .pipe(take(1))
-              .subscribe(
-                (response: CreateChatRoomResponse) => {
-                  const request: AddUserChatRoomStore = {
-                    chatRoom: response.chatRoom
-                  };
-                  this.store$.dispatch(
-                    new ChatStoreActions.AddUserChatRoomStoreAction(request)
-                  );
-                  this.createRoomTab(response.chatRoom);
-                  this.close();
-                },
-                (err) => {
-                  if (
-                    Object.prototype.hasOwnProperty.call(
-                      err.error.errors,
-                      'name'
-                    )
-                  ) {
-                    this.name.setErrors({ taken: true });
+          .subscribe(
+            (response: UploadChatRoomPhotoResponse) => {
+              const chatRequest: CreateChatRoomRequest = {
+                name: this.name.value,
+                description: this.description.value,
+                password: this.isPrivate ? this.password.value : null,
+                imageSrc: response.imageSrc,
+                lat: this.location.latitude,
+                lng: this.location.longitude
+              };
+              this.chatService
+                .createChatRoom(chatRequest)
+                .pipe(take(1))
+                .subscribe(
+                  (response: CreateChatRoomResponse) => {
+                    const request: AddUserChatRoomStore = {
+                      chatRoom: response.chatRoom
+                    };
+                    this.store$.dispatch(
+                      new ChatStoreActions.AddUserChatRoomStoreAction(request)
+                    );
+                    this.createRoomTab(response.chatRoom);
+                    this.close();
+                  },
+                  (err) => {
+                    if (
+                      err.error &&
+                      err.error.errors &&
+                      Object.prototype.hasOwnProperty.call(
+                        err.error.errors,
+                        'name'
+                      )
+                    ) {
+                      this.name.setErrors({ taken: true });
+                    }
+                    if (this.user.role == UserRole.GUEST) {
+                      this.errorMessage = this.STRINGS.GUEST_ERROR;
+                    }
                   }
-                }
-              );
-          }, (_err: { error: SpotError }) => {
+                );
+            },
+            (_err: { error: SpotError }) => {
               this.errorMessage = this.STRINGS.IMAGE_ERROR;
-            });
+            }
+          );
       } else {
         const chatRequest: CreateChatRoomRequest = {
           name: this.name.value,
@@ -208,9 +223,15 @@ export class ChatCreateComponent implements OnInit, OnDestroy {
             },
             (err) => {
               if (
+                err.error &&
+                err.error.errors &&
                 Object.prototype.hasOwnProperty.call(err.error.errors, 'name')
               ) {
                 this.name.setErrors({ taken: true });
+              }
+              console.log(err);
+              if (this.user.role == UserRole.GUEST) {
+                this.errorMessage = this.STRINGS.GUEST_ERROR;
               }
             }
           );

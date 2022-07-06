@@ -38,6 +38,7 @@ import {
   GetChatRoomsResponse
 } from '@models/chat';
 import { LocationData } from '@models/location';
+import { User, UserRole } from '@models/user';
 import { UserMetadata, UnitSystem } from '@models/userMetadata';
 import { ModalChatPasswordResult } from '@models/modal';
 
@@ -65,6 +66,8 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
   search = '';
 
   // User Metadata
+  user$: Observable<User>;
+  user: User;
   userMetadata$: Observable<UserMetadata>;
   userMetadata: UserMetadata;
 
@@ -98,6 +101,14 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy))
       .subscribe((userMetadata: UserMetadata) => {
         this.userMetadata = userMetadata;
+      });
+    this.user$ = this.store$.pipe(
+      select(UserStoreSelectors.selectUser)
+    );
+    this.user$
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe((user: User) => {
+        this.user = user;
       });
 
     // location
@@ -247,13 +258,20 @@ export class ChatDiscoverComponent implements OnInit, OnDestroy {
           this.close();
         },
         (err) => {
-          if (
+          // TODO: wrong password msgs logic :/
+          if (password) {
+            this.errorMessage = this.STRINGS.ERROR_PASSWORD;
+          } else if (
+            err &&
+            err.error && err.error.errors &&
             Object.prototype.hasOwnProperty.call(
               err.error.errors,
               'user_id_room_id'
             )
           ) {
             this.errorMessage = this.STRINGS.ERROR_JOINED;
+          } else if (this.user.role == UserRole.GUEST) {
+            this.errorMessage = this.STRINGS.ERROR_GUEST;
           } else {
             this.errorMessage = this.STRINGS.ERROR;
           }

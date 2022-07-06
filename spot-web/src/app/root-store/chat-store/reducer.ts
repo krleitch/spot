@@ -30,13 +30,14 @@ export function featureReducer(state = initialState, action: Actions): State {
             ? (r.data as ChatRoom).id !== action.request.chatId
             : true
         ),
-        chatPageOpenChat:
-          state.chatPageOpenChat.type === ChatType.ROOM
+        chatPageOpenChat: state.chatPageOpenChat
+          ? state.chatPageOpenChat.type === ChatType.ROOM
             ? action.request.chatId ===
               (state.chatPageOpenChat.data as ChatRoom).id
               ? null
               : state.chatPageOpenChat
-            : state.chatPageOpenChat,
+            : state.chatPageOpenChat
+          : null,
         minimizedChats: state.minimizedChats.filter((r) =>
           r.type === ChatType.ROOM
             ? (r.data as ChatRoom).id !== action.request.chatId

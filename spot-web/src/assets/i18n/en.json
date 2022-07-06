@@ -363,7 +363,8 @@
       "PRIVATE": "Private",
       "CREATE": "Create",
 
-      "IMAGE_ERROR": "Error uploading image"
+      "IMAGE_ERROR": "Error uploading image",
+      "GUEST_ERROR": "Guests cannot create rooms"
     },
 
     "CHAT_JOIN": {
@@ -386,6 +387,8 @@
       "ERROR": "Error joining chat. Please try again",
       "ERROR_JOINED": "You have already joined this chat",
       "ERROR_NO_PASSWORD": "You must enter a password",
+      "ERROR_PASSWORD": "Password is incorrect",
+      "ERROR_GUEST": "Guests cannot join rooms",
       "AGE": "Age",
       "SHOWING_1": "Showing",
       "SHOWING_2": "chats"

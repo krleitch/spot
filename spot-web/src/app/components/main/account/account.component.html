@@ -2,7 +2,7 @@
 <div class="account">
   <div class="account-content">
     <div *ngIf="user$ | async as user; else noUser">
-      <div *ngIf="user.role === eUserRole.GUEST" class="text-error text-center">
+      <div *ngIf="user.role === eUserRole.GUEST" class="text-error text-center margin-v-sm">
         {{ 'MAIN.ACCOUNT.GUEST' | translate }}
       </div>
 
