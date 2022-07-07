@@ -9,7 +9,7 @@ import secret from '@config/secret.js';
 // Google auth
 import { LoginTicket, OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client(
-  '805375534727-tsjtjhrf00a4hnvscrnejj5jaioo2nit.apps.googleusercontent.com'
+  '562475424621-665s55gudfsaq3usnb140dhmlfhs1ho1.apps.googleusercontent.com'
 );
 
 // services
@@ -287,7 +287,7 @@ const verifyGoogleIdToken = async (
   const ticket = await client.verifyIdToken({
     idToken: accessToken,
     audience:
-      '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com'
+      '562475424621-665s55gudfsaq3usnb140dhmlfhs1ho1.apps.googleusercontent.com'
   });
   return ticket;
 };

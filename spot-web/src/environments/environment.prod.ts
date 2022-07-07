@@ -3,5 +3,5 @@ export const environment = {
   baseUrl: '/api',
   chatBaseUrl: '/chat/api',
   googleProviderId:
-    '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com'
+    '562475424621-665s55gudfsaq3usnb140dhmlfhs1ho1.apps.googleusercontent.com'
 };

@@ -33,6 +33,7 @@ import {
   ChatStoreActions,
   ChatStoreSelectors
 } from '@src/app/root-store/chat-store';
+import { SocialStoreFriendActions } from '@src/app/root-store/social-store';
 
 // service
 import { SpotService } from '@services/spot.service';
@@ -210,6 +211,11 @@ export class HomeComponent implements OnInit, OnDestroy {
             .pipe(startWith(false));
         }
       });
+
+    // TODO: this should trigger on login action, move this
+    this.store$.dispatch(
+      new SocialStoreFriendActions.GetFriendsRequestAction({ limit: null })
+    );
 
     // Spots
     // remember scroll posiotion

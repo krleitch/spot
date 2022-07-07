@@ -129,7 +129,7 @@ export class AppComponent implements OnInit {
       google.accounts.id.initialize({
         // Ref: https://developers.google.com/identity/gsi/web/reference/js-reference#IdConfiguration
         client_id:
-          '773867677566-52gc54rg7909514ff2nvvi5oejlg0077.apps.googleusercontent.com',
+          '562475424621-665s55gudfsaq3usnb140dhmlfhs1ho1.apps.googleusercontent.com',
         callback: this.handleGoogleCredentialResponse.bind(this),
         auto_select: true,
         cancel_on_tap_outside: false
