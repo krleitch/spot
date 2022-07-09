@@ -283,7 +283,7 @@ router.post(
           await mailService.email.send({
             template: 'password',
             message: {
-              from: 'spottables.app@gmail.com',
+              from: 'spottables.com@gmail.com',
               to: user.email
             },
             locals: {

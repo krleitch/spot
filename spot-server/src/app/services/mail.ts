@@ -1,27 +1,36 @@
 // Mail Service
 
 import nodemailer from 'nodemailer';
-import aws from 'aws-sdk';
 import Email from 'email-templates';
 import path from 'path';
 import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // config
-import awsconfig from '@config/awskey.js';
-
-aws.config.update({
-  secretAccessKey: awsconfig.SecretAccessKey,
-  accessKeyId: awsconfig.AccessKeyID,
-  region: 'us-east-1'
-});
+import mailconfig from '@config/mail.js';
 
 const transporter = nodemailer.createTransport({
-  SES: new aws.SES({
-    apiVersion: '2010-12-01'
-  })
+  service: "gmail",
+  auth: {
+    type: "OAuth2",
+    user: mailconfig.MAIL_USERNAME,
+    clientId: mailconfig.OAUTH_CLIENTID,
+    clientSecret: mailconfig.OAUTH_CLIENT_SECRET,
+    refreshToken: mailconfig.OAUTH_REFRESH_TOKEN
+  },
 });
+
+// let transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     type: "OAuth2",
+//     user: "user@example.com",
+//     accessToken: "ya29.Xx_XX0xxxxx-xX0X0XxXXxXxXXXxX0x",
+//   },
+// });
 
 const rootPath = path.join(__dirname, '../emails');
 const imagePath = path.join(__dirname, '../emails/spot_logo.png');

@@ -542,7 +542,7 @@ router.post(
       await mail.email.send({
         template: 'verify',
         message: {
-          from: 'spottables.app@gmail.com',
+          from: 'spottables.com@gmail.com',
           to: req.user.email
         },
         locals: {

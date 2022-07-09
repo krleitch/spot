@@ -25,20 +25,22 @@ import {
 // env
 import { environment } from 'src/environments/environment';
 
-export const WEBSOCKET_SERVER_URI = 'ws://localhost:4000/socket';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private chatBaseUrl = environment.chatBaseUrl;
+  private websocketUrl = environment.websocketUrl;
   phoenixSocket: PhoenixSocket;
+
+  WEBSOCKET_SERVER_URI = `${this.websocketUrl}/socket`;
 
   constructor(private http: HttpClient) {}
 
   connectToWebSocket() {
     // Connect to socket
-    this.phoenixSocket = new PhoenixSocket(WEBSOCKET_SERVER_URI, {
+    this.phoenixSocket = new PhoenixSocket(this.WEBSOCKET_SERVER_URI, {
       params: {
         token: localStorage.getItem('id_token'),
         logger: (kind, msg, data) => {

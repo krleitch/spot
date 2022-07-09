@@ -10,6 +10,7 @@ src/app/log/
 src/config/secret.ts
 src/config/awskey.ts
 src/config/googlekey.ts
+src/config/mail.ts
 
 # Prisma
 .env
