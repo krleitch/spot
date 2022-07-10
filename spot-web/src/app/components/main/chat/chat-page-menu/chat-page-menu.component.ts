@@ -35,7 +35,6 @@ import {
   GetUserChatRoomsRequest
 } from '@models/chat';
 import { LocationData } from '@models/location';
-import { on } from 'process';
 
 enum SelectedPage {
   FRIENDS = 'FRIENDS',
