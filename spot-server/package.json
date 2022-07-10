@@ -60,7 +60,7 @@
     "build-typecheck": "npm run typecheck && npm run build",
     "start": "npm run build-typecheck && node ./dist/app/main.js",
     "dev": "concurrently \"tsc -w --p .\" \"npm run watch\" \"nodemon dist/app/main.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
     "tsc": "tsc",
     "lint": "npx eslint 'src/**/*.{js,ts}' --quiet --fix",
     "format": "npx prettier 'src/**/*.{js,ts}' --write"
@@ -76,7 +76,9 @@
   },
   "homepage": "https://github.com/krleitch/spot-server#readme",
   "devDependencies": {
+    "@types/jest": "^28.1.4",
     "@types/node": "^17.0.17",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "babel-plugin-module-resolver": "^4.1.0",
@@ -84,8 +86,38 @@
     "eslint": "^8.7.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.4",
+    "jest": "^28.1.2",
     "nodemon": "^2.0.15",
     "prisma": "^3.14.0",
+    "supertest": "^6.2.4",
+    "ts-jest": "^28.0.5",
     "tsconfig-paths": "^3.12.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "transform": {},
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "globals": {
+      "ts-jest": {
+        "useESM": true
+      }
+    },
+    "moduleNameMapper": {
+      "^@models/(.*).js$": "<rootDir>/../spot-commons/models/$1",
+      "^@exceptions/(.*).js$": "<rootDir>/../spot-commons/exceptions/$1",
+      "^@constants/(.*).js$": "<rootDir>/../spot-commons/constants/$1",
+      "^@db/(.*).js$": "<rootDir>/src/app/db/$1",
+      "^@routes/(.*).js$": "<rootDir>/src/app/routes/$1",
+      "^@services/(.*).js$": "<rootDir>/src/app/services/$1",
+      "^@helpers/(.*).js$": "<rootDir>/src/app/helpers/$1",
+      "^@config/(.*).js$": "<rootDir>/src/config/$1",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }
