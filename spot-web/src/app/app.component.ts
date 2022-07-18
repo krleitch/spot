@@ -175,6 +175,8 @@ export class AppComponent implements OnInit {
       } else {
         this.themeService.setLightTheme();
       }
+    } else {
+      this.themeService.setLightTheme();
     }
     this.themeService.setRegularSizeTheme();
   }
