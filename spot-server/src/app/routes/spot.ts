@@ -156,6 +156,7 @@ router.post(
       singleUpload(req, res, async (err: any) => {
         // error uploading image
         if (err) {
+          console.log(err);
           return next(new spotError.SpotImage(422));
         }
 

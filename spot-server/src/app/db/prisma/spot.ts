@@ -151,7 +151,8 @@ const _findHotSpots = async (
         deletedAt: null
       },
       orderBy: {
-        hotRanking: 'desc'
+        // hotRanking: 'desc',
+        likes: 'desc'
       },
       take: limit
     });
@@ -165,7 +166,8 @@ const _findHotSpots = async (
         deletedAt: null
       },
       orderBy: {
-        hotRanking: 'desc'
+        // hotRanking: 'desc'
+        likes: 'desc'
       },
       cursor: {
         spotId: after ? after : before

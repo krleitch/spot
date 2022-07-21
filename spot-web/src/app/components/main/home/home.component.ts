@@ -367,11 +367,11 @@ export class HomeComponent implements OnInit, OnDestroy {
               new SpotStoreActions.SetSpotStoreRequestAction(setRequest)
             );
             this.loading = false;
+            this.loadedSpots += SPOT_CONSTANTS.INITIAL_LIMIT;
+            this.initialLoad = false;
           },
           (err) => {}
         );
-      this.loadedSpots += SPOT_CONSTANTS.INITIAL_LIMIT;
-      this.initialLoad = false;
     }
   }
 
@@ -395,6 +395,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.noSpots = false;
     this.loadedSpots = 0;
     this.initialLoad = true;
+    // TODO: dont do this, actually use proper logic
+    this.spots = [];
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.onScroll();
   }
