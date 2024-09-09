@@ -8,7 +8,7 @@ export const environment = {
   chatBaseUrl: 'http://localhost:4000/api',
   websocketUrl: 'ws://localhost:4000',
   googleProviderId:
-    '562475424621-665s55gudfsaq3usnb140dhmlfhs1ho1.apps.googleusercontent.com'
+    ''
 };
 
 /*
